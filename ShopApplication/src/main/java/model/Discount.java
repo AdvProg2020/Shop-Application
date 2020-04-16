@@ -28,36 +28,36 @@ public class Discount {
         return discountCode;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public int getPercentage() {
-        return percentage;
-    }
-
-    public int getMaximumAmount() {
-        return maximumAmount;
-    }
-
     public void setDiscountCode(String discountCode) {
         this.discountCode = discountCode;
+    }
+
+    public Date getStartDate() {
+        return startDate;
     }
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
+    public Date getEndDate() {
+        return endDate;
+    }
+
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
+    public int getPercentage() {
+        return percentage;
+    }
+
     public void setPercentage(int percentage) {
         this.percentage = percentage;
+    }
+
+    public int getMaximumAmount() {
+        return maximumAmount;
     }
 
     public void setMaximumAmount(int maximumAmount) {
@@ -72,7 +72,21 @@ public class Discount {
         suspended = true;
     }
 
-    public void addCustomer(Customer customer){}
+    public void addCustomer(Customer customer) {
+    }
 
-    public void removeCustomer(Customer customer){}
+    public void removeCustomer(Customer customer) {
+    }
+
+    private void addDiscountToDatabase() {
+    }
+
+    private void removeDiscountFromDatabase() {
+    }
+
+    private void loadDatabase() {
+    }
+
+    private void updateDiscountInDatabase(String name) {
+    }
 }

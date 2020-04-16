@@ -25,7 +25,9 @@ public class Rating {
         return score;
     }
 
-    public void addReviewToDatabase() {}
+    private void addReviewToDatabase() {
+    }
 
-    public void loadDatabase() {}
+    private void loadDatabase() {
+    }
 }

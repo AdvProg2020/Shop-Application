@@ -49,23 +49,33 @@ public class Category {
         suspended = true;
     }
 
-    public void addProduct(Product product){}
+    public void addProduct(Product product) {
+    }
 
-    public void removeProduct(Product product){}
+    public void removeProduct(Product product) {
+    }
 
-    public void addSpecialProperty(SpecialProperty specialProperty) {}
+    public void addSpecialProperty(SpecialProperty specialProperty) {
+    }
 
-    public void removeSpecialProperty(SpecialProperty specialProperty) {}
+    public void removeSpecialProperty(SpecialProperty specialProperty) {
+    }
 
-    public void addSubcategory(Category category){}
+    public void addSubcategory(Category category) {
+    }
 
-    public void removeSubcategory(Category category){}
+    public void removeSubcategory(Category category) {
+    }
 
-    public void addCategoryToDatabase() {}
+    private void addCategoryToDatabase() {
+    }
 
-    public void removeCategoryFromDatabase() {}
+    private void removeCategoryFromDatabase() {
+    }
 
-    public void loadDatabase() {}
+    private void loadDatabase() {
+    }
 
-    public void updateCategoryInDatabase(String name) {}
+    private void updateCategoryInDatabase(String name) {
+    }
 }

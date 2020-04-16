@@ -21,8 +21,6 @@ public abstract class Account {
         this.phone = phone;
     }
 
-    public abstract String getType();
-
     public static Account getAccountById(String accountId) {
         return null;
     }
@@ -30,6 +28,8 @@ public abstract class Account {
     public static Account getAccountByUsername(String username) {
         return null;
     }
+
+    public abstract String getType();
 
     public String getUsername() {
         return username;
@@ -39,28 +39,28 @@ public abstract class Account {
         return password;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
     public void setPhone(String phone) {
@@ -75,11 +75,11 @@ public abstract class Account {
         suspended = true;
     }
 
-    public abstract void addAccountToDatabase();
+    protected abstract void addAccountToDatabase();
 
-    public abstract void removeAccountFromDatabase();
+    protected abstract void removeAccountFromDatabase();
 
-    public abstract void loadDatabase();
+    protected abstract void loadDatabase();
 
-    public abstract void updateAccountInDatabase(String username);
+    protected abstract void updateAccountInDatabase(String username);
 }

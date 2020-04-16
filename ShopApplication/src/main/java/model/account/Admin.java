@@ -1,6 +1,6 @@
 package model.account;
 
-public class Admin extends Account{
+public class Admin extends Account {
 
     public Admin(String accountId, String username, String password, String firstName, String lastName, String email, String phone) {
         super(accountId, username, password, firstName, lastName, email, phone);
@@ -12,22 +12,22 @@ public class Admin extends Account{
     }
 
     @Override
-    public void addAccountToDatabase() {
+    protected void addAccountToDatabase() {
 
     }
 
     @Override
-    public void removeAccountFromDatabase() {
+    protected void removeAccountFromDatabase() {
 
     }
 
     @Override
-    public void loadDatabase() {
+    protected void loadDatabase() {
 
     }
 
     @Override
-    public void updateAccountInDatabase(String username) {
+    protected void updateAccountInDatabase(String username) {
 
     }
 }

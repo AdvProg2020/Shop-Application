@@ -1,46 +1,47 @@
 package model.log;
 
-import model.SubProduct;
+import model.account.Customer;
+import model.account.Seller;
 
 import java.util.Date;
 import java.util.HashMap;
 
-public class TransactionLog {
-    private static HashMap<String, TransactionLog> allLogs = new HashMap<String, TransactionLog>();
-    private String logId;
-    private String customerName;
+public class BuyLog {
+    private static HashMap<String, BuyLog> allBuyLogs = new HashMap<String, BuyLog>();
+    private String buyLogId;
+    private Customer customer;
     private Date date;
     private int paidMoney;
     private int totalDiscountAmount;
-    private HashMap<SubProduct, LogDetail> purchasedItems;
+    private HashMap<Seller, SellLog> sellLogs;
     private ShippingStatus shippingStatus;
     private String receiverName;
     private String receiverAddress;
     private String receiverPhone;
 
-    public TransactionLog(String logId, String customerName, Date date, HashMap<SubProduct, LogDetail> purchasedItems, ShippingStatus shippingStatus, int paidMoney, int totalDiscountAmount, String receiverName, String receiverAddress, String receiverPhone) {
-        this.logId = logId;
-        this.customerName = customerName;
+    public BuyLog(String buyLogId, Customer customer, Date date, int paidMoney, int totalDiscountAmount, HashMap<Seller, SellLog> sellLogs, String receiverName, String receiverAddress, String receiverPhone) {
+        this.buyLogId = buyLogId;
+        this.customer = customer;
         this.date = date;
-        this.purchasedItems = purchasedItems;
-        this.shippingStatus = shippingStatus;
         this.paidMoney = paidMoney;
         this.totalDiscountAmount = totalDiscountAmount;
+        this.sellLogs = sellLogs;
         this.receiverName = receiverName;
         this.receiverAddress = receiverAddress;
         this.receiverPhone = receiverPhone;
+        shippingStatus = ShippingStatus.processing;
     }
 
-    public static HashMap<String, TransactionLog> getAllLogs() {
-        return allLogs;
+    public static HashMap<String, BuyLog> getAllBuyLogs() {
+        return allBuyLogs;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public static String getBuyLogById() {
+        return null;
     }
 
-    public String getLogId() {
-        return logId;
+    public Customer getCustomer() {
+        return customer;
     }
 
     public Date getDate() {
@@ -51,8 +52,8 @@ public class TransactionLog {
         return receiverPhone;
     }
 
-    public HashMap<SubProduct, LogDetail> getPurchasedItems() {
-        return purchasedItems;
+    public HashMap<Seller, SellLog> getSellLogs() {
+        return sellLogs;
     }
 
     public ShippingStatus getShippingStatus() {
@@ -75,10 +76,13 @@ public class TransactionLog {
         return receiverAddress;
     }
 
-    public void addLogToDatabase() {}
+    public void addLogToDatabase() {
+    }
 
-    public void removeLogFromDatabase() {}
+    public void removeLogFromDatabase() {
+    }
 
-    public void loadDatabase() {}
+    public void loadDatabase() {
+    }
 
 }

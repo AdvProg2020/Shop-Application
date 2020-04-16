@@ -78,14 +78,6 @@ public class Product {
         //todo : suspend all subProducts
     }
 
-    public void addProductToDatabase() {}
-
-    public void removeProductFromDatabase() {}
-
-    public void loadDatabase() {}
-
-    public void updateProductInDatabase(String name) {}
-
     public int getViewCount() {
         return viewCount;
     }
@@ -93,4 +85,18 @@ public class Product {
     public void addViewCount() {
         viewCount ++;
     }
+
+    private void addProductToDatabase() {
+    }
+
+    private void removeProductFromDatabase() {
+    }
+
+    private void loadDatabase() {
+    }
+
+    private void updateProductInDatabase(String name) {
+    }
+
+
 }

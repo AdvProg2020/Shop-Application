@@ -37,36 +37,36 @@ public class Sale {
         return saleId;
     }
 
-    public Seller getSeller() {
-        return seller;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public int getPercentage() {
-        return percentage;
-    }
-
     public void setSaleId(String saleId) {
         this.saleId = saleId;
+    }
+
+    public Seller getSeller() {
+        return seller;
     }
 
     public void setSeller(Seller seller) {
         this.seller = seller;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
+    public Date getEndDate() {
+        return endDate;
+    }
+
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public int getPercentage() {
+        return percentage;
     }
 
     public void setPercentage(int percentage) {
@@ -89,7 +89,21 @@ public class Sale {
         return false;
     }
 
-    public void addProduct(String productId) { }
+    public void addProduct(String productId) {
+    }
 
-    public void removeProduct(String productId) {}
+    public void removeProduct(String productId) {
+    }
+
+    private void addSaleToDatabase() {
+    }
+
+    private void removeSaleFromDatabase() {
+    }
+
+    private void loadDatabase() {
+    }
+
+    private void updateSaleInDatabase(String name) {
+    }
 }

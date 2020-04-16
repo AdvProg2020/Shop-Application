@@ -2,14 +2,14 @@ package model.account;
 
 import model.Discount;
 import model.ShoppingCart;
-import model.log.TransactionLog;
+import model.log.BuyLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Customer extends Account {
     private ShoppingCart shoppingCart;
-    private ArrayList<TransactionLog> transactionLogs;
+    private ArrayList<BuyLog> buyLogs;
     private HashMap<Discount, Integer> discounts;
     private int balance;
 
@@ -22,23 +22,26 @@ public class Customer extends Account {
         return shoppingCart;
     }
 
-    public ArrayList<TransactionLog> getTransactionLogs() {
-        return transactionLogs;
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    public ArrayList<BuyLog> getBuyLogs() {
+        return buyLogs;
     }
 
     public HashMap<Discount, Integer> getDiscounts() {
         return discounts;
     }
 
-    public void addBuyLog(TransactionLog transactionLog) {}
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
+    public void addBuyLog(BuyLog buyLog) {
     }
 
-    public void addDiscount(Discount discount) {}
+    public void addDiscount(Discount discount) {
+    }
 
-    public void removeDiscount(Discount discount) {}
+    public void removeDiscount(Discount discount) {
+    }
 
     public int getBalance() {
         return balance;
@@ -54,22 +57,22 @@ public class Customer extends Account {
     }
 
     @Override
-    public void addAccountToDatabase() {
+    protected void addAccountToDatabase() {
 
     }
 
     @Override
-    public void removeAccountFromDatabase() {
+    protected void removeAccountFromDatabase() {
 
     }
 
     @Override
-    public void loadDatabase() {
+    protected void loadDatabase() {
 
     }
 
     @Override
-    public void updateAccountInDatabase(String username) {
+    protected void updateAccountInDatabase(String username) {
 
     }
 }

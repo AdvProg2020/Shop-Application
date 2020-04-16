@@ -2,7 +2,7 @@ package model.request;
 
 import model.account.Seller;
 
-public class SellerRequest extends Request{
+public class SellerRequest extends Request {
     private Seller seller;
     private SellerStatus status;
 

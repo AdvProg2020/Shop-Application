@@ -20,7 +20,21 @@ public class ShoppingCart {
         return products;
     }
 
-    public void addProduct(Product product, int count) {}
+    public void addProduct(Product product, int count) {
+    }
 
-    public void removeProduct(Product product) {}
+    public void removeProduct(Product product) {
+    }
+
+    private void addShoppingCartToDatabase() {
+    }
+
+    private void removeShoppingCartFromDatabase() {
+    }
+
+    private void loadDatabase() {
+    }
+
+    private void updateShoppingCartInDatabase(String name) {
+    }
 }

@@ -32,12 +32,12 @@ public class SubProduct {
         return price;
     }
 
-    public int getRemainingCount() {
-        return remainingCount;
-    }
-
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getRemainingCount() {
+        return remainingCount;
     }
 
     public void setRemainingCount(int remainingCount) {
@@ -50,5 +50,17 @@ public class SubProduct {
 
     public void suspend() {
         suspended = true;
+    }
+
+    private void addSubProductToDatabase() {
+    }
+
+    private void removeSubProductFromDatabase() {
+    }
+
+    private void loadDatabase() {
+    }
+
+    private void updateSubProductInDatabase(String name) {
     }
 }

@@ -1,19 +1,18 @@
 package model;
 
 import model.account.Account;
-import model.request.reviewRequest;
 
 public class Review {
     private Account reviewer;
     private Product product;
     private String reviewText;
-    private boolean hasBought;
+    private boolean bought;
 
-    public Review(Account reviewer, Product product, String reviewText, boolean hasBought) {
+    public Review(Account reviewer, Product product, String reviewText, boolean bought) {
         this.reviewer = reviewer;
         this.product = product;
         this.reviewText = reviewText;
-        this.hasBought = hasBought;
+        this.bought = bought;
     }
 
     public Account getReviewer() {
@@ -28,7 +27,13 @@ public class Review {
         return reviewText;
     }
 
-    public boolean isHasBought() {
-        return hasBought;
+    public boolean hasBought() {
+        return bought;
+    }
+
+    private void addRatingToDatabase() {
+    }
+
+    private void loadDatabase() {
     }
 }

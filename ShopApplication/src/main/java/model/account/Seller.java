@@ -2,12 +2,14 @@ package model.account;
 
 import model.Sale;
 import model.SubProduct;
+import model.log.SellLog;
 
 import java.util.ArrayList;
 
 public class Seller extends Account {
     private String storeName;
     private ArrayList<SubProduct> products;
+    private ArrayList<SellLog> sellLogs;
     private ArrayList<Sale> Sales;
     private int balance;
 
@@ -26,6 +28,10 @@ public class Seller extends Account {
         return storeName;
     }
 
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
     public int getBalance() {
         return balance;
     }
@@ -34,35 +40,50 @@ public class Seller extends Account {
         this.balance = balance;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
+    public ArrayList<SellLog> getSellLogs() {
+        return sellLogs;
     }
 
-    public void addProduct(String productId) {}
+    public ArrayList<Sale> getSales() {
+        return Sales;
+    }
 
-    public void removeProduct(String productId) {}
+    public ArrayList<SubProduct> getProducts() {
+        return products;
+    }
 
-    public void addSale(String saleId) {}
+    public void addProduct(String productId) {
+    }
 
-    public void removeSale(String saleId) {}
+    public void removeProduct(String productId) {
+    }
+
+    public void sellLog(String sellLogId) {
+    }
+
+    public void addSale(String saleId) {
+    }
+
+    public void removeSale(String saleId) {
+    }
 
     @Override
-    public void addAccountToDatabase() {
+    protected void addAccountToDatabase() {
 
     }
 
     @Override
-    public void removeAccountFromDatabase() {
+    protected void removeAccountFromDatabase() {
 
     }
 
     @Override
-    public void loadDatabase() {
+    protected void loadDatabase() {
 
     }
 
     @Override
-    public void updateAccountInDatabase(String username) {
+    protected void updateAccountInDatabase(String username) {
 
     }
 }
