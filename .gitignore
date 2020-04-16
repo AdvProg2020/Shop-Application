@@ -1,1 +1,4 @@
-/ShopApplication/.idea/**/workspace.xml
+ShopApplication/.idea/**/*.xml
+ShopApplication/.idea/modules
+ShopApplication/out/
+*.iml
