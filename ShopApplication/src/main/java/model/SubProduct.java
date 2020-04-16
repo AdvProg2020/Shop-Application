@@ -2,7 +2,10 @@ package model;
 
 import model.account.Seller;
 
+import java.util.HashMap;
+
 public class SubProduct {
+    private static HashMap<String, SubProduct> allSubProducts = new HashMap<String, SubProduct>();
     private String subProductId;
     private Product product;
     private Seller seller;

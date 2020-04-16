@@ -5,7 +5,6 @@ import model.account.Customer;
 import java.util.HashMap;
 
 public class ShoppingCart {
-    private String shoppingCartId;
     private Customer customer;
     private HashMap<SubProduct, Integer> products;
 

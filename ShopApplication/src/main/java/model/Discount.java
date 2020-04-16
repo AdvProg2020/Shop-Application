@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Discount {
+    private HashMap<String, Discount> allDiscounts = new HashMap<String, Discount>();
+    private String discountId;
     private String discountCode;
     private Date startDate;
     private Date endDate;
