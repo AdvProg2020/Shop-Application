@@ -1,8 +1,8 @@
 package model.log;
 
 import model.account.Customer;
-import model.account.Seller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -13,23 +13,22 @@ public class BuyLog {
     private Date date;
     private int paidMoney;
     private int totalDiscountAmount;
-    private HashMap<Seller, SellLog> sellLogs;
+    private ArrayList<LogItem> items;
     private ShippingStatus shippingStatus;
     private String receiverName;
     private String receiverAddress;
     private String receiverPhone;
 
-    public BuyLog(String buyLogId, Customer customer, Date date, int paidMoney, int totalDiscountAmount, HashMap<Seller, SellLog> sellLogs, String receiverName, String receiverAddress, String receiverPhone) {
-        this.buyLogId = buyLogId;
+    public BuyLog(Customer customer, Date date, int paidMoney, int totalDiscountAmount, ArrayList<LogItem> items, ShippingStatus shippingStatus, String receiverName, String receiverAddress, String receiverPhone) {
         this.customer = customer;
         this.date = date;
         this.paidMoney = paidMoney;
         this.totalDiscountAmount = totalDiscountAmount;
-        this.sellLogs = sellLogs;
+        this.items = items;
+        this.shippingStatus = shippingStatus;
         this.receiverName = receiverName;
         this.receiverAddress = receiverAddress;
         this.receiverPhone = receiverPhone;
-        shippingStatus = ShippingStatus.processing;
     }
 
     public static HashMap<String, BuyLog> getAllBuyLogs() {
@@ -52,8 +51,8 @@ public class BuyLog {
         return receiverPhone;
     }
 
-    public HashMap<Seller, SellLog> getSellLogs() {
-        return sellLogs;
+    public ArrayList<LogItem> getItems() {
+        return items;
     }
 
     public ShippingStatus getShippingStatus() {

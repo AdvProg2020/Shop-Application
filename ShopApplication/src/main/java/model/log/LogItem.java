@@ -5,13 +5,13 @@ import model.SubProduct;
 public class LogItem {
     private SubProduct subProduct;
     private int count;
-    private int Price;
+    private int price;
     private int salePercentage;
 
     public LogItem(SubProduct subProduct, int count, int price, int salePercentage) {
         this.subProduct = subProduct;
         this.count = count;
-        Price = price;
+        this.price = price;
         this.salePercentage = salePercentage;
     }
 
@@ -24,7 +24,7 @@ public class LogItem {
     }
 
     public int getPrice() {
-        return Price;
+        return price;
     }
 
     public int getSalePercentage() {
