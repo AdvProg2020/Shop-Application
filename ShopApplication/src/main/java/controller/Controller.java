@@ -28,23 +28,19 @@ public class Controller {
         return null;
     }
 
-    public void sortProducts(String availableSort, String categoryName) {
-    }
-
-    public void disableSort(String categoryName) {
-    }
-
-    public ArrayList<String> filtering(String categoryName, ArrayList<String> filterBy) {
+    private ArrayList<String> sortProducts(String sortBy, ArrayList<String> productIds) {
         return null;
     }
 
-    public void disableFilter() {}
+    private ArrayList<String> filterProducts(ArrayList<String> filterBy, ArrayList<String> productIds) {
+        return null;
+    }
 
     public ArrayList<String> viewCategories() {
         return null;
     }
 
-    public ArrayList<String> showProducts() {
+    public ArrayList<String> showProducts(String categoryName, String sortBy, ArrayList<String> filterBy) {
         return null;
     }
 
@@ -82,7 +78,7 @@ public class Controller {
     public void addComment(String productId, String title, String content) {
     }
 
-    public ArrayList<String> offs() {
+    public ArrayList<String> sales() {
         return null;
     }
 

@@ -40,8 +40,7 @@ public class CustomerController extends Controller {
         return false;
     }
 
-    public void purchaseTheCart() {
-    }
+    public String purchaseTheCart() {return null; }
 
     public ArrayList<String> showOrder(String orderId) {
         return null;

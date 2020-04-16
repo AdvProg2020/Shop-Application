@@ -79,18 +79,6 @@ public class AdminController extends Controller {
         return false;
     }
 
-    private ArrayList<String> parseSellerRegisterRequest(String request) {
-        return null;
-    }
-
-    private ArrayList<String> parseAddProductRequest(String request) {
-        return null;
-    }
-
-    private ArrayList<String> parseAddOffRequest(String request) {
-        return null;
-    }
-
     public ArrayList<String> manageCategories() {
         return null;
     }
@@ -102,7 +90,7 @@ public class AdminController extends Controller {
     public void editCategory(String categoryName, String field, String newData) {
     }
 
-    public void addCategory(String categoryName) {
+    public void addCategory(String categoryName, String parentCategoryId) {
     }
 
     public void createCategory(String categoryName, ArrayList<String> details) {

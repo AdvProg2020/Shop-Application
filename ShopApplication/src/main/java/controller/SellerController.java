@@ -26,6 +26,8 @@ public class SellerController extends Controller {
         return false;
     }
 
+    public ArrayList<String> viewProducts(String categoryName){return null;}
+    
     public ArrayList<String> viewProduct(String productID) {
         return null;
     }
@@ -43,18 +45,18 @@ public class SellerController extends Controller {
     public void removeProduct(String productID) {
     }
 
-    public ArrayList<String> viewOffs() {
+    public ArrayList<String> viewSales() {
         return null;
     }
 
-    public ArrayList<String> viewOffWithId(String offId) {
+    public ArrayList<String> viewSaleWithId(String saleId) {
         return null;
     }
 
-    public void editOff(String offId, String field, String newInformation) {
+    public void editSale(String saleId, String field, String newInformation) {
     }
 
-    public void addOff(ArrayList<String> offInformation) {
+    public void addSale(ArrayList<String> saleInformation) {
     }
 
     public int viewBalance() {
