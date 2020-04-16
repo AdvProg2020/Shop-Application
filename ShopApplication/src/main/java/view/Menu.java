@@ -22,16 +22,16 @@ public abstract class Menu {
     }
 
 
-//    public Menu(String name, boolean isAccountMenuAccessible, Menu parent, String commandPattern, String commandList) {
-//        this.name = name;
-//        this.isAccountMenuAccessible = isAccountMenuAccessible;
-//        this.parent = parent;
-//        this.commandPattern = commandPattern;
-//        this.commandList = commandList;
-//        allMenus.add(this);
-//        subMenus = new HashMap<Integer, Menu>();
-//
-//    }
+    public Menu(String name, boolean isAccountMenuAccessible, Menu parent, String commandPattern, String commandList) {
+        this.name = name;
+        this.isAccountMenuAccessible = isAccountMenuAccessible;
+        this.parent = parent;
+        this.commandPattern = commandPattern;
+        this.commandList = commandList;
+        allMenus.add(this);
+        subMenus = new HashMap<Integer, Menu>();
+
+    }
     static protected String getNextLineTrimmed() {
         return sc.nextLine().trim();
     }
