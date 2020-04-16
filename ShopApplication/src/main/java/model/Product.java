@@ -15,6 +15,7 @@ public class Product {
     private ArrayList<SpecialProperty> specialProperties;
     private ArrayList<Review> reviews;
     private ArrayList<Rating> ratings;
+    private boolean suspended;
 
     public Product(String productId, String name, String brand, int price, Category category, String specsText) {
         this.productId = productId;
@@ -68,6 +69,15 @@ public class Product {
         return 0;
     }
 
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void suspend() {
+        suspended = true;
+        //todo : suspend all subProducts
+    }
+
     public void addProductToDatabase() {}
 
     public void removeProductFromDatabase() {}
@@ -80,5 +90,7 @@ public class Product {
         return viewCount;
     }
 
-    public void addViewCount() {}
+    public void addViewCount() {
+        viewCount ++;
+    }
 }

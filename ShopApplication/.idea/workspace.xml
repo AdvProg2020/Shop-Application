@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1c6b1517-8ca8-4cb0-8bee-8e7dc5e778a2" name="Default Changelist" comment="UML">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="1c6b1517-8ca8-4cb0-8bee-8e7dc5e778a2" name="Default Changelist" comment="refined model">
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/DatabasePaths.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/CustomerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/SellerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/SellerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Category.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Discount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Discount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Rating.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Rating.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Sale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Sale.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/SubProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/SubProduct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/account/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/account/Account.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,10 +45,9 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/view" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -56,6 +59,20 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Desktop\CE\Projects\ShopApplication(AP)\ShopApplication\src\main\java\view" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ShopApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -71,22 +88,34 @@
       <workItem from="1586635085248" duration="36524000" />
       <workItem from="1586954646064" duration="9230000" />
       <workItem from="1587022295791" duration="327000" />
-      <workItem from="1587023580206" duration="1524000" />
+      <workItem from="1587031627967" duration="1452000" />
     </task>
+    <task id="LOCAL-00001" summary="refined model">
+      <created>1587025774772</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1587025774772</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refined model" />
+    <option name="LAST_COMMIT_MESSAGE" value="refined model" />
   </component>
   <component name="WindowStateProjectService">
     <state x="361" y="71" key="#Project_Structure" timestamp="1586600063048">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="71" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1586600063048" />
-    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1586986963292">
+    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1587031978692">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1586986963292" />
+    <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1587031978692" />
     <state x="403" y="338" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1586899054351">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -103,10 +132,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1586986392829" />
-    <state x="193" y="0" key="CommitChangelistDialog2" timestamp="1587024433586">
-      <screen x="0" y="0" width="1280" height="760" />
+    <state x="319" y="7" key="CommitChangelistDialog2" timestamp="1587031748617">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="193" y="0" key="CommitChangelistDialog2/0.0.1280.760@0.0.1280.760" timestamp="1587024433586" />
+    <state x="319" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1587031748617" />
+    <state x="150" y="65" key="DiffContextDialog" timestamp="1587031390222">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="150" y="65" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1587031390222" />
     <state x="549" y="139" key="FileChooserDialogImpl" timestamp="1586949443192">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -119,14 +152,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1536.824@0.0.1536.824" timestamp="1586635347255" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1587025791823">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1587025791823" />
+    <state x="578" y="329" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587031664257">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="578" y="329" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.824@0.0.1536.824" timestamp="1587031664257" />
     <state x="425" y="187" key="run.anything.popup" timestamp="1586985062553">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1586985062553" />
-    <state x="431" y="145" width="670" height="58" key="search.everywhere.popup" timestamp="1586797661493">
+    <state x="431" y="145" width="672" height="160" key="search.everywhere.popup" timestamp="1587031965200">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="670" height="58" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1586797661493" />
+    <state x="431" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1587031965200" />
     <state x="599" y="203" key="svn.repositoryBrowser" timestamp="1587022442762">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

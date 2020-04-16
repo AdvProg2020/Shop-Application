@@ -10,6 +10,7 @@ public abstract class Account {
     protected String fullName;
     protected String email;
     protected String phone;
+    protected boolean suspended;
 
     public Account(String accountId, String username, String password, String fullName, String lastName, String email, String phone) {
         this.accountId = accountId;
@@ -64,6 +65,14 @@ public abstract class Account {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void suspend() {
+        suspended = true;
     }
 
     public abstract void addAccountToDatabase();

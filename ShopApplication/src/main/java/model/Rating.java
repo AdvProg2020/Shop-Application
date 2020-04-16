@@ -24,4 +24,8 @@ public class Rating {
     public int getScore() {
         return score;
     }
+
+    public void addReviewToDatabase() {}
+
+    public void loadDatabase() {}
 }

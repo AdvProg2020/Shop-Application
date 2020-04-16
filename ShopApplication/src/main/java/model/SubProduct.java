@@ -11,6 +11,7 @@ public class SubProduct {
     private Seller seller;
     private int price;
     private int remainingCount;
+    private boolean suspended;
 
     public SubProduct(Product product, Seller seller, int price, int remainingCount) {
         this.product = product;
@@ -41,5 +42,13 @@ public class SubProduct {
 
     public void setRemainingCount(int remainingCount) {
         this.remainingCount = remainingCount;
+    }
+
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void suspend() {
+        suspended = true;
     }
 }

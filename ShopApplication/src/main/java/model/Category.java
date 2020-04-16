@@ -11,6 +11,7 @@ public class Category {
     private ArrayList<SpecialProperty> specialProperties;
     private Category parent;
     private ArrayList<Category> subcategories;
+    private boolean suspended;
 
     public Category(String name) {
         this.name = name;
@@ -38,6 +39,14 @@ public class Category {
 
     public ArrayList<Category> getSubcategories() {
         return subcategories;
+    }
+
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void suspend() {
+        suspended = true;
     }
 
     public void addProduct(Product product){}

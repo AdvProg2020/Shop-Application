@@ -14,6 +14,7 @@ public class Discount {
     private int percentage;
     private int maximumAmount;
     private HashMap<Customer, Integer> validCustomers;
+    private boolean suspended;
 
     public Discount(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) {
         this.discountCode = discountCode;
@@ -61,6 +62,14 @@ public class Discount {
 
     public void setMaximumAmount(int maximumAmount) {
         this.maximumAmount = maximumAmount;
+    }
+
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void suspend() {
+        suspended = true;
     }
 
     public void addCustomer(Customer customer){}

@@ -14,6 +14,7 @@ public class Sale {
     private Date endDate;
     private int percentage;
     private ArrayList<SubProduct> products;
+    private boolean suspended;
 
     public Sale(String saleId, Seller seller, Date startDate, Date endDate, int percentage, ArrayList<SubProduct> products) {
         this.saleId = saleId;
@@ -70,6 +71,14 @@ public class Sale {
 
     public void setPercentage(int percentage) {
         this.percentage = percentage;
+    }
+
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void suspend() {
+        suspended = true;
     }
 
     public ArrayList<SubProduct> getProducts() {
