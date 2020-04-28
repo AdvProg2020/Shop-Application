@@ -27,8 +27,8 @@ public abstract class Account {
     }
 
     private static String getNewId() {
-        //TODO: implement
         return null;
+        //TODO: implement
     }
 
     public static ArrayList<Account> getAllAccounts() {
