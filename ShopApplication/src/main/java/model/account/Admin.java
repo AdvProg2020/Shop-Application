@@ -30,4 +30,5 @@ public class Admin extends Account {
     protected void updateAccountInDatabase(String username) {
 
     }
+
 }

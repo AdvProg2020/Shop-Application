@@ -19,10 +19,15 @@ public abstract class Account {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
+
     }
 
     public static Account getAccountById(String accountId) {
         return null;
+    }
+
+    public static boolean isAccountWithUsername(String username){
+        return false;
     }
 
     public static Account getAccountByUsername(String username) {

@@ -29,6 +29,10 @@ public class Product {
         return allProducts;
     }
 
+    public static Product getProductById(String productId){
+        return null;
+    }
+
     public static void addValidProduct(Product product) {}
 
     public static void removeValidProduct(Product product) {}
