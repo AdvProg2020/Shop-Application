@@ -1,22 +1,54 @@
 package model.log;
 
+import model.account.Customer;
+import model.account.Seller;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 public class SellLog {
-    private static HashMap<String, SellLog> allSellLogs = new HashMap<String, SellLog>();
-    private BuyLog mainLog;
+    private static HashMap<String, SellLog> allSellLogs = new HashMap<>();
     private String sellLogId;
+    private String sellerId;
+    private String parentBuyLogId;
     private int receivedMoney;
     private int totalSaleAmount;
-    private ArrayList<LogItem> items;
+    private ArrayList<String> logItemIds;
 
-    public SellLog(BuyLog mainLog, String sellLogId, int receivedMoney, int totalSaleAmount) {
-        this.mainLog = mainLog;
-        this.sellLogId = sellLogId;
+    public SellLog(String sellerId, String parentBuyLogId, int receivedMoney, int totalSaleAmount) {
+        sellLogId = getNewId(sellerId);
+        this.sellerId = sellerId;
+        this.parentBuyLogId = parentBuyLogId;
         this.receivedMoney = receivedMoney;
         this.totalSaleAmount = totalSaleAmount;
+        allSellLogs.put(sellLogId, this);
+        getSeller().addSellLog(sellLogId);
+    }
+
+    public static String getNewId(String sellerId) {
+        //TODO: implement
+        return null;
+    }
+
+    public static SellLog getSellLogById(String sellLogId) {
+        return allSellLogs.get(sellLogId);
+    }
+
+    public String getSellLogId() {
+        return sellLogId;
+    }
+
+    private BuyLog getParentBuyLog() {
+        return BuyLog.getBuyLogById(parentBuyLogId);
+    }
+
+    public Seller getSeller() {
+        return Seller.getSellerById(sellerId);
+    }
+
+    public Customer getCustomer() {
+        return getParentBuyLog().getCustomer();
     }
 
     public int getReceivedMoney() {
@@ -28,48 +60,35 @@ public class SellLog {
     }
 
     public Date getDate() {
-        return null;
-    }
-
-    public String getReceiverPhone() {
-        return null;
-    }
-
-    public ShippingStatus getShippingStatus() {
-        return null;
-    }
-
-    public int getPaidMoney() {
-        return 0;
-    }
-
-    public int getTotalDiscountAmount() {
-        return 0;
+        return getParentBuyLog().getDate();
     }
 
     public String getReceiverName() {
-        return null;
+        return getParentBuyLog().getReceiverName();
     }
 
     public String getReceiverAddress() {
-        return null;
+        return getParentBuyLog().getReceiverAddress();
     }
 
-    public ArrayList<LogItem> getItems() {
-        return items;
+    public String getReceiverPhone() {
+        return getParentBuyLog().getReceiverPhone();
     }
 
-    public String getSellLogId() {
-        return sellLogId;
+    public ShippingStatus getShippingStatus() {
+        return getParentBuyLog().getShippingStatus();
     }
 
-    public void addLogToDatabase() {
+    public ArrayList<LogItem> getLogItems() {
+        ArrayList<LogItem> logItems = new ArrayList<>();
+        for (String logItemId : logItemIds) {
+            logItems.add(LogItem.getLogItemById(logItemId));
+        }
+        return logItems;
     }
 
-    public void removeLogFromDatabase() {
-    }
-
-    public void loadDatabase() {
+    public void addLogItem(String logItemId) {
+        logItemIds.add(logItemId);
     }
 
 }

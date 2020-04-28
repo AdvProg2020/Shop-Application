@@ -5,27 +5,45 @@ import model.account.Seller;
 import java.util.HashMap;
 
 public class SubProduct {
-    private static HashMap<String, SubProduct> allSubProducts = new HashMap<String, SubProduct>();
+    private static HashMap<String, SubProduct> allSubProducts = new HashMap<>();
     private String subProductId;
-    private Product product;
-    private Seller seller;
+    private String productId;
+    private String sellerId;
     private int price;
     private int remainingCount;
     private boolean suspended;
 
-    public SubProduct(Product product, Seller seller, int price, int remainingCount) {
-        this.product = product;
-        this.seller = seller;
+    public SubProduct(String productId, String sellerId, int price, int count) {
+        this.subProductId = getNewId(productId, sellerId);
+        this.productId = productId;
+        this.sellerId = sellerId;
         this.price = price;
-        this.remainingCount = remainingCount;
+        remainingCount = count;
+        suspended = false;
+        allSubProducts.put(subProductId, this);
+        getSeller().addSubProduct(subProductId);
+        getProduct().addSubProduct(subProductId);
+    }
+
+    private static String getNewId(String productId, String sellerId) {
+        //TODO: implement
+        return null;
+    }
+
+    public static SubProduct getSubProductById(String subProductId) {
+        return allSubProducts.get(subProductId);
+    }
+
+    public String getSubProductId() {
+        return subProductId;
     }
 
     public Product getProduct() {
-        return product;
+        return Product.getProductById(productId);
     }
 
     public Seller getSeller() {
-        return seller;
+        return Seller.getSellerById(sellerId);
     }
 
     public int getPrice() {
@@ -40,8 +58,8 @@ public class SubProduct {
         return remainingCount;
     }
 
-    public void setRemainingCount(int remainingCount) {
-        this.remainingCount = remainingCount;
+    public void changeRemainingCount(int changeAmount) {
+        remainingCount += changeAmount;
     }
 
     public boolean isSuspended() {
@@ -50,17 +68,5 @@ public class SubProduct {
 
     public void suspend() {
         suspended = true;
-    }
-
-    private void addSubProductToDatabase() {
-    }
-
-    private void removeSubProductFromDatabase() {
-    }
-
-    private void loadDatabase() {
-    }
-
-    private void updateSubProductInDatabase(String name) {
     }
 }

@@ -1,35 +1,58 @@
 package model.account;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Account {
-    private static HashMap<String, Account> allAccounts = new HashMap<String, Account>();
+    private static HashMap<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
     protected String username;
     protected String password;
-    protected String fullName;
+    protected String firstName;
+    protected String lastName;
     protected String email;
     protected String phone;
     protected boolean suspended;
 
-    public Account(String accountId, String username, String password, String fullName, String lastName, String email, String phone) {
-        this.accountId = accountId;
+    public Account(String username, String password, String firstName, String lastName, String email, String phone) {
+        accountId = getNewId();
         this.username = username;
         this.password = password;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+        suspended = false;
+        allAccounts.put(accountId, this);
     }
 
-    public static Account getAccountById(String accountId) {
+    private static String getNewId() {
+        //TODO: implement
         return null;
     }
 
+    public static ArrayList<Account> getAllAccounts() {
+        return (ArrayList<Account>) allAccounts.values();
+    }
+
+    public static Account getAccountById(String accountId) {
+        return allAccounts.get(accountId);
+    }
+
     public static Account getAccountByUsername(String username) {
+        for (Account account : allAccounts.values()) {
+            if (account.getUsername().equals(username)) {
+                return account;
+            }
+        }
         return null;
     }
 
     public abstract String getType();
+
+    public String getAccountId() {
+        return accountId;
+    }
 
     public String getUsername() {
         return username;
@@ -43,12 +66,20 @@ public abstract class Account {
         this.password = password;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -74,12 +105,4 @@ public abstract class Account {
     public void suspend() {
         suspended = true;
     }
-
-    protected abstract void addAccountToDatabase();
-
-    protected abstract void removeAccountFromDatabase();
-
-    protected abstract void loadDatabase();
-
-    protected abstract void updateAccountInDatabase(String username);
 }

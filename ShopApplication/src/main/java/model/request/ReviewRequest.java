@@ -2,11 +2,11 @@ package model.request;
 
 import model.Review;
 
-public class reviewRequest extends Request {
+public class ReviewRequest extends Request {
     private Review review;
     private ReviewStatus status;
 
-    public reviewRequest(Review review) {
+    public ReviewRequest(Review review) {
         this.review = review;
     }
 
@@ -23,7 +23,7 @@ public class reviewRequest extends Request {
     }
 
     public enum ReviewStatus {
-        pending, accepted, declined;
+        pending, accepted, declined
     }
 
 }

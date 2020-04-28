@@ -7,46 +7,47 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Sale {
-    private static HashMap<String, Sale> allSales = new HashMap<String, Sale>();
+    private static HashMap<String, Sale> allSales = new HashMap<>();
     private String saleId;
-    private Seller seller;
+    private String sellerId;
     private Date startDate;
     private Date endDate;
     private int percentage;
-    private ArrayList<SubProduct> products;
+    private int maximumAmount;
+    private ArrayList<String> subProductIds;
     private boolean suspended;
 
-    public Sale(String saleId, Seller seller, Date startDate, Date endDate, int percentage, ArrayList<SubProduct> products) {
-        this.saleId = saleId;
-        this.seller = seller;
+    public Sale(String sellerId, Date startDate, Date endDate, int percentage, int maximumAmount) {
+        this.saleId = getNewId(sellerId);
+        this.sellerId = sellerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.percentage = percentage;
-        this.products = products;
+        this.maximumAmount = maximumAmount;
+        suspended = false;
+        allSales.put(saleId, this);
+        getSeller().addSale(saleId);
     }
 
-    public static Sale getSaleById(String saleId) {
+    private static String getNewId(String sellerId) {
+        //TODO: implement
         return null;
     }
 
-    public static HashMap<String, Sale> getAllSales() {
-        return allSales;
+    public static ArrayList<Sale> getAllSales() {
+        return (ArrayList<Sale>) allSales.values();
+    }
+
+    public static Sale getSaleById(String saleId) {
+        return allSales.get(saleId);
     }
 
     public String getSaleId() {
         return saleId;
     }
 
-    public void setSaleId(String saleId) {
-        this.saleId = saleId;
-    }
-
     public Seller getSeller() {
-        return seller;
-    }
-
-    public void setSeller(Seller seller) {
-        this.seller = seller;
+        return Seller.getSellerById(sellerId);
     }
 
     public Date getStartDate() {
@@ -73,6 +74,14 @@ public class Sale {
         this.percentage = percentage;
     }
 
+    public int getMaximumAmount() {
+        return maximumAmount;
+    }
+
+    public void setMaximumAmount(int maximumAmount) {
+        this.maximumAmount = maximumAmount;
+    }
+
     public boolean isSuspended() {
         return suspended;
     }
@@ -81,29 +90,19 @@ public class Sale {
         suspended = true;
     }
 
-    public ArrayList<SubProduct> getProducts() {
-        return products;
+    public ArrayList<SubProduct> getSubProducts() {
+        ArrayList<SubProduct> subProducts = new ArrayList<>();
+        for (String subProductId : subProductIds) {
+            subProducts.add(SubProduct.getSubProductById(subProductId));
+        }
+        return subProducts;
     }
 
-    public boolean hasProductWithId(String productId) {
-        return false;
+    public void addSubProduct(String subProductId) {
+        subProductIds.add(subProductId);
     }
 
-    public void addProduct(String productId) {
-    }
-
-    public void removeProduct(String productId) {
-    }
-
-    private void addSaleToDatabase() {
-    }
-
-    private void removeSaleFromDatabase() {
-    }
-
-    private void loadDatabase() {
-    }
-
-    private void updateSaleInDatabase(String name) {
+    public void removeSubProduct(String subProductId) {
+        subProductIds.remove(subProductId);
     }
 }

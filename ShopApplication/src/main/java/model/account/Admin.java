@@ -1,33 +1,23 @@
 package model.account;
 
 public class Admin extends Account {
+    private static boolean firstAdmin = true;
 
-    public Admin(String accountId, String username, String password, String firstName, String lastName, String email, String phone) {
-        super(accountId, username, password, firstName, lastName, email, phone);
+    public Admin(String username, String password, String firstName, String lastName, String email, String phone) {
+        super(username, password, firstName, lastName, email, phone);
+        firstAdmin = false;
+    }
+
+    public static Admin getAdminById(String accountId) {
+        return (Admin) Account.getAccountById(accountId);
+    }
+
+    public static boolean isFirstAdmin() {
+        return firstAdmin;
     }
 
     @Override
     public String getType() {
         return "admin";
-    }
-
-    @Override
-    protected void addAccountToDatabase() {
-
-    }
-
-    @Override
-    protected void removeAccountFromDatabase() {
-
-    }
-
-    @Override
-    protected void loadDatabase() {
-
-    }
-
-    @Override
-    protected void updateAccountInDatabase(String username) {
-
     }
 }

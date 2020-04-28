@@ -7,56 +7,48 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class BuyLog {
-    private static HashMap<String, BuyLog> allBuyLogs = new HashMap<String, BuyLog>();
+    private static HashMap<String, BuyLog> allBuyLogs = new HashMap<>();
     private String buyLogId;
-    private Customer customer;
-    private Date date;
+    private String customerId;
     private int paidMoney;
     private int totalDiscountAmount;
-    private ArrayList<LogItem> items;
-    private ShippingStatus shippingStatus;
+    private Date date;
     private String receiverName;
     private String receiverAddress;
     private String receiverPhone;
+    private ShippingStatus shippingStatus;
+    private ArrayList<String> logItemIds;
 
-    public BuyLog(Customer customer, Date date, int paidMoney, int totalDiscountAmount, ArrayList<LogItem> items, ShippingStatus shippingStatus, String receiverName, String receiverAddress, String receiverPhone) {
-        this.customer = customer;
-        this.date = date;
+    public BuyLog(String customerId, int paidMoney, int totalDiscountAmount, Date date, String receiverName,
+                  String receiverAddress, String receiverPhone, ShippingStatus shippingStatus) {
+        buyLogId = getNewId(customerId);
+        this.customerId = customerId;
         this.paidMoney = paidMoney;
         this.totalDiscountAmount = totalDiscountAmount;
-        this.items = items;
-        this.shippingStatus = shippingStatus;
+        this.date = date;
         this.receiverName = receiverName;
         this.receiverAddress = receiverAddress;
         this.receiverPhone = receiverPhone;
+        this.shippingStatus = shippingStatus;
+        allBuyLogs.put(buyLogId, this);
+        getCustomer().addBuyLog(buyLogId);
     }
 
-    public static HashMap<String, BuyLog> getAllBuyLogs() {
-        return allBuyLogs;
-    }
-
-    public static String getBuyLogById() {
+    private static String getNewId(String customerId) {
+        //TODO: implement
         return null;
     }
 
+    public static BuyLog getBuyLogById(String buyLogId) {
+        return allBuyLogs.get(buyLogId);
+    }
+
+    public String getBuyLogId() {
+        return buyLogId;
+    }
+
     public Customer getCustomer() {
-        return customer;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public String getReceiverPhone() {
-        return receiverPhone;
-    }
-
-    public ArrayList<LogItem> getItems() {
-        return items;
-    }
-
-    public ShippingStatus getShippingStatus() {
-        return shippingStatus;
+        return Customer.getCustomerById(customerId);
     }
 
     public int getPaidMoney() {
@@ -67,6 +59,10 @@ public class BuyLog {
         return totalDiscountAmount;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     public String getReceiverName() {
         return receiverName;
     }
@@ -75,13 +71,24 @@ public class BuyLog {
         return receiverAddress;
     }
 
-    public void addLogToDatabase() {
+    public String getReceiverPhone() {
+        return receiverPhone;
     }
 
-    public void removeLogFromDatabase() {
+    public ShippingStatus getShippingStatus() {
+        return shippingStatus;
     }
 
-    public void loadDatabase() {
+    public ArrayList<LogItem> getLogItems() {
+        ArrayList<LogItem> logItems = new ArrayList<>();
+        for (String logItemId : logItemIds) {
+            logItems.add(LogItem.getLogItemById(logItemId));
+        }
+        return logItems;
+    }
+
+    public void addLogItem(String logItemId) {
+        logItemIds.add(logItemId);
     }
 
 }

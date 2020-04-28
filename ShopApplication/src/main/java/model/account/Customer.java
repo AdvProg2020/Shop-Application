@@ -1,54 +1,25 @@
 package model.account;
 
-import model.Discount;
 import model.ShoppingCart;
 import model.log.BuyLog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Customer extends Account {
-    private ShoppingCart shoppingCart;
-    private ArrayList<BuyLog> buyLogs;
-    private HashMap<Discount, Integer> discounts;
-    private int balance;
+    private String shoppingCartId;
+    private ArrayList<String> buyLogIds;
+    private int credit;
 
-    public Customer(String accountId, String username, String password, String firstName, String lastName, String email, String phone, int balance) {
-        super(accountId, username, password, firstName, lastName, email, phone);
-        this.balance = balance;
+    public Customer(String username, String password, String firstName, String lastName, String email, String phone,
+                    int credit) {
+        super(username, password, firstName, lastName, email, phone);
+        this.credit = credit;
+        shoppingCartId = null;
+        buyLogIds = new ArrayList<>();
     }
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
-    }
-
-    public ArrayList<BuyLog> getBuyLogs() {
-        return buyLogs;
-    }
-
-    public HashMap<Discount, Integer> getDiscounts() {
-        return discounts;
-    }
-
-    public void addBuyLog(BuyLog buyLog) {
-    }
-
-    public void addDiscount(Discount discount) {
-    }
-
-    public void removeDiscount(Discount discount) {
-    }
-
-    public int getBalance() {
-        return balance;
-    }
-
-    public void setBalance(int balance) {
-        this.balance = balance;
+    public static Customer getCustomerById(String accountId) {
+        return (Customer) Account.getAccountById(accountId);
     }
 
     @Override
@@ -56,23 +27,34 @@ public class Customer extends Account {
         return "customer";
     }
 
-    @Override
-    protected void addAccountToDatabase() {
-
+    public ShoppingCart getShoppingCart() {
+        return ShoppingCart.getShoppingCartById(shoppingCartId);
     }
 
-    @Override
-    protected void removeAccountFromDatabase() {
-
+    public void setShoppingCart(String shoppingCartId) {
+        if (this.shoppingCartId != null) {
+            ShoppingCart.mergeShoppingCarts(this.shoppingCartId, shoppingCartId);
+        }
+        this.shoppingCartId = shoppingCartId;
     }
 
-    @Override
-    protected void loadDatabase() {
-
+    public ArrayList<BuyLog> getBuyLogs() {
+        ArrayList<BuyLog> buyLogs = new ArrayList<>();
+        for (String buyLogId : buyLogIds) {
+            buyLogs.add(BuyLog.getBuyLogById(buyLogId));
+        }
+        return buyLogs;
     }
 
-    @Override
-    protected void updateAccountInDatabase(String username) {
+    public void addBuyLog(String buyLogId) {
+        buyLogIds.add(buyLogId);
+    }
 
+    public int getCredit() {
+        return credit;
+    }
+
+    public void changeCredit(int changeAmount) {
+        credit += changeAmount;
     }
 }
