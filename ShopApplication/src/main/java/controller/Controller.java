@@ -1,7 +1,10 @@
 package controller;
 
+import model.Product;
 import model.ShoppingCart;
 import model.account.Account;
+import model.account.Admin;
+import model.account.Customer;
 
 import java.util.ArrayList;
 
@@ -13,15 +16,25 @@ public class Controller {
         return false;
     }
 
-    public String usernameTypeValidation(String username, String type) {
-        return null;
+    public void usernameTypeValidation(String username, String type) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
+        if(Account.isAccountWithUsername(username))
+            throw new Exceptions.ExistedUsernameException();
+        //if(Admin.isAnyAdmin())
+        //    throw new Exceptions.AdminRegisterException();
     }
 
-    public void creatAccount(String type, String information) {
+    public void creatAccount(String type, ArrayList<String> information) {// lazeme inja ham exception bezarim?
+
     }
 
-    public String login(String username, String password) {
-        return null;
+    public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.NotExistedUsernameException {
+        Account account = Account.getAccountByUsername(username);
+        if(account == null)
+            throw new Exceptions.NotExistedUsernameException();
+        if(!account.getPassword().equals(password))
+            throw new Exceptions.WrongPasswordException();
+        currentAccount = account;
+        // baraye cart kari lazem nist bokonim? account cart nadare...
     }
 
     public ArrayList<String> productsStatus() {

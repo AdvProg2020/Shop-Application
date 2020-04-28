@@ -20,4 +20,5 @@ public class Admin extends Account {
     public String getType() {
         return "admin";
     }
+
 }
