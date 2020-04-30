@@ -1,13 +1,28 @@
 package controller;
 
+import model.account.Seller;
+
 import java.util.ArrayList;
 
 public class SellerController extends Controller {
     public ArrayList<String> viewPersonalInfo() {
-        return null;
+        ArrayList<String> info = viewCommonPersonalInfo();
+        info.add(((Seller) currentAccount).getCompanyName());
+        info.add(String.valueOf(((Seller) currentAccount).getCredit()));
+        return info;
     }
 
-    public void editInformation(String field, String newInformation) {
+    @SuppressWarnings("DuplicatedCode")
+    public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
+        try{
+            if(field.equals("companyName"))
+                ((Seller) currentAccount).setCompanyName(newInformation);
+            else
+                editCommonInformation(field, newInformation);
+        }
+        catch (Exceptions.InvalidFieldException ex){
+            throw ex;
+        }
     }
 
     public ArrayList<String> viewCompanyInformation() {

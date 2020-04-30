@@ -42,7 +42,7 @@ public abstract class Account {
     public static Account getAccountByUsername(String username) {
         for (Account account : allAccounts.values()) {
             if (account.getUsername().equals(username)) {
-                return account;
+                return account;//TODO: if not suspended
             }
         }
         return null;

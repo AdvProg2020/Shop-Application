@@ -7,16 +7,16 @@ import model.log.SellLog;
 import java.util.ArrayList;
 
 public class Seller extends Account {
-    private String storeName;
+    private String companyName;
     private int credit;
     private ArrayList<String> subProductIds;
     private ArrayList<String> sellLogIds;
     private ArrayList<String> saleIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone,
-                  String storeName, int credit) {
+                  String companyName, int credit) {
         super(username, password, firstName, lastName, email, phone);
-        this.storeName = storeName;
+        this.companyName = companyName;
         this.credit = credit;
         subProductIds = new ArrayList<>();
         sellLogIds = new ArrayList<>();
@@ -32,12 +32,12 @@ public class Seller extends Account {
         return "seller";
     }
 
-    public String getStoreName() {
-        return storeName;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public int getCredit() {
