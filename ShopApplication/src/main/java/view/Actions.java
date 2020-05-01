@@ -3,8 +3,8 @@ package view;
 public class Actions {
     public static class BackAction extends Action {
         private Menu parent;
-        BackAction(String name, String actionPattern, Menu parent) {
-            super(name, actionPattern);
+        BackAction(String name, Menu parent) {
+            super(name, Constants.ActionCommandAndPattern.backPattern, Constants.ActionCommandAndPattern.backCommand);
             this.parent = parent;
         }
 
@@ -15,8 +15,8 @@ public class Actions {
     }
 
     public static class ExitAction extends Action {
-        ExitAction(String name, String actionPattern) {
-            super(name, actionPattern);
+        ExitAction(String name) {
+            super(name, Constants.ActionCommandAndPattern.exitPattern, Constants.ActionCommandAndPattern.exitCommand);
         }
 
         @Override

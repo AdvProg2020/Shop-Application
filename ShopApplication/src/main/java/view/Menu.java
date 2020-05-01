@@ -1,5 +1,6 @@
 package view;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public abstract class Menu {
@@ -11,8 +12,8 @@ public abstract class Menu {
     protected Map<Integer, Action> subActions;
     static protected ArrayList<Menu>  allMenus;
     static protected Scanner sc;
-    protected String commandList;
     protected String commandPattern;
+    protected String command;
 
 
     static {
@@ -21,12 +22,12 @@ public abstract class Menu {
     }
 
 
-    public Menu(String name, boolean isAccountMenuAccessible, Menu parent, String commandPattern, String commandList) {
+    public Menu(String name, boolean isAccountMenuAccessible, Menu parent, String commandPattern, String command) {
         this.name = name;
         this.isAccountMenuAccessible = isAccountMenuAccessible;
         this.parent = parent;
         this.commandPattern = commandPattern;
-        this.commandList = commandList;
+        this.command = command;
         allMenus.add(this);
         subMenus = new HashMap<>();
         subActions = new HashMap<>();
@@ -49,12 +50,13 @@ public abstract class Menu {
         return commandPattern;
     }
 
-    public String getCommandList() {
-        return commandList;
-    }
-
     public void showCommandList() {
-        System.out.println(commandList);
+        for (int index = 1; index <= subMenus.keySet().size(); index++) {
+            System.out.println(subMenus.get(index).command + " or " + index);
+        }
+        for (int index = subMenus.keySet().size() + 1; index <= subMenus.keySet().size() + subActions.keySet().size(); index++) {
+            System.out.println(subActions.get(index).getActionCommand() + " or " + index);
+        }
     }
 
     static protected <T> void printArray(ArrayList<T> list) {
@@ -79,7 +81,7 @@ public abstract class Menu {
         if (subActions.size() != 0) {
             System.out.println("Available Actions:");
         }
-        for (int index = 1; index <= subActions.keySet().size(); index++) {
+        for (int index = subMenus.keySet().size() + 1; index <= subActions.keySet().size() + subMenus.keySet().size(); index++) {
             System.out.println(index + ". " + subActions.get(index).getName());
         }
 
