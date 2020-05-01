@@ -8,7 +8,7 @@ public class SellerController extends Controller {
     public ArrayList<String> viewPersonalInfo() {
         ArrayList<String> info = viewCommonPersonalInfo();
         info.add(((Seller) currentAccount).getCompanyName());
-        info.add(String.valueOf(((Seller) currentAccount).getCredit()));
+        info.add(String.valueOf(((Seller) currentAccount).getBalance()));
         return info;
     }
 

@@ -6,8 +6,15 @@ public class SaleRequest extends Request {
     private Sale sale;
     private SaleStatus status;
 
-    public SaleRequest(Sale sale) {
+    public SaleRequest(Sale sale, SaleStatus status) {
         this.sale = sale;
+        this.status = status;
+        initialize();
+    }
+
+    @Override
+    public String getType() {
+        return "sale";
     }
 
     public SaleStatus getStatus() {
@@ -23,6 +30,6 @@ public class SaleRequest extends Request {
     }
 
     public enum SaleStatus {
-        pending, editing, verified;
+        pending, editing, verified
     }
 }

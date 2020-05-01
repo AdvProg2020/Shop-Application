@@ -14,18 +14,26 @@ public class Review {
     private boolean bought;
 
     public Review(String reviewerId, String productId, String reviewText) {
-        reviewId = getNewId(reviewerId, productId);
         this.reviewerId = reviewerId;
         this.productId = productId;
         this.reviewText = reviewText;
         setBought();
-        getProduct().addReview(reviewId);
-        allReviews.put(reviewId, this);
+
     }
 
-    private static String getNewId(String reviewerId, String productId) {
+    private static String generateNewId(String reviewerId, String productId) {
         //TODO: implement
         return null;
+    }
+
+    public void initialize() {
+        if (reviewId == null) {
+            reviewId = generateNewId(reviewerId, productId);
+        }
+        allReviews.put(reviewId, this);
+        if (getProduct() != null) {
+            getProduct().addReview(reviewId);
+        }
     }
 
     public static Review getReviewById(String reviewId) {
@@ -53,6 +61,11 @@ public class Review {
     }
 
     private void setBought() {
-        // TODO: implement
+        bought = false;
+        for (SubProduct subProduct : getProduct().getSubProducts()) {
+            if (subProduct.hasCustomerWithId(reviewerId)) {
+                bought = true;
+            }
+        }
     }
 }

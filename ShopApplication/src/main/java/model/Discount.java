@@ -18,38 +18,55 @@ public class Discount {
     private boolean suspended;
 
     public Discount(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) {
-        discountId = getNewId();
         this.discountCode = discountCode;
         this.startDate = startDate;
         this.endDate = endDate;
         this.percentage = percentage;
         this.maximumAmount = maximumAmount;
         suspended = false;
-        customerIds = new HashMap<>();
-        allDiscounts.put(discountId, this);
-
+        initialize();
     }
 
-    private static String getNewId() {
+    private static String generateNewId() {
         //TODO: implement
         return null;
     }
 
     public static ArrayList<Discount> getAllDiscounts() {
-        return (ArrayList<Discount>) allDiscounts.values();
+        ArrayList<Discount> discounts = new ArrayList<>();
+        for (Discount discount : allDiscounts.values()) {
+            if (!discount.suspended) {
+                discounts.add(discount);
+            }
+        }
+        return discounts;
+    }
+
+    public static Discount getDiscountByCode(String discountCode) {
+        for (Discount discount : allDiscounts.values()) {
+            if (!discount.suspended && discount.getDiscountCode().equals(discountCode)) {
+                return discount;
+            }
+        }
+        return null;
     }
 
     public static Discount getDiscountById(String discountId) {
         return allDiscounts.get(discountId);
     }
 
-    public static Discount getDiscountByCode(String discountCode) {
-        for (Discount discount : allDiscounts.values()) {
-            if (discount.getDiscountCode().equals(discountCode)) {
-                return discount;
-            }
+    public void initialize() {
+        if (discountId == null) {
+            discountId = generateNewId();
         }
-        return null;
+        allDiscounts.put(discountId, this);
+        if (!suspended) {
+            customerIds = new HashMap<>();
+        }
+    }
+
+    public void suspend() {
+        suspended = true;
     }
 
     public String getDiscountId() {
@@ -92,26 +109,23 @@ public class Discount {
         this.maximumAmount = maximumAmount;
     }
 
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public void suspend() {
-        suspended = true;
-    }
-
-    public HashMap<Customer, Integer> customers() {
+    public HashMap<Customer, Integer> getCustomers() {
         HashMap<Customer, Integer> customers = new HashMap<>();
         for (String customerId : customerIds.keySet()) {
             Customer customer = Customer.getCustomerById(customerId);
             int count = customerIds.get(customerId);
-            customers.put(customer, count);
+            if (customer == null) {
+                customerIds.remove(customerId);
+            } else {
+                customers.put(customer, count);
+            }
         }
         return customers;
     }
 
     public void addCustomer(String customerId, int count) {
         customerIds.put(customerId, count);
+        Customer.getCustomerById(customerId).addDiscount(discountId, count);
     }
 
     public void changeCount(String customerId, int changeAmount) {
@@ -125,6 +139,7 @@ public class Discount {
 
     public void removeCustomer(String customerId) {
         customerIds.remove(customerId);
+        Customer.getCustomerById(customerId).removeDiscount(discountId);
     }
 
 }

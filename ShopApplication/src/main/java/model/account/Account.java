@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Account {
-    private static HashMap<String, Account> allAccounts = new HashMap<>();
+    protected static HashMap<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
     protected String username;
     protected String password;
@@ -15,7 +15,6 @@ public abstract class Account {
     protected boolean suspended;
 
     public Account(String username, String password, String firstName, String lastName, String email, String phone) {
-        accountId = getNewId();
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -23,29 +22,45 @@ public abstract class Account {
         this.email = email;
         this.phone = phone;
         suspended = false;
-        allAccounts.put(accountId, this);
     }
 
-    private static String getNewId() {
+    protected static String generateNewId() {
         return null;
         //TODO: implement
     }
 
     public static ArrayList<Account> getAllAccounts() {
-        return (ArrayList<Account>) allAccounts.values();
+        ArrayList<Account> accounts = new ArrayList<>();
+        for (Account account : allAccounts.values()) {
+            if (!account.suspended) {
+                accounts.add(account);
+            }
+        }
+        return accounts;
+    }
+
+    public static Account getAccountByUsername(String username) {
+        for (Account account : allAccounts.values()) {
+            if (!account.suspended && account.getUsername().equals(username)) {
+                return account;
+            }
+        }
+        return null;
     }
 
     public static Account getAccountById(String accountId) {
         return allAccounts.get(accountId);
     }
 
-    public static Account getAccountByUsername(String username) {
-        for (Account account : allAccounts.values()) {
-            if (account.getUsername().equals(username)) {
-                return account;//TODO: if not suspended
-            }
+    public void initialize() {
+        if (accountId == null) {
+            accountId = generateNewId();
         }
-        return null;
+        allAccounts.put(accountId, this);
+    }
+
+    public void suspend() {
+        suspended = true;
     }
 
     public abstract String getType();
@@ -96,13 +111,5 @@ public abstract class Account {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public void suspend() {
-        suspended = true;
     }
 }

@@ -14,37 +14,57 @@ public class Category {
     private boolean suspended;
 
     public Category(String name, String parentId, ArrayList<String> specialProperties) {
-        categoryId = getNewId(parentId);
         this.name = name;
-        setParent(parentId);
+        this.parentId = parentId;
         this.specialProperties = specialProperties;
         suspended = false;
-        productIds = new ArrayList<>();
-        subCategoryIds = new ArrayList<>();
-        allCategories.put(categoryId, this);
-        getParent().addSubCategory(categoryId);
+        initialize();
     }
 
-    private static String getNewId(String parentId) {
+    private static String generateNewId(String parentId) {
         //TODO: implement
         return null;
     }
 
     public static ArrayList<Category> getAllCategories() {
-        return (ArrayList<Category>) allCategories.values();
+        ArrayList<Category> categories = new ArrayList<>();
+        for (Category category : allCategories.values()) {
+            if (!category.suspended) {
+                categories.add(category);
+            }
+        }
+        return categories;
+    }
+
+    public static Category getCategoryByName(String name) {
+        for (Category category : allCategories.values()) {
+            if (!category.suspended && category.getName().equals(name)) {
+                return category;
+            }
+        }
+        return null;
     }
 
     public static Category getCategoryById(String categoryId) {
         return allCategories.get(categoryId);
     }
 
-    public static Category getCategoryByName(String name) {
-        for (Category category : allCategories.values()) {
-            if (category.getName().equals(name)) {
-                return category;
-            }
+    public void initialize() {
+        if (categoryId == null) {
+            categoryId = generateNewId(parentId);
         }
-        return null;
+        allCategories.put(categoryId, this);
+        if (!suspended) {
+            productIds = new ArrayList<>();
+            subCategoryIds = new ArrayList<>();
+            getParent().addSubCategory(categoryId);
+        }
+    }
+
+    public void suspend() {
+        //TODO: deep suspend products and subCategories?
+        getParent().removeSubCategory(categoryId);
+        suspended = true;
     }
 
     public String getCategoryId() {
@@ -64,9 +84,8 @@ public class Category {
     }
 
     public void setParent(String parentId) {
-        if (parentId != null) {
-            getParent().removeSubCategory(categoryId);
-        }
+        //TODO: check if new parent is a child of the category
+        getParent().removeSubCategory(categoryId);
         this.parentId = parentId;
         getParent().addSubCategory(categoryId);
     }
@@ -112,13 +131,5 @@ public class Category {
 
     public void removeSubCategory(String subCategoryId) {
         subCategoryIds.remove(subCategoryId);
-    }
-
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public void suspend() {
-        suspended = true;
     }
 }

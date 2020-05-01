@@ -8,19 +8,26 @@ import java.util.ArrayList;
 
 public class Seller extends Account {
     private String companyName;
-    private int credit;
+    private double balance;
     private ArrayList<String> subProductIds;
-    private ArrayList<String> sellLogIds;
     private ArrayList<String> saleIds;
+    private ArrayList<String> sellLogIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone,
-                  String companyName, int credit) {
+                  String companyName, double balance) {
         super(username, password, firstName, lastName, email, phone);
         this.companyName = companyName;
-        this.credit = credit;
-        subProductIds = new ArrayList<>();
-        sellLogIds = new ArrayList<>();
-        saleIds = new ArrayList<>();
+        this.balance = balance;
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        if (!suspended) {
+            subProductIds = new ArrayList<>();
+            saleIds = new ArrayList<>();
+            sellLogIds = new ArrayList<>();
+        }
     }
 
     public static Seller getSellerById(String accountId) {
@@ -40,20 +47,12 @@ public class Seller extends Account {
         this.companyName = companyName;
     }
 
-    public int getCredit() {
-        return credit;
+    public double getBalance() {
+        return balance;
     }
 
-    public void addCredit(int changeAmount) {
-        credit += changeAmount;
-    }
-
-    public ArrayList<SellLog> getSellLogs() {
-        ArrayList<SellLog> sellLogs = new ArrayList<>();
-        for (String sellLogId : sellLogIds) {
-            sellLogs.add(SellLog.getSellLogById(sellLogId));
-        }
-        return sellLogs;
+    public void changeBalance(double changeAmount) {
+        balance += changeAmount;
     }
 
     public ArrayList<Sale> getSales() {
@@ -62,6 +61,14 @@ public class Seller extends Account {
             sales.add(Sale.getSaleById(saleId));
         }
         return sales;
+    }
+
+    public void addSale(String saleId) {
+        saleIds.add(saleId);
+    }
+
+    public void removeSale(String saleId) {
+        saleIds.remove(saleId);
     }
 
     public ArrayList<SubProduct> getSubProducts() {
@@ -76,12 +83,20 @@ public class Seller extends Account {
         subProductIds.add(subProductId);
     }
 
-    public void addSellLog(String sellLogId) {
-        sellLogIds.add(sellLogId);
+    public void removeSubProduct(String subProductId) {
+        subProductIds.remove(subProductId);
     }
 
-    public void addSale(String saleId) {
-        saleIds.add(saleId);
+    public ArrayList<SellLog> getSellLogs() {
+        ArrayList<SellLog> sellLogs = new ArrayList<>();
+        for (String sellLogId : sellLogIds) {
+            sellLogs.add(SellLog.getSellLogById(sellLogId));
+        }
+        return sellLogs;
+    }
+
+    public void addSellLog(String sellLogId) {
+        sellLogIds.add(sellLogId);
     }
 }
 

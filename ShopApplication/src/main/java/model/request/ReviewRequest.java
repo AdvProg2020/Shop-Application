@@ -8,6 +8,13 @@ public class ReviewRequest extends Request {
 
     public ReviewRequest(Review review) {
         this.review = review;
+        status = ReviewStatus.pending;
+        initialize();
+    }
+
+    @Override
+    public String getType() {
+        return "review";
     }
 
     public Review getReview() {

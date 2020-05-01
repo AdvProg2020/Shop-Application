@@ -17,18 +17,25 @@ public class SellLog {
     private ArrayList<String> logItemIds;
 
     public SellLog(String sellerId, String parentBuyLogId, int receivedMoney, int totalSaleAmount) {
-        sellLogId = getNewId(sellerId);
         this.sellerId = sellerId;
         this.parentBuyLogId = parentBuyLogId;
         this.receivedMoney = receivedMoney;
         this.totalSaleAmount = totalSaleAmount;
-        allSellLogs.put(sellLogId, this);
-        getSeller().addSellLog(sellLogId);
+        initialize();
     }
 
-    public static String getNewId(String sellerId) {
+    public static String generateNewId(String sellerId) {
         //TODO: implement
         return null;
+    }
+
+    public void initialize() {
+        if (sellLogId == null) {
+            sellLogId = generateNewId(sellerId);
+        }
+        allSellLogs.put(sellLogId, this);
+        logItemIds = new ArrayList<>();
+        getCustomer().addBuyLog(sellLogId);
     }
 
     public static SellLog getSellLogById(String sellLogId) {

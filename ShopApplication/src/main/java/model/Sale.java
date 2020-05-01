@@ -18,15 +18,12 @@ public class Sale {
     private boolean suspended;
 
     public Sale(String sellerId, Date startDate, Date endDate, int percentage, int maximumAmount) {
-        this.saleId = getNewId(sellerId);
         this.sellerId = sellerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.percentage = percentage;
         this.maximumAmount = maximumAmount;
         suspended = false;
-        allSales.put(saleId, this);
-        getSeller().addSale(saleId);
     }
 
     private static String getNewId(String sellerId) {
@@ -35,7 +32,28 @@ public class Sale {
     }
 
     public static ArrayList<Sale> getAllSales() {
-        return (ArrayList<Sale>) allSales.values();
+        ArrayList<Sale> sales = new ArrayList<>();
+        for (Sale sale : allSales.values()) {
+            if (!sale.suspended) {
+                sales.add(sale);
+            }
+        }
+        return sales;
+    }
+
+    public void initialize() {
+        if (saleId == null) {
+            saleId = getNewId(sellerId);
+        }
+        allSales.put(saleId, this);
+        if (!suspended) {
+            getSeller().addSale(saleId);
+        }
+    }
+
+    public void suspend() {
+        getSeller().removeSale(saleId);
+        suspended = true;
     }
 
     public static Sale getSaleById(String saleId) {
@@ -82,18 +100,15 @@ public class Sale {
         this.maximumAmount = maximumAmount;
     }
 
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public void suspend() {
-        suspended = true;
-    }
-
     public ArrayList<SubProduct> getSubProducts() {
         ArrayList<SubProduct> subProducts = new ArrayList<>();
         for (String subProductId : subProductIds) {
-            subProducts.add(SubProduct.getSubProductById(subProductId));
+            SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+            if (subProduct == null) {
+                subProductIds.remove(subProductId);
+            } else {
+                subProducts.add(subProduct);
+            }
         }
         return subProducts;
     }

@@ -17,21 +17,28 @@ public class LogItem {
     private int salePercentage;
 
     public LogItem(String buyLogId, String sellLogId, String subProductId, int count, int price, int salePercentage) {
-        logItemId = getNewId(subProductId);
         this.buyLogId = buyLogId;
         this.sellLogId = sellLogId;
         this.subProductId = subProductId;
         this.count = count;
         this.price = price;
         this.salePercentage = salePercentage;
+        initialize();
+    }
+
+    private static String generateNewId(String subProductId) {
+        //TODO: implement
+        return null;
+    }
+
+    public void initialize() {
+        if (logItemId == null) {
+            logItemId = generateNewId(subProductId);
+        }
         allLogItems.put(logItemId, this);
         getBuyLog().addLogItem(logItemId);
         getSellLog().addLogItem(logItemId);
-    }
-
-    private static String getNewId(String subProductId) {
-        //TODO: implement
-        return null;
+        getSubProduct().addCustomer(getCustomer().getAccountId());
     }
 
     public static LogItem getLogItemById(String logItemId) {

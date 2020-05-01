@@ -1,6 +1,5 @@
 package controller;
 
-import model.ShoppingCart;
 import model.SubProduct;
 import model.account.Customer;
 
@@ -10,7 +9,7 @@ import java.util.HashMap;
 public class CustomerController extends Controller {
     public ArrayList<String> viewPersonalInfo() {
         ArrayList<String> info = viewCommonPersonalInfo();
-        info.add(String.valueOf(((Customer) currentAccount).getCredit()));
+        info.add(String.valueOf(((Customer) currentAccount).getBalance()));
         return info;
     }
 
@@ -60,7 +59,7 @@ public class CustomerController extends Controller {
         else if(number + subProducts.get(subProduct) > subProduct.getRemainingCount())
             throw new Exceptions.UnavailableProductException();
         else
-            currentCart.changeCount(subProductId, number);
+            currentCart.addSubProductCount(subProductId, number);
     }
 
     public void decreaseProductInCart(String subProductId, int number) {
@@ -71,7 +70,9 @@ public class CustomerController extends Controller {
         return 0;
     }
 
-    public String purchaseTheCart() {return null; }
+    public String purchaseTheCart() {
+        return null;
+    }
 
     public ArrayList<String> showOrder(String orderId) {
         return null;
@@ -81,8 +82,8 @@ public class CustomerController extends Controller {
         return null;
     }
 
-    public int viewBalance() {
-        return ((Customer)currentAccount).getCredit();
+    public double viewBalance() {
+        return ((Customer) currentAccount).getBalance();
     }
 
     public ArrayList<String> viewDiscountCodes() {

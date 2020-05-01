@@ -6,7 +6,6 @@ import model.ShoppingCart;
 import model.SubProduct;
 import model.account.Account;
 import model.account.Admin;
-import model.account.Customer;
 
 import java.util.ArrayList;
 

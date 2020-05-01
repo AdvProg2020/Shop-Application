@@ -21,7 +21,6 @@ public class BuyLog {
 
     public BuyLog(String customerId, int paidMoney, int totalDiscountAmount, Date date, String receiverName,
                   String receiverAddress, String receiverPhone, ShippingStatus shippingStatus) {
-        buyLogId = getNewId(customerId);
         this.customerId = customerId;
         this.paidMoney = paidMoney;
         this.totalDiscountAmount = totalDiscountAmount;
@@ -30,13 +29,21 @@ public class BuyLog {
         this.receiverAddress = receiverAddress;
         this.receiverPhone = receiverPhone;
         this.shippingStatus = shippingStatus;
-        allBuyLogs.put(buyLogId, this);
-        getCustomer().addBuyLog(buyLogId);
+        initialize();
     }
 
-    private static String getNewId(String customerId) {
+    private static String generateNewId(String customerId) {
         //TODO: implement
         return null;
+    }
+
+    public void initialize() {
+        if (buyLogId == null) {
+            buyLogId = generateNewId(customerId);
+        }
+        allBuyLogs.put(buyLogId, this);
+        logItemIds = new ArrayList<>();
+        getCustomer().addBuyLog(buyLogId);
     }
 
     public static BuyLog getBuyLogById(String buyLogId) {

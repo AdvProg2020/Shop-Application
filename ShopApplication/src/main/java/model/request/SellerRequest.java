@@ -6,8 +6,15 @@ public class SellerRequest extends Request {
     private Seller seller;
     private SellerStatus status;
 
-    public SellerRequest(Seller seller) {
+    public SellerRequest(Seller seller, SellerStatus status) {
         this.seller = seller;
+        this.status = status;
+        initialize();
+    }
+
+    @Override
+    public String getType() {
+        return "seller";
     }
 
     public Seller getSeller() {
@@ -23,6 +30,6 @@ public class SellerRequest extends Request {
     }
 
     public enum SellerStatus {
-        pending, editing, verified;
+        pending, editing, verified
     }
 }

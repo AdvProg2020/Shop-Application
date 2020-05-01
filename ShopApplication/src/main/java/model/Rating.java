@@ -12,17 +12,25 @@ public class Rating {
     private int score;
 
     public Rating(String customerId, String productId, int score) {
-        ratingId = getNewId(customerId, productId);
         this.customerId = customerId;
         this.productId = productId;
         this.score = score;
-        allRatings.put(ratingId, this);
-        getProduct().addRating(ratingId);
+        initialize();
     }
 
-    private static String getNewId(String customerId, String productId) {
+    private static String generateNewId(String customerId, String productId) {
         //TODO: implement
         return null;
+    }
+
+    public void initialize() {
+        if (ratingId == null) {
+            ratingId = generateNewId(customerId, productId);
+        }
+        allRatings.put(ratingId, this);
+        if (getProduct() != null) {
+            getProduct().addRating(ratingId);
+        }
     }
 
     public static Rating getRatingById(String ratingId) {

@@ -8,10 +8,16 @@ public class ProductRequest extends Request {
     private SubProduct subProduct;
     private ProductStatus status;
 
-    public ProductRequest(Product product, SubProduct subProduct) {
+    public ProductRequest(Product product, SubProduct subProduct, ProductStatus status) {
         this.product = product;
         this.subProduct = subProduct;
-        status = ProductStatus.pending;
+        this.status = status;
+        initialize();
+    }
+
+    @Override
+    public String getType() {
+        return "product";
     }
 
     public Product getProduct() {
@@ -31,6 +37,6 @@ public class ProductRequest extends Request {
     }
 
     public enum ProductStatus {
-        pending, editing, verified;
+        pending, editing, verified
     }
 }

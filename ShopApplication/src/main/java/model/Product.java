@@ -12,47 +12,68 @@ public class Product {
     private int viewCount;
     private String categoryId;
     private ArrayList<String> specialProperties;
-    private ArrayList<String> subProductIds;
-    private ArrayList<String> reviewIds;
-    private ArrayList<String> ratingIds;
+    private transient ArrayList<String> subProductIds;
+    private transient ArrayList<String> reviewIds;
+    private transient ArrayList<String> ratingIds;
     private boolean suspended;
 
     public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> specialProperties) {
-        productId = getNewId();
         this.name = name;
         this.brand = brand;
         this.infoText = infoText;
-        setCategory(categoryId);
+        this.categoryId = categoryId;
         this.specialProperties = specialProperties;
         viewCount = 0;
-        subProductIds = new ArrayList<>();
-        reviewIds = new ArrayList<>();
-        ratingIds = new ArrayList<>();
         suspended = false;
-        allProducts.put(productId, this);
-        getCategory().addProduct(productId);
     }
 
-    private static String getNewId() {
+    private static String generateNewId() {
         //TODO: implement
         return null;
     }
 
     public static ArrayList<Product> getAllProducts() {
-        return (ArrayList<Product>) allProducts.values();
+        ArrayList<Product> products = new ArrayList<>();
+        for (Product product : allProducts.values()) {
+            if (!product.suspended) {
+                products.add(product);
+            }
+        }
+        return products;
+    }
+
+    public static Product getProductByName(String name) {
+        for (Product product : allProducts.values()) {
+            if (!product.suspended && product.getName().equals(name)) {
+                return product;
+            }
+        }
+        return null;
     }
 
     public static Product getProductById(String productId) {
         return allProducts.get(productId);
     }
 
-    public static Product getProductByName(String name) {
-        for (Product product : allProducts.values()) {
-            if (product.getName().equals(name)) {
-                return product;
-            }
+    public void initialize() {
+        if (productId == null) {
+            productId = generateNewId();
         }
-        return null;
+        allProducts.put(productId, this);
+        if (!suspended) {
+            subProductIds = new ArrayList<>();
+            reviewIds = new ArrayList<>();
+            ratingIds = new ArrayList<>();
+            getCategory().addProduct(productId);
+        }
+    }
+
+    public void suspend() {
+        for (String subProductId : subProductIds) {
+            SubProduct.getSubProductById(subProductId).suspend();
+        }
+        getCategory().removeProduct(productId);
+        suspended = true;
     }
 
     public String getProductId() {
@@ -63,12 +84,32 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getBrand() {
         return brand;
     }
 
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
     public String getInfoText() {
         return infoText;
+    }
+
+    public void setInfoText(String infoText) {
+        this.infoText = infoText;
+    }
+
+    public int getViewCount() {
+        return viewCount;
+    }
+
+    public void increaseViewCount() {
+        viewCount++;
     }
 
     public Category getCategory() {
@@ -76,9 +117,7 @@ public class Product {
     }
 
     public void setCategory(String categoryId) {
-        if (categoryId != null) {
-            getCategory().removeProduct(productId);
-        }
+        getCategory().removeProduct(productId);
         this.categoryId = categoryId;
         getCategory().addProduct(productId);
     }
@@ -93,6 +132,10 @@ public class Product {
 
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
+    }
+
+    public void removeSubProduct(String subProductId) {
+        subProductIds.remove(subProductId);
     }
 
     public ArrayList<String> getSpecialProperties() {
@@ -124,24 +167,5 @@ public class Product {
 
     public void addRating(String ratingId) {
         ratingIds.add(ratingId);
-    }
-
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public void suspend() {
-        suspended = true;
-        for (String subProductId : subProductIds) {
-            SubProduct.getSubProductById(subProductId).suspend();
-        }
-    }
-
-    public int getViewCount() {
-        return viewCount;
-    }
-
-    public void addViewCount() {
-        viewCount++;
     }
 }

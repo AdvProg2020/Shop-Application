@@ -1,21 +1,33 @@
 package model.account;
 
+import model.Discount;
 import model.ShoppingCart;
 import model.log.BuyLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Customer extends Account {
-    private String shoppingCartId;
+    private double balance;
+    private String shoppingCartId; // can be null
     private ArrayList<String> buyLogIds;
-    private int credit;
+    private HashMap<String, Integer> discountIds;
 
     public Customer(String username, String password, String firstName, String lastName, String email, String phone,
-                    int credit) {
+                    double balance) {
         super(username, password, firstName, lastName, email, phone);
-        this.credit = credit;
+        this.balance = balance;
         shoppingCartId = null;
-        buyLogIds = new ArrayList<>();
+        initialize();
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        if (!suspended) {
+            buyLogIds = new ArrayList<>();
+            discountIds = new HashMap<>();
+        }
     }
 
     public static Customer getCustomerById(String accountId) {
@@ -25,6 +37,14 @@ public class Customer extends Account {
     @Override
     public String getType() {
         return "customer";
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void changeBalance(double changeAmount) {
+        balance += changeAmount;
     }
 
     public ShoppingCart getShoppingCart() {
@@ -50,11 +70,25 @@ public class Customer extends Account {
         buyLogIds.add(buyLogId);
     }
 
-    public int getCredit() {
-        return credit;
+    public HashMap<Discount, Integer> getDiscounts() {
+        HashMap<Discount, Integer> discounts = new HashMap<>();
+        for (String discountId : discountIds.keySet()) {
+            Discount discount = Discount.getDiscountById(discountId);
+            int count = discountIds.get(discountId);
+            if (discount == null) {
+                discountIds.remove(discountId);
+            } else {
+                discounts.put(discount, count);
+            }
+        }
+        return discounts;
     }
 
-    public void changeCredit(int changeAmount) {
-        credit += changeAmount;
+    public void addDiscount(String discountId, int count) {
+        discountIds.put(discountId, count);
+    }
+
+    public void removeDiscount(String discountId) {
+        discountIds.remove(discountId);
     }
 }

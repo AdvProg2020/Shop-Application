@@ -11,15 +11,24 @@ public class ShoppingCart {
     private HashMap<String, Integer> subProductIds;
 
     public ShoppingCart(String customerId) {
-        shoppingCartId = getNewId(customerId);
         this.customerId = customerId;
-        allShoppingCarts.put(shoppingCartId, this);
-        getCustomer().setShoppingCart(shoppingCartId);
+        initialize();
+
     }
 
     private static String getNewId(String customerId) {
         //TODO: implement
         return null;
+    }
+
+    public void initialize() {
+        if (shoppingCartId == null) {
+            shoppingCartId = getNewId(customerId);
+        }
+        allShoppingCarts.put(shoppingCartId, this);
+        if (getCustomer() != null) {
+            getCustomer().setShoppingCart(shoppingCartId);
+        }
     }
 
     public static ShoppingCart getShoppingCartById(String shoppingCartId) {
@@ -53,16 +62,14 @@ public class ShoppingCart {
         return subProducts;
     }
 
-    public void addSubProduct(String subProductId, int count) {
-        subProductIds.put(subProductId, count);
-    }
-
-    public void changeCount(String subProductId, int changeAmount) {
-        int newCount = subProductIds.get(subProductId) + changeAmount;
-        if (newCount <= 0) {
+    public void addSubProductCount(String subProductId, int count) {
+        if (subProductIds.containsKey(subProductId)) {
+            count += subProductIds.get(subProductId);
+        }
+        if (count <= 0) {
             removeSubProduct(subProductId);
         } else {
-            addSubProduct(subProductId, newCount);
+            subProductIds.put(subProductId, count);
         }
     }
 
