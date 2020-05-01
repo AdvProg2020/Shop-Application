@@ -68,47 +68,35 @@ public abstract class Menu {
         this.execute();
     }
 
-    //TODO: redo show
     public void show() {
-        if () {
+        if (subMenus.size() != 0) {
+            System.out.println("Sub Menus:");
+        }
+        for (int index = 1; index <= subMenus.keySet().size(); index++) {
+            System.out.println(index + ". " + subMenus.get(index).getName());
+        }
 
+        if (subActions.size() != 0) {
+            System.out.println("Available Actions:");
         }
-        for (Integer menuIndex : new TreeSet<Integer>(subMenus.keySet())) {
-            System.out.println(menuIndex + ". " + subMenus.get(menuIndex));
+        for (int index = 1; index <= subActions.keySet().size(); index++) {
+            System.out.println(index + ". " + subActions.get(index).getName());
         }
-        int index = subMenus.keySet().size();
 
-        if (isAccountMenuAccessible) {
-            System.out.println(++index  + ". " + accountMenu);
-        }
-        if (this.parent == null) {
-            System.out.println(++index + ". exit");
-        } else {
-            System.out.println(++index + ". back");
-        }
-    }
-
-    public boolean shouldGoBack(String command) {
-        if (command.equalsIgnoreCase("back") || command.equalsIgnoreCase("exit") ||
-            command.equalsIgnoreCase(Integer.toString(subMenus.keySet().size() + ((isAccountMenuAccessible) ? 2 : 1)))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public int getMenuIndex(Menu menu) throws Exception{
-        for (Integer index : subMenus.keySet()) {
-            if (subMenus.get(index).equals(menu)) {
-                return index;
-            }
-        }
-        throw new Exception("Not in the sub-menus");
     }
 
     public void execute() {
         String command = getNextLineTrimmed();
-
+        for (Integer menuIndex : subMenus.keySet()) {
+            if (command.equals(Integer.toString(menuIndex)) || command.matches(subMenus.get(menuIndex).commandPattern)) {
+                subMenus.get(menuIndex).run();
+            }
+        }
+        for (Integer actionIndex : subActions.keySet()) {
+            if (command.equals(Integer.toString(actionIndex)) || command.matches(subActions.get(actionIndex).getActionPattern())) {
+                subActions.get(actionIndex).execute(command);
+            }
+        }
     }
 
     @Override

@@ -18,7 +18,17 @@ public class Menus {
             previousMenu = null;
             nextMenu = null;
         }
-        
+
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
+
         public void run(Menu previousMenu, Menu nextMenu) {
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;

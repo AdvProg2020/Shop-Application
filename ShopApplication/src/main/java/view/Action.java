@@ -9,5 +9,13 @@ public abstract class Action {
         this.actionPattern = actionPattern;
     }
 
+    public String getActionPattern() {
+        return actionPattern;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public abstract void execute(String command);
 }
