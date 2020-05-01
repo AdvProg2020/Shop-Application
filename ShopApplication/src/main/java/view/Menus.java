@@ -7,23 +7,23 @@ import java.util.ArrayList;
 //Todo: make all stupid public methods private :||||
 //here we have all the blueprints and instances of all the menus we want.
 public class Menus {
+    //TODO: initSubActions havaset bashe bayad fargh kone. ye Action makhsos besaz.
     public static class AccountMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
 
         AccountMenu(String name) {
-            super(name, false, null, null, null);
+            super(name, false, null, null, );
             Menu.accountMenu = this;
             previousMenu = null;
             nextMenu = null;
         }
+        
         public void run(Menu previousMenu, Menu nextMenu) {
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
-            this.execute(null);
+            this.execute();
         }
-        @Override
-        public void execute(String command) {}
     }
 
     public static class FirstMenu extends Menu {
@@ -32,6 +32,7 @@ public class Menus {
             subMenus.put(1, new SaleMenu("Sale menu", this));
             subMenus.put(2, new AllProductsMenu("products menu", this));
         }
+
         @Override
         public void execute(String command) {}
     }

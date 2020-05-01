@@ -1,9 +1,6 @@
 package view;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public abstract class Menu {
     protected String name;
@@ -11,10 +8,12 @@ public abstract class Menu {
     protected static Menu accountMenu;
     protected Menu parent;
     protected Map<Integer, Menu> subMenus;
+    protected Map<Integer, Action> subActions;
     static protected ArrayList<Menu>  allMenus;
     static protected Scanner sc;
     protected String commandList;
     protected String commandPattern;
+
 
     static {
         sc = new Scanner(System.in);
@@ -29,9 +28,15 @@ public abstract class Menu {
         this.commandPattern = commandPattern;
         this.commandList = commandList;
         allMenus.add(this);
-        subMenus = new HashMap<Integer, Menu>();
-
+        subMenus = new HashMap<>();
+        subActions = new HashMap<>();
+        initSubMenus();
+        initSubActions();
     }
+
+    protected abstract void initSubMenus();
+    protected abstract void initSubActions();
+
     static protected String getNextLineTrimmed() {
         return sc.nextLine().trim();
     }
@@ -47,34 +52,32 @@ public abstract class Menu {
     public String getCommandList() {
         return commandList;
     }
+
     public void showCommandList() {
         System.out.println(commandList);
     }
 
-    static protected void printArray(ArrayList<String> list) {
-        for (String item : list) {
+    static protected <T> void printArray(ArrayList<T> list) {
+        for (T item : list) {
             System.out.println(item);
         }
     }
 
     protected void run() {
-        this.show(null);
-        this.execute(null);
+        this.show();
+        this.execute();
     }
 
-    protected void run(String command) {
-        this.show(command);
-        this.execute(command);
-    }
+    //TODO: redo show
+    public void show() {
+        if () {
 
-    //Todo: implement
-    static protected boolean isUserLoggedIn() {return false;}
-
-    public void show(String command) {
-        for (Integer menuIndex : subMenus.keySet()) {
+        }
+        for (Integer menuIndex : new TreeSet<Integer>(subMenus.keySet())) {
             System.out.println(menuIndex + ". " + subMenus.get(menuIndex));
         }
         int index = subMenus.keySet().size();
+
         if (isAccountMenuAccessible) {
             System.out.println(++index  + ". " + accountMenu);
         }
@@ -86,7 +89,8 @@ public abstract class Menu {
     }
 
     public boolean shouldGoBack(String command) {
-        if (command.equalsIgnoreCase("back") || command.equalsIgnoreCase("exit")) {
+        if (command.equalsIgnoreCase("back") || command.equalsIgnoreCase("exit") ||
+            command.equalsIgnoreCase(Integer.toString(subMenus.keySet().size() + ((isAccountMenuAccessible) ? 2 : 1)))) {
             return true;
         } else {
             return false;
@@ -102,7 +106,10 @@ public abstract class Menu {
         throw new Exception("Not in the sub-menus");
     }
 
-    public abstract void execute(String command);
+    public void execute() {
+        String command = getNextLineTrimmed();
+
+    }
 
     @Override
     public String toString() {
