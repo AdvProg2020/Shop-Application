@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Product {
     private static HashMap<String, Product> allProducts = new HashMap<>();
@@ -12,9 +13,9 @@ public class Product {
     private int viewCount;
     private String categoryId;
     private ArrayList<String> specialProperties;
-    private transient ArrayList<String> subProductIds;
-    private transient ArrayList<String> reviewIds;
-    private transient ArrayList<String> ratingIds;
+    private transient HashSet<String> subProductIds;
+    private transient HashSet<String> reviewIds;
+    private transient HashSet<String> ratingIds;
     private boolean suspended;
 
     public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> specialProperties) {
@@ -61,17 +62,26 @@ public class Product {
         }
         allProducts.put(productId, this);
         if (!suspended) {
-            subProductIds = new ArrayList<>();
-            reviewIds = new ArrayList<>();
-            ratingIds = new ArrayList<>();
+            subProductIds = new HashSet<>();
+            reviewIds = new HashSet<>();
+            ratingIds = new HashSet<>();
             getCategory().addProduct(productId);
         }
     }
 
     public void suspend() {
-        for (String subProductId : subProductIds) {
-            SubProduct.getSubProductById(subProductId).suspend();
+        for (SubProduct subProduct : getSubProducts()) {
+            subProduct.suspend();
         }
+        for (Review review : getReviews()) {
+            review.terminate();
+        }
+        for (Rating rating : getRatings()) {
+            rating.terminate();
+        }
+        subProductIds = null;
+        reviewIds = null;
+        ratingIds = null;
         getCategory().removeProduct(productId);
         suspended = true;
     }
@@ -154,7 +164,15 @@ public class Product {
         reviewIds.add(reviewId);
     }
 
-    public double getAverageRating() {
+    public ArrayList<Rating> getRatings() {
+        ArrayList<Rating> ratings = new ArrayList<>();
+        for (String ratingId : ratingIds) {
+            ratings.add(Rating.getRatingById(ratingId));
+        }
+        return ratings;
+    }
+
+    public double getAverageRatingScore() {
         if (ratingIds.size() == 0) {
             return 0;
         }

@@ -35,7 +35,7 @@ public class SellLog {
         }
         allSellLogs.put(sellLogId, this);
         logItemIds = new ArrayList<>();
-        getCustomer().addBuyLog(sellLogId);
+        getSeller().addSellLog(sellLogId);
     }
 
     public static SellLog getSellLogById(String sellLogId) {

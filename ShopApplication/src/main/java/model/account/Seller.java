@@ -5,13 +5,14 @@ import model.SubProduct;
 import model.log.SellLog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Seller extends Account {
     private String companyName;
     private double balance;
-    private ArrayList<String> subProductIds;
-    private ArrayList<String> saleIds;
-    private ArrayList<String> sellLogIds;
+    private transient HashSet<String> subProductIds;
+    private transient HashSet<String> saleIds;
+    private transient HashSet<String> sellLogIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone,
                   String companyName, double balance) {
@@ -20,18 +21,31 @@ public class Seller extends Account {
         this.balance = balance;
     }
 
+    public static Seller getSellerById(String accountId) {
+        return (Seller) Account.getAccountById(accountId);
+    }
+
     @Override
     public void initialize() {
         super.initialize();
+        sellLogIds = new HashSet<>();
         if (!suspended) {
-            subProductIds = new ArrayList<>();
-            saleIds = new ArrayList<>();
-            sellLogIds = new ArrayList<>();
+            subProductIds = new HashSet<>();
+            saleIds = new HashSet<>();
         }
     }
 
-    public static Seller getSellerById(String accountId) {
-        return (Seller) Account.getAccountById(accountId);
+    @Override
+    public void suspend() {
+        for (SubProduct subProduct : getSubProducts()) {
+            subProduct.suspend();
+        }
+        for (Sale sale : getSales()) {
+            sale.suspend();
+        }
+        subProductIds = null;
+        saleIds = null;
+        super.suspend();
     }
 
     @Override

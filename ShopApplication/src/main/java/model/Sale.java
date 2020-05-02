@@ -5,6 +5,7 @@ import model.account.Seller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Sale {
     private static HashMap<String, Sale> allSales = new HashMap<>();
@@ -12,9 +13,9 @@ public class Sale {
     private String sellerId;
     private Date startDate;
     private Date endDate;
-    private int percentage;
-    private int maximumAmount;
-    private ArrayList<String> subProductIds;
+    private double percentage; // 0 - 100
+    private double maximumAmount;
+    private HashSet<String> subProductIds;
     private boolean suspended;
 
     public Sale(String sellerId, Date startDate, Date endDate, int percentage, int maximumAmount) {
@@ -41,23 +42,28 @@ public class Sale {
         return sales;
     }
 
+    public static Sale getSaleById(String saleId) {
+        return allSales.get(saleId);
+    }
+
     public void initialize() {
         if (saleId == null) {
             saleId = getNewId(sellerId);
         }
         allSales.put(saleId, this);
         if (!suspended) {
+            subProductIds = new HashSet<>();
             getSeller().addSale(saleId);
         }
     }
 
     public void suspend() {
         getSeller().removeSale(saleId);
+        for (SubProduct subProduct : getSubProducts()) {
+            subProduct.setSale(null);
+        }
+        subProductIds = null;
         suspended = true;
-    }
-
-    public static Sale getSaleById(String saleId) {
-        return allSales.get(saleId);
     }
 
     public String getSaleId() {
@@ -84,19 +90,19 @@ public class Sale {
         this.endDate = endDate;
     }
 
-    public int getPercentage() {
+    public double getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(int percentage) {
+    public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
 
-    public int getMaximumAmount() {
+    public double getMaximumAmount() {
         return maximumAmount;
     }
 
-    public void setMaximumAmount(int maximumAmount) {
+    public void setMaximumAmount(double maximumAmount) {
         this.maximumAmount = maximumAmount;
     }
 
@@ -115,9 +121,11 @@ public class Sale {
 
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
+        SubProduct.getSubProductById(subProductId).setSale(saleId);
     }
 
     public void removeSubProduct(String subProductId) {
         subProductIds.remove(subProductId);
+        SubProduct.getSubProductById(subProductId).setSale(null);
     }
 }

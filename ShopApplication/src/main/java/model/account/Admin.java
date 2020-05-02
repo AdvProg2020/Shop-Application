@@ -5,8 +5,6 @@ public class Admin extends Account {
 
     public Admin(String username, String password, String firstName, String lastName, String email, String phone) {
         super(username, password, firstName, lastName, email, phone);
-        firstAdmin = false;
-        //TODO: change firstAdmin (gson won't save it)
         initialize();
     }
 
@@ -16,6 +14,12 @@ public class Admin extends Account {
 
     public static boolean isFirstAdmin() {
         return firstAdmin;
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        firstAdmin = false;
     }
 
     @Override
