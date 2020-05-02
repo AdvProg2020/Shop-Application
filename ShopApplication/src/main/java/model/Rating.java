@@ -9,7 +9,7 @@ public class Rating {
     private String ratingId;
     private String customerId;
     private String productId;
-    private int score;
+    private int score; // 1 - 5
 
     public Rating(String customerId, String productId, int score) {
         this.customerId = customerId;
@@ -23,18 +23,20 @@ public class Rating {
         return null;
     }
 
+    public static Rating getRatingById(String ratingId) {
+        return allRatings.get(ratingId);
+    }
+
     public void initialize() {
         if (ratingId == null) {
             ratingId = generateNewId(customerId, productId);
         }
         allRatings.put(ratingId, this);
-        if (getProduct() != null) {
-            getProduct().addRating(ratingId);
-        }
+        getProduct().addRating(ratingId);
     }
 
-    public static Rating getRatingById(String ratingId) {
-        return allRatings.get(ratingId);
+    public void terminate() {
+        allRatings.remove(ratingId);
     }
 
     public String getRatingId() {

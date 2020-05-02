@@ -26,18 +26,20 @@ public class Review {
         return null;
     }
 
+    public static Review getReviewById(String reviewId) {
+        return allReviews.get(reviewId);
+    }
+
     public void initialize() {
         if (reviewId == null) {
             reviewId = generateNewId(reviewerId, productId);
         }
         allReviews.put(reviewId, this);
-        if (getProduct() != null) {
-            getProduct().addReview(reviewId);
-        }
+        getProduct().addReview(reviewId);
     }
 
-    public static Review getReviewById(String reviewId) {
-        return allReviews.get(reviewId);
+    public void terminate() {
+        allReviews.remove(reviewId);
     }
 
     public String getReviewId() {

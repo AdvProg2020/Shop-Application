@@ -6,12 +6,12 @@ import java.util.HashMap;
 public abstract class Account {
     protected static HashMap<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
-    protected String username;
-    protected String password;
-    protected String firstName;
-    protected String lastName;
-    protected String email;
-    protected String phone;
+    private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
     protected boolean suspended;
 
     public Account(String username, String password, String firstName, String lastName, String email, String phone) {
@@ -52,7 +52,7 @@ public abstract class Account {
         return allAccounts.get(accountId);
     }
 
-    public void initialize() {
+    protected void initialize() {
         if (accountId == null) {
             accountId = generateNewId();
         }

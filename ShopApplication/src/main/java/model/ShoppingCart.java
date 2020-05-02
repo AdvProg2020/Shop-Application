@@ -12,18 +12,22 @@ public class ShoppingCart {
 
     public ShoppingCart(String customerId) {
         this.customerId = customerId;
+        subProductIds = new HashMap<>();
         initialize();
-
     }
 
-    private static String getNewId(String customerId) {
+    private static String generateNewId(String customerId) {
         //TODO: implement
         return null;
     }
 
+    public static ShoppingCart getShoppingCartById(String shoppingCartId) {
+        return allShoppingCarts.get(shoppingCartId);
+    }
+
     public void initialize() {
         if (shoppingCartId == null) {
-            shoppingCartId = getNewId(customerId);
+            shoppingCartId = generateNewId(customerId);
         }
         allShoppingCarts.put(shoppingCartId, this);
         if (getCustomer() != null) {
@@ -31,17 +35,8 @@ public class ShoppingCart {
         }
     }
 
-    public static ShoppingCart getShoppingCartById(String shoppingCartId) {
-        return allShoppingCarts.get(shoppingCartId);
-    }
-
-    public static void mergeShoppingCarts(String oldShoppingCartId, String newShoppingCartId) {
-        ShoppingCart oldShoppingCart = ShoppingCart.getShoppingCartById(oldShoppingCartId);
-        ShoppingCart newShoppingCart = ShoppingCart.getShoppingCartById(newShoppingCartId);
-        for (String subProductId : oldShoppingCart.subProductIds.keySet()) {
-            int count = oldShoppingCart.subProductIds.get(subProductId);
-            newShoppingCart.subProductIds.put(subProductId, count);
-        }
+    public void terminate() {
+        allShoppingCarts.remove(shoppingCartId);
     }
 
     public String getShoppingCartId() {

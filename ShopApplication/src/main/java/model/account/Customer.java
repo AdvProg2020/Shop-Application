@@ -6,32 +6,44 @@ import model.log.BuyLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Customer extends Account {
     private double balance;
-    private String shoppingCartId; // can be null
-    private ArrayList<String> buyLogIds;
-    private HashMap<String, Integer> discountIds;
+    private transient String shoppingCartId;
+    private transient HashSet<String> buyLogIds;
+    private transient HashMap<String, Integer> discountIds;
 
     public Customer(String username, String password, String firstName, String lastName, String email, String phone,
                     double balance) {
         super(username, password, firstName, lastName, email, phone);
         this.balance = balance;
-        shoppingCartId = null;
+        new ShoppingCart(accountId);
         initialize();
+    }
+
+    public static Customer getCustomerById(String customerId) {
+        return (Customer) allAccounts.get(customerId);
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        buyLogIds = new HashSet<>();
         if (!suspended) {
-            buyLogIds = new ArrayList<>();
             discountIds = new HashMap<>();
         }
     }
 
-    public static Customer getCustomerById(String accountId) {
-        return (Customer) Account.getAccountById(accountId);
+    @Override
+    public void suspend() {
+        getShoppingCart().terminate();
+        for (Discount discount : getDiscounts().keySet()) {
+            discount.removeCustomer(accountId);
+        }
+        shoppingCartId = null;
+        discountIds = null;
+        super.suspend();
     }
 
     @Override
@@ -53,7 +65,7 @@ public class Customer extends Account {
 
     public void setShoppingCart(String shoppingCartId) {
         if (this.shoppingCartId != null) {
-            ShoppingCart.mergeShoppingCarts(this.shoppingCartId, shoppingCartId);
+            getShoppingCart().terminate();
         }
         this.shoppingCartId = shoppingCartId;
     }
@@ -75,11 +87,7 @@ public class Customer extends Account {
         for (String discountId : discountIds.keySet()) {
             Discount discount = Discount.getDiscountById(discountId);
             int count = discountIds.get(discountId);
-            if (discount == null) {
-                discountIds.remove(discountId);
-            } else {
-                discounts.put(discount, count);
-            }
+            discounts.put(discount, count);
         }
         return discounts;
     }

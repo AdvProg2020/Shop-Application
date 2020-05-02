@@ -12,12 +12,12 @@ public class Discount {
     private String discountCode;
     private Date startDate;
     private Date endDate;
-    private int percentage;
-    private int maximumAmount;
+    private double percentage; // 0 - 100
+    private double maximumAmount;
     private HashMap<String, Integer> customerIds;
     private boolean suspended;
 
-    public Discount(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) {
+    public Discount(String discountCode, Date startDate, Date endDate, double percentage, double maximumAmount) {
         this.discountCode = discountCode;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -66,6 +66,10 @@ public class Discount {
     }
 
     public void suspend() {
+        for (Customer customer : getCustomers().keySet()) {
+            customer.removeDiscount(discountId);
+        }
+        customerIds = null;
         suspended = true;
     }
 
@@ -93,19 +97,19 @@ public class Discount {
         this.endDate = endDate;
     }
 
-    public int getPercentage() {
+    public double getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(int percentage) {
+    public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
 
-    public int getMaximumAmount() {
+    public double getMaximumAmount() {
         return maximumAmount;
     }
 
-    public void setMaximumAmount(int maximumAmount) {
+    public void setMaximumAmount(double maximumAmount) {
         this.maximumAmount = maximumAmount;
     }
 
@@ -114,11 +118,7 @@ public class Discount {
         for (String customerId : customerIds.keySet()) {
             Customer customer = Customer.getCustomerById(customerId);
             int count = customerIds.get(customerId);
-            if (customer == null) {
-                customerIds.remove(customerId);
-            } else {
-                customers.put(customer, count);
-            }
+            customers.put(customer, count);
         }
         return customers;
     }

@@ -5,16 +5,17 @@ import model.account.Seller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class SubProduct {
     private static HashMap<String, SubProduct> allSubProducts = new HashMap<>();
     private String subProductId;
     private String productId;
     private String sellerId;
-    private String saleId; //can be null
     private double price;
     private int remainingCount;
-    private ArrayList<String> customerIds;
+    private transient String saleId; //can be null
+    private transient HashSet<String> customerIds;
     private boolean suspended;
 
     public SubProduct(String productId, String sellerId, double price, int count) {
@@ -31,13 +32,17 @@ public class SubProduct {
         return null;
     }
 
+    public static SubProduct getSubProductById(String subProductId) {
+        return allSubProducts.get(subProductId);
+    }
+
     public void initialize() {
         if (subProductId == null) {
             subProductId = generateNewId(productId, sellerId);
         }
         allSubProducts.put(subProductId, this);
         if (!suspended) {
-            customerIds = new ArrayList<>();
+            customerIds = new HashSet<>();
             getSeller().addSubProduct(subProductId);
             getProduct().addSubProduct(subProductId);
         }
@@ -46,16 +51,9 @@ public class SubProduct {
     public void suspend() {
         getSeller().removeSubProduct(subProductId);
         getProduct().removeSubProduct(subProductId);
-        //TODO: remove from sale?
+        setSale(null);
+        customerIds = null;
         suspended = true;
-    }
-
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public static SubProduct getSubProductById(String subProductId) {
-        return allSubProducts.get(subProductId);
     }
 
     public String getSubProductId() {
@@ -75,11 +73,10 @@ public class SubProduct {
     }
 
     public void setSale(String saleId) {
-        if (getSale() != null) {
+        if (this.saleId != null) {
             getSale().removeSubProduct(subProductId);
         }
         this.saleId = saleId;
-        getSale().addSubProduct(subProductId);
     }
 
     public double getPrice() {

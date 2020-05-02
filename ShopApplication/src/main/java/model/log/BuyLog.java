@@ -5,6 +5,7 @@ import model.account.Customer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class BuyLog {
     private static HashMap<String, BuyLog> allBuyLogs = new HashMap<>();
@@ -17,7 +18,7 @@ public class BuyLog {
     private String receiverAddress;
     private String receiverPhone;
     private ShippingStatus shippingStatus;
-    private ArrayList<String> logItemIds;
+    private transient HashSet<String> logItemIds;
 
     public BuyLog(String customerId, int paidMoney, int totalDiscountAmount, Date date, String receiverName,
                   String receiverAddress, String receiverPhone, ShippingStatus shippingStatus) {
@@ -37,17 +38,17 @@ public class BuyLog {
         return null;
     }
 
+    public static BuyLog getBuyLogById(String buyLogId) {
+        return allBuyLogs.get(buyLogId);
+    }
+
     public void initialize() {
         if (buyLogId == null) {
             buyLogId = generateNewId(customerId);
         }
         allBuyLogs.put(buyLogId, this);
-        logItemIds = new ArrayList<>();
+        logItemIds = new HashSet<>();
         getCustomer().addBuyLog(buyLogId);
-    }
-
-    public static BuyLog getBuyLogById(String buyLogId) {
-        return allBuyLogs.get(buyLogId);
     }
 
     public String getBuyLogId() {
@@ -56,7 +57,7 @@ public class BuyLog {
 
     public Customer getCustomer() {
         return Customer.getCustomerById(customerId);
-    }
+    } // TODO: include suspended
 
     public int getPaidMoney() {
         return paidMoney;
