@@ -77,4 +77,42 @@ public class Actions {
 
         }
     }
+
+    public static class ShowProductByID extends Action {
+        ShowProductByID(String name) {
+            super(name, Constants.ActionCommandAndPattern.showProductByIDPattern, Constants.ActionCommandAndPattern.showProductByIDCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ChooseCategoryAction extends Action {
+        ChooseCategoryAction(String name) {
+            super(name, Constants.ActionCommandAndPattern.chooseCategoryPattern, Constants.ActionCommandAndPattern.chooseCategoryCommand);
+        }
+
+        //TODO: imp
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class RevertCategoryAction extends Action {
+        RevertCategoryAction(String name) {
+            super(name, Constants.ActionCommandAndPattern.revertCategoryPattern, Constants.ActionCommandAndPattern.revertCategoryCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+
 }
