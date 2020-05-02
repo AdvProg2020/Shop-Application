@@ -51,10 +51,10 @@ public abstract class Menu {
     }
 
     public void showCommandList() {
-        for (int index = 1; index <= subMenus.keySet().size(); index++) {
+        for (int index = 1; index <= subMenus.size(); index++) {
             System.out.println(subMenus.get(index).command + " or " + index);
         }
-        for (int index = subMenus.keySet().size() + 1; index <= subMenus.keySet().size() + subActions.keySet().size(); index++) {
+        for (int index = subMenus.size() + 1; index <= subMenus.size() + subActions.size(); index++) {
             System.out.println(subActions.get(index).getActionCommand() + " or " + index);
         }
     }
@@ -71,17 +71,18 @@ public abstract class Menu {
     }
 
     public void show() {
+        System.out.println(this.name + ":");
         if (subMenus.size() != 0) {
             System.out.println("Sub Menus:");
         }
-        for (int index = 1; index <= subMenus.keySet().size(); index++) {
+        for (int index = 1; index <= subMenus.size(); index++) {
             System.out.println(index + ". " + subMenus.get(index).getName());
         }
 
         if (subActions.size() != 0) {
             System.out.println("Available Actions:");
         }
-        for (int index = subMenus.keySet().size() + 1; index <= subActions.keySet().size() + subMenus.keySet().size(); index++) {
+        for (int index = subMenus.size() + 1; index <= subActions.size() + subMenus.size(); index++) {
             System.out.println(index + ". " + subActions.get(index).getName());
         }
 

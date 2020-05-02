@@ -13,20 +13,34 @@ public class Menus {
         private Menu nextMenu;
 
         AccountMenu(String name) {
-            super(name, false, null, null, );
+            super(name, false, null, Constants.MenuCommandAndPattern.accountMenuPattern, Constants.MenuCommandAndPattern.accountMenuCommand);
             Menu.accountMenu = this;
             previousMenu = null;
             nextMenu = null;
         }
 
+        //TODO: imp.
         @Override
-        protected void initSubMenus() {
+        public void execute() {
 
         }
 
         @Override
-        protected void initSubActions() {
+        public void show() {
+            // no execution needed!
+        }
 
+        @Override
+        protected void initSubMenus() {
+            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this));
+            subMenus.put(2, new AdminMenu("Admin Menu", this));
+            subMenus.put(3, new SellerMenu("Seller Menu", this));
+            subMenus.put(4, new CustomerMenu("Customer Menu", this));
+        }
+
+        @Override
+        protected void initSubActions() {
+            //no sub action available.
         }
 
         public void run(Menu previousMenu, Menu nextMenu) {
@@ -38,13 +52,24 @@ public class Menus {
 
     public static class FirstMenu extends Menu {
         FirstMenu(String name) {
-            super(name, true, null, null, );
+            super(name, true, null, null, null);
             subMenus.put(1, new SaleMenu("Sale menu", this));
             subMenus.put(2, new AllProductsMenu("products menu", this));
         }
 
         @Override
-        public void execute(String command) {}
+        public void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
+
+
+        @Override
+        public void execute() {}
     }
 
     //both method and menu
@@ -54,7 +79,7 @@ public class Menus {
         @Override
         public void show(String command){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void showCurrentProducts(){}
         public void showCurrentCategories(){}
         public void showProductByID(){}
@@ -66,7 +91,7 @@ public class Menus {
         private String productID;
         ProductMenu(String name, Menu parent){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void digest(){}
         //should select seller before adding.
         public void addToShoppingCart(){}
@@ -81,7 +106,7 @@ public class Menus {
         private ArrayList<String> availableSorts;
         SortMenu(String name, Menu parent, ArrayList<String> availableSorts){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void viewAvailableSorts(){}
         public void setCurrentSort(String availableSort){
             this.currentSort = availableSort;
@@ -97,7 +122,7 @@ public class Menus {
         private ArrayList<String> availableFilters;
         FilterMenu(String name, Menu parent, ArrayList<String> availableFilters){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void viewAvailableFilters(){}
         public void setCurrentFilter(){
             this.currentFilter = currentFilter;
@@ -115,9 +140,27 @@ public class Menus {
         @Override
         public void show(){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void showCurrentSales(){}
         public void showProductByID(String ID){}
+    }
+
+    public static class AnonymousUserAccountMenu extends Menu {
+        AnonymousUserAccountMenu(String name, Menu parent) {
+            super(name, false, parent, null, null);
+        }
+
+        @Override
+        protected void initSubMenus() {
+            //no sub menu available.
+        }
+
+        @Override
+        protected void initSubActions() {
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.LoginAction("Login"));
+            subActions.put(index + 2, new Actions.RegisterAction("Register"));
+        }
     }
 
     public static class LoginMenu extends Menu{
@@ -125,7 +168,7 @@ public class Menus {
         private String password;
         LoginMenu(String name, Menu parent){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
     }
 
     public static class RegisterMenu extends Menu {
@@ -138,7 +181,7 @@ public class Menus {
         private String type;
         RegisterMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         private void getCustomerInfo(){}
         private void getSellerInfo(){}
         private void getAdminInfo(){}
@@ -148,7 +191,7 @@ public class Menus {
     public static class AdminMenu extends Menu {
         AdminMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
     }
 
 
@@ -159,7 +202,7 @@ public class Menus {
     public static class UserManagingMenu extends Menu{
         UserManagingMenu(String name, Menu parent);
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void viewUser(String command){}
         public void deleteUser(String command){}
         public void createAdmin(){}
@@ -168,7 +211,7 @@ public class Menus {
     public static class ProductManagingMenu extends Menu{
         ProductManagingMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void removeProduct(String command);
     }
 
@@ -176,7 +219,7 @@ public class Menus {
     public static class DiscountCodesMenu extends Menu{
         DiscountCodesMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void createDiscountCode(){}
         public void viewDiscountCodes(){}
         public void viewDiscountByCode(String code){}
@@ -187,7 +230,7 @@ public class Menus {
     public static class RequestManagingMenu extends Menu {
         RequestManagingMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void viewRequestDetailsByID(String ID){}
         public void determineRequest(String ID, boolean isAccepted){}
     }
@@ -195,7 +238,7 @@ public class Menus {
     public static class CategoryManagingMenu extends Menu {
         CategoryManagingMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public boolean isCategoryValid(String category){}
         public void addCategory(String category){}
         public void editCategory(String category){}
@@ -206,7 +249,7 @@ public class Menus {
     public static class SellerMenu extends Menu {
         SellerMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void viewCompanyInfo(){}
         public void viewSellHistory(){}
         public void viewCategories(){}
@@ -216,7 +259,7 @@ public class Menus {
     public static class SellerSalesMenu extends Menu {
         SellerSalesMenu(String name, Menu parent){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void viewSales(){}
         public void editSale(){}
         public void addSale(){}
@@ -225,7 +268,7 @@ public class Menus {
     public static class SellerProductMenu extends Menu {
         SellerProductMenu(String name, Menu parent){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void viewProductByID(String ID){}
         public void viewProductBuyersByID(String ID){}
         public void editProductByID(String ID){}
@@ -241,7 +284,7 @@ public class Menus {
     public static class CustomerMenu extends Menu {
         CustomerMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
     }
 
     //this is both used in product menu and in customer menu
@@ -249,7 +292,7 @@ public class Menus {
     public static class ShoppingCartMenu extends Menu {
         ShoppingCartMenu(String name, Menu parent){}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void showProducts(){}
         public void viewProductByID(String ID){}
         public void increaseProductCount(String ID){}
@@ -263,7 +306,7 @@ public class Menus {
     public static class CustomerOrderLogMenu extends Menu {
         CustomerOrderLogMenu(String name, Menu parent) {}
         @Override
-        public void execute(String command) {}
+        public void execute() {}
         public void showOrderByID(String ID){}
         public void rateProductByID(String ID, int rate){}
         private boolean hasBoughtProduct(String ID){}

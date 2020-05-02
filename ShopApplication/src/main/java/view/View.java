@@ -2,8 +2,6 @@ package view;
 
 import controller.*;
 
-import java.util.ArrayList;
-
 /**
 *  @author Dana
  *  This is the non-implemented sketch of the View

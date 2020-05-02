@@ -24,4 +24,29 @@ public class Actions {
             System.exit(1);
         }
     }
+
+    public static  class LoginAction extends Action {
+        LoginAction(String name) {
+            super(name, Constants.ActionCommandAndPattern.loginPattern, Constants.ActionCommandAndPattern.loginCommand);
+        }
+
+        //TODO: implement.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class RegisterAction extends Action {
+        RegisterAction(String name) {
+            super(name, Constants.ActionCommandAndPattern.registerPattern, Constants.ActionCommandAndPattern.registerCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+
 }
