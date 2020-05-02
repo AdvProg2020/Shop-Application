@@ -1,5 +1,7 @@
 package view;
 
+import java.util.ArrayList;
+
 public class Actions {
     public static class BackAction extends Action {
         private Menu parent;
@@ -42,11 +44,37 @@ public class Actions {
             super(name, Constants.ActionCommandAndPattern.registerPattern, Constants.ActionCommandAndPattern.registerCommand);
         }
 
+        //TODO: implement.
         @Override
         public void execute(String command) {
 
         }
     }
 
+    public static class ShowProductsAction extends Action {
+        private ArrayList<String> categoryTree;
+        ShowProductsAction(String name, ArrayList<String> categoryTree) {
+            super(name, Constants.ActionCommandAndPattern.showProductsPattern, Constants.ActionCommandAndPattern.showProductsCommand);
+            this.categoryTree = categoryTree;
+        }
 
+        //TODO: implement.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowCategories extends Action {
+        private ArrayList<String> categoryTree;
+        ShowCategories(String name, ArrayList<String> categoryTree) {
+            super(name, Constants.ActionCommandAndPattern.showCategoriesPattern, Constants.ActionCommandAndPattern.showCategoriesCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
 }
