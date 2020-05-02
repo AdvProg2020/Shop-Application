@@ -53,23 +53,19 @@ public class Menus {
     public static class FirstMenu extends Menu {
         FirstMenu(String name) {
             super(name, true, null, null, null);
-            subMenus.put(1, new SaleMenu("Sale menu", this));
-            subMenus.put(2, new AllProductsMenu("products menu", this));
         }
 
         @Override
         public void initSubMenus() {
-
+            subMenus.put(1, new SaleMenu("Sale menu", this));
+            subMenus.put(2, new AllProductsMenu("products menu", this));
+            subMenus.put(3, Menu.accountMenu);
         }
 
         @Override
         protected void initSubActions() {
-
+            //no sub action available
         }
-
-
-        @Override
-        public void execute() {}
     }
 
     //both method and menu
