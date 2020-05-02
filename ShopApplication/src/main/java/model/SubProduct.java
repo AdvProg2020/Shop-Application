@@ -33,7 +33,15 @@ public class SubProduct {
     }
 
     public static SubProduct getSubProductById(String subProductId) {
-        return allSubProducts.get(subProductId);
+        return getSubProductById(subProductId, true);
+    }
+
+    public static SubProduct getSubProductById(String subProductId, boolean checkSuspense) {
+        SubProduct subProduct = allSubProducts.get(subProductId);
+        if (checkSuspense && subProduct != null && subProduct.suspended) {
+            subProduct = null;
+        }
+        return subProduct;
     }
 
     public void initialize() {
@@ -56,7 +64,7 @@ public class SubProduct {
         suspended = true;
     }
 
-    public String getSubProductId() {
+    public String getId() {
         return subProductId;
     }
 
@@ -107,12 +115,9 @@ public class SubProduct {
     public ArrayList<Customer> getCustomers() {
         ArrayList<Customer> customers = new ArrayList<>();
         for (String customerId : new ArrayList<>(customerIds)) {
-            Customer customer = Customer.getCustomerById(customerId);
-            if (customer == null) {
-                customerIds.remove(customerId);
-            } else {
-                customers.add(customer);
-            }
+            Customer customer = Customer.getCustomerById(customerId, false);
+            customers.add(customer);
+
         }
         return customers;
     }

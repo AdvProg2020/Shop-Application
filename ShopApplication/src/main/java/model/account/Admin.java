@@ -9,7 +9,15 @@ public class Admin extends Account {
     }
 
     public static Admin getAdminById(String accountId) {
-        return (Admin) Account.getAccountById(accountId);
+        return getAdminById(accountId, true);
+    }
+
+    public static Admin getAdminById(String accountId, boolean checkSuspense) {
+        Admin admin = (Admin) allAccounts.get(accountId);
+        if (checkSuspense && admin != null && admin.suspended) {
+            admin = null;
+        }
+        return admin;
     }
 
     public static boolean isFirstAdmin() {

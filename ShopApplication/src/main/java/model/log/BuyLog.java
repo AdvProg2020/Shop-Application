@@ -51,12 +51,12 @@ public class BuyLog {
         getCustomer().addBuyLog(buyLogId);
     }
 
-    public String getBuyLogId() {
+    public String getId() {
         return buyLogId;
     }
 
     public Customer getCustomer() {
-        return Customer.getCustomerById(customerId);
+        return Customer.getCustomerById(customerId, false);
     } // TODO: include suspended
 
     public int getPaidMoney() {

@@ -8,8 +8,6 @@ import model.account.Customer;
 import model.log.BuyLog;
 import model.log.LogItem;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +28,7 @@ public class CustomerController extends Controller {
         ArrayList<String> shoppingCart = new ArrayList<>();
         HashMap<SubProduct, Integer> subProducts = ((Customer)currentAccount).getShoppingCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
-            shoppingCart.add(subProduct.getSubProductId() + "   "+subProduct.getProduct().getName()+"  "+subProduct.getSeller().getCompanyName()+" number in carts: "+subProducts.get(subProduct));
+            shoppingCart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getCompanyName() + " number in carts: " + subProducts.get(subProduct));
         }
         return shoppingCart;
     }
@@ -42,7 +40,7 @@ public class CustomerController extends Controller {
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else{
             try {
-                return showProduct(subProduct.getProduct().getProductId());
+                return showProduct(subProduct.getProduct().getId());
             }
             catch (Exceptions.InvalidProductIdException ex) {
                 return null;
@@ -97,7 +95,7 @@ public class CustomerController extends Controller {
         if(currentAccount.getType().equals("customer")){
             ArrayList<String> orderIds = new ArrayList<>();
             for (BuyLog buyLog : ((Customer) currentAccount).getBuyLogs()) {
-                orderIds.add(buyLog.getBuyLogId());
+                orderIds.add(buyLog.getId());
             }
             return orderIds;
         }else
@@ -126,7 +124,7 @@ public class CustomerController extends Controller {
                 ArrayList<String> productPack = new ArrayList<>();
                 Product product = item.getSubProduct().getProduct();
                 productPack.add(product.getName());
-                productPack.add(product.getProductId());
+                productPack.add(product.getId());
                 productPack.add(item.getSeller().getUsername());
                 productPack.add(item.getSeller().getCompanyName());
                 productPack.add(Integer.toString(item.getCount()));
@@ -141,8 +139,8 @@ public class CustomerController extends Controller {
     //Done!!
     public void rateProduct(String productID, int rate) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : currentCart.getSubProducts().keySet()) {
-            if(subProduct.getProduct().getProductId().equals(productID)){
-                new Rating(currentAccount.getAccountId(),productID,rate);
+            if (subProduct.getProduct().getId().equals(productID)) {
+                new Rating(currentAccount.getId(), productID, rate);
                 return;
             }
         }

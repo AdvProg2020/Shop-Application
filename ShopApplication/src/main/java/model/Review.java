@@ -42,12 +42,12 @@ public class Review {
         allReviews.remove(reviewId);
     }
 
-    public String getReviewId() {
+    public String getId() {
         return reviewId;
     }
 
     public Account getReviewer() {
-        return Account.getAccountById(reviewerId);
+        return Account.getAccountById(reviewerId, false);
     }
 
     public Product getProduct() {

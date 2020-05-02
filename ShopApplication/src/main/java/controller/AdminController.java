@@ -7,8 +7,6 @@ import model.account.Account;
 import model.account.Admin;
 import model.request.Request;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -56,7 +54,7 @@ public class AdminController extends Controller {
     public ArrayList<String> manageAllProducts() {
         ArrayList<String> productIds = new ArrayList<>();
         for (Product product : Product.getAllProducts()) {
-            productIds.add(product.getProductId());
+            productIds.add(product.getId());
         }
         return productIds;
     }
@@ -153,7 +151,7 @@ public class AdminController extends Controller {
         else if(Category.getCategoryByName(parentCategory) == null )
             throw new Exceptions.InvalidCategoryException(parentCategory);
         else
-            new Category(categoryName, Category.getCategoryByName(parentCategory).getCategoryId(), specialProperties);
+            new Category(categoryName, Category.getCategoryByName(parentCategory).getId(), specialProperties);
     }
 
     //Done!! Shayan: terminate oke?

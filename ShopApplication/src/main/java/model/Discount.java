@@ -52,7 +52,15 @@ public class Discount {
     }
 
     public static Discount getDiscountById(String discountId) {
-        return allDiscounts.get(discountId);
+        return getDiscountById(discountId, true);
+    }
+
+    public static Discount getDiscountById(String discountId, boolean checkSuspense) {
+        Discount discount = allDiscounts.get(discountId);
+        if (checkSuspense && discount != null && discount.suspended) {
+            discount = null;
+        }
+        return discount;
     }
 
     public void initialize() {
@@ -73,7 +81,7 @@ public class Discount {
         suspended = true;
     }
 
-    public String getDiscountId() {
+    public String getId() {
         return discountId;
     }
 

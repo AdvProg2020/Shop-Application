@@ -65,7 +65,7 @@ public class Category {
         allCategories.remove(categoryId);
     }
 
-    public String getCategoryId() {
+    public String getId() {
         return categoryId;
     }
 

@@ -9,7 +9,6 @@ import model.account.Seller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Controller {
     protected static Account currentAccount;
@@ -85,7 +84,7 @@ public class Controller {
             productInfo.add(infoPack);
             for (SubProduct subProduct : product.getSubProducts()) {
                 ArrayList<String> subProductPack = new ArrayList<>();
-                subProductPack.add(subProduct.getSubProductId());
+                subProductPack.add(subProduct.getId());
                 subProductPack.add(subProduct.getSeller().getCompanyName());
                 subProductPack.add(Double.toString(subProduct.getPrice()));
                 subProductPack.add(Integer.toString(subProduct.getRemainingCount()));
@@ -149,7 +148,7 @@ public class Controller {
             if(Product.getProductById(productId) == null)
                 throw new Exceptions.InvalidProductIdException();
             else
-                new Review(currentAccount.getAccountId(), productId,reviewText);
+                new Review(currentAccount.getId(), productId, reviewText);
         }
     }
 
@@ -216,7 +215,7 @@ public class Controller {
         salePack.add(Integer.toString(sale.getSubProducts().size()));
         for (SubProduct subProduct : sale.getSubProducts()) {
             salePack.add(subProduct.getProduct().getName());
-            salePack.add(subProduct.getProduct().getProductId());
+            salePack.add(subProduct.getProduct().getId());
         }
         return salePack;
     }

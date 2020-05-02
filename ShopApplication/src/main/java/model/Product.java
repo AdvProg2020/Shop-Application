@@ -53,7 +53,15 @@ public class Product {
     }
 
     public static Product getProductById(String productId) {
-        return allProducts.get(productId);
+        return getProductById(productId, true);
+    }
+
+    public static Product getProductById(String productId, boolean checkSuspense) {
+        Product product = allProducts.get(productId);
+        if (checkSuspense && product != null && product.suspended) {
+            product = null;
+        }
+        return product;
     }
 
     public void initialize() {
@@ -86,7 +94,7 @@ public class Product {
         suspended = true;
     }
 
-    public String getProductId() {
+    public String getId() {
         return productId;
     }
 

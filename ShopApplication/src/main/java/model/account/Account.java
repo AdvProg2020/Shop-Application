@@ -25,8 +25,8 @@ public abstract class Account {
     }
 
     protected static String generateNewId() {
-        return null;
         //TODO: implement
+        return null;
     }
 
     public static ArrayList<Account> getAllAccounts() {
@@ -49,7 +49,15 @@ public abstract class Account {
     }
 
     public static Account getAccountById(String accountId) {
-        return allAccounts.get(accountId);
+        return getAccountById(accountId, true);
+    }
+
+    public static Account getAccountById(String accountId, boolean checkSuspense) {
+        Account account = allAccounts.get(accountId);
+        if (checkSuspense && account != null && account.suspended) {
+            account = null;
+        }
+        return account;
     }
 
     protected void initialize() {
@@ -65,7 +73,7 @@ public abstract class Account {
 
     public abstract String getType();
 
-    public String getAccountId() {
+    public String getId() {
         return accountId;
     }
 

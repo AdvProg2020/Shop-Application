@@ -42,7 +42,7 @@ public class SellLog {
         return allSellLogs.get(sellLogId);
     }
 
-    public String getSellLogId() {
+    public String getId() {
         return sellLogId;
     }
 
@@ -51,7 +51,7 @@ public class SellLog {
     }
 
     public Seller getSeller() {
-        return Seller.getSellerById(sellerId);
+        return Seller.getSellerById(sellerId, false);
     }
 
     public Customer getCustomer() {

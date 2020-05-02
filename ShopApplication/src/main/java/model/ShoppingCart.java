@@ -39,7 +39,7 @@ public class ShoppingCart {
         allShoppingCarts.remove(shoppingCartId);
     }
 
-    public String getShoppingCartId() {
+    public String getId() {
         return shoppingCartId;
     }
 
@@ -52,7 +52,11 @@ public class ShoppingCart {
         for (String subProductId : subProductIds.keySet()) {
             SubProduct subProduct = SubProduct.getSubProductById(subProductId);
             int count = subProductIds.get(subProductId);
-            subProducts.put(subProduct, count);
+            if (subProduct == null) {
+                subProductIds.remove(subProductId);
+            } else {
+                subProducts.put(subProduct, count);
+            }
         }
         return subProducts;
     }
