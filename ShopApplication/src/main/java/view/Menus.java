@@ -1,7 +1,5 @@
 package view;
 
-import javax.imageio.spi.ServiceRegistry;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -41,7 +39,14 @@ public class Menus {
 
         @Override
         protected void initSubActions() {
-            //no sub action available.
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.BackAction("account menu back", previousMenu));
+        }
+
+        @Override
+        public void run() {
+            previousMenu = nextMenu = Menu.getCallingMenu();
+            this.execute();
         }
 
         public void run(Menu previousMenu, Menu nextMenu) {
@@ -65,11 +70,11 @@ public class Menus {
 
         @Override
         protected void initSubActions() {
-            //no sub action available
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ExitAction("first menu exit"));
         }
     }
 
-    //both method and menu
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
         private ArrayList<String> currentFilters;
@@ -108,6 +113,7 @@ public class Menus {
             subActions.put(index + 3, new Actions.ShowProductByID("show product by ID"));
             subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category"));
             subActions.put(index + 5, new Actions.RevertCategoryAction("revert category"));
+            subActions.put(index + 6, new Actions.BackAction("all product menu back", parent));
         }
     }
 
@@ -126,37 +132,55 @@ public class Menus {
     }
 
     public static class SortMenu extends Menu {
-        private String currentSort;
+        private StringBuilder currentSort;
         private ArrayList<String> availableSorts;
-        SortMenu(String name, Menu parent, ArrayList<String> availableSorts, StringBuilder currentSort){
 
+        SortMenu(String name, Menu parent, ArrayList<String> availableSorts, StringBuilder currentSort){
+            super(name, true, parent, Constants.MenuCommandAndPattern.sortMenuPattern, Constants.MenuCommandAndPattern.sortMenuCommand);
+            this.currentSort = currentSort;
+            this.availableSorts = new ArrayList<>(availableSorts);
         }
+
         @Override
-        public void execute() {}
-        public void viewAvailableSorts(){}
-        public void setCurrentSort(String availableSort){
-            this.currentSort = availableSort;
+        protected void initSubMenus() {
+            //no available sub menu.
         }
-        public String getCurrentSort(){
-            return currentSort;
+
+        @Override
+        protected void initSubActions() {
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ShowAvailableSorts("product available sorts", availableSorts));
+            subActions.put(index + 2, new Actions.SortAction("product sorter", currentSort));
+            subActions.put(index + 3, new Actions.ShowCurrentSort("product current sort", currentSort));
+            subActions.put(index + 4, new Actions.DisableSort("product sort remover", currentSort));
+            subActions.put(index + 5, new Actions.BackAction("product sort back", parent));
         }
     }
 
     //wtf is with filtering anyway
     public static class FilterMenu extends Menu {
-        private String currentFilter;
+        private ArrayList<String> currentFilters;
         private ArrayList<String> availableFilters;
-        FilterMenu(String name, Menu parent, ArrayList<String> availableFilters, ArrayList<String> currentFilters){
 
+        FilterMenu(String name, Menu parent, ArrayList<String> availableFilters, ArrayList<String> currentFilters){
+            super(name, true, parent, Constants.MenuCommandAndPattern.filterMenuPattern, Constants.MenuCommandAndPattern.filterMenuCommand);
+            this.currentFilters = currentFilters;
+            this.availableFilters = new ArrayList<>(availableFilters);
         }
+
         @Override
-        public void execute() {}
-        public void viewAvailableFilters(){}
-        public void setCurrentFilter(){
-            this.currentFilter = currentFilter;
+        protected void initSubMenus() {
+            //no available sub meu.
         }
-        public String getCurrentFilter() {
-            return currentFilter;
+
+        @Override
+        protected void initSubActions() {
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ShowAvailableFilters("product available filters", availableFilters));
+            subActions.put(index + 2, new Actions.FilterAction("product sorter", currentFilters));
+            subActions.put(index + 3, new Actions.ShowCurrentFilters("product current filters", currentFilters));
+            subActions.put(index + 4, new Actions.DisableFilter("product filter remover", currentFilters));
+            subActions.put(index + 5, new Actions.BackAction("product filter back", parent));
         }
     }
 
