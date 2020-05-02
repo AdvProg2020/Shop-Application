@@ -14,14 +14,12 @@ import java.util.Date;
 
 public class AdminController extends Controller {
 
-    public ArrayList<String> viewPersonalInfo() {
-        return viewCommonPersonalInfo();
-    }
-
+    //Done!!
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException {
         editCommonInformation(field, newInformation);
     }
 
+    //Done!!
     public ArrayList<String> manageUsers() {
         ArrayList<String> accounts = new ArrayList<>();
         for (Account account : Account.getAllAccounts()) {
@@ -30,22 +28,17 @@ public class AdminController extends Controller {
         return accounts;
     }
 
+    //Done!!
     public ArrayList<String> viewUsername(String username) throws Exceptions.NotExistedUsernameException {
         Account account = Account.getAccountByUsername(username);
-        if (account != null)
+        if (account == null)
             throw new Exceptions.NotExistedUsernameException();
         else{
-            ArrayList<String> accountInfo = new ArrayList<>();
-            accountInfo.add("Username: "+account.getUsername());
-            accountInfo.add("Type: "+account.getType());
-            accountInfo.add("First name: "+account.getFirstName());
-            accountInfo.add("Last name: "+account.getLastName());
-            accountInfo.add("Phone number: "+account.getPhone());
-            accountInfo.add("Email: "+ account.getEmail());
-            return accountInfo;
+            return getPersonalInfo(account);
         }
     }
 
+    //Done!!
     public void deleteUsername(String username) throws Exceptions.NotExistedUsernameException {
         Account account = Account.getAccountByUsername(username);
         if(account == null)
@@ -59,6 +52,7 @@ public class AdminController extends Controller {
         new Admin(username, information.get(0), information.get(1), information.get(2), information.get(3), information.get(4));
     }
 
+    //Done!!todo
     public ArrayList<String> manageAllProducts() {
         ArrayList<String> productIds = new ArrayList<>();
         for (Product product : Product.getAllProducts()) {
@@ -67,9 +61,10 @@ public class AdminController extends Controller {
         return productIds;
     }
 
+    //Done!!
     public void removeProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
-        if(product != null)
+        if(product == null)
             throw new Exceptions.InvalidProductIdException();
         else
             product.suspend();
@@ -79,6 +74,7 @@ public class AdminController extends Controller {
 
     }
 
+    //Done!!
     public ArrayList<String> viewDiscountCodes() {
         ArrayList<String> discountCodes = new ArrayList<>();
         for (Discount discount : Discount.getAllDiscounts()) {
@@ -87,18 +83,18 @@ public class AdminController extends Controller {
         return discountCodes;
     }
 
+    //Done!! Should show people?
     public ArrayList<String> viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if(discount == null)
             throw new Exceptions.DiscountCodeException();
         else{
             ArrayList<String> discountInfo = new ArrayList<>();
-            discountInfo.add("Discount code: "+ discount.getDiscountCode());
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            discountInfo.add("Start date: "+ dateFormat.format(discount.getStartDate()));
-            discountInfo.add("End date: "+dateFormat.format(discount.getEndDate()));
-            discountInfo.add("Maximum amount: "+Integer.toString(discount.getMaximumAmount()));
-            discountInfo.add("Percentage: "+ Integer.toString(discount.getPercentage()));
+            discountInfo.add(discount.getDiscountCode());
+            discountInfo.add(dateFormat.format(discount.getStartDate()));
+            discountInfo.add(dateFormat.format(discount.getEndDate()));
+            discountInfo.add(Double.toString(discount.getMaximumAmount()));
+            discountInfo.add(Double.toString(discount.getPercentage()));
             return discountInfo;
         }
     }
@@ -106,6 +102,7 @@ public class AdminController extends Controller {
     public void editDiscountCode(String code, String field, String newInformation) {
     }
 
+    //Done!!
     public void removeDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if(discount == null)
@@ -114,6 +111,7 @@ public class AdminController extends Controller {
             discount.suspend();
     }
 
+    //Done!!
     public ArrayList<String> manageRequests() {
         ArrayList<String> requestIds = new ArrayList<>();
         for (Request request : Request.getAllRequests()) {
@@ -133,6 +131,7 @@ public class AdminController extends Controller {
         Request request;
     }
 
+    //Done!!
     public ArrayList<String> manageCategories() {
         ArrayList<String> categoryNames = new ArrayList<>();
         for (Category category : Category.getAllCategories()) {
@@ -147,6 +146,7 @@ public class AdminController extends Controller {
 
     }
 
+    //Done!!
     public void addCategory(String categoryName, String parentCategory, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
         if(Category.getCategoryByName(categoryName) != null)
             throw new Exceptions.InvalidCategoryException();
@@ -156,10 +156,11 @@ public class AdminController extends Controller {
             new Category(categoryName, Category.getCategoryByName(parentCategory).getCategoryId(), specialProperties);
     }
 
+    //Done!! Shayan: terminate oke?
     public void removeCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if(category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        category.suspend();
+        category.terminate();
     }
 }

@@ -63,6 +63,9 @@ public class Exceptions{
         public InvalidProductIdException(){
             super("ProductId is Invalid!");
         }
+        public InvalidProductIdException(String productId){
+            super("There is no product with Id: "+ productId + " in your cart!");
+        }
     }
 
     public static class InvalidCategoryException extends Exception{
@@ -90,6 +93,22 @@ public class Exceptions{
     public static class NotLoggedInException extends Exception{
         public NotLoggedInException(){
             super("You should login before you do this action!");
+        }
+
+        public NotLoggedInException(String type){
+            super("You should login as a "+type+ " before doing this action!");
+        }
+    }
+
+    public static class InvalidLogIdException extends Exception{
+        public InvalidLogIdException(String logId){
+            super("You don't have any order with Id: "+ logId);
+        }
+    }
+
+    public static class InvalidSaleIdException extends Exception{
+        public InvalidSaleIdException(){
+            super("There is no sale with this Id for you!");
         }
     }
 }
