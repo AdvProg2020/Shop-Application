@@ -21,8 +21,8 @@ public class Controller {
     //Done!
     public void usernameTypeValidation(String username, String type) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
         if(Account.getAccountByUsername(username) == null )
-            throw new Exceptions.ExistedUsernameException();
-        else if(type.equals("Admin") && !Admin.isFirstAdmin())
+            throw new Exceptions.ExistedUsernameException(username);
+        else if(type.equalsIgnoreCase("admin") && !Admin.isFirstAdmin())
             throw new Exceptions.AdminRegisterException();
     }
 
@@ -34,16 +34,18 @@ public class Controller {
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.NotExistedUsernameException {
         Account account = Account.getAccountByUsername(username);
         if(account == null)
-            throw new Exceptions.NotExistedUsernameException();
+            throw new Exceptions.NotExistedUsernameException(username);
         if(!account.getPassword().equals(password))
             throw new Exceptions.WrongPasswordException();
         currentAccount = account;
         // baraye cart kari lazem nist bokonim? account cart nadare...
     }
 
-    //Todo
+    //Done!!
     public String getType(){
-        return null;
+        if (currentAccount == null)
+            return "anonymous";
+        return currentAccount.getType();
     }
 
     //Todo
@@ -141,6 +143,11 @@ public class Controller {
         return productInfo;
     }
 
+    //Todo
+    public ArrayList<String> attributes(String productId) {
+        return null;
+    }
+
     //Done!!
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException{
         Product product = Product.getProductById(productId);
@@ -174,16 +181,13 @@ public class Controller {
         return reviews;
     }
 
+    //Todo
     public void addToCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
     }
 
+    //Todo
     public boolean selectSeller(String productId, String sellerId) {
         return false;
-    }
-
-    //Todo
-    public ArrayList<String> attributes(String productId) {
-        return null;
     }
 
     //Todo
@@ -195,7 +199,7 @@ public class Controller {
     public ArrayList<String[]> reviews(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if(product == null)
-            throw new Exceptions.InvalidProductIdException();
+            throw new Exceptions.InvalidProductIdException(productId);
         else{
             ArrayList<String[]> reviews = new ArrayList<>();
             String[] reviewPack = new String[2];
@@ -214,7 +218,7 @@ public class Controller {
             throw new Exceptions.NotLoggedInException();
         else{
             if(Product.getProductById(productId) == null)
-                throw new Exceptions.InvalidProductIdException();
+                throw new Exceptions.InvalidProductIdException(productId);
             else
                 new Review(currentAccount.getId(), productId, reviewText);
         }
@@ -230,25 +234,28 @@ public class Controller {
     }
 
     //Done!!
-    protected ArrayList<String> getPersonalInfo(Account account) {
-        ArrayList<String> info = new ArrayList<>();
-        info.add(account.getUsername());
-        info.add(account.getType());
-        info.add(account.getFirstName());
-        info.add(account.getLastName());
-        info.add(account.getEmail());
-        info.add(account.getPhone());
-        if(account.getType().equals("customer"))
-            info.add(String.valueOf(((Customer) account).getBalance()));
-        else if(account.getType().equals("seller")){
-            info.add(String.valueOf(((Seller) account).getBalance()));
-            info.add(((Seller) account).getCompanyName());
-        }
+    protected String[] getPersonalInfo(Account account) {
+        String[] info;
+        if(account.getType().equals("customer")) {
+            info = new String[7];
+            info[6] = String.valueOf(((Customer) account).getBalance());
+        }else if(account.getType().equals("seller")){
+            info = new String[8];
+            info[6] = String.valueOf(((Seller) account).getBalance());
+            info[7] = ((Seller) account).getCompanyName();
+        }else
+            info = new String[6];
+        info[0] = account.getUsername();
+        info[1] = account.getType();
+        info[2] = account.getFirstName();
+        info[3] = account.getLastName();
+        info[4] = account.getEmail();
+        info[5] = account.getPhone();
         return info;
     }
 
     //Done!!
-    public ArrayList<String> viewPersonalInfo() {
+    public String[] viewPersonalInfo() {
         return getPersonalInfo(currentAccount);
     }
 
@@ -275,6 +282,7 @@ public class Controller {
         }
     }
 
+    //Done!! Todo
     protected ArrayList<String> getSaleInfo(Sale sale){
         ArrayList<String> salePack = new ArrayList<>();
         salePack.add(Double.toString(sale.getPercentage()));
