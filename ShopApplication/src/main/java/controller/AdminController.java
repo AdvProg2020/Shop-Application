@@ -5,10 +5,12 @@ import model.Discount;
 import model.Product;
 import model.account.Account;
 import model.account.Admin;
+import model.account.Customer;
 import model.request.Request;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class AdminController extends Controller {
 
@@ -27,10 +29,10 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public ArrayList<String> viewUsername(String username) throws Exceptions.NotExistedUsernameException {
+    public String[] viewUsername(String username) throws Exceptions.NotExistedUsernameException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
-            throw new Exceptions.NotExistedUsernameException();
+            throw new Exceptions.NotExistedUsernameException(username);
         else{
             return getPersonalInfo(account);
         }
@@ -40,31 +42,34 @@ public class AdminController extends Controller {
     public void deleteUsername(String username) throws Exceptions.NotExistedUsernameException {
         Account account = Account.getAccountByUsername(username);
         if(account == null)
-            throw new Exceptions.NotExistedUsernameException();
+            throw new Exceptions.NotExistedUsernameException(username);
         account.suspend();
     }
 
-    //Todo
-    public void creatManagerProfile(String username, ArrayList<String> information) throws Exceptions.ExistedUsernameException {
+    //Todo: information = String[5];
+    public void creatManagerProfile(String username, String[] information) throws Exceptions.ExistedUsernameException {
         if(Account.getAccountByUsername(username) != null)
-            throw new Exceptions.ExistedUsernameException();
-        new Admin(username, information.get(0), information.get(1), information.get(2), information.get(3), information.get(4));
+            throw new Exceptions.ExistedUsernameException(username);
+        new Admin(username, information[0], information[1], information[2], information[3], information[4]);
     }
 
-    //Done!!todo
-    public ArrayList<String> manageAllProducts() {
-        ArrayList<String> productIds = new ArrayList<>();
+    //Done!! sort?
+    public ArrayList<String[]> manageAllProducts() {
+        ArrayList<String[]> products = new ArrayList<>();
+        String[] productPack = new String[2];
         for (Product product : Product.getAllProducts()) {
-            productIds.add(product.getId());
+            productPack[0] = product.getId();
+            productPack[1] = product.getName();
+            products.add(productPack);
         }
-        return productIds;
+        return products;
     }
 
     //Done!!
     public void removeProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if(product == null)
-            throw new Exceptions.InvalidProductIdException();
+            throw new Exceptions.InvalidProductIdException(productId);
         else
             product.suspend();
     }
@@ -84,18 +89,36 @@ public class AdminController extends Controller {
     }
 
     //Done!! Should show people?
-    public ArrayList<String> viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
+    public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if(discount == null)
-            throw new Exceptions.DiscountCodeException();
+            throw new Exceptions.DiscountCodeException(code);
         else{
-            ArrayList<String> discountInfo = new ArrayList<>();
-            discountInfo.add(discount.getDiscountCode());
-            discountInfo.add(dateFormat.format(discount.getStartDate()));
-            discountInfo.add(dateFormat.format(discount.getEndDate()));
-            discountInfo.add(Double.toString(discount.getMaximumAmount()));
-            discountInfo.add(Double.toString(discount.getPercentage()));
+            String[] discountInfo = new String[5];
+            discountInfo[0] = discount.getDiscountCode();
+            discountInfo[1] = dateFormat.format(discount.getStartDate());
+            discountInfo[2] = dateFormat.format(discount.getEndDate());
+            discountInfo[3] = Double.toString(discount.getMaximumAmount());
+            discountInfo[4] = Double.toString(discount.getPercentage());
             return discountInfo;
+        }
+    }
+
+    //Done!!
+    public ArrayList<String[]> peopleWhoHaveThisDiscount(String code) throws Exceptions.DiscountCodeException{
+        Discount discount = Discount.getDiscountByCode(code);
+        if(discount == null)
+            throw new Exceptions.DiscountCodeException(code);
+        else{
+            HashMap<Customer, Integer> peopleRemainingCount = discount.getCustomers();
+            ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
+            String[] personPack = new String[2];
+            for (Customer customer : peopleRemainingCount.keySet()) {
+                personPack[0] = customer.getUsername();
+                personPack[1] = Integer.toString(peopleRemainingCount.get(customer));
+                peopleWithThisCode.add(personPack);
+            }
+            return peopleWithThisCode;
         }
     }
 
@@ -107,7 +130,7 @@ public class AdminController extends Controller {
     public void removeDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if(discount == null)
-            throw new Exceptions.DiscountCodeException();
+            throw new Exceptions.DiscountCodeException(code);
         else
             discount.suspend();
     }
@@ -125,7 +148,7 @@ public class AdminController extends Controller {
     public ArrayList<String> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId);
         if(request == null)
-            throw new Exceptions.InvalidRequestIdException();
+            throw new Exceptions.InvalidRequestIdException(requestId);
         return null;
     }
 
@@ -153,7 +176,7 @@ public class AdminController extends Controller {
     //Done!!
     public void addCategory(String categoryName, String parentCategory, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
         if(Category.getCategoryByName(categoryName) != null)
-            throw new Exceptions.InvalidCategoryException();
+            throw new Exceptions.InvalidCategoryException(categoryName);
         else if(Category.getCategoryByName(parentCategory) == null )
             throw new Exceptions.InvalidCategoryException(parentCategory);
         else
