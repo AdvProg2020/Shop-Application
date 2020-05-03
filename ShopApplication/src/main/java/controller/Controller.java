@@ -118,52 +118,60 @@ public class Controller {
     }
 
     //Done!!
-    public ArrayList<ArrayList<String>> showProduct(String productId) throws Exceptions.InvalidProductIdException {
+    public void showProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if(product == null)
-            throw new Exceptions.InvalidProductIdException();
+            throw new Exceptions.InvalidProductIdException(productId);
         else{
-            if(currentAccount == null)
-                product.increaseViewCount();
-            else if(currentAccount.getType().equals("customer"))
-                product.increaseViewCount();
-            ArrayList<ArrayList<String>> productInfo = new ArrayList<>();
-            ArrayList<String> infoPack = new ArrayList<>();
-            infoPack.add(productId);
-            infoPack.add(product.getName());
-            infoPack.add(product.getBrand());
-            infoPack.add(product.getInfoText());
-            infoPack.add(Double.toString(product.getAverageRatingScore()));
-            productInfo.add(infoPack);
-            for (SubProduct subProduct : product.getSubProducts()) {
-                ArrayList<String> subProductPack = new ArrayList<>();
-                subProductPack.add(subProduct.getId());
-                subProductPack.add(subProduct.getSeller().getCompanyName());
-                subProductPack.add(Double.toString(subProduct.getPrice()));
-                subProductPack.add(Integer.toString(subProduct.getRemainingCount()));
-                productInfo.add(subProductPack);
-            }
-            productInfo.add(null);
-            for (Review review : product.getReviews()) {
-                ArrayList<String> reviewPack = new ArrayList<>();
-                reviewPack.add(review.getReviewer().getUsername());
-                reviewPack.add(review.getReviewText());
-                productInfo.add(reviewPack);
-            }
-            return productInfo;
+            product.increaseViewCount();
         }
     }
 
+    //Done!!
+    public String[] digest(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        String[] productInfo = new String[5];
+        productInfo[0] = productId;
+        productInfo[1] = product.getName();
+        productInfo[2] = product.getBrand();
+        productInfo[3] = product.getInfoText();
+        productInfo[4] = Double.toString(product.getAverageRatingScore());
+        return productInfo;
+    }
+
+    //Done!!
+    public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException{
+        Product product = Product.getProductById(productId);
+        if(product == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        ArrayList<String[]> subProducts = new ArrayList<>();
+        String[] subProductPack = new String[4];
+        for (SubProduct subProduct : product.getSubProducts()) {
+            subProductPack[0] = subProduct.getId();
+            subProductPack[1] = subProduct.getSeller().getCompanyName();
+            subProductPack[2] = Double.toString(subProduct.getPrice());
+            subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
+            subProducts.add(subProductPack);
+        }
+        return subProducts;
+    }
+
+    //Done!!
     public ArrayList<String[]> reviewsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if(product == null)
             throw new Exceptions.InvalidProductIdException(productId);
-        product.getReviews()
-    }
-
-    //Not necessary; show Product
-    public ArrayList<String> digest(String productId){
-        return null;
+        ArrayList<String[]> reviews = new ArrayList<>();
+        String[] reviewPack = new String[3];
+        for (Review review : product.getReviews()) {
+            reviewPack[0] = review.getReviewer().getUsername();
+            reviewPack[1] = review.getReviewTitle();
+            reviewPack[2] = review.getReviewText();
+            reviews.add(reviewPack);
+        }
+        return reviews;
     }
 
     public void addToCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
