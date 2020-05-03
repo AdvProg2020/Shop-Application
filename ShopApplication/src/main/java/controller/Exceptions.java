@@ -11,14 +11,14 @@ public class Exceptions{
     }
 
     public static class NotExistedUsernameException extends Exception{
-        public NotExistedUsernameException(){
-            super("There is no account with this username!");
+        public NotExistedUsernameException(String username){
+            super("There is no account with this username: " + username);
         }
     }
 
     public static class ExistedUsernameException extends Exception{
-        public ExistedUsernameException(){
-            super("Such username has already existed!");
+        public ExistedUsernameException(String username){
+            super("There is an account with username: " + username);
         }
     }
 
@@ -41,30 +41,26 @@ public class Exceptions{
     }
 
     public static class UnavailableProductException extends Exception{
-        public UnavailableProductException(String name, String subProductId){
-            super("Product: "+name+" with Id: "+subProductId +" is unavailable!");
-        }
-        public UnavailableProductException(){
-            super("There is not enough items of this sub product!");
+        public UnavailableProductException(String subProductId){
+            super("There is not enough items of this sub product: " + subProductId);
         }
     }
 
     public static class InvalidSubProductIdException extends Exception{
-        public InvalidSubProductIdException(){
-            super("SubProductId is invalid!");
-        }
-
         public InvalidSubProductIdException(String subProductId){
-            super("There is no sub product with Id: "+ subProductId + " in  your shopping cart!");
+            super("SubProductId: " + subProductId + " is invalid!");
+        }
+    }
+
+    public static class NotProductIdInTheCartException extends Exception{
+        public NotProductIdInTheCartException(String productId){
+            super("There is no product with Id: "+ productId + " in  your shopping cart!");
         }
     }
 
     public static class InvalidProductIdException extends Exception{
-        public InvalidProductIdException(){
-            super("ProductId is Invalid!");
-        }
         public InvalidProductIdException(String productId){
-            super("There is no product with Id: "+ productId + " in your cart!");
+            super("ProductId: "+ productId + " is Invalid!");
         }
     }
 
@@ -72,31 +68,27 @@ public class Exceptions{
         public InvalidCategoryException(String categoryName){
             super("There is no category with name:"+categoryName);
         }
+    }
 
-        public InvalidCategoryException(){
-            super("There is already a category with this name!");
-        }
+    public static class ExistedCategoryException extends Exception{
+        public ExistedCategoryException(String categoryName){ super("There is already a category with this name: "+ categoryName); }
     }
 
     public static class InvalidRequestIdException extends Exception{
-        public InvalidRequestIdException(){
-            super("There is no request with this Id!");
+        public InvalidRequestIdException(String requestId){
+            super("There is no request with this Id: "+ requestId);
         }
     }
 
     public static class DiscountCodeException extends Exception{
-        public DiscountCodeException(){
-            super("There is no discount with this code!");
+        public DiscountCodeException(String discountCode){
+            super("There is no discount with this code: "+ discountCode);
         }
     }
 
     public static class NotLoggedInException extends Exception{
         public NotLoggedInException(){
             super("You should login before you do this action!");
-        }
-
-        public NotLoggedInException(String type){
-            super("You should login as a "+type+ " before doing this action!");
         }
     }
 
@@ -107,8 +99,8 @@ public class Exceptions{
     }
 
     public static class InvalidSaleIdException extends Exception{
-        public InvalidSaleIdException(){
-            super("There is no sale with this Id for you!");
+        public InvalidSaleIdException(String saleId){
+            super("There is no sale with Id: " + saleId +" for you!");
         }
     }
 }

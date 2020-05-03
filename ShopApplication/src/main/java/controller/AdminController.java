@@ -44,6 +44,7 @@ public class AdminController extends Controller {
         account.suspend();
     }
 
+    //Todo
     public void creatManagerProfile(String username, ArrayList<String> information) throws Exceptions.ExistedUsernameException {
         if(Account.getAccountByUsername(username) != null)
             throw new Exceptions.ExistedUsernameException();
@@ -68,6 +69,7 @@ public class AdminController extends Controller {
             product.suspend();
     }
 
+    //Todo
     public void createDiscountCode(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) {
 
     }
@@ -97,6 +99,7 @@ public class AdminController extends Controller {
         }
     }
 
+    //Todo
     public void editDiscountCode(String code, String field, String newInformation) {
     }
 
@@ -118,6 +121,7 @@ public class AdminController extends Controller {
         return requestIds;
     }
 
+    //Todo
     public ArrayList<String> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId);
         if(request == null)
@@ -125,6 +129,7 @@ public class AdminController extends Controller {
         return null;
     }
 
+    //Todo
     public void acceptRequest(String requestID, boolean accepted) throws Exceptions.InvalidRequestIdException {
         Request request;
     }
@@ -138,6 +143,7 @@ public class AdminController extends Controller {
         return categoryNames;
     }
 
+    //Todo
     public void editCategory(String categoryName, String field, String newField) throws Exceptions.InvalidCategoryException, Exceptions.InvalidFieldException {
         if(Category.getCategoryByName(categoryName) == null)
             throw new Exceptions.InvalidCategoryException(categoryName);

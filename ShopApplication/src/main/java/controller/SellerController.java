@@ -94,6 +94,11 @@ public class SellerController extends Controller {
     }
 
     //Todo
+    public boolean exist(String productName, String brand){
+        return false;
+    }
+
+    //Todo
     public void addProduct(ArrayList<String> information) {
     }
 

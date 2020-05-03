@@ -194,4 +194,9 @@ public class Product {
     public void addRating(String ratingId) {
         ratingIds.add(ratingId);
     }
+
+    //Todo
+    public Double getMinPrice(){
+        return 0.0;
+    }
 }

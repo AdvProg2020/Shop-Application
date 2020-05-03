@@ -86,6 +86,7 @@ public class CustomerController extends Controller {
         return totalSum;
     }
 
+    //Todo
     public String purchaseTheCart() {
         return null;
     }
@@ -136,15 +137,8 @@ public class CustomerController extends Controller {
         }
     }
 
-    //Done!!
+    //todo
     public void rateProduct(String productID, int rate) throws Exceptions.InvalidProductIdException {
-        for (SubProduct subProduct : currentCart.getSubProducts().keySet()) {
-            if (subProduct.getProduct().getId().equals(productID)) {
-                new Rating(currentAccount.getId(), productID, rate);
-                return;
-            }
-        }
-        throw new Exceptions.InvalidProductIdException(productID);
     }
 
     //Done!!

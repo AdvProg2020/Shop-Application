@@ -6,9 +6,12 @@ import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
 
+import java.sql.DataTruncation;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 
 public class Controller {
     protected static Account currentAccount;
@@ -25,7 +28,6 @@ public class Controller {
 
     //Todo
     public void creatAccount(String type, ArrayList<String> information) {// lazeme inja ham exception bezarim?
-
     }
 
     //Todo
@@ -40,13 +42,64 @@ public class Controller {
     }
 
     //Todo
-    public ArrayList<String> productsStatus() {
+    public String getType(){
         return null;
     }
 
     //Todo
-    private ArrayList<String> sortProducts(String sortBy, ArrayList<String> productIds) {
+    public ArrayList<String> productsStatus() {
         return null;
+    }
+
+    //Done!!
+    private ArrayList<Product> sortProducts(String sortBy, ArrayList<Product> products){
+        switch (sortBy){
+            case "view count":
+                products.sort(new Comparator<Product>() {
+                    @Override
+                    public int compare(Product o1, Product o2) {
+                        return Integer.compare(o1.getViewCount(), o2.getViewCount());
+                    }
+                });
+            case "price":
+                products.sort(new Comparator<Product>() {
+                    @Override
+                    public int compare(Product o1, Product o2) {
+                        return Double.compare(o1.getMinPrice(), o2.getMinPrice());
+                    }
+                });
+            case "rating score":
+                products.sort(new Comparator<Product>() {
+                    @Override
+                    public int compare(Product o1, Product o2) {
+                        return Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
+                    }
+                });
+            case "Name":
+                products.sort(new Comparator<Product>() {
+                    @Override
+                    public int compare(Product o1, Product o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+            case "category name":
+                products.sort(new Comparator<Product>() {
+                    @Override
+                    public int compare(Product o1, Product o2) {
+                        return o1.getCategory().getName().compareTo(o2.getCategory().getName());
+                    }
+                });
+        }
+        return products;
+    }
+
+    //Done!!
+    private ArrayList<String> productToId(ArrayList<Product> products){
+        ArrayList<String> productIds = new ArrayList<>();
+        for (Product product : products) {
+            productIds.add(product.getId());
+        }
+        return productIds;
     }
 
     //Todo
@@ -101,8 +154,15 @@ public class Controller {
         }
     }
 
+    public ArrayList<String[]> reviewsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        product.getReviews()
+    }
+
     //Not necessary; show Product
-    public ArrayList<String> digest(String productId) {
+    public ArrayList<String> digest(String productId){
         return null;
     }
 
@@ -183,6 +243,7 @@ public class Controller {
     public ArrayList<String> viewPersonalInfo() {
         return getPersonalInfo(currentAccount);
     }
+
     //Done!!
     protected void editCommonInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
         switch (field) {
