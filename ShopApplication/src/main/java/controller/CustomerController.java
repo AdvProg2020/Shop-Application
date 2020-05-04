@@ -34,44 +34,43 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public ArrayList<ArrayList<String>> viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
+    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (!currentCart.getSubProducts().containsKey(subProduct))
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else {
             try {
-                return showProduct(subProduct.getProduct().getId());
-            } catch (Exceptions.InvalidProductIdException ex) {
-                return null;
+                showProduct(subProduct.getProduct().getId());
+            } catch (Exceptions.InvalidProductIdException ignored) {
             }
         }
     }
 
     //Done!!
-    public void increaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException, Exceptions.UnavailableProductException {
+    public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException, Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         HashMap<SubProduct, Integer> subProducts = currentCart.getSubProducts();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
-            throw new Exceptions.InvalidSubProductIdException();
-        else if (!subProducts.containsKey(subProduct))
             throw new Exceptions.InvalidSubProductIdException(subProductId);
+        else if (!subProducts.containsKey(subProduct))
+            throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
         else if (number + subProducts.get(subProduct) > subProduct.getRemainingCount())
-            throw new Exceptions.UnavailableProductException();
+            throw new Exceptions.UnavailableProductException(subProductId);
         else
             currentCart.addSubProductCount(subProductId, number);
     }
 
     //Done!!
-    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException {
+    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException, Exceptions.NotSubProductIdInTheCartException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
-            throw new Exceptions.InvalidSubProductIdException();
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
         else {
             HashMap<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
             if (subProductsInCart.containsKey(subProduct))
                 currentCart.addSubProductCount(subProductId, -number);
             else
-                throw new Exceptions.InvalidSubProductIdException(subProductId);
+                throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
         }
     }
 
@@ -91,7 +90,7 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public ArrayList<String> viewOrders() {
+    public ArrayList<String> viewOrders() throws Exceptions.CustomerLoginException {
         if (currentAccount.getType().equals("customer")) {
             ArrayList<String> orderIds = new ArrayList<>();
             for (BuyLog buyLog : ((Customer) currentAccount).getBuyLogs()) {
@@ -99,6 +98,8 @@ public class CustomerController extends Controller {
             }
             return orderIds;
         }
+        else
+            throw new Exceptions.CustomerLoginException();
     }
 
     //Done!!

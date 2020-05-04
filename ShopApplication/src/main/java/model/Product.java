@@ -209,7 +209,7 @@ public class Product {
     }
 
     //Todo
-    public ArrayList<String> companyNames(){
-        return null;
+    public boolean inCompanyWithName(String companyName){
+        return false;
     }
 }

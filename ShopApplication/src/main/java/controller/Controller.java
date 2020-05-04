@@ -101,25 +101,15 @@ public class Controller {
                                               String companyName, double minRatingScore, ArrayList<Product> products) {
         if (available)
             products.removeIf(product -> !product.isAvailable());
-        products.removeIf(product -> product.getMinPrice() < minPrice);
+        products.removeIf(product -> product.getMinPrice() > maxPrice);
         if (maxPrice != 0)
-            products.removeIf(product -> product.getMaxPrice() > maxPrice);
+            products.removeIf(product -> product.getMaxPrice() < minPrice);
         if (!contains.equals(""))
             products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
         if (!brand.equals(""))
             products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
         if (!companyName.equals("")) {
-            for (Product product : new ArrayList<>(products)) {
-                boolean itContains = false;
-                for (String name : product.companyNames()) {
-                    if (name.toLowerCase().contains(companyName.toLowerCase())) {
-                        itContains = true;
-                        break;
-                    }
-                }
-                if (!itContains)
-                    products.remove(product);
-            }
+            products.removeIf(product -> !product.inCompanyWithName(companyName.toLowerCase()));
         }
         products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
         return products;
@@ -128,18 +118,52 @@ public class Controller {
     //Done!!
     private ArrayList<String[]> productToIdName(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
-        String[] productPack = new String[2];
         for (Product product : products) {
-            productPack[0] = product.getId();
-            productPack[1] = product.getName();
-            productIdNames.add(productPack);
+            productIdNames.add(productPack(product));
         }
         return productIdNames;
     }
 
-    //Todo
-    public ArrayList<String> viewCategories() {
-        return null;
+    private String[] productPack(Product product){
+        String[] productPack = new String[2];
+        productPack[0] = product.getId();
+        productPack[1]  =product.getName();
+        return productPack;
+    }
+
+    //Done!!
+    public ArrayList<String[]> viewCategories() {
+        try {
+            return getSubCategoriesOfThisCategory(Category.getSuperCategory().getName());
+        } catch (Exceptions.InvalidCategoryException e) {
+            return null;
+        }
+    }
+
+    //Done!!
+    public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException{
+        Category category = Category.getCategoryByName(categoryName);
+        if(category == null)
+            throw new Exceptions.InvalidCategoryException(categoryName);
+        else {
+            ArrayList<String[]> categoryIdNames = new ArrayList<>();
+            String[] categoryPack = new String[2];
+            for (Category subCategory : category.getSubCategories()) {
+                categoryPack[0] = subCategory.getId();
+                categoryPack[1] = subCategory.getName();
+                categoryIdNames.add(categoryPack);
+            }
+            return categoryIdNames;
+        }
+    }
+
+    //Done!!
+    public ArrayList<String[]> getProductsOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException{
+        Category category  = Category.getCategoryByName(categoryName);
+        if( category == null)
+            throw new Exceptions.InvalidCategoryException(categoryName);
+        else
+            return productToIdName(category.getProducts());
     }
 
     //Done!!

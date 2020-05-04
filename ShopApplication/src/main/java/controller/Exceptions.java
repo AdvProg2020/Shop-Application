@@ -1,5 +1,6 @@
 package controller;
 import model.Discount;
+import model.account.Customer;
 
 import java.lang.Exception;
 public class Exceptions{
@@ -28,6 +29,12 @@ public class Exceptions{
         }
     }
 
+    public static class CustomerLoginException extends Exception{
+        public CustomerLoginException(){
+            super("You should login as a customer to see your orders!");
+        }
+    }
+
     public static class InvalidFieldException extends Exception{
         public InvalidFieldException(){
             super("There is no such field or you can't change this field!");
@@ -52,9 +59,9 @@ public class Exceptions{
         }
     }
 
-    public static class NotProductIdInTheCartException extends Exception{
-        public NotProductIdInTheCartException(String productId){
-            super("There is no product with Id: "+ productId + " in  your shopping cart!");
+    public static class NotSubProductIdInTheCartException extends Exception{
+        public NotSubProductIdInTheCartException(String subProductId){
+            super("There is no subProduct with Id: "+ subProductId + " in  your shopping cart!");
         }
     }
 
