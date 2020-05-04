@@ -134,15 +134,19 @@ public class Controller {
         Product product = Product.getProductById(productId);
         if(product == null)
             throw new Exceptions.InvalidProductIdException(productId);
+        return digest(product);
+    }
+
+    //Done!!
+    protected String[] digest(Product product){
         String[] productInfo = new String[5];
-        productInfo[0] = productId;
+        productInfo[0] = product.getId();
         productInfo[1] = product.getName();
         productInfo[2] = product.getBrand();
         productInfo[3] = product.getInfoText();
         productInfo[4] = Double.toString(product.getAverageRatingScore());
         return productInfo;
     }
-
     //Todo
     public ArrayList<String> attributes(String productId) {
         return null;
@@ -225,8 +229,8 @@ public class Controller {
     }
 
     //Done!!
-    public ArrayList<ArrayList<String>> sales() {
-        ArrayList<ArrayList<String>> sales = new ArrayList<>();
+    public ArrayList<String[]> sales() {
+        ArrayList<String[]> sales = new ArrayList<>();
         for (Sale sale : Sale.getAllSales()) {
             sales.add(getSaleInfo(sale));
         }
@@ -283,17 +287,34 @@ public class Controller {
     }
 
     //Done!! Todo
-    protected ArrayList<String> getSaleInfo(Sale sale){
-        ArrayList<String> salePack = new ArrayList<>();
-        salePack.add(Double.toString(sale.getPercentage()));
-        salePack.add(sale.getSeller().getCompanyName());
-        salePack.add(dateFormat.format(sale.getStartDate()));
-        salePack.add(dateFormat.format(sale.getEndDate()));
-        salePack.add(Integer.toString(sale.getSubProducts().size()));
-        for (SubProduct subProduct : sale.getSubProducts()) {
-            salePack.add(subProduct.getProduct().getName());
-            salePack.add(subProduct.getProduct().getId());
-        }
+    protected String[] getSaleInfo(Sale sale){
+        String[] salePack = new String[5];
+        salePack[0] = Double.toString(sale.getPercentage());
+        salePack[1] = sale.getSeller().getCompanyName();
+        salePack[2] = dateFormat.format(sale.getStartDate());
+        salePack[3] = dateFormat.format(sale.getEndDate());
+        salePack[5] = Integer.toString(sale.getSubProducts().size());
         return salePack;
+    }
+
+    //Done!!
+    public ArrayList<String[]> getProductInSale(String saleId) throws Exceptions.InvalidSaleIdException{
+        Sale sale = Sale.getSaleById(saleId);
+        if(sale == null)
+            throw new Exceptions.InvalidSaleIdException(saleId);
+        else
+            return getProductsInSale(sale);
+    }
+
+    //Done!!
+    protected ArrayList<String[]> getProductsInSale(Sale sale){
+        ArrayList<String[]> productsInSale = new ArrayList<>();
+        String[] productPack = new String[2];
+        for (SubProduct subProduct : sale.getSubProducts()) {
+            productPack[0] = subProduct.getProduct().getName();
+            productPack[1] = subProduct.getProduct().getId();
+            productsInSale.add(productPack);
+        }
+        return productsInSale;
     }
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import model.Product;
 import model.Sale;
 import model.SubProduct;
 import model.account.Customer;
@@ -64,18 +65,17 @@ public class SellerController extends Controller {
     public ArrayList<String> viewProductsForASeller(String categoryName) {return null;}
 
     //Done!!
-    public ArrayList<ArrayList<String>> viewProduct(String productID) throws Exceptions.InvalidProductIdException {
+    public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID))
-                return showProduct(productID);
+                return digest(subProduct.getProduct());
         }
-        throw new Exceptions.InvalidProductIdException();
+        throw new Exceptions.InvalidProductIdException(productID);
 
     }
 
     //Done!!
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
-
         Seller seller = ((Seller)currentAccount);
         for (SubProduct subProduct : seller.getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
@@ -86,15 +86,19 @@ public class SellerController extends Controller {
                 return buyers;
             }
         }
-        throw new Exceptions.InvalidProductIdException();
+        throw new Exceptions.InvalidProductIdException(productID);
     }
 
     //Todo
     public void editProduct(String productID, String field, String newInformation) {
     }
 
-    //Todo
+    //Done!!
     public boolean exist(String productName, String brand){
+        for (Product product : Product.getAllProducts()) {
+            if(product.getName().equalsIgnoreCase(productName) && product.getBrand().equalsIgnoreCase(brand))
+                return true;
+        }
         return false;
     }
 
@@ -102,7 +106,7 @@ public class SellerController extends Controller {
     public void addProduct(ArrayList<String> information) {
     }
 
-    //Done!
+    //Done!!
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller)currentAccount).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
@@ -110,7 +114,7 @@ public class SellerController extends Controller {
                 return;
             }
         }
-        throw new Exceptions.InvalidProductIdException();
+        throw new Exceptions.InvalidProductIdException(productID);
     }
 
     //Done!!
@@ -123,13 +127,13 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    public ArrayList<String> viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
+    public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
         for (Sale sale : ((Seller) currentAccount).getSales()) {
             if (sale.getId().equals(saleId)) {
                 return getSaleInfo(sale);
             }
         }
-        throw new Exceptions.InvalidSaleIdException();
+        throw new Exceptions.InvalidSaleIdException(saleId);
     }
 
     //Todo
