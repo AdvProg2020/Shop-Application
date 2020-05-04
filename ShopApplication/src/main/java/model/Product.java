@@ -199,4 +199,17 @@ public class Product {
     public Double getMinPrice(){
         return 0.0;
     }
+
+    //Todo
+    public Double getMaxPrice() {return 0.0;}
+
+    //Todo
+    public boolean isAvailable(){
+        return false;
+    }
+
+    //Todo
+    public ArrayList<String> companyNames(){
+        return null;
+    }
 }

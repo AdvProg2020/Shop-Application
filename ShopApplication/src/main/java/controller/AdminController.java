@@ -33,7 +33,7 @@ public class AdminController extends Controller {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
             throw new Exceptions.NotExistedUsernameException(username);
-        else{
+        else {
             return getPersonalInfo(account);
         }
     }
@@ -41,14 +41,14 @@ public class AdminController extends Controller {
     //Done!!
     public void deleteUsername(String username) throws Exceptions.NotExistedUsernameException {
         Account account = Account.getAccountByUsername(username);
-        if(account == null)
+        if (account == null)
             throw new Exceptions.NotExistedUsernameException(username);
         account.suspend();
     }
 
     //Todo: information = String[5];
     public void creatManagerProfile(String username, String[] information) throws Exceptions.ExistedUsernameException {
-        if(Account.getAccountByUsername(username) != null)
+        if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.ExistedUsernameException(username);
         new Admin(username, information[0], information[1], information[2], information[3], information[4]);
     }
@@ -68,7 +68,7 @@ public class AdminController extends Controller {
     //Done!!
     public void removeProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
-        if(product == null)
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else
             product.suspend();
@@ -91,9 +91,9 @@ public class AdminController extends Controller {
     //Done!! Should show people?
     public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
-        if(discount == null)
+        if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
-        else{
+        else {
             String[] discountInfo = new String[5];
             discountInfo[0] = discount.getDiscountCode();
             discountInfo[1] = dateFormat.format(discount.getStartDate());
@@ -105,11 +105,11 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public ArrayList<String[]> peopleWhoHaveThisDiscount(String code) throws Exceptions.DiscountCodeException{
+    public ArrayList<String[]> peopleWhoHaveThisDiscount(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
-        if(discount == null)
+        if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
-        else{
+        else {
             HashMap<Customer, Integer> peopleRemainingCount = discount.getCustomers();
             ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
             String[] personPack = new String[2];
@@ -129,7 +129,7 @@ public class AdminController extends Controller {
     //Done!!
     public void removeDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
-        if(discount == null)
+        if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
         else
             discount.suspend();
@@ -147,7 +147,7 @@ public class AdminController extends Controller {
     //Todo
     public ArrayList<String> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId);
-        if(request == null)
+        if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
         return null;
     }
@@ -168,16 +168,16 @@ public class AdminController extends Controller {
 
     //Todo
     public void editCategory(String categoryName, String field, String newField) throws Exceptions.InvalidCategoryException, Exceptions.InvalidFieldException {
-        if(Category.getCategoryByName(categoryName) == null)
+        if (Category.getCategoryByName(categoryName) == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
 
     }
 
     //Done!!
     public void addCategory(String categoryName, String parentCategory, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
-        if(Category.getCategoryByName(categoryName) != null)
+        if (Category.getCategoryByName(categoryName) != null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        else if(Category.getCategoryByName(parentCategory) == null )
+        else if (Category.getCategoryByName(parentCategory) == null)
             throw new Exceptions.InvalidCategoryException(parentCategory);
         else
             new Category(categoryName, Category.getCategoryByName(parentCategory).getId(), specialProperties);
@@ -186,7 +186,7 @@ public class AdminController extends Controller {
     //Done!! Shayan: terminate oke?
     public void removeCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if(category == null)
+        if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         category.terminate();
     }
