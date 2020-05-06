@@ -13,7 +13,7 @@ public class Menus {
         private Menu nextMenu;
 
         AccountMenu(String name) {
-            super(name, false, null, Constants.MenuCommandAndPattern.accountMenuPattern, Constants.MenuCommandAndPattern.accountMenuCommand);
+            super(name, false, null, Constants.Menus.accountMenuPattern, Constants.Menus.accountMenuCommand);
             Menu.accountMenu = this;
             previousMenu = null;
             nextMenu = null;
@@ -85,7 +85,7 @@ public class Menus {
         private ArrayList<String> currentProducts;
 
         AllProductsMenu(String name, Menu parent) {
-            super(name, true, parent, Constants.MenuCommandAndPattern.allProductsMenuPattern, Constants.MenuCommandAndPattern.allProductsMenuCommand);
+            super(name, true, parent, Constants.Menus.allProductsMenuPattern, Constants.Menus.allProductsMenuCommand);
             this.categoryTree = new ArrayList<>();
             this.currentFilters = new ArrayList<>();
             currentSort = new StringBuilder();
@@ -140,7 +140,7 @@ public class Menus {
         private ArrayList<String> availableSorts;
 
         SortMenu(String name, Menu parent, ArrayList<String> availableSorts, StringBuilder currentSort){
-            super(name, true, parent, Constants.MenuCommandAndPattern.sortMenuPattern, Constants.MenuCommandAndPattern.sortMenuCommand);
+            super(name, true, parent, Constants.Menus.sortMenuPattern, Constants.Menus.sortMenuCommand);
             this.currentSort = currentSort;
             this.availableSorts = new ArrayList<>(availableSorts);
         }
@@ -167,7 +167,7 @@ public class Menus {
         private ArrayList<String> availableFilters;
 
         FilterMenu(String name, Menu parent, ArrayList<String> availableFilters, ArrayList<String> currentFilters){
-            super(name, true, parent, Constants.MenuCommandAndPattern.filterMenuPattern, Constants.MenuCommandAndPattern.filterMenuCommand);
+            super(name, true, parent, Constants.Menus.filterMenuPattern, Constants.Menus.filterMenuCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = new ArrayList<>(availableFilters);
         }
@@ -195,7 +195,7 @@ public class Menus {
         private ArrayList<String> currentProducts;
         private ArrayList<String> currentOffs;
         SaleMenu(String name, Menu parent) {
-            super(name, true, parent, Constants.MenuCommandAndPattern.saleMenuPattern, Constants.MenuCommandAndPattern.saleMenuCommand);
+            super(name, true, parent, Constants.Menus.saleMenuPattern, Constants.Menus.saleMenuCommand);
             this.currentSort = new StringBuilder();
             this.currentFilters = new ArrayList<>();
             this.currentProducts = new ArrayList<>();
@@ -225,9 +225,6 @@ public class Menus {
         private ArrayList<String> getAvailableFilters() {
             return null;
         }
-
-        public void showCurrentSales(){}
-        public void showProductByID(String ID){}
     }
 
     public static class AnonymousUserAccountMenu extends Menu {
@@ -274,39 +271,74 @@ public class Menus {
 
     //Todo: in sub menus add custom personalInfoMenu
     public static class AdminMenu extends Menu {
-        AdminMenu(String name, Menu parent) {}
+        AdminMenu(String name, Menu parent) {
+            super(name, false, parent, null, null);
+        }
+
         @Override
-        public void execute() {}
-    }
+        protected void initSubMenus() {
+            subMenus.put(1, new PersonalInfoMenu("admin personal info", this) {
+                //TODO: imp.
+                @Override
+                protected ArrayList<String> getEditableFields() {
+                    return null;
+                }
+            });
+            subMenus.put(2, new UserManagingMenu("user managing menu", this));
+            subMenus.put(3, new ProductManagingMenu("product managing menu", this));
+            subMenus.put(4, new DiscountCodesManagingMenu( "discount code managing menu", this));
+            subMenus.put(5, new RequestManagingMenu("request managing menu", this));
+            subMenus.put(6, new CategoryManagingMenu("category managing menu", this));
+        }
 
+        @Override
+        protected void initSubActions() {
 
-    public static abstract class PersonalInfoMenu extends Menu{
-        PersonalInfoMenu(String name, Menu parent){
-            super(name, false, parent, )
         }
     }
 
-    public static class UserManagingMenu extends Menu{
-        UserManagingMenu(String name, Menu parent);
+
+    public static abstract class PersonalInfoMenu extends Menu {
+        PersonalInfoMenu(String name, Menu parent){
+            super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
+        }
+
         @Override
-        public void execute() {}
+        protected void initSubMenus() {
+            //no available subMenus
+        }
+
+        @Override
+        protected void initSubActions() {
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.EditField("edit field",getEditableFields()));
+            subActions.put(index + 2, new Actions.BackAction("view personal info back", parent));
+        }
+
+        protected abstract ArrayList<String> getEditableFields();
+    }
+
+    public static class UserManagingMenu extends Menu{
+        UserManagingMenu(String name, Menu parent) {
+            super(name, false, parent, Constants.Menus.userManagingMenuPattern, Constants.Menus.userManagingMenuCommand);
+        }
         public void viewUser(String command){}
         public void deleteUser(String command){}
         public void createAdmin(){}
     }
 
     public static class ProductManagingMenu extends Menu{
-        ProductManagingMenu(String name, Menu parent) {}
-        @Override
-        public void execute() {}
+        ProductManagingMenu(String name, Menu parent) {
+            super(name, false, parent, Constants.Menus.productManagingMenuPattern, Constants.Menus.productManagingMenuCommand);
+        }
         public void removeProduct(String command);
     }
 
     //this one handles both creation and view discount codes. so supports to commands
-    public static class DiscountCodesMenu extends Menu{
-        DiscountCodesMenu(String name, Menu parent) {}
-        @Override
-        public void execute() {}
+    public static class DiscountCodesManagingMenu extends Menu{
+        DiscountCodesManagingMenu(String name, Menu parent) {
+            super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
+        }
         public void createDiscountCode(){}
         public void viewDiscountCodes(){}
         public void viewDiscountByCode(String code){}
@@ -315,17 +347,19 @@ public class Menus {
     }
 
     public static class RequestManagingMenu extends Menu {
-        RequestManagingMenu(String name, Menu parent) {}
-        @Override
-        public void execute() {}
+        RequestManagingMenu(String name, Menu parent) {
+            super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
+        }
+
         public void viewRequestDetailsByID(String ID){}
         public void determineRequest(String ID, boolean isAccepted){}
     }
 
     public static class CategoryManagingMenu extends Menu {
-        CategoryManagingMenu(String name, Menu parent) {}
-        @Override
-        public void execute() {}
+        CategoryManagingMenu(String name, Menu parent) {
+            super(name, false, parent, Constants.Menus.categoryManagingMenuPattern, Constants.Menus.categoryManagingMenuCommand);
+        }
+
         public boolean isCategoryValid(String category){}
         public void addCategory(String category){}
         public void editCategory(String category){}
@@ -334,7 +368,9 @@ public class Menus {
 
     //Todo: in sub menus add custom personalInfoMenu and also show method should support few more methods methods.
     public static class SellerMenu extends Menu {
-        SellerMenu(String name, Menu parent) {}
+        SellerMenu(String name, Menu parent) {
+            super(name, )
+        }
         @Override
         public void execute() {}
         public void viewCompanyInfo(){}

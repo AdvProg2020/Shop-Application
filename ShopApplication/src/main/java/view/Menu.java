@@ -99,7 +99,11 @@ public abstract class Menu {
         }
         for (Integer actionIndex : subActions.keySet()) {
             if (command.equals(Integer.toString(actionIndex)) || command.matches(subActions.get(actionIndex).getActionPattern())) {
-                subActions.get(actionIndex).execute(command);
+                try {
+                    subActions.get(actionIndex).execute(command);
+                } catch (Exception actionException) {
+                    System.out.println(actionException.getMessage());
+                }
                 this.run();
             }
         }

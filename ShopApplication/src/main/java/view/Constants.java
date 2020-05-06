@@ -7,7 +7,7 @@ public class Constants {
     private static final String
     private static final String
 
-    public static class MenuCommandAndPattern {
+    public static class Menus {
         public static final String accountMenuCommand = "account menu";
         public static final String accountMenuPattern = caseInsensitiveMode + "^" + accountMenuCommand + "$";
         public static final String allProductsMenuCommand = "products";
@@ -20,13 +20,26 @@ public class Constants {
         public static final String saleMenuPattern = caseInsensitiveMode + "^" + saleMenuCommand + "$";
         public static final String showProductByIDCommand = "show product [productID]";
         public static final String showProductByIDPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
+        public static final String viewPersonalInfoCommand = "view personal info";
+        public static final String viewPersonalInfoPattern = caseInsensitiveMode + "^"  + viewPersonalInfoCommand + "$";
+        public static final String userManagingMenuCommand = "manage users";
+        public static final String userManagingMenuPattern = caseInsensitiveMode + "^" + userManagingMenuCommand + "$";
+        public static final String productManagingMenuCommand = "manage all products";
+        public static final String productManagingMenuPattern = caseInsensitiveMode + "^" + productManagingMenuCommand + "$";
+        public static final String discountCodesManagingMenuCommand = "view discount codes";
+        public static final String discountCodesManagingMenuPattern = caseInsensitiveMode + "^" + discountCodesManagingMenuCommand + "$";
+        public static final String requestManagingMenuCommand = "manage requests";
+        public static final String requestManagingMenuPattern = caseInsensitiveMode + "^" + requestManagingMenuCommand + "$";
+        public static final String categoryManagingMenuCommand = "manage categories";
+        public static final String categoryManagingMenuPattern = caseInsensitiveMode + "^" + categoryManagingMenuCommand + "$";
+        public static final String
         public static final String
         public static final String
         public static final String
         public static final String
     }
 
-    public static class ActionCommandAndPattern {
+    public static class Actions {
         public static final String backCommand = "back";
         public static final String backPattern = caseInsensitiveMode + "^" + backCommand + "$";
         public static final String exitCommand = "exit";
@@ -66,8 +79,9 @@ public class Constants {
         //SaleMenu actions.l
         public static final String showOffsCommand = "show offs";
         public static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
-        public static final String
-        public static final String
+
+        public static final String editFieldCommand = "edit [field]";
+        public static final String editFieldPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
         public static final String
         public static final String
         public static final String
