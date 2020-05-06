@@ -36,8 +36,10 @@ public class Constants {
         public static final String sellerProductManagingMenuPattern = caseInsensitiveMode + "^" + sellerProductManagingMenuCommand + "$";
         public static final String sellerSaleManagingMenuCommand = "view offs";
         public static final String sellerSaleManagingMenuPattern = caseInsensitiveMode + "^" + sellerSaleManagingMenuCommand + "$";
-        public static final String
-        public static final String
+        public static final String customerShoppingCartMenuCommand = "view cart";
+        public static final String customerShoppingCartMenuPattern = caseInsensitiveMode + "^" + customerShoppingCartMenuCommand + "$";
+        public static final String customerOrderLogMenuCommand = "view orders";
+        public static final String customerOrderLogMenuPattern = caseInsensitiveMode + "^" + customerOrderLogMenuCommand + "$";
         public static final String
         public static final String
         public static final String
@@ -94,8 +96,10 @@ public class Constants {
         public static final String showSellerCategoriesPattern = caseInsensitiveMode + "^" + showSellerCategoriesCommand + "$";
         public static final String showSellerBalanceCommand = "view balance";
         public static final String showSellerBalancePattern = caseInsensitiveMode + "^" + showSellerBalanceCommand + "$";
-        public static final String
-        public static final String
+        public static final String showCustomerBalanceCommand = "view balance";
+        public static final String showCustomerBalancePattern = caseInsensitiveMode + "^" + showCustomerBalanceCommand + "$";
+        public static final String showCustomerDiscountCodesCommand = "view discount codes";
+        public static final String showCustomerDiscountCodesPattern = caseInsensitiveMode + "^" + showCustomerDiscountCodesCommand +"$";
         public static final String
     }
 }

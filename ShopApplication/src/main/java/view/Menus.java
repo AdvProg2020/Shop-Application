@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 //Todo: addSubMenus, support back option for every field getter and menu. new all submenus or you'll get nullPtrExc.
 //Todo: make all stupid public methods private :||||
+//TODO: vase menu haye AccountMenu, AnonymousUserAccountMenu, AdminMenu, SellerMenu and CustomerMenu bayad back makhsos tarahi shavad.
 public class Menus {
     //TODO: initSubActions havaset bashe bayad fargh kone. ye Action makhsos besaz.
     //TODO: execute khas. handle kardane back alan moshkel dre.
@@ -121,6 +122,7 @@ public class Menus {
         }
     }
 
+    //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim.
     public static class ProductMenu extends Menu {
         private String productID;
         ProductMenu(String name, Menu parent){}
@@ -270,7 +272,6 @@ public class Menus {
         private void getAdminInfo(){}
     }
 
-    //Todo: in sub menus add custom personalInfoMenu
     public static class AdminMenu extends Menu {
         AdminMenu(String name, Menu parent) {
             super(name, false, parent, null, null);
@@ -368,7 +369,6 @@ public class Menus {
         public void removeCategory(String category){}
     }
 
-    //Todo: in sub menus add custom personalInfoMenu and also show method should support few more methods methods.
     public static class SellerMenu extends Menu {
         SellerMenu(String name, Menu parent) {
             super(name, false, parent, null, null);
@@ -396,11 +396,6 @@ public class Menus {
             subActions.put(index + 4, new Actions.ShowSellerSellHistory("seller sell history"));
             subActions.put(index + 5, new Actions.BackAction("seller menu back", parent));
         }
-
-        public void viewCompanyInfo(){}
-        public void viewSellHistory(){}
-        public void viewCategories(){}
-        public void viewBalance(){}
     }
 
     public static class SellerSalesMenu extends Menu {
@@ -425,21 +420,40 @@ public class Menus {
         public void removeProduct(String ID){}
     }
 
-    public abstract class TransactionLogMenu {
-        TransactionLogMenu(String name, Menu parent) {}
-    }
-
     //Todo: in sub menus add custom personalInfoMenu
     public static class CustomerMenu extends Menu {
-        CustomerMenu(String name, Menu parent) {}
+        CustomerMenu(String name, Menu parent) {
+            super(name, false, parent, null, null);
+        }
+
         @Override
-        public void execute() {}
+        protected void initSubMenus() {
+            subMenus.put(1, new PersonalInfoMenu("customer personal info menu", this) {
+                //TODO: imp
+                @Override
+                protected ArrayList<String> getEditableFields() {
+                    return null;
+                }
+            });
+            subMenus.put(2, new ShoppingCartMenu("customer shopping cart", this));
+            subMenus.put(3, new CustomerOrderLogMenu("customer order log menu", this));
+        }
+
+        @Override
+        protected void initSubActions() {
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ShowCustomerBalance("show customer balance"));
+            subActions.put(index + 2, new Actions.ShowCustomerDiscountCodes("show customer discount codes"));
+            subActions.put(index + 3, new Actions.BackAction("back", parent));
+        }
     }
 
     //this is both used in product menu and in customer menu
     //also should be able to handle both method call and menu call because of shopping cart
     public static class ShoppingCartMenu extends Menu {
-        ShoppingCartMenu(String name, Menu parent){}
+        ShoppingCartMenu(String name, Menu parent){
+            super(name, false)
+        }
         @Override
         public void execute() {}
         public void showProducts(){}

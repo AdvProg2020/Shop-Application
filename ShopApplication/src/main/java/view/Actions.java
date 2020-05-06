@@ -1,5 +1,7 @@
 package view;
 
+import com.sun.tools.jconsole.JConsoleContext;
+
 import java.util.ArrayList;
 
 //TODO: be actions controller haro moarefi kon.
@@ -313,4 +315,27 @@ public class Actions {
         }
     }
 
+    public static class ShowCustomerBalance extends Action {
+        ShowCustomerBalance(String name) {
+            super(name, Constants.Actions.showCustomerBalancePattern, Constants.Actions.showCustomerBalanceCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowCustomerDiscountCodes extends Action {
+        ShowCustomerDiscountCodes(String name) {
+            super(name, Constants.Actions.showCustomerDiscountCodesPattern, Constants.Actions.showCustomerDiscountCodesCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
 }
