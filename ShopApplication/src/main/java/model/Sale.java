@@ -43,7 +43,15 @@ public class Sale {
     }
 
     public static Sale getSaleById(String saleId) {
-        return allSales.get(saleId);
+        return getSaleById(saleId, true);
+    }
+
+    public static Sale getSaleById(String saleId, boolean checkSuspense) {
+        Sale sale = allSales.get(saleId);
+        if (checkSuspense && sale != null && sale.suspended) {
+            sale = null;
+        }
+        return sale;
     }
 
     public void initialize() {
@@ -66,7 +74,7 @@ public class Sale {
         suspended = true;
     }
 
-    public String getSaleId() {
+    public String getId() {
         return saleId;
     }
 
@@ -110,11 +118,7 @@ public class Sale {
         ArrayList<SubProduct> subProducts = new ArrayList<>();
         for (String subProductId : subProductIds) {
             SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-            if (subProduct == null) {
-                subProductIds.remove(subProductId);
-            } else {
-                subProducts.add(subProduct);
-            }
+            subProducts.add(subProduct);
         }
         return subProducts;
     }

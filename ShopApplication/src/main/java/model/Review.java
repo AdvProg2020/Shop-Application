@@ -10,6 +10,7 @@ public class Review {
     private String reviewId;
     private String reviewerId;
     private String productId;
+    private String reviewTitle;//Todo
     private String reviewText;
     private boolean bought;
 
@@ -42,16 +43,20 @@ public class Review {
         allReviews.remove(reviewId);
     }
 
-    public String getReviewId() {
+    public String getId() {
         return reviewId;
     }
 
     public Account getReviewer() {
-        return Account.getAccountById(reviewerId);
+        return Account.getAccountById(reviewerId, false);
     }
 
     public Product getProduct() {
         return Product.getProductById(productId);
+    }
+
+    public String getReviewTitle(){
+        return reviewTitle;
     }
 
     public String getReviewText() {

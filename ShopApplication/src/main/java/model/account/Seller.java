@@ -22,7 +22,15 @@ public class Seller extends Account {
     }
 
     public static Seller getSellerById(String accountId) {
-        return (Seller) Account.getAccountById(accountId);
+        return getSellerById(accountId, true);
+    }
+
+    public static Seller getSellerById(String accountId, boolean checkSuspense) {
+        Seller seller = (Seller) allAccounts.get(accountId);
+        if (checkSuspense && seller != null && seller.suspended) {
+            seller = null;
+        }
+        return seller;
     }
 
     @Override

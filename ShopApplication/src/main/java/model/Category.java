@@ -12,6 +12,7 @@ public class Category {
     private ArrayList<String> specialProperties;
     private transient HashSet<String> productIds;
     private transient HashSet<String> subCategoryIds;
+    private static Category superCategory; //Todo
 
     public Category(String name, String parentId, ArrayList<String> specialProperties) {
         this.name = name;
@@ -65,7 +66,7 @@ public class Category {
         allCategories.remove(categoryId);
     }
 
-    public String getCategoryId() {
+    public String getId() {
         return categoryId;
     }
 
@@ -129,5 +130,10 @@ public class Category {
 
     public void removeSubCategory(String subCategoryId) {
         subCategoryIds.remove(subCategoryId);
+    }
+
+    //Todo?
+    public static Category getSuperCategory(){
+        return superCategory;
     }
 }

@@ -53,7 +53,15 @@ public class Product {
     }
 
     public static Product getProductById(String productId) {
-        return allProducts.get(productId);
+        return getProductById(productId, true);
+    }
+
+    public static Product getProductById(String productId, boolean checkSuspense) {
+        Product product = allProducts.get(productId);
+        if (checkSuspense && product != null && product.suspended) {
+            product = null;
+        }
+        return product;
     }
 
     public void initialize() {
@@ -86,7 +94,7 @@ public class Product {
         suspended = true;
     }
 
-    public String getProductId() {
+    public String getId() {
         return productId;
     }
 
@@ -185,5 +193,23 @@ public class Product {
 
     public void addRating(String ratingId) {
         ratingIds.add(ratingId);
+    }
+
+    //Todo
+    public Double getMinPrice(){
+        return 0.0;
+    }
+
+    //Todo
+    public Double getMaxPrice() {return 0.0;}
+
+    //Todo
+    public boolean isAvailable(){
+        return false;
+    }
+
+    //Todo
+    public boolean inCompanyWithName(String companyName){
+        return false;
     }
 }

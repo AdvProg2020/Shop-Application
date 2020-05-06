@@ -22,8 +22,16 @@ public class Customer extends Account {
         initialize();
     }
 
-    public static Customer getCustomerById(String customerId) {
-        return (Customer) allAccounts.get(customerId);
+    public static Customer getCustomerById(String accountId) {
+        return getCustomerById(accountId, true);
+    }
+
+    public static Customer getCustomerById(String accountId, boolean checkSuspense) {
+        Customer customer = (Customer) allAccounts.get(accountId);
+        if (checkSuspense && customer != null && customer.suspended) {
+            customer = null;
+        }
+        return customer;
     }
 
     @Override

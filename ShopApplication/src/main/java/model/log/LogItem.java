@@ -43,10 +43,10 @@ public class LogItem {
         allLogItems.put(logItemId, this);
         getBuyLog().addLogItem(logItemId);
         getSellLog().addLogItem(logItemId);
-        getSubProduct().addCustomer(getCustomer().getAccountId());
+        getSubProduct().addCustomer(getCustomer().getId());
     }
 
-    public String getLogItemId() {
+    public String getId() {
         return logItemId;
     }
 
@@ -67,7 +67,7 @@ public class LogItem {
     }
 
     public SubProduct getSubProduct() {
-        return SubProduct.getSubProductById(subProductId);
+        return SubProduct.getSubProductById(subProductId, false);
     }
 
     public double getUnitPrice() {

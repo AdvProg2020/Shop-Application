@@ -39,12 +39,12 @@ public class Rating {
         allRatings.remove(ratingId);
     }
 
-    public String getRatingId() {
+    public String getId() {
         return ratingId;
     }
 
     public Customer getCustomer() {
-        return Customer.getCustomerById(customerId);
+        return Customer.getCustomerById(customerId, false);
     }
 
     public Product getProduct() {
