@@ -4,8 +4,6 @@ public class Constants {
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
-    private static final String
-    private static final String
 
     public static class Menus {
         public static final String accountMenuCommand = "account menu";
@@ -18,8 +16,8 @@ public class Constants {
         public static final String filterMenuPattern = caseInsensitiveMode + "^" + filterMenuCommand + "$";
         public static final String saleMenuCommand = "offs";
         public static final String saleMenuPattern = caseInsensitiveMode + "^" + saleMenuCommand + "$";
-        public static final String showProductByIDCommand = "show product [productID]";
-        public static final String showProductByIDPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
+        public static final String productDetailMenuCommand = "show product [productID]";
+        public static final String productDetailMenuPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
         public static final String viewPersonalInfoCommand = "view personal info";
         public static final String viewPersonalInfoPattern = caseInsensitiveMode + "^"  + viewPersonalInfoCommand + "$";
         public static final String userManagingMenuCommand = "manage users";
@@ -36,13 +34,13 @@ public class Constants {
         public static final String sellerProductManagingMenuPattern = caseInsensitiveMode + "^" + sellerProductManagingMenuCommand + "$";
         public static final String sellerSaleManagingMenuCommand = "view offs";
         public static final String sellerSaleManagingMenuPattern = caseInsensitiveMode + "^" + sellerSaleManagingMenuCommand + "$";
-        public static final String customerShoppingCartMenuCommand = "view cart";
-        public static final String customerShoppingCartMenuPattern = caseInsensitiveMode + "^" + customerShoppingCartMenuCommand + "$";
+        public static final String shoppingCartMenuCommand = "view cart";
+        public static final String shoppingCartMenuPattern = caseInsensitiveMode + "^" + shoppingCartMenuCommand + "$";
         public static final String customerOrderLogMenuCommand = "view orders";
         public static final String customerOrderLogMenuPattern = caseInsensitiveMode + "^" + customerOrderLogMenuCommand + "$";
-        public static final String
-        public static final String
-        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
     }
 
     public static class Actions {
@@ -100,6 +98,6 @@ public class Constants {
         public static final String showCustomerBalancePattern = caseInsensitiveMode + "^" + showCustomerBalanceCommand + "$";
         public static final String showCustomerDiscountCodesCommand = "view discount codes";
         public static final String showCustomerDiscountCodesPattern = caseInsensitiveMode + "^" + showCustomerDiscountCodesCommand +"$";
-        public static final String
+//        public static final String
     }
 }

@@ -125,9 +125,20 @@ public class Menus {
     //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim.
     public static class ProductMenu extends Menu {
         private String productID;
-        ProductMenu(String name, Menu parent){}
+        ProductMenu(String name, Menu parent){
+            super(name, false, parent, Constants.Menus.productDetailMenuPattern, Constants.Menus.productDetailMenuCommand);
+        }
+
         @Override
-        public void execute() {}
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
+
         public void digest(){}
         //should select seller before adding.
         public void addToShoppingCart(){}
@@ -248,30 +259,6 @@ public class Menus {
         }
     }
 
-    public static class LoginMenu extends Menu{
-        private String username;
-        private String password;
-        LoginMenu(String name, Menu parent){}
-        @Override
-        public void execute() {}
-    }
-
-    public static class RegisterMenu extends Menu {
-        private String username;
-        private String password;
-        private String phoneNumber;
-        private String firstName;
-        private String lastName;
-        private String emailAddress;
-        private String type;
-        RegisterMenu(String name, Menu parent) {}
-        @Override
-        public void execute() {}
-        private void getCustomerInfo(){}
-        private void getSellerInfo(){}
-        private void getAdminInfo(){}
-    }
-
     public static class AdminMenu extends Menu {
         AdminMenu(String name, Menu parent) {
             super(name, false, parent, null, null);
@@ -300,7 +287,6 @@ public class Menus {
         }
     }
 
-
     public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
@@ -325,16 +311,32 @@ public class Menus {
         UserManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.userManagingMenuPattern, Constants.Menus.userManagingMenuCommand);
         }
-        public void viewUser(String command){}
-        public void deleteUser(String command){}
-        public void createAdmin(){}
+
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 
     public static class ProductManagingMenu extends Menu{
         ProductManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.productManagingMenuPattern, Constants.Menus.productManagingMenuCommand);
         }
-        public void removeProduct(String command);
+
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 
     //this one handles both creation and view discount codes. so supports to commands
@@ -342,11 +344,16 @@ public class Menus {
         DiscountCodesManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
         }
-        public void createDiscountCode(){}
-        public void viewDiscountCodes(){}
-        public void viewDiscountByCode(String code){}
-        public void editDiscountCodes(String code){}
-        public void removeDiscountCode(String code){}
+
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 
     public static class RequestManagingMenu extends Menu {
@@ -354,8 +361,15 @@ public class Menus {
             super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
         }
 
-        public void viewRequestDetailsByID(String ID){}
-        public void determineRequest(String ID, boolean isAccepted){}
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 
     public static class CategoryManagingMenu extends Menu {
@@ -363,10 +377,15 @@ public class Menus {
             super(name, false, parent, Constants.Menus.categoryManagingMenuPattern, Constants.Menus.categoryManagingMenuCommand);
         }
 
-        public boolean isCategoryValid(String category){}
-        public void addCategory(String category){}
-        public void editCategory(String category){}
-        public void removeCategory(String category){}
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 
     public static class SellerMenu extends Menu {
@@ -403,9 +422,15 @@ public class Menus {
             super(name, false, parent, Constants.Menus.sellerSaleManagingMenuPattern, Constants.Menus.sellerSaleManagingMenuCommand);
         }
 
-        public void viewSales(){}
-        public void editSale(){}
-        public void addSale(){}
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 
     public static class SellerProductMenu extends Menu {
@@ -413,11 +438,17 @@ public class Menus {
             super(name, false, parent, Constants.Menus.sellerProductManagingMenuPattern, Constants.Menus.sellerProductManagingMenuCommand);
         }
 
-        public void viewProductByID(String ID){}
-        public void viewProductBuyersByID(String ID){}
-        public void editProductByID(String ID){}
-        public void addProduct(){}
-        public void removeProduct(String ID){}
+        @Override
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
+
+
     }
 
     //Todo: in sub menus add custom personalInfoMenu
@@ -450,28 +481,36 @@ public class Menus {
 
     //this is both used in product menu and in customer menu
     //also should be able to handle both method call and menu call because of shopping cart
+    //TODO: isAccountMenuAccessible ino che gohi bokhorim :|
     public static class ShoppingCartMenu extends Menu {
         ShoppingCartMenu(String name, Menu parent){
-            super(name, false)
+            super(name, true, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
         }
+
         @Override
-        public void execute() {}
-        public void showProducts(){}
-        public void viewProductByID(String ID){}
-        public void increaseProductCount(String ID){}
-        public void decreaseProductCount(String ID){}
-        public void ShowTotalPrice(){}
-        public void purchase(){}
-        public void viewBalance(){}
-        public void viewDiscountCodes(){}
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 
     public static class CustomerOrderLogMenu extends Menu {
-        CustomerOrderLogMenu(String name, Menu parent) {}
+        CustomerOrderLogMenu(String name, Menu parent) {
+            super(name, false, parent, Constants.Menus.customerOrderLogMenuPattern, Constants.Menus.customerOrderLogMenuCommand);
+        }
+
         @Override
-        public void execute() {}
-        public void showOrderByID(String ID){}
-        public void rateProductByID(String ID, int rate){}
-        private boolean hasBoughtProduct(String ID){}
+        protected void initSubMenus() {
+
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
     }
 }
