@@ -2,6 +2,7 @@ package view;
 
 import java.util.ArrayList;
 
+//TODO: be actions controller haro moarefi kon.
 public class Actions {
     public static class BackAction extends Action {
         private Menu parent;
@@ -53,9 +54,15 @@ public class Actions {
 
     public static class ShowProductsAction extends Action {
         private ArrayList<String> categoryTree;
-        ShowProductsAction(String name, ArrayList<String> categoryTree) {
+        private ArrayList<String> currentFilters;
+        private StringBuilder currentSort;
+        private ArrayList<String> currentProducts;
+        ShowProductsAction(String name, ArrayList<String> categoryTree, ArrayList<String> currentFilters, StringBuilder currentSort, ArrayList<String> currentProducts) {
             super(name, Constants.ActionCommandAndPattern.showProductsPattern, Constants.ActionCommandAndPattern.showProductsCommand);
             this.categoryTree = categoryTree;
+            this.currentFilters = currentFilters;
+            this.currentSort = currentSort;
+            this.currentProducts = currentProducts;
         }
 
         //TODO: implement.
@@ -78,21 +85,12 @@ public class Actions {
         }
     }
 
-    public static class ShowProductByID extends Action {
-        ShowProductByID(String name) {
-            super(name, Constants.ActionCommandAndPattern.showProductByIDPattern, Constants.ActionCommandAndPattern.showProductByIDCommand);
-        }
-
-        //TODO: imp.
-        @Override
-        public void execute(String command) {
-
-        }
-    }
 
     public static class ChooseCategoryAction extends Action {
-        ChooseCategoryAction(String name) {
+        private ArrayList<String> categoryTree;
+        ChooseCategoryAction(String name, ArrayList<String> categoryTree) {
             super(name, Constants.ActionCommandAndPattern.chooseCategoryPattern, Constants.ActionCommandAndPattern.chooseCategoryCommand);
+            this.categoryTree = categoryTree;
         }
 
         //TODO: imp
@@ -222,6 +220,27 @@ public class Actions {
         DisableFilter(String name, ArrayList<String> currentFilters) {
             super(name, Constants.ActionCommandAndPattern.disableFilterPattern, Constants.ActionCommandAndPattern.disableFilterCommand);
             this.currentFilters = currentFilters;
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowOffs extends Action {
+        private StringBuilder currentSort;
+        private ArrayList<String> currentFilters;
+        private ArrayList<String> currentProducts;
+        private ArrayList<String> currentOffs;
+
+        public ShowOffs(String name, StringBuilder currentSort, ArrayList<String> currentFilters, ArrayList<String> currentProducts, ArrayList<String> currentOffs) {
+            super(name, Constants.ActionCommandAndPattern.showOffsPattern, Constants.ActionCommandAndPattern.showOffsCommand);
+            this.currentSort = currentSort;
+            this.currentFilters = currentFilters;
+            this.currentProducts = currentProducts;
+            this.currentOffs = currentOffs;
         }
 
         //TODO: imp.

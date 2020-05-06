@@ -16,8 +16,10 @@ public class Constants {
         public static final String sortMenuPattern = caseInsensitiveMode + "^" + sortMenuCommand + "$";
         public static final String filterMenuCommand = "filtering";
         public static final String filterMenuPattern = caseInsensitiveMode + "^" + filterMenuCommand + "$";
-        public static final String
-        public static final String
+        public static final String saleMenuCommand = "offs";
+        public static final String saleMenuPattern = caseInsensitiveMode + "^" + saleMenuCommand + "$";
+        public static final String showProductByIDCommand = "show product [productID]";
+        public static final String showProductByIDPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
         public static final String
         public static final String
         public static final String
@@ -39,8 +41,6 @@ public class Constants {
         public static final String showProductsPattern = caseInsensitiveMode + "^show products" + spacePattern + "(-all)?$";
         public static final String showCategoriesCommand = "view categories [-all]";
         public static final String showCategoriesPattern = caseInsensitiveMode + "^view categories" + spacePattern + "(-all)?$";
-        public static final String showProductByIDCommand = "show product [productID]";
-        public static final String showProductByIDPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
         public static final String chooseCategoryCommand = "choose category [availableCategory]";
         public static final String chooseCategoryPattern = caseInsensitiveMode + "^choose category" + spacePattern + argumentPattern + "$";
         public static final String revertCategoryCommand = "revert category [-numberOfReverts]"; //you can set the number of times to go back. 1 by default.
@@ -63,8 +63,9 @@ public class Constants {
         public static final String showCurrentFiltersPattern = caseInsensitiveMode + "^" + showCurrentFiltersCommand + "$";
         public static final String disableFilterCommand = "disable filter [aFilter] ...";
         public static final String disableFilterPattern = caseInsensitiveMode + "^disable filter" + "(?:" + spacePattern + argumentPattern + ")+$";
-        public static final String
-        public static final String
+        //SaleMenu actions.l
+        public static final String showOffsCommand = "show offs";
+        public static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
         public static final String
         public static final String
         public static final String

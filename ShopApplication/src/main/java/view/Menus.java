@@ -7,6 +7,7 @@ import java.util.ArrayList;
 //Todo: make all stupid public methods private :||||
 public class Menus {
     //TODO: initSubActions havaset bashe bayad fargh kone. ye Action makhsos besaz.
+    //TODO: execute khas. handle kardane back alan moshkel dre.
     public static class AccountMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
@@ -75,23 +76,27 @@ public class Menus {
         }
     }
 
+
+    //TODO: remove show products as an action and always do it as show method and kinda allow iteration through pages of the products. same for sale menu
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
         private ArrayList<String> currentFilters;
         private StringBuilder currentSort;
+        private ArrayList<String> currentProducts;
 
         AllProductsMenu(String name, Menu parent) {
             super(name, true, parent, Constants.MenuCommandAndPattern.allProductsMenuPattern, Constants.MenuCommandAndPattern.allProductsMenuCommand);
             this.categoryTree = new ArrayList<>();
             this.currentFilters = new ArrayList<>();
             currentSort = new StringBuilder();
-
+            currentProducts = new ArrayList<>();
         }
 
         @Override
         protected void initSubMenus() {
             subMenus.put(1, new SortMenu("product sorting menu", this, getAvailableSorts(), currentSort));
             subMenus.put(2, new FilterMenu("product filtering menu", this, getAvailableFilters(), currentFilters));
+            subMenus.put(3, new ProductMenu("product Menu", this));
         }
 
         //TODO: imp.
@@ -108,10 +113,9 @@ public class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.ShowProductsAction("show products", this.categoryTree));
+            subActions.put(index + 1, new Actions.ShowProductsAction("show products", this.categoryTree, this.currentFilters,this.currentSort,this.currentProducts));
             subActions.put(index + 2, new Actions.ShowCategories("show categories", this.categoryTree));
-            subActions.put(index + 3, new Actions.ShowProductByID("show product by ID"));
-            subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category"));
+            subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category", this.categoryTree));
             subActions.put(index + 5, new Actions.RevertCategoryAction("revert category"));
             subActions.put(index + 6, new Actions.BackAction("all product menu back", parent));
         }
@@ -186,13 +190,42 @@ public class Menus {
 
     //handles both method and menu
     public static class SaleMenu extends Menu {
-        private String currentSort;
-        private String currentFilter;
-        SaleMenu(String name, Menu parent) {}
+        private StringBuilder currentSort;
+        private ArrayList<String> currentFilters;
+        private ArrayList<String> currentProducts;
+        private ArrayList<String> currentOffs;
+        SaleMenu(String name, Menu parent) {
+            super(name, true, parent, Constants.MenuCommandAndPattern.saleMenuPattern, Constants.MenuCommandAndPattern.saleMenuCommand);
+            this.currentSort = new StringBuilder();
+            this.currentFilters = new ArrayList<>();
+            this.currentProducts = new ArrayList<>();
+            this.currentOffs = new ArrayList<>();
+        }
+
         @Override
-        public void show(){}
+        protected void initSubMenus() {
+            subMenus.put(1, new SortMenu("sale sort menu", this, getAvailableSorts(), this.currentSort));
+            subMenus.put(2, new FilterMenu("sale filter menu", this, getAvailableFilters(), this.currentFilters));
+            subMenus.put(3, new ProductMenu("sale menu prdduct menu", this));
+        }
+
         @Override
-        public void execute() {}
+        protected void initSubActions() {
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ShowOffs("show products", this.currentSort, this.currentFilters, this.currentProducts, this.currentOffs));
+            subActions.put(index + 2, new Actions.BackAction("sale menu back", parent));
+        }
+
+        //TODO: imp.
+        private ArrayList<String> getAvailableSorts() {
+            return null;
+        }
+
+        //TODO: imp.
+        private ArrayList<String> getAvailableFilters() {
+            return null;
+        }
+
         public void showCurrentSales(){}
         public void showProductByID(String ID){}
     }
