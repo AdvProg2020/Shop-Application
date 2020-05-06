@@ -242,6 +242,7 @@ public class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.LoginAction("Login"));
             subActions.put(index + 2, new Actions.RegisterAction("Register"));
+            subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
 
@@ -293,7 +294,8 @@ public class Menus {
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.BackAction("another fuckin back", parent));
         }
     }
 
@@ -369,10 +371,32 @@ public class Menus {
     //Todo: in sub menus add custom personalInfoMenu and also show method should support few more methods methods.
     public static class SellerMenu extends Menu {
         SellerMenu(String name, Menu parent) {
-            super(name, )
+            super(name, false, parent, null, null);
         }
+
         @Override
-        public void execute() {}
+        protected void initSubMenus() {
+            subMenus.put(1, new PersonalInfoMenu("seller personal info menu", this) {
+                //TODO: imp.
+                @Override
+                protected ArrayList<String> getEditableFields() {
+                    return null;
+                }
+            });
+            subMenus.put(2, new SellerProductMenu("seller product menu", this));
+            subMenus.put(3, new SellerSalesMenu("seller sales menu", this));
+        }
+
+        @Override
+        protected void initSubActions() {
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ShowSellerCompanyInfo("seller company info"));
+            subActions.put(index + 2, new Actions.ShowSellerCategories("seller categories"));
+            subActions.put(index + 3, new Actions.ShowSellerBalance("seller balance"));
+            subActions.put(index + 4, new Actions.ShowSellerSellHistory("seller sell history"));
+            subActions.put(index + 5, new Actions.BackAction("seller menu back", parent));
+        }
+
         public void viewCompanyInfo(){}
         public void viewSellHistory(){}
         public void viewCategories(){}
@@ -380,18 +404,20 @@ public class Menus {
     }
 
     public static class SellerSalesMenu extends Menu {
-        SellerSalesMenu(String name, Menu parent){}
-        @Override
-        public void execute() {}
+        SellerSalesMenu(String name, Menu parent){
+            super(name, false, parent, Constants.Menus.sellerSaleManagingMenuPattern, Constants.Menus.sellerSaleManagingMenuCommand);
+        }
+
         public void viewSales(){}
         public void editSale(){}
         public void addSale(){}
     }
 
     public static class SellerProductMenu extends Menu {
-        SellerProductMenu(String name, Menu parent){}
-        @Override
-        public void execute() {}
+        SellerProductMenu(String name, Menu parent){
+            super(name, false, parent, Constants.Menus.sellerProductManagingMenuPattern, Constants.Menus.sellerProductManagingMenuCommand);
+        }
+
         public void viewProductByID(String ID){}
         public void viewProductBuyersByID(String ID){}
         public void editProductByID(String ID){}

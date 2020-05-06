@@ -264,4 +264,53 @@ public class Actions {
 
         }
     }
+
+    public static class ShowSellerCategories extends Action {
+        ShowSellerCategories(String name) {
+            super(name, Constants.Actions.showSellerCategoriesPattern, Constants.Actions.showSellerCategoriesCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowSellerCompanyInfo extends Action {
+        ShowSellerCompanyInfo(String name) {
+            super(name, Constants.Actions.showSellerCompanyInfoPattern, Constants.Actions.showSellerCompanyInfoCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowSellerSellHistory extends Action {
+        ShowSellerSellHistory(String name) {
+            super(name, Constants.Actions.showSellerSellHistoryPattern, Constants.Actions.showSellerSellHistoryCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowSellerBalance extends Action {
+        ShowSellerBalance(String name) {
+            super(name, Constants.Actions.showSellerBalancePattern, Constants.Actions.showSellerBalanceCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
 }

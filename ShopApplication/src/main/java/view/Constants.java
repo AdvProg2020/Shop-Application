@@ -32,6 +32,10 @@ public class Constants {
         public static final String requestManagingMenuPattern = caseInsensitiveMode + "^" + requestManagingMenuCommand + "$";
         public static final String categoryManagingMenuCommand = "manage categories";
         public static final String categoryManagingMenuPattern = caseInsensitiveMode + "^" + categoryManagingMenuCommand + "$";
+        public static final String sellerProductManagingMenuCommand = "manage products";
+        public static final String sellerProductManagingMenuPattern = caseInsensitiveMode + "^" + sellerProductManagingMenuCommand + "$";
+        public static final String sellerSaleManagingMenuCommand = "view offs";
+        public static final String sellerSaleManagingMenuPattern = caseInsensitiveMode + "^" + sellerSaleManagingMenuCommand + "$";
         public static final String
         public static final String
         public static final String
@@ -76,12 +80,20 @@ public class Constants {
         public static final String showCurrentFiltersPattern = caseInsensitiveMode + "^" + showCurrentFiltersCommand + "$";
         public static final String disableFilterCommand = "disable filter [aFilter] ...";
         public static final String disableFilterPattern = caseInsensitiveMode + "^disable filter" + "(?:" + spacePattern + argumentPattern + ")+$";
-        //SaleMenu actions.l
+        //SaleMenu actions.
         public static final String showOffsCommand = "show offs";
         public static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
-
+        //account menus actions.
         public static final String editFieldCommand = "edit [field]";
         public static final String editFieldPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        public static final String showSellerCompanyInfoCommand = "view company information";
+        public static final String showSellerCompanyInfoPattern = caseInsensitiveMode + "^" + showSellerCompanyInfoCommand + "$";
+        public static final String showSellerSellHistoryCommand = "view sales history";
+        public static final String showSellerSellHistoryPattern = caseInsensitiveMode + "^" + showSellerSellHistoryCommand + "$";
+        public static final String showSellerCategoriesCommand = "show categories";
+        public static final String showSellerCategoriesPattern = caseInsensitiveMode + "^" + showSellerCategoriesCommand + "$";
+        public static final String showSellerBalanceCommand = "view balance";
+        public static final String showSellerBalancePattern = caseInsensitiveMode + "^" + showSellerBalanceCommand + "$";
         public static final String
         public static final String
         public static final String
