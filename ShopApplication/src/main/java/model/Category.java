@@ -55,11 +55,11 @@ public class Category {
     }
 
     public void terminate() {
-        for (Product product : getProducts()) {
-            product.setCategory(parentId);
-        }
         for (Category subCategory : getSubCategories()) {
             subCategory.terminate();
+        }
+        for (Product product : getProducts()) {
+            product.setCategory(parentId);
         }
         getParent().removeSubCategory(categoryId);
         allCategories.remove(categoryId);

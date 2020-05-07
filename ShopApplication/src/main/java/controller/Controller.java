@@ -86,7 +86,7 @@ public class Controller {
                 ArrayList<String> subProductPack = new ArrayList<>();
                 subProductPack.add(subProduct.getId());
                 subProductPack.add(subProduct.getSeller().getCompanyName());
-                subProductPack.add(Double.toString(subProduct.getPrice()));
+                subProductPack.add(Double.toString(subProduct.getRawPrice()));
                 subProductPack.add(Integer.toString(subProduct.getRemainingCount()));
                 productInfo.add(subProductPack);
             }

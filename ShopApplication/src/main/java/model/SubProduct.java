@@ -87,7 +87,7 @@ public class SubProduct {
         this.saleId = saleId;
     }
 
-    public double getPrice() {
+    public double getRawPrice() {
         return price;
     }
 
@@ -110,6 +110,9 @@ public class SubProduct {
 
     public void changeRemainingCount(int changeAmount) {
         remainingCount += changeAmount;
+        if (remainingCount < 0) {
+            remainingCount = 0;
+        }
     }
 
     public ArrayList<Customer> getCustomers() {
@@ -117,7 +120,6 @@ public class SubProduct {
         for (String customerId : new ArrayList<>(customerIds)) {
             Customer customer = Customer.getCustomerById(customerId, false);
             customers.add(customer);
-
         }
         return customers;
     }

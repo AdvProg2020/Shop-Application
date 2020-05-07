@@ -1,4 +1,6 @@
 ShopApplication/.idea/**/*.xml
 ShopApplication/.idea/modules
 ShopApplication/out/
+ShopApplication/target/
 *.iml
+*.class
