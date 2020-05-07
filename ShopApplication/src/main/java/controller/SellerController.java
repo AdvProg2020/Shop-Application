@@ -1,5 +1,6 @@
 package controller;
 
+import model.Product;
 import model.Sale;
 import model.SubProduct;
 import model.account.Customer;
@@ -15,7 +16,7 @@ public class SellerController extends Controller {
 
     //Done!!
     public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
-        if(field.equals("companyName"))
+        if (field.equals("companyName"))
             ((Seller) currentAccount).setCompanyName(newInformation);
         else
             editCommonInformation(field, newInformation);
@@ -24,7 +25,7 @@ public class SellerController extends Controller {
     //Done!! any thing other companyName?
     public ArrayList<String> viewCompanyInformation() {
         ArrayList<String> companyInformation = new ArrayList<>();
-        companyInformation.add(((Seller)currentAccount).getCompanyName());
+        companyInformation.add(((Seller) currentAccount).getCompanyName());
         return companyInformation;
     }
 
@@ -61,22 +62,23 @@ public class SellerController extends Controller {
     }
 
     //Not necessary
-    public ArrayList<String> viewProductsForASeller(String categoryName) {return null;}
+    public ArrayList<String> viewProductsForASeller(String categoryName) {
+        return null;
+    }
 
     //Done!!
-    public ArrayList<ArrayList<String>> viewProduct(String productID) throws Exceptions.InvalidProductIdException {
+    public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID))
-                return showProduct(productID);
+                return digest(subProduct.getProduct());
         }
-        throw new Exceptions.InvalidProductIdException();
+        throw new Exceptions.InvalidProductIdException(productID);
 
     }
 
     //Done!!
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
-
-        Seller seller = ((Seller)currentAccount);
+        Seller seller = ((Seller) currentAccount);
         for (SubProduct subProduct : seller.getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
                 ArrayList<String> buyers = new ArrayList<>();
@@ -86,26 +88,35 @@ public class SellerController extends Controller {
                 return buyers;
             }
         }
-        throw new Exceptions.InvalidProductIdException();
+        throw new Exceptions.InvalidProductIdException(productID);
     }
 
     //Todo
     public void editProduct(String productID, String field, String newInformation) {
     }
 
+    //Done!!
+    public boolean exist(String productName, String brand) {
+        for (Product product : Product.getAllProducts()) {
+            if (product.getName().equalsIgnoreCase(productName) && product.getBrand().equalsIgnoreCase(brand))
+                return true;
+        }
+        return false;
+    }
+
     //Todo
     public void addProduct(ArrayList<String> information) {
     }
 
-    //Done!
+    //Done!!
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
-        for (SubProduct subProduct : ((Seller)currentAccount).getSubProducts()) {
+        for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
                 subProduct.suspend();
                 return;
             }
         }
-        throw new Exceptions.InvalidProductIdException();
+        throw new Exceptions.InvalidProductIdException(productID);
     }
 
     //Done!!
@@ -118,13 +129,13 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    public ArrayList<String> viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
+    public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
         for (Sale sale : ((Seller) currentAccount).getSales()) {
             if (sale.getId().equals(saleId)) {
                 return getSaleInfo(sale);
             }
         }
-        throw new Exceptions.InvalidSaleIdException();
+        throw new Exceptions.InvalidSaleIdException(saleId);
     }
 
     //Todo
@@ -137,6 +148,6 @@ public class SellerController extends Controller {
 
     //Done!
     public double viewBalance() {
-        return ((Seller)currentAccount).getBalance();
+        return ((Seller) currentAccount).getBalance();
     }
 }

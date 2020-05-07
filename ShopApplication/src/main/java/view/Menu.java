@@ -1,6 +1,5 @@
 package view;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public abstract class Menu {
@@ -10,8 +9,9 @@ public abstract class Menu {
     protected Menu parent;
     protected Map<Integer, Menu> subMenus;
     protected Map<Integer, Action> subActions;
-    static protected ArrayList<Menu>  allMenus;
-    static protected Scanner sc;
+    static ArrayList<Menu>  allMenus;
+    static private Scanner sc;
+    static private Stack<Menu> stackTrace;
     protected String commandPattern;
     protected String command;
 
@@ -19,6 +19,7 @@ public abstract class Menu {
     static {
         sc = new Scanner(System.in);
         allMenus = new ArrayList<Menu>();
+        stackTrace = new Stack<>();
     }
 
 
@@ -92,14 +93,27 @@ public abstract class Menu {
         String command = getNextLineTrimmed();
         for (Integer menuIndex : subMenus.keySet()) {
             if (command.equals(Integer.toString(menuIndex)) || command.matches(subMenus.get(menuIndex).commandPattern)) {
+                stackTrace.push(subMenus.get(menuIndex));
                 subMenus.get(menuIndex).run();
             }
         }
         for (Integer actionIndex : subActions.keySet()) {
             if (command.equals(Integer.toString(actionIndex)) || command.matches(subActions.get(actionIndex).getActionPattern())) {
-                subActions.get(actionIndex).execute(command);
+                try {
+                    subActions.get(actionIndex).execute(command);
+                } catch (Exception actionException) {
+                    System.out.println(actionException.getMessage());
+                }
+                this.run();
             }
         }
+    }
+
+    protected static Menu getCallingMenu() {
+        Menu temp = stackTrace.pop();
+        Menu callingMenu = stackTrace.peek();
+        stackTrace.push(temp);
+        return callingMenu;
     }
 
     @Override
