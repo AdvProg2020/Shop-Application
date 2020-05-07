@@ -2,3 +2,4 @@ ShopApplication/.idea/**/*.xml
 ShopApplication/.idea/modules
 ShopApplication/out/
 *.iml
+*.class
