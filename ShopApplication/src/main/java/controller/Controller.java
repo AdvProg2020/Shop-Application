@@ -21,6 +21,14 @@ public class Controller {
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
     //Done!
+
+    /**
+     *
+     * @param username
+     * @param type
+     * @throws Exceptions.ExistedUsernameException
+     * @throws Exceptions.AdminRegisterException
+     */
     public void usernameTypeValidation(String username, String type) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
         if (Account.getAccountByUsername(username) == null)
             throw new Exceptions.ExistedUsernameException(username);
@@ -29,6 +37,18 @@ public class Controller {
     }
 
     //Todo
+
+    /**
+     *
+     * @param type
+     * @param information:
+     *                   1- customer:
+     *                      * String username, String password, String firstName, String lastName, String email, String phone, double balance
+     *                   2- seller:
+     *                      * String username, String password, String firstName, String lastName, String email, String phone, String companyName, double balance
+     *                  3- admin:
+     *                      * String username, String password, String firstName, String lastName, String email, String phone
+     */
     public void creatAccount(String type, ArrayList<String> information) {// lazeme inja ham exception bezarim?
     }
 
@@ -44,6 +64,10 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     * @return returns the currentAccount type: anonymous, customer, seller, admin.
+     */
     public String getType() {
         if (currentAccount == null)
             return "anonymous";
@@ -56,6 +80,8 @@ public class Controller {
     }
 
     //Done!!
+    //TODO: increasing decreasing.
+    //TODO: add getAvailableSorts.
     private ArrayList<Product> sortProducts(String sortBy, ArrayList<Product> products) {
         if (sortBy.equalsIgnoreCase("price")) {
             products.sort(new Comparator<Product>() {
@@ -97,6 +123,7 @@ public class Controller {
     }
 
     //Done!!
+    //TODO: getAvailableFilters.
     private ArrayList<Product> filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                               String companyName, double minRatingScore, ArrayList<Product> products) {
         if (available)
@@ -132,6 +159,11 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     * for show category stuff.
+     * @return returns String[2]: category ID, category name
+     */
     public ArrayList<String[]> viewCategories() {
         try {
             return getSubCategoriesOfThisCategory(Category.getSuperCategory().getName());
@@ -141,6 +173,13 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     * for show category action without all.
+     * @param categoryName
+     * @return
+     * @throws Exceptions.InvalidCategoryException
+     */
     public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException{
         Category category = Category.getCategoryByName(categoryName);
         if(category == null)
@@ -158,6 +197,13 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     *
+     * @param categoryName
+     * @return String[2]: ID, name
+     * @throws Exceptions.InvalidCategoryException
+     */
     public ArrayList<String[]> getProductsOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException{
         Category category  = Category.getCategoryByName(categoryName);
         if( category == null)
@@ -167,7 +213,27 @@ public class Controller {
     }
 
     //Done!!
-    public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, String[] filterBy) throws Exceptions.InvalidProductIdException {
+
+    /**
+     *
+     * @param productIds
+     * @param sortBy
+     * @param filterBy
+     * @return String[2]: ID, name
+     * @throws Exceptions.InvalidProductIdException
+     *
+     * for filtering:
+     *  available true if only available are to be shown.
+     * minPrice if N/A pass 0.00
+     * maxPrice if N/A pass 0.00
+     * contains if N/A pass null
+     * brand if N/A pass null
+     * companyName if N/A pass null
+     * minRatingScore if N/A pass 0.00
+     * products
+     * @return
+     */
+    public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy) throws Exceptions.InvalidProductIdException {
         ArrayList<Product> products = new ArrayList<>();
         Product product;
         for (String productId : productIds) {
@@ -194,6 +260,13 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     *
+     * @param productId
+     * @return String[5]: ID, name, brand, infoText, averageRatingScore.
+     * @throws Exceptions.InvalidProductIdException
+     */
     public String[] digest(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -218,6 +291,13 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     *
+     * @param productId
+     * @return String[4]: ID, companyName, price, remaining count.
+     * @throws Exceptions.InvalidProductIdException
+     */
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -235,6 +315,13 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     *
+     * @param productId
+     * @return String[3]: usernameOfReviewer, title, body.
+     * @throws Exceptions.InvalidProductIdException
+     */
     public ArrayList<String[]> reviewsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -294,6 +381,12 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     *
+     * @return String[6]: ID, percentage, sellerCompanyName, startDate, endDate, numberOfProductsInSale.
+     */
+    //TODO: filter and sort for sales.
     public ArrayList<String[]> sales() {
         ArrayList<String[]> sales = new ArrayList<>();
         for (Sale sale : Sale.getAllSales()) {
@@ -303,6 +396,7 @@ public class Controller {
     }
 
     //Done!!
+    //TODO: getEditableFields. return String[].
     protected String[] getPersonalInfo(Account account) {
         String[] info;
         if (account.getType().equals("customer")) {

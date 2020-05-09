@@ -3,8 +3,6 @@ package view;
 import java.util.ArrayList;
 
 
-//Todo: addSubMenus, support back option for every field getter and menu. new all submenus or you'll get nullPtrExc.
-//Todo: make all stupid public methods private :||||
 //TODO: vase menu haye AccountMenu, AnonymousUserAccountMenu, AdminMenu, SellerMenu and CustomerMenu bayad back makhsos tarahi shavad.
 public class Menus {
     //TODO: initSubActions havaset bashe bayad fargh kone. ye Action makhsos besaz.
@@ -36,10 +34,10 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this));
-            subMenus.put(2, new AdminMenu("Admin Menu", this));
-            subMenus.put(3, new SellerMenu("Seller Menu", this));
-            subMenus.put(4, new CustomerMenu("Customer Menu", this));
+            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this, this.previousMenu, this.nextMenu));
+            subMenus.put(2, new AdminMenu("Admin Menu", this, this.previousMenu, this.nextMenu));
+            subMenus.put(3, new SellerMenu("Seller Menu", this, this.previousMenu, this.nextMenu));
+            subMenus.put(4, new CustomerMenu("Customer Menu", this, this.previousMenu, this.nextMenu));
         }
 
         @Override
@@ -84,6 +82,7 @@ public class Menus {
     //TODO: remove show products as an action and always do it as show method and kinda allow iteration through pages of the products. same for sale menu
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
+        //TODO: make it String[].
         private ArrayList<String> currentFilters;
         private StringBuilder currentSort;
         private ArrayList<String> currentProducts;
@@ -244,8 +243,12 @@ public class Menus {
     }
 
     public static class AnonymousUserAccountMenu extends Menu {
-        AnonymousUserAccountMenu(String name, Menu parent) {
+        private Menu previousMenu;
+        private Menu nextMenu;
+        AnonymousUserAccountMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
             super(name, false, parent, null, null);
+            this.previousMenu = previousMenu;
+            this.nextMenu = nextMenu;
         }
 
         @Override
@@ -263,8 +266,12 @@ public class Menus {
     }
 
     public static class AdminMenu extends Menu {
-        AdminMenu(String name, Menu parent) {
+        private Menu previousMenu;
+        private Menu nextMenu;
+        AdminMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
             super(name, false, parent, null, null);
+            this.previousMenu = previousMenu;
+            this.nextMenu = nextMenu;
         }
 
         @Override
@@ -392,8 +399,12 @@ public class Menus {
     }
 
     public static class SellerMenu extends Menu {
-        SellerMenu(String name, Menu parent) {
+        private Menu previousMenu;
+        private Menu nextMenu;
+        SellerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
             super(name, false, parent, null, null);
+            this.previousMenu = previousMenu;
+            this.nextMenu = nextMenu;
         }
 
         @Override
@@ -456,8 +467,12 @@ public class Menus {
 
     //Todo: in sub menus add custom personalInfoMenu
     public static class CustomerMenu extends Menu {
-        CustomerMenu(String name, Menu parent) {
+        private Menu previousMenu;
+        private Menu nextMenu;
+        CustomerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
             super(name, false, parent, null, null);
+            this.previousMenu = previousMenu;
+            this.nextMenu = nextMenu;
         }
 
         @Override

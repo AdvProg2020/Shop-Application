@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class AdminController extends Controller {
 
     //Done!!
+    //TODO: check for new Info (for example for password).
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException {
         editCommonInformation(field, newInformation);
     }
