@@ -11,8 +11,8 @@ public class BuyLog {
     private static HashMap<String, BuyLog> allBuyLogs = new HashMap<>();
     private String buyLogId;
     private String customerId;
-    private int paidMoney;
-    private int totalDiscountAmount;
+    private double paidMoney;
+    private double totalDiscountAmount;
     private Date date;
     private String receiverName;
     private String receiverAddress;
@@ -20,12 +20,12 @@ public class BuyLog {
     private ShippingStatus shippingStatus;
     private transient HashSet<String> logItemIds;
 
-    public BuyLog(String customerId, int paidMoney, int totalDiscountAmount, Date date, String receiverName,
+    public BuyLog(String customerId, double paidMoney, double totalDiscountAmount, String receiverName,
                   String receiverAddress, String receiverPhone, ShippingStatus shippingStatus) {
         this.customerId = customerId;
         this.paidMoney = paidMoney;
         this.totalDiscountAmount = totalDiscountAmount;
-        this.date = date;
+        date = new Date();
         this.receiverName = receiverName;
         this.receiverAddress = receiverAddress;
         this.receiverPhone = receiverPhone;
@@ -59,11 +59,11 @@ public class BuyLog {
         return Customer.getCustomerById(customerId, false);
     }
 
-    public int getPaidMoney() {
+    public double getPaidMoney() {
         return paidMoney;
     }
 
-    public int getTotalDiscountAmount() {
+    public double getTotalDiscountAmount() {
         return totalDiscountAmount;
     }
 
@@ -85,6 +85,10 @@ public class BuyLog {
 
     public ShippingStatus getShippingStatus() {
         return shippingStatus;
+    }
+
+    public void setShippingStatus(ShippingStatus status) {
+        this.shippingStatus = status;
     }
 
     public ArrayList<LogItem> getLogItems() {

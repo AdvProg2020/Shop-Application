@@ -10,23 +10,27 @@ import java.util.HashMap;
 public class SellLog {
     private static HashMap<String, SellLog> allSellLogs = new HashMap<>();
     private String sellLogId;
-    private String sellerId;
     private String parentBuyLogId;
-    private int receivedMoney;
-    private int totalSaleAmount;
-    private ArrayList<String> logItemIds;
+    private String sellerId;
+    private double receivedMoney;
+    private double totalSaleAmount;
+    private transient ArrayList<String> logItemIds;
 
-    public SellLog(String sellerId, String parentBuyLogId, int receivedMoney, int totalSaleAmount) {
-        this.sellerId = sellerId;
+    public SellLog(String parentBuyLogId, String sellerId) {
         this.parentBuyLogId = parentBuyLogId;
-        this.receivedMoney = receivedMoney;
-        this.totalSaleAmount = totalSaleAmount;
+        this.sellerId = sellerId;
+        receivedMoney = 0;
+        totalSaleAmount = 0;
         initialize();
     }
 
     public static String generateNewId(String sellerId) {
         //TODO: implement
         return null;
+    }
+
+    public static SellLog getSellLogById(String sellLogId) {
+        return allSellLogs.get(sellLogId);
     }
 
     public void initialize() {
@@ -36,10 +40,6 @@ public class SellLog {
         allSellLogs.put(sellLogId, this);
         logItemIds = new ArrayList<>();
         getSeller().addSellLog(sellLogId);
-    }
-
-    public static SellLog getSellLogById(String sellLogId) {
-        return allSellLogs.get(sellLogId);
     }
 
     public String getId() {
@@ -58,11 +58,11 @@ public class SellLog {
         return getParentBuyLog().getCustomer();
     }
 
-    public int getReceivedMoney() {
+    public double getReceivedMoney() {
         return receivedMoney;
     }
 
-    public int getTotalSaleAmount() {
+    public double getTotalSaleAmount() {
         return totalSaleAmount;
     }
 
@@ -86,6 +86,10 @@ public class SellLog {
         return getParentBuyLog().getShippingStatus();
     }
 
+    public void setShippingStatus(ShippingStatus status) {
+        getParentBuyLog().setShippingStatus(status);
+    }
+
     public ArrayList<LogItem> getLogItems() {
         ArrayList<LogItem> logItems = new ArrayList<>();
         for (String logItemId : logItemIds) {
@@ -96,6 +100,9 @@ public class SellLog {
 
     public void addLogItem(String logItemId) {
         logItemIds.add(logItemId);
+        LogItem item = LogItem.getLogItemById(logItemId);
+        receivedMoney += (item.getPrice() - item.getSaleAmount()) * item.getCount();
+        totalSaleAmount += item.getSaleAmount() * item.getCount();
     }
 
 }
