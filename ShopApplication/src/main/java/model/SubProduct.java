@@ -2,6 +2,7 @@ package model;
 
 import model.account.Customer;
 import model.account.Seller;
+import model.request.AddProductRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,9 @@ public class SubProduct {
         remainingCount = count;
         saleId = null;
         suspended = false;
+        if (productId != null) {
+            new AddProductRequest(null, this);
+        }
     }
 
     private static String generateNewId(String productId, String sellerId) {
@@ -70,6 +74,12 @@ public class SubProduct {
 
     public Product getProduct() {
         return Product.getProductById(productId);
+    }
+
+    public void setProductId(String productId) {
+        if (this.productId == null) {
+            this.productId = productId;
+        }
     }
 
     public Seller getSeller() {

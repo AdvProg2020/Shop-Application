@@ -2,7 +2,6 @@ package controller;
 
 import model.Discount;
 import model.Product;
-import model.Rating;
 import model.SubProduct;
 import model.account.Customer;
 import model.log.BuyLog;
@@ -28,7 +27,7 @@ public class CustomerController extends Controller {
         ArrayList<String> shoppingCart = new ArrayList<>();
         HashMap<SubProduct, Integer> subProducts = ((Customer) currentAccount).getShoppingCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
-            shoppingCart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getCompanyName() + " number in carts: " + subProducts.get(subProduct));
+            shoppingCart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getStoreName() + " number in carts: " + subProducts.get(subProduct));
         }
         return shoppingCart;
     }
@@ -91,14 +90,13 @@ public class CustomerController extends Controller {
 
     //Done!!
     public ArrayList<String> viewOrders() throws Exceptions.CustomerLoginException {
-        if (currentAccount.getType().equals("customer")) {
+        if (currentAccount instanceof Customer) {
             ArrayList<String> orderIds = new ArrayList<>();
             for (BuyLog buyLog : ((Customer) currentAccount).getBuyLogs()) {
                 orderIds.add(buyLog.getId());
             }
             return orderIds;
-        }
-        else
+        } else
             throw new Exceptions.CustomerLoginException();
     }
 
@@ -126,7 +124,7 @@ public class CustomerController extends Controller {
                 productPack.add(product.getName());
                 productPack.add(product.getId());
                 productPack.add(item.getSeller().getUsername());
-                productPack.add(item.getSeller().getCompanyName());
+                productPack.add(item.getSeller().getStoreName());
                 productPack.add(Integer.toString(item.getCount()));
                 productPack.add(Double.toString(item.getUnitPrice() * item.getCount()));
                 productPack.add(Double.toString(item.getSalePercentage()));

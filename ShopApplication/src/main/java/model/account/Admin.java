@@ -1,7 +1,7 @@
 package model.account;
 
 public class Admin extends Account {
-    private static boolean firstAdmin = true;
+    private static Admin manager = null;
 
     public Admin(String username, String password, String firstName, String lastName, String email, String phone) {
         super(username, password, firstName, lastName, email, phone);
@@ -20,19 +20,21 @@ public class Admin extends Account {
         return admin;
     }
 
-    public static boolean isFirstAdmin() {
-        return firstAdmin;
+    public static Admin getManager() {
+        return manager;
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        firstAdmin = false;
+        if (manager == null) {
+            manager = this;
+        }
     }
 
     @Override
     public String getType() {
-        return "admin";
+        return "Admin";
     }
 
 }

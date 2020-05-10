@@ -1,25 +1,26 @@
 package model;
 
 import model.account.Account;
+import model.request.AddReviewRequest;
 
 import java.util.HashMap;
 
 public class Review {
     private static HashMap<String, Review> allReviews = new HashMap<>();
-
     private String reviewId;
     private String reviewerId;
     private String productId;
-    private String reviewTitle;//Todo
-    private String reviewText;
+    private String title;
+    private String text;
     private boolean bought;
 
-    public Review(String reviewerId, String productId, String reviewText) {
+    public Review(String reviewerId, String productId, String title, String text) {
         this.reviewerId = reviewerId;
         this.productId = productId;
-        this.reviewText = reviewText;
+        this.title = title;
+        this.text = text;
         setBought();
-
+        new AddReviewRequest(this);
     }
 
     private static String generateNewId(String reviewerId, String productId) {
@@ -55,12 +56,12 @@ public class Review {
         return Product.getProductById(productId);
     }
 
-    public String getReviewTitle(){
-        return reviewTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public String getReviewText() {
-        return reviewText;
+    public String getText() {
+        return text;
     }
 
     public boolean hasBought() {
