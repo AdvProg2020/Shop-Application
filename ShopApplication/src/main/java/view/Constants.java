@@ -4,6 +4,10 @@ public class Constants {
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
+    public static final String anonymousUserType = "anonymous";
+    public static final String adminUserType = "admin";
+    public static final String customerUserType = "customer";
+    public static final String sellerUserType = "seller";
 
     public static class Menus {
         public static final String accountMenuCommand = "account menu";
@@ -38,9 +42,6 @@ public class Constants {
         public static final String shoppingCartMenuPattern = caseInsensitiveMode + "^" + shoppingCartMenuCommand + "$";
         public static final String customerOrderLogMenuCommand = "view orders";
         public static final String customerOrderLogMenuPattern = caseInsensitiveMode + "^" + customerOrderLogMenuCommand + "$";
-//        public static final String
-//        public static final String
-//        public static final String
     }
 
     public static class Actions {

@@ -3,6 +3,7 @@ package view;
 import controller.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 //TODO: be actions controller haro moarefi kon.
 public class Actions {
@@ -65,20 +66,17 @@ public class Actions {
         @Override
         public void execute(String command) {
             String type ;
-            String username ;
-            try {
-
-            }
+            String username;
 
         }
     }
 
     public static class ShowProductsAction extends Action {
         private ArrayList<String> categoryTree;
-        private ArrayList<String> currentFilters;
+        private String[] currentFilters;
         private StringBuilder currentSort;
         private ArrayList<String> currentProducts;
-        ShowProductsAction(String name, ArrayList<String> categoryTree, ArrayList<String> currentFilters, StringBuilder currentSort, ArrayList<String> currentProducts) {
+        ShowProductsAction(String name, ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String> currentProducts) {
             super(name, Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
@@ -134,16 +132,16 @@ public class Actions {
     }
 
     public static class ShowAvailableSorts extends Action {
-        private ArrayList<String> availableSorts;
+        private String[] availableSorts;
 
-        ShowAvailableSorts(String name, ArrayList<String> availableSorts) {
+        ShowAvailableSorts(String name, String[] availableSorts) {
             super(name, Constants.Actions.showAvailableSortsPattern, Constants.Actions.showAvailableSortsCommand);
             this.availableSorts = availableSorts;
         }
 
         @Override
         public void execute(String command) {
-            availableSorts.forEach((s) -> System.out.println(s));
+            Arrays.asList(availableSorts).forEach((s) -> System.out.println(s));
         }
     }
 
@@ -193,23 +191,23 @@ public class Actions {
     }
 
     public static class ShowAvailableFilters extends Action {
-        private ArrayList<String> availableFilters;
+        private String[] availableFilters;
 
-        ShowAvailableFilters(String name, ArrayList<String> availableFilters) {
+        ShowAvailableFilters(String name, String[] availableFilters) {
             super(name, Constants.Actions.showAvailableFiltersPattern, Constants.Actions.showAvailableFiltersCommand);
             this.availableFilters = availableFilters;
         }
 
         @Override
         public void execute(String command) {
-            availableFilters.forEach((f) -> System.out.println(f));
+            Arrays.asList(availableFilters).forEach((f) -> System.out.println(f));
         }
     }
 
     public static class FilterAction extends Action {
-        private ArrayList<String> currentFilters;
+        private String[] currentFilters;
 
-        FilterAction(String name, ArrayList<String> currentFilters) {
+        FilterAction(String name, String[] currentFilters) {
             super(name, Constants.Actions.filterPattern, Constants.Actions.filterCommand);
             this.currentFilters = currentFilters;
         }
@@ -222,23 +220,23 @@ public class Actions {
     }
 
     public static class ShowCurrentFilters extends Action {
-        private ArrayList<String> currentFilters;
+        private String[] currentFilters;
 
-        ShowCurrentFilters(String name, ArrayList<String> currentFilters) {
+        ShowCurrentFilters(String name, String[] currentFilters) {
             super(name, Constants.Actions.showCurrentFiltersPattern, Constants.Actions.showCurrentFiltersCommand);
             this.currentFilters = currentFilters;
         }
 
         @Override
         public void execute(String command) {
-            currentFilters.forEach((f) -> System.out.println(f));
+            Arrays.asList(currentFilters).forEach((f) -> System.out.println(f));
         }
     }
 
     public static class DisableFilter extends Action {
-        private ArrayList<String> currentFilters;
+        private String[] currentFilters;
 
-        DisableFilter(String name, ArrayList<String> currentFilters) {
+        DisableFilter(String name, String[] currentFilters) {
             super(name, Constants.Actions.disableFilterPattern, Constants.Actions.disableFilterCommand);
             this.currentFilters = currentFilters;
         }
@@ -254,11 +252,11 @@ public class Actions {
     //TODO: filter and sort for sales.
     public static class ShowOffs extends Action {
         private StringBuilder currentSort;
-        private ArrayList<String> currentFilters;
+        private String[] currentFilters;
         private ArrayList<String> currentProducts;
         private ArrayList<String> currentOffs;
 
-        public ShowOffs(String name, StringBuilder currentSort, ArrayList<String> currentFilters, ArrayList<String> currentProducts, ArrayList<String> currentOffs) {
+        public ShowOffs(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String> currentProducts, ArrayList<String> currentOffs) {
             super(name, Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
             this.currentSort = currentSort;
             this.currentFilters = currentFilters;

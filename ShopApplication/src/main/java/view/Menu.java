@@ -1,5 +1,7 @@
 package view;
 
+import controller.*;
+
 import java.util.*;
 
 public abstract class Menu {
@@ -16,12 +18,12 @@ public abstract class Menu {
     protected String command;
 
 
+
     static {
         sc = new Scanner(System.in);
         allMenus = new ArrayList<Menu>();
         stackTrace = new Stack<>();
     }
-
 
     public Menu(String name, boolean isAccountMenuAccessible, Menu parent, String commandPattern, String command) {
         this.name = name;

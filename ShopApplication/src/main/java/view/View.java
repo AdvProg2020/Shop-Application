@@ -8,10 +8,10 @@ import controller.*;
 **/
 
 public class View {
-    private Controller mainController;
-    private CustomerController customerController;
-    private AdminController adminController;
-    private SellerController sellerController;
+    public static Controller mainController;
+    public static CustomerController customerController;
+    public static AdminController adminController;
+    public static SellerController sellerController;
 
     private Menus.AccountMenu accountMenu;
     private Menus.FirstMenu firstMenu;

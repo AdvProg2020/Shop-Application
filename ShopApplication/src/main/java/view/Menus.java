@@ -1,12 +1,26 @@
 package view;
 
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
+import controller.SellerController;
+
 import java.util.ArrayList;
 
 
-//TODO: vase menu haye AccountMenu, AnonymousUserAccountMenu, AdminMenu, SellerMenu and CustomerMenu bayad back makhsos tarahi shavad.
 public class Menus {
-    //TODO: initSubActions havaset bashe bayad fargh kone. ye Action makhsos besaz.
-    //TODO: execute khas. handle kardane back alan moshkel dre.
+    private static Controller mainController;
+    private static AdminController adminController;
+    private static SellerController sellerController;
+    private static CustomerController customerController;
+
+    static {
+        mainController = View.mainController;
+        adminController = View.adminController;
+        sellerController = View.sellerController;
+        customerController = View.customerController;
+    }
+
     public static class AccountMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
@@ -18,13 +32,14 @@ public class Menus {
             nextMenu = null;
         }
 
-
-
-
-        //TODO: imp.
         @Override
         public void execute() {
-
+            String userType = mainController.getType();
+            for (Menu menu : subMenus.values()) {
+                if (userType.matches(menu.getCommandPattern())) {
+                    menu.run();
+                }
+            }
         }
 
         @Override
@@ -34,10 +49,10 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this, this.previousMenu, this.nextMenu));
-            subMenus.put(2, new AdminMenu("Admin Menu", this, this.previousMenu, this.nextMenu));
-            subMenus.put(3, new SellerMenu("Seller Menu", this, this.previousMenu, this.nextMenu));
-            subMenus.put(4, new CustomerMenu("Customer Menu", this, this.previousMenu, this.nextMenu));
+            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this, this.previousMenu, this.nextMenu, Constants.anonymousUserType));
+            subMenus.put(2, new AdminMenu("Admin Menu", this, this.previousMenu, this.nextMenu, Constants.adminUserType));
+            subMenus.put(3, new SellerMenu("Seller Menu", this, this.previousMenu, this.nextMenu, Constants.sellerUserType));
+            subMenus.put(4, new CustomerMenu("Customer Menu", this, this.previousMenu, this.nextMenu, Constants.customerUserType));
         }
 
         @Override
@@ -81,15 +96,14 @@ public class Menus {
     //TODO: remove show products as an action and always do it as show method and kinda allow iteration through pages of the products. same for sale menu
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
-        //TODO: make it String[].
-        private ArrayList<String> currentFilters;
+        private String[] currentFilters;
         private StringBuilder currentSort;
         private ArrayList<String> currentProducts;
 
         AllProductsMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.allProductsMenuPattern, Constants.Menus.allProductsMenuCommand);
             this.categoryTree = new ArrayList<>();
-            this.currentFilters = new ArrayList<>();
+            this.currentFilters = new String[getAvailableFilters().length];
             currentSort = new StringBuilder();
             currentProducts = new ArrayList<>();
         }
@@ -102,12 +116,12 @@ public class Menus {
         }
 
         //TODO: imp.
-        private ArrayList<String> getAvailableSorts() {
+        private String[] getAvailableSorts() {
             return null;
         }
 
-        //TODO: imp.
-        private ArrayList<String> getAvailableFilters() {
+        //TODO: imp. waiting for shayan to add the method
+        private String[] getAvailableFilters() {
             return null;
         }
 
@@ -151,12 +165,12 @@ public class Menus {
 
     public static class SortMenu extends Menu {
         private StringBuilder currentSort;
-        private ArrayList<String> availableSorts;
+        private String[] availableSorts;
 
-        SortMenu(String name, Menu parent, ArrayList<String> availableSorts, StringBuilder currentSort){
+        SortMenu(String name, Menu parent, String[] availableSorts, StringBuilder currentSort){
             super(name, true, parent, Constants.Menus.sortMenuPattern, Constants.Menus.sortMenuCommand);
             this.currentSort = currentSort;
-            this.availableSorts = new ArrayList<>(availableSorts);
+            this.availableSorts = availableSorts.clone();
         }
 
         @Override
@@ -177,13 +191,13 @@ public class Menus {
 
     //wtf is with filtering anyway
     public static class FilterMenu extends Menu {
-        private ArrayList<String> currentFilters;
-        private ArrayList<String> availableFilters;
+        private String[] currentFilters;
+        private String[] availableFilters;
 
-        FilterMenu(String name, Menu parent, ArrayList<String> availableFilters, ArrayList<String> currentFilters){
+        FilterMenu(String name, Menu parent, String[] availableFilters, String[] currentFilters){
             super(name, true, parent, Constants.Menus.filterMenuPattern, Constants.Menus.filterMenuCommand);
             this.currentFilters = currentFilters;
-            this.availableFilters = new ArrayList<>(availableFilters);
+            this.availableFilters = availableFilters.clone();
         }
 
         @Override
@@ -205,13 +219,13 @@ public class Menus {
     //handles both method and menu
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
-        private ArrayList<String> currentFilters;
+        private String[] currentFilters;
         private ArrayList<String> currentProducts;
         private ArrayList<String> currentOffs;
         SaleMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.saleMenuPattern, Constants.Menus.saleMenuCommand);
             this.currentSort = new StringBuilder();
-            this.currentFilters = new ArrayList<>();
+            this.currentFilters = new String[getAvailableFilters().length];
             this.currentProducts = new ArrayList<>();
             this.currentOffs = new ArrayList<>();
         }
@@ -231,12 +245,12 @@ public class Menus {
         }
 
         //TODO: imp.
-        private ArrayList<String> getAvailableSorts() {
+        private String[] getAvailableSorts() {
             return null;
         }
 
         //TODO: imp.
-        private ArrayList<String> getAvailableFilters() {
+        private String[] getAvailableFilters() {
             return null;
         }
     }
@@ -244,8 +258,8 @@ public class Menus {
     public static class AnonymousUserAccountMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
-        AnonymousUserAccountMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
-            super(name, false, parent, null, null);
+        AnonymousUserAccountMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+            super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
         }
@@ -267,8 +281,8 @@ public class Menus {
     public static class AdminMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
-        AdminMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
-            super(name, false, parent, null, null);
+        AdminMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+            super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
         }
@@ -400,8 +414,8 @@ public class Menus {
     public static class SellerMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
-        SellerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
-            super(name, false, parent, null, null);
+        SellerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+            super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
         }
@@ -468,8 +482,8 @@ public class Menus {
     public static class CustomerMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
-        CustomerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu) {
-            super(name, false, parent, null, null);
+        CustomerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+            super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
         }

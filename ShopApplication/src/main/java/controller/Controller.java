@@ -213,15 +213,16 @@ public class Controller {
      * @param sortBy
      * @param filterBy
      * @return
-     * @throws Exceptions.InvalidProductIdException for filtering:
-     *                                              available true if only available are to be shown.
-     *                                              minPrice if N/A pass 0.00
-     *                                              maxPrice if N/A pass 0.00
-     *                                              contains if N/A pass null
-     *                                              brand if N/A pass null
-     *                                              storeName if N/A pass null
-     *                                              minRatingScore if N/A pass 0.00
-     *                                              products
+     * @throws Exceptions.InvalidProductIdException
+     * for filtering:
+     * available true if only available are to be shown.
+     * minPrice if N/A pass 0.00
+     * maxPrice if N/A pass 0.00
+     * contains if N/A pass null
+     * brand if N/A pass null
+     * storeName if N/A pass null
+     * minRatingScore if N/A pass 0.00
+     * products
      */
     public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy) throws Exceptions.InvalidProductIdException {
         ArrayList<Product> products = new ArrayList<>();
