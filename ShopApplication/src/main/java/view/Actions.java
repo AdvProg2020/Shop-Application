@@ -1,11 +1,18 @@
 package view;
 
-import com.sun.tools.jconsole.JConsoleContext;
+import controller.*;
 
 import java.util.ArrayList;
 
 //TODO: be actions controller haro moarefi kon.
 public class Actions {
+
+    public static class AccountMenuBackAction extends Action {
+        AccountMenuBackAction(String name, Menu previousMenu, Menu nextMenu) {
+
+        }
+    }
+
     public static class BackAction extends Action {
         private Menu parent;
         BackAction(String name, Menu parent) {
@@ -50,6 +57,11 @@ public class Actions {
         //TODO: implement.
         @Override
         public void execute(String command) {
+            String type ;
+            String username ;
+            try {
+
+            }
 
         }
     }
@@ -231,6 +243,8 @@ public class Actions {
         }
     }
 
+    //TODO: remember that filters and sorts are only for products.
+    //TODO: filter and sort for sales.
     public static class ShowOffs extends Action {
         private StringBuilder currentSort;
         private ArrayList<String> currentFilters;
@@ -255,6 +269,7 @@ public class Actions {
     public static class EditField extends Action {
         private ArrayList<String> editableFields;
 
+        //TODO: check new info (for example for password)
         EditField(String name, ArrayList<String> editableFields) {
             super(name, Constants.Actions.editFieldPattern, Constants.Actions.editFieldCommand);
             this.editableFields = editableFields;
