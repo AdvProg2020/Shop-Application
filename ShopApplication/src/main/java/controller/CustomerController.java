@@ -126,8 +126,8 @@ public class CustomerController extends Controller {
                 productPack.add(item.getSeller().getUsername());
                 productPack.add(item.getSeller().getStoreName());
                 productPack.add(Integer.toString(item.getCount()));
-                productPack.add(Double.toString(item.getUnitPrice() * item.getCount()));
-                productPack.add(Double.toString(item.getSalePercentage()));
+                productPack.add(Double.toString(item.getPrice() * item.getCount()));
+                productPack.add(Double.toString(item.getSaleAmount()));
                 orderInfo.add(productPack);
             }
             return orderInfo;
