@@ -1,5 +1,7 @@
 package model;
 
+import model.request.AddProductRequest;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +20,7 @@ public class Product {
     private transient HashSet<String> ratingIds;
     private boolean suspended;
 
-    public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> specialProperties) {
+    public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> specialProperties, SubProduct subProduct) {
         this.name = name;
         this.brand = brand;
         this.infoText = infoText;
@@ -26,6 +28,7 @@ public class Product {
         this.specialProperties = specialProperties;
         viewCount = 0;
         suspended = false;
+        new AddProductRequest(this, subProduct);
     }
 
     private static String generateNewId() {
@@ -43,9 +46,19 @@ public class Product {
         return products;
     }
 
-    public static Product getProductByName(String name) {
+    public static ArrayList<Product> getProductsByName(String name) {
+        ArrayList<Product> products = new ArrayList<>();
         for (Product product : allProducts.values()) {
             if (!product.suspended && product.getName().equals(name)) {
+                products.add(product);
+            }
+        }
+        return products;
+    }
+
+    public static Product getProductsByNameAndBrand(String name, String brand) {
+        for (Product product : getProductsByName(name)) {
+            if (product.getBrand().equals(brand)) {
                 return product;
             }
         }
@@ -195,21 +208,42 @@ public class Product {
         ratingIds.add(ratingId);
     }
 
-    //Todo
-    public Double getMinPrice(){
-        return 0.0;
+    public double getMinPrice() {
+        double minimum = Double.MAX_VALUE;
+        for (SubProduct subProduct : getSubProducts()) {
+            double toCompare = subProduct.getPriceWithSale();
+            if (toCompare < minimum) {
+                minimum = toCompare;
+            }
+        }
+        return minimum;
     }
 
-    //Todo
-    public Double getMaxPrice() {return 0.0;}
-
-    //Todo
-    public boolean isAvailable(){
-        return false;
+    public double getMaxPrice() {
+        double maximum = 0.0;
+        for (SubProduct subProduct : getSubProducts()) {
+            double toCompare = subProduct.getPriceWithSale();
+            if (toCompare > maximum) {
+                maximum = toCompare;
+            }
+        }
+        return maximum;
     }
 
-    //Todo
-    public boolean inCompanyWithName(String companyName){
+    public int getTotalRemainingCount() {
+        int total = 0;
+        for (SubProduct subProduct : getSubProducts()) {
+            total += subProduct.getRemainingCount();
+        }
+        return total;
+    }
+
+    public boolean isSoldInStoreWithName(String storeName) {
+        for (SubProduct subProduct : getSubProducts()) {
+            if (subProduct.getSeller().getStoreName().equals(storeName)) {
+                return true;
+            }
+        }
         return false;
     }
 }

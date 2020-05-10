@@ -6,14 +6,10 @@ import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
 
-import java.sql.DataTruncation;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Controller {
     protected static Account currentAccount;
@@ -24,7 +20,7 @@ public class Controller {
     public void usernameTypeValidation(String username, String type) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
         if (Account.getAccountByUsername(username) == null)
             throw new Exceptions.ExistedUsernameException(username);
-        else if (type.equalsIgnoreCase("admin") && !Admin.isFirstAdmin())
+        else if (type.equalsIgnoreCase("admin") && (Admin.getManager() != null))
             throw new Exceptions.AdminRegisterException();
     }
 
@@ -98,9 +94,9 @@ public class Controller {
 
     //Done!!
     private ArrayList<Product> filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                              String companyName, double minRatingScore, ArrayList<Product> products) {
+                                              String storeName, double minRatingScore, ArrayList<Product> products) {
         if (available)
-            products.removeIf(product -> !product.isAvailable());
+            products.removeIf(product -> (product.getTotalRemainingCount() == 0));
         products.removeIf(product -> product.getMinPrice() > maxPrice);
         if (maxPrice != 0)
             products.removeIf(product -> product.getMaxPrice() < minPrice);
@@ -108,8 +104,8 @@ public class Controller {
             products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
         if (!brand.equals(""))
             products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
-        if (!companyName.equals("")) {
-            products.removeIf(product -> !product.inCompanyWithName(companyName.toLowerCase()));
+        if (!storeName.equals("")) {
+            products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
         }
         products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
         return products;
@@ -124,10 +120,10 @@ public class Controller {
         return productIdNames;
     }
 
-    private String[] productPack(Product product){
+    private String[] productPack(Product product) {
         String[] productPack = new String[2];
         productPack[0] = product.getId();
-        productPack[1]  =product.getName();
+        productPack[1] = product.getName();
         return productPack;
     }
 
@@ -141,9 +137,9 @@ public class Controller {
     }
 
     //Done!!
-    public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException{
+    public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if(category == null)
+        if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else {
             ArrayList<String[]> categoryIdNames = new ArrayList<>();
@@ -158,9 +154,9 @@ public class Controller {
     }
 
     //Done!!
-    public ArrayList<String[]> getProductsOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException{
-        Category category  = Category.getCategoryByName(categoryName);
-        if( category == null)
+    public ArrayList<String[]> getProductsOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
+        Category category = Category.getCategoryByName(categoryName);
+        if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else
             return productToIdName(category.getProducts());
@@ -226,8 +222,8 @@ public class Controller {
         String[] subProductPack = new String[4];
         for (SubProduct subProduct : product.getSubProducts()) {
             subProductPack[0] = subProduct.getId();
-            subProductPack[1] = subProduct.getSeller().getCompanyName();
-            subProductPack[2] = Double.toString(subProduct.getPrice());
+            subProductPack[1] = subProduct.getSeller().getStoreName();
+            subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
             subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
             subProducts.add(subProductPack);
         }
@@ -243,8 +239,8 @@ public class Controller {
         String[] reviewPack = new String[3];
         for (Review review : product.getReviews()) {
             reviewPack[0] = review.getReviewer().getUsername();
-            reviewPack[1] = review.getReviewTitle();
-            reviewPack[2] = review.getReviewText();
+            reviewPack[1] = review.getTitle();
+            reviewPack[2] = review.getText();
             reviews.add(reviewPack);
         }
         return reviews;
@@ -274,7 +270,7 @@ public class Controller {
             String[] reviewPack = new String[2];
             for (Review review : product.getReviews()) {
                 reviewPack[0] = review.getReviewer().getUsername();
-                reviewPack[1] = review.getReviewText();
+                reviewPack[1] = review.getText();
                 reviews.add(reviewPack);
             }
             return reviews;
@@ -282,14 +278,14 @@ public class Controller {
     }
 
     //Done!!
-    public void addReview(String productId, String reviewText) throws Exceptions.InvalidProductIdException, Exceptions.NotLoggedInException {
+    public void addReview(String productId, String title, String text) throws Exceptions.InvalidProductIdException, Exceptions.NotLoggedInException {
         if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
         else {
             if (Product.getProductById(productId) == null)
                 throw new Exceptions.InvalidProductIdException(productId);
             else
-                new Review(currentAccount.getId(), productId, reviewText);
+                new Review(currentAccount.getId(), productId, title, text);
         }
     }
 
@@ -305,13 +301,13 @@ public class Controller {
     //Done!!
     protected String[] getPersonalInfo(Account account) {
         String[] info;
-        if (account.getType().equals("customer")) {
+        if (account instanceof Customer) {
             info = new String[7];
             info[6] = String.valueOf(((Customer) account).getBalance());
-        } else if (account.getType().equals("seller")) {
+        } else if (account instanceof Seller) {
             info = new String[8];
             info[6] = String.valueOf(((Seller) account).getBalance());
-            info[7] = ((Seller) account).getCompanyName();
+            info[7] = ((Seller) account).getStoreName();
         } else
             info = new String[6];
         info[0] = account.getUsername();
@@ -355,7 +351,7 @@ public class Controller {
     protected String[] getSaleInfo(Sale sale) {
         String[] salePack = new String[5];
         salePack[0] = Double.toString(sale.getPercentage());
-        salePack[1] = sale.getSeller().getCompanyName();
+        salePack[1] = sale.getSeller().getStoreName();
         salePack[2] = dateFormat.format(sale.getStartDate());
         salePack[3] = dateFormat.format(sale.getEndDate());
         salePack[4] = Integer.toString(sale.getSubProducts().size());

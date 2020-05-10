@@ -16,16 +16,16 @@ public class SellerController extends Controller {
 
     //Done!!
     public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
-        if (field.equals("companyName"))
-            ((Seller) currentAccount).setCompanyName(newInformation);
+        if (field.equals("storeName"))
+            ((Seller) currentAccount).setStoreName(newInformation);
         else
             editCommonInformation(field, newInformation);
     }
 
-    //Done!! any thing other companyName?
+    //Done!! any thing other storeName?
     public ArrayList<String> viewCompanyInformation() {
         ArrayList<String> companyInformation = new ArrayList<>();
-        companyInformation.add(((Seller) currentAccount).getCompanyName());
+        companyInformation.add(((Seller) currentAccount).getStoreName());
         return companyInformation;
     }
 

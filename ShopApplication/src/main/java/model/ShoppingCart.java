@@ -75,4 +75,13 @@ public class ShoppingCart {
     public void removeSubProduct(String subProductId) {
         subProductIds.remove(subProductId);
     }
+
+    public double getTotalPrice() {
+        double total = 0;
+        HashMap<SubProduct, Integer> subProducts = getSubProducts();
+        for (SubProduct subProduct : subProducts.keySet()) {
+            total += subProduct.getPriceWithSale() * subProducts.get(subProduct);
+        }
+        return total;
+    }
 }

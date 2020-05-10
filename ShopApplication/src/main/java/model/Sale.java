@@ -1,6 +1,7 @@
 package model;
 
 import model.account.Seller;
+import model.request.AddSaleRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,13 +19,14 @@ public class Sale {
     private HashSet<String> subProductIds;
     private boolean suspended;
 
-    public Sale(String sellerId, Date startDate, Date endDate, int percentage, int maximumAmount) {
+    public Sale(String sellerId, Date startDate, Date endDate, double percentage, double maximumAmount) {
         this.sellerId = sellerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.percentage = percentage;
         this.maximumAmount = maximumAmount;
         suspended = false;
+        new AddSaleRequest(this);
     }
 
     private static String getNewId(String sellerId) {

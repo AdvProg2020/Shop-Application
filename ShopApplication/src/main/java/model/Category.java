@@ -6,13 +6,13 @@ import java.util.HashSet;
 
 public class Category {
     private static HashMap<String, Category> allCategories = new HashMap<>();
+    private static Category superCategory;
     private String categoryId;
     private String name;
-    private String parentId; // can be null
+    private String parentId;
     private ArrayList<String> specialProperties;
     private transient HashSet<String> productIds;
     private transient HashSet<String> subCategoryIds;
-    private static Category superCategory; //Todo
 
     public Category(String name, String parentId, ArrayList<String> specialProperties) {
         this.name = name;
@@ -43,15 +43,21 @@ public class Category {
         return allCategories.get(categoryId);
     }
 
+    public static Category getSuperCategory() {
+        return superCategory;
+    }
+
     public void initialize() {
         if (categoryId == null) {
             categoryId = generateNewId(parentId);
         }
-        allCategories.put(categoryId, this);
-        productIds = new HashSet<>();
         subCategoryIds = new HashSet<>();
+        productIds = new HashSet<>();
         if (parentId != null) {
+            allCategories.put(categoryId, this);
             getParent().addSubCategory(categoryId);
+        } else {
+            superCategory = this;
         }
     }
 
@@ -83,10 +89,19 @@ public class Category {
     }
 
     public void setParent(String parentId) {
-        //TODO: check if new parent is a child of the category
+        // first check if new parent is a child of the category -> !hasChildWithId(parentId)
         getParent().removeSubCategory(categoryId);
         this.parentId = parentId;
         getParent().addSubCategory(categoryId);
+    }
+
+    public boolean hasChildWithId(String categoryId) {
+        for (Category subCategory : getSubCategories()) {
+            if (categoryId.equals(subCategory.getId()) || subCategory.hasChildWithId(categoryId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<String> getSpecialProperties() {
@@ -130,10 +145,5 @@ public class Category {
 
     public void removeSubCategory(String subCategoryId) {
         subCategoryIds.remove(subCategoryId);
-    }
-
-    //Todo?
-    public static Category getSuperCategory(){
-        return superCategory;
     }
 }

@@ -57,7 +57,7 @@ public class BuyLog {
 
     public Customer getCustomer() {
         return Customer.getCustomerById(customerId, false);
-    } // TODO: include suspended
+    }
 
     public int getPaidMoney() {
         return paidMoney;

@@ -56,7 +56,7 @@ public class Customer extends Account {
 
     @Override
     public String getType() {
-        return "customer";
+        return "Customer";
     }
 
     public double getBalance() {

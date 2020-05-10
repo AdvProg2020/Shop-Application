@@ -3,22 +3,24 @@ package model.account;
 import model.Sale;
 import model.SubProduct;
 import model.log.SellLog;
+import model.request.AddSellerRequest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Seller extends Account {
-    private String companyName;
+    private String storeName;
     private double balance;
     private transient HashSet<String> subProductIds;
     private transient HashSet<String> saleIds;
     private transient HashSet<String> sellLogIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone,
-                  String companyName, double balance) {
+                  String storeName, double balance) {
         super(username, password, firstName, lastName, email, phone);
-        this.companyName = companyName;
+        this.storeName = storeName;
         this.balance = balance;
+        new AddSellerRequest(this);
     }
 
     public static Seller getSellerById(String accountId) {
@@ -58,15 +60,15 @@ public class Seller extends Account {
 
     @Override
     public String getType() {
-        return "seller";
+        return "Seller";
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getStoreName() {
+        return storeName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public double getBalance() {
