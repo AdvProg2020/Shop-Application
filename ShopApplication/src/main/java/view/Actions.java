@@ -8,8 +8,15 @@ import java.util.ArrayList;
 public class Actions {
 
     public static class AccountMenuBackAction extends Action {
-        AccountMenuBackAction(String name, Menu previousMenu, Menu nextMenu) {
+        private Menu previousMenu;
+        AccountMenuBackAction(String name, Menu previousMenu) {
+            super(name, Constants.Actions.backPattern, Constants.Actions.backCommand);
+            this.previousMenu = previousMenu;
+        }
 
+        @Override
+        public void execute(String command) {
+            previousMenu.run();
         }
     }
 

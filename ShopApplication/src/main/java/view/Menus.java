@@ -42,8 +42,7 @@ public class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
-            subActions.put(index + 1, new Actions.BackAction("account menu back", previousMenu));
+            //no actions available.
         }
 
         @Override
@@ -261,7 +260,7 @@ public class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.LoginAction("Login"));
             subActions.put(index + 2, new Actions.RegisterAction("Register"));
-            subActions.put(index + 3, new Actions.BackAction("back", parent));
+            subActions.put(index + 3, new Actions.AccountMenuBackAction("back", previousMenu));
         }
     }
 
@@ -293,7 +292,7 @@ public class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.BackAction("another fuckin back", parent));
+            subActions.put(index + 1, new Actions.AccountMenuBackAction("another fuckin back", previousMenu));
         }
     }
 
@@ -427,7 +426,7 @@ public class Menus {
             subActions.put(index + 2, new Actions.ShowSellerCategories("seller categories"));
             subActions.put(index + 3, new Actions.ShowSellerBalance("seller balance"));
             subActions.put(index + 4, new Actions.ShowSellerSellHistory("seller sell history"));
-            subActions.put(index + 5, new Actions.BackAction("seller menu back", parent));
+            subActions.put(index + 5, new Actions.AccountMenuBackAction("seller menu back", previousMenu));
         }
     }
 
@@ -493,7 +492,7 @@ public class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.ShowCustomerBalance("show customer balance"));
             subActions.put(index + 2, new Actions.ShowCustomerDiscountCodes("show customer discount codes"));
-            subActions.put(index + 3, new Actions.BackAction("back", parent));
+            subActions.put(index + 3, new Actions.AccountMenuBackAction("back", previousMenu));
         }
     }
 
