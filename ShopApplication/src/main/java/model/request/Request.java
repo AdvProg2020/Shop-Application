@@ -58,7 +58,4 @@ public abstract class Request {
         status = RequestStatus.DECLINED;
     }
 
-    public enum RequestStatus {
-        PENDING, ACCEPTED, DECLINED
-    }
 }

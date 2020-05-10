@@ -12,18 +12,17 @@ public class LogItem {
     private String buyLogId;
     private String sellLogId;
     private String subProductId;
-    private double unitPrice;
-    private double salePercentage;
     private int count;
+    private double price;
+    private double saleAmount;
 
-    public LogItem(String buyLogId, String sellLogId, String subProductId,
-                   double unitPrice, double salePercentage, int count) {
+    public LogItem(String buyLogId, String sellLogId, String subProductId, int count) {
         this.buyLogId = buyLogId;
         this.sellLogId = sellLogId;
         this.subProductId = subProductId;
-        this.unitPrice = unitPrice;
-        this.salePercentage = salePercentage;
         this.count = count;
+        price = getSubProduct().getRawPrice();
+        saleAmount = price - getSubProduct().getPriceWithSale();
         initialize();
     }
 
@@ -70,12 +69,12 @@ public class LogItem {
         return SubProduct.getSubProductById(subProductId, false);
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
+    public double getPrice() {
+        return price;
     }
 
-    public double getSalePercentage() {
-        return salePercentage;
+    public double getSaleAmount() {
+        return saleAmount;
     }
 
     public int getCount() {
