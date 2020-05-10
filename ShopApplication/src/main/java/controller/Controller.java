@@ -287,6 +287,7 @@ public class Controller {
      * @return String[4]: ID, storeName, price, remaining count.
      * @throws Exceptions.InvalidProductIdException
      */
+    //TODO: same object modification bug.
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -310,6 +311,7 @@ public class Controller {
      * @return String[3]: usernameOfReviewer, title, body.
      * @throws Exceptions.InvalidProductIdException
      */
+    //TODO: one object modification bug.
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)

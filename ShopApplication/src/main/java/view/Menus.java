@@ -1,13 +1,10 @@
 package view;
 
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import controller.SellerController;
+import controller.*;
 
 import java.util.ArrayList;
 
-
+//TODO: back action --> abstract.
 public class Menus {
     private static Controller mainController;
     private static AdminController adminController;
@@ -27,7 +24,7 @@ public class Menus {
 
         AccountMenu(String name) {
             super(name, false, null, Constants.Menus.accountMenuPattern, Constants.Menus.accountMenuCommand);
-            Menu.accountMenu = this;
+            Menu.setAccountMenu(this);
             previousMenu = null;
             nextMenu = null;
         }
@@ -82,7 +79,7 @@ public class Menus {
         public void initSubMenus() {
             subMenus.put(1, new SaleMenu("Sale menu", this));
             subMenus.put(2, new AllProductsMenu("products menu", this));
-            subMenus.put(3, Menu.accountMenu);
+            subMenus.put(3, Menu.getAccountMenu());
         }
 
         @Override
@@ -112,7 +109,6 @@ public class Menus {
         protected void initSubMenus() {
             subMenus.put(1, new SortMenu("product sorting menu", this, getAvailableSorts(), currentSort));
             subMenus.put(2, new FilterMenu("product filtering menu", this, getAvailableFilters(), currentFilters));
-            subMenus.put(3, new ProductMenu("product Menu", this));
         }
 
         //TODO: imp.
@@ -133,15 +129,18 @@ public class Menus {
             subActions.put(index + 2, new Actions.ShowCategories("show categories", this.categoryTree));
             subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category", this.categoryTree));
             subActions.put(index + 5, new Actions.RevertCategoryAction("revert category"));
-            subActions.put(index + 6, new Actions.BackAction("all product menu back", parent));
+            subActions.put(index + 6, new Actions.ProductDetailMenu("productDetailMenu"));
+            subActions.put(index + 7, new Actions.BackAction("all product menu back", parent));
         }
     }
 
     //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim.
-    public static class ProductMenu extends Menu {
+    public static class ProductDetailMenu extends Menu {
         private String productID;
-        ProductMenu(String name, Menu parent){
-            super(name, false, parent, Constants.Menus.productDetailMenuPattern, Constants.Menus.productDetailMenuCommand);
+
+        ProductDetailMenu(String name){
+            super(name, false, null, null, null);
+            Menu.setProductDetailMenu(this);
         }
 
         @Override
@@ -149,12 +148,19 @@ public class Menus {
 
         }
 
+        //TODO: add proper back action.
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.DigestProduct("digest product"));
         }
 
-        public void digest(){}
+        public void runByProductID(String productID) {
+            this.productID = null;
+            this.productID = productID;
+            this.run();
+        }
+
         //should select seller before adding.
         public void addToShoppingCart(){}
         public void showAttributes(){}
@@ -162,6 +168,23 @@ public class Menus {
         public void showComments(){}
         public void addComment(){}
     }
+
+    public static class ProductReviewMenu extends Menu {
+        ProductReviewMenu(String name, Menu parent) {
+            super(name, true, parent, Constants.Menus.productReviewMenuPattern, Constants.Menus.productReviewMenuCommand);
+        }
+
+        @Override
+        protected void initSubMenus() {
+            //no available sub menus.
+        }
+
+        @Override
+        protected void initSubActions() {
+
+        }
+    }
+
 
     public static class SortMenu extends Menu {
         private StringBuilder currentSort;
@@ -234,14 +257,14 @@ public class Menus {
         protected void initSubMenus() {
             subMenus.put(1, new SortMenu("sale sort menu", this, getAvailableSorts(), this.currentSort));
             subMenus.put(2, new FilterMenu("sale filter menu", this, getAvailableFilters(), this.currentFilters));
-            subMenus.put(3, new ProductMenu("sale menu prdduct menu", this));
         }
 
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.ShowOffs("show products", this.currentSort, this.currentFilters, this.currentProducts, this.currentOffs));
-            subActions.put(index + 2, new Actions.BackAction("sale menu back", parent));
+            subActions.put(index + 2, new Actions.ProductDetailMenu("product detail menu"));
+            subActions.put(index + 3, new Actions.BackAction("sale menu back", parent));
         }
 
         //TODO: imp.

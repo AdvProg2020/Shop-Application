@@ -7,7 +7,8 @@ import java.util.*;
 public abstract class Menu {
     protected String name;
     protected boolean isAccountMenuAccessible;
-    protected static Menu accountMenu;
+    private static Menus.AccountMenu accountMenu;
+    private static Menus.ProductDetailMenu productDetailMenu;
     protected Menu parent;
     protected Map<Integer, Menu> subMenus;
     protected Map<Integer, Action> subActions;
@@ -40,6 +41,22 @@ public abstract class Menu {
 
     protected abstract void initSubMenus();
     protected abstract void initSubActions();
+
+    public static void setAccountMenu(Menus.AccountMenu accountMenu) {
+        Menu.accountMenu = accountMenu;
+    }
+
+    public static void setProductDetailMenu(Menus.ProductDetailMenu productDetailMenu) {
+        Menu.productDetailMenu = productDetailMenu;
+    }
+
+    public static Menus.AccountMenu getAccountMenu() {
+        return accountMenu;
+    }
+
+    public static Menus.ProductDetailMenu getProductDetailMenu() {
+        return productDetailMenu;
+    }
 
     static protected String getNextLineTrimmed() {
         return sc.nextLine().trim();

@@ -4,9 +4,22 @@ import controller.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //TODO: be actions controller haro moarefi kon.
 public class Actions {
+    private static Controller mainController;
+    private static AdminController adminController;
+    private static SellerController sellerController;
+    private static CustomerController customerController;
+
+    static {
+        mainController = View.mainController;
+        adminController = View.adminController;
+        sellerController = View.sellerController;
+        customerController = View.customerController;
+    }
 
     public static class AccountMenuBackAction extends Action {
         private Menu previousMenu;
@@ -356,6 +369,47 @@ public class Actions {
         @Override
         public void execute(String command) {
 
+        }
+    }
+
+    public static class ProductDetailMenu extends Action {
+        ProductDetailMenu(String name) {
+            super(name, Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+            Matcher commandMatcher = this.getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            //checks if the ID is valid or not
+            try {
+                mainController.showProduct(productID);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+
+            //if valid, runs productMenu with given productID.
+            Menu.getProductDetailMenu().runByProductID(productID);
+        }
+    }
+
+    public static class DigestProduct extends Action {
+        DigestProduct(String name) {
+            super(name ,Constants.Actions.digestProductPattern, Constants.Actions.digestProductCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+            try {
+                String[] productInfo = mainController.digest(command);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+
+            //if ID is valid, show the info.
         }
     }
 }

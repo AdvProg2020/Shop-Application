@@ -13,6 +13,7 @@ public class View {
     public static AdminController adminController;
     public static SellerController sellerController;
 
+    private Menus.ProductDetailMenu productDetailMenu;
     private Menus.AccountMenu accountMenu;
     private Menus.FirstMenu firstMenu;
 
