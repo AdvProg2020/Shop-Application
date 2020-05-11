@@ -56,6 +56,7 @@ public class EditProductRequest extends Request {
         return newValue;
     }
 
+    //TODO: count
     public enum Field {
         NAME,
         BRAND,

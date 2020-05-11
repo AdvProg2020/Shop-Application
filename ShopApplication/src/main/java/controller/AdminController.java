@@ -75,9 +75,24 @@ public class AdminController extends Controller {
             product.suspend();
     }
 
-    //Todo
-    public void createDiscountCode(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) {
+    //Done!!
+    public void createDiscountCode(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) throws Exceptions.ExistingDiscountCodeException {
+        if(Discount.getDiscountByCode(discountCode) != null)
+            throw new Exceptions.ExistingDiscountCodeException(discountCode);
+        else
+            new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
+    }
 
+    //Done!!
+    public void addCustomerToDiscount(String customerId, String code, int count) throws Exceptions.DiscountCodeException, Exceptions.CustomerIdException {
+        Discount discount = Discount.getDiscountByCode(code);
+        Account account = Account.getAccountById(customerId);
+        if( discount == null)
+            throw new Exceptions.DiscountCodeException(code);
+        else if( account != null && account.getType().equalsIgnoreCase("customer"))
+            discount.addCustomer(customerId, count);
+        else
+            throw new Exceptions.CustomerIdException(customerId);
     }
 
     //Done!!
@@ -124,7 +139,11 @@ public class AdminController extends Controller {
     }
 
     //Todo
-    public void editDiscountCode(String code, String field, String newInformation) {
+    public void editDiscountCode(String code, String field, String newInformation) throws Exceptions.DiscountCodeException {
+        Discount discount = Discount.getDiscountByCode(code);
+        if( discount == null )
+            throw new Exceptions.DiscountCodeException(code);
+
     }
 
     //Done!!
@@ -175,16 +194,17 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public void addCategory(String categoryName, String parentCategory, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
+    public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
         if (Category.getCategoryByName(categoryName) != null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        else if (Category.getCategoryByName(parentCategory) == null)
-            throw new Exceptions.InvalidCategoryException(parentCategory);
-        else
-            new Category(categoryName, Category.getCategoryByName(parentCategory).getId(), specialProperties);
+        else{
+            Category parentCategory = Category.getCategoryByName(parentCategoryName);
+            String parentCategoryId = parentCategory == null ? Category.getSuperCategory().getId() : parentCategory.getId();
+            new Category(categoryName, parentCategoryId, specialProperties);
+        }
     }
 
-    //Done!! Shayan: terminate oke?
+    //Done!!
     public void removeCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)

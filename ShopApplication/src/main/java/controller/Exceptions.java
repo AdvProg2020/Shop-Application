@@ -71,6 +71,12 @@ public class Exceptions{
         }
     }
 
+    public static class ExistingProductException extends Exception{
+        public ExistingProductException( String productId){
+            super("There is another product with this name and brand; Its Id is: "+ productId);
+        }
+    }
+
     public static class InvalidCategoryException extends Exception{
         public InvalidCategoryException(String categoryName){
             super("There is no category with name:"+categoryName);
@@ -90,6 +96,18 @@ public class Exceptions{
     public static class DiscountCodeException extends Exception{
         public DiscountCodeException(String discountCode){
             super("There is no discount with this code: "+ discountCode);
+        }
+    }
+
+    public static class ExistingDiscountCodeException extends Exception{
+        public ExistingDiscountCodeException(String discountCode){
+            super("There is already a discount code with code: " + discountCode);
+        }
+    }
+
+    public static class CustomerIdException extends Exception{
+        public CustomerIdException(String Id){
+            super("There is no customer with this Id: "+ Id);
         }
     }
 

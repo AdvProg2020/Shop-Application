@@ -1,5 +1,6 @@
 package controller;
 
+import model.Category;
 import model.Product;
 import model.Sale;
 import model.SubProduct;
@@ -93,19 +94,47 @@ public class SellerController extends Controller {
 
     //Todo
     public void editProduct(String productID, String field, String newInformation) {
+
     }
 
     //Done!!
-    public boolean exist(String productName, String brand) {
-        for (Product product : Product.getAllProducts()) {
-            if (product.getName().equalsIgnoreCase(productName) && product.getBrand().equalsIgnoreCase(brand))
-                return true;
-        }
-        return false;
+
+    /**
+     *
+     * @param productName
+     * @param brand
+     * @return if there is an existing product returns its Id
+     *          else it returns null
+     */
+    public String exist(String productName, String brand) {
+        Product product = Product.getProductsByNameAndBrand(productName, brand);
+        if( product != null)
+            return product.getId();
+        else
+            return null;
     }
 
-    //Todo
-    public void addProduct(ArrayList<String> information) {
+    //Done!! TODO: Shayan please check this
+    public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
+                              double price, int count) throws Exceptions.ExistingProductException{
+        Product product;
+        if((product = Product.getProductsByNameAndBrand(name, brand)) != null)
+            throw new Exceptions.ExistingProductException(product.getId());
+        else{
+            Category category;
+            if((category = Category.getCategoryByName(categoryName)) == null)
+                category = Category.getSuperCategory();
+            SubProduct subProduct = new SubProduct(null, currentAccount.getId(), price, count);
+            new Product(name, brand, infoText, category.getId(), specialProperties, subProduct);
+        }
+    }
+
+    //Done!!
+    public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidProductIdException {
+        if(Product.getProductById(productId) == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        else
+            new SubProduct(productId, currentAccount.getId(), price, count);
     }
 
     //Done!!
