@@ -47,11 +47,11 @@ public class AdminController extends Controller {
         account.suspend();
     }
 
-    //Todo: information = String[5];
-    public void creatManagerProfile(String username, String[] information) throws Exceptions.ExistedUsernameException {
+    //Done!!
+    public void creatManagerProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.ExistedUsernameException {
         if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.ExistedUsernameException(username);
-        new Admin(username, information[0], information[1], information[2], information[3], information[4]);
+        new Admin(username, password, firstName, lastName, email, phone);
     }
 
     //Done!! sort?

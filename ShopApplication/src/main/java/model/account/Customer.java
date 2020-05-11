@@ -107,4 +107,8 @@ public class Customer extends Account {
     public void removeDiscount(String discountId) {
         discountIds.remove(discountId);
     }
+
+    //Todo
+    public void mergeShoppingCart(String shoppingCartId){
+    }
 }
