@@ -414,7 +414,7 @@ public class Controller {
      *                     * { String firstName, String lastName, String phone, String email, String password, String storeName}
      * @throws Exceptions.NotLoggedInException
      */
-    public String[] getEditableFields() throws Exceptions.NotLoggedInException {
+    public String[] getPersonalInfoEditableFields() throws Exceptions.NotLoggedInException {
         if(currentAccount == null)
             throw new Exceptions.NotLoggedInException();
         else {
@@ -459,21 +459,31 @@ public class Controller {
     }
 
     //Done!!
-    protected void editCommonInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
+    protected void editCommonInformation(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
+                if(currentAccount.getFirstName().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setFirstName(newInformation);
                 break;
             case "lastName":
+                if(currentAccount.getLastName().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setLastName(newInformation);
                 break;
             case "email":
+                if(currentAccount.getEmail().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setEmail(newInformation);
                 break;
             case "phone":
+                if(currentAccount.getPhone().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setPhone(newInformation);
                 break;
             case "password":
+                if(currentAccount.getPassword().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setPassword(newInformation);
                 break;
             default:

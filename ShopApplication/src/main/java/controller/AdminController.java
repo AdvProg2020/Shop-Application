@@ -9,7 +9,6 @@ import model.account.Admin;
 import model.account.Customer;
 import model.request.Request;
 
-import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,8 +17,7 @@ import java.util.HashMap;
 public class AdminController extends Controller {
 
     //Done!!
-    //TODO: check for new Info (for example for password).
-    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException {
+    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         editCommonInformation(field, newInformation);
     }
 
@@ -257,9 +255,17 @@ public class AdminController extends Controller {
         return null;
     }
 
-    //Todo
+    //Done!!
     public void acceptRequest(String requestID, boolean accepted) throws Exceptions.InvalidRequestIdException {
-        Request request;
+        Request request = Request.getRequestById(requestID);
+        if(request == null)
+            throw new Exceptions.InvalidRequestIdException(requestID);
+        else {
+            if(accepted)
+                request.accept();
+            else
+                request.decline();
+        }
     }
 
     //Done!!
