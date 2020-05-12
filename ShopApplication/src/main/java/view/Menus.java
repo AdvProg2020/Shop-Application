@@ -4,7 +4,7 @@ import controller.*;
 
 import java.util.ArrayList;
 
-public class Menus {
+class Menus {
     private static Controller mainController;
     private static AdminController adminController;
     private static SellerController sellerController;
@@ -146,7 +146,7 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new ProductReviewMenu("comments menu", this));
+            subMenus.put(1, new ProductReviewMenu("comments menu", this, productID));
         }
 
         @Override
@@ -168,8 +168,10 @@ public class Menus {
     }
 
     public static class ProductReviewMenu extends Menu {
-        ProductReviewMenu(String name, Menu parent) {
+        private StringBuilder productID;
+        ProductReviewMenu(String name, Menu parent, StringBuilder productID) {
             super(name, true, parent, Constants.Menus.productReviewMenuPattern, Constants.Menus.productReviewMenuCommand);
+            this.productID = productID;
         }
 
         @Override
@@ -180,7 +182,9 @@ public class Menus {
         //TODO: imp.
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ShowReviews("show comments", productID));
+            subActions.put(index + 2, new Actions.AddComment("add comment", productID));
         }
     }
 

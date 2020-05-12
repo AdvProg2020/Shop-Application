@@ -121,7 +121,9 @@ class Constants {
         static final String compareProductByIDPattern = caseInsensitiveMode + "^compare " + argumentPattern + "$";
         static final String addReviewCommand = "add comment";
         static final String addReviewPattern = caseInsensitiveMode + "^" + addReviewCommand + "$";
-   //     static final String
-   //     static final String
+        static final String showReviewsCommand = "show comments";
+        static final String showReviewsPattern = caseInsensitiveMode + "^" + showReviewsCommand + "$";
+        static final String
+        static final String
     }
 }
