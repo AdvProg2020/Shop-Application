@@ -491,4 +491,40 @@ public class Actions {
 
         }
     }
+
+    public static class AdminViewUser extends Action {
+        AdminViewUser(String name) {
+            super(name, Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String userID) {
+
+        }
+    }
+
+    public static class AdminDeleteUser extends Action {
+        AdminDeleteUser(String name) {
+            super(name, Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String userID) {
+
+        }
+    }
+
+    public static class AdminCreateAdmin extends Action {
+        AdminCreateAdmin(String name) {
+            super(name, Constants.Actions.adminCreateAdminPattern, Constants.Actions.adminCreateAdminCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
 }

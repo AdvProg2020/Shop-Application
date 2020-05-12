@@ -6,6 +6,7 @@ class Constants {
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
+    private static final String unsignedIntPattern = "(\\d+)";
     static final String anonymousUserType = "anonymous";
     static final String adminUserType = "admin";
     static final String customerUserType = "customer";
@@ -123,6 +124,14 @@ class Constants {
         static final String addReviewPattern = caseInsensitiveMode + "^" + addReviewCommand + "$";
         static final String showReviewsCommand = "show comments";
         static final String showReviewsPattern = caseInsensitiveMode + "^" + showReviewsCommand + "$";
+        static final String adminViewUserCommand = "view user [userIndex]";
+        static final String adminViewUserPattern = caseInsensitiveMode + "^view user " + unsignedIntPattern + "$";
+        static final String adminDeleteUserCommand = "delete user [userIndex]";
+        static final String adminDeleteUserPattern = caseInsensitiveMode + "delete user " + unsignedIntPattern + "$";
+        static final String adminCreateAdminCommand = "create manager profile";
+        static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
+        static final String
+        static final String
         static final String
         static final String
     }

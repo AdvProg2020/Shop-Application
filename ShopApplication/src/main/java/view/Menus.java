@@ -185,6 +185,7 @@ class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.ShowReviews("show comments", productID));
             subActions.put(index + 2, new Actions.AddComment("add comment", productID));
+            subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
 
@@ -242,7 +243,6 @@ class Menus {
         }
     }
 
-    //handles both method and menu
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
         private String[] currentFilters;
@@ -336,6 +336,7 @@ class Menus {
         }
     }
 
+    //TODO: show chejoury bashe?
     public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
@@ -356,19 +357,26 @@ class Menus {
         protected abstract ArrayList<String> getEditableFields();
     }
 
+    //TODO: executesh bayad fargh kone. command AdminViewUser bayad ID user bashe.
     public static class UserManagingMenu extends Menu{
+        private ArrayList<String[]> users;
         UserManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.userManagingMenuPattern, Constants.Menus.userManagingMenuCommand);
+            users = new ArrayList<>();
         }
 
         @Override
         protected void initSubMenus() {
-
+            //no sub menus available.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminViewUser("view user"));
+            subActions.put(index + 2, new Actions.AdminDeleteUser("delete user"));
+            subActions.put(index + 3, new Actions.AdminCreateAdmin("create admin"));
+            subActions.put(index + 4, new Actions.BackAction("back", parent));
         }
     }
 
