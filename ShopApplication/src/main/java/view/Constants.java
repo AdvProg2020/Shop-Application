@@ -130,8 +130,8 @@ class Constants {
         static final String adminDeleteUserPattern = caseInsensitiveMode + "delete user " + unsignedIntPattern + "$";
         static final String adminCreateAdminCommand = "create manager profile";
         static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
-        static final String
-        static final String
+        static final String adminRemoveProductByIDCommand = "remove [productID]";
+        static final String adminRemoveProductByIDPattern = caseInsensitiveMode + "^remove " + argumentPattern + "$";
         static final String
         static final String
     }

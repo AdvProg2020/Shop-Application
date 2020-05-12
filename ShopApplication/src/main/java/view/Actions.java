@@ -527,4 +527,16 @@ public class Actions {
 
         }
     }
+
+    public static class AdminRemoveProductByID extends Action {
+        AdminRemoveProductByID(String name) {
+            super(name, Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
 }

@@ -133,7 +133,7 @@ class Menus {
         }
     }
 
-    //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim.
+    //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim va inke age customer ya anonymous nabd natone.
     //TODO: getDefaultSubProductID();
     public static class ProductDetailMenu extends Menu {
         private StringBuilder productID;
@@ -387,12 +387,14 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminRemoveProductByID("remove product"));
+            subActions.put(index + 2, new Actions.BackAction("back", parent));
         }
     }
 
