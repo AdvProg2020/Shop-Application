@@ -337,7 +337,9 @@ public class Controller {
     }
 
     //Todo
-    public ArrayList<String> compare(String productId1, String productId2) {
+    //TODO: ID validation exceptions.
+    //TODO: returning type specification.
+    public ArrayList<String> compare(String productId1, String productId2) throws Exceptions.InvalidProductIdException {
         return null;
     }
 
