@@ -9,6 +9,7 @@ import model.account.Admin;
 import model.account.Customer;
 import model.request.Request;
 
+import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -226,10 +227,10 @@ public class AdminController extends Controller {
             throw new Exceptions.InvalidRequestIdException(requestId);
         else{
             String type = request.getType();
-            String detailsOfRequest = null;
-            switch (type) {
-                case "AddProduct":
+            ArrayList<String> detailsOfRequest = null;
 
+             switch (type) {
+                case "AddProduct":
                     break;
                 case "AddReview":
 
@@ -251,11 +252,9 @@ public class AdminController extends Controller {
         }
     }
 
+    //Todo
     private String[] getSubProductInfo(SubProduct subProduct){
-        String[] subProductInfo = new String[];
-        subProductInfo[] = subProduct.getProduct().getName();
-        subProductInfo[] = subProduct.getProduct().getBrand();
-        subProductInfo[] = subProduct.getProduct().get
+        return null;
     }
 
     //Todo

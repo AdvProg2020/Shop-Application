@@ -31,20 +31,34 @@ public class Controller {
             throw new Exceptions.AdminRegisterException();
     }
 
-    //Todo
-
+    //Done!! Todo: Shayan please check this
     /**
      * @param type
-     * @param information: 1- customer:
+     *        information: 1- customer:
      *                     * String username, String password, String firstName, String lastName, String email, String phone, double balance
      *                     2- seller:
      *                     * String username, String password, String firstName, String lastName, String email, String phone, String storeName, double balance
      *                     3- admin:
      *                     * String username, String password, String firstName, String lastName, String email, String phone
      */
-    public void creatAccount(String type, ArrayList<String> information) {// lazeme inja ham exception bezarim?
-
-
+    public void creatAccount(String type, String username, String password, String firstName, String lastName,
+                             String email, String phone, double balance, String storeName) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
+        if(Account.getAccountByUsername(username) != null)
+            throw new Exceptions.ExistedUsernameException(username);
+        switch (type) {
+            case "customer":
+                new Customer(username, password, firstName, lastName, email, phone, balance);
+                break;
+            case "admin":
+                if (Admin.getManager() != null) {
+                    throw new Exceptions.AdminRegisterException();
+                } else
+                    new Admin(username, password, firstName, lastName, email, phone);
+                break;
+            case "seller":
+                new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
+                break;
+        }
     }
 
     //Done!! TODO: check this please!
@@ -296,6 +310,15 @@ public class Controller {
     }
 
     //Done!!
+    public ArrayList<String> getSpecialPropertiesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        else
+            return product.getSpecialProperties();
+    }
+
+    //Done!!
 
     /**
      * @param productId
@@ -351,11 +374,6 @@ public class Controller {
             currentCart.addSubProductCount(subProductId, count);
             subProduct.changeRemainingCount(-count);
         }
-    }
-
-    //Todo
-    public ArrayList<String> compare(String productId1, String productId2) {
-        return null;
     }
 
     //Done!!
