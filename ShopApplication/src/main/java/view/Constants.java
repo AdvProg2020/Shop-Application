@@ -132,6 +132,15 @@ class Constants {
         static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
         static final String adminRemoveProductByIDCommand = "remove [productID]";
         static final String adminRemoveProductByIDPattern = caseInsensitiveMode + "^remove " + argumentPattern + "$";
+        static final String adminCreateDiscountCodeCommand = "create discount code";
+        static final String adminCreateDiscountCodePattern = caseInsensitiveMode + adminCreateDiscountCodeCommand + "$";
+        static final String adminViewDiscountCodeCommand = "view discount code [discountCode]";
+        static final String adminViewDiscountCodePattern = caseInsensitiveMode + "^view discount code " + argumentPattern + "$";
+        static final String adminEditDiscountCodeCommand = "edit discount code [discountCode]";
+        static final String adminEditDiscountCodePattern = caseInsensitiveMode + "^edit discount code " + argumentPattern + "$";
+        static final String adminRemoveDiscountCodeCommand = "remove discount code [discountCode]";
+        static final String adminRemoveDiscountCodePattern = caseInsensitiveMode + "^remove discount code " + argumentPattern + "$";
+        static final String
         static final String
         static final String
     }

@@ -398,20 +398,24 @@ class Menus {
         }
     }
 
-    //this one handles both creation and view discount codes. so supports to commands
-    public static class DiscountCodesManagingMenu extends Menu{
+    public static class DiscountCodesManagingMenu extends Menu {
         DiscountCodesManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
         }
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminCreateDiscountCode("create discount code"));
+            subActions.put(index + 2, new Actions.AdminViewDiscountCode("view discount code"));
+            subActions.put(index + 3, new Actions.AdminEditDiscountCode("edit discount code"));
+            subActions.put(index + 4, new Actions.AdminRemoveDiscountCode("remove discount code"));
+            subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
     }
 

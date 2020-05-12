@@ -539,4 +539,55 @@ public class Actions {
 
         }
     }
+
+    public static class AdminCreateDiscountCode extends Action {
+        AdminCreateDiscountCode(String name) {
+            super(name, Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminViewDiscountCode extends Action {
+        AdminViewDiscountCode(String name) {
+            super(name, Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminEditDiscountCode extends Action {
+        AdminEditDiscountCode(String name) {
+            super(name, Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminRemoveDiscountCode extends Action {
+        AdminRemoveDiscountCode(String name) {
+            super(name, Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
+        }
+
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+
 }
