@@ -3,11 +3,13 @@ package controller;
 import model.Category;
 import model.Discount;
 import model.Product;
+import model.SubProduct;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.request.Request;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -138,12 +140,65 @@ public class AdminController extends Controller {
         }
     }
 
-    //Todo
-    public void editDiscountCode(String code, String field, String newInformation) throws Exceptions.DiscountCodeException {
+    //Done!!
+    public String[] getDiscountEditableFields(){
+        String[] editableFields = new String[4];
+        editableFields[0] = "start date";
+        editableFields[1] = "end date";
+        editableFields[2] = "maximum amount";
+        editableFields[3] = "percentage";
+        return editableFields;
+    }
+
+    //Done!!
+    /**
+     *
+     * @param code String
+     * @param field String ->                     "start date", "end date", "maximum amount", "percentage"
+     * @param newInformation String: should match  dateFormat , dateFormat,  Double         ,  Double
+     * @throws Exceptions.DiscountCodeException
+     * @throws Exceptions.SameAsPreviousValueException
+     * @throws Exceptions.InvalidFormatException
+     */
+    public void editDiscountCode(String code, String field, String newInformation) throws Exceptions.DiscountCodeException, Exceptions.SameAsPreviousValueException, Exceptions.InvalidFormatException {
         Discount discount = Discount.getDiscountByCode(code);
         if( discount == null )
             throw new Exceptions.DiscountCodeException(code);
-
+        else{
+            if(field.equalsIgnoreCase("start date")){
+                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+                else {
+                    try {
+                        discount.setStartDate(dateFormat.parse(newInformation));
+                    } catch (ParseException e) {
+                        throw new Exceptions.InvalidFormatException("date");
+                    }
+                }
+            }else if(field.equalsIgnoreCase("end date")){
+                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+                else {
+                    try {
+                        discount.setEndDate(dateFormat.parse(newInformation));
+                    } catch (ParseException e) {
+                        throw new Exceptions.InvalidFormatException("date");
+                    }
+                }
+            }else if(field.equalsIgnoreCase("maximum amount")){
+                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+                else {
+                    discount.setMaximumAmount(Double.parseDouble(newInformation));
+                }
+            }else if(field.equalsIgnoreCase("percentage")){
+                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+                else {
+                    discount.setPercentage(Double.parseDouble(newInformation));
+                }
+            }
+        }
     }
 
     //Done!!
@@ -169,7 +224,38 @@ public class AdminController extends Controller {
         Request request = Request.getRequestById(requestId);
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
-        return null;
+        else{
+            String type = request.getType();
+            String detailsOfRequest = null;
+            switch (type) {
+                case "AddProduct":
+
+                    break;
+                case "AddReview":
+
+                    break;
+                case "AddSale":
+
+                    break;
+                case "AddSeller":
+
+                    break;
+                case "EditProduct":
+
+                    break;
+                case "EditSale":
+
+                    break;
+            }
+            return detailsOfRequest;
+        }
+    }
+
+    private String[] getSubProductInfo(SubProduct subProduct){
+        String[] subProductInfo = new String[];
+        subProductInfo[] = subProduct.getProduct().getName();
+        subProductInfo[] = subProduct.getProduct().getBrand();
+        subProductInfo[] = subProduct.getProduct().get
     }
 
     //Todo

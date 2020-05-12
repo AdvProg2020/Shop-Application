@@ -2,6 +2,7 @@ package controller;
 
 import model.Discount;
 import model.Product;
+import model.Rating;
 import model.SubProduct;
 import model.account.Customer;
 import model.log.BuyLog;
@@ -74,7 +75,7 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public double showTotalPriceOfCart() {
+    public double getTotalPriceOfCart() {
         HashMap<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
         double totalSum = 0;
         for (SubProduct subProduct : subProductsInCart.keySet()) {
@@ -84,8 +85,7 @@ public class CustomerController extends Controller {
     }
 
     //Todo
-    public String purchaseTheCart() {
-        return null;
+    public void purchaseTheCart() throws Exceptions.InsufficientCreditException {
     }
 
     //Done!!
@@ -134,9 +134,21 @@ public class CustomerController extends Controller {
         }
     }
 
-    //todo
-    public void rateProduct(String productID, int rate) throws Exceptions.InvalidProductIdException {
-
+    //Done!! Todo: Shayan check please
+    public void rateProduct(String productID, int score) throws Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
+        Product product = Product.getProductById(productID, false);
+        if(product == null)
+            throw new Exceptions.InvalidProductIdException(productID);
+        else {
+            for (SubProduct subProduct : product.getSubProducts()) {
+                if(subProduct.getCustomers().contains(((Customer)currentAccount))){
+                    Rating rating = new Rating(currentAccount.getId(), productID,score);
+                    product.addRating(rating.getId());
+                    return;
+                }
+            }
+           throw new Exceptions.HaveNotBoughtException(productID);
+        }
     }
 
     //Done!!

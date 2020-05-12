@@ -128,4 +128,22 @@ public class Exceptions{
             super("There is no sale with Id: " + saleId +" for you!");
         }
     }
+
+    public static class SameAsPreviousValueException extends Exception{
+        public SameAsPreviousValueException(String field){
+            super("This value is same as the previous value in field: "+ field);
+        }
+    }
+
+    public static class InvalidFormatException extends Exception{
+        public InvalidFormatException(String format){
+            super("This data doesn't match the format" + format);
+        }
+    }
+
+    public static class HaveNotBoughtException extends Exception{
+        public HaveNotBoughtException(String productId){
+            super("You haven't bought this product with Id: "+ productId);
+        }
+    }
 }
