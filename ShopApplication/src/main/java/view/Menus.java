@@ -419,6 +419,7 @@ class Menus {
         }
     }
 
+    //TODO: show dilemma.
     public static class RequestManagingMenu extends Menu {
         RequestManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
@@ -426,12 +427,15 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1,  new Actions.AdminShowRequests("show requests"));
+            subActions.put(index + 2, new Actions.AdminViewRequestDetail("view request detail"));
+            subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
 

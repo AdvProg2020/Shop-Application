@@ -5,7 +5,6 @@ import controller.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 //TODO: be actions controller haro moarefi kon.
 public class Actions {
@@ -589,5 +588,27 @@ public class Actions {
         }
     }
 
+    public static class AdminShowRequests extends Action {
+        AdminShowRequests(String name) {
+            super(name, Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
+        }
 
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminViewRequestDetail extends Action {
+        AdminViewRequestDetail(String name) {
+            super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminRemoveDiscountCodeCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
 }
