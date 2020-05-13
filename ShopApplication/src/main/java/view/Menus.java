@@ -446,12 +446,16 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminShowCategories("show categories"));
+            subActions.put(index + 2, new Actions.AdminEditCategory("edit category"));
+            subActions.put(index + 3, new Actions.AdminAddCategory("add category"));
+            subActions.put(index + 4, new Actions.AdminRemoveCategory("remove category"));
         }
     }
 

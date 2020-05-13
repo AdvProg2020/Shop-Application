@@ -1,12 +1,10 @@
 package view;
 
-import controller.*;
-
 import java.util.*;
 
 public abstract class Menu {
-    protected String name;
-    protected boolean isAccountMenuAccessible;
+    private String name;
+    private boolean isAccountMenuAccessible;
     private static Menus.AccountMenu accountMenu;
     private static Menus.ProductDetailMenu productDetailMenu;
     protected Menu parent;
@@ -15,8 +13,8 @@ public abstract class Menu {
     static ArrayList<Menu>  allMenus;
     static private Scanner sc;
     static private Stack<Menu> stackTrace;
-    protected String commandPattern;
-    protected String command;
+    private String commandPattern;
+    private String command;
 
 
 
@@ -86,6 +84,7 @@ public abstract class Menu {
     }
 
     protected void run() {
+        stackTrace.push(this);
         this.show();
         this.execute();
     }
@@ -95,14 +94,19 @@ public abstract class Menu {
         if (subMenus.size() != 0) {
             System.out.println("Sub Menus:");
         }
-        for (int index = 1; index <= subMenus.size(); index++) {
+        int subMenuSize = subMenus.size();
+        for (int index = 1; index <= subMenuSize; index++) {
             System.out.println(index + ". " + subMenus.get(index).getName());
+        }
+        if (isAccountMenuAccessible) {
+            System.out.println((subMenuSize + 1) + ". " + accountMenu.getName());
         }
 
         if (subActions.size() != 0) {
             System.out.println("Available Actions:");
         }
-        for (int index = subMenus.size() + 1; index <= subActions.size() + subMenus.size(); index++) {
+        int subActionSize = subActions.size();
+        for (int index = subMenus.size() + 1; index <= subMenuSize + subActionSize; index++) {
             System.out.println(index + ". " + subActions.get(index).getName());
         }
 
@@ -112,14 +116,13 @@ public abstract class Menu {
         String command = getNextLineTrimmed();
         for (Integer menuIndex : subMenus.keySet()) {
             if (command.equals(Integer.toString(menuIndex)) || command.matches(subMenus.get(menuIndex).commandPattern)) {
-                stackTrace.push(subMenus.get(menuIndex));
                 subMenus.get(menuIndex).run();
             }
         }
         for (Integer actionIndex : subActions.keySet()) {
             if (command.equals(Integer.toString(actionIndex)) || command.matches(subActions.get(actionIndex).getActionPattern())) {
                 try {
-                    subActions.get(actionIndex).execute(command);
+                    subActions.get(actionIndex).run(command);
                 } catch (Exception actionException) {
                     System.out.println(actionException.getMessage());
                 }

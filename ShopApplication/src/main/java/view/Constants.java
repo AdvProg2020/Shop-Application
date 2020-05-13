@@ -1,7 +1,5 @@
 package view;
 
-import java.util.regex.Pattern;
-
 class Constants {
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
@@ -145,6 +143,15 @@ class Constants {
         static final String adminViewRequestDetailPattern = caseInsensitiveMode + "^details " + argumentPattern + "$";
         static final String adminShowRequestsCommand = "view requests";
         static final String adminShowRequestsPattern = caseInsensitiveMode + "^" + adminShowRequestsCommand + "$";
+        static final String adminShowCategoriesCommand = "show categories";
+        static final String adminShowCategoriesPattern = caseInsensitiveMode + "^" + adminShowCategoriesCommand + "$";
+        //minor modification cuz of showing dilemma.
+        static final String adminEditCategoryCommand = "edit [categoryIndex]";
+        static final String adminEditCategoryPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String adminAddCategoryCommand = "add [categoryName]";
+        static final String adminAddCategoryPattern = caseInsensitiveMode + "^add " + argumentPattern + "$";
+        static final String adminRemoveCategoryCommand = "remove [categoryIndex]";
+        static final String adminRemoveCategoryPattern = caseInsensitiveMode + "^remove " + argumentPattern +"$";
         static final String
         static final String
         static final String

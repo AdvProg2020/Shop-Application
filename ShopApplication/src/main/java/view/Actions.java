@@ -602,7 +602,55 @@ public class Actions {
 
     public static class AdminViewRequestDetail extends Action {
         AdminViewRequestDetail(String name) {
-            super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminRemoveDiscountCodeCommand);
+            super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminShowCategories extends Action {
+        AdminShowCategories(String name) {
+            super(name, Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminEditCategory extends Action {
+        AdminEditCategory(String name) {
+            super(name, Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminAddCategory extends Action {
+        AdminAddCategory(String name) {
+            super(name, Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminRemoveCategory extends Action {
+        AdminRemoveCategory(String name) {
+            super(name, Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
         }
 
         //TODO: imp.
