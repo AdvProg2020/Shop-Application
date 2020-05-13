@@ -5,7 +5,6 @@ import controller.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 //TODO: be actions controller haro moarefi kon.
 public class Actions {
@@ -461,6 +460,203 @@ public class Actions {
                 return;
             }
             //show infos.
+        }
+    }
+
+    public static class AddComment extends Action {
+        private StringBuilder productID;
+        AddComment(String name, StringBuilder productID) {
+            super(name, Constants.Actions.addReviewPattern, Constants.Actions.addReviewCommand);
+            this.productID = productID;
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowReviews extends Action {
+        private StringBuilder productID;
+        ShowReviews(String name, StringBuilder productID) {
+            super(name, Constants.Actions.showReviewsPattern, Constants.Actions.showReviewsCommand);
+            this.productID = productID;
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminViewUser extends Action {
+        AdminViewUser(String name) {
+            super(name, Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String userID) {
+
+        }
+    }
+
+    public static class AdminDeleteUser extends Action {
+        AdminDeleteUser(String name) {
+            super(name, Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String userID) {
+
+        }
+    }
+
+    public static class AdminCreateAdmin extends Action {
+        AdminCreateAdmin(String name) {
+            super(name, Constants.Actions.adminCreateAdminPattern, Constants.Actions.adminCreateAdminCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminRemoveProductByID extends Action {
+        AdminRemoveProductByID(String name) {
+            super(name, Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminCreateDiscountCode extends Action {
+        AdminCreateDiscountCode(String name) {
+            super(name, Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminViewDiscountCode extends Action {
+        AdminViewDiscountCode(String name) {
+            super(name, Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminEditDiscountCode extends Action {
+        AdminEditDiscountCode(String name) {
+            super(name, Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminRemoveDiscountCode extends Action {
+        AdminRemoveDiscountCode(String name) {
+            super(name, Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
+        }
+
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminShowRequests extends Action {
+        AdminShowRequests(String name) {
+            super(name, Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminViewRequestDetail extends Action {
+        AdminViewRequestDetail(String name) {
+            super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminShowCategories extends Action {
+        AdminShowCategories(String name) {
+            super(name, Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminEditCategory extends Action {
+        AdminEditCategory(String name) {
+            super(name, Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminAddCategory extends Action {
+        AdminAddCategory(String name) {
+            super(name, Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class AdminRemoveCategory extends Action {
+        AdminRemoveCategory(String name) {
+            super(name, Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
+        }
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+
         }
     }
 }

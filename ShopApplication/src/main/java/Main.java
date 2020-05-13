@@ -1,22 +1,12 @@
-import java.util.ArrayList;
+import controller.*;
+import view.View;
 
 public class Main {
-    private static ArrayList<String> a = new ArrayList<>();
     public static void main(String[] args) {
-        a.add("salam");
-        Test.test();
-        System.out.println(a);
+        View appView = new View(new Controller(), new SellerController(), new AdminController(), new CustomerController());
+        appView.start();
     }
 
-    public static ArrayList<String> getA() {
-        return a;
-    }
+
 }
 
-
-class Test {
-    public static void test() {
-        ArrayList a = Main.getA();
-        a.clear();
-    }
-}

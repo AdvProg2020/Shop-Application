@@ -4,7 +4,7 @@ import controller.*;
 
 import java.util.ArrayList;
 
-public class Menus {
+class Menus {
     private static Controller mainController;
     private static AdminController adminController;
     private static SellerController sellerController;
@@ -133,7 +133,7 @@ public class Menus {
         }
     }
 
-    //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim.
+    //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim va inke age customer ya anonymous nabd natone.
     //TODO: getDefaultSubProductID();
     public static class ProductDetailMenu extends Menu {
         private StringBuilder productID;
@@ -146,7 +146,7 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new ProductReviewMenu("comments menu", this));
+            subMenus.put(1, new ProductReviewMenu("comments menu", this, productID));
         }
 
         @Override
@@ -168,8 +168,10 @@ public class Menus {
     }
 
     public static class ProductReviewMenu extends Menu {
-        ProductReviewMenu(String name, Menu parent) {
+        private StringBuilder productID;
+        ProductReviewMenu(String name, Menu parent, StringBuilder productID) {
             super(name, true, parent, Constants.Menus.productReviewMenuPattern, Constants.Menus.productReviewMenuCommand);
+            this.productID = productID;
         }
 
         @Override
@@ -180,7 +182,10 @@ public class Menus {
         //TODO: imp.
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.ShowReviews("show comments", productID));
+            subActions.put(index + 2, new Actions.AddComment("add comment", productID));
+            subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
 
@@ -238,7 +243,6 @@ public class Menus {
         }
     }
 
-    //handles both method and menu
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
         private String[] currentFilters;
@@ -332,6 +336,7 @@ public class Menus {
         }
     }
 
+    //TODO: show chejoury bashe?
     public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
@@ -352,19 +357,26 @@ public class Menus {
         protected abstract ArrayList<String> getEditableFields();
     }
 
+    //TODO: executesh bayad fargh kone. command AdminViewUser bayad ID user bashe.
     public static class UserManagingMenu extends Menu{
+        private ArrayList<String[]> users;
         UserManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.userManagingMenuPattern, Constants.Menus.userManagingMenuCommand);
+            users = new ArrayList<>();
         }
 
         @Override
         protected void initSubMenus() {
-
+            //no sub menus available.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminViewUser("view user"));
+            subActions.put(index + 2, new Actions.AdminDeleteUser("delete user"));
+            subActions.put(index + 3, new Actions.AdminCreateAdmin("create admin"));
+            subActions.put(index + 4, new Actions.BackAction("back", parent));
         }
     }
 
@@ -375,32 +387,39 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminRemoveProductByID("remove product"));
+            subActions.put(index + 2, new Actions.BackAction("back", parent));
         }
     }
 
-    //this one handles both creation and view discount codes. so supports to commands
-    public static class DiscountCodesManagingMenu extends Menu{
+    public static class DiscountCodesManagingMenu extends Menu {
         DiscountCodesManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
         }
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminCreateDiscountCode("create discount code"));
+            subActions.put(index + 2, new Actions.AdminViewDiscountCode("view discount code"));
+            subActions.put(index + 3, new Actions.AdminEditDiscountCode("edit discount code"));
+            subActions.put(index + 4, new Actions.AdminRemoveDiscountCode("remove discount code"));
+            subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
     }
 
+    //TODO: show dilemma.
     public static class RequestManagingMenu extends Menu {
         RequestManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
@@ -408,12 +427,15 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1,  new Actions.AdminShowRequests("show requests"));
+            subActions.put(index + 2, new Actions.AdminViewRequestDetail("view request detail"));
+            subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
 
@@ -424,12 +446,16 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.AdminShowCategories("show categories"));
+            subActions.put(index + 2, new Actions.AdminEditCategory("edit category"));
+            subActions.put(index + 3, new Actions.AdminAddCategory("add category"));
+            subActions.put(index + 4, new Actions.AdminRemoveCategory("remove category"));
         }
     }
 

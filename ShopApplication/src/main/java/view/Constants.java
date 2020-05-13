@@ -1,11 +1,10 @@
 package view;
 
-import java.util.regex.Pattern;
-
 class Constants {
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
+    private static final String unsignedIntPattern = "(\\d+)";
     static final String anonymousUserType = "anonymous";
     static final String adminUserType = "admin";
     static final String customerUserType = "customer";
@@ -44,9 +43,9 @@ class Constants {
         static final String customerOrderLogMenuPattern = caseInsensitiveMode + "^" + customerOrderLogMenuCommand + "$";
         static final String productReviewMenuCommand = "comments";
         static final String productReviewMenuPattern = caseInsensitiveMode + "^" + productReviewMenuCommand + "$";
-//        static final String
-//        static final String
-//        static final String
+        static final String
+        static final String
+        static final String
     }
 
     static class Actions {
@@ -121,7 +120,41 @@ class Constants {
         static final String compareProductByIDPattern = caseInsensitiveMode + "^compare " + argumentPattern + "$";
         static final String addReviewCommand = "add comment";
         static final String addReviewPattern = caseInsensitiveMode + "^" + addReviewCommand + "$";
-   //     static final String
-   //     static final String
+        static final String showReviewsCommand = "show comments";
+        static final String showReviewsPattern = caseInsensitiveMode + "^" + showReviewsCommand + "$";
+        static final String adminViewUserCommand = "view user [userIndex]";
+        static final String adminViewUserPattern = caseInsensitiveMode + "^view user " + unsignedIntPattern + "$";
+        static final String adminDeleteUserCommand = "delete user [userIndex]";
+        static final String adminDeleteUserPattern = caseInsensitiveMode + "delete user " + unsignedIntPattern + "$";
+        static final String adminCreateAdminCommand = "create manager profile";
+        static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
+        static final String adminRemoveProductByIDCommand = "remove [productID]";
+        static final String adminRemoveProductByIDPattern = caseInsensitiveMode + "^remove " + argumentPattern + "$";
+        static final String adminCreateDiscountCodeCommand = "create discount code";
+        static final String adminCreateDiscountCodePattern = caseInsensitiveMode + adminCreateDiscountCodeCommand + "$";
+        static final String adminViewDiscountCodeCommand = "view discount code [discountCode]";
+        static final String adminViewDiscountCodePattern = caseInsensitiveMode + "^view discount code " + argumentPattern + "$";
+        static final String adminEditDiscountCodeCommand = "edit discount code [discountCode]";
+        static final String adminEditDiscountCodePattern = caseInsensitiveMode + "^edit discount code " + argumentPattern + "$";
+        static final String adminRemoveDiscountCodeCommand = "remove discount code [discountCode]";
+        static final String adminRemoveDiscountCodePattern = caseInsensitiveMode + "^remove discount code " + argumentPattern + "$";
+        //minor modification cuz of showing dilemma.
+        static final String adminViewRequestDetailCommand = "details [requestIndex]";
+        static final String adminViewRequestDetailPattern = caseInsensitiveMode + "^details " + argumentPattern + "$";
+        static final String adminShowRequestsCommand = "view requests";
+        static final String adminShowRequestsPattern = caseInsensitiveMode + "^" + adminShowRequestsCommand + "$";
+        static final String adminShowCategoriesCommand = "show categories";
+        static final String adminShowCategoriesPattern = caseInsensitiveMode + "^" + adminShowCategoriesCommand + "$";
+        //minor modification cuz of showing dilemma.
+        static final String adminEditCategoryCommand = "edit [categoryIndex]";
+        static final String adminEditCategoryPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String adminAddCategoryCommand = "add [categoryName]";
+        static final String adminAddCategoryPattern = caseInsensitiveMode + "^add " + argumentPattern + "$";
+        static final String adminRemoveCategoryCommand = "remove [categoryIndex]";
+        static final String adminRemoveCategoryPattern = caseInsensitiveMode + "^remove " + argumentPattern +"$";
+        static final String
+        static final String
+        static final String
+        static final String
     }
 }

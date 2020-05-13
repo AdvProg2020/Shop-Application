@@ -24,7 +24,12 @@ public class View {
         this.sellerController = sellerController;
         this.customerController = customerController;
         this.adminController = adminController;
+        productDetailMenu = new Menus.ProductDetailMenu("product detail menu");
+        accountMenu = new Menus.AccountMenu("account menu");
+        firstMenu = new Menus.FirstMenu("first menu");
     }
 
-    public void start(){}
+    public void start(){
+        firstMenu.run();
+    }
 }
