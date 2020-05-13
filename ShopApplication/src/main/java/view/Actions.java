@@ -769,4 +769,102 @@ public class Actions {
         }
     }
 
+    public static class CustomerCartShowProducts extends Action {
+        CustomerCartShowProducts(String name) {
+            super(name, Constants.Actions.customerCartShowProductsPattern, Constants.Actions.customerCartShowProductsCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerCartViewProduct extends Action {
+        CustomerCartViewProduct(String name) {
+            super(name, Constants.Actions.customerCartViewProductPattern, Constants.Actions.customerCartViewProductCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerCartIncreaseProductCount extends Action {
+        CustomerCartIncreaseProductCount(String name) {
+            super(name, Constants.Actions.customerCartIncreaseProductCountPattern, Constants.Actions.customerCartIncreaseProductCountCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerCartDecreaseProductCount extends Action {
+        CustomerCartDecreaseProductCount(String name) {
+            super(name, Constants.Actions.customerCartDecreaseProductCountPattern, Constants.Actions.customerCartDecreaseProductCountCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerCartShowTotalPrice extends Action {
+        CustomerCartShowTotalPrice(String name) {
+            super(name, Constants.Actions.customerCartShowTotalPricePattern, Constants.Actions.customerCartShowTotalPriceCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerCartPurchase extends Action {
+        CustomerCartPurchase(String name) {
+            super(name, Constants.Actions.customerCartPurchasePattern, Constants.Actions.customerCartPurchaseCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerShowOrders extends Action {
+        CustomerShowOrders(String name) {
+            super(name, Constants.Actions.customerShowOrdersPattern, Constants.Actions.customerShowOrdersCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerViewOrder extends Action {
+        CustomerViewOrder(String name) {
+            super(name, Constants.Actions.customerViewOrderPattern, Constants.Actions.customerViewOrderCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CustomerRateProduct extends Action {
+        CustomerRateProduct(String name) {
+            super(name, Constants.Actions.customerRateProductPattern, Constants.Actions.customerRateProductCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
 }

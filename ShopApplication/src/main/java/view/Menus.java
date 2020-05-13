@@ -571,8 +571,6 @@ class Menus {
     }
 
     //this is both used in product menu and in customer menu
-    //also should be able to handle both method call and menu call because of shopping cart
-    //TODO: isAccountMenuAccessible ino che gohi bokhorim :|
     public static class ShoppingCartMenu extends Menu {
         ShoppingCartMenu(String name, Menu parent){
             super(name, true, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
@@ -580,12 +578,19 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.CustomerCartShowProducts("show products"));
+            subActions.put(index + 2, new Actions.CustomerCartViewProduct("view product"));
+            subActions.put(index + 3, new Actions.CustomerCartIncreaseProductCount("increase count"));
+            subActions.put(index + 4, new Actions.CustomerCartDecreaseProductCount("decrease count"));
+            subActions.put(index + 5, new Actions.CustomerCartShowTotalPrice("show total price"));
+            subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products"));
+            subActions.put(index + 7, new Actions.BackAction("back", parent));
         }
     }
 
@@ -596,12 +601,16 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.CustomerShowOrders("show orders"));
+            subActions.put(index + 2, new Actions.CustomerViewOrder("view order"));
+            subActions.put(index + 3, new Actions.CustomerRateProduct("rate product"));
+            subActions.put(index + 4, new Actions.BackAction("back", parent));
         }
     }
 }

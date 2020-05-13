@@ -1,5 +1,7 @@
 package view;
 
+import model.Category;
+
 class Constants {
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
@@ -43,9 +45,6 @@ class Constants {
         static final String customerOrderLogMenuPattern = caseInsensitiveMode + "^" + customerOrderLogMenuCommand + "$";
         static final String productReviewMenuCommand = "comments";
         static final String productReviewMenuPattern = caseInsensitiveMode + "^" + productReviewMenuCommand + "$";
-        static final String
-        static final String
-        static final String
     }
 
     static class Actions {
@@ -107,7 +106,7 @@ class Constants {
         static final String showCustomerDiscountCodesPattern = caseInsensitiveMode + "^" + showCustomerDiscountCodesCommand +"$";
         static final String digestProductCommand = "digest";
         static final String digestProductPattern = caseInsensitiveMode + "" + digestProductCommand + "$";
-        //TODO: wtf should we with sub products
+        //TODO: wtf should we do with sub products
         static final String showSubProductsCommand = "show sub products";
         static final String showSubProductsPattern = caseInsensitiveMode + "^" + showSubProductsCommand + "$";
         static final String addToCartCommand = "add to cart";
@@ -175,10 +174,26 @@ class Constants {
         static final String sellerAddProductPattern = caseInsensitiveMode + "^" + sellerAddProductCommand + "$";
         static final String sellerRemoveProductCommand = "remove product [productIndex]";
         static final String sellerRemoveProductPattern = caseInsensitiveMode + "^remove product " + argumentPattern + "$";
-        static final String
-        static final String
-        static final String
-        static final String
-        static final String
+        //customer account menu actions
+        static final String customerCartShowProductsCommand = "show products";
+        static final String customerCartShowProductsPattern = caseInsensitiveMode + "^" + customerCartShowProductsCommand + "$";
+        static final String customerCartViewProductCommand = "view [productIndex]";
+        static final String customerCartViewProductPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
+        static final String customerCartIncreaseProductCountCommand = "increase [productIndex] [-count]";
+        static final String customerCartIncreaseProductCountPattern = caseInsensitiveMode +
+                "^increase " + argumentPattern + "(?: " + unsignedIntPattern + ")$";
+        static final String customerCartDecreaseProductCountCommand = "increase [productIndex] [-count]";
+        static final String customerCartDecreaseProductCountPattern = caseInsensitiveMode +
+                "^decrease " + argumentPattern + "(?: " + unsignedIntPattern + ")$";
+        static final String customerCartShowTotalPriceCommand = "show total price";
+        static final String customerCartShowTotalPricePattern = caseInsensitiveMode + customerCartShowTotalPriceCommand + "$";
+        static final String customerCartPurchaseCommand = "purchase";
+        static final String customerCartPurchasePattern = caseInsensitiveMode + "^" + customerCartPurchaseCommand + "$";
+        static final String customerShowOrdersCommand = "show orders";
+        static final String customerShowOrdersPattern = caseInsensitiveMode + "^" + customerShowOrdersCommand + "$";
+        static final String customerViewOrderCommand = "show order [orderIndex]";
+        static final String customerViewOrderPattern = caseInsensitiveMode + "^show order " + argumentPattern + "$";
+        static final String customerRateProductCommand = "rate [productIndex] [1-5]";
+        static final String customerRateProductPattern = caseInsensitiveMode + "^rate " + argumentPattern + "([1-5])$";
     }
 }
