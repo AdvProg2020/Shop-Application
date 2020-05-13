@@ -65,16 +65,19 @@ public class Actions {
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
             String username = commandMatcher.group(1);
-            String password = getPassword();
-            if (password != null) {
-                try {
-                    mainController.login(username, password);
-                }catch (Exceptions.NotExistedUsernameException | Exceptions.WrongPasswordException e) {
-                    System.out.println(e.getMessage());
+            while(true) {
+                String password = getPassword();
+                if (password != null) {
+                    try {
+                        mainController.login(username, password);
+                    } catch (Exceptions.NotExistedUsernameException | Exceptions.WrongPasswordException e) {
+                        System.out.println(e.getMessage());
+                        continue;
+                    }
+                    //if without problem
+                    System.out.println("logged-in successfully!");
                     return;
                 }
-
-                System.out.println("logged-in successfully!");
             }
         }
     }
@@ -87,9 +90,14 @@ public class Actions {
         //TODO: implement.
         @Override
         public void execute(String command) {
-            String type ;
-            String username;
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String type = commandMatcher.group(1);
+            String username = commandMatcher.group(2);
+            try {
+                mainController.usernameTypeValidation(username, type);
+            } catch (Exceptions.AdminRegisterException | Exceptions.ExistedUsernameException e) {
+                
+            }
         }
     }
 
@@ -458,29 +466,29 @@ public class Actions {
         }
     }
 
-    public static class CompareProductByID extends Action {
-        private StringBuilder productID;
-        CompareProductByID(String name, StringBuilder productID) {
-            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
-            this.productID = productID;
-        }
-
-
-        //TODO: imp.
-        @Override
-        public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String otherProductID = commandMatcher.group(1);
-            try {
-                //what is the return type?
-                mainController.compare(productID.toString(), otherProductID);
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println(e.getMessage());
-                return;
-            }
-            //show infos.
-        }
-    }
+//    public static class CompareProductByID extends Action {
+//        private StringBuilder productID;
+//        CompareProductByID(String name, StringBuilder productID) {
+//            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
+//            this.productID = productID;
+//        }
+//
+//
+//        //TODO: imp.
+//        @Override
+//        public void execute(String command) {
+//            Matcher commandMatcher = getMatcherReady(command);
+//            String otherProductID = commandMatcher.group(1);
+//            try {
+//                //what is the return type?
+//                mainController.compare(productID.toString(), otherProductID);
+//            } catch (Exceptions.InvalidProductIdException e) {
+//                System.out.println(e.getMessage());
+//                return;
+//            }
+//            //show infos.
+//        }
+//    }
 
     public static class AddComment extends Action {
         private StringBuilder productID;
