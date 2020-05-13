@@ -110,9 +110,8 @@ class Menus {
             subMenus.put(2, new FilterMenu("product filtering menu", this, getAvailableFilters(), currentFilters));
         }
 
-        //TODO: imp.
         private String[] getAvailableSorts() {
-            return null;
+            return mainController.getAvailableSorts();
         }
 
         //TODO: imp. waiting for shayan to add the method
@@ -155,6 +154,7 @@ class Menus {
             subActions.put(index + 1, new Actions.DigestProduct("digest product", productID));
             subActions.put(index + 2, new Actions.AddToCart("add to cart", subProductID));
             subActions.put(index + 3, new Actions.SelectSeller("select seller", subProductID));
+            subActions.put(index + 4, new Actions.ShowCurrentSeller("show current seller", subProductID));
    //         subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
             subActions.put(index + 5, new Actions.BackAction("back", null));
         }
@@ -209,7 +209,7 @@ class Menus {
         protected void initSubActions() {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.ShowAvailableSorts("product available sorts", availableSorts));
-            subActions.put(index + 2, new Actions.SortAction("product sorter", currentSort));
+            subActions.put(index + 2, new Actions.ChooseSorting("choose sort", currentSort, availableSorts));
             subActions.put(index + 3, new Actions.ShowCurrentSort("product current sort", currentSort));
             subActions.put(index + 4, new Actions.DisableSort("product sort remover", currentSort));
             subActions.put(index + 5, new Actions.BackAction("product sort back", parent));

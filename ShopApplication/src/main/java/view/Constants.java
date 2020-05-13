@@ -3,6 +3,7 @@ package view;
 import model.Category;
 
 class Constants {
+    //TODO: space pattern ro bargardon.
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
@@ -71,8 +72,8 @@ class Constants {
         //SortMenu actions.
         static final String showAvailableSortsCommand = "show available sorts";
         static final String showAvailableSortsPattern = caseInsensitiveMode + "^" + showAvailableSortsCommand + "$";
-        static final String sortCommand = "sort [anAvailableSorts]";
-        static final String sortPattern = caseInsensitiveMode + "^sort" + spacePattern + argumentPattern + "$";
+        static final String sortCommand = "select sort";
+        static final String sortPattern = caseInsensitiveMode + "^" + sortCommand + "$";
         static final String showCurrentSortCommand = "current sort";
         static final String showCurrentSortPattern = caseInsensitiveMode + "^" + showCurrentSortCommand + "$";
         static final String disableSortCommand = "disable sort";
@@ -116,6 +117,8 @@ class Constants {
         //different form doc. cuz of index choosing.
         static final String selectSellerCommand = "select seller";
         static final String selectSellerPattern = caseInsensitiveMode + "^" + selectSellerCommand + "$";
+        static final String showCurrentSellerCommand = "show current seller";
+        static final String showCurrentSellerPattern = caseInsensitiveMode + "^" + showCurrentSellerCommand + "$";
         static final String compareProductByIDCommand = "compare [productID]";
         static final String compareProductByIDPattern = caseInsensitiveMode + "^compare " + argumentPattern + "$";
         static final String addReviewCommand = "add comment";

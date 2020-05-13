@@ -239,19 +239,72 @@ public class Actions {
         }
     }
 
-    public static class SortAction extends Action {
+    public static class ChooseSorting extends Action {
         private StringBuilder currentSort;
+        private String[] availableSorts;
 
-        SortAction(String name, StringBuilder currentSort) {
+        ChooseSorting(String name, StringBuilder currentSort, String[] availableSorts) {
             super(name, Constants.Actions.sortPattern, Constants.Actions.sortCommand);
             this.currentSort = currentSort;
+            this.availableSorts = availableSorts;
         }
 
-        //TODO: imp
+        private void showAvailableSorts() {
+            for (int i = 0; i < availableSorts.length; i++) {
+                System.out.println((i + 1) + ". " + availableSorts[i]);
+            }
+        }
+
+        private int modifySortingArgument() {
+            while(true) {
+                System.out.println("choose the sorting method (enter back to go back):");
+                String input = View.getNextLineTrimmed();
+                if (input.equalsIgnoreCase("back")) {return 0;}
+                int entry = checkSortingArgument(input);
+                if (entry == 0) {continue;}
+                else {
+                    currentSort.setLength(0);
+                    currentSort.append(availableSorts[entry]);
+                    return 1;
+                }
+            }
+        }
+
+        private int checkSortingArgument(String input) {
+            for (int i = 0; i < availableSorts.length; i++) {
+                if (input.equals(Integer.toString(i + 1)) || input.equalsIgnoreCase(availableSorts[i])) {
+                    return i + 1;
+                }
+            }
+            System.out.println("invalid entry");
+            return 0;
+        }
+
+        private int modifySortingMethod() {
+            while(true) {
+                System.out.println("do want sorting to be increasing or decreasing? (I or D):");
+                String input = View.getNextLineTrimmed();
+                if (input.equalsIgnoreCase("back")) {return 0;}
+                if (input.equalsIgnoreCase("I")) {
+                    currentSort.append(" increasing");
+                } else if (input.equalsIgnoreCase("D")) {
+                    currentSort.append(" decreasing");
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-            currentSort.delete(0, currentSort.length());
-            currentSort.append("shit");
+            showAvailableSorts();
+            while (true) {
+                int response = modifySortingArgument();
+                if (response == 0){return;}
+                response = modifySortingMethod();
+                if (response != 0){return;}
+            }
         }
     }
 
@@ -524,6 +577,18 @@ public class Actions {
 
 
         //TODO: imp. first show all the subProducts and then index choosing.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class ShowCurrentSeller extends Action {
+        private StringBuilder subProductID;
+        ShowCurrentSeller(String name, StringBuilder subProductID) {
+            super(name, Constants.Actions.showCurrentSellerPattern, Constants.Actions.showCurrentSellerCommand);
+        }
+
         @Override
         public void execute(String command) {
 
