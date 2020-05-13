@@ -65,7 +65,7 @@ class Constants {
         static final String chooseCategoryCommand = "choose category [availableCategory]";
         static final String chooseCategoryPattern = caseInsensitiveMode + "^choose category" + spacePattern + argumentPattern + "$";
         static final String revertCategoryCommand = "revert category [-numberOfReverts]"; //you can set the number of times to go back. 1 by default.
-        static final String revertCategoryPattern = caseInsensitiveMode + "^revert category" + spacePattern + argumentPattern + "?$";
+        static final String revertCategoryPattern = caseInsensitiveMode + "^revert category(?:" + spacePattern + unsignedIntPattern + ")?$";
         static final String productDetailMenuCommand = "show product [productID]";
         static final String productDetailMenuPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
         //SortMenu actions.

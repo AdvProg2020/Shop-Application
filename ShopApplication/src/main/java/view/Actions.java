@@ -126,7 +126,6 @@ public class Actions {
         //TODO: implement.
         @Override
         public void execute(String command) {
-
         }
     }
 
@@ -157,7 +156,6 @@ public class Actions {
             showSubCategories();
         }
     }
-
 
     public static class ChooseCategoryAction extends Action {
         private ArrayList<String> categoryTree;
@@ -199,14 +197,31 @@ public class Actions {
     }
 
     public static class RevertCategoryAction extends Action {
-        RevertCategoryAction(String name) {
+        private ArrayList<String> categoryTree;
+        RevertCategoryAction(String name, ArrayList<String> categoryTree) {
             super(name, Constants.Actions.revertCategoryPattern, Constants.Actions.revertCategoryCommand);
+            this.categoryTree = categoryTree;
         }
 
-        //TODO: imp.
+        private void revertCategory(int revertNumber) {
+            int size = categoryTree.size();
+            if (revertNumber >= size) {
+                categoryTree.clear();
+            } else {
+                categoryTree.removeAll(categoryTree.subList(size - revertNumber, size));
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            int revertNumber;
+            if (commandMatcher.groupCount() > 0) {
+                revertNumber = Integer.parseInt(commandMatcher.group(1));
+            } else {
+                revertNumber = 1;
+            }
+            revertCategory(revertNumber);
         }
     }
 
