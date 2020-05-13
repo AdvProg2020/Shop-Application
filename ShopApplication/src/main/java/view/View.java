@@ -2,6 +2,8 @@ package view;
 
 import controller.*;
 
+import java.util.Scanner;
+
 /**
 *  @author Dana
  *  This is the non-implemented sketch of the View
@@ -12,6 +14,7 @@ public class View {
     public static CustomerController customerController;
     public static AdminController adminController;
     public static SellerController sellerController;
+    private static Scanner sc = new Scanner(System.in);
 
     private Menus.ProductDetailMenu productDetailMenu;
     private Menus.AccountMenu accountMenu;
@@ -27,6 +30,10 @@ public class View {
         productDetailMenu = new Menus.ProductDetailMenu("product detail menu");
         accountMenu = new Menus.AccountMenu("account menu");
         firstMenu = new Menus.FirstMenu("first menu");
+    }
+
+    public static  String getNextLineTrimmed() {
+        return sc.nextLine().trim();
     }
 
     public void start(){

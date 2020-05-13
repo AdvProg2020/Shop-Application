@@ -53,10 +53,29 @@ public class Actions {
             super(name, Constants.Actions.loginPattern, Constants.Actions.loginCommand);
         }
 
-        //TODO: implement.
+        //TODO: show asterisk.
+        private String getPassword() {
+            System.out.println("Enter your password (enter \"back\" to go back):");
+             String input = View.getNextLineTrimmed();
+             if (input.equalsIgnoreCase("back")) {return null;}
+             else {return input;}
+        }
+
         @Override
         public void execute(String command) {
+            Matcher commandMatcher = getMatcherReady(command);
+            String username = commandMatcher.group(1);
+            String password = getPassword();
+            if (password != null) {
+                try {
+                    mainController.login(username, password);
+                }catch (Exceptions.NotExistedUsernameException | Exceptions.WrongPasswordException e) {
+                    System.out.println(e.getMessage());
+                    return;
+                }
 
+                System.out.println("logged-in successfully!");
+            }
         }
     }
 
@@ -416,8 +435,8 @@ public class Actions {
         @Override
         public void execute(String command) {
             try {
-                mainController.addToCart(subProductID.toString());
-            } catch (Exceptions.InvalidSubProductIdException e) {
+                mainController.addToCart(subProductID.toString(), 1);
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException e) {
                 System.out.println(e.getMessage());
                 return;
             }

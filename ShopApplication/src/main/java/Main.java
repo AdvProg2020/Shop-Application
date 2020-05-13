@@ -6,7 +6,5 @@ public class Main {
         View appView = new View(new Controller(), new SellerController(), new AdminController(), new CustomerController());
         appView.start();
     }
-
-
 }
 

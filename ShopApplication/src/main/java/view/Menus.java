@@ -88,7 +88,6 @@ class Menus {
         }
     }
 
-
     //TODO: remove show products as an action and always do it as show method and kinda allow iteration through pages of the products. same for sale menu
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
@@ -293,6 +292,15 @@ class Menus {
         @Override
         protected void initSubMenus() {
             //no sub menu available.
+        }
+
+        @Override
+        public void execute() {
+            if (mainController.getType().equals("anonymous")) {
+                super.execute();
+            } else {
+                nextMenu.run();
+            }
         }
 
         @Override
