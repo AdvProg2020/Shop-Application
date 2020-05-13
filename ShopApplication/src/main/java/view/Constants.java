@@ -70,8 +70,6 @@ class Constants {
         static final String productDetailMenuCommand = "show product [productID]";
         static final String productDetailMenuPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
         //SortMenu actions.
-        static final String showAvailableSortsCommand = "show available sorts";
-        static final String showAvailableSortsPattern = caseInsensitiveMode + "^" + showAvailableSortsCommand + "$";
         static final String sortCommand = "select sort";
         static final String sortPattern = caseInsensitiveMode + "^" + sortCommand + "$";
         static final String showCurrentSortCommand = "current sort";
@@ -79,8 +77,6 @@ class Constants {
         static final String disableSortCommand = "disable sort";
         static final String disableSortPattern = caseInsensitiveMode + "^" + disableSortCommand + "$";
         //FilterMenu actions.
-        static final String showAvailableFiltersCommand = "show available filters";
-        static final String showAvailableFiltersPattern = caseInsensitiveMode + "^" + showAvailableFiltersCommand + "$";
         static final String filterCommand = "filter [anAvailableFilter]";
         static final String filterPattern = caseInsensitiveMode + "^filter" + spacePattern + argumentPattern + "$";
         static final String showCurrentFiltersCommand = "current filters";

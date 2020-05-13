@@ -225,20 +225,6 @@ public class Actions {
         }
     }
 
-    public static class ShowAvailableSorts extends Action {
-        private String[] availableSorts;
-
-        ShowAvailableSorts(String name, String[] availableSorts) {
-            super(name, Constants.Actions.showAvailableSortsPattern, Constants.Actions.showAvailableSortsCommand);
-            this.availableSorts = availableSorts;
-        }
-
-        @Override
-        public void execute(String command) {
-            Arrays.asList(availableSorts).forEach((s) -> System.out.println(s));
-        }
-    }
-
     public static class ChooseSorting extends Action {
         private StringBuilder currentSort;
         private String[] availableSorts;
@@ -332,22 +318,7 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            currentSort.delete(0, currentSort.length());
-            currentSort.trimToSize();
-        }
-    }
-
-    public static class ShowAvailableFilters extends Action {
-        private String[] availableFilters;
-
-        ShowAvailableFilters(String name, String[] availableFilters) {
-            super(name, Constants.Actions.showAvailableFiltersPattern, Constants.Actions.showAvailableFiltersCommand);
-            this.availableFilters = availableFilters;
-        }
-
-        @Override
-        public void execute(String command) {
-            Arrays.asList(availableFilters).forEach((f) -> System.out.println(f));
+            currentSort.setLength(0);
         }
     }
 

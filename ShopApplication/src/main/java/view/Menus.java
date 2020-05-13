@@ -208,11 +208,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.ShowAvailableSorts("product available sorts", availableSorts));
-            subActions.put(index + 2, new Actions.ChooseSorting("choose sort", currentSort, availableSorts));
-            subActions.put(index + 3, new Actions.ShowCurrentSort("product current sort", currentSort));
-            subActions.put(index + 4, new Actions.DisableSort("product sort remover", currentSort));
-            subActions.put(index + 5, new Actions.BackAction("product sort back", parent));
+            subActions.put(index + 1, new Actions.ChooseSorting("choose sort", currentSort, availableSorts));
+            subActions.put(index + 2, new Actions.ShowCurrentSort("product current sort", currentSort));
+            subActions.put(index + 3, new Actions.DisableSort("product sort remover", currentSort));
+            subActions.put(index + 4, new Actions.BackAction("product sort back", parent));
         }
     }
 
