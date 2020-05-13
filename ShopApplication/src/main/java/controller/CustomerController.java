@@ -2,6 +2,7 @@ package controller;
 
 import model.Discount;
 import model.Product;
+import model.Rating;
 import model.SubProduct;
 import model.account.Customer;
 import model.log.BuyLog;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 public class CustomerController extends Controller {
 
     //Done!! can edit credit?
-    public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
+    public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException{
         editCommonInformation(field, newInformation);
     }
 
@@ -74,7 +75,7 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public double showTotalPriceOfCart() {
+    public double getTotalPriceOfCart() {
         HashMap<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
         double totalSum = 0;
         for (SubProduct subProduct : subProductsInCart.keySet()) {
@@ -83,9 +84,8 @@ public class CustomerController extends Controller {
         return totalSum;
     }
 
-    //Todo
-    public String purchaseTheCart() {
-        return null;
+    //TODO
+    public void purchaseTheCart() throws Exceptions.InsufficientCreditException {
     }
 
     //Done!!
@@ -100,7 +100,7 @@ public class CustomerController extends Controller {
             throw new Exceptions.CustomerLoginException();
     }
 
-    //Done!!
+    //Done!! TODO: change to String[]
     public ArrayList<ArrayList<String>> showOrder(String orderId) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = BuyLog.getBuyLogById(orderId);
         if (buyLog == null)
@@ -118,7 +118,7 @@ public class CustomerController extends Controller {
             infoPack.add(Double.toString(buyLog.getPaidMoney()));
             infoPack.add(Double.toString(buyLog.getTotalDiscountAmount()));
             orderInfo.add(infoPack);
-            for (LogItem item : buyLog.getLogItems()) {//Todo:(Shayan) this getter should pass even it was suspended!
+            for (LogItem item : buyLog.getLogItems()) {
                 ArrayList<String> productPack = new ArrayList<>();
                 Product product = item.getSubProduct().getProduct();
                 productPack.add(product.getName());
@@ -134,9 +134,21 @@ public class CustomerController extends Controller {
         }
     }
 
-    //todo
-    public void rateProduct(String productID, int rate) throws Exceptions.InvalidProductIdException {
-
+    //Done!! Todo: Shayan check please
+    public void rateProduct(String productID, int score) throws Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
+        Product product = Product.getProductById(productID, false);
+        if(product == null)
+            throw new Exceptions.InvalidProductIdException(productID);
+        else {
+            for (SubProduct subProduct : product.getSubProducts()) {
+                if(subProduct.getCustomers().contains(((Customer)currentAccount))){
+                    Rating rating = new Rating(currentAccount.getId(), productID,score);
+                    product.addRating(rating.getId());
+                    return;
+                }
+            }
+           throw new Exceptions.HaveNotBoughtException(productID);
+        }
     }
 
     //Done!!

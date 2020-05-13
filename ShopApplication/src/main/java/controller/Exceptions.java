@@ -71,9 +71,21 @@ public class Exceptions{
         }
     }
 
+    public static class ExistingProductException extends Exception{
+        public ExistingProductException( String productId){
+            super("There is another product with this name and brand; Its Id is: "+ productId);
+        }
+    }
+
     public static class InvalidCategoryException extends Exception{
         public InvalidCategoryException(String categoryName){
             super("There is no category with name:"+categoryName);
+        }
+    }
+
+    public static class SubCategoryException extends Exception{
+        public SubCategoryException(String categoryName, String subCategoryName){
+            super("Category "+ subCategoryName + " is a subCategory of category "+ categoryName+" and you can not make it its parent!");
         }
     }
 
@@ -93,6 +105,18 @@ public class Exceptions{
         }
     }
 
+    public static class ExistingDiscountCodeException extends Exception{
+        public ExistingDiscountCodeException(String discountCode){
+            super("There is already a discount code with code: " + discountCode);
+        }
+    }
+
+    public static class CustomerIdException extends Exception{
+        public CustomerIdException(String Id){
+            super("There is no customer with this Id: "+ Id);
+        }
+    }
+
     public static class NotLoggedInException extends Exception{
         public NotLoggedInException(){
             super("You should login before you do this action!");
@@ -108,6 +132,24 @@ public class Exceptions{
     public static class InvalidSaleIdException extends Exception{
         public InvalidSaleIdException(String saleId){
             super("There is no sale with Id: " + saleId +" for you!");
+        }
+    }
+
+    public static class SameAsPreviousValueException extends Exception{
+        public SameAsPreviousValueException(String field){
+            super("This value is same as the previous value in field: "+ field);
+        }
+    }
+
+    public static class InvalidFormatException extends Exception{
+        public InvalidFormatException(String format){
+            super("This data doesn't match the format" + format);
+        }
+    }
+
+    public static class HaveNotBoughtException extends Exception{
+        public HaveNotBoughtException(String productId){
+            super("You haven't bought this product with Id: "+ productId);
         }
     }
 }

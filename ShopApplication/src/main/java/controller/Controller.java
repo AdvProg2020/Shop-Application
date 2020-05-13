@@ -31,21 +31,37 @@ public class Controller {
             throw new Exceptions.AdminRegisterException();
     }
 
-    //Todo
-
+    //Done!! Todo: Shayan please check this
     /**
      * @param type
-     * @param information: 1- customer:
+     *        information: 1- customer:
      *                     * String username, String password, String firstName, String lastName, String email, String phone, double balance
      *                     2- seller:
      *                     * String username, String password, String firstName, String lastName, String email, String phone, String storeName, double balance
      *                     3- admin:
      *                     * String username, String password, String firstName, String lastName, String email, String phone
      */
-    public void creatAccount(String type, ArrayList<String> information) {// lazeme inja ham exception bezarim?
+    public void creatAccount(String type, String username, String password, String firstName, String lastName,
+                             String email, String phone, double balance, String storeName) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
+        if(Account.getAccountByUsername(username) != null)
+            throw new Exceptions.ExistedUsernameException(username);
+        switch (type) {
+            case "customer":
+                new Customer(username, password, firstName, lastName, email, phone, balance);
+                break;
+            case "admin":
+                if (Admin.getManager() != null) {
+                    throw new Exceptions.AdminRegisterException();
+                } else
+                    new Admin(username, password, firstName, lastName, email, phone);
+                break;
+            case "seller":
+                new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
+                break;
+        }
     }
 
-    //Todo
+    //Done!! TODO: check this please!
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.NotExistedUsernameException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -53,7 +69,16 @@ public class Controller {
         if (!account.getPassword().equals(password))
             throw new Exceptions.WrongPasswordException();
         currentAccount = account;
-        // baraye cart kari lazem nist bokonim? account cart nadare...
+        if(currentAccount.getType().equalsIgnoreCase("customer")){
+            ((Customer) currentAccount).mergeShoppingCart(currentCart.getId());
+            currentCart = ((Customer) currentAccount).getShoppingCart();
+         }
+    }
+
+    //Done!!
+    public void logout(){
+        currentAccount = null;
+        currentCart = new ShoppingCart(null);
     }
 
     //Done!!
@@ -67,48 +92,58 @@ public class Controller {
         return currentAccount.getType();
     }
 
-    //Todo
-    public ArrayList<String> productsStatus() {
-        return null;
+    //Done!
+
+    /**
+     *
+     * @return String[5]: {price, rating score, name, category name, view counts}
+     */
+    public String[] getAvailableSorts(){
+        String[] availableSorts = new String[5];
+        availableSorts[0] = "price";
+        availableSorts[1] = "rating score";
+        availableSorts[2] = "name";
+        availableSorts[3] = "category name";
+        availableSorts[4] = "default: view counts";
+        return availableSorts;
     }
 
-    //Done!!
-    //TODO: increasing decreasing.
-    //TODO: add getAvailableSorts.
-    private ArrayList<Product> sortProducts(String sortBy, ArrayList<Product> products) {
+    //Done!! check the directions in the test
+    private ArrayList<Product> sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
+        int direction = isIncreasing ? 1 : -1 ;
         if (sortBy.equalsIgnoreCase("price")) {
             products.sort(new Comparator<Product>() {
                 @Override
                 public int compare(Product o1, Product o2) {
-                    return Double.compare(o1.getMinPrice(), o2.getMinPrice());
+                    return direction * Double.compare(o1.getMinPrice(), o2.getMinPrice());
                 }
             });
         } else if (sortBy.equalsIgnoreCase("rating score")) {
             products.sort(new Comparator<Product>() {
                 @Override
                 public int compare(Product o1, Product o2) {
-                    return Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
+                    return direction * Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
                 }
             });
         } else if (sortBy.equalsIgnoreCase("name")) {
             products.sort(new Comparator<Product>() {
                 @Override
                 public int compare(Product o1, Product o2) {
-                    return o1.getName().compareTo(o2.getName());
+                    return direction * o1.getName().compareTo(o2.getName());
                 }
             });
         } else if (sortBy.equalsIgnoreCase("category name")) {
             products.sort(new Comparator<Product>() {
                 @Override
                 public int compare(Product o1, Product o2) {
-                    return o1.getCategory().getName().compareTo(o2.getCategory().getName());
+                    return direction * o1.getCategory().getName().compareTo(o2.getCategory().getName());
                 }
             });
         } else {
             products.sort(new Comparator<Product>() {
                 @Override
                 public int compare(Product o1, Product o2) {
-                    return Integer.compare(o1.getViewCount(), o2.getViewCount());
+                    return direction * Integer.compare(o1.getViewCount(), o2.getViewCount());
                 }
             });
         }
@@ -117,13 +152,14 @@ public class Controller {
 
     //Done!!
     //TODO: getAvailableFilters.
-    private ArrayList<Product> filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
+    private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                               String storeName, double minRatingScore, ArrayList<Product> products) {
         if (available)
             products.removeIf(product -> (product.getTotalRemainingCount() == 0));
-        products.removeIf(product -> product.getMinPrice() > maxPrice);
-        if (maxPrice != 0)
+        if (minPrice != 0)
             products.removeIf(product -> product.getMaxPrice() < minPrice);
+        if (maxPrice != 0)
+            products.removeIf(product -> product.getMinPrice() > maxPrice);
         if (!contains.equals(""))
             products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
         if (!brand.equals(""))
@@ -132,7 +168,6 @@ public class Controller {
             products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
         }
         products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
-        return products;
     }
 
     //Done!!
@@ -181,8 +216,8 @@ public class Controller {
             throw new Exceptions.InvalidCategoryException(categoryName);
         else {
             ArrayList<String[]> categoryIdNames = new ArrayList<>();
-            String[] categoryPack = new String[2];
             for (Category subCategory : category.getSubCategories()) {
+                String[] categoryPack = new String[2];
                 categoryPack[0] = subCategory.getId();
                 categoryPack[1] = subCategory.getName();
                 categoryIdNames.add(categoryPack);
@@ -233,10 +268,10 @@ public class Controller {
             else
                 products.add(product);
         }
-        products = filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
+        filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
-        products = sortProducts(sortBy, products);
+        products = sortProducts(sortBy,isIncreasing, products);
         return productToIdName(products);
     }
 
@@ -275,9 +310,13 @@ public class Controller {
         return productInfo;
     }
 
-    //Todo
-    public ArrayList<String> attributes(String productId) {
-        return null;
+    //Done!!
+    public ArrayList<String> getSpecialPropertiesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        else
+            return product.getSpecialProperties();
     }
 
     //Done!!
@@ -287,14 +326,13 @@ public class Controller {
      * @return String[4]: ID, storeName, price, remaining count.
      * @throws Exceptions.InvalidProductIdException
      */
-    //TODO: same object modification bug.
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
-        String[] subProductPack = new String[4];
         for (SubProduct subProduct : product.getSubProducts()) {
+            String[] subProductPack = new String[4];
             subProductPack[0] = subProduct.getId();
             subProductPack[1] = subProduct.getSeller().getStoreName();
             subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
@@ -311,14 +349,13 @@ public class Controller {
      * @return String[3]: usernameOfReviewer, title, body.
      * @throws Exceptions.InvalidProductIdException
      */
-    //TODO: one object modification bug.
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> reviews = new ArrayList<>();
-        String[] reviewPack = new String[3];
         for (Review review : product.getReviews()) {
+            String[] reviewPack = new String[3];
             reviewPack[0] = review.getReviewer().getUsername();
             reviewPack[1] = review.getTitle();
             reviewPack[2] = review.getText();
@@ -327,20 +364,17 @@ public class Controller {
         return reviews;
     }
 
-    //Todo
-    public void addToCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
-    }
-
-    //Todo
-    public boolean selectSeller(String productId, String sellerId) {
-        return false;
-    }
-
-    //Todo
-    //TODO: ID validation exceptions.
-    //TODO: returning type specification.
-    public ArrayList<String> compare(String productId1, String productId2) throws Exceptions.InvalidProductIdException {
-        return null;
+    //Done!! TODO: check please
+    public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if(subProduct == null)
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
+        else if(subProduct.getRemainingCount() < count)
+            throw new Exceptions.UnavailableProductException(subProductId);
+        else {
+            currentCart.addSubProductCount(subProductId, count);
+            subProduct.changeRemainingCount(-count);
+        }
     }
 
     //Done!!
@@ -358,7 +392,7 @@ public class Controller {
     //Done!!
 
     /**
-     * @return String[6]: ID, percentage, sellerstoreName, startDate, endDate, numberOfProductsInSale.
+     * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
     //TODO: filter and sort for sales.
     public ArrayList<String[]> sales() {
@@ -370,7 +404,36 @@ public class Controller {
     }
 
     //Done!!
-    //TODO: getEditableFields. return String[].
+
+    /**
+     * @return
+     *                     *1- seller:String[6]
+     *                     * { String firstName, String lastName, String phone, String email, String password, String storeName}
+     *                     2- customer:
+     *                     * { String firstName, String lastName, String phone, String email, String password}
+     *                     3- admin:
+     *                     * { String firstName, String lastName, String phone, String email, String password, String storeName}
+     * @throws Exceptions.NotLoggedInException
+     */
+    public String[] getPersonalInfoEditableFields() throws Exceptions.NotLoggedInException {
+        if(currentAccount == null)
+            throw new Exceptions.NotLoggedInException();
+        else {
+            String[] editableFields = new String[5];
+            if(currentAccount.getType().equals("seller")){
+                editableFields = new String[6];
+                editableFields[5] = "storeName";
+            }
+            editableFields[0] = "firstName";
+            editableFields[1] = "lastName";
+            editableFields[2] = "phone";
+            editableFields[3] = "email";
+            editableFields[4] = "password";
+            return editableFields;
+        }
+    }
+
+    //Done!!
     protected String[] getPersonalInfo(Account account) {
         String[] info;
         if (account.getType().equals("customer")) {
@@ -397,21 +460,31 @@ public class Controller {
     }
 
     //Done!!
-    protected void editCommonInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
+    protected void editCommonInformation(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
+                if(currentAccount.getFirstName().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setFirstName(newInformation);
                 break;
             case "lastName":
+                if(currentAccount.getLastName().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setLastName(newInformation);
                 break;
             case "email":
+                if(currentAccount.getEmail().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setEmail(newInformation);
                 break;
             case "phone":
+                if(currentAccount.getPhone().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setPhone(newInformation);
                 break;
             case "password":
+                if(currentAccount.getPassword().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setPassword(newInformation);
                 break;
             default:
@@ -442,10 +515,10 @@ public class Controller {
     //Done!!
     protected ArrayList<String[]> getProductsInSale(Sale sale) {
         ArrayList<String[]> productsInSale = new ArrayList<>();
-        String[] productPack = new String[2];
         for (SubProduct subProduct : sale.getSubProducts()) {
-            productPack[0] = subProduct.getProduct().getName();
-            productPack[1] = subProduct.getProduct().getId();
+            String[] productPack = new String[2];
+            productPack[0] = subProduct.getProduct().getId();
+            productPack[1] = subProduct.getProduct().getName();
             productsInSale.add(productPack);
         }
         return productsInSale;
