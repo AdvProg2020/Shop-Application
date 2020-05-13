@@ -166,10 +166,35 @@ public class Actions {
             this.categoryTree = categoryTree;
         }
 
-        //TODO: imp
+        private boolean isCategoryNameValid(String categoryName) {
+            try {
+                ArrayList<String[]> subs;
+                if (categoryTree.size() > 0) {
+                    subs = mainController.getSubCategoriesOfThisCategory(categoryTree.get(categoryTree.size() - 1));
+                } else {
+                    //TODO: get the list.
+                    subs = new ArrayList<>();
+                }
+                for (String[] category : subs) {
+                    if (category[1].equals(categoryName)) { return true;}
+                }
+                return false;
+            } catch (Exceptions.InvalidCategoryException e) {
+                //wont happen
+                return false;
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String categoryName = commandMatcher.group(1);
+            if (isCategoryNameValid(categoryName)) {
+                categoryTree.add(categoryName);
+            } else {
+                System.out.println(categoryName + " is not in the sub-categories of current category");
+                return;
+            }
         }
     }
 

@@ -89,6 +89,7 @@ class Menus {
     }
 
     //TODO: remove show products as an action and always do it as show method and kinda allow iteration through pages of the products. same for sale menu
+    //TODO: avalesh currentProducts update she.
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
         private String[] currentFilters;
