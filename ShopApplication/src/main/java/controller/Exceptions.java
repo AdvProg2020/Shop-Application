@@ -83,6 +83,12 @@ public class Exceptions{
         }
     }
 
+    public static class SubCategoryException extends Exception{
+        public SubCategoryException(String categoryName, String subCategoryName){
+            super("Category "+ subCategoryName + " is a subCategory of category "+ categoryName+" and you can not make it its parent!");
+        }
+    }
+
     public static class ExistedCategoryException extends Exception{
         public ExistedCategoryException(String categoryName){ super("There is already a category with this name: "+ categoryName); }
     }

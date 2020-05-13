@@ -84,7 +84,7 @@ public class CustomerController extends Controller {
         return totalSum;
     }
 
-    //Todo
+    //TODO
     public void purchaseTheCart() throws Exceptions.InsufficientCreditException {
     }
 
@@ -100,7 +100,7 @@ public class CustomerController extends Controller {
             throw new Exceptions.CustomerLoginException();
     }
 
-    //Done!!
+    //Done!! TODO: change to String[]
     public ArrayList<ArrayList<String>> showOrder(String orderId) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = BuyLog.getBuyLogById(orderId);
         if (buyLog == null)
@@ -118,7 +118,7 @@ public class CustomerController extends Controller {
             infoPack.add(Double.toString(buyLog.getPaidMoney()));
             infoPack.add(Double.toString(buyLog.getTotalDiscountAmount()));
             orderInfo.add(infoPack);
-            for (LogItem item : buyLog.getLogItems()) {//Todo:(Shayan) this getter should pass even it was suspended!
+            for (LogItem item : buyLog.getLogItems()) {
                 ArrayList<String> productPack = new ArrayList<>();
                 Product product = item.getSubProduct().getProduct();
                 productPack.add(product.getName());

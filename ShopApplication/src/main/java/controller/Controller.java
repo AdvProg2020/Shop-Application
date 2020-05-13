@@ -156,9 +156,10 @@ public class Controller {
                                               String storeName, double minRatingScore, ArrayList<Product> products) {
         if (available)
             products.removeIf(product -> (product.getTotalRemainingCount() == 0));
-        products.removeIf(product -> product.getMinPrice() > maxPrice);
-        if (maxPrice != 0)
+        if (minPrice != 0)
             products.removeIf(product -> product.getMaxPrice() < minPrice);
+        if (maxPrice != 0)
+            products.removeIf(product -> product.getMinPrice() > maxPrice);
         if (!contains.equals(""))
             products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
         if (!brand.equals(""))

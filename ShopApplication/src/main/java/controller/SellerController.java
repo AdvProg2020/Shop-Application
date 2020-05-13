@@ -8,6 +8,7 @@ import model.account.Customer;
 import model.account.Seller;
 import model.log.LogItem;
 import model.log.SellLog;
+import model.request.EditProductRequest;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,10 +17,12 @@ import java.util.ArrayList;
 public class SellerController extends Controller {
 
     //Done!!
-    public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException {
-        if (field.equals("storeName"))
+    public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+        if (field.equals("storeName")) {
+            if (((Seller) currentAccount).getStoreName().equals(newInformation))
+                throw new Exceptions.SameAsPreviousValueException(field);
             ((Seller) currentAccount).setStoreName(newInformation);
-        else
+        }else
             editCommonInformation(field, newInformation);
     }
 
@@ -94,7 +97,6 @@ public class SellerController extends Controller {
 
     //Todo
     public void editProduct(String productID, String field, String newInformation) {
-
     }
 
     //Done!!
@@ -171,7 +173,7 @@ public class SellerController extends Controller {
     public void editSale(String saleId, String field, String newInformation) {
     }
 
-    //Todo
+    //Todo: check dates
     public void addSale(ArrayList<String> saleInformation) {
     }
 
