@@ -4,7 +4,6 @@ import controller.*;
 
 import java.util.ArrayList;
 
-//TODO: back action --> abstract.
 public class Menus {
     private static Controller mainController;
     private static AdminController adminController;
@@ -135,38 +134,37 @@ public class Menus {
     }
 
     //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim.
+    //TODO: getDefaultSubProductID();
     public static class ProductDetailMenu extends Menu {
-        private String productID;
-
+        private StringBuilder productID;
+        private StringBuilder subProductID;
         ProductDetailMenu(String name){
             super(name, false, null, null, null);
             Menu.setProductDetailMenu(this);
+        //    subProductID = mainController.getDefaultSubProductID(productID);
         }
 
         @Override
         protected void initSubMenus() {
-
+            subMenus.put(1, new ProductReviewMenu("comments menu", this));
         }
 
-        //TODO: add proper back action.
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.DigestProduct("digest product"));
+            subActions.put(index + 1, new Actions.DigestProduct("digest product", productID));
+            subActions.put(index + 2, new Actions.AddToCart("add to cart", subProductID));
+            subActions.put(index + 3, new Actions.SelectSeller("select seller", subProductID));
+            subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
+            subActions.put(index + 5, new Actions.BackAction("back", null));
         }
 
         public void runByProductID(String productID) {
-            this.productID = null;
-            this.productID = productID;
+            this.productID.delete(0, productID.length());
+            this.productID.append(productID);
+            ((Actions.BackAction)subActions.get(subActions.size() - 1)).setParent(Menu.getCallingMenu());
             this.run();
         }
-
-        //should select seller before adding.
-        public void addToShoppingCart(){}
-        public void showAttributes(){}
-        public void compareByID(String otherProductID){}
-        public void showComments(){}
-        public void addComment(){}
     }
 
     public static class ProductReviewMenu extends Menu {
@@ -179,6 +177,7 @@ public class Menus {
             //no available sub menus.
         }
 
+        //TODO: imp.
         @Override
         protected void initSubActions() {
 
@@ -297,7 +296,7 @@ public class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.LoginAction("Login"));
             subActions.put(index + 2, new Actions.RegisterAction("Register"));
-            subActions.put(index + 3, new Actions.AccountMenuBackAction("back", previousMenu));
+            subActions.put(index + 3, new Actions.BackAction("back", previousMenu));
         }
     }
 
@@ -329,7 +328,7 @@ public class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.AccountMenuBackAction("another fuckin back", previousMenu));
+            subActions.put(index + 1, new Actions.BackAction("another fuckin back", previousMenu));
         }
     }
 
@@ -463,7 +462,7 @@ public class Menus {
             subActions.put(index + 2, new Actions.ShowSellerCategories("seller categories"));
             subActions.put(index + 3, new Actions.ShowSellerBalance("seller balance"));
             subActions.put(index + 4, new Actions.ShowSellerSellHistory("seller sell history"));
-            subActions.put(index + 5, new Actions.AccountMenuBackAction("seller menu back", previousMenu));
+            subActions.put(index + 5, new Actions.BackAction("seller menu back", previousMenu));
         }
     }
 
@@ -529,7 +528,7 @@ public class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.ShowCustomerBalance("show customer balance"));
             subActions.put(index + 2, new Actions.ShowCustomerDiscountCodes("show customer discount codes"));
-            subActions.put(index + 3, new Actions.AccountMenuBackAction("back", previousMenu));
+            subActions.put(index + 3, new Actions.BackAction("back", previousMenu));
         }
     }
 

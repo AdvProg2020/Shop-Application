@@ -21,19 +21,6 @@ public class Actions {
         customerController = View.customerController;
     }
 
-    public static class AccountMenuBackAction extends Action {
-        private Menu previousMenu;
-        AccountMenuBackAction(String name, Menu previousMenu) {
-            super(name, Constants.Actions.backPattern, Constants.Actions.backCommand);
-            this.previousMenu = previousMenu;
-        }
-
-        @Override
-        public void execute(String command) {
-            previousMenu.run();
-        }
-    }
-
     public static class BackAction extends Action {
         private Menu parent;
         BackAction(String name, Menu parent) {
@@ -44,6 +31,10 @@ public class Actions {
         @Override
         public void execute(String command) {
             parent.run();
+        }
+
+        public void setParent(Menu newParent) {
+            this.parent = newParent;
         }
     }
 
@@ -395,21 +386,81 @@ public class Actions {
     }
 
     public static class DigestProduct extends Action {
-        DigestProduct(String name) {
+        private StringBuilder productID;
+        DigestProduct(String name, StringBuilder productID) {
             super(name ,Constants.Actions.digestProductPattern, Constants.Actions.digestProductCommand);
+            this.productID = productID;
         }
 
         //TODO: imp.
         @Override
         public void execute(String command) {
             try {
-                String[] productInfo = mainController.digest(command);
+                String[] productInfo = mainController.digest(productID.toString());
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
                 return;
             }
 
             //if ID is valid, show the info.
+
+        }
+    }
+
+    public static class AddToCart extends Action {
+        private StringBuilder subProductID;
+        AddToCart(String name, StringBuilder subProductID) {
+            super(name, Constants.Actions.addToCartPattern, Constants.Actions.addToCartCommand);
+            this.subProductID = subProductID;
+        }
+
+        @Override
+        public void execute(String command) {
+            try {
+                mainController.addToCart(subProductID.toString());
+            } catch (Exceptions.InvalidSubProductIdException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+        }
+    }
+
+    public static class SelectSeller extends Action {
+        private StringBuilder subProductID;
+        SelectSeller(String name, StringBuilder subProductID) {
+            super(name, Constants.Actions.selectSellerPattern, Constants.Actions.showSellerCompanyInfoCommand);
+            this.subProductID = subProductID;
+        }
+
+
+        //TODO: imp. first show all the subProducts and then index choosing.
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class CompareProductByID extends Action {
+        private StringBuilder productID;
+        CompareProductByID(String name, StringBuilder productID) {
+            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
+            this.productID = productID;
+        }
+
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+            Matcher commandMatcher = getMatcherReady(command);
+            String otherProductID = commandMatcher.group(1);
+            try {
+                //what is the return type?
+                mainController.compare(productID.toString(), otherProductID);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            //show infos.
         }
     }
 }
