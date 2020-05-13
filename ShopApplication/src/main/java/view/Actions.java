@@ -87,6 +87,11 @@ public class Actions {
             super(name, Constants.Actions.registerPattern, Constants.Actions.registerCommand);
         }
 
+        private void registerFromScratch() {
+
+        }
+
+
         //TODO: implement.
         @Override
         public void execute(String command) {
@@ -95,9 +100,13 @@ public class Actions {
             String username = commandMatcher.group(2);
             try {
                 mainController.usernameTypeValidation(username, type);
+             //   getInfo(type);
             } catch (Exceptions.AdminRegisterException | Exceptions.ExistedUsernameException e) {
-                
+                System.out.println(e.getMessage());
             }
+
+            //while()
+
         }
     }
 
@@ -127,10 +136,25 @@ public class Actions {
             super(name, Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
         }
 
-        //TODO: imp.
+        private void showSubCategories() {
+            try {
+                String lastCategory;
+                if (categoryTree.size() == 0) {
+                    lastCategory = null;
+                } else {
+                    lastCategory = categoryTree.get(categoryTree.size() - 1);
+                }
+                ArrayList<String[]> info = mainController.getSubCategoriesOfThisCategory(lastCategory);
+                printList(info, 2);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            showSubCategories();
         }
     }
 

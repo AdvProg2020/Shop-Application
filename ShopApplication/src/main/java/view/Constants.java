@@ -60,8 +60,8 @@ class Constants {
         //AllProductsMenu actions.
         static final String showProductsCommand = "show products [-all]";
         static final String showProductsPattern = caseInsensitiveMode + "^show products" + spacePattern + "(-all)?$";
-        static final String showCategoriesCommand = "view categories [-all]";
-        static final String showCategoriesPattern = caseInsensitiveMode + "^view categories" + spacePattern + "(-all)?$";
+        static final String showCategoriesCommand = "view categories";
+        static final String showCategoriesPattern = caseInsensitiveMode + "^" + showCategoriesCommand + "$";
         static final String chooseCategoryCommand = "choose category [availableCategory]";
         static final String chooseCategoryPattern = caseInsensitiveMode + "^choose category" + spacePattern + argumentPattern + "$";
         static final String revertCategoryCommand = "revert category [-numberOfReverts]"; //you can set the number of times to go back. 1 by default.
