@@ -659,4 +659,114 @@ public class Actions {
 
         }
     }
+
+    public static class SellerShowSales extends Action {
+        SellerShowSales(String name) {
+            super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerViewSaleDetails extends Action {
+        SellerViewSaleDetails(String name) {
+            super(name, Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerEditSale extends Action {
+        SellerEditSale(String name) {
+            super(name, Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerAddSale extends Action {
+        SellerAddSale(String name) {
+            super(name, Constants.Actions.sellerAddSalePattern, Constants.Actions.sellerAddSaleCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerShowProducts extends Action {
+        SellerShowProducts(String name) {
+            super(name, Constants.Actions.sellerShowProductsPattern, Constants.Actions.sellerShowProductsCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+        }
+    }
+
+    public static class SellerViewProductDetails extends Action {
+        SellerViewProductDetails(String name) {
+            super(name, Constants.Actions.sellerViewProductDetailsPattern, Constants.Actions.sellerViewProductDetailsCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerViewProductBuyers extends Action {
+        SellerViewProductBuyers(String name) {
+            super(name, Constants.Actions.sellerViewProductBuyersPattern, Constants.Actions.sellerViewProductBuyersCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerEditProduct extends Action {
+        SellerEditProduct(String name) {
+            super(name, Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerAddProduct extends Action {
+        SellerAddProduct(String name) {
+            super(name, Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
+    public static class SellerRemoveProduct extends Action {
+        SellerRemoveProduct(String name) {
+            super(name, Constants.Actions.sellerRemoveProductPattern, Constants.Actions.sellerRemoveProductCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+
+        }
+    }
+
 }

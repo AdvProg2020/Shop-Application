@@ -107,6 +107,7 @@ class Constants {
         static final String showCustomerDiscountCodesPattern = caseInsensitiveMode + "^" + showCustomerDiscountCodesCommand +"$";
         static final String digestProductCommand = "digest";
         static final String digestProductPattern = caseInsensitiveMode + "" + digestProductCommand + "$";
+        //TODO: wtf should we with sub products
         static final String showSubProductsCommand = "show sub products";
         static final String showSubProductsPattern = caseInsensitiveMode + "^" + showSubProductsCommand + "$";
         static final String addToCartCommand = "add to cart";
@@ -122,6 +123,7 @@ class Constants {
         static final String addReviewPattern = caseInsensitiveMode + "^" + addReviewCommand + "$";
         static final String showReviewsCommand = "show comments";
         static final String showReviewsPattern = caseInsensitiveMode + "^" + showReviewsCommand + "$";
+        //admin account menu actions
         static final String adminViewUserCommand = "view user [userIndex]";
         static final String adminViewUserPattern = caseInsensitiveMode + "^view user " + unsignedIntPattern + "$";
         static final String adminDeleteUserCommand = "delete user [userIndex]";
@@ -152,6 +154,28 @@ class Constants {
         static final String adminAddCategoryPattern = caseInsensitiveMode + "^add " + argumentPattern + "$";
         static final String adminRemoveCategoryCommand = "remove [categoryIndex]";
         static final String adminRemoveCategoryPattern = caseInsensitiveMode + "^remove " + argumentPattern +"$";
+        //seller account menu actions.
+        static final String sellerShowSalesCommand = "view sales";
+        static final String sellerShowSalesPattern = caseInsensitiveMode + "^" + sellerShowSalesCommand + "$";
+        static final String sellerViewSaleDetailsCommand = "view [saleIndex]";
+        static final String sellerViewSaleDetailsPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
+        static final String sellerEditSaleCommand = "edit [saleIndex]";
+        static final String sellerEditSalePattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String sellerAddSaleCommand = "add off";
+        static final String sellerAddSalePattern = caseInsensitiveMode + sellerAddSaleCommand + "$";
+        static final String sellerShowProductsCommand = "view products";
+        static final String sellerShowProductsPattern = caseInsensitiveMode + "^" + sellerShowProductsCommand + "$";
+        static final String sellerViewProductDetailsCommand = "view [productIndex]";
+        static final String sellerViewProductDetailsPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
+        static final String sellerViewProductBuyersCommand = "view buyers [productIndex]";
+        static final String sellerViewProductBuyersPattern = caseInsensitiveMode + "^view buyers " + argumentPattern + "$";
+        static final String sellerEditProductCommand = "edit [productIndex]";
+        static final String sellerEditProductPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String sellerAddProductCommand = "add product";
+        static final String sellerAddProductPattern = caseInsensitiveMode + "^" + sellerAddProductCommand + "$";
+        static final String sellerRemoveProductCommand = "remove product [productIndex]";
+        static final String sellerRemoveProductPattern = caseInsensitiveMode + "^remove product " + argumentPattern + "$";
+        static final String
         static final String
         static final String
         static final String

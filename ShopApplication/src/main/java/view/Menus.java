@@ -499,12 +499,17 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.SellerShowSales("show sales"));
+            subActions.put(index + 2, new Actions.SellerViewSaleDetails("view sale details"));
+            subActions.put(index + 3, new Actions.SellerEditSale("edit sale"));
+            subActions.put(index + 4, new Actions.SellerAddSale("add sale"));
+            subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
     }
 
@@ -515,12 +520,19 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-
+            //no available sub menu.
         }
 
         @Override
         protected void initSubActions() {
-
+            int index = subMenus.size();
+            subActions.put(index + 1, new Actions.SellerShowProducts("show seller products"));
+            subActions.put(index + 2, new Actions.SellerViewProductDetails("view product details"));
+            subActions.put(index + 3, new Actions.SellerViewProductBuyers("view product buyers"));
+            subActions.put(index + 4, new Actions.SellerEditProduct("edit product"));
+            subActions.put(index + 4, new Actions.SellerAddProduct("add product"));
+            subActions.put(index + 4, new Actions.SellerRemoveProduct("remove product"));
+            subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
 
 
