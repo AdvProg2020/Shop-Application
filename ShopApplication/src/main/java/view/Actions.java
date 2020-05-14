@@ -643,8 +643,10 @@ public class Actions {
         public void execute(String command) {
             try {
                 mainController.addToCart(subProductID.toString(), 1);
+                System.out.println("added to the cart");
             } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException e) {
                 System.out.println(e.getMessage());
+                System.out.println("please change seller and try again");
                 return;
             }
         }
@@ -758,6 +760,7 @@ public class Actions {
                 printSeparator();
             } catch (Exceptions.NotExistedUsernameException e) {
                 System.out.println(e.getMessage());
+                return;
             }
         }
     }
@@ -767,10 +770,15 @@ public class Actions {
             super(name, Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
         }
 
-        //TODO: imp.
         @Override
-        public void execute(String userID) {
-
+        public void execute(String username) {
+            try {
+                adminController.deleteUsername(username);
+                System.out.println("user removed successfully");
+            } catch (Exceptions.NotExistedUsernameException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 
@@ -782,7 +790,7 @@ public class Actions {
         //TODO: imp.
         @Override
         public void execute(String command) {
-
+            //adminController.creatAccount();
         }
     }
 
@@ -791,10 +799,17 @@ public class Actions {
             super(name, Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            try {
+                adminController.removeProduct(productID);
+                System.out.println("product removed successfully");
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 

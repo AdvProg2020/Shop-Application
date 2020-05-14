@@ -124,8 +124,8 @@ class Constants {
         //admin account menu actions
         static final String adminViewUserCommand = "view user [username]";
         static final String adminViewUserPattern = caseInsensitiveMode + "^view user " + argumentPattern + "$";
-        static final String adminDeleteUserCommand = "delete user [userIndex]";
-        static final String adminDeleteUserPattern = caseInsensitiveMode + "delete user " + unsignedIntPattern + "$";
+        static final String adminDeleteUserCommand = "delete user [username]";
+        static final String adminDeleteUserPattern = caseInsensitiveMode + "^delete user " + argumentPattern + "$";
         static final String adminCreateAdminCommand = "create manager profile";
         static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
         static final String adminRemoveProductByIDCommand = "remove [productID]";
