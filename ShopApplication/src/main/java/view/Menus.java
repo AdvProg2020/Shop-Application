@@ -590,6 +590,7 @@ class Menus {
 
     //this is both used in product menu and in customer menu
     public static class ShoppingCartMenu extends Menu {
+        private
         ShoppingCartMenu(String name, Menu parent){
             super(name, true, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
         }

@@ -75,6 +75,7 @@ public class AdminController extends Controller {
     }
 
     //Done!!
+    //TODO: percentage double
     public void createDiscountCode(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) throws Exceptions.ExistingDiscountCodeException {
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);

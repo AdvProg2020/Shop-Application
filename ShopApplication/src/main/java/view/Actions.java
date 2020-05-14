@@ -825,13 +825,13 @@ public class Actions {
         @Override
         public void execute(String command) {
             String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
-            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[1-100]%?$", Constants.unsignedIntPattern};
+            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.unsignedIntPattern};
             Form discountCodeForm = new Form(fields, fieldRegex);
             if (discountCodeForm.takeInput() == 0) {
                 String[] results = discountCodeForm.getResults();
                 try {
                     adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
-                            Integer.parseInt(results[3]), Integer.parseInt(results[4]));
+                            Double.valueOf(results[3]), Integer.parseInt(results[4]));
                     System.out.println("discount code created successfully");
                 } catch (Exceptions.ExistingDiscountCodeException e) {
                     System.out.println(e.getMessage());
@@ -1179,7 +1179,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             String[] fields = new String[] {"start date", "end date", "percentage", "maximum price reduction"};
-            String[] fieldRegex = new String[] {Constants.datePattern, Constants.datePattern, "^%?[1-100]%?$", Constants.doublePattern};
+            String[] fieldRegex = new String[] {Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.doublePattern};
             Form saleForm = new Form(fields, fieldRegex);
             saleForm.setupArrayForm("product ID", Constants.argumentPattern);
             if (saleForm.takeInput() == 0) {
