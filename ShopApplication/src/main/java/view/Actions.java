@@ -77,6 +77,8 @@ public class Actions {
                     //if without problem
                     System.out.println("logged-in successfully!");
                     return;
+                } else {
+                    break;
                 }
             }
         }
@@ -151,7 +153,7 @@ public class Actions {
             try {
                 String lastCategory;
                 if (categoryTree.size() == 0) {
-                    lastCategory = null;
+                    lastCategory = "superCategory";
                 } else {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -396,7 +398,6 @@ public class Actions {
     }
 
     //TODO: remember that filters and sorts are only for products.
-    //TODO: filter and sort for sales.
     //TODO: holy guakamoly.
     public static class ShowOffs extends Action {
         private StringBuilder currentSort;
@@ -448,11 +449,19 @@ public class Actions {
             super(name, Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
         }
 
-
-        //TODO: imp.
         private void showPersonalInfo(String[] info) {
-
-            System.out.println("1. ");
+            System.out.println("1. username: " + info[0]);
+            System.out.println("2. type: " + info[1]);
+            System.out.println("3. first name: " + info[2]);
+            System.out.println("4. last name: " + info[3]);
+            System.out.println("5. email: " + info[4]);
+            System.out.println("6. phone number: " + info[5]);
+            if (info.length > 6) {
+                System.out.println("7. balance: " + info[6]);
+            }
+            if (info.length > 7) {
+                System.out.println("8. store name: " + info[7]);
+            }
         }
 
         @Override
@@ -516,18 +525,6 @@ public class Actions {
                     continue;
                 }
             }
-        }
-    }
-
-    public static class ShowSellerCategories extends Action {
-        ShowSellerCategories(String name) {
-            super(name, Constants.Actions.showSellerCategoriesPattern, Constants.Actions.showSellerCategoriesCommand);
-        }
-
-        //TODO: imp.
-        @Override
-        public void execute(String command) {
-
         }
     }
 
@@ -662,6 +659,7 @@ public class Actions {
 
 
         //TODO: imp. first show all the subProducts and then index choosing.
+        //TODO: soale 5 koja niaz shd?
         @Override
         public void execute(String command) {
 

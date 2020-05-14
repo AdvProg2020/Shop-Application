@@ -95,8 +95,6 @@ class Constants {
         static final String showSellerCompanyInfoPattern = caseInsensitiveMode + "^" + showSellerCompanyInfoCommand + "$";
         static final String showSellerSellHistoryCommand = "view sales history";
         static final String showSellerSellHistoryPattern = caseInsensitiveMode + "^" + showSellerSellHistoryCommand + "$";
-        static final String showSellerCategoriesCommand = "show categories";
-        static final String showSellerCategoriesPattern = caseInsensitiveMode + "^" + showSellerCategoriesCommand + "$";
         static final String showSellerBalanceCommand = "view balance";
         static final String showSellerBalancePattern = caseInsensitiveMode + "^" + showSellerBalanceCommand + "$";
         static final String showCustomerBalanceCommand = "view balance";
