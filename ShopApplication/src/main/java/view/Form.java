@@ -1,21 +1,32 @@
 package view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Form {
-    private static String[] fields;
-    private static String[] fieldRegex;
-    private static String[] results;
+    private String[] fields;
+    private String[] fieldRegex;
+    private String[] results;
+    private String arrayListRegex;
+    private String arrayListField;
+    private ArrayList<String> listResult;
 
-    public static int createForm(String[] fields, String[] fieldRegex) {
-        Form.fields = fields.clone();
-        Form.fieldRegex = fieldRegex.clone();
-        Form.results = results.clone();
+    Form(String[] fields, String[] fieldRegex) {
+        this.fields = fields.clone();
+        this.fieldRegex = fieldRegex.clone();
+        this.results = new String[fields.length];
+    }
+
+    public void setupArrayForm(String arrayListField, String arrayListRegex) {
+        this.arrayListField = arrayListField;
+        this.arrayListRegex = arrayListRegex;
+        listResult = new ArrayList<>();
+    }
+
+    public int takeInput() {
         return inputField(0);
     }
 
-    private static int inputField(int currIndex) {
+    private int inputField(int currIndex) {
         while(true) {
             System.out.println(fields[currIndex] + ": ");
             String response = View.getNextLineTrimmed();
@@ -23,20 +34,40 @@ public class Form {
                 return -1;
             } else if (response.matches(fieldRegex[currIndex])) {
                 results[currIndex] = response;
-                if (inputField(currIndex + 1) == 0 || currIndex == fields.length - 1) {
-                    return 0;
-                }
+                if (currIndex == fields.length -1) {
+                    if (inputList() == -1) {continue;}
+                    else {return 0;}
+                } else if (inputField(currIndex + 1) == 0) {return 0;}
+                else {continue;}
             } else {
                 System.out.println("invalid entry.");
             }
         }
     }
 
-    public static String[] getResults() {
-        fields = null;
-        fieldRegex = null;
-        String[] tmp = Arrays.copyOf(results, results.length);
-        results = null;
-        return tmp;
+    private int inputList() {
+        while(true) {
+            System.out.print("enter " + arrayListField + " (enter \"back\" to go back or \"exit\" to exit):\n" + (listResult.size() + 1) + ". ");
+            String input = View.getNextLineTrimmed();
+            if (input.equalsIgnoreCase("back")) {
+                if (listResult.size() == 0) {return -1;}
+                else {
+                    listResult.remove(listResult.size() - 1);
+                    continue;
+                }
+            } else if (input.equalsIgnoreCase("exit")){
+                return 0;
+            } else {
+                listResult.add(input);
+            }
+        }
+    }
+
+    public ArrayList<String> getListResult() {
+        return listResult;
+    }
+
+    public String[] getResults() {
+        return results;
     }
 }

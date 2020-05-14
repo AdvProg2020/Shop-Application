@@ -8,6 +8,7 @@ final class Constants {
     static final String argumentPattern = "(\\S+)";
     static final String spacePattern = "\\s+";
     static final String unsignedIntPattern = "(\\d+)";
+    static final String doublePattern = "(\\d+\\.\\d+)";
     static final String datePattern = argumentPattern;
     static final String anonymousUserType = "anonymous";
     static final String adminUserType = "admin";

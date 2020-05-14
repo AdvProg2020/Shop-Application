@@ -826,10 +826,10 @@ public class Actions {
         @Override
         public void execute(String command) {
             String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
-            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%[0-100]", Constants.unsignedIntPattern};
-            String[] results;
-            if (Form.createForm(fields, fieldRegex) == 0) {
-                results = Form.getResults();
+            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[1-100]%?$", Constants.unsignedIntPattern};
+            Form discountCodeForm = new Form(fields, fieldRegex);
+            if (discountCodeForm.takeInput() == 0) {
+                String[] results = discountCodeForm.getResults();
                 try {
                     adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
                             Integer.parseInt(results[3]), Integer.parseInt(results[4]));
@@ -1035,21 +1035,7 @@ public class Actions {
         }
 
         private int inputParent(ArrayList<String> specialProperties) {
-            while(true) {
-                System.out.print("enter special property (enter \"back\" to go back or \"exit\" to exit):\n" + (specialProperties.size() + 1) + ". ");
-                String input = View.getNextLineTrimmed();
-                if (input.equalsIgnoreCase("back")) {
-                    if (specialProperties.size() == 0) {return -1;}
-                    else {
-                        specialProperties.remove(specialProperties.size() - 1);
-                        continue;
-                    }
-                } else if (input.equalsIgnoreCase("exit")){
-                    return 0;
-                } else {
-                    specialProperties.add(input);
-                }
-            }
+
         }
 
         @Override
@@ -1194,7 +1180,20 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-
+            String[] fields = new String[] {"start date", "end date", "percentage", "maximum price reduction"};
+            String[] fieldRegex = new String[] {Constants.datePattern, Constants.datePattern, "^%?[1-100]%?$", Constants.doublePattern};
+            Form saleForm = new Form(fields, fieldRegex);
+            saleForm.setupArrayForm("product ID", Constants.argumentPattern);
+            if (saleForm.takeInput() == 0) {
+                String[] results = saleForm.getResults();
+                try {
+                    sellerController.addSale(Date.valueOf(results[0]), Date.valueOf(results[1]),
+                            Double.valueOf(results[2]), Double.valueOf(results[3]), saleForm.getListResult());
+                } catch (Exceptions.InvalidDateException | Exceptions.InvalidProductIdsForASeller e) {
+                    System.out.println(e.getMessage());
+                }
+                printSeparator();
+            }
         }
     }
 
