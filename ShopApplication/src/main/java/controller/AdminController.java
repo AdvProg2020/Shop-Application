@@ -47,7 +47,7 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public void creatManagerProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.ExistedUsernameException {
+    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.ExistedUsernameException {
         if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.ExistedUsernameException(username);
         new Admin(username, password, firstName, lastName, email, phone);
