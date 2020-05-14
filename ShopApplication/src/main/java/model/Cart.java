@@ -55,9 +55,8 @@ public class Cart implements Initializable {
         if (cartId == null)
             cartId = generateNewId(customerId);
         allCarts.put(cartId, this);
-        if (customerId != null) {
+        if (customerId != null)
             getCustomer().setCart(cartId);
-        }
     }
 
     @Label("Model internal use only!")

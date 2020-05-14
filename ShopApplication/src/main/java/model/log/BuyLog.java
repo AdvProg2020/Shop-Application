@@ -47,9 +47,8 @@ public class BuyLog implements Initializable {
 
     @Override
     public void initialize() {
-        if (buyLogId == null) {
+        if (buyLogId == null)
             buyLogId = generateNewId(customerId);
-        }
         allBuyLogs.put(buyLogId, this);
         logItemIds = new HashSet<>();
         getCustomer().addBuyLog(buyLogId);

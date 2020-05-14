@@ -35,54 +35,49 @@ public class Product implements Initializable {
         return null;
     }
 
-    public static List<Product> getAllProducts() {
-        return getAllProducts(true);
-    }
+    public static List<Product> getAllProducts(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static List<Product> getAllProducts(boolean checkSuspense) {
         List<Product> products = new ArrayList<>(allProducts.values());
-        if (checkSuspense) {
+        if (checkSuspense)
             products.removeIf(product -> product.suspended);
-        }
+
         return products;
     }
 
-    public static Product getProductById(String productId) {
-        return getProductById(productId, true);
-    }
+    public static Product getProductById(String productId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static Product getProductById(String productId, boolean checkSuspense) {
         Product product = allProducts.get(productId);
-        if (checkSuspense && product != null && product.suspended) {
+        if (checkSuspense && product != null && product.suspended)
             product = null;
-        }
+
         return product;
     }
 
     public static List<Product> getProductsByName(String name) {
         List<Product> products = new ArrayList<>();
-        for (Product product : allProducts.values()) {
+        for (Product product : allProducts.values())
             if (!product.suspended && product.getName().equals(name)) {
                 products.add(product);
             }
-        }
+
         return products;
     }
 
     public static Product getProductByNameAndBrand(String name, String brand) {
         for (Product product : getProductsByName(name)) {
-            if (product.getBrand().equals(brand)) {
+            if (product.getBrand().equals(brand))
                 return product;
-            }
         }
+
         return null;
     }
 
     @Override
     public void initialize() {
-        if (productId == null) {
+        if (productId == null)
             productId = generateNewId();
-        }
         allProducts.put(productId, this);
         if (!suspended) {
             subProductIds = new HashSet<>();

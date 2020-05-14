@@ -16,6 +16,16 @@ public class AddReviewRequest extends Request {
         review.initialize();
     }
 
+    @Override
+    protected boolean isInvalid() {
+        boolean invalid = (review.getProduct() == null);
+
+        if (invalid)
+            terminate();
+
+        return invalid;
+    }
+
     public Review getReview() {
         return review;
     }

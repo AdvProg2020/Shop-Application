@@ -13,11 +13,8 @@ public class Admin extends Account {
         return manager;
     }
 
-    public static Admin getAdminById(String accountId) {
-        return (Admin) getAccountById(accountId, true);
-    }
-
-    public static Admin getAdminById(String accountId, boolean checkSuspense) {
+    public static Admin getAdminById(String accountId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
         return (Admin) getAccountById(accountId, checkSuspense);
     }
 

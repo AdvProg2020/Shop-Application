@@ -16,6 +16,16 @@ public class AddSaleRequest extends Request {
         sale.initialize();
     }
 
+    @Override
+    protected boolean isInvalid() {
+        boolean invalid = (sale.getSeller() == null);
+
+        if (invalid)
+            terminate();
+
+        return invalid;
+    }
+
     public Sale getSale() {
         return sale;
     }
