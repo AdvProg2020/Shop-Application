@@ -59,11 +59,8 @@ public class SellerController extends Controller {
     //Done!!
     public ArrayList<String[]> manageProducts() {
         ArrayList<String[]> products = new ArrayList<>();
-        String[] productPack = new String[2];
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
-            productPack[0] = subProduct.getProduct().getId();
-            productPack[1] = subProduct.getProduct().getName();
-            products.add(productPack);
+            products.add(productPack(subProduct.getProduct()));
         }
         return products;
     }
@@ -275,11 +272,26 @@ public class SellerController extends Controller {
         }
     }
 
-    //Todo: check dates
-    public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException {
+    //Done!!
+    public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
         if( startDate.before(endDate)) {
             Sale sale = new Sale(((Seller) currentAccount).getId(), startDate, endDate, percentage, maximum);
-            //TODO: add products and return exception
+            Product product = null;
+            SubProduct subProduct = null;
+            ArrayList<String> falseSubProductIds = new ArrayList<>();
+            for (String productId : productIds) {
+                product = Product.getProductById(productId);
+                if( product != null){
+                    subProduct = product.getSubProductWithSellerId(((Seller)currentAccount).getId());
+                    if( subProduct != null )
+                        sale.addSubProduct(subProduct.getId());
+                    else
+                        falseSubProductIds.add(productId);
+                }else
+                    falseSubProductIds.add(productId);
+            }
+            if( falseSubProductIds.size() > 0)
+                throw new Exceptions.InvalidProductIdsForASeller(falseSubProductIds);
         }else
             throw new Exceptions.InvalidDateException();
     }

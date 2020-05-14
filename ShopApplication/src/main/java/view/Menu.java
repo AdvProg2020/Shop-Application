@@ -117,7 +117,7 @@ public abstract class Menu {
             }
         }
         for (Integer actionIndex : subActions.keySet()) {
-            if (command.equals(Integer.toString(actionIndex)) || command.matches(subActions.get(actionIndex).getActionPattern())) {
+            if (command.matches(subActions.get(actionIndex).getActionPattern())) {
                 try {
                     subActions.get(actionIndex).run(command);
                 } catch (Exception actionException) {

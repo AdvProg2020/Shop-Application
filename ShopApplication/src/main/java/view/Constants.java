@@ -4,10 +4,11 @@ import model.Category;
 
 class Constants {
     //TODO: space pattern ro bargardon.
-    private static final String caseInsensitiveMode = "(?i)";
-    private static final String argumentPattern = "(\\S+)";
-    private static final String spacePattern = "\\s+";
-    private static final String unsignedIntPattern = "(\\d+)";
+    static final String caseInsensitiveMode = "(?i)";
+    static final String argumentPattern = "(\\S+)";
+    static final String spacePattern = "\\s+";
+    static final String unsignedIntPattern = "(\\d+)";
+    static final String datePattern = argumentPattern;
     static final String anonymousUserType = "anonymous";
     static final String adminUserType = "admin";
     static final String customerUserType = "customer";
@@ -95,8 +96,6 @@ class Constants {
         static final String showSellerCompanyInfoPattern = caseInsensitiveMode + "^" + showSellerCompanyInfoCommand + "$";
         static final String showSellerSellHistoryCommand = "view sales history";
         static final String showSellerSellHistoryPattern = caseInsensitiveMode + "^" + showSellerSellHistoryCommand + "$";
-        static final String showSellerCategoriesCommand = "show categories";
-        static final String showSellerCategoriesPattern = caseInsensitiveMode + "^" + showSellerCategoriesCommand + "$";
         static final String showSellerBalanceCommand = "view balance";
         static final String showSellerBalancePattern = caseInsensitiveMode + "^" + showSellerBalanceCommand + "$";
         static final String showCustomerBalanceCommand = "view balance";
@@ -124,10 +123,10 @@ class Constants {
         static final String showReviewsCommand = "show comments";
         static final String showReviewsPattern = caseInsensitiveMode + "^" + showReviewsCommand + "$";
         //admin account menu actions
-        static final String adminViewUserCommand = "view user [userIndex]";
-        static final String adminViewUserPattern = caseInsensitiveMode + "^view user " + unsignedIntPattern + "$";
-        static final String adminDeleteUserCommand = "delete user [userIndex]";
-        static final String adminDeleteUserPattern = caseInsensitiveMode + "delete user " + unsignedIntPattern + "$";
+        static final String adminViewUserCommand = "view user [username]";
+        static final String adminViewUserPattern = caseInsensitiveMode + "^view user " + argumentPattern + "$";
+        static final String adminDeleteUserCommand = "delete user [username]";
+        static final String adminDeleteUserPattern = caseInsensitiveMode + "^delete user " + argumentPattern + "$";
         static final String adminCreateAdminCommand = "create manager profile";
         static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
         static final String adminRemoveProductByIDCommand = "remove [productID]";
@@ -148,11 +147,11 @@ class Constants {
         static final String adminShowCategoriesCommand = "show categories";
         static final String adminShowCategoriesPattern = caseInsensitiveMode + "^" + adminShowCategoriesCommand + "$";
         //minor modification cuz of showing dilemma.
-        static final String adminEditCategoryCommand = "edit [categoryIndex]";
+        static final String adminEditCategoryCommand = "edit [categoryName]";
         static final String adminEditCategoryPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
         static final String adminAddCategoryCommand = "add [categoryName]";
         static final String adminAddCategoryPattern = caseInsensitiveMode + "^add " + argumentPattern + "$";
-        static final String adminRemoveCategoryCommand = "remove [categoryIndex]";
+        static final String adminRemoveCategoryCommand = "remove [categoryName]";
         static final String adminRemoveCategoryPattern = caseInsensitiveMode + "^remove " + argumentPattern +"$";
         //seller account menu actions.
         static final String sellerShowSalesCommand = "view sales";
