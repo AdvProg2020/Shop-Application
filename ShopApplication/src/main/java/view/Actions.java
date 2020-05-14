@@ -2,7 +2,6 @@ package view;
 
 import controller.*;
 
-import javax.swing.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -435,7 +434,7 @@ public class Actions {
             currentProducts.clear();
             try {
                 for (String[] off : currentOffs) {
-                    ArrayList<String[]> offsProducts = mainController.getProductInSale(off[0]);
+                    ArrayList<String[]> offsProducts = mainController.getProductsInSale(off[0]);
                     currentProducts.addAll(appendSaleInfo(off, offsProducts));
                 }
                 sortProducts();
