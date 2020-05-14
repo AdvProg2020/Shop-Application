@@ -1197,20 +1197,27 @@ public class Actions {
     }
 
     public static class SellerShowProducts extends Action {
-        SellerShowProducts(String name) {
+        private ArrayList<String[]> sellerProducts;
+        SellerShowProducts(String name, ArrayList<String[]> sellerProducts) {
             super(name, Constants.Actions.sellerShowProductsPattern, Constants.Actions.sellerShowProductsCommand);
+            this.sellerProducts = sellerProducts;
         }
 
         @Override
         public void execute(String command) {
-            ArrayList<String[]> sellerProducts = sellerController.manageProducts();
+            if (sellerProducts.isEmpty()) {
+                sellerProducts.addAll(sellerController.manageProducts());
+            }
             printList(sellerProducts, 3);
+            printSeparator();
         }
     }
 
     public static class SellerViewProductDetails extends Action {
-        SellerViewProductDetails(String name) {
+        private ArrayList<String[]> sellerProducts;
+        SellerViewProductDetails(String name, ArrayList<String[]> sellerProducts) {
             super(name, Constants.Actions.sellerViewProductDetailsPattern, Constants.Actions.sellerViewProductDetailsCommand);
+            this.sellerProducts = sellerProducts;
         }
 
         private void printInfo(String[] info) {
@@ -1221,13 +1228,27 @@ public class Actions {
             System.out.println("5. product average rating: " + info[4]);
         }
 
+
+        private boolean isInProducts(String productID) {
+            for (String[] product : sellerProducts) {
+                if (product[0].equals(productID)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         @Override
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
             String productID = commandMatcher.group(1);
             try {
-                String[] info = sellerController.viewProduct(productID);
-                printInfo(info);
+                if ( ! isInProducts(productID)) {
+                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+                } else {
+                    String[] info = sellerController.viewProduct(productID);
+                    printInfo(info);
+                }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1236,8 +1257,19 @@ public class Actions {
     }
 
     public static class SellerViewProductBuyers extends Action {
-        SellerViewProductBuyers(String name) {
+        private ArrayList<String[]> sellerProducts;
+        SellerViewProductBuyers(String name, ArrayList<String[]> sellerProducts) {
             super(name, Constants.Actions.sellerViewProductBuyersPattern, Constants.Actions.sellerViewProductBuyersCommand);
+            this.sellerProducts = sellerProducts;
+        }
+
+        private boolean isInProducts(String productID) {
+            for (String[] product : sellerProducts) {
+                if (product[0].equals(productID)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -1245,9 +1277,13 @@ public class Actions {
             Matcher commandMatcher = getMatcherReady(command);
             String productID = commandMatcher.group(1);
             try {
-                ArrayList<String> buyers = sellerController.viewProductBuyers(productID);
-                System.out.println("buyers:");
-                buyers.forEach(b -> System.out.println(b));
+                if (!isInProducts(productID)) {
+                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+                } else {
+                    ArrayList<String> buyers = sellerController.viewProductBuyers(productID);
+                    System.out.println("buyers:");
+                    buyers.forEach(b -> System.out.println(b));
+                }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1310,6 +1346,7 @@ public class Actions {
         }
     }
 
+    //TODO: wtf should we do?
     public static class SellerAddProduct extends Action {
         SellerAddProduct(String name) {
             super(name, Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
@@ -1317,18 +1354,42 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-
+            String[] fields = new String[] {"name", "brand"};
+            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern};
+            Form productFirstForm = new Form(fields, fieldRegex);
         }
     }
 
     public static class SellerRemoveProduct extends Action {
-        SellerRemoveProduct(String name) {
+        private ArrayList<String[]> sellerProducts;
+        SellerRemoveProduct(String name, ArrayList<String[]> sellerProducts) {
             super(name, Constants.Actions.sellerRemoveProductPattern, Constants.Actions.sellerRemoveProductCommand);
+            this.sellerProducts = sellerProducts;
+        }
+
+        private boolean isInProducts(String productID) {
+            for (String[] product : sellerProducts) {
+                if (product[0].equals(productID)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            try {
+                if (!isInProducts(productID)) {
+                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+                } else {
+                    sellerController.removeProduct(productID);
+                }
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 

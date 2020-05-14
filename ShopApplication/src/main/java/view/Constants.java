@@ -173,7 +173,7 @@ final class Constants {
         static final String sellerEditProductPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
         static final String sellerAddProductCommand = "add product";
         static final String sellerAddProductPattern = caseInsensitiveMode + "^" + sellerAddProductCommand + "$";
-        static final String sellerRemoveProductCommand = "remove product [productIndex]";
+        static final String sellerRemoveProductCommand = "remove product [productID]";
         static final String sellerRemoveProductPattern = caseInsensitiveMode + "^remove product " + argumentPattern + "$";
         //customer account menu actions
         static final String customerCartShowProductsCommand = "show products";

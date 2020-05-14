@@ -428,7 +428,7 @@ class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.AdminCreateDiscountCode("create discount code"));
             subActions.put(index + 2, new Actions.AdminViewDiscountCode("view discount code"));
-            subActions.put(index + 3, new Actions.AdminEditDiscountCode("edit discount codes", getEditableFields());
+            subActions.put(index + 3, new Actions.AdminEditDiscountCode("edit discount codes", getEditableFields()));
             subActions.put(index + 4, new Actions.AdminRemoveDiscountCode("remove discount code"));
             subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
@@ -510,7 +510,6 @@ class Menus {
             super(name, false, parent, Constants.Menus.sellerSaleManagingMenuPattern, Constants.Menus.sellerSaleManagingMenuCommand);
         }
 
-        //TODO: imp.
         private String[] getEditableFields() {
             return sellerController.getSaleEditableFields();
         }
@@ -531,15 +530,16 @@ class Menus {
         }
     }
 
+    //TODO: show bayad koni avalesh.
     public static class SellerProductMenu extends Menu {
+        private ArrayList<String[]> sellerProducts;
         SellerProductMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.sellerProductManagingMenuPattern, Constants.Menus.sellerProductManagingMenuCommand);
+            this.sellerProducts = new ArrayList<>();
         }
 
-
-        //Todo; imp.
         private String[] getEditableFields() {
-            return null;
+            return sellerController.getProductEditableFields();
         }
 
         @Override
@@ -550,12 +550,12 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.SellerShowProducts("show seller products"));
-            subActions.put(index + 2, new Actions.SellerViewProductDetails("view product details"));
-            subActions.put(index + 3, new Actions.SellerViewProductBuyers("view product buyers"));
+            subActions.put(index + 1, new Actions.SellerShowProducts("show seller products", sellerProducts));
+            subActions.put(index + 2, new Actions.SellerViewProductDetails("view product details", sellerProducts));
+            subActions.put(index + 3, new Actions.SellerViewProductBuyers("view product buyers", sellerProducts));
             subActions.put(index + 4, new Actions.SellerEditProduct("edit product", getEditableFields()));
             subActions.put(index + 4, new Actions.SellerAddProduct("add product"));
-            subActions.put(index + 4, new Actions.SellerRemoveProduct("remove product"));
+            subActions.put(index + 4, new Actions.SellerRemoveProduct("remove product", sellerProducts));
             subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
 
