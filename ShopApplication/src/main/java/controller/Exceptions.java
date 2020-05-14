@@ -3,6 +3,8 @@ import model.Discount;
 import model.account.Customer;
 
 import java.lang.Exception;
+import java.util.ArrayList;
+
 public class Exceptions{
 
     public static class WrongPasswordException extends Exception{
@@ -158,4 +160,18 @@ public class Exceptions{
             super("End date should be after start date!");
         }
     }
+
+    public static class InvalidProductIdsForASeller extends Exception{
+        ArrayList<String> falseProductIds;
+
+        public InvalidProductIdsForASeller(ArrayList<String> falseProductIds){
+            super("Some of product Ids are not available for you");
+            this.falseProductIds = falseProductIds;
+        }
+
+        public ArrayList<String> getFalseProductIds() {
+            return falseProductIds;
+        }
+    }
+
 }

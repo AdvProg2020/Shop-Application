@@ -1,5 +1,6 @@
 package controller;
 
+import jdk.jfr.Label;
 import model.Discount;
 import model.Product;
 import model.Rating;
@@ -20,18 +21,26 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public ArrayList<String> viewCart() {
-        return showProductsInCart();
-    }
-
-    //Done!! Todo
-    public ArrayList<String> showProductsInCart() {
-        ArrayList<String> shoppingCart = new ArrayList<>();
+    public ArrayList<String[]> getProductsInCart() {
+        ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
-            shoppingCart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getStoreName() + " number in carts: " + subProducts.get(subProduct));
+            shoppingCart.add(productPackInCart(subProduct, subProducts.get(subProduct)));
         }
         return shoppingCart;
+    }
+
+    @Label("For getProductInCart method")
+    private String[] productPackInCart( SubProduct subProduct, int count){
+        String[] productPack = new String[7];
+        productPack[0] = subProduct.getId();
+        productPack[1] = subProduct.getProduct().getName();
+        productPack[2] = subProduct.getProduct().getBrand();
+        productPack[3] = subProduct.getSeller().getUsername();
+        productPack[4] = subProduct.getSeller().getStoreName();
+        productPack[5] = Integer.toString(count);
+        productPack[6] = Double.toString(subProduct.getPriceWithSale()*count);
+        return productPack;
     }
 
     //Done!!
@@ -80,7 +89,7 @@ public class CustomerController extends Controller {
         return currentCart.getTotalPrice();
     }
 
-    //TODO
+    //Done!!
     public boolean isDiscountCodeValid(String code){
         Discount discount = Discount.getDiscountByCode(code);
         if(discount != null)
@@ -91,53 +100,83 @@ public class CustomerController extends Controller {
 
     //TODO
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException {
+        double totalPrice = currentCart.getTotalPrice();
+        if( isDiscountCodeValid(discountCode) ){
+            Discount discount = Discount.getDiscountByCode(discountCode);
 
+        }
     }
 
-    //Done!! TODO
-    public ArrayList<String> viewOrders() throws Exceptions.CustomerLoginException {
+    //Done!!
+
+    /**
+     *
+     * @return ArrayList<String[9]> : { Id, customerUsername,
+     * receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
+     * @throws Exceptions.CustomerLoginException
+     */
+    public ArrayList<String[]> getOrders() throws Exceptions.CustomerLoginException {
         if (currentAccount instanceof Customer) {
-            ArrayList<String> orderIds = new ArrayList<>();
+            ArrayList<String[]> orders = new ArrayList<>();
             for (BuyLog buyLog : ((Customer) currentAccount).getBuyLogs()) {
-                orderIds.add(buyLog.getId());
+                orders.add(getOrderPack(buyLog));
             }
-            return orderIds;
+            return orders;
         } else
             throw new Exceptions.CustomerLoginException();
     }
 
-    //Done!! TODO: change to String[]
-    public ArrayList<ArrayList<String>> showOrder(String orderId) throws Exceptions.InvalidLogIdException {
+    @Label("For showing order methods")
+    private String[] getOrderPack(BuyLog buyLog){
+        String[] orderPack = new String[9];
+        orderPack[0] = buyLog.getId();
+        orderPack[1] = buyLog.getCustomer().getUsername();
+        orderPack[2] = buyLog.getReceiverName();
+        orderPack[3] = buyLog.getReceiverPhone();
+        orderPack[4] = buyLog.getReceiverAddress();
+        orderPack[5] = dateFormat.format(buyLog.getDate());
+        orderPack[6] = buyLog.getShippingStatus().toString();
+        orderPack[7] = Double.toString(buyLog.getPaidMoney());
+        orderPack[8] = Double.toString(buyLog.getTotalDiscountAmount());
+        return orderPack;
+    }
+
+    //Done!!
+
+    /**
+     *
+     * @param orderId
+     * @return { Id, customerUsername, receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
+     *          product pack String[8] : { productId, name, brand, sellerUsername, sellerStoreName, count, }
+     * @throws Exceptions.InvalidLogIdException
+     */
+    public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = BuyLog.getBuyLogById(orderId);
         if (buyLog == null)
             throw new Exceptions.InvalidLogIdException(orderId);
         else {
-            ArrayList<ArrayList<String>> orderInfo = new ArrayList<>();
-            ArrayList<String> infoPack = new ArrayList<>();
-            infoPack.add(orderId);
-            infoPack.add(buyLog.getCustomer().getUsername());
-            infoPack.add(buyLog.getReceiverName());
-            infoPack.add(buyLog.getReceiverPhone());
-            infoPack.add(buyLog.getReceiverAddress());
-            infoPack.add(dateFormat.format(buyLog.getDate()));
-            infoPack.add(buyLog.getShippingStatus().toString());
-            infoPack.add(Double.toString(buyLog.getPaidMoney()));
-            infoPack.add(Double.toString(buyLog.getTotalDiscountAmount()));
-            orderInfo.add(infoPack);
+            ArrayList<String[]> orderInfo = new ArrayList<>();
+            orderInfo.add(getOrderPack(buyLog));
             for (LogItem item : buyLog.getLogItems()) {
-                ArrayList<String> productPack = new ArrayList<>();
-                Product product = item.getSubProduct().getProduct();
-                productPack.add(product.getName());
-                productPack.add(product.getId());
-                productPack.add(item.getSeller().getUsername());
-                productPack.add(item.getSeller().getStoreName());
-                productPack.add(Integer.toString(item.getCount()));
-                productPack.add(Double.toString(item.getPrice() * item.getCount()));
-                productPack.add(Double.toString(item.getSaleAmount()));
-                orderInfo.add(productPack);
+                orderInfo.add(logItemPack(item));
             }
             return orderInfo;
         }
+    }
+
+    @Label("For showing products in an order")
+    private String[] logItemPack(LogItem item){
+        String[] productPack = new String[8];
+        Product product = item.getSubProduct().getProduct();
+        productPack[0] = product.getId();
+        productPack[1] = product.getName();
+        productPack[2] = product.getBrand();
+        productPack[3] = item.getSeller().getUsername();
+        productPack[4] = item.getSeller().getStoreName();
+        productPack[5] = Integer.toString(item.getCount());
+        productPack[6] = Double.toString(item.getPrice() * item.getCount());
+        productPack[7] = Double.toString(item.getSaleAmount());
+        return productPack;
     }
 
     //Done!! Todo: Shayan check please
