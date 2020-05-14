@@ -76,7 +76,7 @@ public class AdminController extends Controller {
 
     //Done!!
     //TODO: percentage double
-    public void createDiscountCode(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) throws Exceptions.ExistingDiscountCodeException {
+    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount) throws Exceptions.ExistingDiscountCodeException {
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
         else
@@ -251,14 +251,14 @@ public class AdminController extends Controller {
                     detailsOfRequest.add(getPersonalInfo(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProduct":
-                    detailsOfRequest.add(getSubProductInfo(SubProduct.getSubProductById(((EditProductRequest) request).getSubProductId())));
+                    detailsOfRequest.add(getSubProductInfo(SubProduct.getSubProductById(((EditProductRequest) request).getSubProduct().getId())));
                     String[] productChange = new String[2];
                     productChange[0] = ((EditProductRequest) request).getField().toString();
                     productChange[1] = ((EditProductRequest) request).getNewValue();
                     detailsOfRequest.add(productChange);
                     break;
                 case "EditSale":
-                    detailsOfRequest.add(getSaleInfo(Sale.getSaleById(((EditSaleRequest) request).getSaleId())));
+                    detailsOfRequest.add(getSaleInfo(Sale.getSaleById(((EditSaleRequest) request).getSale().getId())));
                     String[] saleChange = new String[2];
                     saleChange[0] = ((EditSaleRequest) request).getField().toString();
                     saleChange[1] = ((EditSaleRequest) request).getNewValue();
