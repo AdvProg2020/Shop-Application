@@ -58,5 +58,10 @@ public abstract class Action {
         }
     }
 
+    protected void printSeparator() {
+        System.out.println("-------------------------------\n");
+    }
+
     public abstract void execute(String command);
+
 }

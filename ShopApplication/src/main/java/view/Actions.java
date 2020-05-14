@@ -2,6 +2,7 @@ package view;
 
 import controller.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -77,6 +78,8 @@ public class Actions {
                     //if without problem
                     System.out.println("logged-in successfully!");
                     return;
+                } else {
+                    break;
                 }
             }
         }
@@ -151,7 +154,7 @@ public class Actions {
             try {
                 String lastCategory;
                 if (categoryTree.size() == 0) {
-                    lastCategory = null;
+                    lastCategory = "superCategory";
                 } else {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -396,7 +399,6 @@ public class Actions {
     }
 
     //TODO: remember that filters and sorts are only for products.
-    //TODO: filter and sort for sales.
     //TODO: holy guakamoly.
     public static class ShowOffs extends Action {
         private StringBuilder currentSort;
@@ -448,11 +450,19 @@ public class Actions {
             super(name, Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
         }
 
-
-        //TODO: imp.
         private void showPersonalInfo(String[] info) {
-
-            System.out.println("1. ");
+            System.out.println("1. username: " + info[0]);
+            System.out.println("2. type: " + info[1]);
+            System.out.println("3. first name: " + info[2]);
+            System.out.println("4. last name: " + info[3]);
+            System.out.println("5. email: " + info[4]);
+            System.out.println("6. phone number: " + info[5]);
+            if (info.length > 6) {
+                System.out.println("7. balance: " + info[6]);
+            }
+            if (info.length > 7) {
+                System.out.println("8. store name: " + info[7]);
+            }
         }
 
         @Override
@@ -519,27 +529,16 @@ public class Actions {
         }
     }
 
-    public static class ShowSellerCategories extends Action {
-        ShowSellerCategories(String name) {
-            super(name, Constants.Actions.showSellerCategoriesPattern, Constants.Actions.showSellerCategoriesCommand);
-        }
-
-        //TODO: imp.
-        @Override
-        public void execute(String command) {
-
-        }
-    }
-
     public static class ShowSellerCompanyInfo extends Action {
         ShowSellerCompanyInfo(String name) {
             super(name, Constants.Actions.showSellerCompanyInfoPattern, Constants.Actions.showSellerCompanyInfoCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            ArrayList<String> info = sellerController.viewCompanyInformation();
+            info.forEach(i -> System.out.println(i));
+            printSeparator();
         }
     }
 
@@ -551,7 +550,6 @@ public class Actions {
         //TODO: imp.
         @Override
         public void execute(String command) {
-
         }
     }
 
@@ -646,8 +644,10 @@ public class Actions {
         public void execute(String command) {
             try {
                 mainController.addToCart(subProductID.toString(), 1);
+                System.out.println("added to the cart");
             } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException e) {
                 System.out.println(e.getMessage());
+                System.out.println("please change seller and try again");
                 return;
             }
         }
@@ -662,6 +662,7 @@ public class Actions {
 
 
         //TODO: imp. first show all the subProducts and then index choosing.
+        //TODO: soale 5 koja niaz shd?
         @Override
         public void execute(String command) {
 
@@ -737,10 +738,31 @@ public class Actions {
             super(name, Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
         }
 
-        //TODO: imp.
-        @Override
-        public void execute(String userID) {
+        private void showPersonalInfo(String[] info) {
+            System.out.println("1. username: " + info[0]);
+            System.out.println("2. type: " + info[1]);
+            System.out.println("3. first name: " + info[2]);
+            System.out.println("4. last name: " + info[3]);
+            System.out.println("5. email: " + info[4]);
+            System.out.println("6. phone number: " + info[5]);
+            if (info.length > 6) {
+                System.out.println("7. balance: " + info[6]);
+            }
+            if (info.length > 7) {
+                System.out.println("8. store name: " + info[7]);
+            }
+        }
 
+        @Override
+        public void execute(String username) {
+            try {
+                String[] info = adminController.viewUsername(username);
+                showPersonalInfo(info);
+                printSeparator();
+            } catch (Exceptions.NotExistedUsernameException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 
@@ -749,10 +771,15 @@ public class Actions {
             super(name, Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
         }
 
-        //TODO: imp.
         @Override
-        public void execute(String userID) {
-
+        public void execute(String username) {
+            try {
+                adminController.deleteUsername(username);
+                System.out.println("user removed successfully");
+            } catch (Exceptions.NotExistedUsernameException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
@@ -764,7 +791,7 @@ public class Actions {
         //TODO: imp.
         @Override
         public void execute(String command) {
-
+            //adminController.creatAccount();
         }
     }
 
@@ -773,10 +800,17 @@ public class Actions {
             super(name, Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            try {
+                adminController.removeProduct(productID);
+                System.out.println("product removed successfully");
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
@@ -785,10 +819,22 @@ public class Actions {
             super(name, Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
+            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%[0-100]", Constants.unsignedIntPattern};
+            String[] results;
+            if (Form.createForm(fields, fieldRegex) == 0) {
+                results = Form.getResults();
+                try {
+                    adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
+                            Integer.parseInt(results[3]), Integer.parseInt(results[4]));
+                    System.out.println("discount code created successfully");
+                } catch (Exceptions.ExistingDiscountCodeException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            printSeparator();
         }
     }
 
