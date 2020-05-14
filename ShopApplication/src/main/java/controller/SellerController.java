@@ -135,16 +135,6 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    public String[] getSaleEditableFields() {
-        String[] saleEditableFields = new String[4];
-        saleEditableFields[0] = "start date";
-        saleEditableFields[1] = "end date";
-        saleEditableFields[2] = "percentage";
-        saleEditableFields[3] = "maximum";
-        return saleEditableFields;
-    }
-
-    //Done!!
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
@@ -259,8 +249,18 @@ public class SellerController extends Controller {
     }
 
     //Done!!
+    public String[] getSaleEditableFields() {
+        String[] saleEditableFields = new String[4];
+        saleEditableFields[0] = "start date";
+        saleEditableFields[1] = "end date";
+        saleEditableFields[2] = "percentage";
+        saleEditableFields[3] = "maximum";
+        return saleEditableFields;
+    }
+
+    //Done!!
     public void editSale(String saleId, String field, String newInformation) throws
-            Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException {
+            Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         Sale targetedSale = null;
         for (Sale sale : ((Seller) currentAccount).getSales()) {
             if (sale.getId().equals(saleId)) {
@@ -274,9 +274,11 @@ public class SellerController extends Controller {
             switch (field) {
                 case "start date":
                     try {
-                        if (targetedSale.getEndDate().after(dateFormat.parse(newInformation)))
+                        if (targetedSale.getEndDate().after(dateFormat.parse(newInformation))) {
+                            if (dateFormat.parse(newInformation).equals(targetedSale.getStartDate()))
+                                throw new Exceptions.SameAsPreviousValueException("start date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.START_DATE);
-                        else
+                        }else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
                         throw new Exceptions.InvalidFormatException("date");
@@ -284,18 +286,24 @@ public class SellerController extends Controller {
                     break;
                 case "end date":
                     try {
-                        if (targetedSale.getStartDate().before(dateFormat.parse(newInformation)))
+                        if (targetedSale.getStartDate().before(dateFormat.parse(newInformation))) {
+                            if(dateFormat.parse(newInformation).equals(targetedSale.getEndDate()))
+                                throw new Exceptions.SameAsPreviousValueException("end date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.END_DATE);
-                        else
+                        }else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
                         throw new Exceptions.InvalidFormatException("date");
                     }
                     break;
                 case "percentage":
+                    if(Double.parseDouble(newInformation) == targetedSale.getPercentage())
+                        throw new Exceptions.SameAsPreviousValueException("percentage");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.PERCENTAGE);
                     break;
                 case "maximum":
+                    if(Double.parseDouble(newInformation) == targetedSale.getMaximumAmount())
+                        throw new Exceptions.SameAsPreviousValueException("maximum");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.MAXIMUM);
                     break;
                 default:
