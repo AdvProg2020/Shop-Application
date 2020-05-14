@@ -37,9 +37,8 @@ public class Rating implements Initializable {
 
     @Override
     public void initialize() {
-        if (ratingId == null) {
+        if (ratingId == null)
             ratingId = generateNewId(customerId, productId);
-        }
         allRatings.put(ratingId, this);
         getProduct().addRating(ratingId);
     }

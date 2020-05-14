@@ -39,8 +39,18 @@ public class EditProductRequest extends Request {
         }
     }
 
-    public String getSubProductId() {
-        return subProductId;
+    @Override
+    protected boolean isInvalid() {
+        boolean invalid = (getSubProduct() == null);
+
+        if (invalid)
+            terminate();
+
+        return invalid;
+    }
+
+    public SubProduct getSubProduct() {
+        return SubProduct.getSubProductById(subProductId);
     }
 
     public Field getField() {

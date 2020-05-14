@@ -41,8 +41,18 @@ public class EditSaleRequest extends Request {
         }
     }
 
-    public String getSaleId() {
-        return saleId;
+    @Override
+    protected boolean isInvalid() {
+        boolean invalid = (getSale() == null);
+
+        if (invalid)
+            terminate();
+
+        return invalid;
+    }
+
+    public Sale getSale() {
+        return Sale.getSaleById(saleId);
     }
 
     public Field getField() {

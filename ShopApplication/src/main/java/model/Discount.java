@@ -31,25 +31,21 @@ public class Discount implements Initializable {
         return null;
     }
 
-    public static List<Discount> getAllDiscounts() {
-        return getAllDiscounts(true);
-    }
+    public static List<Discount> getAllDiscounts(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static List<Discount> getAllDiscounts(boolean checkSuspense) {
         List<Discount> discounts = new ArrayList<>(allDiscounts.values());
         if (checkSuspense)
-            discounts.removeIf(product -> product.suspended);
+            discounts.removeIf(Discount::isInactive);
 
         return discounts;
     }
 
-    public static Discount getDiscountById(String discountId) {
-        return getDiscountById(discountId, true);
-    }
+    public static Discount getDiscountById(String discountId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static Discount getDiscountById(String discountId, boolean checkSuspense) {
         Discount discount = allDiscounts.get(discountId);
-        if (checkSuspense && discount != null && discount.suspended)
+        if (checkSuspense && discount != null && discount.isInactive())
             discount = null;
 
         return discount;
@@ -57,7 +53,7 @@ public class Discount implements Initializable {
 
     public static Discount getDiscountByCode(String discountCode) {
         for (Discount discount : allDiscounts.values()) {
-            if (!discount.suspended && discount.getDiscountCode().equals(discountCode))
+            if (!discount.isInactive() && discount.getDiscountCode().equals(discountCode))
                 return discount;
         }
 
@@ -70,9 +66,8 @@ public class Discount implements Initializable {
             discountId = generateNewId();
         allDiscounts.put(discountId, this);
         if (!suspended) {
-            for (Map.Entry<String, Integer> entry : customerIds.entrySet()) {
-                Customer customer = Customer.getCustomerById(entry.getKey());
-                customer.addDiscount(discountId, entry.getValue());
+            for (Map.Entry<Customer, Integer> entry : getCustomers().entrySet()) {
+                entry.getKey().addDiscount(discountId, entry.getValue());
             }
         }
     }
@@ -83,6 +78,14 @@ public class Discount implements Initializable {
         }
         customerIds = null;
         suspended = true;
+    }
+
+    private boolean isInactive() {
+        Date now = new Date();
+        if (now.after(endDate))
+            suspend();
+
+        return !(suspended || now.before(startDate));
     }
 
     public String getId() {

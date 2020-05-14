@@ -39,9 +39,8 @@ public class SellLog implements Initializable {
 
     @Override
     public void initialize() {
-        if (sellLogId == null) {
+        if (sellLogId == null)
             sellLogId = generateNewId(sellerId);
-        }
         allSellLogs.put(sellLogId, this);
         logItemIds = new ArrayList<>();
         getSeller().addSellLog(sellLogId);

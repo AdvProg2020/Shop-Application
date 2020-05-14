@@ -16,6 +16,11 @@ public class AddSellerRequest extends Request {
         seller.initialize();
     }
 
+    @Override
+    protected boolean isInvalid() {
+        return false;
+    }
+
     public Seller getSeller() {
         return seller;
     }

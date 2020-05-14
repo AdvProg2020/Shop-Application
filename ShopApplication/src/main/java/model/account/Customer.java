@@ -21,11 +21,8 @@ public class Customer extends Account {
         initialize();
     }
 
-    public static Customer getCustomerById(String accountId) {
-        return (Customer) getAccountById(accountId, true);
-    }
-
-    public static Customer getCustomerById(String accountId, boolean checkSuspense) {
+    public static Customer getCustomerById(String accountId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
         return (Customer) getAccountById(accountId, checkSuspense);
     }
 

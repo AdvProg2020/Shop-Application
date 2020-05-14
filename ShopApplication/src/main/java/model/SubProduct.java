@@ -34,11 +34,9 @@ public class SubProduct implements Initializable {
         return null;
     }
 
-    public static List<SubProduct> getAllSubProducts() {
-        return getAllSubProducts(true);
-    }
+    public static List<SubProduct> getAllSubProducts(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static List<SubProduct> getAllSubProducts(boolean checkSuspense) {
         List<SubProduct> subProducts = new ArrayList<>(allSubProducts.values());
         if (checkSuspense)
             subProducts.removeIf(subProduct -> subProduct.suspended);
@@ -46,11 +44,9 @@ public class SubProduct implements Initializable {
         return subProducts;
     }
 
-    public static SubProduct getSubProductById(String subProductId) {
-        return getSubProductById(subProductId, true);
-    }
+    public static SubProduct getSubProductById(String subProductId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static SubProduct getSubProductById(String subProductId, boolean checkSuspense) {
         SubProduct subProduct = allSubProducts.get(subProductId);
         if (checkSuspense && subProduct != null && subProduct.suspended)
             subProduct = null;
@@ -82,8 +78,9 @@ public class SubProduct implements Initializable {
         return subProductId;
     }
 
-    public Product getProduct() {
-        return Product.getProductById(productId, false);
+    public Product getProduct(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
+        return Product.getProductById(productId, checkSuspense);
     }
 
 
@@ -93,8 +90,9 @@ public class SubProduct implements Initializable {
             this.productId = productId;
     }
 
-    public Seller getSeller() {
-        return Seller.getSellerById(sellerId, false);
+    public Seller getSeller(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
+        return Seller.getSellerById(sellerId, checkSuspense);
     }
 
     public Sale getSale() {
@@ -117,7 +115,7 @@ public class SubProduct implements Initializable {
     }
 
     public double getPriceWithSale() {
-        if (saleId == null)
+        if (getSale() == null)
             return price;
 
         double saleAmount = price * getSale().getPercentage() / 100;
