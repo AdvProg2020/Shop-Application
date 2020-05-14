@@ -843,16 +843,39 @@ public class Actions {
             super(name, Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
         }
 
-        //TODO: imp.
+        private void showDiscountCode(String[] info) {
+            System.out.println("1. discount code: " + info[0]);
+            System.out.println("2. start date: " + info[1]);
+            System.out.println("3. end date: " + info[2]);
+            System.out.println("4. maximum amount of use: " + info[3]);
+            System.out.println("5. discount percentage: " + info[4]);
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String discountCode = commandMatcher.group(1);
+            try {
+                String[] info = adminController.viewDiscountCode(discountCode);
+                showDiscountCode(info);
+            } catch (Exceptions.DiscountCodeException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
     public static class AdminEditDiscountCode extends Action {
-        AdminEditDiscountCode(String name) {
+        private String[] editableFields;
+        AdminEditDiscountCode(String name, String[] editableFields) {
             super(name, Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
+            this.editableFields = editableFields;
+        }
+
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
         }
 
         //TODO: imp.
@@ -912,8 +935,16 @@ public class Actions {
     }
 
     public static class AdminEditCategory extends Action {
-        AdminEditCategory(String name) {
+        private String[] editableFields;
+        AdminEditCategory(String name, String[] editableFields) {
             super(name, Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
+            this.editableFields = editableFields;
+        }
+
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
         }
 
         //TODO: imp.
@@ -970,8 +1001,16 @@ public class Actions {
     }
 
     public static class SellerEditSale extends Action {
-        SellerEditSale(String name) {
+        private String[] editableFields;
+        SellerEditSale(String name, String[] editableFields) {
             super(name, Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
+            this.editableFields = editableFields;
+        }
+
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
         }
 
         @Override
@@ -1024,8 +1063,16 @@ public class Actions {
     }
 
     public static class SellerEditProduct extends Action {
-        SellerEditProduct(String name) {
+        private String[] editableFields;
+        SellerEditProduct(String name, String[] editableFields) {
             super(name, Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
+            this.editableFields = editableFields;
+        }
+
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
         }
 
         @Override
