@@ -147,7 +147,7 @@ class Constants {
         static final String adminShowCategoriesCommand = "show categories";
         static final String adminShowCategoriesPattern = caseInsensitiveMode + "^" + adminShowCategoriesCommand + "$";
         //minor modification cuz of showing dilemma.
-        static final String adminEditCategoryCommand = "edit [categoryIndex]";
+        static final String adminEditCategoryCommand = "edit [categoryName]";
         static final String adminEditCategoryPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
         static final String adminAddCategoryCommand = "add [categoryName]";
         static final String adminAddCategoryPattern = caseInsensitiveMode + "^add " + argumentPattern + "$";
