@@ -1,14 +1,17 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Form {
     private static String[] fields;
     private static String[] fieldRegex;
     private static String[] results;
 
-    public static int createForm(String[] fields, String[] fieldRegex, String[] results) {
-        Form.fields = fields;
-        Form.fieldRegex = fieldRegex;
-        Form.results = results;
+    public static int createForm(String[] fields, String[] fieldRegex) {
+        Form.fields = fields.clone();
+        Form.fieldRegex = fieldRegex.clone();
+        Form.results = results.clone();
         return inputField(0);
     }
 
@@ -20,13 +23,20 @@ public class Form {
                 return -1;
             } else if (response.matches(fieldRegex[currIndex])) {
                 results[currIndex] = response;
-                if (inputField(currIndex + 1) == 0) {
+                if (inputField(currIndex + 1) == 0 || currIndex == fields.length - 1) {
                     return 0;
-                } else {continue;}
+                }
             } else {
                 System.out.println("invalid entry.");
-                continue;
             }
         }
+    }
+
+    public static String[] getResults() {
+        fields = null;
+        fieldRegex = null;
+        String[] tmp = Arrays.copyOf(results, results.length);
+        results = null;
+        return tmp;
     }
 }

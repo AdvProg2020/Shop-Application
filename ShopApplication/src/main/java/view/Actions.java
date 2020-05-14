@@ -2,6 +2,7 @@ package view;
 
 import controller.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -818,10 +819,22 @@ public class Actions {
             super(name, Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-            adminController.createDiscountCode();
+            String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
+            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%[0-100]", Constants.unsignedIntPattern};
+            String[] results;
+            if (Form.createForm(fields, fieldRegex) == 0) {
+                results = Form.getResults();
+                try {
+                    adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
+                            Integer.parseInt(results[3]), Integer.parseInt(results[4]));
+                    System.out.println("discount code created successfully");
+                } catch (Exceptions.ExistingDiscountCodeException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            printSeparator();
         }
     }
 
