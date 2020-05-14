@@ -32,25 +32,21 @@ public class Sale implements Initializable {
         return null;
     }
 
-    public static List<Sale> getAllSales() {
-        return getAllSales(true);
-    }
+    public static List<Sale> getAllSales(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static List<Sale> getAllSales(boolean checkSuspense) {
         List<Sale> sales = new ArrayList<>(allSales.values());
         if (checkSuspense)
-            sales.removeIf(sale -> sale.suspended);
+            sales.removeIf(Sale::isInactive);
 
         return sales;
     }
 
-    public static Sale getSaleById(String saleId) {
-        return getSaleById(saleId, true);
-    }
+    public static Sale getSaleById(String saleId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static Sale getSaleById(String saleId, boolean checkSuspense) {
         Sale sale = allSales.get(saleId);
-        if (checkSuspense && sale != null && sale.suspended)
+        if (checkSuspense && sale != null && sale.isInactive())
             sale = null;
 
         return sale;
@@ -62,8 +58,7 @@ public class Sale implements Initializable {
             saleId = getNewId(sellerId);
         allSales.put(saleId, this);
         if (!suspended) {
-            for (String subProductId : subProductIds) {
-                SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+            for (SubProduct subProduct : getSubProducts()) {
                 subProduct.setSale(saleId);
             }
             getSeller().addSale(saleId);
@@ -79,12 +74,21 @@ public class Sale implements Initializable {
         suspended = true;
     }
 
+    private boolean isInactive() {
+        Date now = new Date();
+        if (now.after(endDate))
+            suspend();
+
+        return suspended || now.before(startDate);
+    }
+
     public String getId() {
         return saleId;
     }
 
-    public Seller getSeller() {
-        return Seller.getSellerById(sellerId, false);
+    public Seller getSeller(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
+        return Seller.getSellerById(sellerId, checkSuspense);
     }
 
     public Date getStartDate() {
@@ -121,6 +125,7 @@ public class Sale implements Initializable {
 
     public List<SubProduct> getSubProducts() {
         List<SubProduct> subProducts = new ArrayList<>();
+        subProductIds.removeIf(subProductId -> SubProduct.getSubProductById(subProductId) == null);
         for (String subProductId : subProductIds) {
             subProducts.add(SubProduct.getSubProductById(subProductId));
         }

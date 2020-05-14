@@ -23,6 +23,20 @@ public class AddProductRequest extends Request {
         subProduct.initialize();
     }
 
+    @Override
+    protected boolean isInvalid() {
+        boolean invalid;
+        if (product != null)
+            invalid = (product.getCategory() == null);
+        else
+            invalid = (subProduct.getProduct() == null || subProduct.getSeller() == null);
+
+        if (invalid)
+            terminate();
+
+        return invalid;
+    }
+
     public Product getProduct() {
         return product;
     }

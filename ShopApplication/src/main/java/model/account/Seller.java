@@ -27,12 +27,8 @@ public class Seller extends Account {
         new AddSellerRequest(this);
     }
 
-    public static Seller getSellerById(String accountId) {
-        return (Seller) getAccountById(accountId, true);
-
-    }
-
-    public static Seller getSellerById(String accountId, boolean checkSuspense) {
+    public static Seller getSellerById(String accountId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
         return (Seller) getAccountById(accountId, checkSuspense);
     }
 

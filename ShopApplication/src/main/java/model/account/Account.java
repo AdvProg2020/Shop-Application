@@ -33,11 +33,9 @@ public abstract class Account implements Initializable {
         return null;
     }
 
-    public static List<Account> getAllAccounts() {
-        return getAllAccounts(true);
-    }
+    public static List<Account> getAllAccounts(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static List<Account> getAllAccounts(boolean checkSuspense) {
         List<Account> accounts = new ArrayList<>(allAccounts.values());
         if (checkSuspense)
             accounts.removeIf(account -> account.suspended);
@@ -45,11 +43,9 @@ public abstract class Account implements Initializable {
         return accounts;
     }
 
-    public static Account getAccountById(String accountId) {
-        return getAccountById(accountId, true);
-    }
+    public static Account getAccountById(String accountId, boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-    public static Account getAccountById(String accountId, boolean checkSuspense) {
         if (accountId.equals(Admin.MANAGER_ID))
             return Admin.manager;
 

@@ -22,18 +22,25 @@ public abstract class Request implements Initializable {
     }
 
     public static List<Request> getAllRequests() {
-        return new ArrayList<>(allRequests.values());
+        List<Request> requests = new ArrayList<>(allRequests.values());
+        requests.removeIf(Request::isInvalid);
+
+        return requests;
     }
 
     public static Request getRequestById(String requestId) {
-        return allRequests.get(requestId);
+        Request request = allRequests.get(requestId);
+        if (request != null && request.isInvalid())
+            return null;
+
+        return request;
+
     }
 
     @Override
     public void initialize() {
-        if (requestId == null) {
+        if (requestId == null)
             requestId = generateNewId();
-        }
         allRequests.put(requestId, this);
     }
 
@@ -55,6 +62,12 @@ public abstract class Request implements Initializable {
 
     public void decline() {
         status = RequestStatus.DECLINED;
+    }
+
+    protected abstract boolean isInvalid();
+
+    protected void terminate() {
+        allRequests.remove(requestId);
     }
 
 }

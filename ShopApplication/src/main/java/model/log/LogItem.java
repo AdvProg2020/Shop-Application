@@ -45,9 +45,8 @@ public class LogItem implements Initializable {
 
     @Override
     public void initialize() {
-        if (logItemId == null) {
+        if (logItemId == null)
             logItemId = generateNewId(subProductId);
-        }
         allLogItems.put(logItemId, this);
         getBuyLog().addLogItem(logItemId);
         getSellLog().addLogItem(logItemId);
