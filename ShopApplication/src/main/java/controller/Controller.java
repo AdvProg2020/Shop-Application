@@ -233,6 +233,7 @@ public class Controller {
      * @return String[2]: ID, name
      * @throws Exceptions.InvalidCategoryException
      */
+    //Todo: child ham befrest
     public ArrayList<String[]> getProductsOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)
@@ -460,7 +461,7 @@ public class Controller {
     }
 
     //Done!!
-    protected void editCommonInformation(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    protected void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
                 if(currentAccount.getFirstName().equals(newInformation))

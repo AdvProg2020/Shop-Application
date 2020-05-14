@@ -17,13 +17,14 @@ import java.util.ArrayList;
 public class SellerController extends Controller {
 
     //Done!!
-    public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    @Override
+    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         if (field.equals("storeName")) {
             if (((Seller) currentAccount).getStoreName().equals(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(field);
             ((Seller) currentAccount).setStoreName(newInformation);
         }else
-            editCommonInformation(field, newInformation);
+            super.editPersonalInfo(field, newInformation);
     }
 
     //Done!! any thing other storeName?
@@ -95,8 +96,42 @@ public class SellerController extends Controller {
         throw new Exceptions.InvalidProductIdException(productID);
     }
 
+    //Done!!
+    public String[] getProductEditableFields(){
+        String[] editableFields = new String[5];
+        editableFields[0] = "name";
+        editableFields[1] = "brand";
+        editableFields[2] = "info text";
+        editableFields[3] = "price";
+        editableFields[4] = "count";
+        return editableFields;
+    }
+
     //Todo
-    public void editProduct(String productID, String field, String newInformation) {
+    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException {
+        SubProduct targetedSubProduct = null;
+        for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
+            if(subProduct.getProduct().getId().equals(productID)) {
+                targetedSubProduct = subProduct;
+                break;
+            }
+        }
+        if(targetedSubProduct == null)
+            throw new Exceptions.InvalidProductIdException(productID);
+        else {
+            EditProductRequest.Field fieldToEdit = null;
+            if(field.equals("name"))
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+            else if(field.equals("brand"))
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+            else if(field.equals(""))
+            new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+            else if(field.equals("name"))
+            new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+            else if(field.equals("name"))
+            new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+        }
+            new EditProductRequest(targetedSubProduct.getId(), , newInformation)
     }
 
     //Done!!

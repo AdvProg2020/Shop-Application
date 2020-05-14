@@ -56,7 +56,7 @@ public class EditProductRequest extends Request {
         return newValue;
     }
 
-    //TODO: count
+    //TODO: count, delete category it is hard to handle
     public enum Field {
         NAME,
         BRAND,
