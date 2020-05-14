@@ -151,7 +151,7 @@ class Constants {
         static final String adminEditCategoryPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
         static final String adminAddCategoryCommand = "add [categoryName]";
         static final String adminAddCategoryPattern = caseInsensitiveMode + "^add " + argumentPattern + "$";
-        static final String adminRemoveCategoryCommand = "remove [categoryIndex]";
+        static final String adminRemoveCategoryCommand = "remove [categoryName]";
         static final String adminRemoveCategoryPattern = caseInsensitiveMode + "^remove " + argumentPattern +"$";
         //seller account menu actions.
         static final String sellerShowSalesCommand = "view sales";

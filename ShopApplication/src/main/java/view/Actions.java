@@ -1072,10 +1072,15 @@ public class Actions {
             super(name, Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String categoryName = commandMatcher.group(1);
+            try {
+                adminController.removeCategory(categoryName);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
