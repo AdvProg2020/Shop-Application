@@ -1,5 +1,6 @@
 package controller;
 
+import jdk.jfr.Label;
 import model.Category;
 import model.Product;
 import model.Sale;
@@ -37,23 +38,55 @@ public class SellerController extends Controller {
         return companyInformation;
     }
 
-    //Done!!
-    public ArrayList<ArrayList<String>> viewSellHistory() {
-        ArrayList<ArrayList<String>> sells = new ArrayList<>();
+    public ArrayList<String[]> getAllSellLogs(){
+        ArrayList<String[]> allSells = new ArrayList<>();
         for (SellLog sellLog : ((Seller) currentAccount).getSellLogs()) {
-            ArrayList<String> sellPack = new ArrayList<>();
-            sellPack.add(sellLog.getId());
-            sellPack.add(dateFormat.format(sellLog.getDate()));
-            sellPack.add(sellLog.getCustomer().getUsername());
-            sellPack.add(Double.toString(sellLog.getReceivedMoney()));
-            sellPack.add(Double.toString(sellLog.getTotalSaleAmount()));
-            for (LogItem logItem : sellLog.getLogItems()) {
-                sellPack.add(logItem.getSubProduct().getId());
-                sellPack.add(Integer.toString(logItem.getCount()));
-            }
-            sells.add(sellPack);
+            allSells.add(sellPack(sellLog));
         }
-        return sells;
+        return allSells;
+    }
+
+    //Done!!
+    public ArrayList<String[]> getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException {
+        SellLog sellLog = null;
+        for (SellLog log : ((Seller) currentAccount).getSellLogs()) {
+            if( log.getId().equals(logId))
+                sellLog = log;
+        }
+        if( sellLog == null)
+            throw new Exceptions.InvalidLogIdException(logId);
+        else{
+            ArrayList<String[]> logInfo = new ArrayList<>();
+            logInfo.add(sellPack(sellLog));
+            for (LogItem item : sellLog.getLogItems()) {
+                logInfo.add(logItemPack(item));
+            }
+            return logInfo;
+        }
+    }
+
+    @Label("For showing-sellLog-methods")
+    private String[] sellPack(SellLog sellLog){
+        String[] sellPack = new String[5];
+        sellPack[0] = sellLog.getId();
+        sellPack[1] = dateFormat.format(sellLog.getDate());
+        sellPack[2] = sellLog.getCustomer().getUsername();
+        sellPack[3] = Double.toString(sellLog.getReceivedMoney());
+        sellPack[4] = Double.toString(sellLog.getTotalSaleAmount());
+        return sellPack;
+    }
+
+    @Label("For showing a product in a sellLog")
+    private String[] logItemPack(LogItem item){
+        String[] productPack = new String[8];
+        Product product = Product.getProductById(item.getSubProduct().getProductId(), false);
+        productPack[0] = product.getId();
+        productPack[1] = product.getName();
+        productPack[2] = product.getBrand();
+        productPack[3] = Integer.toString(item.getCount());
+        productPack[4] = Double.toString(item.getPrice());
+        productPack[5] = Double.toString(item.getSaleAmount());
+        return productPack;
     }
 
     //Done!!

@@ -119,15 +119,41 @@ public class CustomerController extends Controller {
         if (currentAccount instanceof Customer) {
             ArrayList<String[]> orders = new ArrayList<>();
             for (BuyLog buyLog : ((Customer) currentAccount).getBuyLogs()) {
-                orders.add(getOrderPack(buyLog));
+                orders.add(orderPack(buyLog));
             }
             return orders;
         } else
             throw new Exceptions.CustomerLoginException();
     }
+    //Done!!
+
+    /**
+     *
+     * @param orderId
+     * @return { Id, customerUsername, receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
+     *          product pack String[8] : { productId, name, brand, sellerUsername, sellerStoreName, count,  }
+     * @throws Exceptions.InvalidLogIdException
+     */
+    public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = null;
+        for (BuyLog log : ((Customer) currentAccount).getBuyLogs()) {
+            if(log.getId().equals(orderId))
+                buyLog = log;
+        }
+        if (buyLog == null)
+            throw new Exceptions.InvalidLogIdException(orderId);
+        else {
+            ArrayList<String[]> orderInfo = new ArrayList<>();
+            orderInfo.add(orderPack(buyLog));
+            for (LogItem item : buyLog.getLogItems()) {
+                orderInfo.add(logItemPack(item));
+            }
+            return orderInfo;
+        }
+    }
 
     @Label("For showing order methods")
-    private String[] getOrderPack(BuyLog buyLog){
+    private String[] orderPack(BuyLog buyLog){
         String[] orderPack = new String[9];
         orderPack[0] = buyLog.getId();
         orderPack[1] = buyLog.getCustomer().getUsername();
@@ -141,40 +167,17 @@ public class CustomerController extends Controller {
         return orderPack;
     }
 
-    //Done!!
-
-    /**
-     *
-     * @param orderId
-     * @return { Id, customerUsername, receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
-     *          product pack String[8] : { productId, name, brand, sellerUsername, sellerStoreName, count, }
-     * @throws Exceptions.InvalidLogIdException
-     */
-    public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException {
-        BuyLog buyLog = BuyLog.getBuyLogById(orderId);
-        if (buyLog == null)
-            throw new Exceptions.InvalidLogIdException(orderId);
-        else {
-            ArrayList<String[]> orderInfo = new ArrayList<>();
-            orderInfo.add(getOrderPack(buyLog));
-            for (LogItem item : buyLog.getLogItems()) {
-                orderInfo.add(logItemPack(item));
-            }
-            return orderInfo;
-        }
-    }
-
     @Label("For showing products in an order")
     private String[] logItemPack(LogItem item){
         String[] productPack = new String[8];
-        Product product = item.getSubProduct().getProduct();
+        Product product = Product.getProductById(item.getSubProduct().getProductId(), false);
         productPack[0] = product.getId();
         productPack[1] = product.getName();
         productPack[2] = product.getBrand();
         productPack[3] = item.getSeller().getUsername();
         productPack[4] = item.getSeller().getStoreName();
         productPack[5] = Integer.toString(item.getCount());
-        productPack[6] = Double.toString(item.getPrice() * item.getCount());
+        productPack[6] = Double.toString(item.getPrice());
         productPack[7] = Double.toString(item.getSaleAmount());
         return productPack;
     }
