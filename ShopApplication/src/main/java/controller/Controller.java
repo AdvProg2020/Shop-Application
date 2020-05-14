@@ -238,7 +238,7 @@ public class Controller {
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else
-            return productToIdName(category.getProducts());
+            return productToIdName(new ArrayList<>(category.getProducts()));
     }
 
     //Done!!

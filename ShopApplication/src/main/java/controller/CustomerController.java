@@ -9,6 +9,7 @@ import model.log.BuyLog;
 import model.log.LogItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CustomerController extends Controller {
@@ -23,14 +24,14 @@ public class CustomerController extends Controller {
         return showProductsInCart();
     }
 
-    //Done!!
+    //Done!! Todo
     public ArrayList<String> showProductsInCart() {
-        ArrayList<String> cart = new ArrayList<>();
+        ArrayList<String> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
-            cart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getStoreName() + " number in carts: " + subProducts.get(subProduct));
+            shoppingCart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getStoreName() + " number in carts: " + subProducts.get(subProduct));
         }
-        return cart;
+        return shoppingCart;
     }
 
     //Done!!
@@ -76,19 +77,24 @@ public class CustomerController extends Controller {
 
     //Done!!
     public double getTotalPriceOfCart() {
-        Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
-        double totalSum = 0;
-        for (SubProduct subProduct : subProductsInCart.keySet()) {
-            totalSum += subProduct.getPriceWithSale() * subProductsInCart.get(subProduct);
-        }
-        return totalSum;
+        return currentCart.getTotalPrice();
     }
 
     //TODO
-    public void purchaseTheCart() throws Exceptions.InsufficientCreditException {
+    public boolean isDiscountCodeValid(String code){
+        Discount discount = Discount.getDiscountByCode(code);
+        if(discount != null)
+            return discount.hasCustomerWithId(currentAccount.getId());
+        else
+            return false;
     }
 
-    //Done!!
+    //TODO
+    public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException {
+
+    }
+
+    //Done!! TODO
     public ArrayList<String> viewOrders() throws Exceptions.CustomerLoginException {
         if (currentAccount instanceof Customer) {
             ArrayList<String> orderIds = new ArrayList<>();

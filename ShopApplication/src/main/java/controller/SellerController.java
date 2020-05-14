@@ -68,11 +68,6 @@ public class SellerController extends Controller {
         return products;
     }
 
-    //Not necessary
-    public ArrayList<String> viewProductsForASeller(String categoryName) {
-        return null;
-    }
-
     //Done!!
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
@@ -173,7 +168,7 @@ public class SellerController extends Controller {
      * else it returns null
      */
     public String exist(String productName, String brand) {
-        Product product = Product.getProductsByNameAndBrand(productName, brand);
+        Product product = Product.getProductByNameAndBrand(productName, brand);
         if (product != null)
             return product.getId();
         else
@@ -184,7 +179,7 @@ public class SellerController extends Controller {
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException {
         Product product;
-        if ((product = Product.getProductsByNameAndBrand(name, brand)) != null)
+        if ((product = Product.getProductByNameAndBrand(name, brand)) != null)
             throw new Exceptions.ExistingProductException(product.getId());
         else {
             Category category;
@@ -281,7 +276,12 @@ public class SellerController extends Controller {
     }
 
     //Todo: check dates
-    public void addSale(ArrayList<String> saleInformation) {
+    public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException {
+        if( startDate.before(endDate)) {
+            Sale sale = new Sale(((Seller) currentAccount).getId(), startDate, endDate, percentage, maximum);
+            //TODO: add products and return exception
+        }else
+            throw new Exceptions.InvalidDateException();
     }
 
     //Done!
