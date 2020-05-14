@@ -84,7 +84,7 @@ public class Sale implements Initializable {
     }
 
     public Seller getSeller() {
-        return Seller.getSellerById(sellerId);
+        return Seller.getSellerById(sellerId, false);
     }
 
     public Date getStartDate() {

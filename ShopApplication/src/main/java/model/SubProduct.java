@@ -63,8 +63,8 @@ public class SubProduct implements Initializable {
         if (subProductId == null)
             subProductId = generateNewId(productId, sellerId);
         allSubProducts.put(subProductId, this);
+        customerIds = new HashSet<>();
         if (!suspended) {
-            customerIds = new HashSet<>();
             getSeller().addSubProduct(subProductId);
             getProduct().addSubProduct(subProductId);
         }
@@ -73,9 +73,8 @@ public class SubProduct implements Initializable {
     public void suspend() {
         getSeller().removeSubProduct(subProductId);
         getProduct().removeSubProduct(subProductId);
-        Cart.updateSubProducts();
         setSale(null);
-        customerIds = null;
+        Cart.updateSubProducts();
         suspended = true;
     }
 
@@ -84,8 +83,9 @@ public class SubProduct implements Initializable {
     }
 
     public Product getProduct() {
-        return Product.getProductById(productId);
+        return Product.getProductById(productId, false);
     }
+
 
     @Label("Model internal use only!")
     public void setProductId(String productId) { // only used for accepting productRequest
@@ -94,7 +94,7 @@ public class SubProduct implements Initializable {
     }
 
     public Seller getSeller() {
-        return Seller.getSellerById(sellerId);
+        return Seller.getSellerById(sellerId, false);
     }
 
     public Sale getSale() {
@@ -117,6 +117,9 @@ public class SubProduct implements Initializable {
     }
 
     public double getPriceWithSale() {
+        if (saleId == null)
+            return price;
+
         double saleAmount = price * getSale().getPercentage() / 100;
         double maximumAmount = getSale().getMaximumAmount();
         if (saleAmount > maximumAmount)
