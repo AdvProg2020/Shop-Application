@@ -125,6 +125,14 @@ public class Discount implements Initializable {
         this.maximumAmount = maximumAmount;
     }
 
+    public double calculateDiscountAmount(double price) {
+        double discountAmount = price * percentage / 100;
+        if (discountAmount > maximumAmount)
+            discountAmount = maximumAmount;
+
+        return discountAmount;
+    }
+
     public Map<Customer, Integer> getCustomers() {
         Map<Customer, Integer> customers = new HashMap<>();
         for (Map.Entry<String, Integer> entry : customerIds.entrySet()) {

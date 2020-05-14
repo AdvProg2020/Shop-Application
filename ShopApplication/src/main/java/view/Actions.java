@@ -2,6 +2,7 @@ package view;
 
 import controller.*;
 
+import javax.swing.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -501,6 +502,7 @@ public class Actions {
                     } else {
                         adminController.editPersonalInfo(editableFields[fieldIndex], response);
                     }
+                    return 0;
                 } catch (Exceptions.InvalidFieldException e) {
                     //wont happen.
                     System.out.println(e.getMessage());
@@ -513,11 +515,11 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            showEditableFields();
             while(true) {
+                showEditableFields();
                 System.out.println("enter the field to edit (index):");
                 String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+")) {
+                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
                     if (editField(Integer.parseInt(response)) == -1) {continue;}
                 } else if (response.equalsIgnoreCase("back")) {
                     return;
@@ -843,22 +845,79 @@ public class Actions {
             super(name, Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
         }
 
-        //TODO: imp.
+        private void showDiscountCode(String[] info) {
+            System.out.println("1. discount code: " + info[0]);
+            System.out.println("2. start date: " + info[1]);
+            System.out.println("3. end date: " + info[2]);
+            System.out.println("4. maximum amount of use: " + info[3]);
+            System.out.println("5. discount percentage: " + info[4]);
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String discountCode = commandMatcher.group(1);
+            try {
+                String[] info = adminController.viewDiscountCode(discountCode);
+                showDiscountCode(info);
+            } catch (Exceptions.DiscountCodeException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
     public static class AdminEditDiscountCode extends Action {
-        AdminEditDiscountCode(String name) {
+        private String[] editableFields;
+        AdminEditDiscountCode(String name, String[] editableFields) {
             super(name, Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
+            this.editableFields = editableFields;
+        }
+
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
+        }
+
+        private int editField(int fieldIndex, String discountCode) {
+            String response;
+            while(true) {
+                System.out.println("enter new info");
+                response = View.getNextLineTrimmed();
+                if (response.equalsIgnoreCase("back")) {return -1;}
+                try {
+                    adminController.editDiscountCode(discountCode, editableFields[fieldIndex], response);
+                    return 0;
+                } catch (Exceptions.DiscountCodeException | Exceptions.InvalidFormatException e) {
+                    //wont happen.
+                    System.out.println(e.getMessage());
+                    return -1;
+                } catch (Exceptions.SameAsPreviousValueException e) {
+                    System.out.println("new value cant be the same as previous!");
+                    continue;
+                }
+            }
         }
 
         //TODO: imp.
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String discountCode = commandMatcher.group(1);
+            while (true) {
+                showEditableFields();
+                System.out.println("enter the field to edit (index):");
+                String response = View.getNextLineTrimmed();
+                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                    if (editField(Integer.parseInt(response), discountCode) == -1) {continue;}
+                } else if (response.equalsIgnoreCase("back")) {
+                    return;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
         }
     }
 
@@ -912,14 +971,55 @@ public class Actions {
     }
 
     public static class AdminEditCategory extends Action {
-        AdminEditCategory(String name) {
+        private String[] editableFields;
+        AdminEditCategory(String name, String[] editableFields) {
             super(name, Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
+            this.editableFields = editableFields;
         }
 
-        //TODO: imp.
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
+        }
+
+        private int editField(int fieldIndex, String categoryName) {
+            String response;
+            while(true) {
+                System.out.println("enter new info");
+                response = View.getNextLineTrimmed();
+                if (response.equalsIgnoreCase("back")) {return -1;}
+                try {
+                    adminController.editCategory(categoryName, editableFields[fieldIndex], response);
+                    return 0;
+                } catch (Exceptions.InvalidCategoryException | Exceptions.InvalidFieldException
+                        | Exceptions.ExistedCategoryException | Exceptions.SubCategoryException e) {
+                    System.out.println(e.getMessage());
+                    return -1;
+                } catch (Exceptions.SameAsPreviousValueException e) {
+                    System.out.println("new value cant be the same as previous!");
+                    continue;
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String categoryName = commandMatcher.group(1);
+            while (true) {
+                showEditableFields();
+                System.out.println("enter the field to edit (index):");
+                String response = View.getNextLineTrimmed();
+                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                    if (editField(Integer.parseInt(response), categoryName) == -1) {continue;}
+                } else if (response.equalsIgnoreCase("back")) {
+                    return;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
         }
     }
 
@@ -928,10 +1028,42 @@ public class Actions {
             super(name, Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
         }
 
-        //TODO: imp.
+        private int inputParent(ArrayList<String> specialProperties) {
+            while(true) {
+                System.out.print("enter special property (enter \"back\" to go back or \"exit\" to exit):\n" + (specialProperties.size() + 1) + ". ");
+                String input = View.getNextLineTrimmed();
+                if (input.equalsIgnoreCase("back")) {
+                    if (specialProperties.size() == 0) {return -1;}
+                    else {
+                        specialProperties.remove(specialProperties.size() - 1);
+                        continue;
+                    }
+                } else if (input.equalsIgnoreCase("exit")){
+                    return 0;
+                } else {
+                    specialProperties.add(input);
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String categoryName = commandMatcher.group(1);
+            String parentCategory;
+            ArrayList<String> specialProperties = new ArrayList<>();
+            while(true) {
+                System.out.println("enter parent category (enter \"root\" for no parent):");
+                 parentCategory = View.getNextLineTrimmed();
+                 if (parentCategory.equalsIgnoreCase("back")) {return;}
+                 if (inputParent(specialProperties) == -1) { continue;}
+                 else {break;}
+            }
+            try {
+                adminController.addCategory(categoryName, parentCategory, specialProperties);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -940,10 +1072,15 @@ public class Actions {
             super(name, Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String categoryName = commandMatcher.group(1);
+            try {
+                adminController.removeCategory(categoryName);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -970,8 +1107,16 @@ public class Actions {
     }
 
     public static class SellerEditSale extends Action {
-        SellerEditSale(String name) {
+        private String[] editableFields;
+        SellerEditSale(String name, String[] editableFields) {
             super(name, Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
+            this.editableFields = editableFields;
+        }
+
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
         }
 
         @Override
@@ -1024,8 +1169,16 @@ public class Actions {
     }
 
     public static class SellerEditProduct extends Action {
-        SellerEditProduct(String name) {
+        private String[] editableFields;
+        SellerEditProduct(String name, String[] editableFields) {
             super(name, Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
+            this.editableFields = editableFields;
+        }
+
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
         }
 
         @Override
