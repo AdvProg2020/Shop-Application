@@ -152,4 +152,10 @@ public class Exceptions{
             super("You haven't bought this product with Id: "+ productId);
         }
     }
+
+    public static class InvalidDateException extends Exception{
+        public InvalidDateException(){
+            super("End date should be after start date!");
+        }
+    }
 }

@@ -9,10 +9,13 @@ import model.account.Seller;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.request.EditProductRequest;
+import model.request.EditSaleRequest;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SellerController extends Controller {
 
@@ -23,7 +26,7 @@ public class SellerController extends Controller {
             if (((Seller) currentAccount).getStoreName().equals(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(field);
             ((Seller) currentAccount).setStoreName(newInformation);
-        }else
+        } else
             super.editPersonalInfo(field, newInformation);
     }
 
@@ -37,7 +40,6 @@ public class SellerController extends Controller {
     //Done!!
     public ArrayList<ArrayList<String>> viewSellHistory() {
         ArrayList<ArrayList<String>> sells = new ArrayList<>();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         for (SellLog sellLog : ((Seller) currentAccount).getSellLogs()) {
             ArrayList<String> sellPack = new ArrayList<>();
             sellPack.add(sellLog.getId());
@@ -97,7 +99,7 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    public String[] getProductEditableFields(){
+    public String[] getProductEditableFields() {
         String[] editableFields = new String[5];
         editableFields[0] = "name";
         editableFields[1] = "brand";
@@ -108,15 +110,25 @@ public class SellerController extends Controller {
     }
 
     //Done!!
+    public String[] getSaleEditableFields(){
+        String[] saleEditableFields = new String[4];
+        saleEditableFields[0] = "start date";
+        saleEditableFields[1] = "end date";
+        saleEditableFields[2] = "percentage";
+        saleEditableFields[3] = "maximum";
+        return saleEditableFields;
+    }
+
+    //Done!!
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
-            if(subProduct.getProduct().getId().equals(productID)) {
+            if (subProduct.getProduct().getId().equals(productID)) {
                 targetedSubProduct = subProduct;
                 break;
             }
         }
-        if(targetedSubProduct == null)
+        if (targetedSubProduct == null)
             throw new Exceptions.InvalidProductIdException(productID);
         else {
             EditProductRequest.Field fieldToEdit = null;
@@ -155,15 +167,14 @@ public class SellerController extends Controller {
     //Done!!
 
     /**
-     *
      * @param productName
      * @param brand
      * @return if there is an existing product returns its Id
-     *          else it returns null
+     * else it returns null
      */
     public String exist(String productName, String brand) {
         Product product = Product.getProductsByNameAndBrand(productName, brand);
-        if( product != null)
+        if (product != null)
             return product.getId();
         else
             return null;
@@ -171,13 +182,13 @@ public class SellerController extends Controller {
 
     //Done!! TODO: Shayan please check this
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
-                              double price, int count) throws Exceptions.ExistingProductException{
+                              double price, int count) throws Exceptions.ExistingProductException {
         Product product;
-        if((product = Product.getProductsByNameAndBrand(name, brand)) != null)
+        if ((product = Product.getProductsByNameAndBrand(name, brand)) != null)
             throw new Exceptions.ExistingProductException(product.getId());
-        else{
+        else {
             Category category;
-            if((category = Category.getCategoryByName(categoryName)) == null)
+            if ((category = Category.getCategoryByName(categoryName)) == null)
                 category = Category.getSuperCategory();
             SubProduct subProduct = new SubProduct(null, currentAccount.getId(), price, count);
             new Product(name, brand, infoText, category.getId(), specialProperties, subProduct);
@@ -186,7 +197,7 @@ public class SellerController extends Controller {
 
     //Done!!
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidProductIdException {
-        if(Product.getProductById(productId) == null)
+        if (Product.getProductById(productId) == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else
             new SubProduct(productId, currentAccount.getId(), price, count);
@@ -222,8 +233,51 @@ public class SellerController extends Controller {
         throw new Exceptions.InvalidSaleIdException(saleId);
     }
 
-    //Todo
-    public void editSale(String saleId, String field, String newInformation) {
+    //Done!!
+    public void editSale(String saleId, String field, String newInformation) throws
+            Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException {
+        Sale targetedSale = null;
+        for (Sale sale : ((Seller) currentAccount).getSales()) {
+            if (sale.getId().equals(saleId)) {
+                targetedSale = sale;
+                break;
+            }
+        }
+        if (targetedSale == null)
+            throw new Exceptions.InvalidSaleIdException(saleId);
+        else {
+            switch (field) {
+                case "start date":
+                    try {
+                        if (targetedSale.getEndDate().after(dateFormat.parse(newInformation)))
+                            new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.START_DATE);
+                        else
+                            throw new Exceptions.InvalidDateException();
+                    } catch (ParseException e) {
+                        throw new Exceptions.InvalidFormatException("date");
+                    }
+                    break;
+                case "end date":
+                    try {
+                        if (targetedSale.getStartDate().before(dateFormat.parse(newInformation)))
+                            new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.END_DATE);
+                        else
+                            throw new Exceptions.InvalidDateException();
+                    } catch (ParseException e) {
+                        throw new Exceptions.InvalidFormatException("date");
+                    }
+                    break;
+                case "percentage":
+                    new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.PERCENTAGE);
+                    break;
+                case "maximum":
+                    new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.MAXIMUM);
+                    break;
+                default:
+                    throw new Exceptions.InvalidFieldException();
+            }
+
+        }
     }
 
     //Todo: check dates
