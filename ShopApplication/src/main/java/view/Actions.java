@@ -322,17 +322,26 @@ public class Actions {
         }
     }
 
-    public static class FilterAction extends Action {
+    //TODO: higher brain performance required :|
+    public static class ChooseFiltering extends Action {
         private String[] currentFilters;
-
-        FilterAction(String name, String[] currentFilters) {
+        private String[] availableFilters;
+        ChooseFiltering(String name, String[] currentFilters, String[] availableFilters) {
             super(name, Constants.Actions.filterPattern, Constants.Actions.filterCommand);
             this.currentFilters = currentFilters;
+            this.availableFilters = availableFilters;
+        }
+
+        private void showAvailableFilters() {
+            for (int i = 0; i < availableFilters.length; i++) {
+                System.out.println((i + 1) + ". " + availableFilters[i]);
+            }
         }
 
         //TODO: imp.
         @Override
         public void execute(String command) {
+            showAvailableFilters();
 
         }
     }
@@ -351,30 +360,39 @@ public class Actions {
         }
     }
 
+    //TODO: higher brain performance required :|
     public static class DisableFilter extends Action {
         private String[] currentFilters;
-
-        DisableFilter(String name, String[] currentFilters) {
+        private String[] availableFilters;
+        DisableFilter(String name, String[] currentFilters, String[] availableFilters) {
             super(name, Constants.Actions.disableFilterPattern, Constants.Actions.disableFilterCommand);
             this.currentFilters = currentFilters;
+            this.availableFilters = availableFilters;
         }
 
-        //TODO: imp.
+        private void showAvailableFilters() {
+            for (int i = 0; i < availableFilters.length; i++) {
+                System.out.println((i + 1) + ". " + availableFilters[i]);
+            }
+        }
+
         @Override
         public void execute(String command) {
+            showAvailableFilters();
 
         }
     }
 
     //TODO: remember that filters and sorts are only for products.
     //TODO: filter and sort for sales.
+    //TODO: holy guakamoly.
     public static class ShowOffs extends Action {
         private StringBuilder currentSort;
         private String[] currentFilters;
-        private ArrayList<String> currentProducts;
-        private ArrayList<String> currentOffs;
+        private ArrayList<String[]> currentProducts;
+        private ArrayList<String[]> currentOffs;
 
-        public ShowOffs(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String> currentProducts, ArrayList<String> currentOffs) {
+        public ShowOffs(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts, ArrayList<String[]> currentOffs) {
             super(name, Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
             this.currentSort = currentSort;
             this.currentFilters = currentFilters;
@@ -382,26 +400,89 @@ public class Actions {
             this.currentOffs = currentOffs;
         }
 
-        //TODO: imp.
+        private ArrayList<String[]> appendSaleInfo(String[] sale, ArrayList<String[]> salesProducts) {
+          ArrayList<String[]> result = new ArrayList<>();
+            for (String[] salesProduct : salesProducts) {
+                String[] extendedProduct = Arrays.copyOf(salesProduct, salesProduct.length + sale.length);
+                System.arraycopy(sale, 0, extendedProduct, salesProduct.length, sale.length);
+                result.add(extendedProduct);
+            }
+            return result;
+        }
+
+        private void sortProducts() {
+
+        }
+
+        //if adding filter and sort for sales then should add an additional currentOffs.clear() and currentOffs.getOffs(...) codes.
         @Override
         public void execute(String command) {
-
+            currentProducts.clear();
+            try {
+                for (String[] off : currentOffs) {
+                    ArrayList<String[]> offsProducts = mainController.getProductInSale(off[0]);
+                    currentProducts.addAll(appendSaleInfo(off, offsProducts));
+                }
+                sortProducts();
+              //  showProducts();
+            } catch (Exceptions.InvalidSaleIdException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
     public static class EditField extends Action {
-        private ArrayList<String> editableFields;
+        private String[] editableFields;
 
-        //TODO: check new info (for example for password)
-        EditField(String name, ArrayList<String> editableFields) {
+        EditField(String name, String[] editableFields) {
             super(name, Constants.Actions.editFieldPattern, Constants.Actions.editFieldCommand);
             this.editableFields = editableFields;
         }
 
-        //TODO: imp.
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
+        }
+
+        private int editField(int fieldIndex) {
+            String type = mainController.getType();
+            String response;
+            while(true) {
+                System.out.println("enter new info");
+                response = View.getNextLineTrimmed();
+                if (response.equalsIgnoreCase("back")) {return -1;}
+                try {
+                    if (type.equals("customer")) {
+                        customerController.editInformation(editableFields[fieldIndex], response);
+                    } else{
+                        sellerController.editInformation(editableFields[fieldIndex], response);
+                    }
+                } catch (Exceptions.InvalidFieldException e) {
+                    //wont happen.
+                    System.out.println(e.getMessage());
+                } catch (Exceptions.SameAsPreviousValueException e) {
+                    System.out.println("new value cant be the same as previous!");
+                    continue;
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            showEditableFields();
+            while(true) {
+                System.out.println("enter the field to edit (index):");
+                String response = View.getNextLineTrimmed();
+                if (response.matches("\\d+")) {
+                    if (editField(Integer.parseInt(response)) == -1) {continue;}
+                } else if (response.equalsIgnoreCase("back")) {
+                    return;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
         }
     }
 

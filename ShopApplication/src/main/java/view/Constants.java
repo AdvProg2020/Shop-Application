@@ -87,8 +87,8 @@ class Constants {
         static final String showOffsCommand = "show offs";
         static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
         //account menus actions.
-        static final String editFieldCommand = "edit [field]";
-        static final String editFieldPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String editFieldCommand = "edit field";
+        static final String editFieldPattern = caseInsensitiveMode + "^" + editFieldCommand + "$";
         static final String showSellerCompanyInfoCommand = "view company information";
         static final String showSellerCompanyInfoPattern = caseInsensitiveMode + "^" + showSellerCompanyInfoCommand + "$";
         static final String showSellerSellHistoryCommand = "view sales history";
