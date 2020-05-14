@@ -126,6 +126,18 @@ public class Actions {
         //TODO: implement.
         @Override
         public void execute(String command) {
+            String categoryName;
+            if (categoryTree.size() == 0) {
+                categoryName = "superCategory";
+            } else {
+                categoryName = categoryTree.get(categoryTree.size() - 1);
+            }
+            try {
+                ArrayList<String[]> products = mainController.getProductsOfThisCategory(categoryName);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 
@@ -243,11 +255,11 @@ public class Actions {
 
         private int modifySortingArgument() {
             while(true) {
-                System.out.println("choose the sorting method (enter back to go back):");
+                System.out.println("choose the sorting method (enter \"back\" to go back):");
                 String input = View.getNextLineTrimmed();
                 if (input.equalsIgnoreCase("back")) {return 0;}
                 int entry = checkSortingArgument(input);
-                if (entry == 0) {continue;}
+                if (entry == -1) {continue;}
                 else {
                     currentSort.setLength(0);
                     currentSort.append(availableSorts[entry]);
@@ -263,7 +275,7 @@ public class Actions {
                 }
             }
             System.out.println("invalid entry");
-            return 0;
+            return -1;
         }
 
         private int modifySortingMethod() {
@@ -431,6 +443,25 @@ public class Actions {
         }
     }
 
+    public static class ViewPersonalInfo extends Action {
+        ViewPersonalInfo(String name) {
+            super(name, Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
+        }
+
+
+        //TODO: imp.
+        private void showPersonalInfo(String[] info) {
+
+            System.out.println("1. ");
+        }
+
+        @Override
+        public void execute(String command) {
+            String[] info = mainController.viewPersonalInfo();
+            showPersonalInfo(info);
+        }
+    }
+
     public static class EditField extends Action {
         private String[] editableFields;
 
@@ -454,9 +485,11 @@ public class Actions {
                 if (response.equalsIgnoreCase("back")) {return -1;}
                 try {
                     if (type.equals("customer")) {
-                        customerController.editInformation(editableFields[fieldIndex], response);
-                    } else{
-                        sellerController.editInformation(editableFields[fieldIndex], response);
+                        customerController.editPersonalInfo(editableFields[fieldIndex], response);
+                    } else if (type.equals("seller")){
+                        sellerController.editPersonalInfo(editableFields[fieldIndex], response);
+                    } else {
+                        adminController.editPersonalInfo(editableFields[fieldIndex], response);
                     }
                 } catch (Exceptions.InvalidFieldException e) {
                     //wont happen.

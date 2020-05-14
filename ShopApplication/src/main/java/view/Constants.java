@@ -67,8 +67,8 @@ class Constants {
         static final String chooseCategoryPattern = caseInsensitiveMode + "^choose category" + spacePattern + argumentPattern + "$";
         static final String revertCategoryCommand = "revert category [-numberOfReverts]"; //you can set the number of times to go back. 1 by default.
         static final String revertCategoryPattern = caseInsensitiveMode + "^revert category(?:" + spacePattern + unsignedIntPattern + ")?$";
-        static final String productDetailMenuCommand = "show product [productID]";
-        static final String productDetailMenuPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
+        static final String productDetailMenuCommand = "show product [productIndex]";
+        static final String productDetailMenuPattern = caseInsensitiveMode + "^show product" + spacePattern + unsignedIntPattern + "$";
         //SortMenu actions.
         static final String sortCommand = "select sort";
         static final String sortPattern = caseInsensitiveMode + "^" + sortCommand + "$";
@@ -87,6 +87,8 @@ class Constants {
         static final String showOffsCommand = "show offs";
         static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
         //account menus actions.
+        static final String viewPersonalInfoCommand = "view info";
+        static final String viewPersonalInfoPattern = caseInsensitiveMode + "^" + viewPersonalInfoCommand + "$";
         static final String editFieldCommand = "edit field";
         static final String editFieldPattern = caseInsensitiveMode + "^" + editFieldCommand + "$";
         static final String showSellerCompanyInfoCommand = "view company information";

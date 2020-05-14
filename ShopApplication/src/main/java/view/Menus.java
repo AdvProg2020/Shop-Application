@@ -338,7 +338,6 @@ class Menus {
         }
     }
 
-    //TODO: show chejoury bashe?
     public static class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
@@ -352,8 +351,9 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.EditField("edit field",getEditableFields()));
-            subActions.put(index + 2, new Actions.BackAction("view personal info back", parent));
+            subActions.put(index + 1, )
+            subActions.put(index + 2, new Actions.EditField("edit field",getEditableFields()));
+            subActions.put(index + 3, new Actions.BackAction("view personal info back", parent));
         }
 
         protected String[] getEditableFields() {
