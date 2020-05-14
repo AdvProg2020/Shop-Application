@@ -1,11 +1,15 @@
 package model;
 
+import jdk.jfr.Label;
 import model.account.Customer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Rating {
-    private static HashMap<String, Rating> allRatings = new HashMap<>();
+public class Rating implements Initializable {
+    private static Map<String, Rating> allRatings = new HashMap<>();
     private String ratingId;
     private String customerId;
     private String productId;
@@ -23,10 +27,15 @@ public class Rating {
         return null;
     }
 
+    public static List<Rating> getAllRatings() {
+        return new ArrayList<>(allRatings.values());
+    }
+
     public static Rating getRatingById(String ratingId) {
         return allRatings.get(ratingId);
     }
 
+    @Override
     public void initialize() {
         if (ratingId == null) {
             ratingId = generateNewId(customerId, productId);
@@ -35,6 +44,7 @@ public class Rating {
         getProduct().addRating(ratingId);
     }
 
+    @Label("Model internal use only!")
     public void terminate() {
         allRatings.remove(ratingId);
     }

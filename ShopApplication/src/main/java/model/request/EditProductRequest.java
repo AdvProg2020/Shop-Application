@@ -35,13 +35,7 @@ public class EditProductRequest extends Request {
                 break;
             case PRICE:
                 subProduct.setPrice(Double.parseDouble(newValue));
-
         }
-    }
-
-    @Override
-    public String getType() {
-        return "EditProduct";
     }
 
     public String getSubProductId() {

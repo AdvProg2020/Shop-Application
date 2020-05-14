@@ -1,62 +1,55 @@
 package model.account;
 
+import jdk.jfr.Label;
+import model.Cart;
 import model.Discount;
-import model.ShoppingCart;
 import model.log.BuyLog;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
+
 
 public class Customer extends Account {
     private double balance;
-    private transient String shoppingCartId;
-    private transient HashSet<String> buyLogIds;
-    private transient HashMap<String, Integer> discountIds;
+    private transient String cartId;
+    private transient Map<String, Integer> discountIds;
+    private transient Set<String> buyLogIds;
 
     public Customer(String username, String password, String firstName, String lastName, String email, String phone,
                     double balance) {
         super(username, password, firstName, lastName, email, phone);
         this.balance = balance;
-        new ShoppingCart(accountId);
         initialize();
     }
 
     public static Customer getCustomerById(String accountId) {
-        return getCustomerById(accountId, true);
+        return (Customer) getAccountById(accountId, true);
     }
 
     public static Customer getCustomerById(String accountId, boolean checkSuspense) {
-        Customer customer = (Customer) allAccounts.get(accountId);
-        if (checkSuspense && customer != null && customer.suspended) {
-            customer = null;
-        }
-        return customer;
+        return (Customer) getAccountById(accountId, checkSuspense);
     }
 
     @Override
     public void initialize() {
-        super.initialize();
+        if (accountId == null)
+            accountId = generateNewId();
+        allAccounts.put(accountId, this);
         buyLogIds = new HashSet<>();
         if (!suspended) {
             discountIds = new HashMap<>();
+            if (cartId == null)
+                new Cart(accountId);
         }
     }
 
     @Override
     public void suspend() {
-        getShoppingCart().terminate();
         for (Discount discount : getDiscounts().keySet()) {
             discount.removeCustomer(accountId);
         }
-        shoppingCartId = null;
         discountIds = null;
+        setCart(null);
         super.suspend();
-    }
-
-    @Override
-    public String getType() {
-        return "Customer";
     }
 
     public double getBalance() {
@@ -67,48 +60,52 @@ public class Customer extends Account {
         balance += changeAmount;
     }
 
-    public ShoppingCart getShoppingCart() {
-        return ShoppingCart.getShoppingCartById(shoppingCartId);
+    public Cart getCart() {
+        return Cart.getCartById(cartId);
     }
 
-    public void setShoppingCart(String shoppingCartId) {
-        if (this.shoppingCartId != null) {
-            getShoppingCart().terminate();
-        }
-        this.shoppingCartId = shoppingCartId;
+    @Label("Model internal use only!")
+    public void setCart(String cartId) {
+        if (this.cartId != null)
+            getCart().terminate();
+        this.cartId = cartId;
     }
 
-    public ArrayList<BuyLog> getBuyLogs() {
-        ArrayList<BuyLog> buyLogs = new ArrayList<>();
+    public void mergeCart(String cartId) {
+        Cart.mergeCarts(cartId, this.cartId);
+    }
+
+    public List<BuyLog> getBuyLogs() {
+        List<BuyLog> buyLogs = new ArrayList<>();
         for (String buyLogId : buyLogIds) {
             buyLogs.add(BuyLog.getBuyLogById(buyLogId));
         }
+
         return buyLogs;
     }
 
+    @Label("Model internal use only!")
     public void addBuyLog(String buyLogId) {
         buyLogIds.add(buyLogId);
     }
 
-    public HashMap<Discount, Integer> getDiscounts() {
-        HashMap<Discount, Integer> discounts = new HashMap<>();
-        for (String discountId : discountIds.keySet()) {
-            Discount discount = Discount.getDiscountById(discountId);
-            int count = discountIds.get(discountId);
-            discounts.put(discount, count);
+    public Map<Discount, Integer> getDiscounts() {
+        Map<Discount, Integer> discounts = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : discountIds.entrySet()) {
+            Discount discount = Discount.getDiscountById(entry.getKey());
+            discounts.put(discount, entry.getValue());
         }
+
         return discounts;
     }
 
+    @Label("Model internal use only!")
     public void addDiscount(String discountId, int count) {
         discountIds.put(discountId, count);
     }
 
+    @Label("Model internal use only!")
     public void removeDiscount(String discountId) {
         discountIds.remove(discountId);
-    }
-
-    //Todo
-    public void mergeShoppingCart(String shoppingCartId){
     }
 }

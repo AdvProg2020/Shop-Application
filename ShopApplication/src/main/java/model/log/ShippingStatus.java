@@ -1,5 +1,5 @@
 package model.log;
 
 public enum ShippingStatus {
-    processing, sending, received
+    PROCESSING, SENDING, RECEIVED
 }

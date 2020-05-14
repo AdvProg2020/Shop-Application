@@ -454,6 +454,14 @@ public class Controller {
     }
 
     //Done!!
+
+    /**
+     *
+     * @return if
+     *      admin:     6: username, type, firstName, lastName, email, phone;
+     *      customer:  7: username, type, firstName, lastName, email, phone, balance;
+     *      seller:    8: username, type, firstName, lastName, email, phone, balance, storeName;
+     */
     public String[] viewPersonalInfo() {
         return getPersonalInfo(currentAccount);
     }

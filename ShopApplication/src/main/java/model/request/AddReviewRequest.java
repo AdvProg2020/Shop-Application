@@ -16,11 +16,6 @@ public class AddReviewRequest extends Request {
         review.initialize();
     }
 
-    @Override
-    public String getType() {
-        return "AddReview";
-    }
-
     public Review getReview() {
         return review;
     }
