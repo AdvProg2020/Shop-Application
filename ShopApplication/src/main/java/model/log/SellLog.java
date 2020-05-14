@@ -1,20 +1,20 @@
 package model.log;
 
+import jdk.jfr.Label;
+import model.Initializable;
 import model.account.Customer;
 import model.account.Seller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
-public class SellLog {
-    private static HashMap<String, SellLog> allSellLogs = new HashMap<>();
+public class SellLog implements Initializable {
+    private static Map<String, SellLog> allSellLogs = new HashMap<>();
     private String sellLogId;
     private String parentBuyLogId;
     private String sellerId;
     private double receivedMoney;
     private double totalSaleAmount;
-    private transient ArrayList<String> logItemIds;
+    private transient List<String> logItemIds;
 
     public SellLog(String parentBuyLogId, String sellerId) {
         this.parentBuyLogId = parentBuyLogId;
@@ -29,10 +29,15 @@ public class SellLog {
         return null;
     }
 
+    public static List<SellLog> getAllSellLogs() {
+        return new ArrayList<>(allSellLogs.values());
+    }
+
     public static SellLog getSellLogById(String sellLogId) {
         return allSellLogs.get(sellLogId);
     }
 
+    @Override
     public void initialize() {
         if (sellLogId == null) {
             sellLogId = generateNewId(sellerId);
@@ -90,7 +95,7 @@ public class SellLog {
         getParentBuyLog().setShippingStatus(status);
     }
 
-    public ArrayList<LogItem> getLogItems() {
+    public List<LogItem> getLogItems() {
         ArrayList<LogItem> logItems = new ArrayList<>();
         for (String logItemId : logItemIds) {
             logItems.add(LogItem.getLogItemById(logItemId));
@@ -98,6 +103,7 @@ public class SellLog {
         return logItems;
     }
 
+    @Label("Model internal use only!")
     public void addLogItem(String logItemId) {
         logItemIds.add(logItemId);
         LogItem item = LogItem.getLogItemById(logItemId);

@@ -13,11 +13,10 @@ import java.util.Comparator;
 
 public class Controller {
     protected static Account currentAccount;
-    protected static ShoppingCart currentCart;
+    protected static Cart currentCart;
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
     //Done!
-
     /**
      * @param username
      * @param type
@@ -69,16 +68,16 @@ public class Controller {
         if (!account.getPassword().equals(password))
             throw new Exceptions.WrongPasswordException();
         currentAccount = account;
-        if(currentAccount.getType().equalsIgnoreCase("customer")){
-            ((Customer) currentAccount).mergeShoppingCart(currentCart.getId());
-            currentCart = ((Customer) currentAccount).getShoppingCart();
-         }
+        if (currentAccount instanceof Customer) {
+            ((Customer) currentAccount).mergeCart(currentCart.getId());
+            currentCart = ((Customer) currentAccount).getCart();
+        }
     }
 
     //Done!!
     public void logout(){
         currentAccount = null;
-        currentCart = new ShoppingCart(null);
+        currentCart = new Cart(null);
     }
 
     //Done!!
@@ -89,7 +88,7 @@ public class Controller {
     public String getType() {
         if (currentAccount == null)
             return "anonymous";
-        return currentAccount.getType();
+        return currentAccount.getClass().getName();
     }
 
     //Done!
@@ -239,7 +238,7 @@ public class Controller {
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else
-            return productToIdName(category.getProducts());
+            return productToIdName(new ArrayList<>(category.getProducts()));
     }
 
     //Done!!
@@ -269,10 +268,12 @@ public class Controller {
             else
                 products.add(product);
         }
+
         filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
         products = sortProducts(sortBy,isIncreasing, products);
+
         return productToIdName(products);
     }
 
@@ -317,7 +318,7 @@ public class Controller {
         if(product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else
-            return product.getSpecialProperties();
+            return (ArrayList<String>) product.getSpecialProperties();
     }
 
     //Done!!
@@ -391,11 +392,9 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
-    //TODO: filter and sort for sales.
     public ArrayList<String[]> sales() {
         ArrayList<String[]> sales = new ArrayList<>();
         for (Sale sale : Sale.getAllSales()) {
@@ -405,7 +404,6 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @return
      *                     *1- seller:String[6]
@@ -421,7 +419,7 @@ public class Controller {
             throw new Exceptions.NotLoggedInException();
         else {
             String[] editableFields = new String[5];
-            if(currentAccount.getType().equals("seller")){
+            if (currentAccount instanceof Seller) {
                 editableFields = new String[6];
                 editableFields[5] = "storeName";
             }
@@ -437,17 +435,17 @@ public class Controller {
     //Done!!
     protected String[] getPersonalInfo(Account account) {
         String[] info;
-        if (account.getType().equals("customer")) {
+        if (account instanceof Customer) {
             info = new String[7];
             info[6] = String.valueOf(((Customer) account).getBalance());
-        } else if (account.getType().equals("seller")) {
+        } else if (account instanceof Seller) {
             info = new String[8];
             info[6] = String.valueOf(((Seller) account).getBalance());
             info[7] = ((Seller) account).getStoreName();
         } else
             info = new String[6];
         info[0] = account.getUsername();
-        info[1] = account.getType();
+        info[1] = account.getClass().getName();
         info[2] = account.getFirstName();
         info[3] = account.getLastName();
         info[4] = account.getEmail();
@@ -503,12 +501,13 @@ public class Controller {
 
     //Done!!
     protected String[] getSaleInfo(Sale sale) {
-        String[] salePack = new String[5];
-        salePack[0] = Double.toString(sale.getPercentage());
-        salePack[1] = sale.getSeller().getStoreName();
-        salePack[2] = dateFormat.format(sale.getStartDate());
-        salePack[3] = dateFormat.format(sale.getEndDate());
-        salePack[4] = Integer.toString(sale.getSubProducts().size());
+        String[] salePack = new String[6];
+        salePack[0] = sale.getId();
+        salePack[1] = Double.toString(sale.getPercentage());
+        salePack[2] = sale.getSeller().getStoreName();
+        salePack[3] = dateFormat.format(sale.getStartDate());
+        salePack[4] = dateFormat.format(sale.getEndDate());
+        salePack[5] = Integer.toString(sale.getSubProducts().size());
         return salePack;
     }
 
@@ -528,8 +527,14 @@ public class Controller {
             String[] productPack = new String[2];
             productPack[0] = subProduct.getProduct().getId();
             productPack[1] = subProduct.getProduct().getName();
+
             productsInSale.add(productPack);
         }
         return productsInSale;
+    }
+
+    //Todo
+    public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy){
+        return null;
     }
 }

@@ -1,13 +1,17 @@
 package model.log;
 
+import model.Initializable;
 import model.SubProduct;
 import model.account.Customer;
 import model.account.Seller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class LogItem {
-    private static HashMap<String, LogItem> allLogItems = new HashMap<>();
+public class LogItem implements Initializable {
+    private static Map<String, LogItem> allLogItems = new HashMap<>();
     private String logItemId;
     private String buyLogId;
     private String sellLogId;
@@ -31,10 +35,15 @@ public class LogItem {
         return null;
     }
 
+    public static List<LogItem> getAllLogItems() {
+        return new ArrayList<>(allLogItems.values());
+    }
+
     public static LogItem getLogItemById(String logItemId) {
         return allLogItems.get(logItemId);
     }
 
+    @Override
     public void initialize() {
         if (logItemId == null) {
             logItemId = generateNewId(subProductId);

@@ -1,22 +1,21 @@
 package model;
 
+import jdk.jfr.Label;
 import model.account.Customer;
 import model.account.Seller;
 import model.request.AddProductRequest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
-public class SubProduct {
-    private static HashMap<String, SubProduct> allSubProducts = new HashMap<>();
+public class SubProduct implements Initializable {
+    private static Map<String, SubProduct> allSubProducts = new HashMap<>();
     private String subProductId;
     private String productId;
     private String sellerId;
     private double price;
     private int remainingCount;
     private transient String saleId; //can be null
-    private transient HashSet<String> customerIds;
+    private transient Set<String> customerIds;
     private boolean suspended;
 
     public SubProduct(String productId, String sellerId, double price, int count) {
@@ -26,14 +25,25 @@ public class SubProduct {
         remainingCount = count;
         saleId = null;
         suspended = false;
-        if (productId != null) {
+        if (productId != null)
             new AddProductRequest(null, this);
-        }
     }
 
     private static String generateNewId(String productId, String sellerId) {
         //TODO: implement
         return null;
+    }
+
+    public static List<SubProduct> getAllSubProducts() {
+        return getAllSubProducts(true);
+    }
+
+    public static List<SubProduct> getAllSubProducts(boolean checkSuspense) {
+        List<SubProduct> subProducts = new ArrayList<>(allSubProducts.values());
+        if (checkSuspense)
+            subProducts.removeIf(subProduct -> subProduct.suspended);
+
+        return subProducts;
     }
 
     public static SubProduct getSubProductById(String subProductId) {
@@ -42,16 +52,16 @@ public class SubProduct {
 
     public static SubProduct getSubProductById(String subProductId, boolean checkSuspense) {
         SubProduct subProduct = allSubProducts.get(subProductId);
-        if (checkSuspense && subProduct != null && subProduct.suspended) {
+        if (checkSuspense && subProduct != null && subProduct.suspended)
             subProduct = null;
-        }
+
         return subProduct;
     }
 
+    @Override
     public void initialize() {
-        if (subProductId == null) {
+        if (subProductId == null)
             subProductId = generateNewId(productId, sellerId);
-        }
         allSubProducts.put(subProductId, this);
         if (!suspended) {
             customerIds = new HashSet<>();
@@ -63,6 +73,7 @@ public class SubProduct {
     public void suspend() {
         getSeller().removeSubProduct(subProductId);
         getProduct().removeSubProduct(subProductId);
+        Cart.updateSubProducts();
         setSale(null);
         customerIds = null;
         suspended = true;
@@ -76,10 +87,10 @@ public class SubProduct {
         return Product.getProductById(productId);
     }
 
-    public void setProductId(String productId) {
-        if (this.productId == null) {
+    @Label("Model internal use only!")
+    public void setProductId(String productId) { // only used for accepting productRequest
+        if (this.productId == null)
             this.productId = productId;
-        }
     }
 
     public Seller getSeller() {
@@ -90,10 +101,10 @@ public class SubProduct {
         return Sale.getSaleById(saleId);
     }
 
+    @Label("Model internal use only!")
     public void setSale(String saleId) {
-        if (this.saleId != null) {
+        if (this.saleId != null)
             getSale().removeSubProduct(subProductId);
-        }
         this.saleId = saleId;
     }
 
@@ -108,9 +119,9 @@ public class SubProduct {
     public double getPriceWithSale() {
         double saleAmount = price * getSale().getPercentage() / 100;
         double maximumAmount = getSale().getMaximumAmount();
-        if (saleAmount > maximumAmount) {
+        if (saleAmount > maximumAmount)
             saleAmount = maximumAmount;
-        }
+
         return price - saleAmount;
     }
 
@@ -120,25 +131,25 @@ public class SubProduct {
 
     public void changeRemainingCount(int changeAmount) {
         remainingCount += changeAmount;
-        if (remainingCount < 0) {
+        if (remainingCount < 0)
             remainingCount = 0;
-        }
     }
 
-    public ArrayList<Customer> getCustomers() {
-        ArrayList<Customer> customers = new ArrayList<>();
-        for (String customerId : new ArrayList<>(customerIds)) {
-            Customer customer = Customer.getCustomerById(customerId, false);
-            customers.add(customer);
+    public List<Customer> getCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        for (String customerId : customerIds) {
+            customers.add(Customer.getCustomerById(customerId, false));
         }
+
         return customers;
-    }
-
-    public void addCustomer(String customerId) {
-        customerIds.add(customerId);
     }
 
     public boolean hasCustomerWithId(String customerId) {
         return customerIds.contains(customerId);
+    }
+
+    @Label("Model internal use only!")
+    public void addCustomer(String customerId) {
+        customerIds.add(customerId);
     }
 }

@@ -41,11 +41,6 @@ public class EditSaleRequest extends Request {
         }
     }
 
-    @Override
-    public String getType() {
-        return "EditSale";
-    }
-
     public String getSaleId() {
         return saleId;
     }

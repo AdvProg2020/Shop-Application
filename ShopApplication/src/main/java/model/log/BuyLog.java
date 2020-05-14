@@ -1,14 +1,13 @@
 package model.log;
 
+import jdk.jfr.Label;
+import model.Initializable;
 import model.account.Customer;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
-public class BuyLog {
-    private static HashMap<String, BuyLog> allBuyLogs = new HashMap<>();
+public class BuyLog implements Initializable {
+    private static Map<String, BuyLog> allBuyLogs = new HashMap<>();
     private String buyLogId;
     private String customerId;
     private double paidMoney;
@@ -18,7 +17,7 @@ public class BuyLog {
     private String receiverAddress;
     private String receiverPhone;
     private ShippingStatus shippingStatus;
-    private transient HashSet<String> logItemIds;
+    private transient Set<String> logItemIds;
 
     public BuyLog(String customerId, double paidMoney, double totalDiscountAmount, String receiverName,
                   String receiverAddress, String receiverPhone, ShippingStatus shippingStatus) {
@@ -38,10 +37,15 @@ public class BuyLog {
         return null;
     }
 
+    public static List<BuyLog> getAllBuyLogs() {
+        return new ArrayList<>(allBuyLogs.values());
+    }
+
     public static BuyLog getBuyLogById(String buyLogId) {
         return allBuyLogs.get(buyLogId);
     }
 
+    @Override
     public void initialize() {
         if (buyLogId == null) {
             buyLogId = generateNewId(customerId);
@@ -91,14 +95,15 @@ public class BuyLog {
         this.shippingStatus = status;
     }
 
-    public ArrayList<LogItem> getLogItems() {
-        ArrayList<LogItem> logItems = new ArrayList<>();
+    public List<LogItem> getLogItems() {
+        List<LogItem> logItems = new ArrayList<>();
         for (String logItemId : logItemIds) {
             logItems.add(LogItem.getLogItemById(logItemId));
         }
         return logItems;
     }
 
+    @Label("Model internal use only!")
     public void addLogItem(String logItemId) {
         logItemIds.add(logItemId);
     }

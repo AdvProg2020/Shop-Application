@@ -8,6 +8,7 @@ public class AddProductRequest extends Request {
     private SubProduct subProduct;
 
     public AddProductRequest(Product product, SubProduct subProduct) {
+        super();
         this.product = product;
         this.subProduct = subProduct;
     }
@@ -20,11 +21,6 @@ public class AddProductRequest extends Request {
             subProduct.setProductId(product.getId());
         }
         subProduct.initialize();
-    }
-
-    @Override
-    public String getType() {
-        return "AddProduct";
     }
 
     public Product getProduct() {

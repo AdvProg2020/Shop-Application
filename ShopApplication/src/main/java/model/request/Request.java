@@ -1,11 +1,11 @@
 package model.request;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import model.Initializable;
 
-public abstract class Request {
-    private static HashMap<String, Request> allRequests = new HashMap<>();
+import java.util.*;
+
+public abstract class Request implements Initializable {
+    private static Map<String, Request> allRequests = new HashMap<>();
     private String requestId;
     private Date date;
     private RequestStatus status;
@@ -21,22 +21,21 @@ public abstract class Request {
         return null;
     }
 
-    public static ArrayList<Request> getAllRequests() {
-        return (ArrayList<Request>) allRequests.values();
+    public static List<Request> getAllRequests() {
+        return new ArrayList<>(allRequests.values());
     }
 
     public static Request getRequestById(String requestId) {
         return allRequests.get(requestId);
     }
 
+    @Override
     public void initialize() {
         if (requestId == null) {
             requestId = generateNewId();
         }
         allRequests.put(requestId, this);
     }
-
-    public abstract String getType();
 
     public String getRequestId() {
         return requestId;

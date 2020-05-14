@@ -1,23 +1,22 @@
 package model;
 
+import jdk.jfr.Label;
 import model.request.AddProductRequest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
-public class Product {
-    private static HashMap<String, Product> allProducts = new HashMap<>();
+public class Product implements Initializable {
+    private static Map<String, Product> allProducts = new HashMap<>();
     private String productId;
     private String name;
     private String brand;
     private String infoText;
     private int viewCount;
     private String categoryId;
-    private ArrayList<String> specialProperties;
-    private transient HashSet<String> subProductIds;
-    private transient HashSet<String> reviewIds;
-    private transient HashSet<String> ratingIds;
+    private List<String> specialProperties;
+    private transient Set<String> subProductIds;
+    private transient Set<String> reviewIds;
+    private transient Set<String> ratingIds;
     private boolean suspended;
 
     public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> specialProperties, SubProduct subProduct) {
@@ -36,33 +35,16 @@ public class Product {
         return null;
     }
 
-    public static ArrayList<Product> getAllProducts() {
-        ArrayList<Product> products = new ArrayList<>();
-        for (Product product : allProducts.values()) {
-            if (!product.suspended) {
-                products.add(product);
-            }
-        }
-        return products;
+    public static List<Product> getAllProducts() {
+        return getAllProducts(true);
     }
 
-    public static ArrayList<Product> getProductsByName(String name) {
-        ArrayList<Product> products = new ArrayList<>();
-        for (Product product : allProducts.values()) {
-            if (!product.suspended && product.getName().equals(name)) {
-                products.add(product);
-            }
+    public static List<Product> getAllProducts(boolean checkSuspense) {
+        List<Product> products = new ArrayList<>(allProducts.values());
+        if (checkSuspense) {
+            products.removeIf(product -> product.suspended);
         }
         return products;
-    }
-
-    public static Product getProductsByNameAndBrand(String name, String brand) {
-        for (Product product : getProductsByName(name)) {
-            if (product.getBrand().equals(brand)) {
-                return product;
-            }
-        }
-        return null;
     }
 
     public static Product getProductById(String productId) {
@@ -77,6 +59,26 @@ public class Product {
         return product;
     }
 
+    public static List<Product> getProductsByName(String name) {
+        List<Product> products = new ArrayList<>();
+        for (Product product : allProducts.values()) {
+            if (!product.suspended && product.getName().equals(name)) {
+                products.add(product);
+            }
+        }
+        return products;
+    }
+
+    public static Product getProductByNameAndBrand(String name, String brand) {
+        for (Product product : getProductsByName(name)) {
+            if (product.getBrand().equals(brand)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void initialize() {
         if (productId == null) {
             productId = generateNewId();
@@ -94,14 +96,14 @@ public class Product {
         for (SubProduct subProduct : getSubProducts()) {
             subProduct.suspend();
         }
+        subProductIds = null;
         for (Review review : getReviews()) {
             review.terminate();
         }
+        reviewIds = null;
         for (Rating rating : getRatings()) {
             rating.terminate();
         }
-        subProductIds = null;
-        reviewIds = null;
         ratingIds = null;
         getCategory().removeProduct(productId);
         suspended = true;
@@ -153,40 +155,62 @@ public class Product {
         getCategory().addProduct(productId);
     }
 
-    public ArrayList<SubProduct> getSubProducts() {
-        ArrayList<SubProduct> subProducts = new ArrayList<>();
+    public List<SubProduct> getSubProducts() {
+        List<SubProduct> subProducts = new ArrayList<>();
         for (String subProductId : subProductIds) {
             subProducts.add(SubProduct.getSubProductById(subProductId));
         }
+
         return subProducts;
     }
 
+    public SubProduct getSubProductWithSellerId(String sellerId) {
+        for (SubProduct subProduct : getSubProducts()) {
+            if (subProduct.getSeller().getId().equals(sellerId))
+                return subProduct;
+        }
+
+        return null;
+    }
+
+    public boolean isSoldInStoreWithName(String storeName) {
+        for (SubProduct subProduct : getSubProducts()) {
+            if (subProduct.getSeller().getStoreName().equals(storeName))
+                return true;
+        }
+
+        return false;
+    }
+
+    @Label("Model internal use only!")
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
     }
 
+    @Label("Model internal use only!")
     public void removeSubProduct(String subProductId) {
         subProductIds.remove(subProductId);
     }
 
-    public ArrayList<String> getSpecialProperties() {
+    public List<String> getSpecialProperties() {
         return new ArrayList<>(specialProperties);
     }
 
-    public ArrayList<Review> getReviews() {
-        ArrayList<Review> reviews = new ArrayList<>();
+    public List<Review> getReviews() {
+        List<Review> reviews = new ArrayList<>();
         for (String reviewId : reviewIds) {
             reviews.add(Review.getReviewById(reviewId));
         }
         return reviews;
     }
 
+    @Label("Model internal use only!")
     public void addReview(String reviewId) {
         reviewIds.add(reviewId);
     }
 
-    public ArrayList<Rating> getRatings() {
-        ArrayList<Rating> ratings = new ArrayList<>();
+    public List<Rating> getRatings() {
+        List<Rating> ratings = new ArrayList<>();
         for (String ratingId : ratingIds) {
             ratings.add(Rating.getRatingById(ratingId));
         }
@@ -204,6 +228,7 @@ public class Product {
         return sum / ratingIds.size();
     }
 
+    @Label("Model internal use only!")
     public void addRating(String ratingId) {
         ratingIds.add(ratingId);
     }
@@ -236,14 +261,5 @@ public class Product {
             total += subProduct.getRemainingCount();
         }
         return total;
-    }
-
-    public boolean isSoldInStoreWithName(String storeName) {
-        for (SubProduct subProduct : getSubProducts()) {
-            if (subProduct.getSeller().getStoreName().equals(storeName)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

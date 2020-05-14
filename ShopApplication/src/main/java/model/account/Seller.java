@@ -1,5 +1,6 @@
 package model.account;
 
+import jdk.jfr.Label;
 import model.Sale;
 import model.SubProduct;
 import model.log.SellLog;
@@ -7,13 +8,16 @@ import model.request.AddSellerRequest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 public class Seller extends Account {
     private String storeName;
     private double balance;
-    private transient HashSet<String> subProductIds;
-    private transient HashSet<String> saleIds;
-    private transient HashSet<String> sellLogIds;
+    private transient Set<String> subProductIds;
+    private transient Set<String> saleIds;
+    private transient Set<String> sellLogIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone,
                   String storeName, double balance) {
@@ -24,15 +28,12 @@ public class Seller extends Account {
     }
 
     public static Seller getSellerById(String accountId) {
-        return getSellerById(accountId, true);
+        return (Seller) getAccountById(accountId, true);
+
     }
 
     public static Seller getSellerById(String accountId, boolean checkSuspense) {
-        Seller seller = (Seller) allAccounts.get(accountId);
-        if (checkSuspense && seller != null && seller.suspended) {
-            seller = null;
-        }
-        return seller;
+        return (Seller) getAccountById(accountId, checkSuspense);
     }
 
     @Override
@@ -50,17 +51,12 @@ public class Seller extends Account {
         for (SubProduct subProduct : getSubProducts()) {
             subProduct.suspend();
         }
+        subProductIds = null;
         for (Sale sale : getSales()) {
             sale.suspend();
         }
-        subProductIds = null;
         saleIds = null;
         super.suspend();
-    }
-
-    @Override
-    public String getType() {
-        return "Seller";
     }
 
     public String getStoreName() {
@@ -79,46 +75,54 @@ public class Seller extends Account {
         balance += changeAmount;
     }
 
-    public ArrayList<Sale> getSales() {
-        ArrayList<Sale> sales = new ArrayList<>();
+    public List<Sale> getSales() {
+        List<Sale> sales = new ArrayList<>();
         for (String saleId : saleIds) {
             sales.add(Sale.getSaleById(saleId));
         }
+
         return sales;
     }
 
+    @Label("Model internal use only!")
     public void addSale(String saleId) {
         saleIds.add(saleId);
     }
 
+    @Label("Model internal use only!")
     public void removeSale(String saleId) {
         saleIds.remove(saleId);
     }
 
-    public ArrayList<SubProduct> getSubProducts() {
-        ArrayList<SubProduct> subProducts = new ArrayList<>();
+    public List<SubProduct> getSubProducts() {
+        List<SubProduct> subProducts = new ArrayList<>();
         for (String subProductId : subProductIds) {
             subProducts.add(SubProduct.getSubProductById(subProductId));
         }
+
         return subProducts;
     }
 
+    @Label("Model internal use only!")
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
     }
 
+    @Label("Model internal use only!")
     public void removeSubProduct(String subProductId) {
         subProductIds.remove(subProductId);
     }
 
-    public ArrayList<SellLog> getSellLogs() {
-        ArrayList<SellLog> sellLogs = new ArrayList<>();
+    public List<SellLog> getSellLogs() {
+        List<SellLog> sellLogs = new ArrayList<>();
         for (String sellLogId : sellLogIds) {
             sellLogs.add(SellLog.getSellLogById(sellLogId));
         }
+
         return sellLogs;
     }
 
+    @Label("Model internal use only!")
     public void addSellLog(String sellLogId) {
         sellLogIds.add(sellLogId);
     }

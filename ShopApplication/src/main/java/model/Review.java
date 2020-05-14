@@ -1,12 +1,16 @@
 package model;
 
+import jdk.jfr.Label;
 import model.account.Account;
 import model.request.AddReviewRequest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Review {
-    private static HashMap<String, Review> allReviews = new HashMap<>();
+public class Review implements Initializable {
+    private static Map<String, Review> allReviews = new HashMap<>();
     private String reviewId;
     private String reviewerId;
     private String productId;
@@ -28,18 +32,23 @@ public class Review {
         return null;
     }
 
-    public static Review getReviewById(String reviewId) {
-        return allReviews.get(reviewId);
+    public static List<Review> getAllReviews() {
+        return new ArrayList<>(allReviews.values());
     }
 
+    public static Review getReviewById(String reviewerId) {
+        return allReviews.get(reviewerId);
+    }
+
+    @Override
     public void initialize() {
-        if (reviewId == null) {
+        if (reviewId == null)
             reviewId = generateNewId(reviewerId, productId);
-        }
         allReviews.put(reviewId, this);
         getProduct().addReview(reviewId);
     }
 
+    @Label("Model internal use only!")
     public void terminate() {
         allReviews.remove(reviewId);
     }
@@ -71,9 +80,8 @@ public class Review {
     private void setBought() {
         bought = false;
         for (SubProduct subProduct : getProduct().getSubProducts()) {
-            if (subProduct.hasCustomerWithId(reviewerId)) {
+            if (subProduct.hasCustomerWithId(reviewerId))
                 bought = true;
-            }
         }
     }
 }
