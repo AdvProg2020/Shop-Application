@@ -146,6 +146,7 @@ public class SellerController extends Controller {
     }
 
     //Done!!
+    //TODO: same value exception
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
@@ -260,6 +261,7 @@ public class SellerController extends Controller {
     }
 
     //Done!!
+    //TODO: same value exception.
     public void editSale(String saleId, String field, String newInformation) throws
             Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException {
         Sale targetedSale = null;

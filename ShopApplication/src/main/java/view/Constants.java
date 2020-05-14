@@ -167,9 +167,9 @@ final class Constants {
         static final String sellerShowProductsPattern = caseInsensitiveMode + "^" + sellerShowProductsCommand + "$";
         static final String sellerViewProductDetailsCommand = "view [productID]";
         static final String sellerViewProductDetailsPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
-        static final String sellerViewProductBuyersCommand = "view buyers [productIndex]";
+        static final String sellerViewProductBuyersCommand = "view buyers [productID]";
         static final String sellerViewProductBuyersPattern = caseInsensitiveMode + "^view buyers " + argumentPattern + "$";
-        static final String sellerEditProductCommand = "edit [productIndex]";
+        static final String sellerEditProductCommand = "edit [productID]";
         static final String sellerEditProductPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
         static final String sellerAddProductCommand = "add product";
         static final String sellerAddProductPattern = caseInsensitiveMode + "^" + sellerAddProductCommand + "$";

@@ -1147,7 +1147,6 @@ public class Actions {
                 } catch (Exceptions.SameAsPreviousValueException e) {
                     System.out.println("new value cant be the same as previous!");
                 }
-
             }
         }
 
@@ -1243,7 +1242,16 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            try {
+                ArrayList<String> buyers = sellerController.viewProductBuyers(productID);
+                System.out.println("buyers:");
+                buyers.forEach(b -> System.out.println(b));
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
@@ -1260,9 +1268,45 @@ public class Actions {
             }
         }
 
+        private int editField(int fieldIndex, String productID) {
+            String response;
+            while(true) {
+                System.out.println("enter new info");
+                response = View.getNextLineTrimmed();
+                if (response.equalsIgnoreCase("back")) {return -1;}
+                try {
+                    sellerController.editProduct(productID, editableFields[fieldIndex], response);
+                    System.out.println("field edited successfully");
+                    return 0;
+                } catch (Exceptions.InvalidProductIdException | Exceptions.ExistingProductException
+                        | Exceptions.InvalidFieldException e) {
+                    System.out.println(e.getMessage());
+                    return -1;
+                } catch (Exceptions.SameAsPreviousValueException e) {
+                    System.out.println("new value cant be the same as previous!");
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            while (true) {
+                showEditableFields();
+                System.out.println("enter the field to edit (index):");
+                String response = View.getNextLineTrimmed();
+                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                    if (editField(Integer.parseInt(response), productID) == -1) {continue;}
+                    else {break;}
+                } else if (response.equalsIgnoreCase("back")) {
+                    break;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
+            printSeparator();
         }
     }
 
