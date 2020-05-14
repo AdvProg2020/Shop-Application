@@ -84,7 +84,7 @@ public class SubProduct implements Initializable {
     }
 
     public Product getProduct() {
-        return Product.getProductById(productId);
+        return Product.getProductById(productId, false);
     }
 
     @Label("Model internal use only!")
@@ -94,7 +94,7 @@ public class SubProduct implements Initializable {
     }
 
     public Seller getSeller() {
-        return Seller.getSellerById(sellerId);
+        return Seller.getSellerById(sellerId, false);
     }
 
     public Sale getSale() {
