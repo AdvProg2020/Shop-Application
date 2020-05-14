@@ -16,11 +16,6 @@ public class AddSaleRequest extends Request {
         sale.initialize();
     }
 
-    @Override
-    public String getType() {
-        return "AddSale";
-    }
-
     public Sale getSale() {
         return sale;
     }

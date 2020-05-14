@@ -1,20 +1,24 @@
 package model.account;
 
+import model.Initializable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public abstract class Account {
-    protected static HashMap<String, Account> allAccounts = new HashMap<>();
+public abstract class Account implements Initializable {
+    protected static Map<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
-    protected String username;
-    protected String password;
-    protected String firstName;
-    protected String lastName;
-    protected String email;
-    protected String phone;
     protected boolean suspended;
+    private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
 
-    public Account(String username, String password, String firstName, String lastName, String email, String phone) {
+    protected Account(String username, String password, String firstName, String lastName, String email, String phone) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -29,23 +33,16 @@ public abstract class Account {
         return null;
     }
 
-    public static ArrayList<Account> getAllAccounts() {
-        ArrayList<Account> accounts = new ArrayList<>();
-        for (Account account : allAccounts.values()) {
-            if (!account.suspended) {
-                accounts.add(account);
-            }
-        }
-        return accounts;
+    public static List<Account> getAllAccounts() {
+        return getAllAccounts(true);
     }
 
-    public static Account getAccountByUsername(String username) {
-        for (Account account : allAccounts.values()) {
-            if (!account.suspended && account.getUsername().equals(username)) {
-                return account;
-            }
-        }
-        return null;
+    public static List<Account> getAllAccounts(boolean checkSuspense) {
+        List<Account> accounts = new ArrayList<>(allAccounts.values());
+        if (checkSuspense)
+            accounts.removeIf(account -> account.suspended);
+
+        return accounts;
     }
 
     public static Account getAccountById(String accountId) {
@@ -53,25 +50,33 @@ public abstract class Account {
     }
 
     public static Account getAccountById(String accountId, boolean checkSuspense) {
+        if (accountId.equals(Admin.MANAGER_ID))
+            return Admin.manager;
+
         Account account = allAccounts.get(accountId);
-        if (checkSuspense && account != null && account.suspended) {
+        if (checkSuspense && account != null && account.suspended)
             account = null;
-        }
+
         return account;
     }
 
-    protected void initialize() {
-        if (accountId == null) {
-            accountId = generateNewId();
+    public static Account getAccountByUsername(String username) {
+        for (Account account : allAccounts.values()) {
+            if (!account.suspended && account.getUsername().equals(username))
+                return account;
         }
-        allAccounts.put(accountId, this);
+
+        return null;
+    }
+
+    @Override
+    public void initialize() {
+
     }
 
     public void suspend() {
         suspended = true;
     }
-
-    public abstract String getType();
 
     public String getId() {
         return accountId;

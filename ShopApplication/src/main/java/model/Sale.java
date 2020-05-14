@@ -3,20 +3,17 @@ package model;
 import model.account.Seller;
 import model.request.AddSaleRequest;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
-public class Sale {
-    private static HashMap<String, Sale> allSales = new HashMap<>();
+public class Sale implements Initializable {
+    private static Map<String, Sale> allSales = new HashMap<>();
     private String saleId;
     private String sellerId;
     private Date startDate;
     private Date endDate;
     private double percentage; // 0 - 100
     private double maximumAmount;
-    private HashSet<String> subProductIds;
+    private Set<String> subProductIds;
     private boolean suspended;
 
     public Sale(String sellerId, Date startDate, Date endDate, double percentage, double maximumAmount) {
@@ -25,6 +22,7 @@ public class Sale {
         this.endDate = endDate;
         this.percentage = percentage;
         this.maximumAmount = maximumAmount;
+        subProductIds = new HashSet<>();
         suspended = false;
         new AddSaleRequest(this);
     }
@@ -34,13 +32,15 @@ public class Sale {
         return null;
     }
 
-    public static ArrayList<Sale> getAllSales() {
-        ArrayList<Sale> sales = new ArrayList<>();
-        for (Sale sale : allSales.values()) {
-            if (!sale.suspended) {
-                sales.add(sale);
-            }
-        }
+    public static List<Sale> getAllSales() {
+        return getAllSales(true);
+    }
+
+    public static List<Sale> getAllSales(boolean checkSuspense) {
+        List<Sale> sales = new ArrayList<>(allSales.values());
+        if (checkSuspense)
+            sales.removeIf(sale -> sale.suspended);
+
         return sales;
     }
 
@@ -50,29 +50,32 @@ public class Sale {
 
     public static Sale getSaleById(String saleId, boolean checkSuspense) {
         Sale sale = allSales.get(saleId);
-        if (checkSuspense && sale != null && sale.suspended) {
+        if (checkSuspense && sale != null && sale.suspended)
             sale = null;
-        }
+
         return sale;
     }
 
+    @Override
     public void initialize() {
-        if (saleId == null) {
+        if (saleId == null)
             saleId = getNewId(sellerId);
-        }
         allSales.put(saleId, this);
         if (!suspended) {
-            subProductIds = new HashSet<>();
+            for (String subProductId : subProductIds) {
+                SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+                subProduct.setSale(saleId);
+            }
             getSeller().addSale(saleId);
         }
     }
 
     public void suspend() {
-        getSeller().removeSale(saleId);
         for (SubProduct subProduct : getSubProducts()) {
             subProduct.setSale(null);
         }
         subProductIds = null;
+        getSeller().removeSale(saleId);
         suspended = true;
     }
 
@@ -116,18 +119,19 @@ public class Sale {
         this.maximumAmount = maximumAmount;
     }
 
-    public ArrayList<SubProduct> getSubProducts() {
-        ArrayList<SubProduct> subProducts = new ArrayList<>();
+    public List<SubProduct> getSubProducts() {
+        List<SubProduct> subProducts = new ArrayList<>();
         for (String subProductId : subProductIds) {
-            SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-            subProducts.add(subProduct);
+            subProducts.add(SubProduct.getSubProductById(subProductId));
         }
+
         return subProducts;
     }
 
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
-        SubProduct.getSubProductById(subProductId).setSale(saleId);
+        if (saleId != null)
+            SubProduct.getSubProductById(subProductId).setSale(saleId);
     }
 
     public void removeSubProduct(String subProductId) {

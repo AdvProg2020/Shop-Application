@@ -16,11 +16,6 @@ public class AddSellerRequest extends Request {
         seller.initialize();
     }
 
-    @Override
-    public String getType() {
-        return "AddSeller";
-    }
-
     public Seller getSeller() {
         return seller;
     }
