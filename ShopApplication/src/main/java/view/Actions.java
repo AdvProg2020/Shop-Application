@@ -777,8 +777,8 @@ public class Actions {
                 System.out.println("user removed successfully");
             } catch (Exceptions.NotExistedUsernameException e) {
                 System.out.println(e.getMessage());
-                return;
             }
+            printSeparator();
         }
     }
 
@@ -808,8 +808,8 @@ public class Actions {
                 System.out.println("product removed successfully");
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
-                return;
             }
+            printSeparator();
         }
     }
 
@@ -821,7 +821,7 @@ public class Actions {
         //TODO: imp.
         @Override
         public void execute(String command) {
-
+            adminController.createDiscountCode();
         }
     }
 

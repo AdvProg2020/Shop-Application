@@ -63,4 +63,8 @@ public abstract class Action {
     }
 
     public abstract void execute(String command);
+
+    protected int form(String[] fields, String[] fieldRegex, String[] toFill, int currIndex) {
+
+    }
 }
