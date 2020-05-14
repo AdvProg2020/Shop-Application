@@ -170,7 +170,7 @@ public class Controller {
     }
 
     //Done!!
-    private ArrayList<String[]> productToIdName(ArrayList<Product> products) {
+    private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
         for (Product product : products) {
             productIdNames.add(productPack(product));
@@ -238,8 +238,20 @@ public class Controller {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        else
-            return productToIdName(new ArrayList<>(category.getProducts()));
+        else{
+            return productToIdNameBrand(getProductsInCategory(category));
+        }
+    }
+
+    //Done!!
+    private ArrayList<Product> getProductsInCategory(Category category){
+        ArrayList<Product> products =new ArrayList<>();
+        for (Category subCategory : category.getSubCategories()) {
+            products.addAll(getProductsInCategory(subCategory));
+        }
+        products.addAll(category.getProducts());
+        sortProducts("view count", false, products);
+        return products;
     }
 
     //Done!!
@@ -274,7 +286,7 @@ public class Controller {
 
         products = sortProducts(sortBy, isIncreasing, products);
 
-        return productToIdName(products);
+        return productToIdNameBrand(products);
     }
 
     //Done!!
