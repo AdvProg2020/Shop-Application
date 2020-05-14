@@ -232,6 +232,7 @@ public class SellerController extends Controller {
     }
 
     //Done!!
+    //TODO: String k.
     public ArrayList<String> viewSales() {
         ArrayList<String> saleIds = new ArrayList<>();
         for (Sale sale : ((Seller) currentAccount).getSales()) {

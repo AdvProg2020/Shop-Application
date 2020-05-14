@@ -25,6 +25,7 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
+    //TODO: return price as well.
     public ArrayList<String[]> getProductsInCart() {
         ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();

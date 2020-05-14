@@ -590,9 +590,10 @@ class Menus {
 
     //this is both used in product menu and in customer menu
     public static class ShoppingCartMenu extends Menu {
-        private
+        private ArrayList<String[]> currentProducts;
         ShoppingCartMenu(String name, Menu parent){
             super(name, true, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
+            this.currentProducts = new ArrayList<>();
         }
 
         @Override
@@ -603,10 +604,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.CustomerCartShowProducts("show products"));
-            subActions.put(index + 2, new Actions.CustomerCartViewProduct("view product"));
-            subActions.put(index + 3, new Actions.CustomerCartIncreaseProductCount("increase count"));
-            subActions.put(index + 4, new Actions.CustomerCartDecreaseProductCount("decrease count"));
+            subActions.put(index + 1, new Actions.CustomerCartShowProducts("show products", currentProducts));
+            subActions.put(index + 2, new Actions.CustomerCartViewProduct("view product", currentProducts));
+            subActions.put(index + 3, new Actions.CustomerCartIncreaseProductCount("increase count", currentProducts));
+            subActions.put(index + 4, new Actions.CustomerCartDecreaseProductCount("decrease count", currentProducts));
             subActions.put(index + 5, new Actions.CustomerCartShowTotalPrice("show total price"));
             subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products"));
             subActions.put(index + 7, new Actions.BackAction("back", parent));

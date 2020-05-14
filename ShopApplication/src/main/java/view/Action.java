@@ -48,7 +48,11 @@ public abstract class Action {
         this.execute(command);
     }
 
-    protected void printList(ArrayList<String[]> list, int args) {
+    protected void printList(ArrayList<String[]> list) {
+        if (list.isEmpty()) {
+            System.out.println("this list is empty!");
+        }
+        int args = list.get(0).length;
         int size = list.size();
         for (int i = 0; i < size; i++) {
             System.out.println(i + ".");
@@ -60,6 +64,11 @@ public abstract class Action {
 
     protected void printSeparator() {
         System.out.println("-------------------------------\n");
+    }
+
+    protected String getGroup(String command, int groupIndex) {
+        Matcher commandMatcher = getMatcherReady(command);
+        return commandMatcher.group(groupIndex);
     }
 
     public abstract void execute(String command);

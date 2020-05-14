@@ -1,13 +1,17 @@
 package view;
 
 import controller.*;
+import model.Cart;
 
+import javax.swing.plaf.IconUIResource;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 
-//TODO: be actions controller haro moarefi kon.
+//TODO: printSeparator();
+//TODO: isInProducts --> int IndexByID
+//TODO: getGroup()
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -159,11 +163,11 @@ public class Actions {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
                 ArrayList<String[]> info = mainController.getSubCategoriesOfThisCategory(lastCategory);
-                printList(info, 2);
+                printList(info);
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
-                return;
             }
+            printSeparator();
         }
 
         @Override
@@ -1084,7 +1088,8 @@ public class Actions {
         @Override
         public void execute(String command) {
             ArrayList<String[]> sales = sellerController.viewSales();
-            printList(sales, 6);
+            printList(sales);
+            printSeparator();
         }
     }
 
@@ -1207,7 +1212,7 @@ public class Actions {
             if (sellerProducts.isEmpty()) {
                 sellerProducts.addAll(sellerController.manageProducts());
             }
-            printList(sellerProducts, 3);
+            printList(sellerProducts);
             printSeparator();
         }
     }
@@ -1245,6 +1250,7 @@ public class Actions {
                 if ( ! isInProducts(productID)) {
                     System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
                 } else {
+                    mainController.showProduct(productID);
                     String[] info = sellerController.viewProduct(productID);
                     printInfo(info);
                 }
@@ -1393,46 +1399,150 @@ public class Actions {
     }
 
     public static class CustomerCartShowProducts extends Action {
-        CustomerCartShowProducts(String name) {
+        private ArrayList<String[]> currentProducts;
+        CustomerCartShowProducts(String name, ArrayList<String[]> currentProducts) {
             super(name, Constants.Actions.customerCartShowProductsPattern, Constants.Actions.customerCartShowProductsCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        private void refreshCurrentProducts() {
+            currentProducts.clear();
+            currentProducts.addAll(customerController.getProductsInCart());
         }
 
         @Override
         public void execute(String command) {
-
+            refreshCurrentProducts();
+            printList(currentProducts);
+            printSeparator();
         }
     }
 
     public static class CustomerCartViewProduct extends Action {
-        CustomerCartViewProduct(String name) {
+        private ArrayList<String[]> currentProducts;
+        CustomerCartViewProduct(String name, ArrayList<String[]> currentProducts) {
             super(name, Constants.Actions.customerCartViewProductPattern, Constants.Actions.customerCartViewProductCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        private int getIndexByID(String productID) {
+            int size = currentProducts.size();
+            for (int i = 0; i < size; i++) {
+                if (currentProducts.get(i)[0].equals(productID)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        //wtf is last field.
+        private void printInfo(int index) {
+            String[] info = currentProducts.get(index);
+            System.out.println("1. product ID: " + info[0]);
+            System.out.println("2. product name: " + info[1]);
+            System.out.println("3. product brand: " + info[2]);
+            System.out.println("4. seller username: " + info[3]);
+            System.out.println("5. seller store name: " + info[4]);
+            System.out.println("6. product count: " + info[5]);
+            System.out.println("7. " + info[6]);
         }
 
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            try {
+                int index = getIndexByID(productID);
+                if (index == -1) {
+                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+                } else {
+                    customerController.viewProductInCart(productID);
+                    printInfo(index);
+                }
+            } catch (Exceptions.InvalidSubProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
     public static class CustomerCartIncreaseProductCount extends Action {
-        CustomerCartIncreaseProductCount(String name) {
+        private ArrayList<String[]> currentProducts;
+        CustomerCartIncreaseProductCount(String name, ArrayList<String[]> currentProducts) {
             super(name, Constants.Actions.customerCartIncreaseProductCountPattern, Constants.Actions.customerCartIncreaseProductCountCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        private int getIndexByID(String productID) {
+            int size = currentProducts.size();
+            for (int i = 0; i < size; i++) {
+                if (currentProducts.get(i)[0].equals(productID)) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            int count;
+            if (commandMatcher.groupCount() == 2) {
+                count = Integer.parseInt(commandMatcher.group(2));
+            } else { count = 1; }
+            try {
+                int index = getIndexByID(productID);
+                if (index == -1) {
+                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+                } else {
+                   customerController.increaseProductInCart(productID, count);
+                }
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException e) {
+                System.out.println(e.getMessage());
+            } catch (Exceptions.UnavailableProductException e) {
+                System.out.println("not enough product. try choosing another seller");
+            }
+            printSeparator();
         }
     }
 
     public static class CustomerCartDecreaseProductCount extends Action {
-        CustomerCartDecreaseProductCount(String name) {
+        private ArrayList<String[]> currentProducts;
+        CustomerCartDecreaseProductCount(String name, ArrayList<String[]> currentProducts) {
             super(name, Constants.Actions.customerCartDecreaseProductCountPattern, Constants.Actions.customerCartDecreaseProductCountCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        private int getIndexByID(String productID) {
+            int size = currentProducts.size();
+            for (int i = 0; i < size; i++) {
+                if (currentProducts.get(i)[0].equals(productID)) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            int count;
+            if (commandMatcher.groupCount() == 2) {
+                count = Integer.parseInt(commandMatcher.group(2));
+            } else { count = 1; }
+            try {
+                int index = getIndexByID(productID);
+                if (index == -1) {
+                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+                } else {
+                    customerController.decreaseProductInCart(productID, count);
+                }
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
@@ -1443,10 +1553,12 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-
+            System.out.println("Total price (ofcourse ghabel nadare :p):" + customerController.getTotalPriceOfCart());
+            printSeparator();
         }
     }
 
+    //TODO: what about anonymous
     public static class CustomerCartPurchase extends Action {
         CustomerCartPurchase(String name) {
             super(name, Constants.Actions.customerCartPurchasePattern, Constants.Actions.customerCartPurchaseCommand);

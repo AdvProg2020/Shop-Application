@@ -178,12 +178,12 @@ final class Constants {
         //customer account menu actions
         static final String customerCartShowProductsCommand = "show products";
         static final String customerCartShowProductsPattern = caseInsensitiveMode + "^" + customerCartShowProductsCommand + "$";
-        static final String customerCartViewProductCommand = "view [productIndex]";
+        static final String customerCartViewProductCommand = "view [productID]";
         static final String customerCartViewProductPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
-        static final String customerCartIncreaseProductCountCommand = "increase [productIndex] [-count]";
+        static final String customerCartIncreaseProductCountCommand = "increase [productID] [-count]";
         static final String customerCartIncreaseProductCountPattern = caseInsensitiveMode +
                 "^increase " + argumentPattern + "(?: " + unsignedIntPattern + ")$";
-        static final String customerCartDecreaseProductCountCommand = "increase [productIndex] [-count]";
+        static final String customerCartDecreaseProductCountCommand = "increase [productID] [-count]";
         static final String customerCartDecreaseProductCountPattern = caseInsensitiveMode +
                 "^decrease " + argumentPattern + "(?: " + unsignedIntPattern + ")$";
         static final String customerCartShowTotalPriceCommand = "show total price";
@@ -192,9 +192,9 @@ final class Constants {
         static final String customerCartPurchasePattern = caseInsensitiveMode + "^" + customerCartPurchaseCommand + "$";
         static final String customerShowOrdersCommand = "show orders";
         static final String customerShowOrdersPattern = caseInsensitiveMode + "^" + customerShowOrdersCommand + "$";
-        static final String customerViewOrderCommand = "show order [orderIndex]";
+        static final String customerViewOrderCommand = "show order [orderID]";
         static final String customerViewOrderPattern = caseInsensitiveMode + "^show order " + argumentPattern + "$";
-        static final String customerRateProductCommand = "rate [productIndex] [1-5]";
+        static final String customerRateProductCommand = "rate [productID] [1-5]";
         static final String customerRateProductPattern = caseInsensitiveMode + "^rate " + argumentPattern + "([1-5])$";
     }
 }
