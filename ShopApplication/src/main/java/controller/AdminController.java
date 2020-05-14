@@ -76,7 +76,7 @@ public class AdminController extends Controller {
 
     //Done!!
     public void createDiscountCode(String discountCode, Date startDate, Date endDate, int percentage, int maximumAmount) throws Exceptions.ExistingDiscountCodeException {
-        if(Discount.getDiscountByCode(discountCode) != null)
+        if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
         else
             new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
@@ -138,7 +138,7 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public String[] getDiscountEditableFields(){
+    public String[] getDiscountEditableFields() {
         String[] editableFields = new String[4];
         editableFields[0] = "start date";
         editableFields[1] = "end date";
@@ -148,10 +148,10 @@ public class AdminController extends Controller {
     }
 
     //Done!!
+
     /**
-     *
-     * @param code String
-     * @param field String ->                     "start date", "end date", "maximum amount", "percentage"
+     * @param code           String
+     * @param field          String ->                     "start date", "end date", "maximum amount", "percentage"
      * @param newInformation String: should match  dateFormat , dateFormat,  Double         ,  Double
      * @throws Exceptions.DiscountCodeException
      * @throws Exceptions.SameAsPreviousValueException
@@ -159,11 +159,11 @@ public class AdminController extends Controller {
      */
     public void editDiscountCode(String code, String field, String newInformation) throws Exceptions.DiscountCodeException, Exceptions.SameAsPreviousValueException, Exceptions.InvalidFormatException {
         Discount discount = Discount.getDiscountByCode(code);
-        if( discount == null )
+        if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
-        else{
-            if(field.equalsIgnoreCase("start date")){
-                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+        else {
+            if (field.equalsIgnoreCase("start date")) {
+                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     try {
@@ -172,8 +172,8 @@ public class AdminController extends Controller {
                         throw new Exceptions.InvalidFormatException("date");
                     }
                 }
-            }else if(field.equalsIgnoreCase("end date")){
-                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+            } else if (field.equalsIgnoreCase("end date")) {
+                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     try {
@@ -182,14 +182,14 @@ public class AdminController extends Controller {
                         throw new Exceptions.InvalidFormatException("date");
                     }
                 }
-            }else if(field.equalsIgnoreCase("maximum amount")){
-                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+            } else if (field.equalsIgnoreCase("maximum amount")) {
+                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     discount.setMaximumAmount(Double.parseDouble(newInformation));
                 }
-            }else if(field.equalsIgnoreCase("percentage")){
-                if(discount.getDiscountCode().equalsIgnoreCase(newInformation))
+            } else if (field.equalsIgnoreCase("percentage")) {
+                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     discount.setPercentage(Double.parseDouble(newInformation));
@@ -219,17 +219,16 @@ public class AdminController extends Controller {
     //Todo
 
     /**
-     *
      * @param requestId
      * @return AddProduct: { {"AddProduct"}, { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }, {specialProperties}}
-     *         AddReview: { {"AddReview"}, {}}
+     * AddReview: { {"AddReview"}, {}}
      * @throws Exceptions.InvalidRequestIdException
      */
     public ArrayList<String[]> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId);
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
-        else{
+        else {
             String[] typeDate = new String[2];
             typeDate[0] = request.getClass().getName();
             typeDate[1] = dateFormat.format(request.getDate());
@@ -237,31 +236,31 @@ public class AdminController extends Controller {
             detailsOfRequest.add(typeDate);
             switch (typeDate[0]) {
                 case "AddProduct":
-                    detailsOfRequest.add(getSubProductInfo(((AddProductRequest)request).getSubProduct()));
-                    String[] specialProperties = new String[((AddProductRequest)request).getProduct().getSpecialProperties().size()];
-                    detailsOfRequest.add(((AddProductRequest)request).getProduct().getSpecialProperties().toArray(specialProperties));
+                    detailsOfRequest.add(getSubProductInfo(((AddProductRequest) request).getSubProduct()));
+                    String[] specialProperties = new String[((AddProductRequest) request).getProduct().getSpecialProperties().size()];
+                    detailsOfRequest.add(((AddProductRequest) request).getProduct().getSpecialProperties().toArray(specialProperties));
                     break;
                 case "AddReview":
-                    detailsOfRequest.add(getReviewInfo(((AddReviewRequest)request).getReview()));
+                    detailsOfRequest.add(getReviewInfo(((AddReviewRequest) request).getReview()));
                     break;
                 case "AddSale":
-                    detailsOfRequest.add(getSaleInfo(((AddSaleRequest)request).getSale()));
+                    detailsOfRequest.add(getSaleInfo(((AddSaleRequest) request).getSale()));
                     break;
                 case "AddSeller":
-                    detailsOfRequest.add(getPersonalInfo(((AddSellerRequest)request).getSeller()));
+                    detailsOfRequest.add(getPersonalInfo(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProduct":
-                    detailsOfRequest.add(getSubProductInfo(SubProduct.getSubProductById(((EditProductRequest)request).getSubProductId())));
+                    detailsOfRequest.add(getSubProductInfo(SubProduct.getSubProductById(((EditProductRequest) request).getSubProductId())));
                     String[] productChange = new String[2];
-                    productChange[0] = ((EditProductRequest)request).getField().toString();
-                    productChange[1] = ((EditProductRequest)request).getNewValue();
+                    productChange[0] = ((EditProductRequest) request).getField().toString();
+                    productChange[1] = ((EditProductRequest) request).getNewValue();
                     detailsOfRequest.add(productChange);
                     break;
                 case "EditSale":
-                    detailsOfRequest.add(getSaleInfo(Sale.getSaleById(((EditSaleRequest)request).getSaleId())));
+                    detailsOfRequest.add(getSaleInfo(Sale.getSaleById(((EditSaleRequest) request).getSaleId())));
                     String[] saleChange = new String[2];
-                    saleChange[0] = ((EditSaleRequest)request).getField().toString();
-                    saleChange[1] = ((EditSaleRequest)request).getNewValue();
+                    saleChange[0] = ((EditSaleRequest) request).getField().toString();
+                    saleChange[1] = ((EditSaleRequest) request).getNewValue();
                     detailsOfRequest.add(saleChange);
                     break;
             }
@@ -270,11 +269,10 @@ public class AdminController extends Controller {
     }
 
     /**
-     *
      * @param subProduct
      * @return String[9]: { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }
      */
-    private String[] getSubProductInfo(SubProduct subProduct){
+    private String[] getSubProductInfo(SubProduct subProduct) {
         String[] subProductInfo = new String[9];
         Product product = subProduct.getProduct();
         subProductInfo[0] = product.getId();
@@ -292,11 +290,10 @@ public class AdminController extends Controller {
     //Done!!
 
     /**
-     *
      * @param review
      * @return String[6]: { reviewerUsername, productId, productName, productBrand, reviewTitle, reviewText }
      */
-    private String[] getReviewInfo(Review review){
+    private String[] getReviewInfo(Review review) {
         String[] reviewInfo = new String[6];
         reviewInfo[0] = review.getReviewer().getUsername();
         reviewInfo[1] = review.getProduct().getId();
@@ -310,10 +307,10 @@ public class AdminController extends Controller {
     //Done!!
     public void acceptRequest(String requestID, boolean accepted) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestID);
-        if(request == null)
+        if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestID);
         else {
-            if(accepted)
+            if (accepted)
                 request.accept();
             else
                 request.decline();
@@ -329,7 +326,7 @@ public class AdminController extends Controller {
         return categoryNames;
     }
 
-    public String[] getCategoryEditableFields(){
+    public String[] getCategoryEditableFields() {
         String[] editableFields = new String[2];
         editableFields[0] = "name";
         editableFields[1] = "parent name";
@@ -339,42 +336,41 @@ public class AdminController extends Controller {
     //Done!!
 
     /**
-     *
      * @param categoryName
-     * @param field             "name", "parent name"
-     * @param newInformation    newName, nameOfNewParent
-     * @throws Exceptions.InvalidCategoryException if this category doesn't exist
-     * @throws Exceptions.InvalidFieldException if there is no such field to edit
+     * @param field          "name", "parent name"
+     * @param newInformation newName, nameOfNewParent
+     * @throws Exceptions.InvalidCategoryException     if this category doesn't exist
+     * @throws Exceptions.InvalidFieldException        if there is no such field to edit
      * @throws Exceptions.SameAsPreviousValueException if new information is as the same as the previous one
-     * @throws Exceptions.ExistedCategoryException if there is already a category with new name
-     * @throws Exceptions.SubCategoryException if the chosen new parent is a child of this category
+     * @throws Exceptions.ExistedCategoryException     if there is already a category with new name
+     * @throws Exceptions.SubCategoryException         if the chosen new parent is a child of this category
      */
     public void editCategory(String categoryName, String field, String newInformation) throws Exceptions.InvalidCategoryException,
             Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException, Exceptions.ExistedCategoryException, Exceptions.SubCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if ( category == null)
+        if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        if( field.equalsIgnoreCase("name")){
-            if( category.getName().equals(newInformation))
+        if (field.equalsIgnoreCase("name")) {
+            if (category.getName().equals(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(field);
             else {
-                if(Category.getCategoryByName(newInformation) != null)
+                if (Category.getCategoryByName(newInformation) != null)
                     throw new Exceptions.ExistedCategoryException(newInformation);
                 else {
                     category.setName(newInformation);
                 }
             }
-        }else if ( field.equalsIgnoreCase("parent name")){
+        } else if (field.equalsIgnoreCase("parent name")) {
             Category newParentCategory = Category.getCategoryByName(newInformation);
-            if(newParentCategory == null){
+            if (newParentCategory == null) {
                 category.setParent(Category.getSuperCategory().getId());
-            }else {
+            } else {
                 if (category.hasSubCategoryWithId(newParentCategory.getId()))
                     throw new Exceptions.SubCategoryException(categoryName, newInformation);
                 else
                     category.setParent(newParentCategory.getId());
             }
-        }else
+        } else
             throw new Exceptions.InvalidFieldException();
     }
 
@@ -382,7 +378,7 @@ public class AdminController extends Controller {
     public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
         if (Category.getCategoryByName(categoryName) != null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        else{
+        else {
             Category parentCategory = Category.getCategoryByName(parentCategoryName);
             String parentCategoryId = parentCategory == null ? Category.getSuperCategory().getId() : parentCategory.getId();
             new Category(categoryName, parentCategoryId, specialProperties);

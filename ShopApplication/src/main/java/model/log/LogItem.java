@@ -25,8 +25,8 @@ public class LogItem implements Initializable {
         this.sellLogId = sellLogId;
         this.subProductId = subProductId;
         this.count = count;
-        price = (getSubProduct().getRawPrice())*count;
-        saleAmount = (price - getSubProduct().getPriceWithSale())*count;
+        price = getSubProduct().getRawPrice();
+        saleAmount = price - getSubProduct().getPriceWithSale();
         initialize();
     }
 

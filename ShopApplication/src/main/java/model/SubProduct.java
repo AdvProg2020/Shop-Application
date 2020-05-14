@@ -87,9 +87,6 @@ public class SubProduct implements Initializable {
         return Product.getProductById(productId, false);
     }
 
-    public String getProductId(){
-        return productId;
-    }
 
     @Label("Model internal use only!")
     public void setProductId(String productId) { // only used for accepting productRequest

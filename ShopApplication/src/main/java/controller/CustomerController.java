@@ -6,8 +6,11 @@ import model.Product;
 import model.Rating;
 import model.SubProduct;
 import model.account.Customer;
+import model.account.Seller;
 import model.log.BuyLog;
 import model.log.LogItem;
+import model.log.SellLog;
+import model.log.ShippingStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +19,8 @@ import java.util.Map;
 public class CustomerController extends Controller {
 
     @Override
-    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException{
+    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
+            Exceptions.SameAsPreviousValueException {
         super.editPersonalInfo(field, newInformation);
     }
 
@@ -31,7 +35,7 @@ public class CustomerController extends Controller {
     }
 
     @Label("For getProductInCart method")
-    private String[] productPackInCart( SubProduct subProduct, int count){
+    private String[] productPackInCart(SubProduct subProduct, int count) {
         String[] productPack = new String[7];
         productPack[0] = subProduct.getId();
         productPack[1] = subProduct.getProduct().getName();
@@ -39,7 +43,7 @@ public class CustomerController extends Controller {
         productPack[3] = subProduct.getSeller().getUsername();
         productPack[4] = subProduct.getSeller().getStoreName();
         productPack[5] = Integer.toString(count);
-        productPack[6] = Double.toString(subProduct.getPriceWithSale()*count);
+        productPack[6] = Double.toString(subProduct.getPriceWithSale() * count);
         return productPack;
     }
 
@@ -57,7 +61,8 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException, Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
+    public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
+            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -71,7 +76,8 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException, Exceptions.NotSubProductIdInTheCartException {
+    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
+            Exceptions.NotSubProductIdInTheCartException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
@@ -90,28 +96,75 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    public boolean isDiscountCodeValid(String code){
+    public boolean isDiscountCodeValid(String code) {
         Discount discount = Discount.getDiscountByCode(code);
-        if(discount != null)
+        if (discount != null)
             return discount.hasCustomerWithId(currentAccount.getId());
         else
             return false;
     }
 
-    //TODO
-    public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException {
+    //Done!! Todo: Shayan check please
+    public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
+            Exceptions.NotAvailableSubProductsInCart, Exceptions.InvalidDiscountException, Exceptions.EmptyCartException {
+        String notAvailableSubProducts;
+        Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
+        if (subProductsInCart.isEmpty())
+            throw new Exceptions.EmptyCartException();
+        if (!(notAvailableSubProducts = notAvailableSubProductsInCart()).equals(""))
+            throw new Exceptions.NotAvailableSubProductsInCart(notAvailableSubProducts);
         double totalPrice = currentCart.getTotalPrice();
-        if( isDiscountCodeValid(discountCode) ){
-            Discount discount = Discount.getDiscountByCode(discountCode);
-
+        double discountAmount = 0;
+        Discount discount = null;
+        if (discountCode != null) {
+            if (isDiscountCodeValid(discountCode) && (discount = Discount.getDiscountByCode(discountCode)) != null) {
+                discountAmount = discount.calculateDiscountAmount(totalPrice);
+            } else
+                throw new Exceptions.InvalidDiscountException(discountCode);
         }
+        double paidMoney = totalPrice - discountAmount;
+        if (paidMoney > ((Customer) currentAccount).getBalance())
+            throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount).getBalance());
+        BuyLog buyLog = new BuyLog(currentAccount.getId(), paidMoney, discountAmount, receiverName, address, receiverPhone, ShippingStatus.PROCESSING);
+        HashMap<Seller, SellLog> sellLogs = new HashMap<>();
+        SellLog sellLog;
+        Seller seller;
+        int subProductCount;
+        for (SubProduct subProduct : subProductsInCart.keySet()) {
+            seller = subProduct.getSeller();
+            if (sellLogs.containsKey(seller))
+                sellLog = sellLogs.get(seller);
+            else {
+                sellLog = new SellLog(buyLog.getId(), seller.getId());
+                sellLogs.put(seller, sellLog);
+            }
+            subProductCount = subProductsInCart.get(subProduct);
+            new LogItem(buyLog.getId(), sellLog.getId(), subProduct.getId(), subProductCount);
+            subProduct.changeRemainingCount(-subProductCount);
+            seller.changeBalance(subProduct.getPriceWithSale() * subProductCount);
+        }
+        if (discount != null)
+            discount.changeCount(currentAccount.getId(), -1);
+        ((Customer) currentAccount).changeBalance(-paidMoney);
     }
 
     //Done!!
+    private String notAvailableSubProductsInCart() {
+        StringBuilder notAvailableSubProducts = new StringBuilder();
+        Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
+        for (SubProduct subProduct : subProductsInCart.keySet()) {
+            if (subProduct.getRemainingCount() < subProductsInCart.get(subProduct)) {
+                String notAvailableProduct = "\n" + subProduct.getId() + " number in cart: " + subProductsInCart.get(subProduct) +
+                        " available count: " + subProduct.getRemainingCount();
+                notAvailableSubProducts.append(notAvailableSubProducts);
+            }
+        }
+        return notAvailableSubProducts.toString();
+    }
 
+    //Done!!
     /**
-     *
-     * @return ArrayList<String[9]> : { Id, customerUsername,
+     * @return ArrayList<String [ 9 ]> : { Id, customerUsername,
      * receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
      * @throws Exceptions.CustomerLoginException
      */
@@ -128,16 +181,15 @@ public class CustomerController extends Controller {
     //Done!!
 
     /**
-     *
      * @param orderId
      * @return { Id, customerUsername, receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
-     *          product pack String[8] : { productId, name, brand, sellerUsername, sellerStoreName, count,  }
+     * product pack String[8] : { productId, name, brand, sellerUsername, sellerStoreName, count,  }
      * @throws Exceptions.InvalidLogIdException
      */
     public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = null;
         for (BuyLog log : ((Customer) currentAccount).getBuyLogs()) {
-            if(log.getId().equals(orderId))
+            if (log.getId().equals(orderId))
                 buyLog = log;
         }
         if (buyLog == null)
@@ -153,7 +205,7 @@ public class CustomerController extends Controller {
     }
 
     @Label("For showing order methods")
-    private String[] orderPack(BuyLog buyLog){
+    private String[] orderPack(BuyLog buyLog) {
         String[] orderPack = new String[9];
         orderPack[0] = buyLog.getId();
         orderPack[1] = buyLog.getCustomer().getUsername();
@@ -168,9 +220,9 @@ public class CustomerController extends Controller {
     }
 
     @Label("For showing products in an order")
-    private String[] logItemPack(LogItem item){
+    private String[] logItemPack(LogItem item) {
         String[] productPack = new String[8];
-        Product product = Product.getProductById(item.getSubProduct().getProductId(), false);
+        Product product = item.getSubProduct().getProduct();
         productPack[0] = product.getId();
         productPack[1] = product.getName();
         productPack[2] = product.getBrand();
@@ -183,19 +235,20 @@ public class CustomerController extends Controller {
     }
 
     //Done!! Todo: Shayan check please
-    public void rateProduct(String productID, int score) throws Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
+    public void rateProduct(String productID, int score) throws
+            Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID, false);
-        if(product == null)
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productID);
         else {
             for (SubProduct subProduct : product.getSubProducts()) {
-                if(subProduct.getCustomers().contains(((Customer)currentAccount))){
-                    Rating rating = new Rating(currentAccount.getId(), productID,score);
+                if (subProduct.getCustomers().contains(((Customer) currentAccount))) {
+                    Rating rating = new Rating(currentAccount.getId(), productID, score);
                     product.addRating(rating.getId());
                     return;
                 }
             }
-           throw new Exceptions.HaveNotBoughtException(productID);
+            throw new Exceptions.HaveNotBoughtException(productID);
         }
     }
 

@@ -17,6 +17,7 @@ public class Controller {
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
     //Done!
+
     /**
      * @param username
      * @param type
@@ -31,18 +32,18 @@ public class Controller {
     }
 
     //Done!! Todo: Shayan please check this
+
     /**
-     * @param type
-     *        information: 1- customer:
-     *                     * String username, String password, String firstName, String lastName, String email, String phone, double balance
-     *                     2- seller:
-     *                     * String username, String password, String firstName, String lastName, String email, String phone, String storeName, double balance
-     *                     3- admin:
-     *                     * String username, String password, String firstName, String lastName, String email, String phone
+     * @param type information: 1- customer:
+     *             * String username, String password, String firstName, String lastName, String email, String phone, double balance
+     *             2- seller:
+     *             * String username, String password, String firstName, String lastName, String email, String phone, String storeName, double balance
+     *             3- admin:
+     *             * String username, String password, String firstName, String lastName, String email, String phone
      */
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
                              String email, String phone, double balance, String storeName) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
-        if(Account.getAccountByUsername(username) != null)
+        if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.ExistedUsernameException(username);
         switch (type) {
             case "customer":
@@ -75,7 +76,7 @@ public class Controller {
     }
 
     //Done!!
-    public void logout(){
+    public void logout() {
         currentAccount = null;
         currentCart = new Cart(null);
     }
@@ -94,10 +95,9 @@ public class Controller {
     //Done!
 
     /**
-     *
      * @return String[5]: {price, rating score, name, category name, view counts}
      */
-    public String[] getAvailableSorts(){
+    public String[] getAvailableSorts() {
         String[] availableSorts = new String[5];
         availableSorts[0] = "price";
         availableSorts[1] = "rating score";
@@ -109,7 +109,7 @@ public class Controller {
 
     //Done!! check the directions in the test
     private ArrayList<Product> sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
-        int direction = isIncreasing ? 1 : -1 ;
+        int direction = isIncreasing ? 1 : -1;
         if (sortBy.equalsIgnoreCase("price")) {
             products.sort(new Comparator<Product>() {
                 @Override
@@ -152,7 +152,7 @@ public class Controller {
     //Done!!
     //TODO: getAvailableFilters.
     private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                              String storeName, double minRatingScore, ArrayList<Product> products) {
+                                String storeName, double minRatingScore, ArrayList<Product> products) {
         if (available)
             products.removeIf(product -> (product.getTotalRemainingCount() == 0));
         if (minPrice != 0)
@@ -249,16 +249,15 @@ public class Controller {
      * @param sortBy
      * @param filterBy
      * @return
-     * @throws Exceptions.InvalidProductIdException
-     * for filtering:
-     * available true if only available are to be shown.
-     * minPrice if N/A pass 0.00
-     * maxPrice if N/A pass 0.00
-     * contains if N/A pass null
-     * brand if N/A pass null
-     * storeName if N/A pass null
-     * minRatingScore if N/A pass 0.00
-     * products
+     * @throws Exceptions.InvalidProductIdException for filtering:
+     *                                              available true if only available are to be shown.
+     *                                              minPrice if N/A pass 0.00
+     *                                              maxPrice if N/A pass 0.00
+     *                                              contains if N/A pass null
+     *                                              brand if N/A pass null
+     *                                              storeName if N/A pass null
+     *                                              minRatingScore if N/A pass 0.00
+     *                                              products
      */
     public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy) throws Exceptions.InvalidProductIdException {
         ArrayList<Product> products = new ArrayList<>();
@@ -273,7 +272,7 @@ public class Controller {
         filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
-        products = sortProducts(sortBy,isIncreasing, products);
+        products = sortProducts(sortBy, isIncreasing, products);
 
         return productToIdName(products);
     }
@@ -316,7 +315,7 @@ public class Controller {
     //Done!!
     public ArrayList<String> getSpecialPropertiesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
-        if(product == null)
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else
             return (ArrayList<String>) product.getSpecialProperties();
@@ -370,9 +369,9 @@ public class Controller {
     //Done!! TODO: check please
     public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if(subProduct == null)
+        if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if(subProduct.getRemainingCount() < count)
+        else if (subProduct.getRemainingCount() < count)
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubProductCount(subProductId, count);
@@ -393,6 +392,7 @@ public class Controller {
     }
 
     //Done!!
+
     /**
      * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
@@ -405,18 +405,18 @@ public class Controller {
     }
 
     //Done!!
+
     /**
-     * @return
-     *                     *1- seller:String[6]
-     *                     * { String firstName, String lastName, String phone, String email, String password, String storeName}
-     *                     2- customer:
-     *                     * { String firstName, String lastName, String phone, String email, String password}
-     *                     3- admin:
-     *                     * { String firstName, String lastName, String phone, String email, String password, String storeName}
+     * @return *1- seller:String[6]
+     * * { String firstName, String lastName, String phone, String email, String password, String storeName}
+     * 2- customer:
+     * * { String firstName, String lastName, String phone, String email, String password}
+     * 3- admin:
+     * * { String firstName, String lastName, String phone, String email, String password, String storeName}
      * @throws Exceptions.NotLoggedInException
      */
     public String[] getPersonalInfoEditableFields() throws Exceptions.NotLoggedInException {
-        if(currentAccount == null)
+        if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
         else {
             String[] editableFields = new String[5];
@@ -457,11 +457,10 @@ public class Controller {
     //Done!!
 
     /**
-     *
      * @return if
-     *      admin:     6: username, type, firstName, lastName, email, phone;
-     *      customer:  7: username, type, firstName, lastName, email, phone, balance;
-     *      seller:    8: username, type, firstName, lastName, email, phone, balance, storeName;
+     * admin:     6: username, type, firstName, lastName, email, phone;
+     * customer:  7: username, type, firstName, lastName, email, phone, balance;
+     * seller:    8: username, type, firstName, lastName, email, phone, balance, storeName;
      */
     public String[] viewPersonalInfo() {
         return getPersonalInfo(currentAccount);
@@ -471,27 +470,27 @@ public class Controller {
     protected void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
-                if(currentAccount.getFirstName().equals(newInformation))
+                if (currentAccount.getFirstName().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setFirstName(newInformation);
                 break;
             case "lastName":
-                if(currentAccount.getLastName().equals(newInformation))
+                if (currentAccount.getLastName().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setLastName(newInformation);
                 break;
             case "email":
-                if(currentAccount.getEmail().equals(newInformation))
+                if (currentAccount.getEmail().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setEmail(newInformation);
                 break;
             case "phone":
-                if(currentAccount.getPhone().equals(newInformation))
+                if (currentAccount.getPhone().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setPhone(newInformation);
                 break;
             case "password":
-                if(currentAccount.getPassword().equals(newInformation))
+                if (currentAccount.getPassword().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setPassword(newInformation);
                 break;
@@ -531,7 +530,7 @@ public class Controller {
     }
 
     //Todo
-    public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy){
+    public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
         return null;
     }
 }

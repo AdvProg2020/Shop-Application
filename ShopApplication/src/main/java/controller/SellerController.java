@@ -38,7 +38,7 @@ public class SellerController extends Controller {
         return companyInformation;
     }
 
-    public ArrayList<String[]> getAllSellLogs(){
+    public ArrayList<String[]> getAllSellLogs() {
         ArrayList<String[]> allSells = new ArrayList<>();
         for (SellLog sellLog : ((Seller) currentAccount).getSellLogs()) {
             allSells.add(sellPack(sellLog));
@@ -50,12 +50,12 @@ public class SellerController extends Controller {
     public ArrayList<String[]> getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException {
         SellLog sellLog = null;
         for (SellLog log : ((Seller) currentAccount).getSellLogs()) {
-            if( log.getId().equals(logId))
+            if (log.getId().equals(logId))
                 sellLog = log;
         }
-        if( sellLog == null)
+        if (sellLog == null)
             throw new Exceptions.InvalidLogIdException(logId);
-        else{
+        else {
             ArrayList<String[]> logInfo = new ArrayList<>();
             logInfo.add(sellPack(sellLog));
             for (LogItem item : sellLog.getLogItems()) {
@@ -66,7 +66,7 @@ public class SellerController extends Controller {
     }
 
     @Label("For showing-sellLog-methods")
-    private String[] sellPack(SellLog sellLog){
+    private String[] sellPack(SellLog sellLog) {
         String[] sellPack = new String[5];
         sellPack[0] = sellLog.getId();
         sellPack[1] = dateFormat.format(sellLog.getDate());
@@ -77,9 +77,9 @@ public class SellerController extends Controller {
     }
 
     @Label("For showing a product in a sellLog")
-    private String[] logItemPack(LogItem item){
+    private String[] logItemPack(LogItem item) {
         String[] productPack = new String[8];
-        Product product = Product.getProductById(item.getSubProduct().getProductId(), false);
+        Product product = item.getSubProduct().getProduct();
         productPack[0] = product.getId();
         productPack[1] = product.getName();
         productPack[2] = product.getBrand();
@@ -135,7 +135,7 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    public String[] getSaleEditableFields(){
+    public String[] getSaleEditableFields() {
         String[] saleEditableFields = new String[4];
         saleEditableFields[0] = "start date";
         saleEditableFields[1] = "end date";
@@ -307,26 +307,36 @@ public class SellerController extends Controller {
 
     //Done!!
     public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
-        if( startDate.before(endDate)) {
+        if (startDate.before(endDate)) {
             Sale sale = new Sale(((Seller) currentAccount).getId(), startDate, endDate, percentage, maximum);
             Product product = null;
             SubProduct subProduct = null;
             ArrayList<String> falseSubProductIds = new ArrayList<>();
             for (String productId : productIds) {
                 product = Product.getProductById(productId);
-                if( product != null){
-                    subProduct = product.getSubProductWithSellerId(((Seller)currentAccount).getId());
-                    if( subProduct != null )
+                if (product != null) {
+                    subProduct = product.getSubProductWithSellerId(((Seller) currentAccount).getId());
+                    if (subProduct != null)
                         sale.addSubProduct(subProduct.getId());
                     else
                         falseSubProductIds.add(productId);
-                }else
+                } else
                     falseSubProductIds.add(productId);
             }
-            if( falseSubProductIds.size() > 0)
-                throw new Exceptions.InvalidProductIdsForASeller(falseSubProductIds);
-        }else
+            if (falseSubProductIds.size() > 0)
+                throw new Exceptions.InvalidProductIdsForASeller(falseSubProductIds(falseSubProductIds));
+        } else
             throw new Exceptions.InvalidDateException();
+    }
+
+    private String falseSubProductIds(ArrayList<String> subProductIds) {
+        StringBuilder falseSubProductIds = new StringBuilder();
+        String falseSubProduct = null;
+        for (String subProductId : subProductIds) {
+            falseSubProduct = "\n" + subProductId;
+            falseSubProductIds.append(falseSubProduct);
+        }
+        return falseSubProductIds.toString();
     }
 
     //Done!
