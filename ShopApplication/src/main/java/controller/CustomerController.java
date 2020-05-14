@@ -13,9 +13,9 @@ import java.util.HashMap;
 
 public class CustomerController extends Controller {
 
-    //Done!! can edit credit?
-    public void editInformation(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException{
-        editCommonInformation(field, newInformation);
+    @Override
+    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException{
+        super.editPersonalInfo(field, newInformation);
     }
 
     //Done!!

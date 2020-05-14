@@ -14,8 +14,9 @@ import java.util.HashMap;
 public class AdminController extends Controller {
 
     //Done!!
+    @Override
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
-        editCommonInformation(field, newInformation);
+        super.editPersonalInfo(field, newInformation);
     }
 
     //Done!!

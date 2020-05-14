@@ -88,8 +88,8 @@ class Menus {
         }
     }
 
-
     //TODO: remove show products as an action and always do it as show method and kinda allow iteration through pages of the products. same for sale menu
+    //TODO: avalesh currentProducts update she.
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
         private String[] currentFilters;
@@ -110,9 +110,8 @@ class Menus {
             subMenus.put(2, new FilterMenu("product filtering menu", this, getAvailableFilters(), currentFilters));
         }
 
-        //TODO: imp.
         private String[] getAvailableSorts() {
-            return null;
+            return mainController.getAvailableSorts();
         }
 
         //TODO: imp. waiting for shayan to add the method
@@ -127,7 +126,7 @@ class Menus {
             subActions.put(index + 1, new Actions.ShowProductsAction("show products", this.categoryTree, this.currentFilters,this.currentSort,this.currentProducts));
             subActions.put(index + 2, new Actions.ShowCategories("show categories", this.categoryTree));
             subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category", this.categoryTree));
-            subActions.put(index + 5, new Actions.RevertCategoryAction("revert category"));
+            subActions.put(index + 5, new Actions.RevertCategoryAction("revert category", categoryTree));
             subActions.put(index + 6, new Actions.ProductDetailMenu("productDetailMenu"));
             subActions.put(index + 7, new Actions.BackAction("all product menu back", parent));
         }
@@ -155,7 +154,8 @@ class Menus {
             subActions.put(index + 1, new Actions.DigestProduct("digest product", productID));
             subActions.put(index + 2, new Actions.AddToCart("add to cart", subProductID));
             subActions.put(index + 3, new Actions.SelectSeller("select seller", subProductID));
-            subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
+            subActions.put(index + 4, new Actions.ShowCurrentSeller("show current seller", subProductID));
+   //         subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
             subActions.put(index + 5, new Actions.BackAction("back", null));
         }
 
@@ -208,11 +208,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.ShowAvailableSorts("product available sorts", availableSorts));
-            subActions.put(index + 2, new Actions.SortAction("product sorter", currentSort));
-            subActions.put(index + 3, new Actions.ShowCurrentSort("product current sort", currentSort));
-            subActions.put(index + 4, new Actions.DisableSort("product sort remover", currentSort));
-            subActions.put(index + 5, new Actions.BackAction("product sort back", parent));
+            subActions.put(index + 1, new Actions.ChooseSorting("choose sort", currentSort, availableSorts));
+            subActions.put(index + 2, new Actions.ShowCurrentSort("product current sort", currentSort));
+            subActions.put(index + 3, new Actions.DisableSort("product sort remover", currentSort));
+            subActions.put(index + 4, new Actions.BackAction("product sort back", parent));
         }
     }
 
@@ -235,25 +234,25 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.ShowAvailableFilters("product available filters", availableFilters));
-            subActions.put(index + 2, new Actions.FilterAction("product sorter", currentFilters));
-            subActions.put(index + 3, new Actions.ShowCurrentFilters("product current filters", currentFilters));
-            subActions.put(index + 4, new Actions.DisableFilter("product filter remover", currentFilters));
-            subActions.put(index + 5, new Actions.BackAction("product filter back", parent));
+            subActions.put(index + 1, new Actions.ChooseFiltering("product sorter", currentFilters, availableFilters));
+            subActions.put(index + 2, new Actions.ShowCurrentFilters("product current filters", currentFilters));
+            subActions.put(index + 3, new Actions.DisableFilter("product filter remover", currentFilters, availableFilters));
+            subActions.put(index + 4, new Actions.BackAction("product filter back", parent));
         }
     }
 
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
         private String[] currentFilters;
-        private ArrayList<String> currentProducts;
-        private ArrayList<String> currentOffs;
+        private ArrayList<String[]> currentProducts;
+        private ArrayList<String[]> currentOffs;
         SaleMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.saleMenuPattern, Constants.Menus.saleMenuCommand);
             this.currentSort = new StringBuilder();
             this.currentFilters = new String[getAvailableFilters().length];
             this.currentProducts = new ArrayList<>();
             this.currentOffs = new ArrayList<>();
+            currentOffs.addAll(mainController.sales());
         }
 
         @Override
@@ -296,6 +295,15 @@ class Menus {
         }
 
         @Override
+        public void execute() {
+            if (mainController.getType().equals("anonymous")) {
+                super.execute();
+            } else {
+                nextMenu.run();
+            }
+        }
+
+        @Override
         protected void initSubActions() {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.LoginAction("Login"));
@@ -315,13 +323,7 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new PersonalInfoMenu("admin personal info", this) {
-                //TODO: imp.
-                @Override
-                protected ArrayList<String> getEditableFields() {
-                    return null;
-                }
-            });
+            subMenus.put(1, new PersonalInfoMenu("admin personal info", this));
             subMenus.put(2, new UserManagingMenu("user managing menu", this));
             subMenus.put(3, new ProductManagingMenu("product managing menu", this));
             subMenus.put(4, new DiscountCodesManagingMenu( "discount code managing menu", this));
@@ -336,8 +338,7 @@ class Menus {
         }
     }
 
-    //TODO: show chejoury bashe?
-    public static abstract class PersonalInfoMenu extends Menu {
+    public static class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
         }
@@ -350,11 +351,19 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.EditField("edit field",getEditableFields()));
-            subActions.put(index + 2, new Actions.BackAction("view personal info back", parent));
+            subActions.put(index + 1, )
+            subActions.put(index + 2, new Actions.EditField("edit field",getEditableFields()));
+            subActions.put(index + 3, new Actions.BackAction("view personal info back", parent));
         }
 
-        protected abstract ArrayList<String> getEditableFields();
+        protected String[] getEditableFields() {
+            try {
+                return mainController.getPersonalInfoEditableFields();
+            }catch (Exceptions.NotLoggedInException e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+        }
     }
 
     //TODO: executesh bayad fargh kone. command AdminViewUser bayad ID user bashe.
@@ -470,13 +479,7 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new PersonalInfoMenu("seller personal info menu", this) {
-                //TODO: imp.
-                @Override
-                protected ArrayList<String> getEditableFields() {
-                    return null;
-                }
-            });
+            subMenus.put(1, new PersonalInfoMenu("seller personal info menu",this));
             subMenus.put(2, new SellerProductMenu("seller product menu", this));
             subMenus.put(3, new SellerSalesMenu("seller sales menu", this));
         }
@@ -550,13 +553,7 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new PersonalInfoMenu("customer personal info menu", this) {
-                //TODO: imp
-                @Override
-                protected ArrayList<String> getEditableFields() {
-                    return null;
-                }
-            });
+            subMenus.put(1, new PersonalInfoMenu("customer personal info menu", this));
             subMenus.put(2, new ShoppingCartMenu("customer shopping cart", this));
             subMenus.put(3, new CustomerOrderLogMenu("customer order log menu", this));
         }

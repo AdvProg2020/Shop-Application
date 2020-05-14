@@ -53,10 +53,32 @@ public class Actions {
             super(name, Constants.Actions.loginPattern, Constants.Actions.loginCommand);
         }
 
-        //TODO: implement.
+        //TODO: show asterisk.
+        private String getPassword() {
+            System.out.println("Enter your password (enter \"back\" to go back):");
+             String input = View.getNextLineTrimmed();
+             if (input.equalsIgnoreCase("back")) {return null;}
+             else {return input;}
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String username = commandMatcher.group(1);
+            while(true) {
+                String password = getPassword();
+                if (password != null) {
+                    try {
+                        mainController.login(username, password);
+                    } catch (Exceptions.NotExistedUsernameException | Exceptions.WrongPasswordException e) {
+                        System.out.println(e.getMessage());
+                        continue;
+                    }
+                    //if without problem
+                    System.out.println("logged-in successfully!");
+                    return;
+                }
+            }
         }
     }
 
@@ -65,11 +87,25 @@ public class Actions {
             super(name, Constants.Actions.registerPattern, Constants.Actions.registerCommand);
         }
 
+        private void registerFromScratch() {
+
+        }
+
+
         //TODO: implement.
         @Override
         public void execute(String command) {
-            String type ;
-            String username;
+            Matcher commandMatcher = getMatcherReady(command);
+            String type = commandMatcher.group(1);
+            String username = commandMatcher.group(2);
+            try {
+                mainController.usernameTypeValidation(username, type);
+             //   getInfo(type);
+            } catch (Exceptions.AdminRegisterException | Exceptions.ExistedUsernameException e) {
+                System.out.println(e.getMessage());
+            }
+
+            //while()
 
         }
     }
@@ -90,7 +126,18 @@ public class Actions {
         //TODO: implement.
         @Override
         public void execute(String command) {
-
+            String categoryName;
+            if (categoryTree.size() == 0) {
+                categoryName = "superCategory";
+            } else {
+                categoryName = categoryTree.get(categoryTree.size() - 1);
+            }
+            try {
+                ArrayList<String[]> products = mainController.getProductsOfThisCategory(categoryName);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 
@@ -100,13 +147,27 @@ public class Actions {
             super(name, Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
         }
 
-        //TODO: imp.
+        private void showSubCategories() {
+            try {
+                String lastCategory;
+                if (categoryTree.size() == 0) {
+                    lastCategory = null;
+                } else {
+                    lastCategory = categoryTree.get(categoryTree.size() - 1);
+                }
+                ArrayList<String[]> info = mainController.getSubCategoriesOfThisCategory(lastCategory);
+                printList(info, 2);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            showSubCategories();
         }
     }
-
 
     public static class ChooseCategoryAction extends Action {
         private ArrayList<String> categoryTree;
@@ -115,52 +176,133 @@ public class Actions {
             this.categoryTree = categoryTree;
         }
 
-        //TODO: imp
+        private boolean isCategoryNameValid(String categoryName) {
+            try {
+                ArrayList<String[]> subs;
+                if (categoryTree.size() > 0) {
+                    subs = mainController.getSubCategoriesOfThisCategory(categoryTree.get(categoryTree.size() - 1));
+                } else {
+                    //TODO: get the list.
+                    subs = new ArrayList<>();
+                }
+                for (String[] category : subs) {
+                    if (category[1].equals(categoryName)) { return true;}
+                }
+                return false;
+            } catch (Exceptions.InvalidCategoryException e) {
+                //wont happen
+                return false;
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String categoryName = commandMatcher.group(1);
+            if (isCategoryNameValid(categoryName)) {
+                categoryTree.add(categoryName);
+            } else {
+                System.out.println(categoryName + " is not in the sub-categories of current category");
+                return;
+            }
         }
     }
 
     public static class RevertCategoryAction extends Action {
-        RevertCategoryAction(String name) {
+        private ArrayList<String> categoryTree;
+        RevertCategoryAction(String name, ArrayList<String> categoryTree) {
             super(name, Constants.Actions.revertCategoryPattern, Constants.Actions.revertCategoryCommand);
+            this.categoryTree = categoryTree;
         }
 
-        //TODO: imp.
+        private void revertCategory(int revertNumber) {
+            int size = categoryTree.size();
+            if (revertNumber >= size) {
+                categoryTree.clear();
+            } else {
+                categoryTree.removeAll(categoryTree.subList(size - revertNumber, size));
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            int revertNumber;
+            if (commandMatcher.groupCount() > 0) {
+                revertNumber = Integer.parseInt(commandMatcher.group(1));
+            } else {
+                revertNumber = 1;
+            }
+            revertCategory(revertNumber);
         }
     }
 
-    public static class ShowAvailableSorts extends Action {
+    public static class ChooseSorting extends Action {
+        private StringBuilder currentSort;
         private String[] availableSorts;
 
-        ShowAvailableSorts(String name, String[] availableSorts) {
-            super(name, Constants.Actions.showAvailableSortsPattern, Constants.Actions.showAvailableSortsCommand);
+        ChooseSorting(String name, StringBuilder currentSort, String[] availableSorts) {
+            super(name, Constants.Actions.sortPattern, Constants.Actions.sortCommand);
+            this.currentSort = currentSort;
             this.availableSorts = availableSorts;
         }
 
-        @Override
-        public void execute(String command) {
-            Arrays.asList(availableSorts).forEach((s) -> System.out.println(s));
-        }
-    }
-
-    public static class SortAction extends Action {
-        private StringBuilder currentSort;
-
-        SortAction(String name, StringBuilder currentSort) {
-            super(name, Constants.Actions.sortPattern, Constants.Actions.sortCommand);
-            this.currentSort = currentSort;
+        private void showAvailableSorts() {
+            for (int i = 0; i < availableSorts.length; i++) {
+                System.out.println((i + 1) + ". " + availableSorts[i]);
+            }
         }
 
-        //TODO: imp
+        private int modifySortingArgument() {
+            while(true) {
+                System.out.println("choose the sorting method (enter \"back\" to go back):");
+                String input = View.getNextLineTrimmed();
+                if (input.equalsIgnoreCase("back")) {return 0;}
+                int entry = checkSortingArgument(input);
+                if (entry == -1) {continue;}
+                else {
+                    currentSort.setLength(0);
+                    currentSort.append(availableSorts[entry]);
+                    return 1;
+                }
+            }
+        }
+
+        private int checkSortingArgument(String input) {
+            for (int i = 0; i < availableSorts.length; i++) {
+                if (input.equals(Integer.toString(i + 1)) || input.equalsIgnoreCase(availableSorts[i])) {
+                    return i + 1;
+                }
+            }
+            System.out.println("invalid entry");
+            return -1;
+        }
+
+        private int modifySortingMethod() {
+            while(true) {
+                System.out.println("do want sorting to be increasing or decreasing? (I or D):");
+                String input = View.getNextLineTrimmed();
+                if (input.equalsIgnoreCase("back")) {return 0;}
+                if (input.equalsIgnoreCase("I")) {
+                    currentSort.append(" increasing");
+                } else if (input.equalsIgnoreCase("D")) {
+                    currentSort.append(" decreasing");
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-            currentSort.delete(0, currentSort.length());
-            currentSort.append("shit");
+            showAvailableSorts();
+            while (true) {
+                int response = modifySortingArgument();
+                if (response == 0){return;}
+                response = modifySortingMethod();
+                if (response != 0){return;}
+            }
         }
     }
 
@@ -188,36 +330,30 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            currentSort.delete(0, currentSort.length());
-            currentSort.trimToSize();
+            currentSort.setLength(0);
         }
     }
 
-    public static class ShowAvailableFilters extends Action {
+    //TODO: higher brain performance required :|
+    public static class ChooseFiltering extends Action {
+        private String[] currentFilters;
         private String[] availableFilters;
-
-        ShowAvailableFilters(String name, String[] availableFilters) {
-            super(name, Constants.Actions.showAvailableFiltersPattern, Constants.Actions.showAvailableFiltersCommand);
+        ChooseFiltering(String name, String[] currentFilters, String[] availableFilters) {
+            super(name, Constants.Actions.filterPattern, Constants.Actions.filterCommand);
+            this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
         }
 
-        @Override
-        public void execute(String command) {
-            Arrays.asList(availableFilters).forEach((f) -> System.out.println(f));
-        }
-    }
-
-    public static class FilterAction extends Action {
-        private String[] currentFilters;
-
-        FilterAction(String name, String[] currentFilters) {
-            super(name, Constants.Actions.filterPattern, Constants.Actions.filterCommand);
-            this.currentFilters = currentFilters;
+        private void showAvailableFilters() {
+            for (int i = 0; i < availableFilters.length; i++) {
+                System.out.println((i + 1) + ". " + availableFilters[i]);
+            }
         }
 
         //TODO: imp.
         @Override
         public void execute(String command) {
+            showAvailableFilters();
 
         }
     }
@@ -236,30 +372,39 @@ public class Actions {
         }
     }
 
+    //TODO: higher brain performance required :|
     public static class DisableFilter extends Action {
         private String[] currentFilters;
-
-        DisableFilter(String name, String[] currentFilters) {
+        private String[] availableFilters;
+        DisableFilter(String name, String[] currentFilters, String[] availableFilters) {
             super(name, Constants.Actions.disableFilterPattern, Constants.Actions.disableFilterCommand);
             this.currentFilters = currentFilters;
+            this.availableFilters = availableFilters;
         }
 
-        //TODO: imp.
+        private void showAvailableFilters() {
+            for (int i = 0; i < availableFilters.length; i++) {
+                System.out.println((i + 1) + ". " + availableFilters[i]);
+            }
+        }
+
         @Override
         public void execute(String command) {
+            showAvailableFilters();
 
         }
     }
 
     //TODO: remember that filters and sorts are only for products.
     //TODO: filter and sort for sales.
+    //TODO: holy guakamoly.
     public static class ShowOffs extends Action {
         private StringBuilder currentSort;
         private String[] currentFilters;
-        private ArrayList<String> currentProducts;
-        private ArrayList<String> currentOffs;
+        private ArrayList<String[]> currentProducts;
+        private ArrayList<String[]> currentOffs;
 
-        public ShowOffs(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String> currentProducts, ArrayList<String> currentOffs) {
+        public ShowOffs(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts, ArrayList<String[]> currentOffs) {
             super(name, Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
             this.currentSort = currentSort;
             this.currentFilters = currentFilters;
@@ -267,26 +412,110 @@ public class Actions {
             this.currentOffs = currentOffs;
         }
 
-        //TODO: imp.
+        private ArrayList<String[]> appendSaleInfo(String[] sale, ArrayList<String[]> salesProducts) {
+          ArrayList<String[]> result = new ArrayList<>();
+            for (String[] salesProduct : salesProducts) {
+                String[] extendedProduct = Arrays.copyOf(salesProduct, salesProduct.length + sale.length);
+                System.arraycopy(sale, 0, extendedProduct, salesProduct.length, sale.length);
+                result.add(extendedProduct);
+            }
+            return result;
+        }
+
+        private void sortProducts() {
+
+        }
+
+        //if adding filter and sort for sales then should add an additional currentOffs.clear() and currentOffs.getOffs(...) codes.
         @Override
         public void execute(String command) {
+            currentProducts.clear();
+            try {
+                for (String[] off : currentOffs) {
+                    ArrayList<String[]> offsProducts = mainController.getProductInSale(off[0]);
+                    currentProducts.addAll(appendSaleInfo(off, offsProducts));
+                }
+                sortProducts();
+              //  showProducts();
+            } catch (Exceptions.InvalidSaleIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 
+    public static class ViewPersonalInfo extends Action {
+        ViewPersonalInfo(String name) {
+            super(name, Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
+        }
+
+
+        //TODO: imp.
+        private void showPersonalInfo(String[] info) {
+
+            System.out.println("1. ");
+        }
+
+        @Override
+        public void execute(String command) {
+            String[] info = mainController.viewPersonalInfo();
+            showPersonalInfo(info);
         }
     }
 
     public static class EditField extends Action {
-        private ArrayList<String> editableFields;
+        private String[] editableFields;
 
-        //TODO: check new info (for example for password)
-        EditField(String name, ArrayList<String> editableFields) {
+        EditField(String name, String[] editableFields) {
             super(name, Constants.Actions.editFieldPattern, Constants.Actions.editFieldCommand);
             this.editableFields = editableFields;
         }
 
-        //TODO: imp.
+        private void showEditableFields() {
+            for (int i = 0; i < editableFields.length; i++) {
+                System.out.println((i + 1) + ". " + editableFields[i]);
+            }
+        }
+
+        private int editField(int fieldIndex) {
+            String type = mainController.getType();
+            String response;
+            while(true) {
+                System.out.println("enter new info");
+                response = View.getNextLineTrimmed();
+                if (response.equalsIgnoreCase("back")) {return -1;}
+                try {
+                    if (type.equals("customer")) {
+                        customerController.editPersonalInfo(editableFields[fieldIndex], response);
+                    } else if (type.equals("seller")){
+                        sellerController.editPersonalInfo(editableFields[fieldIndex], response);
+                    } else {
+                        adminController.editPersonalInfo(editableFields[fieldIndex], response);
+                    }
+                } catch (Exceptions.InvalidFieldException e) {
+                    //wont happen.
+                    System.out.println(e.getMessage());
+                } catch (Exceptions.SameAsPreviousValueException e) {
+                    System.out.println("new value cant be the same as previous!");
+                    continue;
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            showEditableFields();
+            while(true) {
+                System.out.println("enter the field to edit (index):");
+                String response = View.getNextLineTrimmed();
+                if (response.matches("\\d+")) {
+                    if (editField(Integer.parseInt(response)) == -1) {continue;}
+                } else if (response.equalsIgnoreCase("back")) {
+                    return;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
         }
     }
 
@@ -416,8 +645,8 @@ public class Actions {
         @Override
         public void execute(String command) {
             try {
-                mainController.addToCart(subProductID.toString());
-            } catch (Exceptions.InvalidSubProductIdException e) {
+                mainController.addToCart(subProductID.toString(), 1);
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException e) {
                 System.out.println(e.getMessage());
                 return;
             }
@@ -439,29 +668,41 @@ public class Actions {
         }
     }
 
-    public static class CompareProductByID extends Action {
-        private StringBuilder productID;
-        CompareProductByID(String name, StringBuilder productID) {
-            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
-            this.productID = productID;
+    public static class ShowCurrentSeller extends Action {
+        private StringBuilder subProductID;
+        ShowCurrentSeller(String name, StringBuilder subProductID) {
+            super(name, Constants.Actions.showCurrentSellerPattern, Constants.Actions.showCurrentSellerCommand);
         }
 
-
-        //TODO: imp.
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String otherProductID = commandMatcher.group(1);
-            try {
-                //what is the return type?
-                mainController.compare(productID.toString(), otherProductID);
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println(e.getMessage());
-                return;
-            }
-            //show infos.
+
         }
     }
+
+//    public static class CompareProductByID extends Action {
+//        private StringBuilder productID;
+//        CompareProductByID(String name, StringBuilder productID) {
+//            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
+//            this.productID = productID;
+//        }
+//
+//
+//        //TODO: imp.
+//        @Override
+//        public void execute(String command) {
+//            Matcher commandMatcher = getMatcherReady(command);
+//            String otherProductID = commandMatcher.group(1);
+//            try {
+//                //what is the return type?
+//                mainController.compare(productID.toString(), otherProductID);
+//            } catch (Exceptions.InvalidProductIdException e) {
+//                System.out.println(e.getMessage());
+//                return;
+//            }
+//            //show infos.
+//        }
+//    }
 
     public static class AddComment extends Action {
         private StringBuilder productID;

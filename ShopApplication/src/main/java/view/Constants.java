@@ -3,6 +3,7 @@ package view;
 import model.Category;
 
 class Constants {
+    //TODO: space pattern ro bargardon.
     private static final String caseInsensitiveMode = "(?i)";
     private static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
@@ -60,26 +61,22 @@ class Constants {
         //AllProductsMenu actions.
         static final String showProductsCommand = "show products [-all]";
         static final String showProductsPattern = caseInsensitiveMode + "^show products" + spacePattern + "(-all)?$";
-        static final String showCategoriesCommand = "view categories [-all]";
-        static final String showCategoriesPattern = caseInsensitiveMode + "^view categories" + spacePattern + "(-all)?$";
+        static final String showCategoriesCommand = "view categories";
+        static final String showCategoriesPattern = caseInsensitiveMode + "^" + showCategoriesCommand + "$";
         static final String chooseCategoryCommand = "choose category [availableCategory]";
         static final String chooseCategoryPattern = caseInsensitiveMode + "^choose category" + spacePattern + argumentPattern + "$";
         static final String revertCategoryCommand = "revert category [-numberOfReverts]"; //you can set the number of times to go back. 1 by default.
-        static final String revertCategoryPattern = caseInsensitiveMode + "^revert category" + spacePattern + argumentPattern + "?$";
-        static final String productDetailMenuCommand = "show product [productID]";
-        static final String productDetailMenuPattern = caseInsensitiveMode + "^show product" + spacePattern + argumentPattern + "$";
+        static final String revertCategoryPattern = caseInsensitiveMode + "^revert category(?:" + spacePattern + unsignedIntPattern + ")?$";
+        static final String productDetailMenuCommand = "show product [productIndex]";
+        static final String productDetailMenuPattern = caseInsensitiveMode + "^show product" + spacePattern + unsignedIntPattern + "$";
         //SortMenu actions.
-        static final String showAvailableSortsCommand = "show available sorts";
-        static final String showAvailableSortsPattern = caseInsensitiveMode + "^" + showAvailableSortsCommand + "$";
-        static final String sortCommand = "sort [anAvailableSorts]";
-        static final String sortPattern = caseInsensitiveMode + "^sort" + spacePattern + argumentPattern + "$";
+        static final String sortCommand = "select sort";
+        static final String sortPattern = caseInsensitiveMode + "^" + sortCommand + "$";
         static final String showCurrentSortCommand = "current sort";
         static final String showCurrentSortPattern = caseInsensitiveMode + "^" + showCurrentSortCommand + "$";
         static final String disableSortCommand = "disable sort";
         static final String disableSortPattern = caseInsensitiveMode + "^" + disableSortCommand + "$";
         //FilterMenu actions.
-        static final String showAvailableFiltersCommand = "show available filters";
-        static final String showAvailableFiltersPattern = caseInsensitiveMode + "^" + showAvailableFiltersCommand + "$";
         static final String filterCommand = "filter [anAvailableFilter]";
         static final String filterPattern = caseInsensitiveMode + "^filter" + spacePattern + argumentPattern + "$";
         static final String showCurrentFiltersCommand = "current filters";
@@ -90,8 +87,10 @@ class Constants {
         static final String showOffsCommand = "show offs";
         static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
         //account menus actions.
-        static final String editFieldCommand = "edit [field]";
-        static final String editFieldPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String viewPersonalInfoCommand = "view info";
+        static final String viewPersonalInfoPattern = caseInsensitiveMode + "^" + viewPersonalInfoCommand + "$";
+        static final String editFieldCommand = "edit field";
+        static final String editFieldPattern = caseInsensitiveMode + "^" + editFieldCommand + "$";
         static final String showSellerCompanyInfoCommand = "view company information";
         static final String showSellerCompanyInfoPattern = caseInsensitiveMode + "^" + showSellerCompanyInfoCommand + "$";
         static final String showSellerSellHistoryCommand = "view sales history";
@@ -116,6 +115,8 @@ class Constants {
         //different form doc. cuz of index choosing.
         static final String selectSellerCommand = "select seller";
         static final String selectSellerPattern = caseInsensitiveMode + "^" + selectSellerCommand + "$";
+        static final String showCurrentSellerCommand = "show current seller";
+        static final String showCurrentSellerPattern = caseInsensitiveMode + "^" + showCurrentSellerCommand + "$";
         static final String compareProductByIDCommand = "compare [productID]";
         static final String compareProductByIDPattern = caseInsensitiveMode + "^compare " + argumentPattern + "$";
         static final String addReviewCommand = "add comment";
