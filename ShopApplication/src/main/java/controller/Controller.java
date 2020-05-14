@@ -178,10 +178,11 @@ public class Controller {
         return productIdNames;
     }
 
-    private String[] productPack(Product product) {
-        String[] productPack = new String[2];
+    protected String[] productPack(Product product) {
+        String[] productPack = new String[3];
         productPack[0] = product.getId();
         productPack[1] = product.getName();
+        productPack[2] = product.getBrand();
         return productPack;
     }
 
@@ -524,11 +525,7 @@ public class Controller {
     protected ArrayList<String[]> getProductsInSale(Sale sale) {
         ArrayList<String[]> productsInSale = new ArrayList<>();
         for (SubProduct subProduct : sale.getSubProducts()) {
-            String[] productPack = new String[2];
-            productPack[0] = subProduct.getProduct().getId();
-            productPack[1] = subProduct.getProduct().getName();
-
-            productsInSale.add(productPack);
+            productsInSale.add(productPack(subProduct.getProduct()));
         }
         return productsInSale;
     }
