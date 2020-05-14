@@ -164,7 +164,19 @@ public class Controller {
     }
 
     //Done!!
-    //TODO: getAvailableFilters.
+    public String[] getProductAvailableFilters(){
+        String[] availableFilters = new String[7];
+        availableFilters[0] = "available";
+        availableFilters[1] = "minPrice";
+        availableFilters[2] = "macPrice";
+        availableFilters[3] = "contains";
+        availableFilters[4] = "brand";
+        availableFilters[5] = "storeName";
+        availableFilters[6] = "minRatingScore";
+        return availableFilters;
+    }
+
+    //Done!!
     private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                 String storeName, double minRatingScore, ArrayList<Product> products) {
         if (available)
@@ -342,7 +354,7 @@ public class Controller {
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else
-            return (ArrayList<String>) product.getSpecialProperties();
+            return new ArrayList<>(product.getSpecialProperties());
     }
 
     //Done!!
@@ -547,10 +559,10 @@ public class Controller {
     //Done!!
     protected ArrayList<String[]> getProductsInSale(Sale sale) {
         ArrayList<String[]> productsInSale = new ArrayList<>();
-        ArrayList<Product> products = subProductToProduct((ArrayList<SubProduct>) sale.getSubProducts());
-        sortProducts("view count", false, products);
-        for (Product product : products) {
-            productsInSale.add(productPack(product));
+        ArrayList<SubProduct> subProducts = new ArrayList<>(sale.getSubProducts());
+        sortSubProducts("view count", false, subProducts);
+        for (SubProduct subProduct : subProducts) {
+            productsInSale.add(productSalePack(subProduct));
         }
         return productsInSale;
     }
@@ -558,6 +570,16 @@ public class Controller {
     //Todo
     public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
         return null;
+    }
+
+    private String[] productSalePack(SubProduct subProduct){
+        String[] productPack = new String[5];
+        productPack[0] = subProduct.getProduct().getId();
+        productPack[1] = subProduct.getProduct().getName();
+        productPack[2] = subProduct.getProduct().getBrand();
+        productPack[3] = Double.toString(subProduct.getRawPrice());
+        productPack[4] = Double.toString(subProduct.getPriceWithSale());
+        return productPack;
     }
 
     private ArrayList<Product> subProductToProduct( ArrayList<SubProduct> subProducts){
@@ -568,9 +590,27 @@ public class Controller {
         return products;
     }
 
-    private void sortSubProducts( String sortby, boolean isIncreasing, ArrayList<SubProduct> subProducts){
+    private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
+                                   String storeName, double minRatingScore, ArrayList<SubProduct> subProducts){
+        if (available)
+            subProducts.removeIf(subProduct -> (subProduct.getRemainingCount() == 0));
+        if (minPrice != 0)
+            subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() < minPrice);
+        if (maxPrice != 0)
+            subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() > maxPrice);
+        if (!contains.equals(""))
+            subProducts.removeIf(subProduct -> !(subProduct.getProduct().getName().toLowerCase().contains(contains.toLowerCase())));
+        if (!brand.equals(""))
+            subProducts.removeIf(subProduct -> !(subProduct.getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
+        if (!storeName.equals("")) {
+            subProducts.removeIf(subProduct -> !subProduct.getSeller().getStoreName().contains(storeName.toLowerCase()));
+        }
+        subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
+    }
+
+    private void sortSubProducts( String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts){
         int direction = isIncreasing ? 1 : -1;
-        switch (sortby) {
+        switch (sortBy) {
             case "price":
                 subProducts.sort(new Comparator<SubProduct>() {
                     @Override
