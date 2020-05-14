@@ -533,10 +533,11 @@ public class Actions {
             super(name, Constants.Actions.showSellerCompanyInfoPattern, Constants.Actions.showSellerCompanyInfoCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            ArrayList<String> info = sellerController.viewCompanyInformation();
+            info.forEach(i -> System.out.println(i));
+            printSeparator();
         }
     }
 
@@ -548,7 +549,6 @@ public class Actions {
         //TODO: imp.
         @Override
         public void execute(String command) {
-
         }
     }
 
@@ -735,10 +735,30 @@ public class Actions {
             super(name, Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
         }
 
-        //TODO: imp.
-        @Override
-        public void execute(String userID) {
+        private void showPersonalInfo(String[] info) {
+            System.out.println("1. username: " + info[0]);
+            System.out.println("2. type: " + info[1]);
+            System.out.println("3. first name: " + info[2]);
+            System.out.println("4. last name: " + info[3]);
+            System.out.println("5. email: " + info[4]);
+            System.out.println("6. phone number: " + info[5]);
+            if (info.length > 6) {
+                System.out.println("7. balance: " + info[6]);
+            }
+            if (info.length > 7) {
+                System.out.println("8. store name: " + info[7]);
+            }
+        }
 
+        @Override
+        public void execute(String username) {
+            try {
+                String[] info = adminController.viewUsername(username);
+                showPersonalInfo(info);
+                printSeparator();
+            } catch (Exceptions.NotExistedUsernameException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
