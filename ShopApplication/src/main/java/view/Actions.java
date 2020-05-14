@@ -1204,6 +1204,8 @@ public class Actions {
 
         @Override
         public void execute(String command) {
+            ArrayList<String[]> sellerProducts = sellerController.manageProducts();
+            printList(sellerProducts, 3);
         }
     }
 
@@ -1212,9 +1214,25 @@ public class Actions {
             super(name, Constants.Actions.sellerViewProductDetailsPattern, Constants.Actions.sellerViewProductDetailsCommand);
         }
 
+        private void printInfo(String[] info) {
+            System.out.println("1. product ID: " + info[0]);
+            System.out.println("2. product name: " + info[1]);
+            System.out.println("3. product brand: " + info[2]);
+            System.out.println("4. product description: " + info[3]);
+            System.out.println("5. product average rating: " + info[4]);
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String productID = commandMatcher.group(1);
+            try {
+                String[] info = sellerController.viewProduct(productID);
+                printInfo(info);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 

@@ -99,6 +99,7 @@ public class SellerController extends Controller {
     }
 
     //Done!!
+    //TODO: since we are returning sub product in some way, you can return price as well!
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID))
