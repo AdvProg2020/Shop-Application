@@ -567,9 +567,20 @@ public class Controller {
         return productsInSale;
     }
 
-    //Todo
+    //Done!!
     public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
-        return null;
+        ArrayList<String[]> subProductsSalePacks = new ArrayList<>();
+        ArrayList<SubProduct> subProductsInSale = new ArrayList<>();
+        for (Sale sale : Sale.getAllSales()) {
+            subProductsInSale.addAll(sale.getSubProducts());
+        }
+        filterSubProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
+                , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), subProductsInSale);
+        sortSubProducts(sortBy, isIncreasing, subProductsInSale);
+        for (SubProduct subProduct : subProductsInSale) {
+            subProductsSalePacks.add(productSalePack(subProduct));
+        }
+        return subProductsSalePacks;
     }
 
     private String[] productSalePack(SubProduct subProduct){
