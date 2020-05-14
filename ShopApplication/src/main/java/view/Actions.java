@@ -2,6 +2,7 @@ package view;
 
 import controller.*;
 
+import javax.swing.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1027,10 +1028,42 @@ public class Actions {
             super(name, Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
         }
 
-        //TODO: imp.
+        private int inputParent(ArrayList<String> specialProperties) {
+            while(true) {
+                System.out.print("enter special property (enter \"back\" to go back or \"exit\" to exit):\n" + (specialProperties.size() + 1) + ". ");
+                String input = View.getNextLineTrimmed();
+                if (input.equalsIgnoreCase("back")) {
+                    if (specialProperties.size() == 0) {return -1;}
+                    else {
+                        specialProperties.remove(specialProperties.size() - 1);
+                        continue;
+                    }
+                } else if (input.equalsIgnoreCase("exit")){
+                    return 0;
+                } else {
+                    specialProperties.add(input);
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String categoryName = commandMatcher.group(1);
+            String parentCategory;
+            ArrayList<String> specialProperties = new ArrayList<>();
+            while(true) {
+                System.out.println("enter parent category (enter \"root\" for no parent):");
+                 parentCategory = View.getNextLineTrimmed();
+                 if (parentCategory.equalsIgnoreCase("back")) {return;}
+                 if (inputParent(specialProperties) == -1) { continue;}
+                 else {break;}
+            }
+            try {
+                adminController.addCategory(categoryName, parentCategory, specialProperties);
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

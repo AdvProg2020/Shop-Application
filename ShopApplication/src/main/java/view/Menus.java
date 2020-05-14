@@ -1,10 +1,7 @@
 package view;
 
-import com.google.gson.internal.$Gson$Preconditions;
 import controller.*;
-
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 
 class Menus {
     private static Controller mainController;
