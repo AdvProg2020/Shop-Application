@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,9 +36,26 @@ public abstract class Action {
          return matcher;
     }
 
+    protected static Action getPreviousAction() {
+        Action curAction = stackTrace.pop();
+        Action prevAction = stackTrace.peek();
+        stackTrace.push(curAction);
+        return prevAction;
+    }
+
     public void run(String command) {
         stackTrace.push(this);
         this.execute(command);
+    }
+
+    protected void printList(ArrayList<String[]> list, int args) {
+        int size = list.size();
+        for (int i = 0; i < size; i++) {
+            System.out.println(i + ".");
+            for (int j = 0; j < args; j++) {
+                System.out.print( " " + list.get(i)[j]);
+            }
+        }
     }
 
     public abstract void execute(String command);

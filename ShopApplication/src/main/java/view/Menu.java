@@ -1,5 +1,7 @@
 package view;
 
+import com.sun.tools.javac.Main;
+
 import java.util.*;
 
 public abstract class Menu {
@@ -11,7 +13,6 @@ public abstract class Menu {
     protected Map<Integer, Menu> subMenus;
     protected Map<Integer, Action> subActions;
     static ArrayList<Menu>  allMenus;
-    static private Scanner sc;
     static private Stack<Menu> stackTrace;
     private String commandPattern;
     private String command;
@@ -19,7 +20,6 @@ public abstract class Menu {
 
 
     static {
-        sc = new Scanner(System.in);
         allMenus = new ArrayList<Menu>();
         stackTrace = new Stack<>();
     }
@@ -56,9 +56,6 @@ public abstract class Menu {
         return productDetailMenu;
     }
 
-    static protected String getNextLineTrimmed() {
-        return sc.nextLine().trim();
-    }
 
     public String getName() {
         return name;
@@ -113,7 +110,7 @@ public abstract class Menu {
     }
 
     public void execute() {
-        String command = getNextLineTrimmed();
+        String command = View.getNextLineTrimmed();
         for (Integer menuIndex : subMenus.keySet()) {
             if (command.equals(Integer.toString(menuIndex)) || command.matches(subMenus.get(menuIndex).commandPattern)) {
                 subMenus.get(menuIndex).run();
