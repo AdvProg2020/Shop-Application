@@ -521,13 +521,15 @@ public class Actions {
                 String response = View.getNextLineTrimmed();
                 if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
                     if (editField(Integer.parseInt(response)) == -1) {continue;}
+                    else break;
                 } else if (response.equalsIgnoreCase("back")) {
-                    return;
+                    break;
                 } else {
                     System.out.println("invalid entry");
                     continue;
                 }
             }
+            printSeparator();
         }
     }
 
@@ -911,13 +913,15 @@ public class Actions {
                 String response = View.getNextLineTrimmed();
                 if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
                     if (editField(Integer.parseInt(response), discountCode) == -1) {continue;}
+                    else break;
                 } else if (response.equalsIgnoreCase("back")) {
-                    return;
+                    break;
                 } else {
                     System.out.println("invalid entry");
                     continue;
                 }
             }
+            printSeparator();
         }
     }
 
@@ -1013,13 +1017,15 @@ public class Actions {
                 String response = View.getNextLineTrimmed();
                 if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
                     if (editField(Integer.parseInt(response), categoryName) == -1) {continue;}
+                    else break;
                 } else if (response.equalsIgnoreCase("back")) {
-                    return;
+                    break;
                 } else {
                     System.out.println("invalid entry");
                     continue;
                 }
             }
+            printSeparator();
         }
     }
 
@@ -1138,9 +1144,46 @@ public class Actions {
             }
         }
 
+        private int editField(int fieldIndex, String saleID) {
+            String response;
+            while(true) {
+                System.out.println("enter new info");
+                response = View.getNextLineTrimmed();
+                if (response.equalsIgnoreCase("back")) {return -1;}
+                try {
+                    sellerController.editSale(saleID, editableFields[fieldIndex], response);
+                    System.out.println("field edited successfully");
+                    return 0;
+                } catch (Exceptions.InvalidSaleIdException | Exceptions.InvalidFormatException |
+                        Exceptions.InvalidDateException | Exceptions.InvalidFieldException e) {
+                    System.out.println(e.getMessage());
+                    return -1;
+                } catch (Exceptions.SameAsPreviousValueException e) {
+                    System.out.println("new value cant be the same as previous!");
+                }
+
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String saleID = commandMatcher.group(1);
+            while (true) {
+                showEditableFields();
+                System.out.println("enter the field to edit (index):");
+                String response = View.getNextLineTrimmed();
+                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                    if (editField(Integer.parseInt(response), saleID) == -1) {continue;}
+                    else {break;}
+                } else if (response.equalsIgnoreCase("back")) {
+                    break;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
+            printSeparator();
         }
     }
 
