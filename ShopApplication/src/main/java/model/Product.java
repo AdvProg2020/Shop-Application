@@ -173,6 +173,15 @@ public class Product implements Initializable {
         return null;
     }
 
+    public boolean isSoldInStoreWithName(String storeName) {
+        for (SubProduct subProduct : getSubProducts()) {
+            if (subProduct.getSeller().getStoreName().equals(storeName))
+                return true;
+        }
+
+        return false;
+    }
+
     @Label("Model internal use only!")
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
