@@ -2,7 +2,7 @@ package view;
 
 import model.Category;
 
-class Constants {
+final class Constants {
     //TODO: space pattern ro bargardon.
     static final String caseInsensitiveMode = "(?i)";
     static final String argumentPattern = "(\\S+)";
@@ -156,7 +156,7 @@ class Constants {
         //seller account menu actions.
         static final String sellerShowSalesCommand = "view sales";
         static final String sellerShowSalesPattern = caseInsensitiveMode + "^" + sellerShowSalesCommand + "$";
-        static final String sellerViewSaleDetailsCommand = "view [saleIndex]";
+        static final String sellerViewSaleDetailsCommand = "view [saleID]";
         static final String sellerViewSaleDetailsPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
         static final String sellerEditSaleCommand = "edit [saleIndex]";
         static final String sellerEditSalePattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";

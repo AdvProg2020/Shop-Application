@@ -1089,9 +1089,11 @@ public class Actions {
             super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
         }
 
+        //TODO: shayan will fix it.
         @Override
         public void execute(String command) {
-
+            ArrayList<String[]> sales = sellerController.viewSales();
+            printList(sales, 6);
         }
     }
 
@@ -1100,9 +1102,26 @@ public class Actions {
             super(name, Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
         }
 
+        private void showSaleInfo(String[] info) {
+            System.out.println("1. sale ID: " + info[0]);
+            System.out.println("2. percentage: " + info[1]);
+            System.out.println("3. store name: " + info[2]);
+            System.out.println("4. start date: " + info[3]);
+            System.out.println("5. end date: " + info[4]);
+            System.out.println("6. number of products in sale: " + info[5]);
+        }
+
         @Override
         public void execute(String command) {
-
+            Matcher commandMatcher = getMatcherReady(command);
+            String saleID = commandMatcher.group(1);
+            try {
+                String[] info = sellerController.viewSaleWithId(saleID);
+                showSaleInfo(info);
+            } catch (Exceptions.InvalidSaleIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 

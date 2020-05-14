@@ -512,7 +512,7 @@ class Menus {
 
         //TODO: imp.
         private String[] getEditableFields() {
-            return null;
+            return sellerController.getSaleEditableFields();
         }
 
         @Override
