@@ -9,7 +9,7 @@ import model.request.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
 public class AdminController extends Controller {
 
@@ -86,9 +86,9 @@ public class AdminController extends Controller {
     public void addCustomerToDiscount(String customerId, String code, int count) throws Exceptions.DiscountCodeException, Exceptions.CustomerIdException {
         Discount discount = Discount.getDiscountByCode(code);
         Account account = Account.getAccountById(customerId);
-        if( discount == null)
+        if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
-        else if( account != null && account.getType().equalsIgnoreCase("customer"))
+        else if (account instanceof Customer)
             discount.addCustomer(customerId, count);
         else
             throw new Exceptions.CustomerIdException(customerId);
@@ -125,7 +125,7 @@ public class AdminController extends Controller {
         if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
         else {
-            HashMap<Customer, Integer> peopleRemainingCount = discount.getCustomers();
+            Map<Customer, Integer> peopleRemainingCount = discount.getCustomers();
             ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
             String[] personPack = new String[2];
             for (Customer customer : peopleRemainingCount.keySet()) {
@@ -231,7 +231,7 @@ public class AdminController extends Controller {
             throw new Exceptions.InvalidRequestIdException(requestId);
         else{
             String[] typeDate = new String[2];
-            typeDate[0] = request.getType();
+            typeDate[0] = request.getClass().getName();
             typeDate[1] = dateFormat.format(request.getDate());
             ArrayList<String[]> detailsOfRequest = new ArrayList<>();
             detailsOfRequest.add(typeDate);
@@ -369,7 +369,7 @@ public class AdminController extends Controller {
             if(newParentCategory == null){
                 category.setParent(Category.getSuperCategory().getId());
             }else {
-                if(category.hasChildWithId(newParentCategory.getId()))
+                if (category.hasSubCategoryWithId(newParentCategory.getId()))
                     throw new Exceptions.SubCategoryException(categoryName, newInformation);
                 else
                     category.setParent(newParentCategory.getId());

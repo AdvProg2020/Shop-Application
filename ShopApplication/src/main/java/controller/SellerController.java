@@ -27,7 +27,7 @@ public class SellerController extends Controller {
             super.editPersonalInfo(field, newInformation);
     }
 
-    //Done!! any thing other storeName?
+    //Done!! anything other than storeName?
     public ArrayList<String> viewCompanyInformation() {
         ArrayList<String> companyInformation = new ArrayList<>();
         companyInformation.add(((Seller) currentAccount).getStoreName());
@@ -131,7 +131,7 @@ public class SellerController extends Controller {
             else if(field.equals("name"))
             new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
         }
-            new EditProductRequest(targetedSubProduct.getId(), , newInformation)
+        new EditProductRequest(targetedSubProduct.getId(), , newInformation);
     }
 
     //Done!!
@@ -144,7 +144,7 @@ public class SellerController extends Controller {
      *          else it returns null
      */
     public String exist(String productName, String brand) {
-        Product product = Product.getProductsByNameAndBrand(productName, brand);
+        Product product = Product.getProductByNameAndBrand(productName, brand);
         if( product != null)
             return product.getId();
         else
@@ -155,11 +155,11 @@ public class SellerController extends Controller {
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException{
         Product product;
-        if((product = Product.getProductsByNameAndBrand(name, brand)) != null)
+        if ((product = Product.getProductByNameAndBrand(name, brand)) != null)
             throw new Exceptions.ExistingProductException(product.getId());
-        else{
+        else {
             Category category;
-            if((category = Category.getCategoryByName(categoryName)) == null)
+            if ((category = Category.getCategoryByName(categoryName)) == null)
                 category = Category.getSuperCategory();
             SubProduct subProduct = new SubProduct(null, currentAccount.getId(), price, count);
             new Product(name, brand, infoText, category.getId(), specialProperties, subProduct);

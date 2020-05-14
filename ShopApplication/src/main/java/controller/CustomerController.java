@@ -9,7 +9,7 @@ import model.log.BuyLog;
 import model.log.LogItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 public class CustomerController extends Controller {
 
@@ -25,12 +25,12 @@ public class CustomerController extends Controller {
 
     //Done!!
     public ArrayList<String> showProductsInCart() {
-        ArrayList<String> shoppingCart = new ArrayList<>();
-        HashMap<SubProduct, Integer> subProducts = ((Customer) currentAccount).getShoppingCart().getSubProducts();
+        ArrayList<String> cart = new ArrayList<>();
+        Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
-            shoppingCart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getStoreName() + " number in carts: " + subProducts.get(subProduct));
+            cart.add(subProduct.getId() + "   " + subProduct.getProduct().getName() + "  " + subProduct.getSeller().getStoreName() + " number in carts: " + subProducts.get(subProduct));
         }
-        return shoppingCart;
+        return cart;
     }
 
     //Done!!
@@ -48,7 +48,7 @@ public class CustomerController extends Controller {
 
     //Done!!
     public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException, Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
-        HashMap<SubProduct, Integer> subProducts = currentCart.getSubProducts();
+        Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
@@ -66,7 +66,7 @@ public class CustomerController extends Controller {
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else {
-            HashMap<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
+            Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
             if (subProductsInCart.containsKey(subProduct))
                 currentCart.addSubProductCount(subProductId, -number);
             else
@@ -76,7 +76,7 @@ public class CustomerController extends Controller {
 
     //Done!!
     public double getTotalPriceOfCart() {
-        HashMap<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
+        Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
         double totalSum = 0;
         for (SubProduct subProduct : subProductsInCart.keySet()) {
             totalSum += subProduct.getPriceWithSale() * subProductsInCart.get(subProduct);
@@ -158,7 +158,7 @@ public class CustomerController extends Controller {
 
     //Done!!
     public ArrayList<String[]> viewDiscountCodes() {
-        HashMap<Discount, Integer> discounts = ((Customer) currentAccount).getDiscounts();
+        Map<Discount, Integer> discounts = ((Customer) currentAccount).getDiscounts();
         ArrayList<String[]> discountCodes = new ArrayList<>();
         String[] discountInfo = new String[2];
         for (Discount discount : discounts.keySet()) {
