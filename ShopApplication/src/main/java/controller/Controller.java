@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 public class Controller {
     protected static Account currentAccount;
-    protected static ShoppingCart currentCart;
+    protected static Cart currentCart;
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
     //Done!
@@ -68,16 +68,16 @@ public class Controller {
         if (!account.getPassword().equals(password))
             throw new Exceptions.WrongPasswordException();
         currentAccount = account;
-        if(currentAccount.getType().equalsIgnoreCase("customer")){
-            ((Customer) currentAccount).mergeShoppingCart(currentCart.getId());
-            currentCart = ((Customer) currentAccount).getShoppingCart();
-         }
+        if (currentAccount instanceof Customer) {
+            ((Customer) currentAccount).mergeCart(currentCart.getId());
+            currentCart = ((Customer) currentAccount).getCart();
+        }
     }
 
     //Done!!
     public void logout(){
         currentAccount = null;
-        currentCart = new ShoppingCart(null);
+        currentCart = new Cart(null);
     }
 
     //Done!!
@@ -88,7 +88,7 @@ public class Controller {
     public String getType() {
         if (currentAccount == null)
             return "anonymous";
-        return currentAccount.getType();
+        return currentAccount.getClass().getName();
     }
 
     //Done!
@@ -318,7 +318,7 @@ public class Controller {
         if(product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else
-            return product.getSpecialProperties();
+            return (ArrayList<String>) product.getSpecialProperties();
     }
 
     //Done!!
@@ -419,7 +419,7 @@ public class Controller {
             throw new Exceptions.NotLoggedInException();
         else {
             String[] editableFields = new String[5];
-            if(currentAccount.getType().equals("seller")){
+            if (currentAccount instanceof Seller) {
                 editableFields = new String[6];
                 editableFields[5] = "storeName";
             }
@@ -435,17 +435,17 @@ public class Controller {
     //Done!!
     protected String[] getPersonalInfo(Account account) {
         String[] info;
-        if (account.getType().equals("customer")) {
+        if (account instanceof Customer) {
             info = new String[7];
             info[6] = String.valueOf(((Customer) account).getBalance());
-        } else if (account.getType().equals("seller")) {
+        } else if (account instanceof Seller) {
             info = new String[8];
             info[6] = String.valueOf(((Seller) account).getBalance());
             info[7] = ((Seller) account).getStoreName();
         } else
             info = new String[6];
         info[0] = account.getUsername();
-        info[1] = account.getType();
+        info[1] = account.getClass().getName();
         info[2] = account.getFirstName();
         info[3] = account.getLastName();
         info[4] = account.getEmail();

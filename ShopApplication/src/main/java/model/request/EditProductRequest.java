@@ -30,11 +30,12 @@ public class EditProductRequest extends Request {
             case INFO_TEXT:
                 product.setInfoText(newValue);
                 break;
-            case CATEGORY:
-                product.setCategory(newValue);
-                break;
             case PRICE:
                 subProduct.setPrice(Double.parseDouble(newValue));
+                break;
+            case COUNT:
+                int changeAmount = Integer.parseInt(newValue) - subProduct.getRemainingCount();
+                subProduct.changeRemainingCount(changeAmount);
         }
     }
 
@@ -50,12 +51,10 @@ public class EditProductRequest extends Request {
         return newValue;
     }
 
-    //TODO: count, delete category it is hard to handle
     public enum Field {
         NAME,
         BRAND,
         INFO_TEXT,
-        CATEGORY,
         PRICE,
         COUNT
     }
