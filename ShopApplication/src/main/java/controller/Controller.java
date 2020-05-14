@@ -17,7 +17,6 @@ public class Controller {
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
     //Done!
-
     /**
      * @param username
      * @param type
@@ -269,10 +268,12 @@ public class Controller {
             else
                 products.add(product);
         }
+
         filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
         products = sortProducts(sortBy,isIncreasing, products);
+
         return productToIdName(products);
     }
 
@@ -391,11 +392,9 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
-    //TODO: filter and sort for sales.
     public ArrayList<String[]> sales() {
         ArrayList<String[]> sales = new ArrayList<>();
         for (Sale sale : Sale.getAllSales()) {
@@ -405,7 +404,6 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @return
      *                     *1- seller:String[6]
@@ -495,12 +493,13 @@ public class Controller {
 
     //Done!!
     protected String[] getSaleInfo(Sale sale) {
-        String[] salePack = new String[5];
-        salePack[0] = Double.toString(sale.getPercentage());
-        salePack[1] = sale.getSeller().getStoreName();
-        salePack[2] = dateFormat.format(sale.getStartDate());
-        salePack[3] = dateFormat.format(sale.getEndDate());
-        salePack[4] = Integer.toString(sale.getSubProducts().size());
+        String[] salePack = new String[6];
+        salePack[0] = sale.getId();
+        salePack[1] = Double.toString(sale.getPercentage());
+        salePack[2] = sale.getSeller().getStoreName();
+        salePack[3] = dateFormat.format(sale.getStartDate());
+        salePack[4] = dateFormat.format(sale.getEndDate());
+        salePack[5] = Integer.toString(sale.getSubProducts().size());
         return salePack;
     }
 
@@ -520,8 +519,14 @@ public class Controller {
             String[] productPack = new String[2];
             productPack[0] = subProduct.getProduct().getId();
             productPack[1] = subProduct.getProduct().getName();
+
             productsInSale.add(productPack);
         }
         return productsInSale;
+    }
+
+    //Todo
+    public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy){
+        return null;
     }
 }

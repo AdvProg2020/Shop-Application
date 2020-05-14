@@ -107,8 +107,8 @@ public class SellerController extends Controller {
         return editableFields;
     }
 
-    //Todo
-    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException {
+    //Done!!
+    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
             if(subProduct.getProduct().getId().equals(productID)) {
@@ -120,18 +120,36 @@ public class SellerController extends Controller {
             throw new Exceptions.InvalidProductIdException(productID);
         else {
             EditProductRequest.Field fieldToEdit = null;
-            if(field.equals("name"))
-                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-            else if(field.equals("brand"))
-                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-            else if(field.equals(""))
-            new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-            else if(field.equals("name"))
-            new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-            else if(field.equals("name"))
-            new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+            switch (field) {
+                case "name": {
+                    String existingProductId;
+                    if ((existingProductId = exist(newInformation, targetedSubProduct.getProduct().getBrand())) == null)
+                        new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+                    else
+                        throw new Exceptions.ExistingProductException(existingProductId);
+                    break;
+                }
+                case "brand": {
+                    String existingProductId;
+                    if ((existingProductId = exist(targetedSubProduct.getProduct().getName(), newInformation)) == null)
+                        new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.BRAND, newInformation);
+                    else
+                        throw new Exceptions.ExistingProductException(existingProductId);
+                    break;
+                }
+                case "info text":
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
+                    break;
+                case "price":
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.PRICE, newInformation);
+                    break;
+                case "count":
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.COUNT, newInformation);
+                    break;
+                default:
+                    throw new Exceptions.InvalidFieldException();
+            }
         }
-            new EditProductRequest(targetedSubProduct.getId(), , newInformation)
     }
 
     //Done!!

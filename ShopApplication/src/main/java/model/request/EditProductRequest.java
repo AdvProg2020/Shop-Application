@@ -62,6 +62,7 @@ public class EditProductRequest extends Request {
         BRAND,
         INFO_TEXT,
         CATEGORY,
-        PRICE
+        PRICE,
+        COUNT
     }
 }
