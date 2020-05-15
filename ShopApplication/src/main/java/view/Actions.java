@@ -145,7 +145,7 @@ public class Actions {
             if(registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
-                    mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), null);
+                    mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], 0.00, null);
                 } catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
                     //wont happen.
                     System.out.println("sigh! " + e.getMessage());
@@ -963,10 +963,15 @@ public class Actions {
             this.productID = productID;
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            try {
+                System.out.println("product reviews:");
+                printList(mainController.reviewsOfProductWithId(productID.toString()));
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
@@ -1025,10 +1030,25 @@ public class Actions {
             super(name, Constants.Actions.adminCreateAdminPattern, Constants.Actions.adminCreateAdminCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-            //adminController.creatAccount();
+            try {
+                Form registerForm;
+                String[] fields;
+                String[] fieldRegex;
+                String[] results;
+                fields = new String[] {"username", "password", "first name", "last name", "email", "phone"};
+                fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
+                        Constants.argumentPattern, Constants.argumentPattern};
+                registerForm = new Form(fields, fieldRegex);
+                if(registerForm.takeInput() == 0) {
+                    results = registerForm.getResults();
+                    mainController.creatAccount(Constants.adminUserType, results[0], results[1], results[2], results[3], results[4],results[5], 0.00, null);
+                }
+            }  catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
