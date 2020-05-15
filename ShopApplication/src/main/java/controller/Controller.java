@@ -367,6 +367,7 @@ public class Controller {
      * @return String[4]: ID, storeName, price, remaining count.
      * @throws Exceptions.InvalidProductIdException
      */
+    //TODO: provide a method that returns the same String[4] by giving sub product ID. --> mainController.getSubProductByID(String subProductID);
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)

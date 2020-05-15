@@ -890,6 +890,7 @@ public class Actions {
         }
     }
 
+    //TODO: waiting for shayan
     public static class ShowCurrentSeller extends Action {
         private StringBuilder subProductID;
         ShowCurrentSeller(String name, StringBuilder subProductID) {
@@ -898,10 +899,16 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-
+            try {
+                System.out.println("current seller is: " + mainController.getSubProductByIndex(subProductID)[1]);
+            } catch (Exceptions.InvalidSubProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
+    //TODO: last one
     public static class CompareProductByID extends Action {
         private StringBuilder productID;
         CompareProductByID(String name, StringBuilder productID) {
@@ -910,7 +917,6 @@ public class Actions {
         }
 
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
@@ -933,10 +939,20 @@ public class Actions {
             this.productID = productID;
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            try {
+                String[] fields = new String[]{"title", "body"};
+                String[] regex = new String[]{Constants.argumentPattern, ".+"};
+                Form reviewForm = new Form(fields, regex);
+                if (reviewForm.takeInput() == 0) {
+                    String[] results = reviewForm.getResults();
+                    mainController.addReview(productID.toString(), results[0], results[1]);
+                }
+            } catch (Exceptions.InvalidProductIdException | Exceptions.NotLoggedInException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
