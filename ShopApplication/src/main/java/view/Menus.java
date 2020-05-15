@@ -420,7 +420,7 @@ class Menus {
 
         //TODO: imp
         private String[] getEditableFields() {
-            return null;
+            return adminController.getDiscountEditableFields();
         }
 
         @Override
@@ -459,9 +459,8 @@ class Menus {
             super(name, false, parent, Constants.Menus.categoryManagingMenuPattern, Constants.Menus.categoryManagingMenuCommand);
         }
 
-        //TODO: imp.
         private String[] getEditableFields() {
-            return null;
+            return adminController.getCategoryEditableFields();
         }
 
         @Override

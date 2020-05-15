@@ -1155,7 +1155,6 @@ public class Actions {
             }
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
@@ -1183,11 +1182,15 @@ public class Actions {
             super(name, Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
         }
 
-
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            try {
+                String discountCodeID = getGroup(command, 1);
+                adminController.removeDiscountCode(discountCodeID);
+            } catch (Exceptions.DiscountCodeException e) {
+                System.out.println(e);
+            }
+            printSeparator();
         }
     }
 
@@ -1196,10 +1199,12 @@ public class Actions {
             super(name, Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            System.out.println("request IDs:");
+            adminController.manageRequests().forEach(ID -> System.out.println(ID));
+            System.out.println("you can see a request's detail by: details [requestID]");
+            printSeparator();
         }
     }
 
@@ -1208,10 +1213,38 @@ public class Actions {
             super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
         }
 
-        //TODO: imp.
+        private void acceptOrDeclineRequest(String requestID) {
+            try {
+                while (true) {
+                    System.out.println("please accept/decline the request (accept or decline or \"back\" to go back):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.equalsIgnoreCase("back")) {
+
+                    } else if (response.matches("(accept|decline)")) {
+                        if (response.equalsIgnoreCase("accept")) {
+                            adminController.acceptRequest(requestID, true);
+                        } else {
+                            adminController.acceptRequest(requestID, false);
+                        }
+                    } else {
+                        System.out.println("invalid entry.");
+                    }
+                }
+            } catch (Exceptions.InvalidRequestIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
         @Override
         public void execute(String command) {
-
+            try {
+                String requestID = getGroup(command, 1);
+                printList(adminController.detailsOfRequest(requestID));
+                acceptOrDeclineRequest(requestID);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 

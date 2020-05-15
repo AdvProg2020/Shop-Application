@@ -149,7 +149,7 @@ final class Constants {
         static final String adminRemoveDiscountCodeCommand = "remove discount code [discountCode]";
         static final String adminRemoveDiscountCodePattern = caseInsensitiveMode + "^remove discount code " + argumentPattern + "$";
         //minor modification cuz of showing dilemma.
-        static final String adminViewRequestDetailCommand = "details [requestIndex]";
+        static final String adminViewRequestDetailCommand = "details [requestID]";
         static final String adminViewRequestDetailPattern = caseInsensitiveMode + "^details " + argumentPattern + "$";
         static final String adminShowRequestsCommand = "view requests";
         static final String adminShowRequestsPattern = caseInsensitiveMode + "^" + adminShowRequestsCommand + "$";
