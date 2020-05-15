@@ -1188,7 +1188,7 @@ public class Actions {
                 String discountCodeID = getGroup(command, 1);
                 adminController.removeDiscountCode(discountCodeID);
             } catch (Exceptions.DiscountCodeException e) {
-                System.out.println(e);
+                System.out.println(e.getMessage());
             }
             printSeparator();
         }
@@ -1253,10 +1253,11 @@ public class Actions {
             super(name, Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            System.out.println("categories (category inheritance is not shown in this list): ");
+            adminController.manageCategories().forEach(c -> System.out.println(c));
+            printSeparator();
         }
     }
 
@@ -1320,28 +1321,23 @@ public class Actions {
             super(name, Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
         }
 
-        private int inputParent(ArrayList<String> specialProperties) {
-
-        }
-
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String categoryName = commandMatcher.group(1);
-            String parentCategory;
-            ArrayList<String> specialProperties = new ArrayList<>();
-            while(true) {
-                System.out.println("enter parent category (enter \"root\" for no parent):");
-                 parentCategory = View.getNextLineTrimmed();
-                 if (parentCategory.equalsIgnoreCase("back")) {return;}
-                 if (inputParent(specialProperties) == -1) { continue;}
-                 else {break;}
-            }
             try {
-                adminController.addCategory(categoryName, parentCategory, specialProperties);
+                String categoryName = getGroup(command, 1);
+                String[] fields = new String[] {"parent category (enter \"root\" for no parent)"};
+                String[] regex = new String[] {".+"};
+                Form categoryForm = new Form(fields, regex);
+                categoryForm.setupArrayForm("special properties", ".+");
+                if(categoryForm.takeInput() == 0) {
+                    String[] results = categoryForm.getResults();
+                    ArrayList<String> specialProperties = categoryForm.getListResult();
+                    adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? "superCategory" : results[0], specialProperties);
+                }
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
             }
+            printSeparator();
         }
     }
 
