@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 //TODO: isInProducts --> int IndexByID
 //TODO: getGroup()
 //TODO: types start with capital.
+//TODO: sout completion messages. ex: .... done successfully.
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -268,7 +269,8 @@ public class Actions {
             super(name, Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
         }
 
-        private void showSubCategories() {
+        @Override
+        public void execute(String command) {
             try {
                 String lastCategory;
                 if (categoryTree.size() == 0) {
@@ -283,11 +285,6 @@ public class Actions {
             }
             printSeparator();
         }
-
-        @Override
-        public void execute(String command) {
-            showSubCategories();
-        }
     }
 
     public static class ChooseCategoryAction extends Action {
@@ -300,11 +297,10 @@ public class Actions {
         private boolean isCategoryNameValid(String categoryName) {
             try {
                 ArrayList<String[]> subs;
-                if (categoryTree.size() > 0) {
-                    subs = mainController.getSubCategoriesOfThisCategory(categoryTree.get(categoryTree.size() - 1));
+                if (categoryTree.isEmpty()) {
+                    subs = mainController.getSubCategoriesOfThisCategory("superCategory");
                 } else {
-                    //TODO: get the list.
-                    subs = new ArrayList<>();
+                    subs = mainController.getSubCategoriesOfThisCategory(categoryTree.get(categoryTree.size() - 1));
                 }
                 for (String[] category : subs) {
                     if (category[1].equals(categoryName)) { return true;}
@@ -318,12 +314,11 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String categoryName = commandMatcher.group(1);
+            String categoryName = getGroup(command, 1);
             if (isCategoryNameValid(categoryName)) {
                 categoryTree.add(categoryName);
             } else {
-                System.out.println(categoryName + " is not in the sub-categories of current category");
+                System.out.println(categoryName + " its not in the sub-categories of current category");
                 return;
             }
         }
@@ -355,6 +350,8 @@ public class Actions {
                 revertNumber = 1;
             }
             revertCategory(revertNumber);
+            System.out.println("reverted successfully");
+            printSeparator();
         }
     }
 
@@ -420,10 +417,11 @@ public class Actions {
             showAvailableSorts();
             while (true) {
                 int response = modifySortingArgument();
-                if (response == 0){return;}
+                if (response == 0){break;}
                 response = modifySortingMethod();
-                if (response != 0){return;}
+                if (response != 0){break;}
             }
+            printSeparator();
         }
     }
 
@@ -452,10 +450,10 @@ public class Actions {
         @Override
         public void execute(String command) {
             currentSort.setLength(0);
+            printSeparator();
         }
     }
 
-    //TODO: higher brain performance required :|
     public static class ChooseFiltering extends Action {
         private String[] currentFilters;
         private String[] availableFilters;
@@ -467,15 +465,44 @@ public class Actions {
 
         private void showAvailableFilters() {
             for (int i = 0; i < availableFilters.length; i++) {
-                System.out.println((i + 1) + ". " + availableFilters[i]);
+                System.out.println((i + 1) + ". " + availableFilters[i] + ": " + currentFilters[i]);
             }
         }
 
-        //TODO: imp.
+        private int modifyFilter(int filterIndex) {
+            String[] expectingEntry = new String[] {"Y or N", "Double number", "Double number", "non-space String", "String", "String", "Double number"};
+            String[] expectingRegex = new String[] {Constants.caseInsensitiveMode + "[YN]", Constants.doublePattern, Constants.doublePattern,
+                                        Constants.argumentPattern, ".+", ".+", Constants.doublePattern};
+            while (true) {
+                System.out.println("enter new filtering (" + expectingEntry[filterIndex - 1] + "):");
+                String entry = View.getNextLineTrimmed();
+                if (entry.matches(expectingRegex[filterIndex - 1])) {
+                    if (filterIndex == 1) { currentFilters[0] = (entry.equalsIgnoreCase("y") ? "true":"false");}
+                    else {currentFilters[filterIndex - 1] = entry;}
+                    return 0;
+                } else if (entry.equalsIgnoreCase("back")) return -1;
+                else {
+                    System.out.println("invalid entry.");
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-            showAvailableFilters();
-
+            while (true) {
+                showAvailableFilters();
+                System.out.println("choose the filtering field by index (or \"back\" to go back):");
+                String input = View.getNextLineTrimmed();
+                if (input.matches(Constants.unsignedIntPattern) && Integer.parseInt(input) <= availableFilters.length) {
+                    if(modifyFilter(Integer.parseInt(input)) == -1) continue;
+                    else break;
+                } else if (input.equalsIgnoreCase("back")) break;
+                else {
+                    System.out.println("invalid entry.");
+                    continue;
+                }
+            }
+            printSeparator();
         }
     }
 

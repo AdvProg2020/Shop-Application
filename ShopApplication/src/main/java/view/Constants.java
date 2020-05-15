@@ -5,7 +5,7 @@ final class Constants {
     static final String caseInsensitiveMode = "(?i)";
     static final String argumentPattern = "(\\S+)";
     static final String spacePattern = "\\s+";
-    static final String unsignedIntPattern = "(\\d+)";
+    static final String unsignedIntPattern = "+?(\\d+)";
     static final String doublePattern = "(\\d+\\.\\d+)";
     static final String datePattern = argumentPattern;
     static final String anonymousUserType = "Anonymous";
@@ -87,8 +87,8 @@ final class Constants {
         static final String disableSortCommand = "disable sort";
         static final String disableSortPattern = caseInsensitiveMode + "^" + disableSortCommand + "$";
         //FilterMenu actions.
-        static final String filterCommand = "filter [anAvailableFilter]";
-        static final String filterPattern = caseInsensitiveMode + "^filter" + spacePattern + argumentPattern + "$";
+        static final String filterCommand = "choose filtering";
+        static final String filterPattern = caseInsensitiveMode + "^" + filterCommand + "$";
         static final String showCurrentFiltersCommand = "current filters";
         static final String showCurrentFiltersPattern = caseInsensitiveMode + "^" + showCurrentFiltersCommand + "$";
         static final String disableFilterCommand = "disable filter [aFilter] ...";

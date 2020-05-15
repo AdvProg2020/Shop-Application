@@ -28,7 +28,7 @@ public class Form {
 
     private int inputField(int currIndex) {
         while(true) {
-            System.out.println(fields[currIndex] + ": ");
+            System.out.println(fields[currIndex] + ":");
             String response = View.getNextLineTrimmed();
             if (response.equalsIgnoreCase("back")) {
                 return -1;

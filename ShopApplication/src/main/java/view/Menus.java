@@ -114,9 +114,8 @@ class Menus {
             return mainController.getAvailableSorts();
         }
 
-        //TODO: imp. waiting for shayan to add the method
         private String[] getAvailableFilters() {
-            return null;
+            return mainController.getProductAvailableFilters();
         }
 
 
