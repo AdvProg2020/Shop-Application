@@ -19,6 +19,7 @@ public class Customer extends Account {
         super(username, password, firstName, lastName, email, phone);
         this.balance = balance;
         initialize();
+        new Cart(accountId);
     }
 
     public static Customer getCustomerById(String accountId, boolean... suspense) {
@@ -34,8 +35,6 @@ public class Customer extends Account {
         buyLogIds = new HashSet<>();
         if (!suspended) {
             discountIds = new HashMap<>();
-            if (cartId == null)
-                new Cart(accountId);
         }
     }
 

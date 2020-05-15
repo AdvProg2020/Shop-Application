@@ -27,7 +27,7 @@ public class Controller {
     public void usernameTypeValidation(String username, String type) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
         if (Account.getAccountByUsername(username) == null)
             throw new Exceptions.ExistedUsernameException(username);
-        else if (type.equalsIgnoreCase("admin") && (Admin.getManager() == null))
+        else if (type.equalsIgnoreCase("Admin") && (Admin.getManager() == null))
             throw new Exceptions.AdminRegisterException();
     }
 
@@ -46,16 +46,16 @@ public class Controller {
         if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.ExistedUsernameException(username);
         switch (type) {
-            case "customer":
+            case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, balance);
                 break;
-            case "admin":
+            case "Admin":
                 if (Admin.getManager() != null) {
                     throw new Exceptions.AdminRegisterException();
                 } else
                     new Admin(username, password, firstName, lastName, email, phone);
                 break;
-            case "seller":
+            case "Seller":
                 new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
                 break;
         }
