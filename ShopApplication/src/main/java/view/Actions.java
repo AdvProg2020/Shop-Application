@@ -1,7 +1,6 @@
 package view;
 
 import controller.*;
-import model.request.EditSaleRequest;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -520,7 +519,6 @@ public class Actions {
         }
     }
 
-    //TODO: higher brain performance required :|
     public static class DisableFilter extends Action {
         private String[] currentFilters;
         private String[] availableFilters;
@@ -536,10 +534,48 @@ public class Actions {
             }
         }
 
+        private void disableFilter(int filterIndex) {
+            switch (filterIndex) {
+                case 1:
+                    currentFilters[0] = "true";
+                    break;
+                case 2:
+                    currentFilters[1] = "0.00";
+                    break;
+                case 3:
+                    currentFilters[2] = "0.00";
+                    break;
+                case 4:
+                    currentFilters[3] = null;
+                    break;
+                case 5:
+                    currentFilters[4] = null;
+                    break;
+                case 6:
+                    currentFilters[5] = null;
+                    break;
+                case 7:
+                    currentFilters[6] = "0.00";
+                    break;
+            }
+        }
+
         @Override
         public void execute(String command) {
-            showAvailableFilters();
-
+            while (true) {
+                showAvailableFilters();
+                System.out.println("choose the filtering field by index (or \"back\" to go back):");
+                String input = View.getNextLineTrimmed();
+                if (input.matches(Constants.unsignedIntPattern) && Integer.parseInt(input) <= availableFilters.length) {
+                    disableFilter(Integer.parseInt(input));
+                    break;
+                } else if (input.equalsIgnoreCase("back")) break;
+                else {
+                    System.out.println("invalid entry.");
+                    continue;
+                }
+            }
+            printSeparator();
         }
     }
 
@@ -695,9 +731,11 @@ public class Actions {
             super(name, Constants.Actions.showSellerSellHistoryPattern, Constants.Actions.showSellerSellHistoryCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
+            System.out.println("sell history:");
+            printList(sellerController.getAllSellLogs());
+            printSeparator();
         }
     }
 
@@ -706,10 +744,10 @@ public class Actions {
             super(name, Constants.Actions.showSellerBalancePattern, Constants.Actions.showSellerBalanceCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            System.out.println("your balance is: " + sellerController.viewBalance());
+            printSeparator();
         }
     }
 
@@ -718,10 +756,10 @@ public class Actions {
             super(name, Constants.Actions.showCustomerBalancePattern, Constants.Actions.showCustomerBalanceCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            System.out.println("your balance is: " + customerController.viewBalance());
+            printSeparator();
         }
     }
 
@@ -730,10 +768,11 @@ public class Actions {
             super(name, Constants.Actions.showCustomerDiscountCodesPattern, Constants.Actions.showCustomerDiscountCodesCommand);
         }
 
-        //TODO: imp.
         @Override
         public void execute(String command) {
-
+            System.out.println("discount codes:");
+            printList(customerController.viewDiscountCodes());
+            printSeparator();
         }
     }
 
@@ -766,18 +805,23 @@ public class Actions {
             this.productID = productID;
         }
 
-        //TODO: imp.
+        private void showInfo(String[] info) {
+            System.out.println("1. product ID: " + info[0]);
+            System.out.println("2. product name: " + info[1]);
+            System.out.println("3. product brand: " + info[2]);
+            System.out.println("4. product average rating score: " + info[4]);
+            System.out.println("5. product description: " + info[3]);
+        }
+
         @Override
         public void execute(String command) {
             try {
                 String[] productInfo = mainController.digest(productID.toString());
+                showInfo(productInfo);
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
-                return;
             }
-
-            //if ID is valid, show the info.
-
+            printSeparator();
         }
     }
 
