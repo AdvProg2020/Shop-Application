@@ -579,8 +579,6 @@ public class Actions {
         }
     }
 
-    //TODO: remember that filters and sorts are only for products.
-    //TODO: holy guakamoly.
     public static class ShowOffs extends Action {
         private StringBuilder currentSort;
         private String[] currentFilters;
@@ -595,34 +593,23 @@ public class Actions {
             this.currentOffs = currentOffs;
         }
 
-        private ArrayList<String[]> appendSaleInfo(String[] sale, ArrayList<String[]> salesProducts) {
-          ArrayList<String[]> result = new ArrayList<>();
-            for (String[] salesProduct : salesProducts) {
-                String[] extendedProduct = Arrays.copyOf(salesProduct, salesProduct.length + sale.length);
-                System.arraycopy(sale, 0, extendedProduct, salesProduct.length, sale.length);
-                result.add(extendedProduct);
-            }
-            return result;
+        private String getSortingField() {
+            int indicatorIndex = currentSort.lastIndexOf("creasing");
+            indicatorIndex -= 3;
+            return currentSort.substring(0, indicatorIndex);
         }
 
-        private void sortProducts() {
-
+        private boolean isIncreasing() {
+            int indicatorIndex = currentSort.lastIndexOf("creasing");
+            indicatorIndex -= 2;
+            return currentSort.substring(indicatorIndex).equalsIgnoreCase("increasing");
         }
 
-        //if adding filter and sort for sales then should add an additional currentOffs.clear() and currentOffs.getOffs(...) codes.
         @Override
         public void execute(String command) {
-            currentProducts.clear();
-            try {
-                for (String[] off : currentOffs) {
-                    ArrayList<String[]> offsProducts = mainController.getProductsInSale(off[0]);
-                    currentProducts.addAll(appendSaleInfo(off, offsProducts));
-                }
-                sortProducts();
-              //  showProducts();
-            } catch (Exceptions.InvalidSaleIdException e) {
-                System.out.println(e.getMessage());
-            }
+            System.out.println("current sales:");
+            printList(mainController.showInSaleProducts(getSortingField(), isIncreasing(), currentFilters));
+            printSeparator();
         }
     }
 
