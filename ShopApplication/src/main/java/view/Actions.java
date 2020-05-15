@@ -1,9 +1,7 @@
 package view;
 
 import controller.*;
-import model.Cart;
 
-import javax.swing.plaf.IconUIResource;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -498,9 +496,9 @@ public class Actions {
                 response = View.getNextLineTrimmed();
                 if (response.equalsIgnoreCase("back")) {return -1;}
                 try {
-                    if (type.equals("customer")) {
+                    if (type.equals("Customer")) {
                         customerController.editPersonalInfo(editableFields[fieldIndex], response);
-                    } else if (type.equals("seller")){
+                    } else if (type.equals("Seller")) {
                         sellerController.editPersonalInfo(editableFields[fieldIndex], response);
                     } else {
                         adminController.editPersonalInfo(editableFields[fieldIndex], response);

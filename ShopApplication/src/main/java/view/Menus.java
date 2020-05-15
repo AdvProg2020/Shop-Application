@@ -1,6 +1,7 @@
 package view;
 
 import controller.*;
+
 import java.util.ArrayList;
 
 class Menus {
@@ -295,7 +296,7 @@ class Menus {
 
         @Override
         public void execute() {
-            if (mainController.getType().equals("anonymous")) {
+            if (mainController.getType().equals("Anonymous")) {
                 super.execute();
             } else {
                 nextMenu.run();

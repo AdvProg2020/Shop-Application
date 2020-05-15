@@ -1,7 +1,5 @@
 package view;
 
-import model.Category;
-
 final class Constants {
     //TODO: space pattern ro bargardon.
     static final String caseInsensitiveMode = "(?i)";
@@ -10,12 +8,12 @@ final class Constants {
     static final String unsignedIntPattern = "(\\d+)";
     static final String doublePattern = "(\\d+\\.\\d+)";
     static final String datePattern = argumentPattern;
-    static final String anonymousUserType = "anonymous";
-    static final String adminUserType = "admin";
-    static final String customerUserType = "customer";
-    static final String sellerUserType = "seller";
+    static final String anonymousUserType = "Anonymous";
+    static final String adminUserType = "Admin";
+    static final String customerUserType = "Customer";
+    static final String sellerUserType = "Seller";
 
-     static class Menus {
+    static class Menus {
         static final String accountMenuCommand = "account menu";
         static final String accountMenuPattern = caseInsensitiveMode + "^" + accountMenuCommand + "$";
         static final String allProductsMenuCommand = "products";

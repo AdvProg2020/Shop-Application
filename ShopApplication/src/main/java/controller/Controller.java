@@ -88,7 +88,7 @@ public class Controller {
      */
     public String getType() {
         if (currentAccount == null)
-            return "anonymous";
+            return "Anonymous";
         return currentAccount.getClass().getName();
     }
 
