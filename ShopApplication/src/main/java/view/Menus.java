@@ -126,7 +126,7 @@ class Menus {
             subActions.put(index + 2, new Actions.ShowCategories("show categories", this.categoryTree));
             subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category", this.categoryTree));
             subActions.put(index + 5, new Actions.RevertCategoryAction("revert category", categoryTree));
-            subActions.put(index + 6, new Actions.ProductDetailMenu("productDetailMenu", this.currentProducts));
+            subActions.put(index + 6, new Actions.ProductDetailMenu("productDetailMenu"));
             subActions.put(index + 7, new Actions.BackAction("all product menu back", parent));
         }
     }

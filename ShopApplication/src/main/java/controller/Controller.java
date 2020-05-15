@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+//TODO: compare to products!
+
 public class Controller {
     protected static Account currentAccount;
     protected static Cart currentCart;

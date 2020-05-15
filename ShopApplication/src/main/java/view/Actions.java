@@ -785,7 +785,6 @@ public class Actions {
         public void execute(String command) {
             Matcher commandMatcher = this.getMatcherReady(command);
             String productID = commandMatcher.group(1);
-            //checks if the ID is valid or not
             try {
                 mainController.showProduct(productID);
             } catch (Exceptions.InvalidProductIdException e) {
@@ -793,7 +792,6 @@ public class Actions {
                 return;
             }
 
-            //if valid, runs productMenu with given productID.
             Menu.getProductDetailMenu().runByProductID(productID);
         }
     }
@@ -1355,9 +1353,11 @@ public class Actions {
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
             }
+            printSeparator();
         }
     }
 
+    //TODO: waiting for shayan
     public static class SellerShowSales extends Action {
         SellerShowSales(String name) {
             super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
