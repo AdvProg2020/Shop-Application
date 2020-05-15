@@ -5,7 +5,6 @@ import jdk.jfr.Label;
 import java.util.*;
 
 public class Category {
-    private static final String SUPER_CATEGORY_ID = ""; //TODO: set id
     private static Map<String, Category> allCategories = new HashMap<>();
     private static Category superCategory = null; // parent of all main categories (shouldn't be terminated)
     private String categoryId;
@@ -31,6 +30,11 @@ public class Category {
         return superCategory;
     }
 
+    public static void setSuperCategory() {
+        if (superCategory == null)
+            new Category(null, null, null);
+    }
+
     public static List<Category> getAllCategories() {
         return new ArrayList<>(allCategories.values());
     }
@@ -53,7 +57,6 @@ public class Category {
         productIds = new HashSet<>();
         if (superCategory == null) {
             superCategory = this;
-            categoryId = SUPER_CATEGORY_ID;
         } else {
             if (categoryId == null)
                 categoryId = generateNewId();
