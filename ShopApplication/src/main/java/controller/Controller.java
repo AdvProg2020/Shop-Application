@@ -110,6 +110,7 @@ public class Controller {
     }
 
     //Done!! check the directions in the test
+    //TODO: not sure if you can use switch case here!
     private ArrayList<Product> sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
         int direction = isIncreasing ? 1 : -1;
         switch (sortBy) {

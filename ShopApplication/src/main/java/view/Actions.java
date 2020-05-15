@@ -89,7 +89,6 @@ public class Actions {
     }
 
     public static class RegisterAction extends Action {
-
         RegisterAction(String name) {
             super(name, Constants.Actions.registerPattern, Constants.Actions.registerCommand);
         }
@@ -193,8 +192,9 @@ public class Actions {
         private ArrayList<String> categoryTree;
         private String[] currentFilters;
         private StringBuilder currentSort;
-        private ArrayList<String> currentProducts;
-        ShowProductsAction(String name, ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String> currentProducts) {
+        private ArrayList<String[]> currentProducts;
+
+        ShowProductsAction(String name, ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts) {
             super(name, Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
@@ -202,21 +202,63 @@ public class Actions {
             this.currentProducts = currentProducts;
         }
 
-        //TODO: implement.
+        private void refreshCurrentProducts(String categoryName) {
+            try {
+                currentProducts.clear();
+                currentProducts.addAll(mainController.getProductsOfThisCategory(categoryName));
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        private void showAllProducts() {
+            refreshCurrentProducts("superCategory");
+            try {
+                printList(mainController.showProducts(productIDs(), null, true,
+                        new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)}));
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        private String getSortingField() {
+            int indicatorIndex = currentSort.lastIndexOf("creasing");
+            indicatorIndex -= 3;
+            return currentSort.substring(0, indicatorIndex);
+        }
+
+        private boolean isIncreasing() {
+            int indicatorIndex = currentSort.lastIndexOf("creasing");
+            indicatorIndex -= 2;
+             return currentSort.substring(indicatorIndex).equalsIgnoreCase("increasing");
+        }
+
+        private ArrayList<String> productIDs() {
+            ArrayList<String> productIDS = new ArrayList<>();
+            for (String[] product : currentProducts) {
+                productIDS.add(product[0]);
+            }
+            return productIDS;
+        }
+
         @Override
         public void execute(String command) {
             String categoryName;
-            if (categoryTree.size() == 0) {
-                categoryName = "superCategory";
-            } else {
-                categoryName = categoryTree.get(categoryTree.size() - 1);
+            if ( getMatcherReady(command).groupCount() == 1) {showAllProducts();}
+            else {
+                if (categoryTree.size() == 0) {
+                    categoryName = "superCategory";
+                } else {
+                    categoryName = categoryTree.get(categoryTree.size() - 1);
+                }
+                try {
+                    refreshCurrentProducts(categoryName);
+                    printList(mainController.showProducts(productIDs(), getSortingField(), isIncreasing(), currentFilters));
+                } catch (Exceptions.InvalidProductIdException e) {
+                    System.out.println(e.getMessage());
+                }
             }
-            try {
-                ArrayList<String[]> products = mainController.getProductsOfThisCategory(categoryName);
-            } catch (Exceptions.InvalidCategoryException e) {
-                System.out.println(e.getMessage());
-                return;
-            }
+            printSeparator();
         }
     }
 
