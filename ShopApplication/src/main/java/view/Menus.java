@@ -615,8 +615,10 @@ class Menus {
     }
 
     public static class CustomerOrderLogMenu extends Menu {
+        private ArrayList<String[]> currentOrderLogs;
         CustomerOrderLogMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.customerOrderLogMenuPattern, Constants.Menus.customerOrderLogMenuCommand);
+            this.currentOrderLogs = new ArrayList<>();
         }
 
         @Override
@@ -627,8 +629,8 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.CustomerShowOrders("show orders"));
-            subActions.put(index + 2, new Actions.CustomerViewOrder("view order"));
+            subActions.put(index + 1, new Actions.CustomerShowOrders("show orders", currentOrderLogs));
+            subActions.put(index + 2, new Actions.CustomerViewOrder("view order", currentOrderLogs));
             subActions.put(index + 3, new Actions.CustomerRateProduct("rate product"));
             subActions.put(index + 4, new Actions.BackAction("back", parent));
         }
