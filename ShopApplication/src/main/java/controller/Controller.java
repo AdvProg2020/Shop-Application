@@ -24,6 +24,7 @@ public class Controller {
      * @throws Exceptions.ExistedUsernameException
      * @throws Exceptions.AdminRegisterException
      */
+    //TODO: Account.getAccountByUsername(username) != null. , Admin.getManager() != null.
     public void usernameTypeValidation(String username, String type) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
         if (Account.getAccountByUsername(username) == null)
             throw new Exceptions.ExistedUsernameException(username);
@@ -86,6 +87,7 @@ public class Controller {
     /**
      * @return returns the currentAccount type: anonymous, customer, seller, admin.
      */
+    //TODO: shouldn't it be: getClass().getSimpleName()? check please.
     public String getType() {
         if (currentAccount == null)
             return "Anonymous";

@@ -1,6 +1,7 @@
 package view;
 
 import controller.*;
+import model.request.EditSaleRequest;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.regex.Matcher;
 //TODO: printSeparator();
 //TODO: isInProducts --> int IndexByID
 //TODO: getGroup()
+//TODO: types start with capital.
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -56,7 +58,6 @@ public class Actions {
             super(name, Constants.Actions.loginPattern, Constants.Actions.loginCommand);
         }
 
-        //TODO: show asterisk.
         private String getPassword() {
             System.out.println("Enter your password (enter \"back\" to go back):");
              String input = View.getNextLineTrimmed();
@@ -88,30 +89,103 @@ public class Actions {
     }
 
     public static class RegisterAction extends Action {
+
         RegisterAction(String name) {
             super(name, Constants.Actions.registerPattern, Constants.Actions.registerCommand);
         }
 
-        private void registerFromScratch() {
-
+        private void registerCustomer(String username) {
+            Form registerForm;
+            String[] fields;
+            String[] fieldRegex;
+            String[] results;
+            fields = new String[] { "password", "first name", "last name", "email", "phone", "balance"};
+            fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
+                    Constants.argumentPattern, Constants.argumentPattern, Constants.doublePattern};
+            registerForm = new Form(fields, fieldRegex);
+            if(registerForm.takeInput() == 0) {
+                results = registerForm.getResults();
+                try {
+                    mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), null);
+                } catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+                    //wont happen.
+                    System.out.println("sigh! " + e.getMessage());
+                }
+            }
         }
 
+        private void registerSeller(String username) {
+            Form registerForm;
+            String[] fields;
+            String[] fieldRegex;
+            String[] results;
+            fields = new String[] { "password", "first name", "last name", "email", "phone", "balance", "store name"};
+            fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
+                    Constants.argumentPattern, Constants.argumentPattern, Constants.doublePattern, Constants.argumentPattern};
+            registerForm = new Form(fields, fieldRegex);
+            if(registerForm.takeInput() == 0) {
+                results = registerForm.getResults();
+                try {
+                    mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), results[6]);
+                } catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+                    //wont happen.
+                    System.out.println("sigh! " + e.getMessage());
+                }
+            }
+        }
 
-        //TODO: implement.
+        private void registerAdmin(String username) {
+            Form registerForm;
+            String[] fields;
+            String[] fieldRegex;
+            String[] results;
+            fields = new String[] { "password", "first name", "last name", "email", "phone"};
+            fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
+                    Constants.argumentPattern, Constants.argumentPattern};
+            registerForm = new Form(fields, fieldRegex);
+            if(registerForm.takeInput() == 0) {
+                results = registerForm.getResults();
+                try {
+                    mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), null);
+                } catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+                    //wont happen.
+                    System.out.println("sigh! " + e.getMessage());
+                }
+            }
+        }
+
+        private void register(int typeIndex, String username) {
+            if (username != null) {
+                if (typeIndex == 1) {
+                    registerCustomer(username);
+                } else if (typeIndex == 2) {
+                    registerSeller(username);
+                } else {
+                    registerAdmin(username);
+                }
+            }
+        }
+
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String type = commandMatcher.group(1);
-            String username = commandMatcher.group(2);
-            try {
-                mainController.usernameTypeValidation(username, type);
-             //   getInfo(type);
-            } catch (Exceptions.AdminRegisterException | Exceptions.ExistedUsernameException e) {
-                System.out.println(e.getMessage());
+            String type = getGroup(command, 1);
+            String username = getGroup(command, 2);
+            int index = Constants.getTypeByIndex(type);
+            if (index < 1) {
+                System.out.println("invalid type. you can enter customer, seller or admin as type");
+            } else {
+                try {
+                    mainController.usernameTypeValidation(username, type);
+                    register(index, username);
+                } catch (Exceptions.ExistedUsernameException e) {
+                    System.out.println("username already exists!");
+                } catch (Exceptions.AdminRegisterException e) {
+                    System.out.println("only admin can create another admin!");
+                    printSeparator();
+                    return;
+                }
             }
-
-            //while()
-
+            printSeparator();
         }
     }
 

@@ -12,6 +12,16 @@ final class Constants {
     static final String adminUserType = "Admin";
     static final String customerUserType = "Customer";
     static final String sellerUserType = "Seller";
+    static final String[] types = new String[] {anonymousUserType, customerUserType, sellerUserType, adminUserType};
+
+    static int getTypeByIndex(String type) {
+        for (int i = 0; i < types.length; i++) {
+            if (type.equalsIgnoreCase(types[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     static class Menus {
         static final String accountMenuCommand = "account menu";
