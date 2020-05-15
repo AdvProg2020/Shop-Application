@@ -152,7 +152,7 @@ class Menus {
             int index = subMenus.size();
             subActions.put(index + 1, new Actions.DigestProduct("digest product", productID));
             subActions.put(index + 2, new Actions.AddToCart("add to cart", subProductID));
-            subActions.put(index + 3, new Actions.SelectSeller("select seller", subProductID));
+            subActions.put(index + 3, new Actions.SelectSeller("select seller", subProductID, productID));
             subActions.put(index + 4, new Actions.ShowCurrentSeller("show current seller", subProductID));
    //         subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
             subActions.put(index + 5, new Actions.BackAction("back", null));

@@ -840,24 +840,53 @@ public class Actions {
             } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException e) {
                 System.out.println(e.getMessage());
                 System.out.println("please change seller and try again");
-                return;
             }
+            printSeparator();
         }
     }
 
     public static class SelectSeller extends Action {
+        private StringBuilder productID;
         private StringBuilder subProductID;
-        SelectSeller(String name, StringBuilder subProductID) {
-            super(name, Constants.Actions.selectSellerPattern, Constants.Actions.showSellerCompanyInfoCommand);
+        private ArrayList<String[]> subProducts;
+
+        SelectSeller(String name, StringBuilder productID, StringBuilder subProductID) {
+            super(name, Constants.Actions.selectSellerPattern, Constants.Actions.selectSellerCommand);
             this.subProductID = subProductID;
+            this.productID = productID;
+            this.subProducts = new ArrayList<>();
         }
 
+        private void refreshSubProducts() throws Exceptions.InvalidProductIdException {
+            subProducts.clear();
+            subProducts.addAll(mainController.subProductsOfAProduct(productID.toString()));
+        }
 
-        //TODO: imp. first show all the subProducts and then index choosing.
-        //TODO: soale 5 koja niaz shd?
+        private void selectSeller(int sellerIndex) {
+            subProductID.setLength(0);
+            subProductID.append(subProducts.get(sellerIndex - 1)[0]);
+        }
+
         @Override
         public void execute(String command) {
-
+            try {
+                refreshSubProducts();
+                while(true) {
+                    printList(subProducts);
+                    System.out.println("enter the seller index:");
+                    String input = View.getNextLineTrimmed();
+                    if (input.matches(Constants.unsignedIntPattern) && Integer.parseInt(input) <= subProducts.size()) {
+                        selectSeller(Integer.parseInt(input));
+                    } else if (input.equalsIgnoreCase("back")) break;
+                    else {
+                        System.out.println("invalid entry");
+                    }
+                }
+                printSeparator();
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println("product ID is invalid. unable to refresh sub-products.");
+            }
+            printSeparator();
         }
     }
 
@@ -873,29 +902,29 @@ public class Actions {
         }
     }
 
-//    public static class CompareProductByID extends Action {
-//        private StringBuilder productID;
-//        CompareProductByID(String name, StringBuilder productID) {
-//            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
-//            this.productID = productID;
-//        }
-//
-//
-//        //TODO: imp.
-//        @Override
-//        public void execute(String command) {
-//            Matcher commandMatcher = getMatcherReady(command);
-//            String otherProductID = commandMatcher.group(1);
-//            try {
-//                //what is the return type?
-//                mainController.compare(productID.toString(), otherProductID);
-//            } catch (Exceptions.InvalidProductIdException e) {
-//                System.out.println(e.getMessage());
-//                return;
-//            }
-//            //show infos.
-//        }
-//    }
+    public static class CompareProductByID extends Action {
+        private StringBuilder productID;
+        CompareProductByID(String name, StringBuilder productID) {
+            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
+            this.productID = productID;
+        }
+
+
+        //TODO: imp.
+        @Override
+        public void execute(String command) {
+            Matcher commandMatcher = getMatcherReady(command);
+            String otherProductID = commandMatcher.group(1);
+            try {
+                //what is the return type?
+                mainController.compare(productID.toString(), otherProductID);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            //show infos.
+        }
+    }
 
     public static class AddComment extends Action {
         private StringBuilder productID;
