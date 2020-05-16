@@ -58,6 +58,7 @@ class Menus {
 
         @Override
         public void run() {
+            getStackTrace().push(this);
             previousMenu = Menu.getCallingMenu();
             nextMenu = null;
             this.execute();
@@ -79,13 +80,12 @@ class Menus {
         public void initSubMenus() {
             subMenus.put(1, new SaleMenu("Sale menu", this));
             subMenus.put(2, new AllProductsMenu("products menu", this));
-            subMenus.put(3, Menu.getAccountMenu());
         }
 
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ExitAction("first menu exit"));
+            subActions.put(index + 1, new Actions.ExitAction("exit"));
         }
     }
     
@@ -107,7 +107,6 @@ class Menus {
         protected void initSubMenus() {
             subMenus.put(1, new SortMenu("product sorting menu", this, getAvailableSorts(), currentSort));
             subMenus.put(2, new FilterMenu("product filtering menu", this, getAvailableFilters(), currentFilters));
-            if (mainController.get)
         }
 
         private String[] getAvailableSorts() {
@@ -120,7 +119,7 @@ class Menus {
         
         @Override
         public void show() {
-            subActions.get(subMenus.size() + 1).run("show products -all");
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show products -all");
             super.show();
         }
         
@@ -144,7 +143,7 @@ class Menus {
         ProductDetailMenu(String name){
             super(name, false, null, null, null);
             Menu.setProductDetailMenu(this);
-            subProductID = mainController.getDefaultSubProductID(productID);
+           // subProductID = mainController.getDefaultSubProductID(productID);
         }
 
         @Override
@@ -275,14 +274,12 @@ class Menus {
             subActions.put(index + 3, new Actions.BackAction("sale menu back", parent));
         }
 
-        //TODO: imp.
         private String[] getAvailableSorts() {
-            return null;
+            return mainController.getAvailableSorts();
         }
 
-        //TODO: imp.
         private String[] getAvailableFilters() {
-            return null;
+            return mainController.getProductAvailableFilters();
         }
     }
 
@@ -604,9 +601,8 @@ class Menus {
     public static class ShoppingCartMenu extends Menu {
         private ArrayList<String[]> currentProducts;
         ShoppingCartMenu(String name, Menu parent){
-            super(name, true, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
+            super(name, false, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
             this.currentProducts = new ArrayList<>();
-            setShoppingCartMenu(this);
         }
 
         @Override
@@ -622,7 +618,7 @@ class Menus {
             subActions.put(index + 3, new Actions.CustomerCartIncreaseProductCount("increase count", currentProducts));
             subActions.put(index + 4, new Actions.CustomerCartDecreaseProductCount("decrease count", currentProducts));
             subActions.put(index + 5, new Actions.CustomerCartShowTotalPrice("show total price"));
-            subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products"));
+            subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products", this));
             subActions.put(index + 7, new Actions.BackAction("back", parent));
         }
     }

@@ -442,6 +442,7 @@ public class Controller {
     }
 
     //Done!!
+    //TODO: specific getPersonalInfoEditableFields for each of the admin, seller and customer controller.
     /**
      * @return *1- seller:String[6]
      * * { String firstName, String lastName, String phone, String email, String password, String storeName}

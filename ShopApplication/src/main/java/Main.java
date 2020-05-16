@@ -13,7 +13,7 @@ public class Main {
         Category.setSuperCategory();
         Database mainDatabase = new DatabaseManager();
 
-        View appView = new View(new Controller(mainDatabase), new SellerController(mainDatabase), new AdminController(mainDatabase), new CustomerController(mainDatabase));
+        View appView = new View(new Controller(), new SellerController(), new AdminController(), new CustomerController());
         appView.start();
     }
 }

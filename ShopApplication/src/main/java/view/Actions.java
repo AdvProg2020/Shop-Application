@@ -12,8 +12,6 @@ import java.util.regex.Matcher;
 //TODO: getGroup()
 //TODO: types start with capital.
 //TODO: sout completion messages. ex: .... done successfully.
-//TODO: anonymous cant have complete access to  cart
-//TODO: attributes -> getSpecialProperties
 //TODO: index choosing
 public class Actions {
     private static Controller mainController;
