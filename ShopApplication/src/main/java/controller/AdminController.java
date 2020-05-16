@@ -392,5 +392,4 @@ public class AdminController extends Controller {
             throw new Exceptions.InvalidCategoryException(categoryName);
         category.terminate();
     }
-
 }

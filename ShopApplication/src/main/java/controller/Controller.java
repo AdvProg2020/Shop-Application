@@ -401,7 +401,7 @@ public class Controller {
 
     /**
      * @param productId
-     * @return String[3]: usernameOfReviewer, title, body.
+     * @return String[3]: usernameOfReviewer, title, body, hasBought. // TODO: Dana, hasBought added!
      * @throws Exceptions.InvalidProductIdException
      */
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidProductIdException {
@@ -410,10 +410,11 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> reviews = new ArrayList<>();
         for (Review review : product.getReviews()) {
-            String[] reviewPack = new String[3];
+            String[] reviewPack = new String[4];
             reviewPack[0] = review.getReviewer().getUsername();
             reviewPack[1] = review.getTitle();
             reviewPack[2] = review.getText();
+            reviewPack[3] = review.hasBought() ? "yes" : "no";
             reviews.add(reviewPack);
         }
         return reviews;
