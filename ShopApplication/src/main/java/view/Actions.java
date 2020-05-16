@@ -1629,20 +1629,53 @@ public class Actions {
         }
     }
 
-    //TODO: wtf should we do?
     public static class SellerAddProduct extends Action {
         SellerAddProduct(String name) {
             super(name, Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
         }
 
+        private void createNewProduct(String[] results) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
+            String[] fields = new String[] {"description", "category name", "price", "count"};
+            String[] regex = new String[] { ".+", ".+", Constants.doublePattern, Constants.unsignedIntPattern};
+            Form productSecondForm = new Form(fields, regex);
+            productSecondForm.setupArrayForm("special properties", ".+");
+            if (productSecondForm.takeInput() == 0) {
+                String[] secondResults = productSecondForm.getResults();
+                ArrayList<String> specialProperties = productSecondForm.getListResult();
+                sellerController.addNewProduct(results[0], results[1], secondResults[0], secondResults[1],
+                        specialProperties, Double.parseDouble(secondResults[2]), Integer.parseInt(secondResults[3]));
+            }
+        }
+
+        private void createExistingProduct(String productID) throws Exceptions.InvalidProductIdException {
+            String[] fields = new String[] {"price", "count"};
+            String[] regex = new String[] {Constants.doublePattern, Constants.unsignedIntPattern};
+            Form productSecondForm = new Form(fields, regex);
+            if (productSecondForm.takeInput() == 0) {
+                String[] results = productSecondForm.getResults();
+                sellerController.addNewSubProductToAnExistingProduct(productID, Double.parseDouble(results[0]), Integer.parseInt(results[1]));
+            }
+        }
+
         @Override
         public void execute(String command) {
-            String[] fields = new String[] {"name", "brand"};
-            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern};
-            Form productFirstForm = new Form(fields, fieldRegex);
-            sellerController.addNewProduct();
-            sellerController.exist();
-            sellerController.addNewSubProductToAnExistingProduct();
+            try {
+                String[] fields = new String[]{"name", "brand"};
+                String[] fieldRegex = new String[]{Constants.argumentPattern, Constants.argumentPattern};
+                Form productFirstForm = new Form(fields, fieldRegex);
+                if (productFirstForm.takeInput() == 0) {
+                    String[] results = productFirstForm.getResults();
+                    String productID = sellerController.exist(results[0], results[1]);
+                    if (productID == null) {
+                        createNewProduct(results);
+                    } else {
+                        createExistingProduct(productID);
+                    }
+                }
+            } catch (Exceptions.InvalidProductIdException | Exceptions.ExistingProductException | Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
