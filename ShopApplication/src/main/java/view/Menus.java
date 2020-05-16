@@ -140,7 +140,7 @@ class Menus {
         ProductDetailMenu(String name){
             super(name, false, null, null, null);
             Menu.setProductDetailMenu(this);
-        //    subProductID = mainController.getDefaultSubProductID(productID);
+            subProductID = mainController.getDefaultSubProductID(productID);
         }
 
         @Override
@@ -155,7 +155,7 @@ class Menus {
             subActions.put(index + 2, new Actions.AddToCart("add to cart", subProductID));
             subActions.put(index + 3, new Actions.SelectSeller("select seller", subProductID, productID));
             subActions.put(index + 4, new Actions.ShowCurrentSeller("show current seller", subProductID));
-   //         subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
+            subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
             subActions.put(index + 5, new Actions.BackAction("back", null));
         }
 

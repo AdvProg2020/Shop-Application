@@ -887,7 +887,6 @@ public class Actions {
         }
     }
 
-    //TODO: last one -> need to be discussed
     public static class CompareProductByID extends Action {
         private StringBuilder productID;
         CompareProductByID(String name, StringBuilder productID) {
@@ -896,11 +895,36 @@ public class Actions {
         }
 
 
+        private void printDigestInfo(String[] productInfo, String[] otherProductInfo) {
+            System.out.println("1. ID: " + productInfo[0] + " | " + otherProductInfo[0]);
+            System.out.println("2. name: " + productInfo[1] + " | " + otherProductInfo[1]);
+            System.out.println("3. brand: " + productInfo[2] + " | " + otherProductInfo[2]);
+            System.out.println("4. average rating score: " + productInfo[4] + " | " + otherProductInfo[4]);
+            System.out.println("5. description: " + productInfo[3] + " | " + otherProductInfo[3]);
+        }
+
+        private void printSpecialProperties(String productID, ArrayList<String> specialProperties) {
+            System.out.println("product with ID: " + productID + "'s special properties:");
+            specialProperties.forEach(sp -> System.out.println(sp));
+        }
+
         @Override
         public void execute(String command) {
-            mainController.digest();
-            mainController.getSpecialPropertiesOfAProduct()
-            mainController.getSpecialPropertiesOfAProduct()
+            String otherProductID = getGroup(command, 1);
+            try {
+                String[] productInfo = mainController.digest(productID.toString());
+                String[] otherProductInfo = mainController.digest(otherProductID);
+                ArrayList<String> productSP = mainController.getSpecialPropertiesOfAProduct(productID.toString());
+                ArrayList<String> otherProductSP = mainController.getSpecialPropertiesOfAProduct(otherProductID);
+                printDigestInfo(productInfo, otherProductInfo);
+                printSeparator();
+                printSpecialProperties(productID.toString(), productSP);
+                printSeparator();
+                printSpecialProperties(otherProductID, otherProductSP);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
@@ -1047,17 +1071,17 @@ public class Actions {
             super(name, Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
         }
 
-        //TODO: arrayListOf ID
         @Override
         public void execute(String command) {
             String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
             String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.unsignedIntPattern};
             Form discountCodeForm = new Form(fields, fieldRegex);
+            discountCodeForm.setupArrayForm("customer ID to add", Constants.argumentPattern);
             if (discountCodeForm.takeInput() == 0) {
                 String[] results = discountCodeForm.getResults();
                 try {
                     adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
-                            Double.valueOf(results[3]), Integer.parseInt(results[4]));
+                            Double.valueOf(results[3]), Integer.parseInt(results[4]), discountCodeForm.getListResult());
                     System.out.println("discount code created successfully");
                 } catch (Exceptions.ExistingDiscountCodeException e) {
                     System.out.println(e.getMessage());
