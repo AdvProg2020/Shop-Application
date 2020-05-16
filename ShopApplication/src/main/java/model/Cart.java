@@ -82,6 +82,13 @@ public class Cart implements Initializable {
         return subProducts;
     }
 
+    public int getCountOfaSubProduct(String subProductId) {
+        if (!subProductIds.containsKey(subProductId))
+            return 0;
+
+        return subProductIds.get(subProductId);
+    }
+
     public void addSubProductCount(String subProductId, int count) {
         if (subProductIds.containsKey(subProductId))
             count += subProductIds.get(subProductId);
