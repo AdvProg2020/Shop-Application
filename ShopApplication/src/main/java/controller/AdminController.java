@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+//TODO: database constructor
 public class AdminController extends Controller {
 
     //Done!!

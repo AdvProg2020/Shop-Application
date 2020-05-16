@@ -46,6 +46,9 @@ public class Form {
     }
 
     private int inputList() {
+        if (listResult == null) {
+            return 0;
+        }
         while(true) {
             System.out.print("enter " + arrayListField + " (enter \"back\" to go back or \"exit\" to exit):\n" + (listResult.size() + 1) + ". ");
             String input = View.getNextLineTrimmed();

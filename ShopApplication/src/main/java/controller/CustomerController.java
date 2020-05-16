@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO: database constructor
 public class CustomerController extends Controller {
 
     @Override

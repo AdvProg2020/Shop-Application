@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 //TODO: compare to products!
-
+//TODO: database constructor
 public class Controller {
     protected static Account currentAccount;
     protected static Cart currentCart;

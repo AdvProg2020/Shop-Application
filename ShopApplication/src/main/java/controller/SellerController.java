@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
+//TODO: database constructor
 public class SellerController extends Controller {
 
     //Done!!

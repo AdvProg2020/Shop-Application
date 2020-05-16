@@ -4,6 +4,7 @@ import controller.*;
 
 import java.util.ArrayList;
 
+//TODO: logout
 class Menus {
     private static Controller mainController;
     private static AdminController adminController;
@@ -240,11 +241,13 @@ class Menus {
         }
     }
 
+    //TODO: show sales joda bayad bashe refresh ham beshe
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
         private String[] currentFilters;
         private ArrayList<String[]> currentProducts;
         private ArrayList<String[]> currentOffs;
+
         SaleMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.saleMenuPattern, Constants.Menus.saleMenuCommand);
             this.currentSort = new StringBuilder();
@@ -263,7 +266,7 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
-            subActions.put(index + 1, new Actions.ShowOffs("show products", this.currentSort, this.currentFilters, this.currentProducts, this.currentOffs));
+            subActions.put(index + 1, new Actions.ShowInSaleProducts("show filtered products", this.currentSort, this.currentFilters, this.currentProducts, this.currentOffs));
             subActions.put(index + 2, new Actions.ProductDetailMenu("product detail menu"));
             subActions.put(index + 3, new Actions.BackAction("sale menu back", parent));
         }
@@ -380,6 +383,8 @@ class Menus {
             //no sub menus available.
         }
 
+        //TODO: adminController.manageUsers
+        //TODO: storeAllUsers.
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
@@ -400,6 +405,7 @@ class Menus {
             //no available sub menu.
         }
 
+        //TODO: adminController.manageProducts()
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
@@ -418,11 +424,11 @@ class Menus {
             //no available sub menu.
         }
 
-        //TODO: imp
         private String[] getEditableFields() {
             return adminController.getDiscountEditableFields();
         }
 
+        //TODO: view all discountCodes adminController.viewDiscountCodes
         @Override
         protected void initSubActions() {
             int index = subMenus.size();
@@ -494,6 +500,7 @@ class Menus {
             subMenus.put(3, new SellerSalesMenu("seller sales menu", this));
         }
 
+        //TODO: view a single sell history
         @Override
         protected void initSubActions() {
             int index = subMenus.size();

@@ -12,6 +12,9 @@ import java.util.regex.Matcher;
 //TODO: getGroup()
 //TODO: types start with capital.
 //TODO: sout completion messages. ex: .... done successfully.
+//TODO: anonymous cant have complete access to  cart
+//TODO: attributes -> getSpecialProperties
+//TODO: index choosing
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -540,22 +543,14 @@ public class Actions {
                     currentFilters[0] = "true";
                     break;
                 case 2:
-                    currentFilters[1] = "0.00";
-                    break;
                 case 3:
-                    currentFilters[2] = "0.00";
+                case 7:
+                    currentFilters[filterIndex - 1] = "0.00";
                     break;
                 case 4:
-                    currentFilters[3] = null;
-                    break;
                 case 5:
-                    currentFilters[4] = null;
-                    break;
                 case 6:
-                    currentFilters[5] = null;
-                    break;
-                case 7:
-                    currentFilters[6] = "0.00";
+                    currentFilters[filterIndex - 1] = null;
                     break;
             }
         }
@@ -579,13 +574,13 @@ public class Actions {
         }
     }
 
-    public static class ShowOffs extends Action {
+    public static class ShowInSaleProducts extends Action {
         private StringBuilder currentSort;
         private String[] currentFilters;
         private ArrayList<String[]> currentProducts;
         private ArrayList<String[]> currentOffs;
 
-        public ShowOffs(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts, ArrayList<String[]> currentOffs) {
+        public ShowInSaleProducts(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts, ArrayList<String[]> currentOffs) {
             super(name, Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
             this.currentSort = currentSort;
             this.currentFilters = currentFilters;
@@ -875,7 +870,6 @@ public class Actions {
         }
     }
 
-    //TODO: waiting for shayan -> change subProductId to subProductId.roString()
     public static class ShowCurrentSeller extends Action {
         private StringBuilder subProductID;
         ShowCurrentSeller(String name, StringBuilder subProductID) {
@@ -885,7 +879,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             try {
-                System.out.println("current seller is: " + mainController.getSubProductByID(subProductID)[1]);
+                System.out.println("current seller is: " + mainController.getSubProductByID(subProductID.toString())[1]);
             } catch (Exceptions.InvalidSubProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -904,16 +898,9 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String otherProductID = commandMatcher.group(1);
-            try {
-                //what is the return type?
-                mainController.compare(productID.toString(), otherProductID);
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println(e.getMessage());
-                return;
-            }
-            //show infos.
+            mainController.digest();
+            mainController.getSpecialPropertiesOfAProduct()
+            mainController.getSpecialPropertiesOfAProduct()
         }
     }
 
@@ -985,11 +972,10 @@ public class Actions {
             try {
                 String[] info = adminController.viewUsername(username);
                 showPersonalInfo(info);
-                printSeparator();
             } catch (Exceptions.UsernameDoesntExistException e) {
                 System.out.println(e.getMessage());
-                return;
             }
+            printSeparator();
         }
     }
 
@@ -1028,9 +1014,9 @@ public class Actions {
                 registerForm = new Form(fields, fieldRegex);
                 if(registerForm.takeInput() == 0) {
                     results = registerForm.getResults();
-                    mainController.creatAccount(Constants.adminUserType, results[0], results[1], results[2], results[3], results[4],results[5], 0.00, null);
+                    adminController.creatAdminProfile(results[0], results[1], results[2], results[3], results[4],results[5]);
                 }
-            }  catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
+            }  catch (Exceptions.UsernameAlreadyTakenException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -1061,6 +1047,7 @@ public class Actions {
             super(name, Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
         }
 
+        //TODO: arrayListOf ID
         @Override
         public void execute(String command) {
             String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
@@ -1100,6 +1087,8 @@ public class Actions {
             try {
                 String[] info = adminController.viewDiscountCode(discountCode);
                 showDiscountCode(info);
+                System.out.println("people who have this discount:");
+                printList(adminController.peopleWhoHaveThisDiscount(discountCode));
             } catch (Exceptions.DiscountCodeException e) {
                 System.out.println(e.getMessage());
             }
@@ -1179,6 +1168,7 @@ public class Actions {
         }
     }
 
+    //TODO: index choosing
     public static class AdminShowRequests extends Action {
         AdminShowRequests(String name) {
             super(name, Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
@@ -1344,13 +1334,11 @@ public class Actions {
         }
     }
 
-    //TODO: waiting for shayan
     public static class SellerShowSales extends Action {
         SellerShowSales(String name) {
             super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
         }
 
-        //TODO: shayan will fix it. Shayan fixed it ;)
         @Override
         public void execute(String command) {
             ArrayList<String[]> sales = sellerController.viewSales();
@@ -1628,6 +1616,9 @@ public class Actions {
             String[] fields = new String[] {"name", "brand"};
             String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern};
             Form productFirstForm = new Form(fields, fieldRegex);
+            sellerController.addNewProduct();
+            sellerController.exist();
+            sellerController.addNewSubProductToAnExistingProduct();
         }
     }
 
@@ -1843,15 +1834,19 @@ public class Actions {
             this.currentOrderLogs = currentOrderLogs;
         }
 
-        private void refreshCurrentOrderLogs() {
+        private void refreshCurrentOrderLogs() throws Exceptions.CustomerLoginException {
             currentOrderLogs.clear();
-            currentOrderLogs.addAll(customerController.getProductsInCart());
+            currentOrderLogs.addAll(customerController.getOrders());
         }
 
         @Override
         public void execute(String command) {
-            refreshCurrentOrderLogs();
-            printList(currentOrderLogs);
+            try {
+                refreshCurrentOrderLogs();
+                printList(currentOrderLogs);
+            } catch (Exceptions.CustomerLoginException e) {
+                System.out.println(e.getMessage());
+            }
             printSeparator();
         }
     }
@@ -1886,7 +1881,8 @@ public class Actions {
             System.out.println("9. total discount amount: " + orderDetails[8]);
             printSeparator();
             System.out.println("order products:");
-            printList((ArrayList)order.subList(1, order.size()));
+            order.remove(0);
+            printList(order);
         }
 
 
@@ -1901,7 +1897,7 @@ public class Actions {
                     ArrayList<String[]> info = customerController.getOrderWithId(orderID);
                     printInfo(info);
                 }
-            } catch (Exceptions.InvalidLogIdException e) {
+            } catch (Exceptions.InvalidLogIdException | Exceptions.CustomerLoginException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -1925,6 +1921,17 @@ public class Actions {
                 System.out.println("you have not bought this product therefore you cant rate it.");
             }
             printSeparator();
+        }
+    }
+
+    public static class Logout extends Action {
+        Logout(String name) {
+            super(name, Constants.Actions.logoutPattern, Constants.Actions.logoutCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+            mainController.logout();
         }
     }
 }

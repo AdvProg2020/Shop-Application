@@ -48,17 +48,20 @@ public abstract class Action {
         this.execute(command);
     }
 
+    //TODO: get field names
     protected void printList(ArrayList<String[]> list) {
         if (list.isEmpty()) {
             System.out.println("this list is empty!");
+            return;
         }
         int args = list.get(0).length;
         int size = list.size();
         for (int i = 0; i < size; i++) {
-            System.out.println(i + ".");
+            System.out.print((i + 1) + ".");
             for (int j = 0; j < args; j++) {
                 System.out.print( " " + list.get(i)[j]);
             }
+            System.out.print("\n");
         }
     }
 
