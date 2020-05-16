@@ -5,8 +5,9 @@ import jdk.jfr.Label;
 import java.util.*;
 
 public class Category {
-    private static Map<String, Category> allCategories = new HashMap<>();
+    private static final String EXTRAS_NAME = "extras";
     private static Category superCategory = null; // parent of all main categories (shouldn't be terminated)
+    private static Map<String, Category> allCategories = new HashMap<>();
     private String categoryId;
     private String name;
     private String parentId;
@@ -44,6 +45,9 @@ public class Category {
     }
 
     public static Category getCategoryByName(String name) {
+        if (name.equals(EXTRAS_NAME))
+            return superCategory;
+
         for (Category category : allCategories.values()) {
             if (category.getName().equals(name))
                 return category;
