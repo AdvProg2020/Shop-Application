@@ -798,6 +798,8 @@ public class Actions {
             try {
                 String[] productInfo = mainController.digest(productID.toString());
                 showInfo(productInfo);
+                System.out.println("attributes");
+                mainController.getSpecialPropertiesOfAProduct(productID.toString()).forEach(att -> System.out.println(att));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1872,15 +1874,33 @@ public class Actions {
         }
     }
 
-    //TODO: what about anonymous
     public static class CustomerCartPurchase extends Action {
-        CustomerCartPurchase(String name) {
+        private Menu shoppingCartMenu;
+        CustomerCartPurchase(String name, Menu shoppingCartMenu) {
             super(name, Constants.Actions.customerCartPurchasePattern, Constants.Actions.customerCartPurchaseCommand);
+            this.shoppingCartMenu = shoppingCartMenu;
         }
 
         @Override
         public void execute(String command) {
-
+            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+                System.out.println("you have to be logged-in in order to be able to purchase. please login and try again.");
+                Menu.getAccountMenu().run(shoppingCartMenu,shoppingCartMenu);
+            }
+            try {
+                String[] fields = new String[] {"receiver name", "receiver address", "receiver phone",
+                        "discount code (if you have any, enter \"-\" if you dont)"};
+                String[] regex = new String[] {".+", ".+", Constants.unsignedIntPattern, Constants.argumentPattern};
+                Form purchaseForm = new Form(fields, regex);
+                if (purchaseForm.takeInput() == 0) {
+                    String[] result = purchaseForm.getResults();
+                    customerController.purchaseTheCart(result[0], result[1], result[2], result[3]);
+                }
+            } catch (Exceptions.InsufficientCreditException | Exceptions.NotAvailableSubProductsInCart
+             | Exceptions.EmptyCartException | Exceptions.InvalidDiscountException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 
