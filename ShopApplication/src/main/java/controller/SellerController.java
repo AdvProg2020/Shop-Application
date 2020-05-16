@@ -336,7 +336,7 @@ public class SellerController extends Controller {
         }
     }
 
-    //Done!!
+    //Done!! TODO
     public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
         if (startDate.before(endDate)) {
             Sale sale = new Sale(((Seller) currentAccount).getId(), startDate, endDate, percentage, maximum);

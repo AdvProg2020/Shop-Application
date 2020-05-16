@@ -157,7 +157,7 @@ public class CustomerController extends Controller {
             if (subProduct.getRemainingCount() < subProductsInCart.get(subProduct)) {
                 String notAvailableProduct = "\n" + subProduct.getId() + " number in cart: " + subProductsInCart.get(subProduct) +
                         " available count: " + subProduct.getRemainingCount();
-                notAvailableSubProducts.append(notAvailableSubProducts);
+                notAvailableSubProducts.append(notAvailableProduct);
             }
         }
         return notAvailableSubProducts.toString();
@@ -187,7 +187,9 @@ public class CustomerController extends Controller {
      * product pack String[8] : { productId, name, brand, sellerUsername, sellerStoreName, count,  }
      * @throws Exceptions.InvalidLogIdException
      */
-    public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException {
+    public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException, Exceptions.CustomerLoginException {
+        if(! (currentAccount instanceof Customer))
+            throw new Exceptions.CustomerLoginException();
         BuyLog buyLog = null;
         for (BuyLog log : ((Customer) currentAccount).getBuyLogs()) {
             if (log.getId().equals(orderId))

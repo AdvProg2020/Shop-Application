@@ -20,10 +20,13 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public ArrayList<String> manageUsers() {
-        ArrayList<String> accounts = new ArrayList<>();
+    public ArrayList<String[]> manageUsers() {
+        ArrayList<String[]> accounts = new ArrayList<>();
         for (Account account : Account.getAllAccounts()) {
-            accounts.add(account.getUsername());
+            String[] IdUsername = new String[2];
+            IdUsername[0] = account.getId();
+            IdUsername[1] = account.getUsername();
+            accounts.add(IdUsername);
         }
         return accounts;
     }
@@ -74,8 +77,8 @@ public class AdminController extends Controller {
             product.suspend();
     }
 
-    //Done!!
-    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount) throws Exceptions.ExistingDiscountCodeException {
+    //Done!! TODO: unified exception
+    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount, ArrayList<String> customerIds) throws Exceptions.ExistingDiscountCodeException {
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
         else
@@ -103,7 +106,7 @@ public class AdminController extends Controller {
         return discountCodes;
     }
 
-    //Done!! Should show people?
+    //Done!!
     public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)

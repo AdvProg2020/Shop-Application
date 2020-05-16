@@ -211,21 +211,6 @@ public class Controller {
     }
 
     //Done!!
-
-    /**
-     * for show category stuff.
-     *
-     * @return returns String[2]: category ID, category name
-     */
-    public ArrayList<String[]> viewCategories() {
-        try {
-            return getSubCategoriesOfThisCategory("superCategory");
-        } catch (Exceptions.InvalidCategoryException e) {
-            return null;
-        }
-    }
-
-    //Done!!
     /**
      * for show category action without all.
      *
