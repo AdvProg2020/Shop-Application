@@ -29,27 +29,27 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public String[] viewUsername(String username) throws Exceptions.NotExistedUsernameException {
+    public String[] viewUsername(String username) throws Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
-            throw new Exceptions.NotExistedUsernameException(username);
+            throw new Exceptions.UsernameDoesntExistException(username);
         else {
             return getPersonalInfo(account);
         }
     }
 
     //Done!!
-    public void deleteUsername(String username) throws Exceptions.NotExistedUsernameException {
+    public void deleteUsername(String username) throws Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
-            throw new Exceptions.NotExistedUsernameException(username);
+            throw new Exceptions.UsernameDoesntExistException(username);
         account.suspend();
     }
 
     //Done!!
-    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.ExistedUsernameException {
+    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.getAccountByUsername(username) != null)
-            throw new Exceptions.ExistedUsernameException(username);
+            throw new Exceptions.UsernameAlreadyTakenException(username);
         new Admin(username, password, firstName, lastName, email, phone);
     }
 
@@ -250,14 +250,14 @@ public class AdminController extends Controller {
                     detailsOfRequest.add(getPersonalInfo(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProduct":
-                    detailsOfRequest.add(getSubProductInfo(SubProduct.getSubProductById(((EditProductRequest) request).getSubProduct().getId())));
+                    detailsOfRequest.add(getSubProductInfo(((EditProductRequest)request).getSubProduct()));
                     String[] productChange = new String[2];
                     productChange[0] = ((EditProductRequest) request).getField().toString();
                     productChange[1] = ((EditProductRequest) request).getNewValue();
                     detailsOfRequest.add(productChange);
                     break;
                 case "EditSale":
-                    detailsOfRequest.add(getSaleInfo(Sale.getSaleById(((EditSaleRequest) request).getSale().getId())));
+                    detailsOfRequest.add(getSaleInfo(((EditSaleRequest)request).getSale()));
                     String[] saleChange = new String[2];
                     saleChange[0] = ((EditSaleRequest) request).getField().toString();
                     saleChange[1] = ((EditSaleRequest) request).getNewValue();

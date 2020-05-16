@@ -23,18 +23,18 @@ public class Controller {
     /**
      * @param username
      * @param type
-     * @throws Exceptions.ExistedUsernameException
+     * @throws Exceptions.UsernameAlreadyTakenException
      * @throws Exceptions.AdminRegisterException
      */
-    //TODO: Account.getAccountByUsername(username) != null. , Admin.getManager() != null.
-    public void usernameTypeValidation(String username, String type) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
-        if (Account.getAccountByUsername(username) == null)
-            throw new Exceptions.ExistedUsernameException(username);
-        else if (type.equalsIgnoreCase("Admin") && (Admin.getManager() == null))
+
+    public void usernameTypeValidation(String username, String type) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
+        if (Account.getAccountByUsername(username) != null)
+            throw new Exceptions.UsernameAlreadyTakenException(username);
+        else if (type.equalsIgnoreCase("Admin") && (Admin.getManager() != null))
             throw new Exceptions.AdminRegisterException();
     }
 
-    //Done!! Todo: Shayan please check this
+    //Done!!
 
     /**
      * @param type information: 1- customer:
@@ -45,18 +45,14 @@ public class Controller {
      *             * String username, String password, String firstName, String lastName, String email, String phone
      */
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
-                             String email, String phone, double balance, String storeName) throws Exceptions.ExistedUsernameException, Exceptions.AdminRegisterException {
-        if (Account.getAccountByUsername(username) != null)
-            throw new Exceptions.ExistedUsernameException(username);
+                             String email, String phone, double balance, String storeName) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
+        usernameTypeValidation(username, type);
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, balance);
                 break;
             case "Admin":
-                if (Admin.getManager() != null) {
-                    throw new Exceptions.AdminRegisterException();
-                } else
-                    new Admin(username, password, firstName, lastName, email, phone);
+                new Admin(username, password, firstName, lastName, email, phone);
                 break;
             case "Seller":
                 new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
@@ -64,11 +60,11 @@ public class Controller {
         }
     }
 
-    //Done!! TODO: check this please!
-    public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.NotExistedUsernameException {
+    //Done!!
+    public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
-            throw new Exceptions.NotExistedUsernameException(username);
+            throw new Exceptions.UsernameDoesntExistException(username);
         if (!account.getPassword().equals(password))
             throw new Exceptions.WrongPasswordException();
         currentAccount = account;
@@ -85,15 +81,13 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @return returns the currentAccount type: anonymous, customer, seller, admin.
      */
-    //TODO: shouldn't it be: getClass().getSimpleName()? check please.
     public String getType() {
         if (currentAccount == null)
             return "Anonymous";
-        return currentAccount.getClass().getName();
+        return currentAccount.getClass().getSimpleName();
     }
 
     //Done!
@@ -112,7 +106,6 @@ public class Controller {
     }
 
     //Done!! check the directions in the test
-    //TODO: not sure if you can use switch case here!
     private ArrayList<Product> sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
         int direction = isIncreasing ? 1 : -1;
         switch (sortBy) {
@@ -226,14 +219,13 @@ public class Controller {
      */
     public ArrayList<String[]> viewCategories() {
         try {
-            return getSubCategoriesOfThisCategory(Category.getSuperCategory().getName());
+            return getSubCategoriesOfThisCategory("superCategory");
         } catch (Exceptions.InvalidCategoryException e) {
             return null;
         }
     }
 
     //Done!!
-
     /**
      * for show category action without all.
      *
@@ -242,7 +234,11 @@ public class Controller {
      * @throws Exceptions.InvalidCategoryException
      */
     public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
-        Category category = Category.getCategoryByName(categoryName);
+        Category category = null;
+        if( categoryName .equals("superCategory"))
+            category = Category.getCategoryByName(categoryName);
+        else
+            category = Category.getSuperCategory();
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else {
@@ -274,11 +270,7 @@ public class Controller {
 
     //Done!!
     private ArrayList<Product> getProductsInCategory(Category category){
-        ArrayList<Product> products =new ArrayList<>();
-        for (Category subCategory : category.getSubCategories()) {
-            products.addAll(getProductsInCategory(subCategory));
-        }
-        products.addAll(category.getProducts());
+        ArrayList<Product> products = new ArrayList<>(category.getProducts());
         sortProducts("view count", false, products);
         return products;
     }
@@ -301,15 +293,17 @@ public class Controller {
      *                                              products
      */
     public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy) throws Exceptions.InvalidProductIdException {
+        if( sortBy == null )
+            sortBy = "viewCount";
         ArrayList<Product> products = new ArrayList<>();
         Product product;
+
         for (String productId : productIds) {
             if ((product = Product.getProductById(productId)) == null)
                 throw new Exceptions.InvalidProductIdException(productId);
             else
                 products.add(product);
         }
-
         filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
@@ -369,7 +363,7 @@ public class Controller {
      * @return String[4]: ID, storeName, price, remaining count.
      * @throws Exceptions.InvalidProductIdException
      */
-    //TODO: provide a method that returns the same String[4] by giving sub product ID. --> mainController.getSubProductByID(String subProductID);
+
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -386,6 +380,23 @@ public class Controller {
         return subProducts;
     }
 
+    //Done!!
+    public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if(subProduct == null)
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
+        else
+            return getSubProductPack(subProduct);
+    }
+
+    private String[] getSubProductPack(SubProduct subProduct){
+        String[] subProductPack = new String[4];
+        subProductPack[0] = subProduct.getId();
+        subProductPack[1] = subProduct.getSeller().getStoreName();
+        subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
+        subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
+        return subProductPack;
+    }
     //Done!!
 
     /**
@@ -408,16 +419,15 @@ public class Controller {
         return reviews;
     }
 
-    //Done!! TODO: check please
+    //Done!!
     public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (subProduct.getRemainingCount() < count)
+        else if (subProduct.getRemainingCount() < count + currentCart.getCountOfaSubProduct(subProductId))
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubProductCount(subProductId, count);
-            subProduct.changeRemainingCount(-count);
         }
     }
 
@@ -434,7 +444,6 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
@@ -447,7 +456,6 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @return *1- seller:String[6]
      * * { String firstName, String lastName, String phone, String email, String password, String storeName}

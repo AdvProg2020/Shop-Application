@@ -11,14 +11,14 @@ public class Exceptions {
         }
     }
 
-    public static class NotExistedUsernameException extends Exception {
-        public NotExistedUsernameException(String username) {
+    public static class UsernameDoesntExistException extends Exception {
+        public UsernameDoesntExistException(String username) {
             super("There is no account with this username: " + username);
         }
     }
 
-    public static class ExistedUsernameException extends Exception {
-        public ExistedUsernameException(String username) {
+    public static class UsernameAlreadyTakenException extends Exception {
+        public UsernameAlreadyTakenException(String username) {
             super("There is an account with username: " + username);
         }
     }

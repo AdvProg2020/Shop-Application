@@ -136,8 +136,7 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    //TODO: same value exception
-    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException {
+    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
@@ -152,27 +151,37 @@ public class SellerController extends Controller {
             switch (field) {
                 case "name": {
                     String existingProductId;
-                    if ((existingProductId = exist(newInformation, targetedSubProduct.getProduct().getBrand())) == null)
+                    if ((existingProductId = exist(newInformation, targetedSubProduct.getProduct().getBrand())) == null) {
+                        if (targetedSubProduct.getProduct().getName().equals(newInformation))
+                            throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-                    else
+                    } else
                         throw new Exceptions.ExistingProductException(existingProductId);
                     break;
                 }
                 case "brand": {
                     String existingProductId;
-                    if ((existingProductId = exist(targetedSubProduct.getProduct().getName(), newInformation)) == null)
+                    if ((existingProductId = exist(targetedSubProduct.getProduct().getName(), newInformation)) == null) {
+                        if (targetedSubProduct.getProduct().getBrand().equals(newInformation))
+                            throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.BRAND, newInformation);
-                    else
+                    } else
                         throw new Exceptions.ExistingProductException(existingProductId);
                     break;
                 }
                 case "info text":
+                    if (targetedSubProduct.getProduct().getInfoText().equals(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
                     break;
                 case "price":
+                    if (targetedSubProduct.getRawPrice() == Double.parseDouble(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.PRICE, newInformation);
                     break;
                 case "count":
+                    if (targetedSubProduct.getRemainingCount() == Integer.parseInt(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.COUNT, newInformation);
                     break;
                 default:
@@ -232,13 +241,12 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    //TODO: String k.
-    public ArrayList<String> viewSales() {
-        ArrayList<String> saleIds = new ArrayList<>();
+    public ArrayList<String[]> viewSales() {
+        ArrayList<String[]> saleInfos = new ArrayList<>();
         for (Sale sale : ((Seller) currentAccount).getSales()) {
-            saleIds.add(sale.getId());
+            saleInfos.add(getSaleInfo(sale));
         }
-        return saleIds;
+        return saleInfos;
     }
 
     //Done!!
@@ -281,7 +289,7 @@ public class SellerController extends Controller {
                             if (dateFormat.parse(newInformation).equals(targetedSale.getStartDate()))
                                 throw new Exceptions.SameAsPreviousValueException("start date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.START_DATE);
-                        }else
+                        } else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
                         throw new Exceptions.InvalidFormatException("date");
@@ -290,22 +298,22 @@ public class SellerController extends Controller {
                 case "end date":
                     try {
                         if (targetedSale.getStartDate().before(dateFormat.parse(newInformation))) {
-                            if(dateFormat.parse(newInformation).equals(targetedSale.getEndDate()))
+                            if (dateFormat.parse(newInformation).equals(targetedSale.getEndDate()))
                                 throw new Exceptions.SameAsPreviousValueException("end date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.END_DATE);
-                        }else
+                        } else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
                         throw new Exceptions.InvalidFormatException("date");
                     }
                     break;
                 case "percentage":
-                    if(Double.parseDouble(newInformation) == targetedSale.getPercentage())
+                    if (Double.parseDouble(newInformation) == targetedSale.getPercentage())
                         throw new Exceptions.SameAsPreviousValueException("percentage");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.PERCENTAGE);
                     break;
                 case "maximum":
-                    if(Double.parseDouble(newInformation) == targetedSale.getMaximumAmount())
+                    if (Double.parseDouble(newInformation) == targetedSale.getMaximumAmount())
                         throw new Exceptions.SameAsPreviousValueException("maximum");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.MAXIMUM);
                     break;

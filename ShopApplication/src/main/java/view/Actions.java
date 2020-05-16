@@ -74,7 +74,7 @@ public class Actions {
                 if (password != null) {
                     try {
                         mainController.login(username, password);
-                    } catch (Exceptions.NotExistedUsernameException | Exceptions.WrongPasswordException e) {
+                    } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException e) {
                         System.out.println(e.getMessage());
                         continue;
                     }
@@ -106,7 +106,7 @@ public class Actions {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), null);
-                } catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
                     System.out.println("sigh! " + e.getMessage());
                 }
@@ -126,7 +126,7 @@ public class Actions {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), results[6]);
-                } catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
                     System.out.println("sigh! " + e.getMessage());
                 }
@@ -146,7 +146,7 @@ public class Actions {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], 0.00, null);
-                } catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
                     System.out.println("sigh! " + e.getMessage());
                 }
@@ -176,7 +176,7 @@ public class Actions {
                 try {
                     mainController.usernameTypeValidation(username, type);
                     register(index, username);
-                } catch (Exceptions.ExistedUsernameException e) {
+                } catch (Exceptions.UsernameAlreadyTakenException e) {
                     System.out.println("username already exists!");
                 } catch (Exceptions.AdminRegisterException e) {
                     System.out.println("only admin can create another admin!");
@@ -875,7 +875,7 @@ public class Actions {
         }
     }
 
-    //TODO: waiting for shayan
+    //TODO: waiting for shayan -> change subProductId to subProductId.roString()
     public static class ShowCurrentSeller extends Action {
         private StringBuilder subProductID;
         ShowCurrentSeller(String name, StringBuilder subProductID) {
@@ -885,7 +885,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             try {
-                System.out.println("current seller is: " + mainController.getSubProductByIndex(subProductID)[1]);
+                System.out.println("current seller is: " + mainController.getSubProductByID(subProductID)[1]);
             } catch (Exceptions.InvalidSubProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -893,7 +893,7 @@ public class Actions {
         }
     }
 
-    //TODO: last one
+    //TODO: last one -> need to be discussed
     public static class CompareProductByID extends Action {
         private StringBuilder productID;
         CompareProductByID(String name, StringBuilder productID) {
@@ -986,7 +986,7 @@ public class Actions {
                 String[] info = adminController.viewUsername(username);
                 showPersonalInfo(info);
                 printSeparator();
-            } catch (Exceptions.NotExistedUsernameException e) {
+            } catch (Exceptions.UsernameDoesntExistException e) {
                 System.out.println(e.getMessage());
                 return;
             }
@@ -1003,7 +1003,7 @@ public class Actions {
             try {
                 adminController.deleteUsername(username);
                 System.out.println("user removed successfully");
-            } catch (Exceptions.NotExistedUsernameException e) {
+            } catch (Exceptions.UsernameDoesntExistException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -1030,7 +1030,7 @@ public class Actions {
                     results = registerForm.getResults();
                     mainController.creatAccount(Constants.adminUserType, results[0], results[1], results[2], results[3], results[4],results[5], 0.00, null);
                 }
-            }  catch (Exceptions.ExistedUsernameException | Exceptions.AdminRegisterException e) {
+            }  catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -1350,7 +1350,7 @@ public class Actions {
             super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
         }
 
-        //TODO: shayan will fix it.
+        //TODO: shayan will fix it. Shayan fixed it ;)
         @Override
         public void execute(String command) {
             ArrayList<String[]> sales = sellerController.viewSales();
