@@ -21,14 +21,13 @@ public class View {
     private Menus.FirstMenu firstMenu;
 
 
-    //Todo: create Menus
     public View(Controller mainController, SellerController sellerController, AdminController adminController, CustomerController customerController) {
         this.mainController = mainController;
         this.sellerController = sellerController;
         this.customerController = customerController;
         this.adminController = adminController;
         productDetailMenu = new Menus.ProductDetailMenu("product detail menu");
-        accountMenu = new Menus.AccountMenu("account menu");
+          accountMenu = new Menus.AccountMenu("account menu");
         firstMenu = new Menus.FirstMenu("first menu");
     }
 

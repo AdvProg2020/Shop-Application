@@ -2,7 +2,6 @@ package view;
 
 import controller.*;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 class Menus {
@@ -65,7 +64,7 @@ class Menus {
             this.execute();
         }
 
-        public void run(Menu previousMenu, Menu nextMenu) {
+        void run(Menu previousMenu, Menu nextMenu) {
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
             this.execute();
@@ -464,12 +463,20 @@ class Menus {
     }
 
     public static class CategoryManagingMenu extends Menu {
+        private ArrayList<String> currentCategories;
         CategoryManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.categoryManagingMenuPattern, Constants.Menus.categoryManagingMenuCommand);
+            this.currentCategories = new ArrayList<>();
         }
 
         private String[] getEditableFields() {
             return adminController.getCategoryEditableFields();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         @Override
@@ -480,10 +487,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminShowCategories("show categories"));
-            subActions.put(index + 2, new Actions.AdminEditCategory("edit category", getEditableFields()));
+            subActions.put(index + 1, new Actions.AdminShowCategories("show categories", currentCategories));
+            subActions.put(index + 2, new Actions.AdminEditCategory("edit category", getEditableFields(), currentCategories));
             subActions.put(index + 3, new Actions.AdminAddCategory("add category"));
-            subActions.put(index + 4, new Actions.AdminRemoveCategory("remove category"));
+            subActions.put(index + 4, new Actions.AdminRemoveCategory("remove category", currentCategories));
         }
     }
 
@@ -616,6 +623,18 @@ class Menus {
         ShoppingCartMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
             this.currentProducts = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            String type = mainController.getType();
+            if (type.equalsIgnoreCase(Constants.adminUserType) || type.equalsIgnoreCase(Constants.sellerUserType)) {
+                System.out.println("you dont possess a shopping cart");
+                return;
+            }
+            else {
+                super.show();
+            }
         }
 
         @Override

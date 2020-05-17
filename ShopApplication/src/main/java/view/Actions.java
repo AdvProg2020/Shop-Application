@@ -1427,23 +1427,33 @@ public class Actions {
     }
 
     public static class AdminShowCategories extends Action {
-        AdminShowCategories(String name) {
+        private ArrayList<String> currentCategories;
+        AdminShowCategories(String name, ArrayList<String> currentCategories) {
             super(name, Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
+            this.currentCategories = currentCategories;
+        }
+
+        private void refreshCurrentCategories() {
+            currentCategories.clear();
+            currentCategories.addAll(adminController.manageCategories());
         }
 
         @Override
         public void execute(String command) {
+            refreshCurrentCategories();
             System.out.println("categories (category inheritance is not shown in this list): ");
-            adminController.manageCategories().forEach(c -> System.out.println(c));
+            currentCategories.forEach(cc -> System.out.println(cc));
             printSeparator();
         }
     }
 
     public static class AdminEditCategory extends Action {
         private String[] editableFields;
-        AdminEditCategory(String name, String[] editableFields) {
+        private ArrayList<String> currentCategories;
+        AdminEditCategory(String name, String[] editableFields, ArrayList<String> currentCategories) {
             super(name, Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
             this.editableFields = editableFields;
+            this.currentCategories = currentCategories;
         }
 
         private void showEditableFields() {
@@ -1474,20 +1484,22 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String categoryName = commandMatcher.group(1);
-            while (true) {
-                showEditableFields();
-                System.out.println("enter the field to edit (index):");
-                String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response), categoryName) == -1) {continue;}
-                    else break;
-                } else if (response.equalsIgnoreCase("back")) {
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
+            int index = getIndex(command, currentCategories);
+            if(index != 0) {
+                while (true) {
+                    showEditableFields();
+                    System.out.println("enter the field to edit (index):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                        if (editField(Integer.parseInt(response), currentCategories.get(index - 1)) == -1) {
+                            continue;
+                        } else break;
+                    } else if (response.equalsIgnoreCase("back")) {
+                        break;
+                    } else {
+                        System.out.println("invalid entry");
+                        continue;
+                    }
                 }
             }
             printSeparator();
@@ -1528,16 +1540,19 @@ public class Actions {
     }
 
     public static class AdminRemoveCategory extends Action {
-        AdminRemoveCategory(String name) {
+        private ArrayList<String> currentCategories;
+        AdminRemoveCategory(String name, ArrayList<String> currentCategories) {
             super(name, Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
+            this.currentCategories = currentCategories;
         }
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String categoryName = commandMatcher.group(1);
             try {
-                adminController.removeCategory(categoryName);
+                int index = getIndex(command,currentCategories);
+                if (index != 0) {
+                    adminController.removeCategory(currentCategories.get(index - 1));
+                }
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
             }
