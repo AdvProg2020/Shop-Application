@@ -6,6 +6,8 @@ import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
+import model.database.Database;
+import model.database.DatabaseManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,16 +21,23 @@ public class Controller {
     protected static Account currentAccount;
     protected static Cart currentCart;
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+    protected static DatabaseManager databaseManager;
+
+
+    //Done TODO: Shayan please check
+    public Controller(DatabaseManager DataBaseManager){
+        databaseManager = DataBaseManager;
+        currentCart = new Cart(null);
+        currentAccount = null;
+    }
 
     //Done!
-
     /**
      * @param username
      * @param type
      * @throws Exceptions.UsernameAlreadyTakenException
      * @throws Exceptions.AdminRegisterException
      */
-
     public void usernameTypeValidation(String username, String type) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.UsernameAlreadyTakenException(username);
@@ -37,7 +46,6 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @param type information: 1- customer:
      *             * String username, String password, String firstName, String lastName, String email, String phone, double balance

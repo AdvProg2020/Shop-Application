@@ -17,6 +17,12 @@ public class Exceptions {
         }
     }
 
+    public static class ManagerDeleteException extends Exception{
+        public ManagerDeleteException(){
+            super("You can not delete manager!");
+        }
+    }
+
     public static class UsernameAlreadyTakenException extends Exception {
         public UsernameAlreadyTakenException(String username) {
             super("There is an account with username: " + username);
