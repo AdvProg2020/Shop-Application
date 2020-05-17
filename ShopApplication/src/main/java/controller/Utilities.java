@@ -372,7 +372,7 @@ public class Utilities {
                 if (storeName == null) {
                     return;
                 }
-                if (!storeName.equals("")) {
+
                 if (!storeName.isEmpty()) {
                     products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
                 }
