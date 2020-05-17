@@ -351,17 +351,17 @@ public class Utilities {
             }
 
             public static void name(ArrayList<Product> products, String contains) {
-                if (!contains.equals(""))
+                if (!contains.isEmpty())
                     products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
             }
 
             public static void brand(ArrayList<Product> products, String brand) {
-                if (!brand.equals(""))
+                if (!brand.isEmpty())
                     products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
 
             public static void storeName(ArrayList<Product> products, String storeName) {
-                if (!storeName.equals("")) {
+                if (!storeName.isEmpty()) {
                     products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
                 }
             }
@@ -385,15 +385,15 @@ public class Utilities {
                     subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() > maxPrice);
             }
             public static void name(ArrayList<SubProduct> subProducts, String contains) {
-                if (!contains.equals(""))
+                if (!contains.isEmpty())
                     subProducts.removeIf(subProduct -> !(subProduct.getProduct().getName().toLowerCase().contains(contains.toLowerCase())));
             }
             public static void brand(ArrayList<SubProduct> subProducts, String brand) {
-                if (!brand.equals(""))
+                if (!brand.isEmpty())
                     subProducts.removeIf(subProduct -> !(subProduct.getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
             public static void storeName(ArrayList<SubProduct> subProducts, String storeName) {
-                if (!storeName.equals(""))
+                if (!storeName.isEmpty())
                     subProducts.removeIf(subProduct -> !subProduct.getSeller().getStoreName().contains(storeName.toLowerCase()));
             }
             public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){
