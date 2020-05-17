@@ -1712,11 +1712,15 @@ public class Actions {
             this.sellerProducts = sellerProducts;
         }
 
+        private void refreshProducts() {
+            sellerProducts.clear();
+            sellerProducts.addAll(sellerController.manageProducts());
+        }
+
         @Override
         public void execute(String command) {
-            if (sellerProducts.isEmpty()) {
-                sellerProducts.addAll(sellerController.manageProducts());
-            }
+            refreshProducts();
+            System.out.println("seller products:");
             printList(sellerProducts);
             printSeparator();
         }
@@ -1738,26 +1742,13 @@ public class Actions {
         }
 
 
-        private boolean isInProducts(String productID) {
-            for (String[] product : sellerProducts) {
-                if (product[0].equals(productID)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
             try {
-                if ( ! isInProducts(productID)) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    mainController.showProduct(productID);
-                    String[] info = sellerController.viewProduct(productID);
-                    printInfo(info);
+                int index = getIndex(command, sellerProducts);
+                if (index != 0) {
+                    mainController.showProduct(sellerProducts.get(index - 1)[0]);
+                    printInfo(sellerController.viewProduct(sellerProducts.get(index - 1)[0]));
                 }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
@@ -1773,26 +1764,13 @@ public class Actions {
             this.sellerProducts = sellerProducts;
         }
 
-        private boolean isInProducts(String productID) {
-            for (String[] product : sellerProducts) {
-                if (product[0].equals(productID)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
             try {
-                if (!isInProducts(productID)) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    ArrayList<String> buyers = sellerController.viewProductBuyers(productID);
+                int index = getIndex(command, sellerProducts);
+                if (index != 0) {
                     System.out.println("buyers:");
-                    buyers.forEach(b -> System.out.println(b));
+                    sellerController.viewProductBuyers(sellerProducts.get(index - 1)[0]).forEach(by -> System.out.println(by));
                 }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
@@ -1803,9 +1781,11 @@ public class Actions {
 
     public static class SellerEditProduct extends Action {
         private String[] editableFields;
-        SellerEditProduct(String name, String[] editableFields) {
+        private ArrayList<String[]> sellerProducts;
+        SellerEditProduct(String name, String[] editableFields, ArrayList<String[]> sellerProducts) {
             super(name, Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
             this.editableFields = editableFields;
+            this.sellerProducts = sellerProducts;
         }
 
         private void showEditableFields() {
@@ -1836,20 +1816,24 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
-            while (true) {
-                showEditableFields();
-                System.out.println("enter the field to edit (index):");
-                String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response), productID) == -1) {continue;}
-                    else {break;}
-                } else if (response.equalsIgnoreCase("back")) {
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
+            int index = getIndex(command, sellerProducts);
+            if(index != 0) {
+                while (true) {
+                    showEditableFields();
+                    System.out.println("enter the field to edit (index):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                        if (editField(Integer.parseInt(response), sellerProducts.get(index - 1)[0]) == -1) {
+                            continue;
+                        } else {
+                            break;
+                        }
+                    } else if (response.equalsIgnoreCase("back")) {
+                        break;
+                    } else {
+                        System.out.println("invalid entry");
+                        continue;
+                    }
                 }
             }
             printSeparator();
@@ -1921,27 +1905,15 @@ public class Actions {
             this.sellerProducts = sellerProducts;
         }
 
-        private boolean isInProducts(String productID) {
-            for (String[] product : sellerProducts) {
-                if (product[0].equals(productID)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
-            try {
-                if (!isInProducts(productID)) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    sellerController.removeProduct(productID);
+            int index = getIndex(command, sellerProducts);
+            if (index != 0) {
+                try {
+                    sellerController.removeProduct(sellerProducts.get(index - 1)[0]);
+                } catch (Exceptions.InvalidProductIdException e) {
+                    System.out.println(e.getMessage());
                 }
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println(e.getMessage());
             }
             printSeparator();
         }

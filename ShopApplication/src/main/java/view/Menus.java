@@ -562,12 +562,17 @@ class Menus {
         }
     }
 
-    //TODO: show bayad koni avalesh.
     public static class SellerProductMenu extends Menu {
         private ArrayList<String[]> sellerProducts;
         SellerProductMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.sellerProductManagingMenuPattern, Constants.Menus.sellerProductManagingMenuCommand);
             this.sellerProducts = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         private String[] getEditableFields() {
@@ -585,7 +590,7 @@ class Menus {
             subActions.put(index + 1, new Actions.SellerShowProducts("show seller products", sellerProducts));
             subActions.put(index + 2, new Actions.SellerViewProductDetails("view product details", sellerProducts));
             subActions.put(index + 3, new Actions.SellerViewProductBuyers("view product buyers", sellerProducts));
-            subActions.put(index + 4, new Actions.SellerEditProduct("edit product", getEditableFields()));
+            subActions.put(index + 4, new Actions.SellerEditProduct("edit product", getEditableFields(), sellerProducts));
             subActions.put(index + 4, new Actions.SellerAddProduct("add product"));
             subActions.put(index + 4, new Actions.SellerRemoveProduct("remove product", sellerProducts));
             subActions.put(index + 5, new Actions.BackAction("back", parent));

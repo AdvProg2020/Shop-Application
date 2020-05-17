@@ -176,24 +176,24 @@ final class Constants {
         //seller account menu actions.
         static final String sellerShowSalesCommand = "view sales";
         static final String sellerShowSalesPattern = caseInsensitiveMode + "^" + sellerShowSalesCommand + "$";
-        static final String sellerViewSaleDetailsCommand = "view [saleID]";
-        static final String sellerViewSaleDetailsPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
-        static final String sellerEditSaleCommand = "edit [saleID]";
-        static final String sellerEditSalePattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String sellerViewSaleDetailsCommand = "view [index]";
+        static final String sellerViewSaleDetailsPattern = caseInsensitiveMode + "^view" + spacePattern + unsignedIntPattern + "$";
+        static final String sellerEditSaleCommand = "edit [index]";
+        static final String sellerEditSalePattern = caseInsensitiveMode + "^edit" + spacePattern + argumentPattern + "$";
         static final String sellerAddSaleCommand = "add off";
         static final String sellerAddSalePattern = caseInsensitiveMode + sellerAddSaleCommand + "$";
         static final String sellerShowProductsCommand = "view products";
         static final String sellerShowProductsPattern = caseInsensitiveMode + "^" + sellerShowProductsCommand + "$";
-        static final String sellerViewProductDetailsCommand = "view [productID]";
-        static final String sellerViewProductDetailsPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
-        static final String sellerViewProductBuyersCommand = "view buyers [productID]";
-        static final String sellerViewProductBuyersPattern = caseInsensitiveMode + "^view buyers " + argumentPattern + "$";
-        static final String sellerEditProductCommand = "edit [productID]";
-        static final String sellerEditProductPattern = caseInsensitiveMode + "^edit " + argumentPattern + "$";
+        static final String sellerViewProductDetailsCommand = "view [index]";
+        static final String sellerViewProductDetailsPattern = caseInsensitiveMode + "^view" + spacePattern + argumentPattern + "$";
+        static final String sellerViewProductBuyersCommand = "view buyers [index]";
+        static final String sellerViewProductBuyersPattern = caseInsensitiveMode + "^view buyers" + spacePattern + argumentPattern + "$";
+        static final String sellerEditProductCommand = "edit [index]";
+        static final String sellerEditProductPattern = caseInsensitiveMode + "^edit" + spacePattern + argumentPattern + "$";
         static final String sellerAddProductCommand = "add product";
         static final String sellerAddProductPattern = caseInsensitiveMode + "^" + sellerAddProductCommand + "$";
-        static final String sellerRemoveProductCommand = "remove product [productID]";
-        static final String sellerRemoveProductPattern = caseInsensitiveMode + "^remove product " + argumentPattern + "$";
+        static final String sellerRemoveProductCommand = "remove product [index]";
+        static final String sellerRemoveProductPattern = caseInsensitiveMode + "^remove product" + spacePattern + argumentPattern + "$";
         //customer account menu actions
         static final String customerCartShowProductsCommand = "show products";
         static final String customerCartShowProductsPattern = caseInsensitiveMode + "^" + customerCartShowProductsCommand + "$";
