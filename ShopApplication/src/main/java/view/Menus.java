@@ -10,7 +10,7 @@ class Menus {
     private static SellerController sellerController;
     private static CustomerController customerController;
 
-    static {
+    public static void init(){
         mainController = View.mainController;
         adminController = View.adminController;
         sellerController = View.sellerController;
@@ -26,6 +26,8 @@ class Menus {
             Menu.setAccountMenu(this);
             previousMenu = null;
             nextMenu = null;
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -74,6 +76,8 @@ class Menus {
     public static class FirstMenu extends Menu {
         FirstMenu(String name) {
             super(name, true, null, null, null);
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -103,6 +107,8 @@ class Menus {
             currentSort = new StringBuilder();
             currentProducts = new ArrayList<>();
             this.availableCategories = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -146,6 +152,8 @@ class Menus {
             super(name, false, null, null, null);
             Menu.setProductDetailMenu(this);
            subProductID = new StringBuilder();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -177,6 +185,8 @@ class Menus {
         ProductReviewMenu(String name, Menu parent, StringBuilder productID) {
             super(name, true, parent, Constants.Menus.productReviewMenuPattern, Constants.Menus.productReviewMenuCommand);
             this.productID = productID;
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -207,6 +217,8 @@ class Menus {
             super(name, true, parent, Constants.Menus.sortMenuPattern, Constants.Menus.sortMenuCommand);
             this.currentSort = currentSort;
             this.availableSorts = availableSorts.clone();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -232,6 +244,8 @@ class Menus {
             super(name, true, parent, Constants.Menus.filterMenuPattern, Constants.Menus.filterMenuCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters.clone();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -261,6 +275,8 @@ class Menus {
             this.currentFilters = new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)};
             this.currentProducts = new ArrayList<>();
             this.currentSales = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -300,6 +316,8 @@ class Menus {
             super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -332,6 +350,8 @@ class Menus {
             super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -360,6 +380,8 @@ class Menus {
     public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -383,6 +405,8 @@ class Menus {
         UserManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.userManagingMenuPattern, Constants.Menus.userManagingMenuCommand);
             users = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -412,6 +436,8 @@ class Menus {
         ProductManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.productManagingMenuPattern, Constants.Menus.productManagingMenuCommand);
             this.currentProducts = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -440,6 +466,8 @@ class Menus {
         DiscountCodesManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
             this.discountCodes = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -474,6 +502,8 @@ class Menus {
         RequestManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
             pendingRequests = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -502,6 +532,8 @@ class Menus {
         CategoryManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.categoryManagingMenuPattern, Constants.Menus.categoryManagingMenuCommand);
             this.currentCategories = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         private String[] getEditableFields() {
@@ -538,6 +570,8 @@ class Menus {
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
             this.sellLogs = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -569,6 +603,8 @@ class Menus {
         SellerSalesMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.sellerSaleManagingMenuPattern, Constants.Menus.sellerSaleManagingMenuCommand);
             this.currentSales = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         private String[] getEditableFields() {
@@ -602,6 +638,8 @@ class Menus {
         SellerProductMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.sellerProductManagingMenuPattern, Constants.Menus.sellerProductManagingMenuCommand);
             this.sellerProducts = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -641,6 +679,8 @@ class Menus {
             super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -671,6 +711,8 @@ class Menus {
         ShoppingCartMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
             this.currentProducts = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override
@@ -708,6 +750,8 @@ class Menus {
         CustomerOrderLogMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.customerOrderLogMenuPattern, Constants.Menus.customerOrderLogMenuCommand);
             this.currentOrderLogs = new ArrayList<>();
+            initSubMenus();
+            initSubActions();
         }
 
         @Override

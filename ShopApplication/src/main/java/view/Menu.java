@@ -29,8 +29,7 @@ public abstract class Menu {
         allMenus.add(this);
         subMenus = new HashMap<>();
         subActions = new HashMap<>();
-        initSubMenus();
-        initSubActions();
+
     }
 
     protected abstract void initSubMenus();
@@ -87,7 +86,7 @@ public abstract class Menu {
         }
         int subMenuSize = subMenus.size();
         for (int index = 1; index <= subMenuSize; index++) {
-            System.out.println(index + ". " + subMenus.get(index).getName());
+            System.out.println(index + ". " + subMenus.get(index).command);
         }
         if (isAccountMenuAccessible) {
             System.out.println((subMenuSize + 1) + ". " + accountMenu.getName());
@@ -99,7 +98,7 @@ public abstract class Menu {
         int subActionSize = subActions.size();
         int modification = floatingMenusIndexModification();
         for (int index = subMenuSize + modification + 1; index <= subMenuSize + subActionSize + modification; index++) {
-            System.out.println(subActions.get(index).getName());
+            System.out.println(subActions.get(index).getActionCommand());
         }
 
     }
@@ -136,6 +135,7 @@ public abstract class Menu {
         stackTrace.push(temp);
         return callingMenu;
     }
+
 
     protected int floatingMenusIndexModification() {
         int modification = 0;

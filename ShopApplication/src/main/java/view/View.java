@@ -26,9 +26,12 @@ public class View {
         this.sellerController = sellerController;
         this.customerController = customerController;
         this.adminController = adminController;
+        Menus.init();
+        Actions.init();
         productDetailMenu = new Menus.ProductDetailMenu("product detail menu");
-          accountMenu = new Menus.AccountMenu("account menu");
+        accountMenu = new Menus.AccountMenu("account menu");
         firstMenu = new Menus.FirstMenu("first menu");
+
     }
 
     public static  String getNextLineTrimmed() {

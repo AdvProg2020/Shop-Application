@@ -20,7 +20,7 @@ public class Actions {
     private static SellerController sellerController;
     private static CustomerController customerController;
 
-    static {
+    public static void init() {
         mainController = View.mainController;
         adminController = View.adminController;
         sellerController = View.sellerController;
@@ -76,17 +76,20 @@ public class Actions {
                 if (password != null) {
                     try {
                         mainController.login(username, password);
-                    } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException e) {
+                    } catch (Exceptions.UsernameDoesntExistException  e) {
                         System.out.println(e.getMessage());
-                        continue;
+                        break;
+                    } catch (Exceptions.WrongPasswordException e) {
+                        System.out.println(e.getMessage());
                     }
                     //if without problem
                     System.out.println("logged-in successfully!");
-                    return;
+                    break;
                 } else {
                     break;
                 }
             }
+            printSeparator();
         }
     }
 
