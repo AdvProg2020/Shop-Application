@@ -181,7 +181,7 @@ class Menus {
 
         @Override
         public void show() {
-            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run();
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show comments");
             super.show();
         }
 
@@ -249,7 +249,6 @@ class Menus {
         }
     }
 
-    //TODO: show sales joda bayad bashe refresh ham beshe
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
         private String[] currentFilters;
@@ -262,6 +261,12 @@ class Menus {
             this.currentFilters = new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)};
             this.currentProducts = new ArrayList<>();
             this.currentSales = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show offs");
+            super.show();
         }
 
         @Override

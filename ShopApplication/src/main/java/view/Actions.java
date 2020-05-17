@@ -13,7 +13,6 @@ import java.util.regex.Matcher;
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: index choosing
 //TODO: nullptr exception.
-//TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim va inke age customer ya anonymous nabd natone.
 //TODO: getDefaultSubProductID();
 public class Actions {
     private static Controller mainController;
@@ -906,7 +905,7 @@ public class Actions {
             try {
                 mainController.addToCart(subProductID.toString(), 1);
                 System.out.println("added to the cart");
-            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException e) {
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException | Exceptions.UnAuthorizedAccountException e) {
                 System.out.println(e.getMessage());
                 System.out.println("please change seller and try again");
             }
@@ -1955,17 +1954,21 @@ public class Actions {
             this.currentProducts = currentProducts;
         }
 
-        private void refreshCurrentProducts() {
+        private void refreshCurrentProducts() throws Exceptions.UnAuthorizedAccountException {
             currentProducts.clear();
             currentProducts.addAll(mainController.getProductsInCart());
         }
 
         @Override
         public void execute(String command) {
-            refreshCurrentProducts();
-            System.out.println("shopping cart products:");
-            printList(currentProducts);
-            printSeparator();
+            try {
+                refreshCurrentProducts();
+                System.out.println("shopping cart products:");
+                printList(currentProducts);
+                printSeparator();
+            } catch (Exceptions.UnAuthorizedAccountException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -1995,7 +1998,7 @@ public class Actions {
                     mainController.viewProductInCart(currentProducts.get(index - 1)[0]);
 
                 }
-            } catch (Exceptions.InvalidSubProductIdException e) {
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnAuthorizedAccountException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -2081,8 +2084,12 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            System.out.println("Total price (ofcourse ghabel nadare :p):" + customerController.getTotalPriceOfCart());
-            printSeparator();
+            try {
+                System.out.println("Total price (ofcourse ghabel nadare :p):" + customerController.getTotalPriceOfCart());
+                printSeparator();
+            }  catch (Exceptions.UnAuthorizedAccountException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

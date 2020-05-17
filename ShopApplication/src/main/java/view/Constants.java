@@ -1,7 +1,6 @@
 package view;
 
 final class Constants {
-    //TODO: space pattern ro bargardon.
     static final String caseInsensitiveMode = "(?i)";
     static final String argumentPattern = "(\\S+)";
     static final String spacePattern = "\\s+";
@@ -213,9 +212,9 @@ final class Constants {
         static final String shoppingCartPurchasePattern = caseInsensitiveMode + "^" + shoppingCartPurchaseCommand + "$";
         static final String customerShowOrdersCommand = "show orders";
         static final String customerShowOrdersPattern = caseInsensitiveMode + "^" + customerShowOrdersCommand + "$";
-        static final String customerViewOrderCommand = "show order [orderID]";
-        static final String customerViewOrderPattern = caseInsensitiveMode + "^show order " + argumentPattern + "$";
+        static final String customerViewOrderCommand = "show order [index]";
+        static final String customerViewOrderPattern = caseInsensitiveMode + "^show order" + spacePattern + unsignedIntPattern + "$";
         static final String customerRateProductCommand = "rate [productID] [1-5]";
-        static final String customerRateProductPattern = caseInsensitiveMode + "^rate " + argumentPattern + "([1-5])$";
+        static final String customerRateProductPattern = caseInsensitiveMode + "^rate" + spacePattern + argumentPattern + "([1-5])$";
     }
 }
