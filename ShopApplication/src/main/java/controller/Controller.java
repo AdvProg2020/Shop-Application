@@ -1,35 +1,49 @@
 package controller;
 
-import jdk.jfr.Label;
+
 import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
-import model.database.DatabaseManager;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
 
 //TODO: compare to products!
-//TODO: database constructor
-//TODO: constructors, remove statics
 public class Controller {
-    protected static Account currentAccount;
-    protected static Cart currentCart;
-    protected static DateFormat dateFormat = Utilities.getDateFormat();
+    private Account currentAccount;
+    private Cart currentCart;
+    protected DateFormat dateFormat;
     protected Database databaseManager;
 
 
     //Done
     public Controller(Database DataBaseManager) {
         databaseManager = DataBaseManager;
+        dateFormat = Utilities.getDateFormat();
         currentCart = new Cart(null);
         currentAccount = null;
+    }
+
+    public Database getDatabaseManager(){
+        return databaseManager;
+    }
+
+    public Account getCurrentAccount() {
+        return currentAccount;
+    }
+
+    public Cart getCurrentCart() {
+        return currentCart;
+    }
+
+    public DateFormat getDateFormat() {
+        return dateFormat;
     }
 
     //Done!

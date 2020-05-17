@@ -15,11 +15,12 @@ import java.util.Map;
 
 public class AdminController extends Controller {
 
+    private Controller mainController;
 
-    public AdminController(DatabaseManager DataBaseManager) {
-        super(DataBaseManager);
+    public AdminController(Controller controller) {
+        super(controller.getDatabaseManager());
+        mainController = controller;
     }
-
     //Done!!
 
     /**
@@ -254,7 +255,7 @@ public class AdminController extends Controller {
         for (Request request : Request.getPendingRequests()) {
             requestIds.add(Utilities.Pack.request(request));
         }
-        if(currentAccount == Admin.getManager()){
+        if(mainController.getCurrentAccount() == Admin.getManager()){
             for (Request request : Request.getRequestArchive()) {
                 requestIds.add(Utilities.Pack.request(request));
             }
