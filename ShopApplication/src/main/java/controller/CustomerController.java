@@ -191,25 +191,25 @@ public class CustomerController {
         return discountCodes;
     }
 
-    public ArrayList<String[]> getProductsInCart() {
+    public ArrayList<String[]> getProductsInCart() throws Exceptions.UnAuthorizedAccountException {
         return mainController.getProductsInCart();
     }
 
-    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
+    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
         mainController.viewProductInCart(subProductId);
     }
 
     public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
-            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
+            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
         mainController.increaseProductInCart(subProductId, number);
     }
 
     public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
-            Exceptions.NotSubProductIdInTheCartException {
+            Exceptions.NotSubProductIdInTheCartException, Exceptions.UnAuthorizedAccountException {
         mainController.decreaseProductInCart(subProductId, number);
     }
 
-    public double getTotalPriceOfCart() {
+    public double getTotalPriceOfCart() throws Exceptions.UnAuthorizedAccountException {
         return mainController.getTotalPriceOfCart();
     }
 }

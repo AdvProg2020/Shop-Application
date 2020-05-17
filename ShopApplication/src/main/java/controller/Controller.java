@@ -388,7 +388,8 @@ public class Controller {
         }
     }
 
-    public double getTotalPriceOfCart() {
+    public double getTotalPriceOfCart() throws Exceptions.UnAuthorizedAccountException {
+        checkAuthorityOverCart();
         return currentCart.getTotalPrice();
     }
     
