@@ -2,6 +2,7 @@ package view;
 
 import controller.*;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 class Menus {
@@ -325,7 +326,12 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new PersonalInfoMenu("admin personal info", this));
+            subMenus.put(1, new PersonalInfoMenu("admin personal info", this) {
+                @Override
+                protected String[] getEditableFields() {
+                    return adminController.getPersonalInfoEditableFields();
+                }
+            });
             subMenus.put(2, new UserManagingMenu("user managing menu", this));
             subMenus.put(3, new ProductManagingMenu("product managing menu", this));
             subMenus.put(4, new DiscountCodesManagingMenu( "discount code managing menu", this));
@@ -343,7 +349,7 @@ class Menus {
 
 
 
-    public static class PersonalInfoMenu extends Menu {
+    public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
         }
@@ -361,14 +367,7 @@ class Menus {
             subActions.put(index + 3, new Actions.BackAction("view personal info back", parent));
         }
 
-        protected String[] getEditableFields() {
-            try {
-                return mainController.getPersonalInfoEditableFields();
-            }catch (Exceptions.NotLoggedInException e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
-        }
+        protected abstract String[] getEditableFields();
     }
 
     //TODO: executesh bayad fargh kone.
@@ -501,7 +500,12 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new PersonalInfoMenu("seller personal info menu",this));
+            subMenus.put(1, new PersonalInfoMenu("seller personal info menu",this) {
+                @Override
+                protected String[] getEditableFields() {
+                    return sellerController.getPersonalInfoEditableFields();
+                }
+            });
             subMenus.put(2, new SellerProductMenu("seller product menu", this));
             subMenus.put(3, new SellerSalesMenu("seller sales menu", this));
         }
@@ -586,7 +590,12 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new PersonalInfoMenu("customer personal info menu", this));
+            subMenus.put(1, new PersonalInfoMenu("customer personal info menu", this) {
+                @Override
+                protected String[] getEditableFields() {
+                    return customerController.getPersonalInfoEditableFields();
+                }
+            });
             subMenus.put(2, new ShoppingCartMenu("customer shopping cart", this));
             subMenus.put(3, new CustomerOrderLogMenu("customer order log menu", this));
         }

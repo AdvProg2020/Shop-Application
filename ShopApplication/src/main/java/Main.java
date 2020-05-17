@@ -12,8 +12,8 @@ public class Main {
         new DatabaseManager().loadDatabase();
         Category.setSuperCategory();
         Database mainDatabase = new DatabaseManager();
-
-        View appView = new View(new Controller(), new SellerController(), new AdminController(), new CustomerController());
+        Controller mainController = new Controller(mainDatabase);
+        View appView = new View(mainController, new SellerController(mainController), new AdminController(mainController), new CustomerController(mainController));
         appView.start();
     }
 }
