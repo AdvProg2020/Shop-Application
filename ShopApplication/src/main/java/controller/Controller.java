@@ -18,32 +18,27 @@ import java.util.Map;
 public class Controller {
     private Account currentAccount;
     private Cart currentCart;
-    protected DateFormat dateFormat;
+    protected static final DateFormat dateFormat = Utilities.getDateFormat();
     protected Database databaseManager;
 
 
     //Done
     public Controller(Database DataBaseManager) {
         databaseManager = DataBaseManager;
-        dateFormat = Utilities.getDateFormat();
         currentCart = new Cart(null);
         currentAccount = null;
     }
 
-    public Database getDatabaseManager(){
+    Database getDatabaseManager(){
         return databaseManager;
     }
 
-    public Account getCurrentAccount() {
+    Account getCurrentAccount() {
         return currentAccount;
     }
 
-    public Cart getCurrentCart() {
+    Cart getCurrentCart() {
         return currentCart;
-    }
-
-    public DateFormat getDateFormat() {
-        return dateFormat;
     }
 
     //Done!
@@ -90,7 +85,7 @@ public class Controller {
         }
     }
 
-    //Done!! TODO: Shayan data base for cart
+    //Done!!
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -127,67 +122,30 @@ public class Controller {
     /**
      * @return String[5]: {price, rating score, name, category name, view counts}
      */
-    public String[] getAvailableSorts() {
-        String[] availableSorts = new String[5];
-        availableSorts[0] = "price";
-        availableSorts[1] = "rating score";
-        availableSorts[2] = "name";
-        availableSorts[3] = "category name";
-        availableSorts[4] = "default: view counts";
-        return availableSorts;
+    public String[] getProductAvailableSorts() {
+        return Utilities.Sort.productAvailableSorts();
     }
 
     //Done!! check the directions in the test
     private ArrayList<Product> sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
-        int direction = isIncreasing ? 1 : -1;
         switch (sortBy) {
             case "price":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Double.compare(o1.getMinPrice(), o2.getMinPrice());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductPriceComparator(isIncreasing));
                 break;
             case "rating score":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductRatingScoreComparator(isIncreasing));
                 break;
             case "name":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * o1.getName().compareTo(o2.getName());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductNameComparator(isIncreasing));
                 break;
             case "category name":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * o1.getCategory().getName().compareTo(o2.getCategory().getName());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductCategoryNameComparator(isIncreasing));
                 break;
             case "remaining count":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Integer.compare(o1.getTotalRemainingCount(), o2.getTotalRemainingCount());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductRemainingCountComparator(isIncreasing));
                 break;
             default:
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Integer.compare(o1.getViewCount(), o2.getViewCount());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductViewCountComparator(isIncreasing));
                 break;
         }
         return products;
@@ -195,15 +153,7 @@ public class Controller {
 
     //Done!!
     public String[] getProductAvailableFilters() {
-        String[] availableFilters = new String[7];
-        availableFilters[0] = "available";
-        availableFilters[1] = "minPrice";
-        availableFilters[2] = "macPrice";
-        availableFilters[3] = "contains";
-        availableFilters[4] = "brand";
-        availableFilters[5] = "storeName";
-        availableFilters[6] = "minRatingScore";
-        return availableFilters;
+        return Utilities.Filter.productAvailableFilters();
     }
 
     //Done!!

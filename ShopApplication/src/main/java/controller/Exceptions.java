@@ -1,7 +1,6 @@
 package controller;
 
 import java.lang.Exception;
-import java.util.ArrayList;
 
 public class Exceptions {
 
@@ -196,6 +195,5 @@ public class Exceptions {
             super("Your cart is empty!");
         }
     }
-
 
 }

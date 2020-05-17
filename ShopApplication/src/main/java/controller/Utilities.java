@@ -14,6 +14,7 @@ import model.request.Request;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Utilities {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -319,11 +320,108 @@ public class Utilities {
         }
     }
 
-    static class filter{
-
+    static class Filter{
+        public static String[] productAvailableFilters() {
+            String[] availableFilters = new String[7];
+            availableFilters[0] = "available";
+            availableFilters[1] = "minPrice";
+            availableFilters[2] = "macPrice";
+            availableFilters[3] = "contains";
+            availableFilters[4] = "brand";
+            availableFilters[5] = "storeName";
+            availableFilters[6] = "minRatingScore";
+            return availableFilters;
+        }
     }
 
-    static class sort{
+    static class Sort{
+        public static String[] productAvailableSorts() {
+            String[] availableSorts = new String[5];
+            availableSorts[0] = "price";
+            availableSorts[1] = "rating score";
+            availableSorts[2] = "name";
+            availableSorts[3] = "category name";
+            availableSorts[4] = "default: view counts";
+            return availableSorts;
+        }
 
+        public static class ProductPriceComparator implements Comparator<Product> {
+            private int direction;
+            public ProductPriceComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+                @Override
+                public int compare(Product o1, Product o2) {
+                    return direction * Double.compare(o1.getMinPrice(), o2.getMinPrice());
+                }
+        }
+
+        public static class ProductRatingScoreComparator implements Comparator<Product> {
+            private int direction;
+            public ProductRatingScoreComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(Product o1, Product o2) {
+                return direction * Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
+            }
+        }
+
+        public static class ProductNameComparator implements Comparator<Product> {
+            private int direction;
+            public ProductNameComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(Product o1, Product o2) {
+                return direction * o1.getName().compareTo(o2.getName());
+            }
+        }
+
+        public static class ProductCategoryNameComparator implements Comparator<Product> {
+            private int direction;
+            public ProductCategoryNameComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(Product o1, Product o2) {
+                return direction * o1.getCategory().getName().compareTo(o2.getCategory().getName());
+            }
+        }
+
+        public static class ProductRemainingCountComparator implements Comparator<Product> {
+            private int direction;
+            public ProductRemainingCountComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(Product o1, Product o2) {
+                return direction * Integer.compare(o1.getTotalRemainingCount(), o2.getTotalRemainingCount());
+            }
+        }
+
+        public static class ProductViewCountComparator implements Comparator<Product> {
+            private int direction;
+            public ProductViewCountComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(Product o1, Product o2) {
+                return direction * Integer.compare(o1.getViewCount(), o2.getViewCount());
+            }
+        }
+
+        public static class SubProductPriceComparator implements Comparator<SubProduct> {
+            private int direction;
+            public SubProductPriceComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(SubProduct o1, SubProduct o2) {
+                return direction * Double.compare(o1.getPriceWithSale(), o2.getPriceWithSale());
+            }
+        }
     }
+
+
 }
