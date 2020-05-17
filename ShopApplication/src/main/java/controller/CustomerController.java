@@ -65,7 +65,7 @@ public class CustomerController {
         Map<SubProduct, Integer> subProductsInCart = currentCart().getSubProducts();
         if (subProductsInCart.isEmpty())
             throw new Exceptions.EmptyCartException();
-        if (!(notAvailableSubProducts = notAvailableSubProductsInCart()).equals(""))
+        if (!(notAvailableSubProducts = notAvailableSubProductsInCart()).isEmpty())
             throw new Exceptions.NotAvailableSubProductsInCart(notAvailableSubProducts);
         double totalPrice = currentCart().getTotalPrice();
         double discountAmount = 0;

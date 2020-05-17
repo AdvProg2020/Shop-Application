@@ -147,7 +147,7 @@ public class Utilities {
             } else
                 info = new String[6];
             info[0] = account.getUsername();
-            info[1] = account.getClass().getName();
+            info[1] = account.getClass().getSimpleName();
             info[2] = account.getFirstName();
             info[3] = account.getLastName();
             info[4] = account.getEmail();
@@ -316,7 +316,7 @@ public class Utilities {
         public static String[] getCategoryEditableFields() {
             String[] editableFields = new String[2];
             editableFields[0] = "name";
-            editableFields[1] = "parent name";
+            editableFields[1] = "parent";
             return editableFields;
         }
     }
@@ -355,6 +355,7 @@ public class Utilities {
                     return;
                 }
                 if (!contains.equals(""))
+                if (!contains.isEmpty())
                     products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
             }
 
@@ -363,6 +364,7 @@ public class Utilities {
                     return;
                 }
                 if (!brand.equals(""))
+                if (!brand.isEmpty())
                     products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
 
@@ -371,6 +373,7 @@ public class Utilities {
                     return;
                 }
                 if (!storeName.equals("")) {
+                if (!storeName.isEmpty()) {
                     products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
                 }
             }
@@ -394,15 +397,15 @@ public class Utilities {
                     subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() > maxPrice);
             }
             public static void name(ArrayList<SubProduct> subProducts, String contains) {
-                if (!contains.equals(""))
+                if (!contains.isEmpty())
                     subProducts.removeIf(subProduct -> !(subProduct.getProduct().getName().toLowerCase().contains(contains.toLowerCase())));
             }
             public static void brand(ArrayList<SubProduct> subProducts, String brand) {
-                if (!brand.equals(""))
+                if (!brand.isEmpty())
                     subProducts.removeIf(subProduct -> !(subProduct.getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
             public static void storeName(ArrayList<SubProduct> subProducts, String storeName) {
-                if (!storeName.equals(""))
+                if (!storeName.isEmpty())
                     subProducts.removeIf(subProduct -> !subProduct.getSeller().getStoreName().contains(storeName.toLowerCase()));
             }
             public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){

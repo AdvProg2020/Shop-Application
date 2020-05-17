@@ -192,13 +192,14 @@ public class AdminController {
      * @throws Exceptions.SameAsPreviousValueException
      * @throws Exceptions.InvalidFormatException
      */
+    // TODO: switch case!
     public void editDiscountCode(String code, String field, String newInformation) throws Exceptions.DiscountCodeException, Exceptions.SameAsPreviousValueException, Exceptions.InvalidFormatException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
         else {
             if (field.equalsIgnoreCase("start date")) {
-                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                if (discount.getDiscountCode().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     try {
@@ -208,7 +209,7 @@ public class AdminController {
                     }
                 }
             } else if (field.equalsIgnoreCase("end date")) {
-                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                if (discount.getDiscountCode().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     try {
@@ -218,13 +219,13 @@ public class AdminController {
                     }
                 }
             } else if (field.equalsIgnoreCase("maximum amount")) {
-                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                if (discount.getDiscountCode().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     discount.setMaximumAmount(Double.parseDouble(newInformation));
                 }
             } else if (field.equalsIgnoreCase("percentage")) {
-                if (discount.getDiscountCode().equalsIgnoreCase(newInformation))
+                if (discount.getDiscountCode().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     discount.setPercentage(Double.parseDouble(newInformation));
@@ -346,7 +347,7 @@ public class AdminController {
 
     /**
      * @param categoryName
-     * @param field          "name", "parent name"
+     * @param field          "name", "parent"
      * @param newInformation newName, nameOfNewParent
      * @throws Exceptions.InvalidCategoryException     if this category doesn't exist
      * @throws Exceptions.InvalidFieldException        if there is no such field to edit
@@ -372,7 +373,7 @@ public class AdminController {
                 }
                 database().editCategory();
                 break;
-            case "parent name":
+            case "parent":
                 Category newParentCategory = Category.getCategoryByName(newInformation);
                 if (newParentCategory == null) {
                     category.setParent(Category.getSuperCategory().getId());
