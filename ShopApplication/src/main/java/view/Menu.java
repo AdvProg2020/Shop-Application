@@ -99,7 +99,7 @@ public abstract class Menu {
         int subActionSize = subActions.size();
         int modification = floatingMenusIndexModification();
         for (int index = subMenuSize + modification + 1; index <= subMenuSize + subActionSize + modification; index++) {
-            System.out.println(index + ". " + subActions.get(index).getName());
+            System.out.println(subActions.get(index).getName());
         }
 
     }

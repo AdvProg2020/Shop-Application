@@ -91,6 +91,7 @@ class Menus {
     
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
+        private ArrayList<String[]> availableCategories;
         private String[] currentFilters;
         private StringBuilder currentSort;
         private ArrayList<String[]> currentProducts;
@@ -98,9 +99,10 @@ class Menus {
         AllProductsMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.allProductsMenuPattern, Constants.Menus.allProductsMenuCommand);
             this.categoryTree = new ArrayList<>();
-            this.currentFilters = new String[getAvailableFilters().length];
+            this.currentFilters = new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)};
             currentSort = new StringBuilder();
             currentProducts = new ArrayList<>();
+            this.availableCategories = new ArrayList<>();
         }
 
         @Override
@@ -122,28 +124,28 @@ class Menus {
             subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show products -all");
             super.show();
         }
-        
+
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowProductsAction("show products", this.categoryTree, this.currentFilters,this.currentSort,this.currentProducts));
-            subActions.put(index + 2, new Actions.ShowCategories("show categories", this.categoryTree));
-            subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category", this.categoryTree));
+            subActions.put(index + 2, new Actions.ShowCategories("show categories", this.categoryTree, availableCategories));
+            subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category", this.categoryTree, availableCategories));
             subActions.put(index + 5, new Actions.RevertCategoryAction("revert category", categoryTree));
-            subActions.put(index + 6, new Actions.ProductDetailMenu("productDetailMenu"));
+            subActions.put(index + 6, new Actions.ProductDetailMenu("productDetailMenu", currentProducts));
             subActions.put(index + 7, new Actions.BackAction("all product menu back", parent));
         }
     }
 
-    //TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim va inke age customer ya anonymous nabd natone.
-    //TODO: getDefaultSubProductID();
+
+    //TODO: this motha fucka.
     public static class ProductDetailMenu extends Menu {
         private StringBuilder productID;
         private StringBuilder subProductID;
         ProductDetailMenu(String name){
             super(name, false, null, null, null);
             Menu.setProductDetailMenu(this);
-           // subProductID = mainController.getDefaultSubProductID(productID);
+           subProductID = new StringBuilder();
         }
 
         @Override
@@ -182,7 +184,6 @@ class Menus {
             //no available sub menus.
         }
 
-        //TODO: imp.
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
@@ -191,7 +192,6 @@ class Menus {
             subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
-
 
     public static class SortMenu extends Menu {
         private StringBuilder currentSort;
@@ -218,7 +218,6 @@ class Menus {
         }
     }
 
-    //wtf is with filtering anyway
     public static class FilterMenu extends Menu {
         private String[] currentFilters;
         private String[] availableFilters;
@@ -238,7 +237,7 @@ class Menus {
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ChooseFiltering("product sorter", currentFilters, availableFilters));
-            subActions.put(index + 2, new Actions.ShowCurrentFilters("product current filters", currentFilters));
+            subActions.put(index + 2, new Actions.ShowCurrentFilters("product current filters", currentFilters, availableFilters));
             subActions.put(index + 3, new Actions.DisableFilter("product filter remover", currentFilters, availableFilters));
             subActions.put(index + 4, new Actions.BackAction("product filter back", parent));
         }
@@ -249,15 +248,14 @@ class Menus {
         private StringBuilder currentSort;
         private String[] currentFilters;
         private ArrayList<String[]> currentProducts;
-        private ArrayList<String[]> currentOffs;
+        private ArrayList<String[]> currentSales;
 
         SaleMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.saleMenuPattern, Constants.Menus.saleMenuCommand);
             this.currentSort = new StringBuilder();
-            this.currentFilters = new String[getAvailableFilters().length];
+            this.currentFilters = new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)};
             this.currentProducts = new ArrayList<>();
-            this.currentOffs = new ArrayList<>();
-            currentOffs.addAll(mainController.sales());
+            this.currentSales = new ArrayList<>();
         }
 
         @Override
@@ -269,9 +267,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowInSaleProducts("show filtered products", this.currentSort, this.currentFilters, this.currentProducts, this.currentOffs));
-            subActions.put(index + 2, new Actions.ProductDetailMenu("product detail menu"));
-            subActions.put(index + 3, new Actions.BackAction("sale menu back", parent));
+            subActions.put(index + 1, new Actions.ShowSales("show offs", currentSales));
+            subActions.put(index + 2, new Actions.ShowInSaleProducts("show filtered products", currentSort, currentFilters, currentProducts));
+            subActions.put(index + 3, new Actions.ProductDetailMenu("product detail menu", currentProducts));
+            subActions.put(index + 4, new Actions.BackAction("sale menu back", parent));
         }
 
         private String[] getAvailableSorts() {
@@ -372,7 +371,7 @@ class Menus {
         }
     }
 
-    //TODO: executesh bayad fargh kone. command AdminViewUser bayad ID user bashe.
+    //TODO: executesh bayad fargh kone.
     public static class UserManagingMenu extends Menu{
         private ArrayList<String[]> users;
         UserManagingMenu(String name, Menu parent) {
@@ -385,21 +384,22 @@ class Menus {
             //no sub menus available.
         }
 
-        //TODO: adminController.manageUsers
-        //TODO: storeAllUsers.
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminViewUser("view user"));
-            subActions.put(index + 2, new Actions.AdminDeleteUser("delete user"));
-            subActions.put(index + 3, new Actions.AdminCreateAdmin("create admin"));
-            subActions.put(index + 4, new Actions.BackAction("back", parent));
+            subActions.put(index + 1, new Actions.AdminViewAllUsers("show users", users));
+            subActions.put(index + 2, new Actions.AdminViewUser("view user", users));
+            subActions.put(index + 3, new Actions.AdminDeleteUser("delete user", users));
+            subActions.put(index + 4, new Actions.AdminCreateAdmin("create admin"));
+            subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
     }
 
     public static class ProductManagingMenu extends Menu{
+        private ArrayList<String[]> currentProducts;
         ProductManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.productManagingMenuPattern, Constants.Menus.productManagingMenuCommand);
+            this.currentProducts = new ArrayList<>();
         }
 
         @Override
@@ -407,18 +407,20 @@ class Menus {
             //no available sub menu.
         }
 
-        //TODO: adminController.manageProducts()
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminRemoveProductByID("remove product"));
-            subActions.put(index + 2, new Actions.BackAction("back", parent));
+            subActions.put(index + 1, new Actions.AdminShowProducts("show products", currentProducts));
+            subActions.put(index + 2, new Actions.AdminRemoveProductByID("remove product", currentProducts));
+            subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
 
     public static class DiscountCodesManagingMenu extends Menu {
+        private ArrayList<String> discountCodes;
         DiscountCodesManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
+            this.discountCodes = new ArrayList<>();
         }
 
         @Override
@@ -430,14 +432,14 @@ class Menus {
             return adminController.getDiscountEditableFields();
         }
 
-        //TODO: view all discountCodes adminController.viewDiscountCodes
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
+            subActions.put(index + 1, new Actions.AdminShowDiscountCodes("show discount codes", discountCodes));
             subActions.put(index + 1, new Actions.AdminCreateDiscountCode("create discount code"));
-            subActions.put(index + 2, new Actions.AdminViewDiscountCode("view discount code"));
-            subActions.put(index + 3, new Actions.AdminEditDiscountCode("edit discount codes", getEditableFields()));
-            subActions.put(index + 4, new Actions.AdminRemoveDiscountCode("remove discount code"));
+            subActions.put(index + 2, new Actions.AdminViewDiscountCode("view discount code", discountCodes));
+            subActions.put(index + 3, new Actions.AdminEditDiscountCode("edit discount codes", discountCodes, getEditableFields()));
+            subActions.put(index + 4, new Actions.AdminRemoveDiscountCode("remove discount code", discountCodes));
             subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
     }
@@ -489,10 +491,12 @@ class Menus {
     public static class SellerMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
+        private ArrayList<String[]> sellLogs;
         SellerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
             super(name, false, parent, userType, null);
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
+            this.sellLogs = new ArrayList<>();
         }
 
         @Override
@@ -502,15 +506,15 @@ class Menus {
             subMenus.put(3, new SellerSalesMenu("seller sales menu", this));
         }
 
-        //TODO: view a single sell history
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowSellerCompanyInfo("seller company info"));
             subActions.put(index + 2, new Actions.ShowSellerBalance("seller balance"));
-            subActions.put(index + 3, new Actions.ShowSellerSellHistory("seller sell history"));
-            subActions.put(index + 4, new Actions.Logout("logout"));
-            subActions.put(index + 5, new Actions.BackAction("seller menu back", previousMenu));
+            subActions.put(index + 3, new Actions.ShowSellerSellHistory("seller sell history", sellLogs));
+            subActions.put(index + 4, new Actions.ViewSingleSellHistory("show single sell history", sellLogs));
+            subActions.put(index + 5, new Actions.Logout("logout"));
+            subActions.put(index + 6, new Actions.BackAction("seller menu back", previousMenu));
         }
     }
 
