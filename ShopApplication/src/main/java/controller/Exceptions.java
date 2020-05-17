@@ -16,8 +16,8 @@ public class Exceptions {
         }
     }
 
-    public static class ManagerDeleteException extends Exception{
-        public ManagerDeleteException(){
+    public static class ManagerDeleteException extends Exception {
+        public ManagerDeleteException() {
             super("You can not delete manager!");
         }
     }
@@ -112,8 +112,8 @@ public class Exceptions {
         }
     }
 
-    public static class InvalidAccountsForDiscount extends Exception{
-        public InvalidAccountsForDiscount(String accountIds){
+    public static class InvalidAccountsForDiscount extends Exception {
+        public InvalidAccountsForDiscount(String accountIds) {
             super("You can only add customer account to a discount these accountIds are invalid" + accountIds);
         }
     }

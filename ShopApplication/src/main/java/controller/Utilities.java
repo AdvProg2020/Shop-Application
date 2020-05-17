@@ -23,7 +23,7 @@ public class Utilities {
         return dateFormat;
     }
 
-    static class Pack{
+    static class Pack {
         public static String[] saleInfo(Sale sale) {
             String[] salePack = new String[6];
             salePack[0] = sale.getId();
@@ -52,7 +52,7 @@ public class Utilities {
             return subProductPack;
         }
 
-        public static String[] subProductExtended(SubProduct subProduct){
+        public static String[] subProductExtended(SubProduct subProduct) {
             String[] subProductPack = new String[9];
             Product product = subProduct.getProduct();
             subProductPack[0] = product.getId();
@@ -67,7 +67,7 @@ public class Utilities {
             return subProductPack;
         }
 
-        public static String[] review(Review review){
+        public static String[] review(Review review) {
             String[] reviewPack = new String[4];
             reviewPack[0] = review.getReviewer().getUsername();
             reviewPack[1] = review.getTitle();
@@ -124,7 +124,7 @@ public class Utilities {
             return productPack;
         }
 
-        public static String[] discountInfo(Discount discount){
+        public static String[] discountInfo(Discount discount) {
             String[] discountInfo = new String[5];
             discountInfo[0] = discount.getDiscountCode();
             discountInfo[1] = dateFormat.format(discount.getStartDate());
@@ -164,7 +164,7 @@ public class Utilities {
             return productInfo;
         }
 
-        public static String[] category(Category category){
+        public static String[] category(Category category) {
             String[] categoryPack = new String[2];
             categoryPack[0] = category.getId();
             categoryPack[1] = category.getName();
@@ -199,7 +199,7 @@ public class Utilities {
             return productPack;
         }
 
-        public static String[] request(Request request){
+        public static String[] request(Request request) {
             String[] requestPack = new String[4];
             requestPack[0] = request.getId();
             requestPack[1] = request.getClass().getSimpleName();
@@ -208,21 +208,21 @@ public class Utilities {
             return requestPack;
         }
 
-        public static String[] saleChange(EditSaleRequest request){
+        public static String[] saleChange(EditSaleRequest request) {
             String[] saleChange = new String[2];
             saleChange[0] = request.getField().toString();
             saleChange[1] = request.getNewValue();
             return saleChange;
         }
 
-        public static String[] productChange(EditProductRequest request){
+        public static String[] productChange(EditProductRequest request) {
             String[] productChange = new String[2];
             productChange[0] = request.getField().toString();
             productChange[1] = request.getNewValue();
             return productChange;
         }
 
-        public static String[] customerDiscountRemainingCount(Customer customer, int count){
+        public static String[] customerDiscountRemainingCount(Customer customer, int count) {
             String[] personPack = new String[2];
             personPack[0] = customer.getUsername();
             personPack[1] = Integer.toString(count);
@@ -239,7 +239,7 @@ public class Utilities {
             return invalidSubProductIds.toString();
         }
 
-        public static String invalidAccountIds(ArrayList<String> accountIds){
+        public static String invalidAccountIds(ArrayList<String> accountIds) {
             StringBuilder invalidAccountIds = new StringBuilder();
             String falseAccount;
             for (String accountId : accountIds) {
@@ -250,7 +250,7 @@ public class Utilities {
         }
     }
 
-    static class Field{
+    static class Field {
         public static String[] customerPersonalInfoEditableFields() {
             String[] editableFields = new String[6];
             editableFields[0] = "firstName";
@@ -262,7 +262,7 @@ public class Utilities {
             return editableFields;
         }
 
-        public static String[] sellerPersonalInfoEditableFields(){
+        public static String[] sellerPersonalInfoEditableFields() {
             String[] editableFields = new String[7];
             editableFields[0] = "firstName";
             editableFields[1] = "lastName";
@@ -284,7 +284,7 @@ public class Utilities {
             return editableFields;
         }
 
-        public static String[] productEditableFields(){
+        public static String[] productEditableFields() {
             String[] editableFields = new String[5];
             editableFields[0] = "name";
             editableFields[1] = "brand";
@@ -320,7 +320,7 @@ public class Utilities {
         }
     }
 
-    static class Filter{
+    static class Filter {
         public static String[] productAvailableFilters() {
             String[] availableFilters = new String[7];
             availableFilters[0] = "available";
@@ -334,7 +334,7 @@ public class Utilities {
         }
     }
 
-    static class Sort{
+    static class Sort {
         public static String[] productAvailableSorts() {
             String[] availableSorts = new String[6];
             availableSorts[0] = "price";
@@ -348,20 +348,24 @@ public class Utilities {
 
         public static class ProductPriceComparator implements Comparator<Product> {
             private int direction;
-            public ProductPriceComparator(boolean isIncreasing){
+
+            public ProductPriceComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
-                @Override
-                public int compare(Product o1, Product o2) {
-                    return direction * Double.compare(o1.getMinPrice(), o2.getMinPrice());
-                }
+
+            @Override
+            public int compare(Product o1, Product o2) {
+                return direction * Double.compare(o1.getMinPrice(), o2.getMinPrice());
+            }
         }
 
         public static class ProductRatingScoreComparator implements Comparator<Product> {
             private int direction;
-            public ProductRatingScoreComparator(boolean isIncreasing){
+
+            public ProductRatingScoreComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(Product o1, Product o2) {
                 return direction * Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
@@ -370,9 +374,11 @@ public class Utilities {
 
         public static class ProductNameComparator implements Comparator<Product> {
             private int direction;
-            public ProductNameComparator(boolean isIncreasing){
+
+            public ProductNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(Product o1, Product o2) {
                 return direction * o1.getName().compareTo(o2.getName());
@@ -381,9 +387,11 @@ public class Utilities {
 
         public static class ProductCategoryNameComparator implements Comparator<Product> {
             private int direction;
-            public ProductCategoryNameComparator(boolean isIncreasing){
+
+            public ProductCategoryNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(Product o1, Product o2) {
                 return direction * o1.getCategory().getName().compareTo(o2.getCategory().getName());
@@ -392,9 +400,11 @@ public class Utilities {
 
         public static class ProductRemainingCountComparator implements Comparator<Product> {
             private int direction;
-            public ProductRemainingCountComparator(boolean isIncreasing){
+
+            public ProductRemainingCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(Product o1, Product o2) {
                 return direction * Integer.compare(o1.getTotalRemainingCount(), o2.getTotalRemainingCount());
@@ -403,9 +413,11 @@ public class Utilities {
 
         public static class ProductViewCountComparator implements Comparator<Product> {
             private int direction;
-            public ProductViewCountComparator(boolean isIncreasing){
+
+            public ProductViewCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(Product o1, Product o2) {
                 return direction * Integer.compare(o1.getViewCount(), o2.getViewCount());
@@ -414,19 +426,24 @@ public class Utilities {
 
         public static class SubProductPriceComparator implements Comparator<SubProduct> {
             private int direction;
-            public SubProductPriceComparator(boolean isIncreasing){
+
+            public SubProductPriceComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(SubProduct o1, SubProduct o2) {
                 return direction * Double.compare(o1.getPriceWithSale(), o2.getPriceWithSale());
             }
         }
+
         public static class SubProductRatingScoreComparator implements Comparator<SubProduct> {
             private int direction;
-            public SubProductRatingScoreComparator(boolean isIncreasing){
+
+            public SubProductRatingScoreComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(SubProduct o1, SubProduct o2) {
                 return direction * Double.compare(o1.getProduct().getAverageRatingScore(), o2.getProduct().getAverageRatingScore());
@@ -435,9 +452,11 @@ public class Utilities {
 
         public static class SubProductNameComparator implements Comparator<SubProduct> {
             private int direction;
-            public SubProductNameComparator(boolean isIncreasing){
+
+            public SubProductNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(SubProduct o1, SubProduct o2) {
                 return direction * o1.getProduct().getName().compareTo(o2.getProduct().getName());
@@ -446,9 +465,11 @@ public class Utilities {
 
         public static class SubProductCategoryNameComparator implements Comparator<SubProduct> {
             private int direction;
-            public SubProductCategoryNameComparator(boolean isIncreasing){
+
+            public SubProductCategoryNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(SubProduct o1, SubProduct o2) {
                 return direction * o1.getProduct().getCategory().getName().compareTo(o2.getProduct().getCategory().getName());
@@ -457,9 +478,11 @@ public class Utilities {
 
         public static class SubProductRemainingCountComparator implements Comparator<SubProduct> {
             private int direction;
-            public SubProductRemainingCountComparator(boolean isIncreasing){
+
+            public SubProductRemainingCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(SubProduct o1, SubProduct o2) {
                 return direction * Integer.compare(o1.getRemainingCount(), o2.getRemainingCount());
@@ -468,9 +491,11 @@ public class Utilities {
 
         public static class SubProductViewCountComparator implements Comparator<SubProduct> {
             private int direction;
-            public SubProductViewCountComparator(boolean isIncreasing){
+
+            public SubProductViewCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
             }
+
             @Override
             public int compare(SubProduct o1, SubProduct o2) {
                 return direction * Integer.compare(o1.getProduct().getViewCount(), o2.getProduct().getViewCount());

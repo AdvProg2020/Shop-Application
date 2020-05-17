@@ -8,8 +8,6 @@ import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
 
-import java.text.DateFormat;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -17,11 +15,9 @@ import java.util.Map;
 public class Controller {
     private Account currentAccount;
     private Cart currentCart;
-    protected static final DateFormat dateFormat = Utilities.getDateFormat();
-    protected Database databaseManager;
+    private Database databaseManager;
 
-
-    //Done
+    
     public Controller(Database DataBaseManager) {
         databaseManager = DataBaseManager;
         currentCart = new Cart(null);
@@ -39,9 +35,7 @@ public class Controller {
     Cart getCurrentCart() {
         return currentCart;
     }
-
-    //Done!
-
+    
     /**
      * @param username
      * @param type
@@ -54,9 +48,7 @@ public class Controller {
         else if (type.equalsIgnoreCase("Admin") && (Admin.getManager() != null))
             throw new Exceptions.AdminRegisterException();
     }
-
-    //Done!!
-
+    
     /**
      * @param type information: 1- customer:
      *             * String username, String password, String firstName, String lastName, String email, String phone, double balance
@@ -83,8 +75,7 @@ public class Controller {
                 break;
         }
     }
-
-    //Done!!
+    
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -99,14 +90,11 @@ public class Controller {
         }
     }
 
-    //Done!!
     public void logout() {
         currentAccount = null;
         currentCart = new Cart(null);
     }
-
-    //Done!!
-
+    
     /**
      * @return returns the currentAccount type: anonymous, customer, seller, admin.
      */
@@ -116,16 +104,13 @@ public class Controller {
         return currentAccount.getClass().getSimpleName();
     }
 
-    //Done!
-
     /**
      * @return String[5]: {price, rating score, name, category name, view counts}
      */
     public String[] getProductAvailableSorts() {
         return Utilities.Sort.productAvailableSorts();
     }
-
-    //Done!! check the directions in the test
+    
     private void sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
         switch (sortBy) {
             case "price":
@@ -150,13 +135,11 @@ public class Controller {
                 break;
         }
     }
-
-    //Done!!
+    
     public String[] getProductAvailableFilters() {
         return Utilities.Filter.productAvailableFilters();
     }
-
-    //Done!!
+    
     private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                 String storeName, double minRatingScore, ArrayList<Product> products) {
         if (available)
@@ -174,8 +157,7 @@ public class Controller {
         }
         products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
     }
-
-    //Done!!
+    
     private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
         for (Product product : products) {
@@ -183,9 +165,7 @@ public class Controller {
         }
         return productIdNames;
     }
-
-    //Done!!
-
+    
     /**
      * for show category action without all.
      *
@@ -209,9 +189,7 @@ public class Controller {
             return categoryIdNames;
         }
     }
-
-    //Done!!
-
+    
     /**
      * @param categoryName
      * @return String[2]: ID, name
@@ -226,14 +204,11 @@ public class Controller {
         }
     }
 
-    //Done!!
     private ArrayList<Product> getProductsInCategory(Category category) {
         ArrayList<Product> products = new ArrayList<>(category.getProducts());
         sortProducts("view count", true, products);
         return products;
     }
-
-    //Done!!
 
     /**
      * @param productIds
@@ -270,7 +245,6 @@ public class Controller {
         return productToIdNameBrand(products);
     }
 
-    //Done!!
     public void showProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -279,8 +253,6 @@ public class Controller {
             product.increaseViewCount();
         }
     }
-
-    //Done!!
 
     /**
      * @param productId
@@ -294,7 +266,6 @@ public class Controller {
         return Utilities.Pack.digest(product);
     }
 
-    //Done!!
     public ArrayList<String> getSpecialPropertiesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -303,14 +274,11 @@ public class Controller {
             return new ArrayList<>(product.getSpecialProperties());
     }
 
-    //Done!!
-
     /**
      * @param productId
      * @return String[4]: ID, storeName, price, remaining count.
      * @throws Exceptions.InvalidProductIdException
      */
-
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -322,7 +290,6 @@ public class Controller {
         return subProducts;
     }
 
-    //Done!!
     public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -330,8 +297,6 @@ public class Controller {
         else
             return Utilities.Pack.subProduct(subProduct);
     }
-
-    //Done!!
 
     /**
      * @param productId
@@ -349,7 +314,6 @@ public class Controller {
         return reviews;
     }
 
-    //Done!!
     public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -362,7 +326,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public ArrayList<String[]> getProductsInCart() {
         ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
@@ -372,7 +335,6 @@ public class Controller {
         return shoppingCart;
     }
 
-    //Done!!
     public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (!currentCart.getSubProducts().containsKey(subProduct))
@@ -385,7 +347,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
             Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
@@ -402,7 +363,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
             Exceptions.NotSubProductIdInTheCartException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
@@ -418,13 +378,10 @@ public class Controller {
         }
     }
 
-    //Done!!
     public double getTotalPriceOfCart() {
         return currentCart.getTotalPrice();
     }
-
-
-    //Done!!
+    
     public void addReview(String productId, String title, String text) throws Exceptions.InvalidProductIdException, Exceptions.NotLoggedInException {
         if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
@@ -438,8 +395,6 @@ public class Controller {
         }
     }
 
-    //Done!!
-
     /**
      * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
@@ -451,8 +406,6 @@ public class Controller {
         return sales;
     }
 
-    //Done!!
-
     /**
      * @return if
      * admin:     6: username, type, firstName, lastName, email, phone;
@@ -463,8 +416,8 @@ public class Controller {
         return Utilities.Pack.personalInfo(currentAccount);
     }
 
-    //Done!!
-    protected void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    
+     void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
                 if (currentAccount.getFirstName().equals(newInformation))
@@ -496,7 +449,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if (sale == null)
@@ -505,8 +457,7 @@ public class Controller {
             return getProductsInSale(sale);
     }
 
-    //Done!!
-    protected ArrayList<String[]> getProductsInSale(Sale sale) {
+     private ArrayList<String[]> getProductsInSale(Sale sale) {
         ArrayList<String[]> productsInSale = new ArrayList<>();
         ArrayList<SubProduct> subProducts = new ArrayList<>(sale.getSubProducts());
         sortSubProducts("view count", false, subProducts);
@@ -516,7 +467,7 @@ public class Controller {
         return productsInSale;
     }
 
-    //Done!!
+    
     public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
         ArrayList<String[]> subProductsSalePacks = new ArrayList<>();
         ArrayList<SubProduct> subProductsInSale = new ArrayList<>();

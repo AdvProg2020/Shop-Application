@@ -5,6 +5,7 @@ import model.*;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
+import model.database.Database;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
@@ -15,24 +16,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CustomerController extends Controller {
+public class CustomerController {
 
     private Controller mainController;
+    private Database databaseManager;
 
     public CustomerController(Controller controller) {
-        super(controller.getDatabaseManager());
+        databaseManager = controller.getDatabaseManager();
         mainController = controller;
     }
 
-    private Account currentAccount(){
+    private Account currentAccount() {
         return mainController.getCurrentAccount();
     }
 
-    private Cart currentCart(){
+    private Cart currentCart() {
         return mainController.getCurrentCart();
     }
-    
-    //Done!!
+
     /**
      * @return customer:
      * { String firstName, String lastName, String phone, String email, String password, balance}
@@ -41,14 +42,12 @@ public class CustomerController extends Controller {
         return Utilities.Field.customerPersonalInfoEditableFields();
     }
 
-    @Override
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
-        super.editPersonalInfo(field, newInformation);
+        mainController.editPersonalInfo(field, newInformation);
         databaseManager.editAccount();
     }
 
-    //Done!!
     public boolean isDiscountCodeValid(String code) {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount != null)
@@ -57,7 +56,7 @@ public class CustomerController extends Controller {
             return false;
     }
 
-    //Done!! Todo: check please
+    //Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
             Exceptions.NotAvailableSubProductsInCart, Exceptions.InvalidDiscountException, Exceptions.EmptyCartException {
         String notAvailableSubProducts;
@@ -102,7 +101,6 @@ public class CustomerController extends Controller {
         databaseManager.purchase();
     }
 
-    //Done!!
     private String notAvailableSubProductsInCart() {
         StringBuilder notAvailableSubProducts = new StringBuilder();
         Map<SubProduct, Integer> subProductsInCart = currentCart().getSubProducts();
@@ -116,7 +114,6 @@ public class CustomerController extends Controller {
         return notAvailableSubProducts.toString();
     }
 
-    //Done!!
     /**
      * @return ArrayList<String [ 9 ]> : { Id, customerUsername,
      * receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
@@ -132,7 +129,6 @@ public class CustomerController extends Controller {
         } else
             throw new Exceptions.CustomerLoginException();
     }
-    //Done!!
 
     /**
      * @param orderId
@@ -160,7 +156,6 @@ public class CustomerController extends Controller {
         }
     }
 
-    //Done!!
     public void rateProduct(String productID, int score) throws
             Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID);
@@ -180,12 +175,10 @@ public class CustomerController extends Controller {
         }
     }
 
-    //Done!!
     public double viewBalance() {
         return ((Customer) currentAccount()).getBalance();
     }
 
-    //Done!!
     public ArrayList<String[]> viewDiscountCodes() {
         Map<Discount, Integer> discounts = ((Customer) currentAccount()).getDiscounts();
         ArrayList<String[]> discountCodes = new ArrayList<>();
@@ -196,5 +189,27 @@ public class CustomerController extends Controller {
             discountCodes.add(discountInfo);
         }
         return discountCodes;
+    }
+
+    public ArrayList<String[]> getProductsInCart() {
+        return mainController.getProductsInCart();
+    }
+
+    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
+        mainController.viewProductInCart(subProductId);
+    }
+
+    public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
+            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
+        mainController.increaseProductInCart(subProductId, number);
+    }
+
+    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
+            Exceptions.NotSubProductIdInTheCartException {
+        mainController.decreaseProductInCart(subProductId, number);
+    }
+
+    public double getTotalPriceOfCart() {
+        return mainController.getTotalPriceOfCart();
     }
 }

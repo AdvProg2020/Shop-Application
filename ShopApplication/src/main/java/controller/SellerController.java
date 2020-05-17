@@ -6,21 +6,25 @@ import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
 
+import model.database.Database;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class SellerController extends Controller {
+public class SellerController {
 
     private Controller mainController;
+    private static  final DateFormat dateFormat = Utilities.getDateFormat();
+    private Database databaseManager;
 
     public SellerController(Controller controller) {
-        super(controller.getDatabaseManager());
+        databaseManager = controller.getDatabaseManager();
         mainController = controller;
     }
 
@@ -28,8 +32,6 @@ public class SellerController extends Controller {
         return mainController.getCurrentAccount();
     }
     
-    //Done!!
-
     /**
      * @return seller:String[7]
      *         { String firstName, String lastName, String phone, String email, String password, String storeName, balance}
@@ -37,21 +39,17 @@ public class SellerController extends Controller {
     public String[] getPersonalInfoEditableFields(){
         return Utilities.Field.sellerPersonalInfoEditableFields();
     }
-
-
-    //Done!!
-    @Override
+    
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         if (field.equals("storeName")) {
             if (((Seller) currentAccount()).getStoreName().equals(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(field);
             ((Seller) currentAccount()).setStoreName(newInformation);
         } else
-            super.editPersonalInfo(field, newInformation);
+            mainController.editPersonalInfo(field, newInformation);
         databaseManager.editAccount();
     }
-
-    //Done!! any thing other storeName?
+    
     public ArrayList<String> viewCompanyInformation() {
         ArrayList<String> companyInformation = new ArrayList<>();
         companyInformation.add(((Seller) currentAccount()).getStoreName());
@@ -65,8 +63,7 @@ public class SellerController extends Controller {
         }
         return allSells;
     }
-
-    //Done!!
+    
     public ArrayList<String[]> getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException {
         SellLog sellLog = null;
         for (SellLog log : ((Seller) currentAccount()).getSellLogs()) {
@@ -84,8 +81,7 @@ public class SellerController extends Controller {
             return logInfo;
         }
     }
-
-    //Done!!
+    
     public ArrayList<String[]> manageProducts() {
         ArrayList<String[]> products = new ArrayList<>();
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
@@ -93,8 +89,7 @@ public class SellerController extends Controller {
         }
         return products;
     }
-
-    //Done!!
+    
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID))
@@ -103,8 +98,7 @@ public class SellerController extends Controller {
         throw new Exceptions.InvalidProductIdException(productID);
 
     }
-
-    //Done!!
+    
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
         Seller seller = ((Seller) currentAccount());
         for (SubProduct subProduct : seller.getSubProducts()) {
@@ -118,13 +112,11 @@ public class SellerController extends Controller {
         }
         throw new Exceptions.InvalidProductIdException(productID);
     }
-
-    //Done!!
+    
     public String[] getProductEditableFields() {
         return Utilities.Field.productEditableFields();
     }
-
-    //Done!!
+    
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
@@ -182,9 +174,7 @@ public class SellerController extends Controller {
             }
         }
     }
-
-    //Done!!
-
+    
     /**
      * @param productName
      * @param brand
@@ -199,7 +189,7 @@ public class SellerController extends Controller {
             return null;
     }
 
-    //Done!! TODO: please check this
+     //TODO: please check this
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
         Product product = Product.getProductByNameAndBrand(name, brand);
@@ -214,8 +204,7 @@ public class SellerController extends Controller {
             databaseManager.request();
         }
     }
-
-    //Done!!
+    
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidProductIdException {
         if (Product.getProductById(productId) == null)
             throw new Exceptions.InvalidProductIdException(productId);
@@ -224,8 +213,7 @@ public class SellerController extends Controller {
             databaseManager.request();
         }
     }
-
-    //Done!!
+    
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
@@ -236,8 +224,7 @@ public class SellerController extends Controller {
         }
         throw new Exceptions.InvalidProductIdException(productID);
     }
-
-    //Done!!
+    
     public ArrayList<String[]> viewSales() {
         ArrayList<String[]> saleInfos = new ArrayList<>();
         for (Sale sale : ((Seller) currentAccount()).getSales()) {
@@ -245,8 +232,7 @@ public class SellerController extends Controller {
         }
         return saleInfos;
     }
-
-    //Done!!
+    
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
         for (Sale sale : ((Seller) currentAccount()).getSales()) {
             if (sale.getId().equals(saleId)) {
@@ -255,13 +241,11 @@ public class SellerController extends Controller {
         }
         throw new Exceptions.InvalidSaleIdException(saleId);
     }
-
-    //Done!!
+    
     public String[] getSaleEditableFields() {
         return Utilities.Field.saleEditableFields();
     }
-
-    //Done!!
+    
     public void editSale(String saleId, String field, String newInformation) throws
             Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         Sale targetedSale = null;
@@ -319,8 +303,7 @@ public class SellerController extends Controller {
 
         }
     }
-
-    //Done!!
+    
     public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
         if (startDate.before(endDate)) {
             Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum);
@@ -345,7 +328,6 @@ public class SellerController extends Controller {
             throw new Exceptions.InvalidDateException();
     }
 
-    //Done!
     public double viewBalance() {
         return ((Seller) currentAccount()).getBalance();
     }

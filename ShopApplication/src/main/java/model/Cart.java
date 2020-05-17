@@ -15,6 +15,7 @@ public class Cart implements ModelBasic {
     private String customerId; // can be null
     private Map<String, Integer> subProductIds;
 
+    //Todo: clear cart
     public Cart(String customerId) {
         this.customerId = customerId;
         subProductIds = new HashMap<>();
