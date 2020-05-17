@@ -19,10 +19,8 @@ import java.util.Map;
 public class CustomerController {
 
     private Controller mainController;
-    private Database databaseManager;
 
     public CustomerController(Controller controller) {
-        databaseManager = controller.getDatabaseManager();
         mainController = controller;
     }
 
@@ -32,6 +30,10 @@ public class CustomerController {
 
     private Cart currentCart() {
         return mainController.getCurrentCart();
+    }
+
+    private Database database() {
+        return mainController.getDatabase();
     }
 
     /**
@@ -45,7 +47,7 @@ public class CustomerController {
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
         mainController.editPersonalInfo(field, newInformation);
-        databaseManager.editAccount();
+        database().editAccount();
     }
 
     public boolean isDiscountCodeValid(String code) {
@@ -98,7 +100,8 @@ public class CustomerController {
         if (discount != null)
             discount.changeCount(currentAccount().getId(), -1);
         ((Customer) currentAccount()).changeBalance(-paidMoney);
-        databaseManager.purchase();
+        currentCart().clearCart();
+        database().purchase();
     }
 
     private String notAvailableSubProductsInCart() {
@@ -164,9 +167,9 @@ public class CustomerController {
         else {
             if (currentAccount() != null) {
                 for (SubProduct subProduct : product.getSubProducts()) {
-                    if (new ArrayList<>(subProduct.getCustomers()).contains(currentAccount())) {
+                    if (new ArrayList<>(subProduct.getCustomers()).contains((Customer) currentAccount())) {
                         new Rating(currentAccount().getId(), productID, score);
-                        databaseManager.addRating();
+                        database().addRating();
                         return;
                     }
                 }

@@ -15,17 +15,17 @@ import java.util.Map;
 public class Controller {
     private Account currentAccount;
     private Cart currentCart;
-    private Database databaseManager;
+    private Database database;
 
-    
+
     public Controller(Database DataBaseManager) {
-        databaseManager = DataBaseManager;
+        database = DataBaseManager;
         currentCart = new Cart(null);
         currentAccount = null;
     }
 
-    Database getDatabaseManager(){
-        return databaseManager;
+    Database getDatabase() {
+        return database;
     }
 
     Account getCurrentAccount() {
@@ -35,7 +35,7 @@ public class Controller {
     Cart getCurrentCart() {
         return currentCart;
     }
-    
+
     /**
      * @param username
      * @param type
@@ -43,12 +43,12 @@ public class Controller {
      * @throws Exceptions.AdminRegisterException
      */
     public void usernameTypeValidation(String username, String type) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
-        if (Account.getAccountByUsername(username) != null)
+        if (Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
         else if (type.equalsIgnoreCase("Admin") && (Admin.getManager() != null))
             throw new Exceptions.AdminRegisterException();
     }
-    
+
     /**
      * @param type information: 1- customer:
      *             * String username, String password, String firstName, String lastName, String email, String phone, double balance
@@ -63,19 +63,19 @@ public class Controller {
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, balance);
-                databaseManager.createCustomer();
+                database.createCustomer();
                 break;
             case "Admin":
                 new Admin(username, password, firstName, lastName, email, phone);
-                databaseManager.createAdmin();
+                database.createAdmin();
                 break;
             case "Seller":
                 new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
-                databaseManager.createSeller();
+                database.createSeller();
                 break;
         }
     }
-    
+
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -86,7 +86,7 @@ public class Controller {
         if (currentAccount instanceof Customer) {
             ((Customer) currentAccount).mergeCart(currentCart.getId());
             currentCart = ((Customer) currentAccount).getCart();
-            databaseManager.cart();
+            database.cart();
         }
     }
 
@@ -94,7 +94,7 @@ public class Controller {
         currentAccount = null;
         currentCart = new Cart(null);
     }
-    
+
     /**
      * @return returns the currentAccount type: anonymous, customer, seller, admin.
      */
@@ -110,39 +110,39 @@ public class Controller {
     public String[] getProductAvailableSorts() {
         return Utilities.Sort.productAvailableSorts();
     }
-    
+
     private void sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
         switch (sortBy) {
             case "price":
-                products.sort( new Utilities.Sort.ProductPriceComparator(isIncreasing));
+                products.sort(new Utilities.Sort.ProductPriceComparator(isIncreasing));
                 break;
             case "rating score":
-                products.sort( new Utilities.Sort.ProductRatingScoreComparator(isIncreasing));
+                products.sort(new Utilities.Sort.ProductRatingScoreComparator(isIncreasing));
                 break;
             case "name":
-                products.sort( new Utilities.Sort.ProductNameComparator(isIncreasing));
+                products.sort(new Utilities.Sort.ProductNameComparator(isIncreasing));
                 break;
             case "category name":
-                products.sort( new Utilities.Sort.ProductCategoryNameComparator(isIncreasing));
+                products.sort(new Utilities.Sort.ProductCategoryNameComparator(isIncreasing));
                 break;
             case "remaining count":
-                products.sort( new Utilities.Sort.ProductRemainingCountComparator(isIncreasing));
+                products.sort(new Utilities.Sort.ProductRemainingCountComparator(isIncreasing));
                 break;
             case "view count":
-                products.sort( new Utilities.Sort.ProductViewCountComparator(isIncreasing));
+                products.sort(new Utilities.Sort.ProductViewCountComparator(isIncreasing));
             default:
-                products.sort( new Utilities.Sort.ProductViewCountComparator(true));
+                products.sort(new Utilities.Sort.ProductViewCountComparator(true));
                 break;
         }
     }
-    
+
     public String[] getProductAvailableFilters() {
         return Utilities.Filter.productAvailableFilters();
     }
-    
+
     private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                 String storeName, double minRatingScore, ArrayList<Product> products) {
-        Utilities.Filter.ProductFilter.available( products, available);
+        Utilities.Filter.ProductFilter.available(products, available);
         Utilities.Filter.ProductFilter.minPrice(products, minPrice);
         Utilities.Filter.ProductFilter.maxPrice(products, maxPrice);
         Utilities.Filter.ProductFilter.name(products, contains);
@@ -150,7 +150,7 @@ public class Controller {
         Utilities.Filter.ProductFilter.storeName(products, storeName);
         Utilities.Filter.ProductFilter.ratingScore(products, minRatingScore);
     }
-    
+
     private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
         for (Product product : products) {
@@ -158,7 +158,7 @@ public class Controller {
         }
         return productIdNames;
     }
-    
+
     /**
      * for show category action without all.
      *
@@ -182,7 +182,7 @@ public class Controller {
             return categoryIdNames;
         }
     }
-    
+
     /**
      * @param categoryName
      * @return String[2]: ID, name
@@ -264,7 +264,7 @@ public class Controller {
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else
-            return new ArrayList<>(product.getSpecialProperties());
+            return new ArrayList<>(product.getPropertyValues());
     }
 
     /**
@@ -307,8 +307,8 @@ public class Controller {
         return reviews;
     }
 
-    public void checkAuthorityOverCart() throws Exceptions.UnAuthorizedAccountException{
-        if((currentAccount != null) && !currentAccount.getClass().getSimpleName().equals("Customer"))
+    public void checkAuthorityOverCart() throws Exceptions.UnAuthorizedAccountException {
+        if ((currentAccount != null) && !currentAccount.getClass().getSimpleName().equals("Customer"))
             throw new Exceptions.UnAuthorizedAccountException();
     }
 
@@ -321,7 +321,7 @@ public class Controller {
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubProductCount(subProductId, count);
-            databaseManager.cart();
+            database.cart();
         }
     }
 
@@ -361,7 +361,7 @@ public class Controller {
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubProductCount(subProductId, number);
-            databaseManager.cart();
+            database.cart();
         }
     }
 
@@ -375,7 +375,7 @@ public class Controller {
             Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
             if (subProductsInCart.containsKey(subProduct)) {
                 currentCart.addSubProductCount(subProductId, -number);
-                databaseManager.cart();
+                database.cart();
             } else
                 throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
         }
@@ -385,7 +385,7 @@ public class Controller {
         checkAuthorityOverCart();
         return currentCart.getTotalPrice();
     }
-    
+
     public void addReview(String productId, String title, String text) throws Exceptions.InvalidProductIdException, Exceptions.NotLoggedInException {
         if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
@@ -394,7 +394,7 @@ public class Controller {
                 throw new Exceptions.InvalidProductIdException(productId);
             else {
                 new Review(currentAccount.getId(), productId, title, text);
-                databaseManager.request();
+                database.request();
             }
         }
     }
@@ -420,7 +420,7 @@ public class Controller {
         return Utilities.Pack.personalInfo(currentAccount);
     }
 
-     void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
                 if (currentAccount.getFirstName().equals(newInformation))
@@ -460,7 +460,7 @@ public class Controller {
             return getProductsInSale(sale);
     }
 
-     private ArrayList<String[]> getProductsInSale(Sale sale) {
+    private ArrayList<String[]> getProductsInSale(Sale sale) {
         ArrayList<String[]> productsInSale = new ArrayList<>();
         ArrayList<SubProduct> subProducts = new ArrayList<>(sale.getSubProducts());
         sortSubProducts("view count", false, subProducts);

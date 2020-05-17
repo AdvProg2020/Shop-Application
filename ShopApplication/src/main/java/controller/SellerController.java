@@ -1,11 +1,13 @@
 package controller;
 
 
-import model.*;
+import model.Category;
+import model.Product;
+import model.Sale;
+import model.SubProduct;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
-
 import model.database.Database;
 import model.log.LogItem;
 import model.log.SellLog;
@@ -19,29 +21,29 @@ import java.util.Date;
 
 public class SellerController {
 
+    private static final DateFormat dateFormat = Utilities.getDateFormat();
     private Controller mainController;
-    private static  final DateFormat dateFormat = Utilities.getDateFormat();
-    private Database databaseManager;
-    //private Account currentAccount;
 
     public SellerController(Controller controller) {
-        databaseManager = controller.getDatabaseManager();
         mainController = controller;
-        //currentAccount = mainController.getCurrentAccount();
     }
 
-    private Account currentAccount(){
+    private Account currentAccount() {
         return mainController.getCurrentAccount();
     }
-    
+
+    private Database database() {
+        return mainController.getDatabase();
+    }
+
     /**
      * @return seller:String[7]
-     *         { String firstName, String lastName, String phone, String email, String password, String storeName, balance}
+     * { String firstName, String lastName, String phone, String email, String password, String storeName, balance}
      */
-    public String[] getPersonalInfoEditableFields(){
+    public String[] getPersonalInfoEditableFields() {
         return Utilities.Field.sellerPersonalInfoEditableFields();
     }
-    
+
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         if (field.equals("storeName")) {
             if (((Seller) currentAccount()).getStoreName().equals(newInformation))
@@ -49,9 +51,9 @@ public class SellerController {
             ((Seller) currentAccount()).setStoreName(newInformation);
         } else
             mainController.editPersonalInfo(field, newInformation);
-        databaseManager.editAccount();
+        database().editAccount();
     }
-    
+
     public ArrayList<String> viewCompanyInformation() {
         ArrayList<String> companyInformation = new ArrayList<>();
         companyInformation.add(((Seller) currentAccount()).getStoreName());
@@ -65,7 +67,7 @@ public class SellerController {
         }
         return allSells;
     }
-    
+
     public ArrayList<String[]> getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException {
         SellLog sellLog = null;
         for (SellLog log : ((Seller) currentAccount()).getSellLogs()) {
@@ -83,7 +85,7 @@ public class SellerController {
             return logInfo;
         }
     }
-    
+
     public ArrayList<String[]> manageProducts() {
         ArrayList<String[]> products = new ArrayList<>();
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
@@ -91,7 +93,7 @@ public class SellerController {
         }
         return products;
     }
-    
+
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID))
@@ -100,7 +102,7 @@ public class SellerController {
         throw new Exceptions.InvalidProductIdException(productID);
 
     }
-    
+
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
         Seller seller = ((Seller) currentAccount());
         for (SubProduct subProduct : seller.getSubProducts()) {
@@ -114,11 +116,11 @@ public class SellerController {
         }
         throw new Exceptions.InvalidProductIdException(productID);
     }
-    
+
     public String[] getProductEditableFields() {
         return Utilities.Field.productEditableFields();
     }
-    
+
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
@@ -137,7 +139,7 @@ public class SellerController {
                         if (targetedSubProduct.getProduct().getName().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-                        databaseManager.request();
+                        database().request();
                     } else
                         throw new Exceptions.ExistingProductException(existingProductId);
                     break;
@@ -148,7 +150,7 @@ public class SellerController {
                         if (targetedSubProduct.getProduct().getBrand().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.BRAND, newInformation);
-                        databaseManager.request();
+                        database().request();
                     } else
                         throw new Exceptions.ExistingProductException(existingProductId);
                     break;
@@ -157,26 +159,26 @@ public class SellerController {
                     if (targetedSubProduct.getProduct().getInfoText().equals(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
-                    databaseManager.request();
+                    database().request();
                     break;
                 case "price":
                     if (targetedSubProduct.getRawPrice() == Double.parseDouble(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_PRICE, newInformation);
-                    databaseManager.request();
+                    database().request();
                     break;
                 case "count":
                     if (targetedSubProduct.getRemainingCount() == Integer.parseInt(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
-                    databaseManager.request();
+                    database().request();
                     break;
                 default:
                     throw new Exceptions.InvalidFieldException();
             }
         }
     }
-    
+
     /**
      * @param productName
      * @param brand
@@ -191,7 +193,6 @@ public class SellerController {
             return null;
     }
 
-     //TODO: please check this
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
         Product product = Product.getProductByNameAndBrand(name, brand);
@@ -203,30 +204,30 @@ public class SellerController {
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count);
             new Product(name, brand, infoText, category.getId(), specialProperties, subProduct);
-            databaseManager.request();
+            database().request();
         }
     }
-    
+
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidProductIdException {
         if (Product.getProductById(productId) == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
             new SubProduct(productId, currentAccount().getId(), price, count);
-            databaseManager.request();
+            database().request();
         }
     }
-    
+
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
                 subProduct.suspend();
-                databaseManager.removeSubProduct();
+                database().removeSubProduct();
                 return;
             }
         }
         throw new Exceptions.InvalidProductIdException(productID);
     }
-    
+
     public ArrayList<String[]> viewSales() {
         ArrayList<String[]> saleInfos = new ArrayList<>();
         for (Sale sale : ((Seller) currentAccount()).getSales()) {
@@ -234,7 +235,7 @@ public class SellerController {
         }
         return saleInfos;
     }
-    
+
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
         for (Sale sale : ((Seller) currentAccount()).getSales()) {
             if (sale.getId().equals(saleId)) {
@@ -243,11 +244,11 @@ public class SellerController {
         }
         throw new Exceptions.InvalidSaleIdException(saleId);
     }
-    
+
     public String[] getSaleEditableFields() {
         return Utilities.Field.saleEditableFields();
     }
-    
+
     public void editSale(String saleId, String field, String newInformation) throws
             Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         Sale targetedSale = null;
@@ -267,7 +268,7 @@ public class SellerController {
                             if (dateFormat.parse(newInformation).equals(targetedSale.getStartDate()))
                                 throw new Exceptions.SameAsPreviousValueException("start date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.START_DATE);
-                            databaseManager.request();
+                            database().request();
                         } else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
@@ -280,7 +281,7 @@ public class SellerController {
                             if (dateFormat.parse(newInformation).equals(targetedSale.getEndDate()))
                                 throw new Exceptions.SameAsPreviousValueException("end date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.END_DATE);
-                            databaseManager.request();
+                            database().request();
                         } else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
@@ -291,13 +292,13 @@ public class SellerController {
                     if (Double.parseDouble(newInformation) == targetedSale.getPercentage())
                         throw new Exceptions.SameAsPreviousValueException("percentage");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.PERCENTAGE);
-                    databaseManager.request();
+                    database().request();
                     break;
                 case "maximum":
                     if (Double.parseDouble(newInformation) == targetedSale.getMaximumAmount())
                         throw new Exceptions.SameAsPreviousValueException("maximum");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.MAXIMUM);
-                    databaseManager.request();
+                    database().request();
                     break;
                 default:
                     throw new Exceptions.InvalidFieldException();
@@ -305,7 +306,7 @@ public class SellerController {
 
         }
     }
-    
+
     public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
         if (startDate.before(endDate)) {
             Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum);
@@ -323,7 +324,7 @@ public class SellerController {
                 } else
                     invalidSubProductIds.add(productId);
             }
-            databaseManager.request();
+            database().request();
             if (invalidSubProductIds.size() > 0)
                 throw new Exceptions.InvalidProductIdsForASeller(Utilities.Pack.invalidProductIds(invalidSubProductIds));
         } else
