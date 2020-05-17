@@ -199,7 +199,7 @@ public class SellerController extends Controller {
             return null;
     }
 
-    //Done!! TODO: Shayan please check this
+    //Done!! TODO: please check this
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
         Product product = Product.getProductByNameAndBrand(name, brand);
@@ -323,14 +323,14 @@ public class SellerController extends Controller {
     //Done!!
     public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
         if (startDate.before(endDate)) {
-            Sale sale = new Sale(((Seller) currentAccount()).getId(), startDate, endDate, percentage, maximum);
+            Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum);
             Product product;
             SubProduct subProduct;
             ArrayList<String> invalidSubProductIds = new ArrayList<>();
             for (String productId : productIds) {
                 product = Product.getProductById(productId);
                 if (product != null) {
-                    subProduct = product.getSubProductWithSellerId(((Seller) currentAccount()).getId());
+                    subProduct = product.getSubProductWithSellerId(currentAccount().getId());
                     if (subProduct != null)
                         sale.addSubProduct(subProduct.getId());
                     else

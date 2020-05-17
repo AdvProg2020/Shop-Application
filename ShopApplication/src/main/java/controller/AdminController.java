@@ -4,7 +4,6 @@ import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
-import model.database.DatabaseManager;
 import model.request.*;
 
 import java.text.ParseException;
@@ -143,19 +142,6 @@ public class AdminController extends Controller {
             if(wrongIds.size() > 0)
                 throw new Exceptions.InvalidAccountsForDiscount(Utilities.Pack.invalidAccountIds(wrongIds));
         }
-    }
-
-    //Done!! data base
-    public void addCustomerToDiscount(String customerId, String code, int count) throws Exceptions.DiscountCodeException, Exceptions.CustomerIdException {
-        Discount discount = Discount.getDiscountByCode(code);
-        Account account = Account.getAccountById(customerId);
-        if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
-        else if (account instanceof Customer) {
-            discount.addCustomer(customerId, count);
-            databaseManager.editDiscount();
-        }else
-            throw new Exceptions.CustomerIdException(customerId);
     }
 
     //Done!!

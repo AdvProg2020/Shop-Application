@@ -124,12 +124,6 @@ public class Exceptions {
         }
     }
 
-    public static class CustomerIdException extends Exception {
-        public CustomerIdException(String Id) {
-            super("There is no customer with this Id: " + Id);
-        }
-    }
-
     public static class NotLoggedInException extends Exception {
         public NotLoggedInException() {
             super("You should login before you do this action!");

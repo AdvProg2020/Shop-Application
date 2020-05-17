@@ -336,7 +336,7 @@ public class Utilities {
 
     static class Sort{
         public static String[] productAvailableSorts() {
-            String[] availableSorts = new String[5];
+            String[] availableSorts = new String[6];
             availableSorts[0] = "price";
             availableSorts[1] = "rating score";
             availableSorts[2] = "name";

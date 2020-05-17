@@ -57,7 +57,7 @@ public class CustomerController extends Controller {
             return false;
     }
 
-    //Done!! Todo: Shayan check please
+    //Done!! Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
             Exceptions.NotAvailableSubProductsInCart, Exceptions.InvalidDiscountException, Exceptions.EmptyCartException {
         String notAvailableSubProducts;
@@ -167,14 +167,16 @@ public class CustomerController extends Controller {
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productID);
         else {
-            for (SubProduct subProduct : product.getSubProducts()) {
-                if (subProduct.getCustomers().contains(((Customer) currentAccount()))) {
-                    new Rating(currentAccount().getId(), productID, score);
-                    databaseManager.addRating();
-                    return;
+            if (currentAccount() != null) {
+                for (SubProduct subProduct : product.getSubProducts()) {
+                    if (new ArrayList<>(subProduct.getCustomers()).contains(currentAccount())) {
+                        new Rating(currentAccount().getId(), productID, score);
+                        databaseManager.addRating();
+                        return;
+                    }
                 }
+                throw new Exceptions.HaveNotBoughtException(productID);
             }
-            throw new Exceptions.HaveNotBoughtException(productID);
         }
     }
 
