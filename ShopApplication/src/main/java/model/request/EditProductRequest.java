@@ -42,7 +42,7 @@ public class EditProductRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        return (getSubProduct() == null);
+        return (status == RequestStatus.PENDING) && (getSubProduct() == null);
     }
 
     public SubProduct getSubProduct() {

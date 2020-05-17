@@ -1,7 +1,7 @@
 package model.account;
 
-import jdk.jfr.Label;
-import model.BasicMethods;
+import model.ModelUtilities;
+import model.ModelUtilities.ModelOnly;
 import model.Sale;
 import model.SubProduct;
 import model.log.SellLog;
@@ -36,7 +36,7 @@ public class Seller extends Account {
     @Override
     public void initialize() {
         if (accountId == null)
-            accountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allAccounts.put(accountId, this);
         lastNum++;
         sellLogIds = new HashSet<>();
@@ -84,12 +84,12 @@ public class Seller extends Account {
         return sales;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addSale(String saleId) {
         saleIds.add(saleId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void removeSale(String saleId) {
         saleIds.remove(saleId);
     }
@@ -103,12 +103,12 @@ public class Seller extends Account {
         return subProducts;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void removeSubProduct(String subProductId) {
         subProductIds.remove(subProductId);
     }
@@ -122,7 +122,7 @@ public class Seller extends Account {
         return sellLogs;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addSellLog(String sellLogId) {
         sellLogIds.add(sellLogId);
     }

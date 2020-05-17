@@ -1,7 +1,7 @@
 package model.log;
 
-import model.BasicMethods;
 import model.ModelBasic;
+import model.ModelUtilities;
 import model.SubProduct;
 import model.account.Customer;
 import model.account.Seller;
@@ -43,7 +43,7 @@ public class LogItem implements ModelBasic {
     @Override
     public void initialize() {
         if (logItemId == null)
-            logItemId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            logItemId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allLogItems.put(logItemId, this);
         lastNum++;
 

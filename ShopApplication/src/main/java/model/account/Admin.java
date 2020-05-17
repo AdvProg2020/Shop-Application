@@ -1,9 +1,8 @@
 package model.account;
 
-import model.BasicMethods;
+import model.ModelUtilities;
 
 public class Admin extends Account {
-    protected static final String MANAGER_ID = ""; // TODO: set id
     protected static Admin manager = null; // head of other admins (shouldn't be suspended)
     private static int lastNum = 1;
 
@@ -22,16 +21,13 @@ public class Admin extends Account {
 
     @Override
     public void initialize() {
-        if (manager == null) {
-            manager = this;
-            accountId = MANAGER_ID;
-        } else {
-            if (accountId == null)
-                accountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
-            allAccounts.put(accountId, this);
-            lastNum++;
-        }
+        if (accountId == null)
+            accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+        allAccounts.put(accountId, this);
+        lastNum++;
 
+        if (manager == null)
+            manager = this;
     }
 
 

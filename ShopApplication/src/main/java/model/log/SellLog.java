@@ -1,8 +1,8 @@
 package model.log;
 
-import jdk.jfr.Label;
-import model.BasicMethods;
 import model.ModelBasic;
+import model.ModelUtilities;
+import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 import model.account.Seller;
 
@@ -37,7 +37,7 @@ public class SellLog implements ModelBasic {
     @Override
     public void initialize() {
         if (sellLogId == null)
-            sellLogId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            sellLogId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allSellLogs.put(sellLogId, this);
         lastNum++;
 
@@ -107,7 +107,7 @@ public class SellLog implements ModelBasic {
         return logItems;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addLogItem(String logItemId) {
         logItemIds.add(logItemId);
         LogItem item = LogItem.getLogItemById(logItemId);

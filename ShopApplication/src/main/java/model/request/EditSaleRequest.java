@@ -44,7 +44,7 @@ public class EditSaleRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        return (getSale() == null);
+        return (status == RequestStatus.PENDING) && (getSale() == null);
     }
 
     public Sale getSale() {

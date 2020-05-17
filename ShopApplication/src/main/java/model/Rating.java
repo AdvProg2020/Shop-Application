@@ -1,6 +1,6 @@
 package model;
 
-import jdk.jfr.Label;
+import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 
 import java.util.ArrayList;
@@ -34,14 +34,14 @@ public class Rating implements ModelBasic {
     @Override
     public void initialize() {
         if (ratingId == null)
-            ratingId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            ratingId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allRatings.put(ratingId, this);
         lastNum++;
 
         getProduct().addRating(ratingId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void terminate() {
         allRatings.remove(ratingId);
     }

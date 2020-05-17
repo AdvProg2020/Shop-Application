@@ -1,6 +1,6 @@
 package model;
 
-import jdk.jfr.Label;
+import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 import model.account.Seller;
 import model.request.AddProductRequest;
@@ -31,17 +31,17 @@ public class SubProduct implements ModelBasic {
     }
 
     public static List<SubProduct> getAllSubProducts(boolean... suspense) {
-        return BasicMethods.getInstances(allSubProducts.values(), suspense);
+        return ModelUtilities.getInstances(allSubProducts.values(), suspense);
     }
 
     public static SubProduct getSubProductById(String subProductId, boolean... suspense) {
-        return BasicMethods.getInstanceById(allSubProducts, subProductId, suspense);
+        return ModelUtilities.getInstanceById(allSubProducts, subProductId, suspense);
     }
 
     @Override
     public void initialize() {
         if (subProductId == null)
-            subProductId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            subProductId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allSubProducts.put(subProductId, this);
         lastNum++;
 
@@ -75,8 +75,7 @@ public class SubProduct implements ModelBasic {
         return Product.getProductById(productId, checkSuspense);
     }
 
-
-    @Label("Model internal use only!")
+    @ModelOnly
     public void setProductId(String productId) { // only used for accepting productRequest
         if (this.productId == null)
             this.productId = productId;
@@ -91,7 +90,7 @@ public class SubProduct implements ModelBasic {
         return Sale.getSaleById(saleId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void setSale(String saleId) {
         if (this.saleId != null)
             getSale().removeSubProduct(subProductId);
@@ -141,7 +140,7 @@ public class SubProduct implements ModelBasic {
         return customerIds.contains(customerId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addCustomer(String customerId) {
         customerIds.add(customerId);
     }

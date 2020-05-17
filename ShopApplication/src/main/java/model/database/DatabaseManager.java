@@ -3,7 +3,6 @@ package model.database;
 import com.google.gson.Gson;
 import model.*;
 import model.account.Account;
-import model.account.Admin;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
@@ -32,9 +31,7 @@ public class DatabaseManager implements Database {
 
     private <T> void update(Path path, Class<T> classType, List<T> allInstances) {
         PrintWriter printWriter = Builder.buildPrintWriter(path);
-        if (classType == Account.class) { // writing manager first
-            printWriter.println(gson.toJson(Admin.getManager(), classType));
-        } else if (classType == Category.class) { // writing superCategory first
+        if (classType == Category.class) { // writing superCategory first
             printWriter.println(gson.toJson(Category.getSuperCategory(), classType));
         }
 

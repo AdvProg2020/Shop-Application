@@ -1,7 +1,7 @@
 package model.account;
 
-import model.BasicMethods;
 import model.ModelBasic;
+import model.ModelUtilities;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,14 +29,11 @@ public abstract class Account implements ModelBasic {
     }
 
     public static List<Account> getAllAccounts(boolean... suspense) {
-        return BasicMethods.getInstances(allAccounts.values(), suspense);
+        return ModelUtilities.getInstances(allAccounts.values(), suspense);
     }
 
     public static Account getAccountById(String accountId, boolean... suspense) {
-        if (accountId.equals(Admin.MANAGER_ID))
-            return Admin.manager;
-
-        return BasicMethods.getInstanceById(allAccounts, accountId, suspense);
+        return ModelUtilities.getInstanceById(allAccounts, accountId, suspense);
     }
 
     public static Account getAccountByUsername(String username) {
