@@ -7,7 +7,8 @@ final class Constants {
     static final String spacePattern = "\\s+";
     static final String unsignedIntPattern = "+?(\\d+)";
     static final String doublePattern = "(\\d+\\.\\d+)";
-    static final String datePattern = argumentPattern;
+    //TODO: regex date.
+    static final String datePattern = "yyyy-mm-dd";
     static final String anonymousUserType = "Anonymous";
     static final String adminUserType = "Admin";
     static final String customerUserType = "Customer";
@@ -65,6 +66,8 @@ final class Constants {
         static final String exitPattern = caseInsensitiveMode + "^" + exitCommand + "$";
         static final String loginCommand = "login [username]";
         static final String loginPattern = caseInsensitiveMode + "^login" + spacePattern + argumentPattern + "$";
+        static final String logoutCommand = "logout";
+        static final String logoutPattern = caseInsensitiveMode + "^" + loginCommand + "$";
         static final String registerCommand = "create account [type] [username]";
         static final String registerPattern =
                 caseInsensitiveMode + "^create account" + spacePattern + argumentPattern + spacePattern + argumentPattern + "$";

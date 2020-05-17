@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO: database constructor
 public class CustomerController extends Controller {
 
     @Override
@@ -25,7 +26,7 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-    //TODO: return price as well.
+
     public ArrayList<String[]> getProductsInCart() {
         ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
@@ -44,7 +45,7 @@ public class CustomerController extends Controller {
         productPack[3] = subProduct.getSeller().getUsername();
         productPack[4] = subProduct.getSeller().getStoreName();
         productPack[5] = Integer.toString(count);
-        productPack[6] = Double.toString(subProduct.getPriceWithSale() * count);
+        productPack[6] = Double.toString(subProduct.getPriceWithSale());
         return productPack;
     }
 
@@ -157,7 +158,7 @@ public class CustomerController extends Controller {
             if (subProduct.getRemainingCount() < subProductsInCart.get(subProduct)) {
                 String notAvailableProduct = "\n" + subProduct.getId() + " number in cart: " + subProductsInCart.get(subProduct) +
                         " available count: " + subProduct.getRemainingCount();
-                notAvailableSubProducts.append(notAvailableSubProducts);
+                notAvailableSubProducts.append(notAvailableProduct);
             }
         }
         return notAvailableSubProducts.toString();
@@ -187,7 +188,9 @@ public class CustomerController extends Controller {
      * product pack String[8] : { productId, name, brand, sellerUsername, sellerStoreName, count,  }
      * @throws Exceptions.InvalidLogIdException
      */
-    public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException {
+    public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException, Exceptions.CustomerLoginException {
+        if(! (currentAccount instanceof Customer))
+            throw new Exceptions.CustomerLoginException();
         BuyLog buyLog = null;
         for (BuyLog log : ((Customer) currentAccount).getBuyLogs()) {
             if (log.getId().equals(orderId))
@@ -235,10 +238,10 @@ public class CustomerController extends Controller {
         return productPack;
     }
 
-    //Done!! Todo: Shayan check please
+    //Done!!
     public void rateProduct(String productID, int score) throws
             Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
-        Product product = Product.getProductById(productID, false);
+        Product product = Product.getProductById(productID);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productID);
         else {

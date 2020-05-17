@@ -1,7 +1,5 @@
 package view;
 
-import com.sun.tools.javac.Main;
-
 import java.util.*;
 
 public abstract class Menu {
@@ -16,8 +14,6 @@ public abstract class Menu {
     static private Stack<Menu> stackTrace;
     private String commandPattern;
     private String command;
-
-
 
     static {
         allMenus = new ArrayList<Menu>();
@@ -69,14 +65,8 @@ public abstract class Menu {
         for (int index = 1; index <= subMenus.size(); index++) {
             System.out.println(subMenus.get(index).command + " or " + index);
         }
-        for (int index = subMenus.size() + 1; index <= subMenus.size() + subActions.size(); index++) {
-            System.out.println(subActions.get(index).getActionCommand() + " or " + index);
-        }
-    }
-
-    static protected <T> void printArray(ArrayList<T> list) {
-        for (T item : list) {
-            System.out.println(item);
+        for (Integer key : subActions.keySet()) {
+            System.out.println(subActions.get(key).getActionCommand());
         }
     }
 
@@ -84,6 +74,10 @@ public abstract class Menu {
         stackTrace.push(this);
         this.show();
         this.execute();
+    }
+
+    public static Stack<Menu> getStackTrace() {
+        return stackTrace;
     }
 
     public void show() {
@@ -103,7 +97,8 @@ public abstract class Menu {
             System.out.println("Available Actions:");
         }
         int subActionSize = subActions.size();
-        for (int index = subMenus.size() + 1; index <= subMenuSize + subActionSize; index++) {
+        int modification = floatingMenusIndexModification();
+        for (int index = subMenuSize + modification + 1; index <= subMenuSize + subActionSize + modification; index++) {
             System.out.println(index + ". " + subActions.get(index).getName());
         }
 
@@ -111,10 +106,14 @@ public abstract class Menu {
 
     public void execute() {
         String command = View.getNextLineTrimmed();
+        if (command.equalsIgnoreCase("help")) {showCommandList(); this.run();}
         for (Integer menuIndex : subMenus.keySet()) {
             if (command.equals(Integer.toString(menuIndex)) || command.matches(subMenus.get(menuIndex).commandPattern)) {
                 subMenus.get(menuIndex).run();
             }
+        }
+        if (command.equals(Integer.toString(subMenus.size() + 1)) || command.matches(accountMenu.getCommandPattern())) {
+            accountMenu.run();
         }
         for (Integer actionIndex : subActions.keySet()) {
             if (command.matches(subActions.get(actionIndex).getActionPattern())) {
@@ -126,7 +125,9 @@ public abstract class Menu {
                 this.run();
             }
         }
-        //TODO: if invalid command entered.
+        //if the command is invalid.
+        System.out.println("invalid entry.");
+        this.execute();
     }
 
     protected static Menu getCallingMenu() {
@@ -134,6 +135,12 @@ public abstract class Menu {
         Menu callingMenu = stackTrace.peek();
         stackTrace.push(temp);
         return callingMenu;
+    }
+
+    protected int floatingMenusIndexModification() {
+        int modification = 0;
+        if (isAccountMenuAccessible) {return 1;}
+        else {return 0;}
     }
 
     @Override

@@ -58,7 +58,9 @@ class Menus {
 
         @Override
         public void run() {
-            previousMenu = nextMenu = Menu.getCallingMenu();
+            getStackTrace().push(this);
+            previousMenu = Menu.getCallingMenu();
+            nextMenu = null;
             this.execute();
         }
 
@@ -78,18 +80,15 @@ class Menus {
         public void initSubMenus() {
             subMenus.put(1, new SaleMenu("Sale menu", this));
             subMenus.put(2, new AllProductsMenu("products menu", this));
-            subMenus.put(3, Menu.getAccountMenu());
         }
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
-            subActions.put(index + 1, new Actions.ExitAction("first menu exit"));
+            int index = floatingMenusIndexModification() + subMenus.size();
+            subActions.put(index + 1, new Actions.ExitAction("exit"));
         }
     }
-
-    //TODO: remove show products as an action and always do it as show method and kinda allow iteration through pages of the products. same for sale menu
-    //TODO: avalesh currentProducts update she.
+    
     public static class AllProductsMenu extends Menu {
         private ArrayList<String> categoryTree;
         private String[] currentFilters;
@@ -117,11 +116,16 @@ class Menus {
         private String[] getAvailableFilters() {
             return mainController.getProductAvailableFilters();
         }
-
-
+        
+        @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show products -all");
+            super.show();
+        }
+        
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowProductsAction("show products", this.categoryTree, this.currentFilters,this.currentSort,this.currentProducts));
             subActions.put(index + 2, new Actions.ShowCategories("show categories", this.categoryTree));
             subActions.put(index + 4, new Actions.ChooseCategoryAction("choose category", this.categoryTree));
@@ -139,7 +143,7 @@ class Menus {
         ProductDetailMenu(String name){
             super(name, false, null, null, null);
             Menu.setProductDetailMenu(this);
-        //    subProductID = mainController.getDefaultSubProductID(productID);
+           // subProductID = mainController.getDefaultSubProductID(productID);
         }
 
         @Override
@@ -149,12 +153,12 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.DigestProduct("digest product", productID));
             subActions.put(index + 2, new Actions.AddToCart("add to cart", subProductID));
             subActions.put(index + 3, new Actions.SelectSeller("select seller", subProductID, productID));
             subActions.put(index + 4, new Actions.ShowCurrentSeller("show current seller", subProductID));
-   //         subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
+            subActions.put(index + 4, new Actions.CompareProductByID("compare products", productID));
             subActions.put(index + 5, new Actions.BackAction("back", null));
         }
 
@@ -181,7 +185,7 @@ class Menus {
         //TODO: imp.
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowReviews("show comments", productID));
             subActions.put(index + 2, new Actions.AddComment("add comment", productID));
             subActions.put(index + 3, new Actions.BackAction("back", parent));
@@ -206,7 +210,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ChooseSorting("choose sort", currentSort, availableSorts));
             subActions.put(index + 2, new Actions.ShowCurrentSort("product current sort", currentSort));
             subActions.put(index + 3, new Actions.DisableSort("product sort remover", currentSort));
@@ -232,7 +236,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ChooseFiltering("product sorter", currentFilters, availableFilters));
             subActions.put(index + 2, new Actions.ShowCurrentFilters("product current filters", currentFilters));
             subActions.put(index + 3, new Actions.DisableFilter("product filter remover", currentFilters, availableFilters));
@@ -240,11 +244,13 @@ class Menus {
         }
     }
 
+    //TODO: show sales joda bayad bashe refresh ham beshe
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
         private String[] currentFilters;
         private ArrayList<String[]> currentProducts;
         private ArrayList<String[]> currentOffs;
+
         SaleMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.saleMenuPattern, Constants.Menus.saleMenuCommand);
             this.currentSort = new StringBuilder();
@@ -262,20 +268,18 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
-            subActions.put(index + 1, new Actions.ShowOffs("show products", this.currentSort, this.currentFilters, this.currentProducts, this.currentOffs));
+            int index = floatingMenusIndexModification() + subMenus.size();
+            subActions.put(index + 1, new Actions.ShowInSaleProducts("show filtered products", this.currentSort, this.currentFilters, this.currentProducts, this.currentOffs));
             subActions.put(index + 2, new Actions.ProductDetailMenu("product detail menu"));
             subActions.put(index + 3, new Actions.BackAction("sale menu back", parent));
         }
 
-        //TODO: imp.
         private String[] getAvailableSorts() {
-            return null;
+            return mainController.getAvailableSorts();
         }
 
-        //TODO: imp.
         private String[] getAvailableFilters() {
-            return null;
+            return mainController.getProductAvailableFilters();
         }
     }
 
@@ -290,21 +294,21 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            //no sub menu available.
+            subMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
         }
 
         @Override
         public void execute() {
-            if (mainController.getType().equals("Anonymous")) {
+            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
                 super.execute();
             } else {
-                nextMenu.run();
+                parent.run();
             }
         }
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.LoginAction("Login"));
             subActions.put(index + 2, new Actions.RegisterAction("Register"));
             subActions.put(index + 3, new Actions.BackAction("back", previousMenu));
@@ -332,8 +336,9 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
-            subActions.put(index + 1, new Actions.BackAction("another fuckin back", previousMenu));
+            int index = floatingMenusIndexModification() + subMenus.size();
+            subActions.put(index + 1, new Actions.Logout("logout"));
+            subActions.put(index + 2, new Actions.BackAction("back", previousMenu));
         }
     }
 
@@ -351,7 +356,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ViewPersonalInfo("show personal info"));
             subActions.put(index + 2, new Actions.EditField("edit personal info", getEditableFields()));
             subActions.put(index + 3, new Actions.BackAction("view personal info back", parent));
@@ -380,9 +385,11 @@ class Menus {
             //no sub menus available.
         }
 
+        //TODO: adminController.manageUsers
+        //TODO: storeAllUsers.
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.AdminViewUser("view user"));
             subActions.put(index + 2, new Actions.AdminDeleteUser("delete user"));
             subActions.put(index + 3, new Actions.AdminCreateAdmin("create admin"));
@@ -400,9 +407,10 @@ class Menus {
             //no available sub menu.
         }
 
+        //TODO: adminController.manageProducts()
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.AdminRemoveProductByID("remove product"));
             subActions.put(index + 2, new Actions.BackAction("back", parent));
         }
@@ -418,14 +426,14 @@ class Menus {
             //no available sub menu.
         }
 
-        //TODO: imp
         private String[] getEditableFields() {
             return adminController.getDiscountEditableFields();
         }
 
+        //TODO: view all discountCodes adminController.viewDiscountCodes
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.AdminCreateDiscountCode("create discount code"));
             subActions.put(index + 2, new Actions.AdminViewDiscountCode("view discount code"));
             subActions.put(index + 3, new Actions.AdminEditDiscountCode("edit discount codes", getEditableFields()));
@@ -447,7 +455,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1,  new Actions.AdminShowRequests("show requests"));
             subActions.put(index + 2, new Actions.AdminViewRequestDetail("view request detail"));
             subActions.put(index + 3, new Actions.BackAction("back", parent));
@@ -470,7 +478,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.AdminShowCategories("show categories"));
             subActions.put(index + 2, new Actions.AdminEditCategory("edit category", getEditableFields()));
             subActions.put(index + 3, new Actions.AdminAddCategory("add category"));
@@ -494,13 +502,15 @@ class Menus {
             subMenus.put(3, new SellerSalesMenu("seller sales menu", this));
         }
 
+        //TODO: view a single sell history
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowSellerCompanyInfo("seller company info"));
             subActions.put(index + 2, new Actions.ShowSellerBalance("seller balance"));
             subActions.put(index + 3, new Actions.ShowSellerSellHistory("seller sell history"));
-            subActions.put(index + 4, new Actions.BackAction("seller menu back", previousMenu));
+            subActions.put(index + 4, new Actions.Logout("logout"));
+            subActions.put(index + 5, new Actions.BackAction("seller menu back", previousMenu));
         }
     }
 
@@ -520,7 +530,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.SellerShowSales("show sales"));
             subActions.put(index + 2, new Actions.SellerViewSaleDetails("view sale details"));
             subActions.put(index + 3, new Actions.SellerEditSale("edit sale", getEditableFields()));
@@ -548,7 +558,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.SellerShowProducts("show seller products", sellerProducts));
             subActions.put(index + 2, new Actions.SellerViewProductDetails("view product details", sellerProducts));
             subActions.put(index + 3, new Actions.SellerViewProductBuyers("view product buyers", sellerProducts));
@@ -560,8 +570,7 @@ class Menus {
 
 
     }
-
-    //Todo: in sub menus add custom personalInfoMenu
+    
     public static class CustomerMenu extends Menu {
         private Menu previousMenu;
         private Menu nextMenu;
@@ -580,10 +589,11 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowCustomerBalance("show customer balance"));
             subActions.put(index + 2, new Actions.ShowCustomerDiscountCodes("show customer discount codes"));
-            subActions.put(index + 3, new Actions.BackAction("back", previousMenu));
+            subActions.put(index + 3, new Actions.Logout("logout"));
+            subActions.put(index + 4, new Actions.BackAction("back", previousMenu));
         }
     }
 
@@ -591,7 +601,7 @@ class Menus {
     public static class ShoppingCartMenu extends Menu {
         private ArrayList<String[]> currentProducts;
         ShoppingCartMenu(String name, Menu parent){
-            super(name, true, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
+            super(name, false, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
             this.currentProducts = new ArrayList<>();
         }
 
@@ -602,13 +612,13 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.CustomerCartShowProducts("show products", currentProducts));
             subActions.put(index + 2, new Actions.CustomerCartViewProduct("view product", currentProducts));
             subActions.put(index + 3, new Actions.CustomerCartIncreaseProductCount("increase count", currentProducts));
             subActions.put(index + 4, new Actions.CustomerCartDecreaseProductCount("decrease count", currentProducts));
             subActions.put(index + 5, new Actions.CustomerCartShowTotalPrice("show total price"));
-            subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products"));
+            subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products", this));
             subActions.put(index + 7, new Actions.BackAction("back", parent));
         }
     }
@@ -627,7 +637,7 @@ class Menus {
 
         @Override
         protected void initSubActions() {
-            int index = subMenus.size();
+            int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.CustomerShowOrders("show orders", currentOrderLogs));
             subActions.put(index + 2, new Actions.CustomerViewOrder("view order", currentOrderLogs));
             subActions.put(index + 3, new Actions.CustomerRateProduct("rate product"));

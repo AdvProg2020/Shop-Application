@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
+//TODO: database constructor
 public class SellerController extends Controller {
 
     //Done!!
@@ -65,12 +66,16 @@ public class SellerController extends Controller {
 
     @Label("For showing-sellLog-methods")
     private String[] sellPack(SellLog sellLog) {
-        String[] sellPack = new String[5];
+        String[] sellPack = new String[9];
         sellPack[0] = sellLog.getId();
         sellPack[1] = dateFormat.format(sellLog.getDate());
         sellPack[2] = sellLog.getCustomer().getUsername();
         sellPack[3] = Double.toString(sellLog.getReceivedMoney());
         sellPack[4] = Double.toString(sellLog.getTotalSaleAmount());
+        sellPack[5] = sellLog.getReceiverName();
+        sellPack[6] = sellLog.getReceiverPhone();
+        sellPack[7] = sellLog.getReceiverAddress();
+        sellPack[8] = sellLog.getShippingStatus().toString();
         return sellPack;
     }
 
@@ -97,11 +102,22 @@ public class SellerController extends Controller {
     }
 
     //Done!!
-    //TODO: since we are returning sub product in some way, you can return price as well!
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
-            if (subProduct.getProduct().getId().equals(productID))
-                return digest(subProduct.getProduct());
+            if (subProduct.getProduct().getId().equals(productID)){
+                String[] subProductPack = new String[9];
+                subProductPack[0] = subProduct.getProduct().getId();
+                subProductPack[1] = subProduct.getProduct().getName();
+                subProductPack[2] = subProduct.getProduct().getBrand();
+                subProductPack[3] = subProduct.getProduct().getCategory().getName();
+                subProductPack[4] = subProduct.getProduct().getInfoText();
+                subProductPack[5] = Integer.toString(subProduct.getRemainingCount());
+                subProductPack[6] = Double.toString(subProduct.getRawPrice());
+                subProductPack[7] = subProduct.getSale() != null ? subProduct.getSale().getId() : "-";
+                subProductPack[8] = subProduct.getSale() != null ? Double.toString(subProduct.getPriceWithSale()) : "-";
+                return subProductPack;
+            }
+
         }
         throw new Exceptions.InvalidProductIdException(productID);
 
@@ -145,7 +161,6 @@ public class SellerController extends Controller {
         if (targetedSubProduct == null)
             throw new Exceptions.InvalidProductIdException(productID);
         else {
-            EditProductRequest.Field fieldToEdit = null;
             switch (field) {
                 case "name": {
                     String existingProductId;
@@ -206,14 +221,14 @@ public class SellerController extends Controller {
 
     //Done!! TODO: Shayan please check this
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
-                              double price, int count) throws Exceptions.ExistingProductException {
-        Product product;
-        if ((product = Product.getProductByNameAndBrand(name, brand)) != null)
+                              double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
+        Product product = Product.getProductByNameAndBrand(name, brand);
+        if (product != null)
             throw new Exceptions.ExistingProductException(product.getId());
         else {
-            Category category;
-            if ((category = Category.getCategoryByName(categoryName)) == null)
-                category = Category.getSuperCategory();
+            Category category = Category.getCategoryByName(categoryName);
+            if (category == null)
+                throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount.getId(), price, count);
             new Product(name, brand, infoText, category.getId(), specialProperties, subProduct);
         }
@@ -322,13 +337,13 @@ public class SellerController extends Controller {
         }
     }
 
-    //Done!!
+    //Done!! TODO
     public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
         if (startDate.before(endDate)) {
             Sale sale = new Sale(((Seller) currentAccount).getId(), startDate, endDate, percentage, maximum);
             Product product = null;
             SubProduct subProduct = null;
-            ArrayList<String> falseSubProductIds = new ArrayList<>();
+            ArrayList<String> invalidSubProductIds = new ArrayList<>();
             for (String productId : productIds) {
                 product = Product.getProductById(productId);
                 if (product != null) {
@@ -336,24 +351,24 @@ public class SellerController extends Controller {
                     if (subProduct != null)
                         sale.addSubProduct(subProduct.getId());
                     else
-                        falseSubProductIds.add(productId);
+                        invalidSubProductIds.add(productId);
                 } else
-                    falseSubProductIds.add(productId);
+                    invalidSubProductIds.add(productId);
             }
-            if (falseSubProductIds.size() > 0)
-                throw new Exceptions.InvalidProductIdsForASeller(falseSubProductIds(falseSubProductIds));
+            if (invalidSubProductIds.size() > 0)
+                throw new Exceptions.InvalidProductIdsForASeller(invalidProductIds(invalidSubProductIds));
         } else
             throw new Exceptions.InvalidDateException();
     }
 
-    private String falseSubProductIds(ArrayList<String> subProductIds) {
-        StringBuilder falseSubProductIds = new StringBuilder();
+    private String invalidProductIds(ArrayList<String> subProductIds) {
+        StringBuilder invalidSubProductIds = new StringBuilder();
         String falseSubProduct = null;
         for (String subProductId : subProductIds) {
             falseSubProduct = "\n" + subProductId;
-            falseSubProductIds.append(falseSubProduct);
+            invalidSubProductIds.append(falseSubProduct);
         }
-        return falseSubProductIds.toString();
+        return invalidSubProductIds.toString();
     }
 
     //Done!

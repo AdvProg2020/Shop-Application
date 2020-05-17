@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 //TODO: compare to products!
-
+//TODO: database constructor
 public class Controller {
     protected static Account currentAccount;
     protected static Cart currentCart;
@@ -211,21 +211,6 @@ public class Controller {
     }
 
     //Done!!
-
-    /**
-     * for show category stuff.
-     *
-     * @return returns String[2]: category ID, category name
-     */
-    public ArrayList<String[]> viewCategories() {
-        try {
-            return getSubCategoriesOfThisCategory("superCategory");
-        } catch (Exceptions.InvalidCategoryException e) {
-            return null;
-        }
-    }
-
-    //Done!!
     /**
      * for show category action without all.
      *
@@ -401,7 +386,7 @@ public class Controller {
 
     /**
      * @param productId
-     * @return String[3]: usernameOfReviewer, title, body.
+     * @return String[3]: usernameOfReviewer, title, body, hasBought. // TODO: Dana, hasBought added!
      * @throws Exceptions.InvalidProductIdException
      */
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidProductIdException {
@@ -410,10 +395,11 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> reviews = new ArrayList<>();
         for (Review review : product.getReviews()) {
-            String[] reviewPack = new String[3];
+            String[] reviewPack = new String[4];
             reviewPack[0] = review.getReviewer().getUsername();
             reviewPack[1] = review.getTitle();
             reviewPack[2] = review.getText();
+            reviewPack[3] = review.hasBought() ? "yes" : "no";
             reviews.add(reviewPack);
         }
         return reviews;
@@ -456,6 +442,7 @@ public class Controller {
     }
 
     //Done!!
+    //TODO: specific getPersonalInfoEditableFields for each of the admin, seller and customer controller.
     /**
      * @return *1- seller:String[6]
      * * { String firstName, String lastName, String phone, String email, String password, String storeName}
