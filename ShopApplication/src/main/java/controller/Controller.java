@@ -11,7 +11,6 @@ import model.database.Database;
 import java.text.DateFormat;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Map;
 
 //TODO: compare to products!
@@ -127,7 +126,7 @@ public class Controller {
     }
 
     //Done!! check the directions in the test
-    private ArrayList<Product> sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
+    private void sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
         switch (sortBy) {
             case "price":
                 products.sort( new Utilities.Sort.ProductPriceComparator(isIncreasing));
@@ -144,11 +143,12 @@ public class Controller {
             case "remaining count":
                 products.sort( new Utilities.Sort.ProductRemainingCountComparator(isIncreasing));
                 break;
-            default:
+            case "view count":
                 products.sort( new Utilities.Sort.ProductViewCountComparator(isIncreasing));
+            default:
+                products.sort( new Utilities.Sort.ProductViewCountComparator(true));
                 break;
         }
-        return products;
     }
 
     //Done!!
@@ -229,7 +229,7 @@ public class Controller {
     //Done!!
     private ArrayList<Product> getProductsInCategory(Category category) {
         ArrayList<Product> products = new ArrayList<>(category.getProducts());
-        sortProducts("view count", false, products);
+        sortProducts("view count", true, products);
         return products;
     }
 
@@ -265,7 +265,7 @@ public class Controller {
         filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
-        products = sortProducts(sortBy, isIncreasing, products);
+        sortProducts(sortBy, isIncreasing, products);
 
         return productToIdNameBrand(products);
     }
@@ -551,56 +551,27 @@ public class Controller {
     }
 
     private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts) {
-        int direction = isIncreasing ? 1 : -1;
         switch (sortBy) {
             case "price":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Double.compare(o1.getPriceWithSale(), o2.getPriceWithSale());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductPriceComparator(isIncreasing));
                 break;
             case "name":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * o1.getProduct().getName().compareTo(o2.getProduct().getName());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductNameComparator(isIncreasing));
                 break;
             case "rating score":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Double.compare(o1.getProduct().getAverageRatingScore(), o2.getProduct().getAverageRatingScore());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductRatingScoreComparator(isIncreasing));
                 break;
             case "category name":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * o1.getProduct().getCategory().getName().
-                                compareTo(o2.getProduct().getCategory().getName());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductCategoryNameComparator(isIncreasing));
                 break;
             case "remaining count":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Integer.compare(o1.getRemainingCount(), o2.getRemainingCount());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductRemainingCountComparator(isIncreasing));
+                break;
+            case "view count":
+                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(isIncreasing));
                 break;
             default:
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Integer.compare(o1.getProduct().getViewCount(), o2.getProduct().getViewCount());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(true));
                 break;
         }
     }

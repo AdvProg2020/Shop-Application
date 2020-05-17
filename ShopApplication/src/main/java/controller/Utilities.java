@@ -341,7 +341,8 @@ public class Utilities {
             availableSorts[1] = "rating score";
             availableSorts[2] = "name";
             availableSorts[3] = "category name";
-            availableSorts[4] = "default: view counts";
+            availableSorts[4] = "total remaining count";
+            availableSorts[5] = "view count";
             return availableSorts;
         }
 
@@ -419,6 +420,60 @@ public class Utilities {
             @Override
             public int compare(SubProduct o1, SubProduct o2) {
                 return direction * Double.compare(o1.getPriceWithSale(), o2.getPriceWithSale());
+            }
+        }
+        public static class SubProductRatingScoreComparator implements Comparator<SubProduct> {
+            private int direction;
+            public SubProductRatingScoreComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(SubProduct o1, SubProduct o2) {
+                return direction * Double.compare(o1.getProduct().getAverageRatingScore(), o2.getProduct().getAverageRatingScore());
+            }
+        }
+
+        public static class SubProductNameComparator implements Comparator<SubProduct> {
+            private int direction;
+            public SubProductNameComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(SubProduct o1, SubProduct o2) {
+                return direction * o1.getProduct().getName().compareTo(o2.getProduct().getName());
+            }
+        }
+
+        public static class SubProductCategoryNameComparator implements Comparator<SubProduct> {
+            private int direction;
+            public SubProductCategoryNameComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(SubProduct o1, SubProduct o2) {
+                return direction * o1.getProduct().getCategory().getName().compareTo(o2.getProduct().getCategory().getName());
+            }
+        }
+
+        public static class SubProductRemainingCountComparator implements Comparator<SubProduct> {
+            private int direction;
+            public SubProductRemainingCountComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(SubProduct o1, SubProduct o2) {
+                return direction * Integer.compare(o1.getRemainingCount(), o2.getRemainingCount());
+            }
+        }
+
+        public static class SubProductViewCountComparator implements Comparator<SubProduct> {
+            private int direction;
+            public SubProductViewCountComparator(boolean isIncreasing){
+                direction = isIncreasing ? 1 : -1;
+            }
+            @Override
+            public int compare(SubProduct o1, SubProduct o2) {
+                return direction * Integer.compare(o1.getProduct().getViewCount(), o2.getProduct().getViewCount());
             }
         }
     }
