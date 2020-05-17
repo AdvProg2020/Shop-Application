@@ -7,6 +7,7 @@ import model.Rating;
 import model.SubProduct;
 import model.account.Customer;
 import model.account.Seller;
+import model.database.DatabaseManager;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
@@ -18,6 +19,11 @@ import java.util.Map;
 
 //TODO: database constructor
 public class CustomerController extends Controller {
+
+
+    public CustomerController(DatabaseManager DataBaseManager) {
+        super(DataBaseManager);
+    }
 
     //Done!!
 
@@ -40,6 +46,7 @@ public class CustomerController extends Controller {
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
         super.editPersonalInfo(field, newInformation);
+        databaseManager.editAccount();
     }
 
     //Done!!
@@ -93,6 +100,7 @@ public class CustomerController extends Controller {
         if (discount != null)
             discount.changeCount(currentAccount.getId(), -1);
         ((Customer) currentAccount).changeBalance(-paidMoney);
+        databaseManager.purchase();
     }
 
     //Done!!
@@ -110,7 +118,6 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
-
     /**
      * @return ArrayList<String [ 9 ]> : { Id, customerUsername,
      * receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
@@ -184,7 +191,7 @@ public class CustomerController extends Controller {
         return productPack;
     }
 
-    //Done!!
+    //Done!! Todo: Shayan check should I add rating to product
     public void rateProduct(String productID, int score) throws
             Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID);
@@ -195,6 +202,7 @@ public class CustomerController extends Controller {
                 if (subProduct.getCustomers().contains(((Customer) currentAccount))) {
                     Rating rating = new Rating(currentAccount.getId(), productID, score);
                     product.addRating(rating.getId());
+                    databaseManager.addRating();
                     return;
                 }
             }
