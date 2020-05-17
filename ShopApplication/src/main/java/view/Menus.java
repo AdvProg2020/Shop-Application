@@ -180,6 +180,12 @@ class Menus {
         }
 
         @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run();
+            super.show();
+        }
+
+        @Override
         protected void initSubMenus() {
             //no available sub menus.
         }
@@ -442,10 +448,17 @@ class Menus {
         }
     }
 
-    //TODO: show dilemma.
     public static class RequestManagingMenu extends Menu {
+        private ArrayList<String[]> pendingRequests;
         RequestManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
+            pendingRequests = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         @Override
@@ -456,8 +469,9 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1,  new Actions.AdminShowRequests("show requests"));
-            subActions.put(index + 2, new Actions.AdminViewRequestDetail("view request detail"));
+            subActions.put(index + 1, new Actions.AdminShowPendingRequests("show pending requests", pendingRequests));
+            subActions.put(index + 2, new Actions.AdminShowArchiveRequests("show archived requests"));
+            subActions.put(index + 2, new Actions.AdminViewRequestDetail("view request detail", pendingRequests));
             subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
@@ -673,6 +687,12 @@ class Menus {
         CustomerOrderLogMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.customerOrderLogMenuPattern, Constants.Menus.customerOrderLogMenuCommand);
             this.currentOrderLogs = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         @Override

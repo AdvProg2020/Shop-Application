@@ -1369,24 +1369,52 @@ public class Actions {
         }
     }
 
-    //TODO: index choosing
-    public static class AdminShowRequests extends Action {
-        AdminShowRequests(String name) {
+    public static class AdminShowPendingRequests extends Action {
+        private ArrayList<String[]> pendingRequests;
+        AdminShowPendingRequests(String name, ArrayList<String[]> pendingRequests) {
             super(name, Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
+            this.pendingRequests = pendingRequests;
+        }
+
+        private void refreshPendingRequests() {
+            pendingRequests.clear();
+            pendingRequests.addAll(adminController.getPendingRequests());
         }
 
         @Override
         public void execute(String command) {
-            System.out.println("request IDs:");
-            adminController.manageRequests().forEach(ID -> System.out.println(ID));
-            System.out.println("you can see a request's detail by: details [requestID]");
+            refreshPendingRequests();
+            System.out.println("pending requests:");
+            printList(pendingRequests);
+            System.out.println("you can see a request's detail by: details [index]");
+            printSeparator();
+        }
+    }
+
+    public static class AdminShowArchiveRequests extends Action {
+        AdminShowArchiveRequests(String name) {
+            super(name, Constants.Actions.adminShowArchiveRequestsPattern, Constants.Actions.adminShowArchiveRequestsCommand);
+        }
+
+
+        @Override
+        public void execute(String command) {
+            ArrayList<String[]> archives = adminController.getArchivedRequests();
+            if (archives.isEmpty()) {
+                System.out.println("you cant see archived requests");
+            } else {
+                System.out.println("archived requests:");
+                printList(archives);
+            }
             printSeparator();
         }
     }
 
     public static class AdminViewRequestDetail extends Action {
-        AdminViewRequestDetail(String name) {
+        private ArrayList<String[]> pendingRequests;
+        AdminViewRequestDetail(String name, ArrayList<String[]> pendingRequests) {
             super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
+            this.pendingRequests = pendingRequests;
         }
 
         private void acceptOrDeclineRequest(String requestID) {
@@ -1413,12 +1441,15 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            try {
-                String requestID = getGroup(command, 1);
-                printList(adminController.detailsOfRequest(requestID));
-                acceptOrDeclineRequest(requestID);
-            } catch (Exceptions.InvalidRequestIdException e) {
-                System.out.println(e.getMessage());
+            int index = getIndex(command, pendingRequests);
+            if (index != 0) {
+                try {
+                    String requestID = pendingRequests.get(index - 1)[0];
+                    printList(adminController.detailsOfRequest(requestID));
+                    acceptOrDeclineRequest(requestID);
+                } catch (Exceptions.InvalidRequestIdException e) {
+                    System.out.println(e.getMessage());
+                }
             }
             printSeparator();
         }
@@ -2116,16 +2147,6 @@ public class Actions {
             this.currentOrderLogs = currentOrderLogs;
         }
 
-        private int getIndexByID(String productID) {
-            int size = currentOrderLogs.size();
-            for (int i = 0; i < size; i++) {
-                if (currentOrderLogs.get(i)[0].equals(productID)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
         private void printInfo(ArrayList<String[]> order) {
             String[] orderDetails = order.get(0);
             System.out.println("1. order ID: " + orderDetails[0]);
@@ -2146,17 +2167,13 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            String orderID = getGroup(command, 1);
-            try {
-                int index = getIndexByID(orderID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of valid IDs by \"show orders\".");
-                } else {
-                    ArrayList<String[]> info = customerController.getOrderWithId(orderID);
-                    printInfo(info);
+            int index = getIndex(command, currentOrderLogs);
+            if (index != 0) {
+                try {
+                    printInfo(customerController.getOrderWithId(currentOrderLogs.get(index - 1)[0]));
+                } catch (Exceptions.InvalidLogIdException | Exceptions.CustomerLoginException e) {
+                    System.out.println(e.getMessage());
                 }
-            } catch (Exceptions.InvalidLogIdException | Exceptions.CustomerLoginException e) {
-                System.out.println(e.getMessage());
             }
             printSeparator();
         }
