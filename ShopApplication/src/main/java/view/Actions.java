@@ -1561,21 +1561,31 @@ public class Actions {
     }
 
     public static class SellerShowSales extends Action {
-        SellerShowSales(String name) {
+        private ArrayList<String[]> currentSales;
+        SellerShowSales(String name, ArrayList<String[]> currentSales) {
             super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
+            this.currentSales = currentSales;
+        }
+
+        private void refreshCurrentSales() {
+            currentSales.clear();
+            currentSales.addAll(sellerController.viewSales());
         }
 
         @Override
         public void execute(String command) {
-            ArrayList<String[]> sales = sellerController.viewSales();
-            printList(sales);
+            refreshCurrentSales();
+            System.out.println("seller sales:");
+            printList(currentSales);
             printSeparator();
         }
     }
 
     public static class SellerViewSaleDetails extends Action {
-        SellerViewSaleDetails(String name) {
+        private ArrayList<String[]> currentSales;
+        SellerViewSaleDetails(String name, ArrayList<String[]> currentSales) {
             super(name, Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
+            this.currentSales = currentSales;
         }
 
         private void showSaleInfo(String[] info) {
@@ -1589,11 +1599,11 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String saleID = commandMatcher.group(1);
             try {
-                String[] info = sellerController.viewSaleWithId(saleID);
-                showSaleInfo(info);
+                int index = getIndex(command, currentSales);
+                if (index != 0) {
+                showSaleInfo(sellerController.viewSaleWithId(currentSales.get(index - 1)[0]));
+                }
             } catch (Exceptions.InvalidSaleIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1603,9 +1613,11 @@ public class Actions {
 
     public static class SellerEditSale extends Action {
         private String[] editableFields;
-        SellerEditSale(String name, String[] editableFields) {
+        private ArrayList<String[]> currentSales;
+        SellerEditSale(String name, String[] editableFields, ArrayList<String[]> currentSales) {
             super(name, Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
             this.editableFields = editableFields;
+            this.currentSales = currentSales;
         }
 
         private void showEditableFields() {
@@ -1636,20 +1648,24 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String saleID = commandMatcher.group(1);
-            while (true) {
-                showEditableFields();
-                System.out.println("enter the field to edit (index):");
-                String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response), saleID) == -1) {continue;}
-                    else {break;}
-                } else if (response.equalsIgnoreCase("back")) {
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
+            int index = getIndex(command, currentSales);
+            if (index != 0) {
+                while (true) {
+                    showEditableFields();
+                    System.out.println("enter the field to edit (index):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                        if (editField(Integer.parseInt(response), currentSales.get(index - 1)[0]) == -1) {
+                            continue;
+                        } else {
+                            break;
+                        }
+                    } else if (response.equalsIgnoreCase("back")) {
+                        break;
+                    } else {
+                        System.out.println("invalid entry");
+                        continue;
+                    }
                 }
             }
             printSeparator();

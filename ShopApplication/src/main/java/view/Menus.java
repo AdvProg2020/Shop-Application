@@ -530,12 +530,20 @@ class Menus {
     }
 
     public static class SellerSalesMenu extends Menu {
+        private ArrayList<String[]> currentSales;
         SellerSalesMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.sellerSaleManagingMenuPattern, Constants.Menus.sellerSaleManagingMenuCommand);
+            this.currentSales = new ArrayList<>();
         }
 
         private String[] getEditableFields() {
             return sellerController.getSaleEditableFields();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         @Override
@@ -546,9 +554,9 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.SellerShowSales("show sales"));
-            subActions.put(index + 2, new Actions.SellerViewSaleDetails("view sale details"));
-            subActions.put(index + 3, new Actions.SellerEditSale("edit sale", getEditableFields()));
+            subActions.put(index + 1, new Actions.SellerShowSales("show sales", currentSales));
+            subActions.put(index + 2, new Actions.SellerViewSaleDetails("view sale details", currentSales));
+            subActions.put(index + 3, new Actions.SellerEditSale("edit sale", getEditableFields(), currentSales));
             subActions.put(index + 4, new Actions.SellerAddSale("add sale"));
             subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
