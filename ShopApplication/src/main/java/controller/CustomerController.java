@@ -200,8 +200,7 @@ public class CustomerController extends Controller {
         else {
             for (SubProduct subProduct : product.getSubProducts()) {
                 if (subProduct.getCustomers().contains(((Customer) currentAccount))) {
-                    Rating rating = new Rating(currentAccount.getId(), productID, score);
-                    product.addRating(rating.getId());
+                    new Rating(currentAccount.getId(), productID, score);
                     databaseManager.addRating();
                     return;
                 }

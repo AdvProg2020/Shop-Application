@@ -193,7 +193,7 @@ public class SellerController extends Controller {
                         if (targetedSubProduct.getProduct().getName().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-                        databaseManager.editProduct();
+                        databaseManager.request();
                     } else
                         throw new Exceptions.ExistingProductException(existingProductId);
                     break;
@@ -204,7 +204,7 @@ public class SellerController extends Controller {
                         if (targetedSubProduct.getProduct().getBrand().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.BRAND, newInformation);
-                        databaseManager.editProduct();
+                        databaseManager.request();
                     } else
                         throw new Exceptions.ExistingProductException(existingProductId);
                     break;
@@ -213,19 +213,19 @@ public class SellerController extends Controller {
                     if (targetedSubProduct.getProduct().getInfoText().equals(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
-                    databaseManager.editProduct();
+                    databaseManager.request();
                     break;
                 case "price":
                     if (targetedSubProduct.getRawPrice() == Double.parseDouble(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_PRICE, newInformation);
-                    databaseManager.editProduct();
+                    databaseManager.request();
                     break;
                 case "count":
                     if (targetedSubProduct.getRemainingCount() == Integer.parseInt(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
-                    databaseManager.editProduct();
+                    databaseManager.request();
                     break;
                 default:
                     throw new Exceptions.InvalidFieldException();
@@ -261,7 +261,7 @@ public class SellerController extends Controller {
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount.getId(), price, count);
             new Product(name, brand, infoText, category.getId(), specialProperties, subProduct);
-            databaseManager.createProduct();
+            databaseManager.request();
         }
     }
 
@@ -271,7 +271,7 @@ public class SellerController extends Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         else {
             new SubProduct(productId, currentAccount.getId(), price, count);
-            databaseManager.createSubProduct();
+            databaseManager.request();
         }
     }
 
@@ -336,7 +336,7 @@ public class SellerController extends Controller {
                             if (dateFormat.parse(newInformation).equals(targetedSale.getStartDate()))
                                 throw new Exceptions.SameAsPreviousValueException("start date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.START_DATE);
-                            databaseManager.editSale();
+                            databaseManager.request();
                         } else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
@@ -349,7 +349,7 @@ public class SellerController extends Controller {
                             if (dateFormat.parse(newInformation).equals(targetedSale.getEndDate()))
                                 throw new Exceptions.SameAsPreviousValueException("end date");
                             new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.END_DATE);
-                            databaseManager.editSale();
+                            databaseManager.request();
                         } else
                             throw new Exceptions.InvalidDateException();
                     } catch (ParseException e) {
@@ -360,13 +360,13 @@ public class SellerController extends Controller {
                     if (Double.parseDouble(newInformation) == targetedSale.getPercentage())
                         throw new Exceptions.SameAsPreviousValueException("percentage");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.PERCENTAGE);
-                    databaseManager.editSale();
+                    databaseManager.request();
                     break;
                 case "maximum":
                     if (Double.parseDouble(newInformation) == targetedSale.getMaximumAmount())
                         throw new Exceptions.SameAsPreviousValueException("maximum");
                     new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.MAXIMUM);
-                    databaseManager.editSale();
+                    databaseManager.request();
                     break;
                 default:
                     throw new Exceptions.InvalidFieldException();
@@ -393,7 +393,7 @@ public class SellerController extends Controller {
                 } else
                     invalidSubProductIds.add(productId);
             }
-            databaseManager.createSale();
+            databaseManager.request();
             if (invalidSubProductIds.size() > 0)
                 throw new Exceptions.InvalidProductIdsForASeller(invalidProductIds(invalidSubProductIds));
         } else

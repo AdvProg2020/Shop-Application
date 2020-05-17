@@ -17,15 +17,16 @@ import java.util.Map;
 
 //TODO: compare to products!
 //TODO: database constructor
+//TODO: constructors, remove statics
 public class Controller {
     protected static Account currentAccount;
     protected static Cart currentCart;
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-    protected static DatabaseManager databaseManager;
+    protected Database databaseManager;
 
 
-    //Done TODO: Shayan please check
-    public Controller(DatabaseManager DataBaseManager){
+    //Done
+    public Controller( Database DataBaseManager ){
         databaseManager = DataBaseManager;
         currentCart = new Cart(null);
         currentAccount = null;
@@ -60,12 +61,15 @@ public class Controller {
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, balance);
+                databaseManager.createCustomer();
                 break;
             case "Admin":
                 new Admin(username, password, firstName, lastName, email, phone);
+                databaseManager.createAdmin();
                 break;
             case "Seller":
                 new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
+                databaseManager.createSeller();
                 break;
         }
     }
@@ -81,7 +85,7 @@ public class Controller {
         if (currentAccount instanceof Customer) {
             ((Customer) currentAccount).mergeCart(currentCart.getId());
             currentCart = ((Customer) currentAccount).getCart();
-
+            databaseManager.cart();
         }
     }
 
@@ -512,7 +516,7 @@ public class Controller {
                 throw new Exceptions.InvalidProductIdException(productId);
             else {
                 new Review(currentAccount.getId(), productId, title, text);
-                databaseManager.addReview();
+                databaseManager.request();
             }
         }
     }

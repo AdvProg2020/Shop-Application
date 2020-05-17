@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-//TODO: database constructor
+
 public class AdminController extends Controller {
 
 
@@ -378,11 +378,11 @@ public class AdminController extends Controller {
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestID);
         else {
-            if (accepted)
+            if (accepted) {
                 request.accept();
-            else
+                request.updateDatabase(databaseManager);
+            }else
                 request.decline();
-            databaseManager.request();
         }
     }
 
