@@ -95,11 +95,21 @@ public class AdminController extends Controller {
     }
 
     //Done!! TODO: unified exception
-    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount, ArrayList<String> customerIds) throws Exceptions.ExistingDiscountCodeException {
+    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount, ArrayList<String[]> customerIds) throws Exceptions.ExistingDiscountCodeException {
+
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
-        else
-            new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
+        else {
+            ArrayList<String> wrongIds = new ArrayList<>();
+            for (String[] Id : new ArrayList<>(customerIds)) {
+                Account account = Account.getAccountById(Id[0]);
+                if(!(account instanceof Customer)){
+                    wrongIds.add(Id[0]);
+                    customerIds.remove(Id);
+                }
+            }
+            Discount discount = new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
+        }
     }
 
     //Done!!
@@ -227,17 +237,31 @@ public class AdminController extends Controller {
             discount.suspend();
     }
 
-    //Done!! TODO: type, username,
-    public ArrayList<String> manageRequests() {
-        ArrayList<String> requestIds = new ArrayList<>();
-        for (Request request : Request.getAllRequests()) {
-            requestIds.add(request.getRequestId());
+    //Done!! TODO: Dana: Id, type, date, status,
+    public ArrayList<String[]> manageRequests() {
+        ArrayList<String[]> requestIds = new ArrayList<>();
+        for (Request request : Request.getPendingRequests()) {
+            requestIds.add(requestPack(request));
+        }
+        if(currentAccount == Admin.getManager()){
+            for (Request request : Request.getRequestArchive()) {
+                requestIds.add(requestPack(request));
+            }
         }
         return requestIds;
     }
 
-    //Todo
+    //Done!!
+    private String[] requestPack(Request request){
+        String[] requestPack = new String[4];
+        requestPack[0] = request.getId();
+        requestPack[1] = request.getClass().getSimpleName();
+        requestPack[2] = dateFormat.format(request.getDate());
+        requestPack[3] = request.getStatus().toString();
+        return requestPack;
+    }
 
+    //Todo: Dana consider the output
     /**
      * @param requestId
      * @return AddProduct: { {"AddProduct"}, { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }, {specialProperties}}
@@ -249,12 +273,9 @@ public class AdminController extends Controller {
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
         else {
-            String[] typeDate = new String[2];
-            typeDate[0] = request.getClass().getName();
-            typeDate[1] = dateFormat.format(request.getDate());
             ArrayList<String[]> detailsOfRequest = new ArrayList<>();
-            detailsOfRequest.add(typeDate);
-            switch (typeDate[0]) {
+            detailsOfRequest.add(requestPack(request));
+            switch (requestPack(request)[0]) {
                 case "AddProduct":
                     detailsOfRequest.add(getSubProductInfo(((AddProductRequest) request).getSubProduct()));
                     String[] specialProperties = new String[((AddProductRequest) request).getProduct().getSpecialProperties().size()];
@@ -346,6 +367,7 @@ public class AdminController extends Controller {
         return categoryNames;
     }
 
+    //Done!!
     public String[] getCategoryEditableFields() {
         String[] editableFields = new String[2];
         editableFields[0] = "name";

@@ -221,7 +221,7 @@ public class Controller {
      * @throws Exceptions.InvalidCategoryException
      */
     public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
-        Category category = null;
+        Category category;
         if( categoryName .equals("superCategory"))
             category = Category.getCategoryByName(categoryName);
         else
