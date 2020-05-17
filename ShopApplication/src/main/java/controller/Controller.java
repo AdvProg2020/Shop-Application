@@ -168,7 +168,7 @@ public class Controller {
      */
     public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category;
-        if (categoryName.equals("superCategory"))
+        if (categoryName.equalsIgnoreCase(Category.SUPER_CATEGORY_NAME))
             category = Category.getCategoryByName(categoryName);
         else
             category = Category.getSuperCategory();
@@ -230,7 +230,7 @@ public class Controller {
             else
                 products.add(product);
         }
-        filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
+        filterProducts(filterBy[0].equalsIgnoreCase("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
         sortProducts(sortBy, isIncreasing, products);
@@ -308,7 +308,7 @@ public class Controller {
     }
 
     public void checkAuthorityOverCart() throws Exceptions.UnAuthorizedAccountException {
-        if ((currentAccount != null) && !currentAccount.getClass().getSimpleName().equals("Customer"))
+        if ((currentAccount != null) && !(currentAccount instanceof Customer))
             throw new Exceptions.UnAuthorizedAccountException();
     }
 
@@ -476,7 +476,7 @@ public class Controller {
         for (Sale sale : Sale.getAllSales()) {
             subProductsInSale.addAll(sale.getSubProducts());
         }
-        filterSubProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
+        filterSubProducts(filterBy[0].equalsIgnoreCase("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), subProductsInSale);
         sortSubProducts(sortBy, isIncreasing, subProductsInSale);
         for (SubProduct subProduct : subProductsInSale) {

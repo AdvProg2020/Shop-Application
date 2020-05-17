@@ -147,7 +147,7 @@ public class Utilities {
             } else
                 info = new String[6];
             info[0] = account.getUsername();
-            info[1] = account.getClass().getName();
+            info[1] = account.getClass().getSimpleName();
             info[2] = account.getFirstName();
             info[3] = account.getLastName();
             info[4] = account.getEmail();
@@ -316,7 +316,7 @@ public class Utilities {
         public static String[] getCategoryEditableFields() {
             String[] editableFields = new String[2];
             editableFields[0] = "name";
-            editableFields[1] = "parent name";
+            editableFields[1] = "parent";
             return editableFields;
         }
     }
