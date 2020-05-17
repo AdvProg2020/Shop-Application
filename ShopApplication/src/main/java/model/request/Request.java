@@ -1,11 +1,14 @@
 package model.request;
 
-import model.Initializable;
+import model.BasicMethods;
+import model.ModelBasic;
+import model.database.Database;
 
 import java.util.*;
 
-public abstract class Request implements Initializable {
+public abstract class Request implements ModelBasic {
     private static Map<String, Request> allRequests = new HashMap<>();
+    private static int lastNum = 1;
     private String requestId;
     private Date date;
     private RequestStatus status;
@@ -16,33 +19,45 @@ public abstract class Request implements Initializable {
         initialize();
     }
 
-    private static String generateNewId() {
-        //TODO: implement
-        return null;
+    private static void filterRequests() {
+        allRequests.values().removeIf(request -> (request.status == RequestStatus.PENDING) && request.isInvalid());
     }
 
-    public static List<Request> getAllRequests() {
-        List<Request> requests = new ArrayList<>(allRequests.values());
-        requests.removeIf(Request::isInvalid);
+    public static List<Request> getPendingRequests() {
+        filterRequests();
+        return BasicMethods.getInstances(allRequests.values());
+    }
 
-        return requests;
+    public static List<Request> getRequestArchive() {
+        ArrayList<Request> archive = new ArrayList<>(allRequests.values());
+        archive.removeAll(getPendingRequests());
+        return archive;
     }
 
     public static Request getRequestById(String requestId) {
-        Request request = allRequests.get(requestId);
-        if (request != null && request.isInvalid())
-            return null;
-
-        return request;
+        return BasicMethods.getInstanceById(allRequests, requestId);
 
     }
 
     @Override
     public void initialize() {
         if (requestId == null)
-            requestId = generateNewId();
+            requestId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allRequests.put(requestId, this);
+        lastNum++;
     }
+
+    @Override
+    public boolean isSuspended() {
+        return (status != RequestStatus.PENDING || isInvalid());
+    }
+
+    @Override
+    public String getId() {
+        return requestId;
+    }
+
+    protected abstract boolean isInvalid();
 
     public String getRequestId() {
         return requestId;
@@ -64,10 +79,6 @@ public abstract class Request implements Initializable {
         status = RequestStatus.DECLINED;
     }
 
-    protected abstract boolean isInvalid();
-
-    protected void terminate() {
-        allRequests.remove(requestId);
-    }
+    public abstract void updateDatabase(Database database);
 
 }

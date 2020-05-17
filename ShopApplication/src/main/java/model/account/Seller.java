@@ -1,6 +1,7 @@
 package model.account;
 
 import jdk.jfr.Label;
+import model.BasicMethods;
 import model.Sale;
 import model.SubProduct;
 import model.log.SellLog;
@@ -13,6 +14,7 @@ import java.util.Set;
 
 
 public class Seller extends Account {
+    private static int lastNum = 1;
     private String storeName;
     private double balance;
     private transient Set<String> subProductIds;
@@ -28,13 +30,15 @@ public class Seller extends Account {
     }
 
     public static Seller getSellerById(String accountId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-        return (Seller) getAccountById(accountId, checkSuspense);
+        return (Seller) getAccountById(accountId, suspense);
     }
 
     @Override
     public void initialize() {
-        super.initialize();
+        if (accountId == null)
+            accountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+        allAccounts.put(accountId, this);
+        lastNum++;
         sellLogIds = new HashSet<>();
         if (!suspended) {
             subProductIds = new HashSet<>();

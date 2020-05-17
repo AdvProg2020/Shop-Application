@@ -8,8 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Cart implements Initializable {
+public class Cart implements ModelBasic {
     private static Map<String, Cart> allCarts = new HashMap<>();
+    private static int lastNum = 1;
     private String cartId;
     private String customerId; // can be null
     private Map<String, Integer> subProductIds;
@@ -18,11 +19,6 @@ public class Cart implements Initializable {
         this.customerId = customerId;
         subProductIds = new HashMap<>();
         initialize();
-    }
-
-    private static String generateNewId(String customerId) {
-        //TODO: implement
-        return null;
     }
 
     public static List<Cart> getAllCarts() {
@@ -53,8 +49,10 @@ public class Cart implements Initializable {
     @Override
     public void initialize() {
         if (cartId == null)
-            cartId = generateNewId(customerId);
+            cartId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allCarts.put(cartId, this);
+        lastNum++;
+
         if (customerId != null)
             getCustomer().setCart(cartId);
     }
@@ -64,6 +62,12 @@ public class Cart implements Initializable {
         allCarts.remove(cartId);
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
     public String getId() {
         return cartId;
     }

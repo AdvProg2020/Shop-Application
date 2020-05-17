@@ -1,14 +1,16 @@
 package model.log;
 
 import jdk.jfr.Label;
-import model.Initializable;
+import model.BasicMethods;
+import model.ModelBasic;
 import model.account.Customer;
 import model.account.Seller;
 
 import java.util.*;
 
-public class SellLog implements Initializable {
+public class SellLog implements ModelBasic {
     private static Map<String, SellLog> allSellLogs = new HashMap<>();
+    private static int lastNum = 1;
     private String sellLogId;
     private String parentBuyLogId;
     private String sellerId;
@@ -24,11 +26,6 @@ public class SellLog implements Initializable {
         initialize();
     }
 
-    public static String generateNewId(String sellerId) {
-        //TODO: implement
-        return null;
-    }
-
     public static List<SellLog> getAllSellLogs() {
         return new ArrayList<>(allSellLogs.values());
     }
@@ -40,12 +37,20 @@ public class SellLog implements Initializable {
     @Override
     public void initialize() {
         if (sellLogId == null)
-            sellLogId = generateNewId(sellerId);
+            sellLogId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allSellLogs.put(sellLogId, this);
+        lastNum++;
+
         logItemIds = new ArrayList<>();
         getSeller().addSellLog(sellLogId);
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
     public String getId() {
         return sellLogId;
     }

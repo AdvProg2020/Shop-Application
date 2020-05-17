@@ -8,8 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Rating implements Initializable {
+public class Rating implements ModelBasic {
     private static Map<String, Rating> allRatings = new HashMap<>();
+    private static int lastNum = 1;
     private String ratingId;
     private String customerId;
     private String productId;
@@ -20,11 +21,6 @@ public class Rating implements Initializable {
         this.productId = productId;
         this.score = score;
         initialize();
-    }
-
-    private static String generateNewId(String customerId, String productId) {
-        //TODO: implement
-        return null;
     }
 
     public static List<Rating> getAllRatings() {
@@ -38,8 +34,10 @@ public class Rating implements Initializable {
     @Override
     public void initialize() {
         if (ratingId == null)
-            ratingId = generateNewId(customerId, productId);
+            ratingId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allRatings.put(ratingId, this);
+        lastNum++;
+
         getProduct().addRating(ratingId);
     }
 
@@ -48,6 +46,12 @@ public class Rating implements Initializable {
         allRatings.remove(ratingId);
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
     public String getId() {
         return ratingId;
     }

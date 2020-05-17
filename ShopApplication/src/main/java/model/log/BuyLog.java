@@ -1,13 +1,15 @@
 package model.log;
 
 import jdk.jfr.Label;
-import model.Initializable;
+import model.BasicMethods;
+import model.ModelBasic;
 import model.account.Customer;
 
 import java.util.*;
 
-public class BuyLog implements Initializable {
+public class BuyLog implements ModelBasic {
     private static Map<String, BuyLog> allBuyLogs = new HashMap<>();
+    private static int lastNum = 1;
     private String buyLogId;
     private String customerId;
     private double paidMoney;
@@ -31,12 +33,6 @@ public class BuyLog implements Initializable {
         this.shippingStatus = shippingStatus;
         initialize();
     }
-
-    private static String generateNewId(String customerId) {
-        //TODO: implement
-        return null;
-    }
-
     public static List<BuyLog> getAllBuyLogs() {
         return new ArrayList<>(allBuyLogs.values());
     }
@@ -48,12 +44,20 @@ public class BuyLog implements Initializable {
     @Override
     public void initialize() {
         if (buyLogId == null)
-            buyLogId = generateNewId(customerId);
+            buyLogId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allBuyLogs.put(buyLogId, this);
+        lastNum++;
+
         logItemIds = new HashSet<>();
         getCustomer().addBuyLog(buyLogId);
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
     public String getId() {
         return buyLogId;
     }

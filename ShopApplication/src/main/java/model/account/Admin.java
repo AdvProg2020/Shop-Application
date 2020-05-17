@@ -1,8 +1,11 @@
 package model.account;
 
+import model.BasicMethods;
+
 public class Admin extends Account {
     protected static final String MANAGER_ID = ""; // TODO: set id
     protected static Admin manager = null; // head of other admins (shouldn't be suspended)
+    private static int lastNum = 1;
 
     public Admin(String username, String password, String firstName, String lastName, String email, String phone) {
         super(username, password, firstName, lastName, email, phone);
@@ -14,8 +17,7 @@ public class Admin extends Account {
     }
 
     public static Admin getAdminById(String accountId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-        return (Admin) getAccountById(accountId, checkSuspense);
+        return (Admin) getAccountById(accountId, suspense);
     }
 
     @Override
@@ -24,8 +26,12 @@ public class Admin extends Account {
             manager = this;
             accountId = MANAGER_ID;
         } else {
-            super.initialize();
+            if (accountId == null)
+                accountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            allAccounts.put(accountId, this);
+            lastNum++;
         }
+
     }
 
 

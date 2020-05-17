@@ -5,8 +5,9 @@ import model.request.AddProductRequest;
 
 import java.util.*;
 
-public class Product implements Initializable {
+public class Product implements ModelBasic {
     private static Map<String, Product> allProducts = new HashMap<>();
+    private static int lastNum = 1;
     private String productId;
     private String name;
     private String brand;
@@ -30,29 +31,12 @@ public class Product implements Initializable {
         new AddProductRequest(this, subProduct);
     }
 
-    private static String generateNewId() {
-        //TODO: implement
-        return null;
-    }
-
     public static List<Product> getAllProducts(boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        List<Product> products = new ArrayList<>(allProducts.values());
-        if (checkSuspense)
-            products.removeIf(product -> product.suspended);
-
-        return products;
+        return BasicMethods.getInstances(allProducts.values(), suspense);
     }
 
     public static Product getProductById(String productId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        Product product = allProducts.get(productId);
-        if (checkSuspense && product != null && product.suspended)
-            product = null;
-
-        return product;
+        return BasicMethods.getInstanceById(allProducts, productId, suspense);
     }
 
     public static List<Product> getProductsByName(String name) {
@@ -77,8 +61,10 @@ public class Product implements Initializable {
     @Override
     public void initialize() {
         if (productId == null)
-            productId = generateNewId();
+            productId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allProducts.put(productId, this);
+        lastNum++;
+
         if (!suspended) {
             subProductIds = new HashSet<>();
             reviewIds = new HashSet<>();
@@ -104,6 +90,12 @@ public class Product implements Initializable {
         suspended = true;
     }
 
+    @Override
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    @Override
     public String getId() {
         return productId;
     }

@@ -1,6 +1,7 @@
 package model.request;
 
 import model.Review;
+import model.database.Database;
 
 public class AddReviewRequest extends Request {
     private Review review;
@@ -18,15 +19,15 @@ public class AddReviewRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        boolean invalid = (review.getProduct() == null);
-
-        if (invalid)
-            terminate();
-
-        return invalid;
+        return (review.getProduct() == null);
     }
 
     public Review getReview() {
         return review;
+    }
+
+    @Override
+    public void updateDatabase(Database database) {
+        database.addReview();
     }
 }

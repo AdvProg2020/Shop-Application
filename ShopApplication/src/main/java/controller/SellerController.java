@@ -12,9 +12,7 @@ import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -177,12 +175,12 @@ public class SellerController extends Controller {
                 case "price":
                     if (targetedSubProduct.getRawPrice() == Double.parseDouble(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.PRICE, newInformation);
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_PRICE, newInformation);
                     break;
                 case "count":
                     if (targetedSubProduct.getRemainingCount() == Integer.parseInt(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.COUNT, newInformation);
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
                     break;
                 default:
                     throw new Exceptions.InvalidFieldException();

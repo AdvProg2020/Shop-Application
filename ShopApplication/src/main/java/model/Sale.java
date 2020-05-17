@@ -5,8 +5,9 @@ import model.request.AddSaleRequest;
 
 import java.util.*;
 
-public class Sale implements Initializable {
+public class Sale implements ModelBasic {
     private static Map<String, Sale> allSales = new HashMap<>();
+    private static int lastNum = 1;
     private String saleId;
     private String sellerId;
     private Date startDate;
@@ -27,36 +28,21 @@ public class Sale implements Initializable {
         new AddSaleRequest(this);
     }
 
-    private static String getNewId(String sellerId) {
-        //TODO: implement
-        return null;
-    }
-
     public static List<Sale> getAllSales(boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        List<Sale> sales = new ArrayList<>(allSales.values());
-        if (checkSuspense)
-            sales.removeIf(Sale::isInactive);
-
-        return sales;
+        return BasicMethods.getInstances(allSales.values(), suspense);
     }
 
     public static Sale getSaleById(String saleId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        Sale sale = allSales.get(saleId);
-        if (checkSuspense && sale != null && sale.isInactive())
-            sale = null;
-
-        return sale;
+        return BasicMethods.getInstanceById(allSales, saleId, suspense);
     }
 
     @Override
     public void initialize() {
         if (saleId == null)
-            saleId = getNewId(sellerId);
+            saleId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allSales.put(saleId, this);
+        lastNum++;
+
         if (!suspended) {
             for (SubProduct subProduct : getSubProducts()) {
                 subProduct.setSale(saleId);
@@ -82,6 +68,12 @@ public class Sale implements Initializable {
         return suspended || now.before(startDate);
     }
 
+    @Override
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    @Override
     public String getId() {
         return saleId;
     }

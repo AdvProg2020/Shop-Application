@@ -2,10 +2,14 @@ package model;
 
 import model.account.Customer;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Discount implements Initializable {
+public class Discount implements ModelBasic {
     private static Map<String, Discount> allDiscounts = new HashMap<>();
+    private static int lastNum = 1;
     private String discountId;
     private String discountCode;
     private Date startDate;
@@ -26,34 +30,17 @@ public class Discount implements Initializable {
         initialize();
     }
 
-    private static String generateNewId() {
-        //TODO: implement
-        return null;
-    }
-
     public static List<Discount> getAllDiscounts(boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        List<Discount> discounts = new ArrayList<>(allDiscounts.values());
-        if (checkSuspense)
-            discounts.removeIf(Discount::isInactive);
-
-        return discounts;
+        return BasicMethods.getInstances(allDiscounts.values(), suspense);
     }
 
     public static Discount getDiscountById(String discountId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        Discount discount = allDiscounts.get(discountId);
-        if (checkSuspense && discount != null && discount.isInactive())
-            discount = null;
-
-        return discount;
+        return BasicMethods.getInstanceById(allDiscounts, discountId, suspense);
     }
 
     public static Discount getDiscountByCode(String discountCode) {
         for (Discount discount : allDiscounts.values()) {
-            if (!discount.isInactive() && discount.getDiscountCode().equals(discountCode))
+            if (!discount.isSuspended() && discount.getDiscountCode().equals(discountCode))
                 return discount;
         }
 
@@ -63,8 +50,10 @@ public class Discount implements Initializable {
     @Override
     public void initialize() {
         if (discountId == null)
-            discountId = generateNewId();
+            discountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allDiscounts.put(discountId, this);
+        lastNum++;
+
         if (!suspended) {
             for (Map.Entry<Customer, Integer> entry : getCustomers().entrySet()) {
                 entry.getKey().addDiscount(discountId, entry.getValue());
@@ -80,7 +69,8 @@ public class Discount implements Initializable {
         suspended = true;
     }
 
-    private boolean isInactive() {
+    @Override
+    public boolean isSuspended() {
         Date now = new Date();
         if (now.after(endDate))
             suspend();
@@ -88,6 +78,7 @@ public class Discount implements Initializable {
         return !(suspended || now.before(startDate));
     }
 
+    @Override
     public String getId() {
         return discountId;
     }

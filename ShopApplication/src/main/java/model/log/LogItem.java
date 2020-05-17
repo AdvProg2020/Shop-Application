@@ -1,6 +1,7 @@
 package model.log;
 
-import model.Initializable;
+import model.BasicMethods;
+import model.ModelBasic;
 import model.SubProduct;
 import model.account.Customer;
 import model.account.Seller;
@@ -10,8 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LogItem implements Initializable {
+public class LogItem implements ModelBasic {
     private static Map<String, LogItem> allLogItems = new HashMap<>();
+    private static int lastNum = 1;
     private String logItemId;
     private String buyLogId;
     private String sellLogId;
@@ -30,11 +32,6 @@ public class LogItem implements Initializable {
         initialize();
     }
 
-    private static String generateNewId(String subProductId) {
-        //TODO: implement
-        return null;
-    }
-
     public static List<LogItem> getAllLogItems() {
         return new ArrayList<>(allLogItems.values());
     }
@@ -46,13 +43,21 @@ public class LogItem implements Initializable {
     @Override
     public void initialize() {
         if (logItemId == null)
-            logItemId = generateNewId(subProductId);
+            logItemId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allLogItems.put(logItemId, this);
+        lastNum++;
+
         getBuyLog().addLogItem(logItemId);
         getSellLog().addLogItem(logItemId);
         getSubProduct().addCustomer(getCustomer().getId());
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
     public String getId() {
         return logItemId;
     }

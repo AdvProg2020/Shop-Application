@@ -1,6 +1,7 @@
 package model.account;
 
 import jdk.jfr.Label;
+import model.BasicMethods;
 import model.Cart;
 import model.Discount;
 import model.log.BuyLog;
@@ -9,6 +10,7 @@ import java.util.*;
 
 
 public class Customer extends Account {
+    private static int lastNum = 1;
     private double balance;
     private transient String cartId;
     private transient Map<String, Integer> discountIds;
@@ -23,15 +25,15 @@ public class Customer extends Account {
     }
 
     public static Customer getCustomerById(String accountId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-        return (Customer) getAccountById(accountId, checkSuspense);
+        return (Customer) getAccountById(accountId, suspense);
     }
 
     @Override
     public void initialize() {
         if (accountId == null)
-            accountId = generateNewId();
+            accountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allAccounts.put(accountId, this);
+        lastNum++;
         buyLogIds = new HashSet<>();
         if (!suspended) {
             discountIds = new HashMap<>();

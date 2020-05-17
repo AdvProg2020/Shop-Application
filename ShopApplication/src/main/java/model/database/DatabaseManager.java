@@ -25,7 +25,7 @@ public class DatabaseManager implements Database {
         Scanner scanner = Builder.buildScanner(path);
         while (scanner.hasNextLine()) {
             String gsonString = scanner.nextLine();
-            ((Initializable) gson.fromJson(gsonString, classType)).initialize();
+            ((ModelBasic) gson.fromJson(gsonString, classType)).initialize();
         }
         scanner.close();
     }
@@ -61,7 +61,8 @@ public class DatabaseManager implements Database {
     }
 
     private void updateRequests() {
-        update(Paths.requests, Request.class, Request.getAllRequests());
+        update(Paths.requests, Request.class, Request.getRequestArchive());
+        update(Paths.requests, Request.class, Request.getPendingRequests());
     }
 
     private void updateCategories() {
@@ -114,6 +115,16 @@ public class DatabaseManager implements Database {
     }
 
     @Override
+    public void cart() {
+        updateCarts();
+    }
+
+    @Override
+    public void request() {
+        updateRequests();
+    }
+
+    @Override
     public void createAdmin() {
         updateAccounts();
     }
@@ -126,6 +137,7 @@ public class DatabaseManager implements Database {
 
     @Override
     public void createSeller() {
+        updateRequests();
         updateAccounts();
     }
 
@@ -163,22 +175,34 @@ public class DatabaseManager implements Database {
     }
 
     @Override
-    public void cart() {
-        updateCarts();
-    }
-
-    @Override
-    public void request() {
-        updateRequests();
-    }
-
-    @Override
-    public void discount() {
+    public void createDiscount() {
         updateDiscounts();
     }
 
     @Override
-    public void sale() {
+    public void editDiscount() {
+        updateDiscounts();
+    }
+
+    @Override
+    public void removeDiscount() {
+        updateDiscounts();
+    }
+
+    @Override
+    public void createSale() {
+        updateRequests();
+        updateSales();
+    }
+
+    @Override
+    public void editSale() {
+        updateRequests();
+        updateSales();
+    }
+
+    @Override
+    public void removeSale() {
         updateSales();
     }
 
@@ -200,11 +224,14 @@ public class DatabaseManager implements Database {
 
     @Override
     public void createProduct() {
+        updateRequests();
         updateProducts();
+        updateSubProducts();
     }
 
     @Override
     public void editProduct() {
+        updateRequests();
         updateProducts();
     }
 
@@ -217,12 +244,14 @@ public class DatabaseManager implements Database {
     }
 
     @Override
-    public void addSubProduct() {
+    public void createSubProduct() {
+        updateRequests();
         updateSubProducts();
     }
 
     @Override
     public void editSubProduct() {
+        updateRequests();
         updateSubProducts();
     }
 

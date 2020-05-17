@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Review implements Initializable {
+public class Review implements ModelBasic {
     private static Map<String, Review> allReviews = new HashMap<>();
+    private static int lastNum = 1;
     private String reviewId;
     private String reviewerId;
     private String productId;
@@ -27,11 +28,6 @@ public class Review implements Initializable {
         new AddReviewRequest(this);
     }
 
-    private static String generateNewId(String reviewerId, String productId) {
-        //TODO: implement
-        return null;
-    }
-
     public static List<Review> getAllReviews() {
         return new ArrayList<>(allReviews.values());
     }
@@ -43,8 +39,10 @@ public class Review implements Initializable {
     @Override
     public void initialize() {
         if (reviewId == null)
-            reviewId = generateNewId(reviewerId, productId);
+            reviewId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allReviews.put(reviewId, this);
+        lastNum++;
+
         getProduct().addReview(reviewId);
     }
 
@@ -53,6 +51,12 @@ public class Review implements Initializable {
         allReviews.remove(reviewId);
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
     public String getId() {
         return reviewId;
     }

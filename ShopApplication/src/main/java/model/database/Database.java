@@ -3,6 +3,10 @@ package model.database;
 public interface Database {
     void loadDatabase();
 
+    void cart();
+
+    void request();
+
     void createAdmin();
 
     void createCustomer();
@@ -19,13 +23,17 @@ public interface Database {
 
     void purchase();
 
-    void cart();
+    void createDiscount();
 
-    void request();
+    void editDiscount();
 
-    void discount();
+    void removeDiscount();
 
-    void sale();
+    void createSale();
+
+    void editSale();
+
+    void removeSale();
 
     void createCategory();
 
@@ -39,7 +47,7 @@ public interface Database {
 
     void removeProduct();
 
-    void addSubProduct();
+    void createSubProduct();
 
     void editSubProduct();
 

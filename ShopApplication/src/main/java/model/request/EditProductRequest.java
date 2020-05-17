@@ -2,6 +2,7 @@ package model.request;
 
 import model.Product;
 import model.SubProduct;
+import model.database.Database;
 
 public class EditProductRequest extends Request {
     private String subProductId;
@@ -30,10 +31,10 @@ public class EditProductRequest extends Request {
             case INFO_TEXT:
                 product.setInfoText(newValue);
                 break;
-            case PRICE:
+            case SUB_PRICE:
                 subProduct.setPrice(Double.parseDouble(newValue));
                 break;
-            case COUNT:
+            case SUB_COUNT:
                 int changeAmount = Integer.parseInt(newValue) - subProduct.getRemainingCount();
                 subProduct.changeRemainingCount(changeAmount);
         }
@@ -41,12 +42,7 @@ public class EditProductRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        boolean invalid = (getSubProduct() == null);
-
-        if (invalid)
-            terminate();
-
-        return invalid;
+        return (getSubProduct() == null);
     }
 
     public SubProduct getSubProduct() {
@@ -61,11 +57,19 @@ public class EditProductRequest extends Request {
         return newValue;
     }
 
+    @Override
+    public void updateDatabase(Database database) {
+        if (field.toString().startsWith("SUB"))
+            database.editSubProduct();
+        else
+            database.editProduct();
+    }
+
     public enum Field {
         NAME,
         BRAND,
         INFO_TEXT,
-        PRICE,
-        COUNT
+        SUB_PRICE,
+        SUB_COUNT
     }
 }

@@ -1,13 +1,13 @@
 package model.account;
 
-import model.Initializable;
+import model.BasicMethods;
+import model.ModelBasic;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Account implements Initializable {
+public abstract class Account implements ModelBasic {
     protected static Map<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
     protected boolean suspended;
@@ -28,32 +28,15 @@ public abstract class Account implements Initializable {
         suspended = false;
     }
 
-    protected static String generateNewId() {
-        //TODO: implement
-        return null;
-    }
-
     public static List<Account> getAllAccounts(boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        List<Account> accounts = new ArrayList<>(allAccounts.values());
-        if (checkSuspense)
-            accounts.removeIf(account -> account.suspended);
-
-        return accounts;
+        return BasicMethods.getInstances(allAccounts.values(), suspense);
     }
 
     public static Account getAccountById(String accountId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
         if (accountId.equals(Admin.MANAGER_ID))
             return Admin.manager;
 
-        Account account = allAccounts.get(accountId);
-        if (checkSuspense && account != null && account.suspended)
-            account = null;
-
-        return account;
+        return BasicMethods.getInstanceById(allAccounts, accountId, suspense);
     }
 
     public static Account getAccountByUsername(String username) {
@@ -66,14 +49,18 @@ public abstract class Account implements Initializable {
     }
 
     @Override
-    public void initialize() {
-
-    }
+    public abstract void initialize();
 
     public void suspend() {
         suspended = true;
     }
 
+    @Override
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    @Override
     public String getId() {
         return accountId;
     }

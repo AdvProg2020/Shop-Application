@@ -7,8 +7,9 @@ import model.request.AddProductRequest;
 
 import java.util.*;
 
-public class SubProduct implements Initializable {
+public class SubProduct implements ModelBasic {
     private static Map<String, SubProduct> allSubProducts = new HashMap<>();
+    private static int lastNum = 1;
     private String subProductId;
     private String productId;
     private String sellerId;
@@ -29,36 +30,21 @@ public class SubProduct implements Initializable {
             new AddProductRequest(null, this);
     }
 
-    private static String generateNewId(String productId, String sellerId) {
-        //TODO: implement
-        return null;
-    }
-
     public static List<SubProduct> getAllSubProducts(boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        List<SubProduct> subProducts = new ArrayList<>(allSubProducts.values());
-        if (checkSuspense)
-            subProducts.removeIf(subProduct -> subProduct.suspended);
-
-        return subProducts;
+        return BasicMethods.getInstances(allSubProducts.values(), suspense);
     }
 
     public static SubProduct getSubProductById(String subProductId, boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-
-        SubProduct subProduct = allSubProducts.get(subProductId);
-        if (checkSuspense && subProduct != null && subProduct.suspended)
-            subProduct = null;
-
-        return subProduct;
+        return BasicMethods.getInstanceById(allSubProducts, subProductId, suspense);
     }
 
     @Override
     public void initialize() {
         if (subProductId == null)
-            subProductId = generateNewId(productId, sellerId);
+            subProductId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
         allSubProducts.put(subProductId, this);
+        lastNum++;
+
         customerIds = new HashSet<>();
         if (!suspended) {
             getSeller().addSubProduct(subProductId);
@@ -74,6 +60,12 @@ public class SubProduct implements Initializable {
         suspended = true;
     }
 
+    @Override
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    @Override
     public String getId() {
         return subProductId;
     }

@@ -8,6 +8,7 @@ public class Category {
     private static final String EXTRAS_NAME = "extras";
     private static Category superCategory = null; // parent of all main categories (shouldn't be terminated)
     private static Map<String, Category> allCategories = new HashMap<>();
+    private static int lastNum = 1;
     private String categoryId;
     private String name;
     private String parentId;
@@ -20,11 +21,6 @@ public class Category {
         this.parentId = parentId;
         this.specialProperties = specialProperties;
         initialize();
-    }
-
-    private static String generateNewId() {
-        //TODO: implement
-        return null;
     }
 
     public static Category getSuperCategory() {
@@ -63,8 +59,10 @@ public class Category {
             superCategory = this;
         } else {
             if (categoryId == null)
-                categoryId = generateNewId();
+                categoryId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
             allCategories.put(categoryId, this);
+            lastNum++;
+
             getParent().addSubCategory(categoryId);
         }
     }

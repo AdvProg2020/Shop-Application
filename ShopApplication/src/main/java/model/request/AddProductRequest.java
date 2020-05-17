@@ -2,6 +2,7 @@ package model.request;
 
 import model.Product;
 import model.SubProduct;
+import model.database.Database;
 
 public class AddProductRequest extends Request {
     private Product product;
@@ -25,16 +26,11 @@ public class AddProductRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        boolean invalid;
         if (product != null)
-            invalid = (product.getCategory() == null);
-        else
-            invalid = (subProduct.getProduct() == null || subProduct.getSeller() == null);
+            return (product.getCategory() == null);
 
-        if (invalid)
-            terminate();
+        return (subProduct.getProduct() == null || subProduct.getSeller() == null);
 
-        return invalid;
     }
 
     public Product getProduct() {
@@ -43,5 +39,13 @@ public class AddProductRequest extends Request {
 
     public SubProduct getSubProduct() {
         return subProduct;
+    }
+
+    @Override
+    public void updateDatabase(Database database) {
+        if (product == null)
+            database.createSubProduct();
+        else
+            database.createProduct();
     }
 }

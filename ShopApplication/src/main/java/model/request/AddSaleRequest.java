@@ -1,6 +1,7 @@
 package model.request;
 
 import model.Sale;
+import model.database.Database;
 
 public class AddSaleRequest extends Request {
     private Sale sale;
@@ -18,15 +19,15 @@ public class AddSaleRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        boolean invalid = (sale.getSeller() == null);
-
-        if (invalid)
-            terminate();
-
-        return invalid;
+        return (sale.getSeller() == null);
     }
 
     public Sale getSale() {
         return sale;
+    }
+
+    @Override
+    public void updateDatabase(Database database) {
+        database.createSale();
     }
 }

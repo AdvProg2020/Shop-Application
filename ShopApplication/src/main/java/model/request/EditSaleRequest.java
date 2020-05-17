@@ -1,6 +1,7 @@
 package model.request;
 
 import model.Sale;
+import model.database.Database;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,12 +44,7 @@ public class EditSaleRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        boolean invalid = (getSale() == null);
-
-        if (invalid)
-            terminate();
-
-        return invalid;
+        return (getSale() == null);
     }
 
     public Sale getSale() {
@@ -61,6 +57,11 @@ public class EditSaleRequest extends Request {
 
     public String getNewValue() {
         return newValue;
+    }
+
+    @Override
+    public void updateDatabase(Database database) {
+        database.editSale();
     }
 
     public enum Field {
