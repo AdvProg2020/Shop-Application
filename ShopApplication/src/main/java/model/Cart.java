@@ -15,7 +15,6 @@ public class Cart implements ModelBasic {
     private String customerId; // can be null
     private Map<String, Integer> subProductIds;
 
-    //Todo: clear cart
     public Cart(String customerId) {
         this.customerId = customerId;
         subProductIds = new HashMap<>();
@@ -31,9 +30,9 @@ public class Cart implements ModelBasic {
     }
 
     @ModelOnly
-    public static void updateSubProducts() {
+    public static void removeSubProductFromCarts(String subProductId) {
         for (Cart cart : allCarts.values()) {
-            cart.subProductIds.keySet().removeIf(key -> SubProduct.getSubProductById(key) == null);
+            cart.subProductIds.remove(subProductId);
         }
     }
 
@@ -116,5 +115,9 @@ public class Cart implements ModelBasic {
         }
 
         return total;
+    }
+
+    public void clearCart() {
+        subProductIds = new HashMap<>();
     }
 }
