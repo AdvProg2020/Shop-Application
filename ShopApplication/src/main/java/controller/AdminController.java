@@ -21,6 +21,11 @@ public class AdminController extends Controller {
         super(controller.getDatabaseManager());
         mainController = controller;
     }
+
+    private Account currentAccount(){
+        return mainController.getCurrentAccount();
+    }
+    
     //Done!!
 
     /**
@@ -42,10 +47,12 @@ public class AdminController extends Controller {
     public ArrayList<String[]> manageUsers() {
         ArrayList<String[]> accounts = new ArrayList<>();
         for (Account account : Account.getAllAccounts()) {
-            String[] IdUsername = new String[2];
-            IdUsername[0] = account.getId();
-            IdUsername[1] = account.getUsername();
-            accounts.add(IdUsername);
+            if( account != currentAccount()) {
+                String[] IdUsername = new String[2];
+                IdUsername[0] = account.getId();
+                IdUsername[1] = account.getUsername();
+                accounts.add(IdUsername);
+            }
         }
         return accounts;
     }
@@ -66,7 +73,8 @@ public class AdminController extends Controller {
         if (account == null)
             throw new Exceptions.UsernameDoesntExistException(username);
         if( account != Admin.getManager())
-            account.suspend();
+            if(account != currentAccount())
+                account.suspend();
         else
             throw new Exceptions.ManagerDeleteException();
         switch (account.getClass().getSimpleName()) {
@@ -90,13 +98,15 @@ public class AdminController extends Controller {
         databaseManager.createAdmin();
     }
 
-    //Done!! sort?
+    //Done!!
     public ArrayList<String[]> manageAllProducts() {
-        ArrayList<String[]> products = new ArrayList<>();
-        for (Product product : Product.getAllProducts()) {
-            products.add(Utilities.Pack.product(product));
+        ArrayList<String[]> productPacks = new ArrayList<>();
+        ArrayList<Product> products = new ArrayList<>(Product.getAllProducts());
+        products.sort( new Utilities.Sort.ProductViewCountComparator(true));
+        for (Product product : products) {
+            productPacks.add(Utilities.Pack.product(product));
         }
-        return products;
+        return productPacks;
     }
 
     //Done!!
@@ -255,7 +265,7 @@ public class AdminController extends Controller {
         for (Request request : Request.getPendingRequests()) {
             requestIds.add(Utilities.Pack.request(request));
         }
-        if(mainController.getCurrentAccount() == Admin.getManager()){
+        if(currentAccount() == Admin.getManager()){
             for (Request request : Request.getRequestArchive()) {
                 requestIds.add(Utilities.Pack.request(request));
             }
