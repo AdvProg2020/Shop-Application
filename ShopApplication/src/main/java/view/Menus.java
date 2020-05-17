@@ -292,17 +292,17 @@ class Menus {
         }
 
         @Override
-        protected void initSubMenus() {
-            subMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
-        }
-
-        @Override
-        public void execute() {
+        public void run() {
             if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
-                super.execute();
+                super.run();
             } else {
                 parent.run();
             }
+        }
+
+        @Override
+        protected void initSubMenus() {
+            subMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
         }
 
         @Override
@@ -630,7 +630,7 @@ class Menus {
         }
     }
 
-    //this is both used in product menu and in customer menu
+    //add product detail menu
     public static class ShoppingCartMenu extends Menu {
         private ArrayList<String[]> currentProducts;
         ShoppingCartMenu(String name, Menu parent){
@@ -643,7 +643,7 @@ class Menus {
             String type = mainController.getType();
             if (type.equalsIgnoreCase(Constants.adminUserType) || type.equalsIgnoreCase(Constants.sellerUserType)) {
                 System.out.println("you dont possess a shopping cart");
-                return;
+                parent.run();
             }
             else {
                 super.show();
@@ -658,12 +658,12 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.CustomerCartShowProducts("show products", currentProducts));
-            subActions.put(index + 2, new Actions.CustomerCartViewProduct("view product", currentProducts));
-            subActions.put(index + 3, new Actions.CustomerCartIncreaseProductCount("increase count", currentProducts));
-            subActions.put(index + 4, new Actions.CustomerCartDecreaseProductCount("decrease count", currentProducts));
-            subActions.put(index + 5, new Actions.CustomerCartShowTotalPrice("show total price"));
-            subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products", this));
+            subActions.put(index + 1, new Actions.ShoppingCartShowProducts("show products", currentProducts));
+            subActions.put(index + 2, new Actions.ShoppingCartViewProduct("view product", currentProducts));
+            subActions.put(index + 3, new Actions.ShoppingCartIncreaseProductCount("increase count", currentProducts));
+            subActions.put(index + 4, new Actions.ShoppingCartDecreaseProductCount("decrease count", currentProducts));
+            subActions.put(index + 5, new Actions.ShoppingCartShowTotalPrice("show total price"));
+            subActions.put(index + 6, new Actions.ShoppingCartPurchase("purchase products", this));
             subActions.put(index + 7, new Actions.BackAction("back", parent));
         }
     }

@@ -195,20 +195,20 @@ final class Constants {
         static final String sellerRemoveProductCommand = "remove product [index]";
         static final String sellerRemoveProductPattern = caseInsensitiveMode + "^remove product" + spacePattern + argumentPattern + "$";
         //customer account menu actions
-        static final String customerCartShowProductsCommand = "show products";
-        static final String customerCartShowProductsPattern = caseInsensitiveMode + "^" + customerCartShowProductsCommand + "$";
-        static final String customerCartViewProductCommand = "view [productID]";
-        static final String customerCartViewProductPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
-        static final String customerCartIncreaseProductCountCommand = "increase [productID] [-count]";
-        static final String customerCartIncreaseProductCountPattern = caseInsensitiveMode +
+        static final String shoppingCartShowProductsCommand = "show products";
+        static final String shoppingCartShowProductsPattern = caseInsensitiveMode + "^" + shoppingCartShowProductsCommand + "$";
+        static final String shoppingCartViewProductCommand = "view [productID]";
+        static final String shoppingCartViewProductPattern = caseInsensitiveMode + "^view " + argumentPattern + "$";
+        static final String shoppingCartIncreaseProductCountCommand = "increase [productID] [-count]";
+        static final String shoppingCartIncreaseProductCountPattern = caseInsensitiveMode +
                 "^increase " + argumentPattern + "(?: " + unsignedIntPattern + ")$";
-        static final String customerCartDecreaseProductCountCommand = "increase [productID] [-count]";
-        static final String customerCartDecreaseProductCountPattern = caseInsensitiveMode +
+        static final String shoppingCartDecreaseProductCountCommand = "increase [productID] [-count]";
+        static final String shoppingCartDecreaseProductCountPattern = caseInsensitiveMode +
                 "^decrease " + argumentPattern + "(?: " + unsignedIntPattern + ")$";
-        static final String customerCartShowTotalPriceCommand = "show total price";
-        static final String customerCartShowTotalPricePattern = caseInsensitiveMode + customerCartShowTotalPriceCommand + "$";
-        static final String customerCartPurchaseCommand = "purchase";
-        static final String customerCartPurchasePattern = caseInsensitiveMode + "^" + customerCartPurchaseCommand + "$";
+        static final String shoppingCartShowTotalPriceCommand = "show total price";
+        static final String shoppingCartShowTotalPricePattern = caseInsensitiveMode + shoppingCartShowTotalPriceCommand + "$";
+        static final String shoppingCartPurchaseCommand = "purchase";
+        static final String shoppingCartPurchasePattern = caseInsensitiveMode + "^" + shoppingCartPurchaseCommand + "$";
         static final String customerShowOrdersCommand = "show orders";
         static final String customerShowOrdersPattern = caseInsensitiveMode + "^" + customerShowOrdersCommand + "$";
         static final String customerViewOrderCommand = "show order [orderID]";

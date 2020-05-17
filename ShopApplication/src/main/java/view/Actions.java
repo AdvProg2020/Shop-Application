@@ -2,10 +2,8 @@ package view;
 
 import controller.*;
 
-import java.io.PushbackReader;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 
 //TODO: printSeparator();
@@ -1919,44 +1917,34 @@ public class Actions {
         }
     }
 
-    public static class CustomerCartShowProducts extends Action {
+    public static class ShoppingCartShowProducts extends Action {
         private ArrayList<String[]> currentProducts;
-        CustomerCartShowProducts(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartShowProductsPattern, Constants.Actions.customerCartShowProductsCommand);
+        ShoppingCartShowProducts(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartShowProductsPattern, Constants.Actions.shoppingCartShowProductsCommand);
             this.currentProducts = currentProducts;
         }
 
         private void refreshCurrentProducts() {
             currentProducts.clear();
-            currentProducts.addAll(customerController.getProductsInCart());
+            currentProducts.addAll(mainController.getProductsInCart());
         }
 
         @Override
         public void execute(String command) {
             refreshCurrentProducts();
+            System.out.println("shopping cart products:");
             printList(currentProducts);
             printSeparator();
         }
     }
 
-    public static class CustomerCartViewProduct extends Action {
+    public static class ShoppingCartViewProduct extends Action {
         private ArrayList<String[]> currentProducts;
-        CustomerCartViewProduct(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartViewProductPattern, Constants.Actions.customerCartViewProductCommand);
+        ShoppingCartViewProduct(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartViewProductPattern, Constants.Actions.shoppingCartViewProductCommand);
             this.currentProducts = currentProducts;
         }
 
-        private int getIndexByID(String productID) {
-            int size = currentProducts.size();
-            for (int i = 0; i < size; i++) {
-                if (currentProducts.get(i)[0].equals(productID)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        //wtf is last field.
         private void printInfo(int index) {
             String[] info = currentProducts.get(index);
             System.out.println("1. product ID: " + info[0]);
@@ -1970,15 +1958,11 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
             try {
-                int index = getIndexByID(productID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    customerController.viewProductInCart(productID);
-                    printInfo(index);
+                int index = getIndex(command, currentProducts);
+                if (index != 0) {
+                    mainController.viewProductInCart(currentProducts.get(index - 1)[0]);
+
                 }
             } catch (Exceptions.InvalidSubProductIdException e) {
                 System.out.println(e.getMessage());
@@ -1987,10 +1971,42 @@ public class Actions {
         }
     }
 
-    public static class CustomerCartIncreaseProductCount extends Action {
+    public static class ShoppingCartIncreaseProductCount extends Action {
         private ArrayList<String[]> currentProducts;
-        CustomerCartIncreaseProductCount(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartIncreaseProductCountPattern, Constants.Actions.customerCartIncreaseProductCountCommand);
+        ShoppingCartIncreaseProductCount(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartIncreaseProductCountPattern, Constants.Actions.shoppingCartIncreaseProductCountCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        @Override
+        public void execute(String command) {
+            Matcher commandMatcher = getMatcherReady(command);
+            int index = Integer.parseInt(commandMatcher.group(1));
+            int count;
+            if (index > currentProducts.size()) {
+                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+            } else {
+                if (commandMatcher.groupCount() == 2) {
+                    count = Integer.parseInt(commandMatcher.group(2));
+                } else {
+                    count = 1;
+                }
+                try {
+                    mainController.increaseProductInCart(currentProducts.get(index - 1)[0], count);
+                } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException | Exceptions.UnAuthorizedAccountException e) {
+                    System.out.println(e.getMessage());
+                } catch (Exceptions.UnavailableProductException e) {
+                    System.out.println("not enough product. try choosing another seller");
+                }
+            }
+            printSeparator();
+        }
+    }
+
+    public static class ShoppingCartDecreaseProductCount extends Action {
+        private ArrayList<String[]> currentProducts;
+        ShoppingCartDecreaseProductCount(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartDecreaseProductCountPattern, Constants.Actions.shoppingCartDecreaseProductCountCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -2007,69 +2023,29 @@ public class Actions {
         @Override
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
+            int index = Integer.parseInt(commandMatcher.group(1));
             int count;
-            if (commandMatcher.groupCount() == 2) {
-                count = Integer.parseInt(commandMatcher.group(2));
-            } else { count = 1; }
-            try {
-                int index = getIndexByID(productID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+            if (index > currentProducts.size()) {
+                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+            } else {
+                if (commandMatcher.groupCount() == 2) {
+                    count = Integer.parseInt(commandMatcher.group(2));
                 } else {
-                   customerController.increaseProductInCart(productID, count);
+                    count = 1;
                 }
-            } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException e) {
-                System.out.println(e.getMessage());
-            } catch (Exceptions.UnavailableProductException e) {
-                System.out.println("not enough product. try choosing another seller");
+                try {
+                    mainController.decreaseProductInCart(currentProducts.get(index - 1)[0], count);
+                } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException | Exceptions.UnAuthorizedAccountException e) {
+                    System.out.println(e.getMessage());
+                }
             }
             printSeparator();
         }
     }
 
-    public static class CustomerCartDecreaseProductCount extends Action {
-        private ArrayList<String[]> currentProducts;
-        CustomerCartDecreaseProductCount(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartDecreaseProductCountPattern, Constants.Actions.customerCartDecreaseProductCountCommand);
-            this.currentProducts = currentProducts;
-        }
-
-        private int getIndexByID(String productID) {
-            int size = currentProducts.size();
-            for (int i = 0; i < size; i++) {
-                if (currentProducts.get(i)[0].equals(productID)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        @Override
-        public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
-            int count;
-            if (commandMatcher.groupCount() == 2) {
-                count = Integer.parseInt(commandMatcher.group(2));
-            } else { count = 1; }
-            try {
-                int index = getIndexByID(productID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    customerController.decreaseProductInCart(productID, count);
-                }
-            } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException e) {
-                System.out.println(e.getMessage());
-            }
-            printSeparator();
-        }
-    }
-
-    public static class CustomerCartShowTotalPrice extends Action {
-        CustomerCartShowTotalPrice(String name) {
-            super(name, Constants.Actions.customerCartShowTotalPricePattern, Constants.Actions.customerCartShowTotalPriceCommand);
+    public static class ShoppingCartShowTotalPrice extends Action {
+        ShoppingCartShowTotalPrice(String name) {
+            super(name, Constants.Actions.shoppingCartShowTotalPricePattern, Constants.Actions.shoppingCartShowTotalPriceCommand);
         }
 
         @Override
@@ -2079,10 +2055,10 @@ public class Actions {
         }
     }
 
-    public static class CustomerCartPurchase extends Action {
+    public static class ShoppingCartPurchase extends Action {
         private Menu shoppingCartMenu;
-        CustomerCartPurchase(String name, Menu shoppingCartMenu) {
-            super(name, Constants.Actions.customerCartPurchasePattern, Constants.Actions.customerCartPurchaseCommand);
+        ShoppingCartPurchase(String name, Menu shoppingCartMenu) {
+            super(name, Constants.Actions.shoppingCartPurchasePattern, Constants.Actions.shoppingCartPurchaseCommand);
             this.shoppingCartMenu = shoppingCartMenu;
         }
 
