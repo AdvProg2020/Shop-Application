@@ -27,7 +27,7 @@ public class AdminController extends Controller {
      * { String firstName, String lastName, String phone, String email, String password}
      */
     public String[] getPersonalInfoEditableFields() {
-        return Utilities.Pack.adminPersonalInfoEditableFields();
+        return Utilities.Field.adminPersonalInfoEditableFields();
     }
 
     //Done!!
@@ -109,21 +109,28 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!! TODO: unified exception/ database
-    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount, ArrayList<String[]> customerIds) throws Exceptions.ExistingDiscountCodeException {
+    //Done!!
+    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage,
+                                   int maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount {
 
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
         else {
             ArrayList<String> wrongIds = new ArrayList<>();
-            for (String[] Id : new ArrayList<>(customerIds)) {
+            for (String[] Id : new ArrayList<>(customersIdCount)) {
                 Account account = Account.getAccountById(Id[0]);
                 if(!(account instanceof Customer)){
                     wrongIds.add(Id[0]);
-                    customerIds.remove(Id);
+                    customersIdCount.remove(Id);
                 }
             }
             Discount discount = new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
+            for (String[] IdCount : customersIdCount) {
+                discount.addCustomer(IdCount[0], Integer.parseInt(IdCount[1]));
+            }
+            databaseManager.createDiscount();
+            if(wrongIds.size() > 0)
+                throw new Exceptions.InvalidAccountsForDiscount(Utilities.Pack.invalidAccountIds(wrongIds));
         }
     }
 
@@ -133,9 +140,10 @@ public class AdminController extends Controller {
         Account account = Account.getAccountById(customerId);
         if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
-        else if (account instanceof Customer)
+        else if (account instanceof Customer) {
             discount.addCustomer(customerId, count);
-        else
+            databaseManager.editDiscount();
+        }else
             throw new Exceptions.CustomerIdException(customerId);
     }
 
@@ -174,12 +182,7 @@ public class AdminController extends Controller {
 
     //Done!!
     public String[] getDiscountEditableFields() {
-        String[] editableFields = new String[4];
-        editableFields[0] = "start date";
-        editableFields[1] = "end date";
-        editableFields[2] = "maximum amount";
-        editableFields[3] = "percentage";
-        return editableFields;
+        return Utilities.Field.discountEditableFields();
     }
 
     //Done!!
@@ -341,10 +344,7 @@ public class AdminController extends Controller {
 
     //Done!!
     public String[] getCategoryEditableFields() {
-        String[] editableFields = new String[2];
-        editableFields[0] = "name";
-        editableFields[1] = "parent name";
-        return editableFields;
+        return Utilities.Field.getCategoryEditableFields();
     }
 
     //Done!!

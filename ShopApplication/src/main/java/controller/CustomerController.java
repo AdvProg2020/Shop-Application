@@ -32,7 +32,7 @@ public class CustomerController extends Controller {
      * { String firstName, String lastName, String phone, String email, String password, balance}
      */
     public String[] getPersonalInfoEditableFields() {
-        return Utilities.Pack.customerPersonalInfoEditableFields();
+        return Utilities.Field.customerPersonalInfoEditableFields();
     }
 
     @Override

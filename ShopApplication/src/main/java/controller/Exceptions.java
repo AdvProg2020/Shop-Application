@@ -113,6 +113,12 @@ public class Exceptions {
         }
     }
 
+    public static class InvalidAccountsForDiscount extends Exception{
+        public InvalidAccountsForDiscount(String accountIds){
+            super("You can only add customer account to a discount these accountIds are invalid" + accountIds);
+        }
+    }
+
     public static class ExistingDiscountCodeException extends Exception {
         public ExistingDiscountCodeException(String discountCode) {
             super("There is already a discount code with code: " + discountCode);
@@ -190,4 +196,6 @@ public class Exceptions {
             super("Your cart is empty!");
         }
     }
+
+
 }

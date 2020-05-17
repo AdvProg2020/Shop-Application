@@ -13,6 +13,7 @@ import model.request.Request;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class Utilities {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -215,8 +216,8 @@ public class Utilities {
 
         public static String[] productChange(EditProductRequest request){
             String[] productChange = new String[2];
-            productChange[0] = ((EditProductRequest) request).getField().toString();
-            productChange[1] = ((EditProductRequest) request).getNewValue();
+            productChange[0] = request.getField().toString();
+            productChange[1] = request.getNewValue();
             return productChange;
         }
 
@@ -227,6 +228,28 @@ public class Utilities {
             return personPack;
         }
 
+        public static String invalidProductIds(ArrayList<String> subProductIds) {
+            StringBuilder invalidSubProductIds = new StringBuilder();
+            String falseSubProduct;
+            for (String subProductId : subProductIds) {
+                falseSubProduct = "\n" + subProductId;
+                invalidSubProductIds.append(falseSubProduct);
+            }
+            return invalidSubProductIds.toString();
+        }
+
+        public static String invalidAccountIds(ArrayList<String> accountIds){
+            StringBuilder invalidAccountIds = new StringBuilder();
+            String falseAccount;
+            for (String accountId : accountIds) {
+                falseAccount = "\n" + accountId;
+                invalidAccountIds.append(falseAccount);
+            }
+            return invalidAccountIds.toString();
+        }
+    }
+
+    static class Field{
         public static String[] customerPersonalInfoEditableFields() {
             String[] editableFields = new String[6];
             editableFields[0] = "firstName";
@@ -257,6 +280,41 @@ public class Utilities {
             editableFields[2] = "phone";
             editableFields[3] = "email";
             editableFields[4] = "password";
+            return editableFields;
+        }
+
+        public static String[] productEditableFields(){
+            String[] editableFields = new String[5];
+            editableFields[0] = "name";
+            editableFields[1] = "brand";
+            editableFields[2] = "info text";
+            editableFields[3] = "price";
+            editableFields[4] = "count";
+            return editableFields;
+        }
+
+        public static String[] saleEditableFields() {
+            String[] saleEditableFields = new String[4];
+            saleEditableFields[0] = "start date";
+            saleEditableFields[1] = "end date";
+            saleEditableFields[2] = "percentage";
+            saleEditableFields[3] = "maximum";
+            return saleEditableFields;
+        }
+
+        public static String[] discountEditableFields() {
+            String[] editableFields = new String[4];
+            editableFields[0] = "start date";
+            editableFields[1] = "end date";
+            editableFields[2] = "maximum amount";
+            editableFields[3] = "percentage";
+            return editableFields;
+        }
+
+        public static String[] getCategoryEditableFields() {
+            String[] editableFields = new String[2];
+            editableFields[0] = "name";
+            editableFields[1] = "parent name";
             return editableFields;
         }
     }

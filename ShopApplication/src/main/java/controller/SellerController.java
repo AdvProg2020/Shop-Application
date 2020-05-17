@@ -31,7 +31,7 @@ public class SellerController extends Controller {
      *         { String firstName, String lastName, String phone, String email, String password, String storeName, balance}
      */
     public String[] getPersonalInfoEditableFields(){
-        return Utilities.Pack.sellerPersonalInfoEditableFields();
+        return Utilities.Field.sellerPersonalInfoEditableFields();
     }
 
 
@@ -117,13 +117,7 @@ public class SellerController extends Controller {
 
     //Done!!
     public String[] getProductEditableFields() {
-        String[] editableFields = new String[5];
-        editableFields[0] = "name";
-        editableFields[1] = "brand";
-        editableFields[2] = "info text";
-        editableFields[3] = "price";
-        editableFields[4] = "count";
-        return editableFields;
+        return Utilities.Field.productEditableFields();
     }
 
     //Done!!
@@ -260,12 +254,7 @@ public class SellerController extends Controller {
 
     //Done!!
     public String[] getSaleEditableFields() {
-        String[] saleEditableFields = new String[4];
-        saleEditableFields[0] = "start date";
-        saleEditableFields[1] = "end date";
-        saleEditableFields[2] = "percentage";
-        saleEditableFields[3] = "maximum";
-        return saleEditableFields;
+        return Utilities.Field.saleEditableFields();
     }
 
     //Done!!
@@ -327,7 +316,7 @@ public class SellerController extends Controller {
         }
     }
 
-    //Done!! TODO
+    //Done!!
     public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
         if (startDate.before(endDate)) {
             Sale sale = new Sale(((Seller) currentAccount).getId(), startDate, endDate, percentage, maximum);
@@ -347,19 +336,9 @@ public class SellerController extends Controller {
             }
             databaseManager.request();
             if (invalidSubProductIds.size() > 0)
-                throw new Exceptions.InvalidProductIdsForASeller(invalidProductIds(invalidSubProductIds));
+                throw new Exceptions.InvalidProductIdsForASeller(Utilities.Pack.invalidProductIds(invalidSubProductIds));
         } else
             throw new Exceptions.InvalidDateException();
-    }
-
-    private String invalidProductIds(ArrayList<String> subProductIds) {
-        StringBuilder invalidSubProductIds = new StringBuilder();
-        String falseSubProduct = null;
-        for (String subProductId : subProductIds) {
-            falseSubProduct = "\n" + subProductId;
-            invalidSubProductIds.append(falseSubProduct);
-        }
-        return invalidSubProductIds.toString();
     }
 
     //Done!
