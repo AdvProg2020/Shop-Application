@@ -190,4 +190,9 @@ public class Exceptions {
         }
     }
 
+    public static class UnAuthorizedAccountException extends Exception{
+        public UnAuthorizedAccountException(){
+            super("This account doesnt have access to shopping cart!");
+        }
+    }
 }
