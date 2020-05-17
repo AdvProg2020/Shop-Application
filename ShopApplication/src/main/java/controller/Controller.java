@@ -70,7 +70,7 @@ public class Controller {
         }
     }
 
-    //Done!!
+    //Done!! TODO: Shayan data base for cart
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -81,6 +81,7 @@ public class Controller {
         if (currentAccount instanceof Customer) {
             ((Customer) currentAccount).mergeCart(currentCart.getId());
             currentCart = ((Customer) currentAccount).getCart();
+
         }
     }
 
@@ -423,6 +424,7 @@ public class Controller {
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubProductCount(subProductId, count);
+            databaseManager.cart();
         }
     }
 
@@ -473,8 +475,10 @@ public class Controller {
             throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
         else if (number + subProducts.get(subProduct) > subProduct.getRemainingCount())
             throw new Exceptions.UnavailableProductException(subProductId);
-        else
+        else {
             currentCart.addSubProductCount(subProductId, number);
+            databaseManager.cart();
+        }
     }
 
     //Done!!
@@ -485,9 +489,10 @@ public class Controller {
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else {
             Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
-            if (subProductsInCart.containsKey(subProduct))
+            if (subProductsInCart.containsKey(subProduct)) {
                 currentCart.addSubProductCount(subProductId, -number);
-            else
+                databaseManager.cart();
+            }else
                 throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
         }
     }
@@ -505,8 +510,10 @@ public class Controller {
         else {
             if (Product.getProductById(productId) == null)
                 throw new Exceptions.InvalidProductIdException(productId);
-            else
+            else {
                 new Review(currentAccount.getId(), productId, title, text);
+                databaseManager.addReview();
+            }
         }
     }
 
