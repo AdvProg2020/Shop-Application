@@ -1,6 +1,6 @@
 package model;
 
-import jdk.jfr.Label;
+import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 
 import java.util.ArrayList;
@@ -29,14 +29,14 @@ public class Cart implements ModelBasic {
         return allCarts.get(cartId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public static void updateSubProducts() {
         for (Cart cart : allCarts.values()) {
             cart.subProductIds.keySet().removeIf(key -> SubProduct.getSubProductById(key) == null);
         }
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public static void mergeCarts(String srcCartId, String destCartId) {
         Cart srcCart = allCarts.get(srcCartId);
         Cart destCart = allCarts.get(destCartId);
@@ -49,7 +49,7 @@ public class Cart implements ModelBasic {
     @Override
     public void initialize() {
         if (cartId == null)
-            cartId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            cartId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allCarts.put(cartId, this);
         lastNum++;
 
@@ -57,7 +57,7 @@ public class Cart implements ModelBasic {
             getCustomer().setCart(cartId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void terminate() {
         allCarts.remove(cartId);
     }

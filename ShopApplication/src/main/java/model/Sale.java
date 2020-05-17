@@ -29,17 +29,17 @@ public class Sale implements ModelBasic {
     }
 
     public static List<Sale> getAllSales(boolean... suspense) {
-        return BasicMethods.getInstances(allSales.values(), suspense);
+        return ModelUtilities.getInstances(allSales.values(), suspense);
     }
 
     public static Sale getSaleById(String saleId, boolean... suspense) {
-        return BasicMethods.getInstanceById(allSales, saleId, suspense);
+        return ModelUtilities.getInstanceById(allSales, saleId, suspense);
     }
 
     @Override
     public void initialize() {
         if (saleId == null)
-            saleId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            saleId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allSales.put(saleId, this);
         lastNum++;
 
@@ -60,17 +60,13 @@ public class Sale implements ModelBasic {
         suspended = true;
     }
 
-    private boolean isInactive() {
+    @Override
+    public boolean isSuspended() {
         Date now = new Date();
         if (now.after(endDate))
             suspend();
 
-        return suspended || now.before(startDate);
-    }
-
-    @Override
-    public boolean isSuspended() {
-        return suspended;
+        return (suspended || now.before(startDate));
     }
 
     @Override

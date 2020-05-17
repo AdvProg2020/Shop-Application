@@ -1,10 +1,10 @@
 package model;
 
-import jdk.jfr.Label;
+import model.ModelUtilities.ModelOnly;
 
 import java.util.*;
 
-public class Category {
+public class Category implements ModelBasic {
     private static final String EXTRAS_NAME = "extras";
     private static Category superCategory = null; // parent of all main categories (shouldn't be terminated)
     private static Map<String, Category> allCategories = new HashMap<>();
@@ -52,6 +52,7 @@ public class Category {
         return null;
     }
 
+    @Override
     public void initialize() {
         subCategoryIds = new HashSet<>();
         productIds = new HashSet<>();
@@ -59,7 +60,7 @@ public class Category {
             superCategory = this;
         } else {
             if (categoryId == null)
-                categoryId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+                categoryId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
             allCategories.put(categoryId, this);
             lastNum++;
 
@@ -78,6 +79,12 @@ public class Category {
         allCategories.remove(categoryId);
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
     public String getId() {
         return categoryId;
     }
@@ -117,12 +124,12 @@ public class Category {
         return products;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addProduct(String productId) {
         productIds.add(productId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void removeProduct(String productId) {
         productIds.remove(productId);
     }
@@ -145,12 +152,12 @@ public class Category {
         return false;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addSubCategory(String subCategoryId) {
         subCategoryIds.add(subCategoryId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void removeSubCategory(String subCategoryId) {
         subCategoryIds.remove(subCategoryId);
     }

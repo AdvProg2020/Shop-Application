@@ -1,6 +1,6 @@
 package model;
 
-import jdk.jfr.Label;
+import model.ModelUtilities.ModelOnly;
 import model.request.AddProductRequest;
 
 import java.util.*;
@@ -32,11 +32,11 @@ public class Product implements ModelBasic {
     }
 
     public static List<Product> getAllProducts(boolean... suspense) {
-        return BasicMethods.getInstances(allProducts.values(), suspense);
+        return ModelUtilities.getInstances(allProducts.values(), suspense);
     }
 
     public static Product getProductById(String productId, boolean... suspense) {
-        return BasicMethods.getInstanceById(allProducts, productId, suspense);
+        return ModelUtilities.getInstanceById(allProducts, productId, suspense);
     }
 
     public static List<Product> getProductsByName(String name) {
@@ -61,7 +61,7 @@ public class Product implements ModelBasic {
     @Override
     public void initialize() {
         if (productId == null)
-            productId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            productId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allProducts.put(productId, this);
         lastNum++;
 
@@ -169,12 +169,12 @@ public class Product implements ModelBasic {
         return false;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void removeSubProduct(String subProductId) {
         subProductIds.remove(subProductId);
     }
@@ -191,7 +191,7 @@ public class Product implements ModelBasic {
         return reviews;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addReview(String reviewId) {
         reviewIds.add(reviewId);
     }
@@ -204,6 +204,11 @@ public class Product implements ModelBasic {
         return ratings;
     }
 
+    @ModelOnly
+    public void addRating(String ratingId) {
+        ratingIds.add(ratingId);
+    }
+
     public double getAverageRatingScore() {
         if (ratingIds.size() == 0) {
             return 0;
@@ -213,11 +218,6 @@ public class Product implements ModelBasic {
             sum += Rating.getRatingById(ratingId).getScore();
         }
         return sum / ratingIds.size();
-    }
-
-    @Label("Model internal use only!")
-    public void addRating(String ratingId) {
-        ratingIds.add(ratingId);
     }
 
     public double getMinPrice() {

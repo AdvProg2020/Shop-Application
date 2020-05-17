@@ -1,8 +1,9 @@
 package model.log;
 
-import jdk.jfr.Label;
-import model.BasicMethods;
+
 import model.ModelBasic;
+import model.ModelUtilities;
+import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 
 import java.util.*;
@@ -33,6 +34,7 @@ public class BuyLog implements ModelBasic {
         this.shippingStatus = shippingStatus;
         initialize();
     }
+
     public static List<BuyLog> getAllBuyLogs() {
         return new ArrayList<>(allBuyLogs.values());
     }
@@ -44,7 +46,7 @@ public class BuyLog implements ModelBasic {
     @Override
     public void initialize() {
         if (buyLogId == null)
-            buyLogId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            buyLogId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allBuyLogs.put(buyLogId, this);
         lastNum++;
 
@@ -106,7 +108,7 @@ public class BuyLog implements ModelBasic {
         return logItems;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addLogItem(String logItemId) {
         logItemIds.add(logItemId);
     }

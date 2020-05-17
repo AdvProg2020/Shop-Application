@@ -1,9 +1,9 @@
 package model.account;
 
-import jdk.jfr.Label;
-import model.BasicMethods;
 import model.Cart;
 import model.Discount;
+import model.ModelUtilities;
+import model.ModelUtilities.ModelOnly;
 import model.log.BuyLog;
 
 import java.util.*;
@@ -31,7 +31,7 @@ public class Customer extends Account {
     @Override
     public void initialize() {
         if (accountId == null)
-            accountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allAccounts.put(accountId, this);
         lastNum++;
         buyLogIds = new HashSet<>();
@@ -62,7 +62,7 @@ public class Customer extends Account {
         return Cart.getCartById(cartId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void setCart(String cartId) {
         if (this.cartId != null)
             getCart().terminate();
@@ -82,7 +82,7 @@ public class Customer extends Account {
         return buyLogs;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addBuyLog(String buyLogId) {
         buyLogIds.add(buyLogId);
     }
@@ -97,12 +97,12 @@ public class Customer extends Account {
         return discounts;
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void addDiscount(String discountId, int count) {
         discountIds.put(discountId, count);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void removeDiscount(String discountId) {
         discountIds.remove(discountId);
     }

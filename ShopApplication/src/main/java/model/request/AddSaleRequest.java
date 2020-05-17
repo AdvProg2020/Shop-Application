@@ -19,7 +19,7 @@ public class AddSaleRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        return (sale.getSeller() == null);
+        return (status == RequestStatus.PENDING) && (sale.getSeller() == null);
     }
 
     public Sale getSale() {

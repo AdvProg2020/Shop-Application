@@ -31,11 +31,11 @@ public class Discount implements ModelBasic {
     }
 
     public static List<Discount> getAllDiscounts(boolean... suspense) {
-        return BasicMethods.getInstances(allDiscounts.values(), suspense);
+        return ModelUtilities.getInstances(allDiscounts.values(), suspense);
     }
 
     public static Discount getDiscountById(String discountId, boolean... suspense) {
-        return BasicMethods.getInstanceById(allDiscounts, discountId, suspense);
+        return ModelUtilities.getInstanceById(allDiscounts, discountId, suspense);
     }
 
     public static Discount getDiscountByCode(String discountCode) {
@@ -50,7 +50,7 @@ public class Discount implements ModelBasic {
     @Override
     public void initialize() {
         if (discountId == null)
-            discountId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            discountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allDiscounts.put(discountId, this);
         lastNum++;
 

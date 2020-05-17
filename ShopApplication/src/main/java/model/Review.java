@@ -1,6 +1,6 @@
 package model;
 
-import jdk.jfr.Label;
+import model.ModelUtilities.ModelOnly;
 import model.account.Account;
 import model.request.AddReviewRequest;
 
@@ -39,14 +39,14 @@ public class Review implements ModelBasic {
     @Override
     public void initialize() {
         if (reviewId == null)
-            reviewId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            reviewId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allReviews.put(reviewId, this);
         lastNum++;
 
         getProduct().addReview(reviewId);
     }
 
-    @Label("Model internal use only!")
+    @ModelOnly
     public void terminate() {
         allReviews.remove(reviewId);
     }

@@ -76,8 +76,8 @@ final class Constants {
         static final String showProductsPattern = caseInsensitiveMode + "^show products" + spacePattern + "(-all)?$";
         static final String showCategoriesCommand = "view categories";
         static final String showCategoriesPattern = caseInsensitiveMode + "^" + showCategoriesCommand + "$";
-        static final String chooseCategoryCommand = "choose category [availableCategory]";
-        static final String chooseCategoryPattern = caseInsensitiveMode + "^choose category" + spacePattern + argumentPattern + "$";
+        static final String chooseCategoryCommand = "choose category [index]";
+        static final String chooseCategoryPattern = caseInsensitiveMode + "^choose category" + spacePattern + unsignedIntPattern + "$";
         static final String revertCategoryCommand = "revert category [-numberOfReverts]"; //you can set the number of times to go back. 1 by default.
         static final String revertCategoryPattern = caseInsensitiveMode + "^revert category(?:" + spacePattern + unsignedIntPattern + ")?$";
         static final String productDetailMenuCommand = "show product [productIndex]";
@@ -99,6 +99,8 @@ final class Constants {
         //SaleMenu actions.
         static final String showOffsCommand = "show offs";
         static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
+        static final String showInSaleProductsCommand = "show in sale products";
+        static final String showInSaleProductsPattern = caseInsensitiveMode + "^" + showInSaleProductsCommand + "$";
         //account menus actions.
         static final String viewPersonalInfoCommand = "view info";
         static final String viewPersonalInfoPattern = caseInsensitiveMode + "^" + viewPersonalInfoCommand + "$";
@@ -108,6 +110,8 @@ final class Constants {
         static final String showSellerCompanyInfoPattern = caseInsensitiveMode + "^" + showSellerCompanyInfoCommand + "$";
         static final String showSellerSellHistoryCommand = "view sales history";
         static final String showSellerSellHistoryPattern = caseInsensitiveMode + "^" + showSellerSellHistoryCommand + "$";
+        static final String showSingleSellLogCommand = "view sell history [sellHistoryIndex]";
+        static final String showSingleSellLogPattern = caseInsensitiveMode + "^view sell history" + spacePattern + unsignedIntPattern + "$";
         static final String showSellerBalanceCommand = "view balance";
         static final String showSellerBalancePattern = caseInsensitiveMode + "^" + showSellerBalanceCommand + "$";
         static final String showCustomerBalanceCommand = "view balance";
@@ -116,7 +120,6 @@ final class Constants {
         static final String showCustomerDiscountCodesPattern = caseInsensitiveMode + "^" + showCustomerDiscountCodesCommand +"$";
         static final String digestProductCommand = "digest";
         static final String digestProductPattern = caseInsensitiveMode + "" + digestProductCommand + "$";
-        //TODO: wtf should we do with sub products
         static final String showSubProductsCommand = "show sub products";
         static final String showSubProductsPattern = caseInsensitiveMode + "^" + showSubProductsCommand + "$";
         static final String addToCartCommand = "add to cart";
@@ -135,22 +138,28 @@ final class Constants {
         static final String showReviewsCommand = "show comments";
         static final String showReviewsPattern = caseInsensitiveMode + "^" + showReviewsCommand + "$";
         //admin account menu actions
-        static final String adminViewUserCommand = "view user [username]";
-        static final String adminViewUserPattern = caseInsensitiveMode + "^view user " + argumentPattern + "$";
-        static final String adminDeleteUserCommand = "delete user [username]";
-        static final String adminDeleteUserPattern = caseInsensitiveMode + "^delete user " + argumentPattern + "$";
+        static final String adminViewAllUsersCommand = "show users";
+        static final String adminViewAllUsersPattern = caseInsensitiveMode + "^" + adminViewAllUsersCommand + "$";
+        static final String adminViewUserCommand = "view user [index]";
+        static final String adminViewUserPattern = caseInsensitiveMode + "^view user" + spacePattern + unsignedIntPattern + "$";
+        static final String adminDeleteUserCommand = "delete user [index]";
+        static final String adminDeleteUserPattern = caseInsensitiveMode + "^delete user " + spacePattern + unsignedIntPattern + "$";
         static final String adminCreateAdminCommand = "create manager profile";
         static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
-        static final String adminRemoveProductByIDCommand = "remove [productID]";
-        static final String adminRemoveProductByIDPattern = caseInsensitiveMode + "^remove " + argumentPattern + "$";
+        static final String adminShowProductsCommand = "show products";
+        static final String adminShowProductsPattern = caseInsensitiveMode + "^" +  adminShowProductsCommand + "$";
+        static final String adminRemoveProductByIDCommand = "remove [index]";
+        static final String adminRemoveProductByIDPattern = caseInsensitiveMode + "^remove" + spacePattern + unsignedIntPattern + "$";
         static final String adminCreateDiscountCodeCommand = "create discount code";
         static final String adminCreateDiscountCodePattern = caseInsensitiveMode + adminCreateDiscountCodeCommand + "$";
-        static final String adminViewDiscountCodeCommand = "view discount code [discountCode]";
-        static final String adminViewDiscountCodePattern = caseInsensitiveMode + "^view discount code " + argumentPattern + "$";
-        static final String adminEditDiscountCodeCommand = "edit discount code [discountCode]";
-        static final String adminEditDiscountCodePattern = caseInsensitiveMode + "^edit discount code " + argumentPattern + "$";
-        static final String adminRemoveDiscountCodeCommand = "remove discount code [discountCode]";
-        static final String adminRemoveDiscountCodePattern = caseInsensitiveMode + "^remove discount code " + argumentPattern + "$";
+        static final String adminShowDiscountCodesCommand = "show discount codes";
+        static final String adminShowDiscountCodesPattern = caseInsensitiveMode + "^" + adminShowDiscountCodesCommand + "$";
+        static final String adminViewDiscountCodeCommand = "view discount code [index]";
+        static final String adminViewDiscountCodePattern = caseInsensitiveMode + "^view discount code" + spacePattern + unsignedIntPattern  + "$";
+        static final String adminEditDiscountCodeCommand = "edit discount code [index]";
+        static final String adminEditDiscountCodePattern = caseInsensitiveMode + "^edit discount code" + spacePattern + unsignedIntPattern + "$";
+        static final String adminRemoveDiscountCodeCommand = "remove discount code [index]";
+        static final String adminRemoveDiscountCodePattern = caseInsensitiveMode + "^remove discount code" + spacePattern + unsignedIntPattern + "$";
         //minor modification cuz of showing dilemma.
         static final String adminViewRequestDetailCommand = "details [requestID]";
         static final String adminViewRequestDetailPattern = caseInsensitiveMode + "^details " + argumentPattern + "$";

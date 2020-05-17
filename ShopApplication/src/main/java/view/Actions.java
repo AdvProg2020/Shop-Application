@@ -2,6 +2,7 @@ package view;
 
 import controller.*;
 
+import java.io.PushbackReader;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,9 @@ import java.util.regex.Matcher;
 //TODO: types start with capital.
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: index choosing
+//TODO: nullptr exception.
+//TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim va inke age customer ya anonymous nabd natone.
+//TODO: getDefaultSubProductID();
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -223,12 +227,14 @@ public class Actions {
         }
 
         private String getSortingField() {
+            if (currentSort.length() == 0) {return null;}
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 3;
             return currentSort.substring(0, indicatorIndex);
         }
 
         private boolean isIncreasing() {
+            if (currentSort.length() == 0) {return true;}
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 2;
              return currentSort.substring(indicatorIndex).equalsIgnoreCase("increasing");
@@ -265,8 +271,15 @@ public class Actions {
 
     public static class ShowCategories extends Action {
         private ArrayList<String> categoryTree;
-        ShowCategories(String name, ArrayList<String> categoryTree) {
+        private ArrayList<String[]> availableCategories;
+        ShowCategories(String name, ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
             super(name, Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
+            this.availableCategories = availableCategories;
+        }
+
+        private void refreshCategories(String lastCategory) throws Exceptions.InvalidCategoryException {
+            availableCategories.clear();
+            availableCategories.addAll(mainController.getSubCategoriesOfThisCategory(lastCategory));
         }
 
         @Override
@@ -278,8 +291,8 @@ public class Actions {
                 } else {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
-                ArrayList<String[]> info = mainController.getSubCategoriesOfThisCategory(lastCategory);
-                printList(info);
+                refreshCategories(lastCategory);
+                printList(availableCategories);
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
             }
@@ -289,37 +302,18 @@ public class Actions {
 
     public static class ChooseCategoryAction extends Action {
         private ArrayList<String> categoryTree;
-        ChooseCategoryAction(String name, ArrayList<String> categoryTree) {
+        private ArrayList<String[]> availableCategories;
+        ChooseCategoryAction(String name, ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
             super(name, Constants.Actions.chooseCategoryPattern, Constants.Actions.chooseCategoryCommand);
+            this.availableCategories = availableCategories;
             this.categoryTree = categoryTree;
-        }
-
-        private boolean isCategoryNameValid(String categoryName) {
-            try {
-                ArrayList<String[]> subs;
-                if (categoryTree.isEmpty()) {
-                    subs = mainController.getSubCategoriesOfThisCategory("superCategory");
-                } else {
-                    subs = mainController.getSubCategoriesOfThisCategory(categoryTree.get(categoryTree.size() - 1));
-                }
-                for (String[] category : subs) {
-                    if (category[1].equals(categoryName)) { return true;}
-                }
-                return false;
-            } catch (Exceptions.InvalidCategoryException e) {
-                //wont happen
-                return false;
-            }
         }
 
         @Override
         public void execute(String command) {
-            String categoryName = getGroup(command, 1);
-            if (isCategoryNameValid(categoryName)) {
-                categoryTree.add(categoryName);
-            } else {
-                System.out.println(categoryName + " its not in the sub-categories of current category");
-                return;
+            int index = getIndex(command, availableCategories);
+            if (index != 0) {
+                categoryTree.add(availableCategories.get(index - 1)[1]);
             }
         }
     }
@@ -435,7 +429,12 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            System.out.println(currentSort);
+            if (currentSort != null) {
+                System.out.println(currentSort);
+            } else {
+                System.out.println("no sorting method is chosen.");
+            }
+            printSeparator();
         }
     }
 
@@ -508,15 +507,25 @@ public class Actions {
 
     public static class ShowCurrentFilters extends Action {
         private String[] currentFilters;
+        private String[] availableFilters;
 
-        ShowCurrentFilters(String name, String[] currentFilters) {
+        ShowCurrentFilters(String name, String[] currentFilters, String[] availableFilters) {
             super(name, Constants.Actions.showCurrentFiltersPattern, Constants.Actions.showCurrentFiltersCommand);
             this.currentFilters = currentFilters;
+            this.availableFilters = availableFilters;
         }
 
         @Override
         public void execute(String command) {
-            Arrays.asList(currentFilters).forEach((f) -> System.out.println(f));
+            for (int i = 0; i < currentFilters.length; i++) {
+                System.out.print(availableFilters[i] + ": ");
+                if (currentFilters[i] == null) {
+                    System.out.println("N/A");
+                } else {
+                    System.out.println(currentFilters[i]);
+                }
+            }
+            printSeparator();
         }
     }
 
@@ -572,36 +581,85 @@ public class Actions {
         }
     }
 
+    public static class ShowSales extends Action {
+        private ArrayList<String[]> currentSales;
+        ShowSales(String name, ArrayList<String[]> currentSales) {
+            super(name, Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
+            this.currentSales = currentSales;
+        }
+
+        private void refreshCurrentSales() {
+            currentSales.clear();
+            currentSales.addAll(mainController.sales());
+        }
+
+        private void printSaleInfo(String[] sale) throws Exceptions.InvalidSaleIdException {
+            for (int i = 0; i < sale.length; i++) {
+                System.out.print(" " + sale[i]);
+            }
+            System.out.print("\n");
+            ArrayList<String[]> productsInSale = mainController.getProductsInSale(sale[0]);
+            int size = productsInSale.size();
+            for (int i = 0; i < size; i++) {
+                System.out.print("\t");
+                for (int j = 0; j < productsInSale.get(i).length; i++) {
+                    System.out.print(" " + productsInSale.get(i)[j]);
+                }
+            }
+        }
+
+        @Override
+        public void execute(String command) {
+            try {
+                refreshCurrentSales();
+                int size = currentSales.size();
+                for (int i = 0; i < size; i++) {
+                    System.out.print((i + 1) + ".");
+                    printSaleInfo(currentSales.get(i));
+                }
+            } catch (Exceptions.InvalidSaleIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
+        }
+    }
+
     public static class ShowInSaleProducts extends Action {
         private StringBuilder currentSort;
         private String[] currentFilters;
         private ArrayList<String[]> currentProducts;
-        private ArrayList<String[]> currentOffs;
 
-        public ShowInSaleProducts(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts, ArrayList<String[]> currentOffs) {
-            super(name, Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
+        public ShowInSaleProducts(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.showInSaleProductsPattern, Constants.Actions.showInSaleProductsCommand);
             this.currentSort = currentSort;
             this.currentFilters = currentFilters;
             this.currentProducts = currentProducts;
-            this.currentOffs = currentOffs;
         }
 
         private String getSortingField() {
+            if (currentSort.length() == 0) {return null;}
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 3;
             return currentSort.substring(0, indicatorIndex);
         }
 
         private boolean isIncreasing() {
+            if (currentSort.length() == 0) {return true;}
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 2;
             return currentSort.substring(indicatorIndex).equalsIgnoreCase("increasing");
         }
 
+        private void refreshCurrentProducts() {
+            currentProducts.clear();
+            currentProducts.addAll(mainController.showInSaleProducts(getSortingField(), isIncreasing(), currentFilters));
+        }
+
         @Override
         public void execute(String command) {
+            refreshCurrentProducts();
             System.out.println("current sales:");
-            printList(mainController.showInSaleProducts(getSortingField(), isIncreasing(), currentFilters));
+            printList(currentProducts);
             printSeparator();
         }
     }
@@ -707,14 +765,43 @@ public class Actions {
     }
 
     public static class ShowSellerSellHistory extends Action {
-        ShowSellerSellHistory(String name) {
+        private ArrayList<String[]> sellLogs;
+        ShowSellerSellHistory(String name, ArrayList<String[]> sellLogs) {
             super(name, Constants.Actions.showSellerSellHistoryPattern, Constants.Actions.showSellerSellHistoryCommand);
+            this.sellLogs = sellLogs;
+        }
+
+        private void refreshSellLogs() {
+            sellLogs.clear();
+            sellLogs.addAll(sellerController.getAllSellLogs());
         }
 
         @Override
         public void execute(String command) {
+            refreshSellLogs();
             System.out.println("sell history:");
-            printList(sellerController.getAllSellLogs());
+            printList(sellLogs);
+            printSeparator();
+        }
+    }
+
+    public static class ViewSingleSellHistory extends Action {
+        private ArrayList<String[]> sellLogs;
+        ViewSingleSellHistory(String name, ArrayList<String[]> sellLogs) {
+            super(name, Constants.Actions.showSingleSellLogPattern, Constants.Actions.showSingleSellLogCommand);
+            this.sellLogs = sellLogs;
+        }
+
+        @Override
+        public void execute(String command) {
+            try {
+                int index = getIndex(command, sellLogs);
+                if (index != 0) {
+                    printList(sellerController.getSellLogWithId(sellLogs.get(index - 1)[0]));
+                }
+            } catch (Exceptions.InvalidLogIdException e) {
+                System.out.println(e.getMessage());
+            }
             printSeparator();
         }
     }
@@ -757,22 +844,26 @@ public class Actions {
     }
 
     public static class ProductDetailMenu extends Action {
-        ProductDetailMenu(String name) {
+        private ArrayList<String[]> currentProducts;
+        ProductDetailMenu(String name, ArrayList<String[]> currentProducts) {
             super(name, Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
+            this.currentProducts = currentProducts;
         }
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = this.getMatcherReady(command);
-            String productID = commandMatcher.group(1);
-            try {
-                mainController.showProduct(productID);
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println(e.getMessage());
-                return;
+            int index = Integer.parseInt(getGroup(command, 1));
+            if (index > currentProducts.size()) {
+                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+            } else {
+                try {
+                    mainController.showProduct(currentProducts.get(index - 1)[0]);
+                } catch (Exceptions.InvalidProductIdException e) {
+                    System.out.println(e.getMessage());
+                    return;
+                }
             }
-
-            Menu.getProductDetailMenu().runByProductID(productID);
+            Menu.getProductDetailMenu().runByProductID(currentProducts.get(index - 1)[0]);
         }
     }
 
@@ -971,9 +1062,31 @@ public class Actions {
         }
     }
 
+    public static class AdminViewAllUsers extends Action {
+        private ArrayList<String[]> users;
+        AdminViewAllUsers(String name, ArrayList<String[]> users) {
+            super(name, Constants.Actions.adminViewAllUsersPattern, Constants.Actions.adminViewAllUsersCommand);
+            this.users = users;
+        }
+
+        private void refreshUsers() {
+            users.clear();
+            users.addAll(adminController.manageUsers());
+        }
+
+        @Override
+        public void execute(String command) {
+            refreshUsers();
+            printList(users);
+            printSeparator();
+        }
+    }
+
     public static class AdminViewUser extends Action {
-        AdminViewUser(String name) {
+        private ArrayList<String[]> users;
+        AdminViewUser(String name, ArrayList<String[]> users) {
             super(name, Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
+            this.users = users;
         }
 
         private void showPersonalInfo(String[] info) {
@@ -992,10 +1105,13 @@ public class Actions {
         }
 
         @Override
-        public void execute(String username) {
+        public void execute(String command) {
             try {
-                String[] info = adminController.viewUsername(username);
-                showPersonalInfo(info);
+                int index = getIndex(command, users);
+                if (index != 0) {
+                    String[] info = adminController.viewUsername(users.get(index - 1)[1]);
+                    showPersonalInfo(info);
+                }
             } catch (Exceptions.UsernameDoesntExistException e) {
                 System.out.println(e.getMessage());
             }
@@ -1004,15 +1120,20 @@ public class Actions {
     }
 
     public static class AdminDeleteUser extends Action {
-        AdminDeleteUser(String name) {
+        private ArrayList<String[]> users;
+        AdminDeleteUser(String name, ArrayList<String[]> users) {
             super(name, Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
+            this.users = users;
         }
 
         @Override
-        public void execute(String username) {
+        public void execute(String command) {
             try {
-                adminController.deleteUsername(username);
-                System.out.println("user removed successfully");
+                int index = getIndex(command, users);
+                if (index != 0) {
+                    adminController.deleteUsername(users.get(index - 1)[1]);
+                    System.out.println("user removed successfully");
+                }
             } catch (Exceptions.UsernameDoesntExistException e) {
                 System.out.println(e.getMessage());
             }
@@ -1047,18 +1168,42 @@ public class Actions {
         }
     }
 
-    public static class AdminRemoveProductByID extends Action {
-        AdminRemoveProductByID(String name) {
-            super(name, Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
+    public static class AdminShowProducts extends Action {
+        private ArrayList<String[]> currentProducts;
+        AdminShowProducts(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.adminShowProductsPattern, Constants.Actions.adminShowProductsCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        private void refreshCurrentProducts() {
+            currentProducts.clear();
+            currentProducts.addAll(adminController.manageAllProducts());
         }
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
+            refreshCurrentProducts();
+            printList(currentProducts);
+            printSeparator();
+        }
+    }
+
+
+    public static class AdminRemoveProductByID extends Action {
+        private ArrayList<String[]> currentProducts;
+        AdminRemoveProductByID(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        @Override
+        public void execute(String command) {
             try {
-                adminController.removeProduct(productID);
-                System.out.println("product removed successfully");
+                int index = getIndex(command, currentProducts);
+                if (index != 0) {
+                    adminController.removeProduct(currentProducts.get(index - 1)[0]);
+                    System.out.println("product removed successfully");
+                }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1091,9 +1236,34 @@ public class Actions {
         }
     }
 
+    public static class AdminShowDiscountCodes extends Action {
+        private ArrayList<String> discountCodes;
+        AdminShowDiscountCodes(String name, ArrayList<String> discountCodes) {
+            super(name, Constants.Actions.adminShowDiscountCodesPattern, Constants.Actions.adminShowDiscountCodesCommand);
+            this.discountCodes = discountCodes;
+        }
+
+        private void refreshDiscountCodes() {
+            discountCodes.clear();
+            discountCodes.addAll(adminController.viewDiscountCodes());
+        }
+
+        @Override
+        public void execute(String command) {
+            refreshDiscountCodes();
+            int size = discountCodes.size();
+            for (int i = 0; i < size; i++) {
+                System.out.println(i + ". " + discountCodes.get(i));
+            }
+            printSeparator();
+        }
+    }
+
     public static class AdminViewDiscountCode extends Action {
-        AdminViewDiscountCode(String name) {
+        private ArrayList<String> discountCodes;
+        AdminViewDiscountCode(String name, ArrayList<String> discountCodes) {
             super(name, Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
+            this.discountCodes = discountCodes;
         }
 
         private void showDiscountCode(String[] info) {
@@ -1106,13 +1276,14 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String discountCode = commandMatcher.group(1);
             try {
-                String[] info = adminController.viewDiscountCode(discountCode);
-                showDiscountCode(info);
-                System.out.println("people who have this discount:");
-                printList(adminController.peopleWhoHaveThisDiscount(discountCode));
+                int index = getIndex(command, discountCodes);
+                if (index != 0) {
+                    String[] info = adminController.viewDiscountCode(discountCodes.get(index - 1));
+                    showDiscountCode(info);
+                    System.out.println("people who have this discount:");
+                    printList(adminController.peopleWhoHaveThisDiscount(discountCodes.get(index - 1)));
+                }
             } catch (Exceptions.DiscountCodeException e) {
                 System.out.println(e.getMessage());
             }
@@ -1122,9 +1293,11 @@ public class Actions {
 
     public static class AdminEditDiscountCode extends Action {
         private String[] editableFields;
-        AdminEditDiscountCode(String name, String[] editableFields) {
+        private ArrayList<String> discountCodes;
+        AdminEditDiscountCode(String name, ArrayList<String> discountCodes, String[] editableFields) {
             super(name, Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
             this.editableFields = editableFields;
+            this.discountCodes = discountCodes;
         }
 
         private void showEditableFields() {
@@ -1155,20 +1328,22 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String discountCode = commandMatcher.group(1);
-            while (true) {
-                showEditableFields();
-                System.out.println("enter the field to edit (index):");
-                String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response), discountCode) == -1) {continue;}
-                    else break;
-                } else if (response.equalsIgnoreCase("back")) {
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
+            int index = getIndex(command, discountCodes);
+            if (index != 0) {
+                while (true) {
+                    showEditableFields();
+                    System.out.println("enter the field to edit (index):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                        if (editField(Integer.parseInt(response), discountCodes.get(index - 1)) == -1) {
+                            continue;
+                        } else break;
+                    } else if (response.equalsIgnoreCase("back")) {
+                        break;
+                    } else {
+                        System.out.println("invalid entry");
+                        continue;
+                    }
                 }
             }
             printSeparator();
@@ -1176,15 +1351,19 @@ public class Actions {
     }
 
     public static class AdminRemoveDiscountCode extends Action {
-        AdminRemoveDiscountCode(String name) {
+        private ArrayList<String> discountCodes;
+        AdminRemoveDiscountCode(String name, ArrayList<String> discountCodes) {
             super(name, Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
+            this.discountCodes = discountCodes;
         }
 
         @Override
         public void execute(String command) {
             try {
-                String discountCodeID = getGroup(command, 1);
-                adminController.removeDiscountCode(discountCodeID);
+                int index = getIndex(command, discountCodes);
+                if (index != 0) {
+                    adminController.removeDiscountCode(discountCodes.get(index - 1));
+                }
             } catch (Exceptions.DiscountCodeException e) {
                 System.out.println(e.getMessage());
             }

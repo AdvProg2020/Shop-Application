@@ -74,7 +74,14 @@ public abstract class Action {
         return commandMatcher.group(groupIndex);
     }
 
-
+    protected int getIndex(String command, ArrayList list) {
+        int index = Integer.parseInt(getGroup(command, 1));
+        if (index > list.size()) {
+            System.out.println("invalid index. please enter a number between 1 and " + list.size());
+            return 0;
+        }
+        return index;
+    }
 
     public abstract void execute(String command);
 

@@ -29,8 +29,7 @@ public class AddProductRequest extends Request {
         if (product != null)
             return (product.getCategory() == null);
 
-        return (subProduct.getProduct() == null || subProduct.getSeller() == null);
-
+        return (status == RequestStatus.PENDING) && (subProduct.getProduct() == null || subProduct.getSeller() == null);
     }
 
     public Product getProduct() {

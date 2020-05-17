@@ -1,7 +1,8 @@
 package model.request;
 
-import model.BasicMethods;
 import model.ModelBasic;
+import model.ModelUtilities;
+import model.ModelUtilities.ModelOnly;
 import model.database.Database;
 
 import java.util.*;
@@ -9,9 +10,9 @@ import java.util.*;
 public abstract class Request implements ModelBasic {
     private static Map<String, Request> allRequests = new HashMap<>();
     private static int lastNum = 1;
-    private String requestId;
-    private Date date;
-    private RequestStatus status;
+    protected String requestId;
+    protected Date date;
+    protected RequestStatus status;
 
     public Request() {
         status = RequestStatus.PENDING;
@@ -19,13 +20,8 @@ public abstract class Request implements ModelBasic {
         initialize();
     }
 
-    private static void filterRequests() {
-        allRequests.values().removeIf(request -> (request.status == RequestStatus.PENDING) && request.isInvalid());
-    }
-
     public static List<Request> getPendingRequests() {
-        filterRequests();
-        return BasicMethods.getInstances(allRequests.values());
+        return ModelUtilities.getInstances(allRequests.values());
     }
 
     public static List<Request> getRequestArchive() {
@@ -35,21 +31,30 @@ public abstract class Request implements ModelBasic {
     }
 
     public static Request getRequestById(String requestId) {
-        return BasicMethods.getInstanceById(allRequests, requestId);
+        return ModelUtilities.getInstanceById(allRequests, requestId);
 
     }
 
     @Override
     public void initialize() {
         if (requestId == null)
-            requestId = BasicMethods.generateNewId(getClass().getSimpleName(), lastNum);
+            requestId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allRequests.put(requestId, this);
         lastNum++;
     }
 
+    @ModelOnly
+    public void terminate() {
+        allRequests.remove(requestId);
+    }
+
     @Override
     public boolean isSuspended() {
-        return (status != RequestStatus.PENDING || isInvalid());
+        boolean invalid = isInvalid();
+        if (invalid)
+            terminate();
+
+        return (invalid || status != RequestStatus.PENDING);
     }
 
     @Override
