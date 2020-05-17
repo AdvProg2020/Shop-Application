@@ -314,7 +314,13 @@ public class Controller {
         return reviews;
     }
 
-    public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
+    public void checkAuthorityOverCart() throws Exceptions.UnAuthorizedAccountException{
+        if((currentAccount != null) && !currentAccount.getClass().getSimpleName().equals("Customer"))
+            throw new Exceptions.UnAuthorizedAccountException();
+    }
+
+    public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
+        checkAuthorityOverCart();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
@@ -326,7 +332,8 @@ public class Controller {
         }
     }
 
-    public ArrayList<String[]> getProductsInCart() {
+    public ArrayList<String[]> getProductsInCart() throws Exceptions.UnAuthorizedAccountException {
+        checkAuthorityOverCart();
         ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
@@ -335,7 +342,8 @@ public class Controller {
         return shoppingCart;
     }
 
-    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
+    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
+        checkAuthorityOverCart();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (!currentCart.getSubProducts().containsKey(subProduct))
             throw new Exceptions.InvalidSubProductIdException(subProductId);
@@ -348,7 +356,8 @@ public class Controller {
     }
 
     public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
-            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
+            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
+        checkAuthorityOverCart();
         Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -364,7 +373,8 @@ public class Controller {
     }
 
     public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
-            Exceptions.NotSubProductIdInTheCartException {
+            Exceptions.NotSubProductIdInTheCartException, Exceptions.UnAuthorizedAccountException {
+        checkAuthorityOverCart();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
@@ -416,7 +426,6 @@ public class Controller {
         return Utilities.Pack.personalInfo(currentAccount);
     }
 
-    
      void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
@@ -467,7 +476,6 @@ public class Controller {
         return productsInSale;
     }
 
-    
     public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
         ArrayList<String[]> subProductsSalePacks = new ArrayList<>();
         ArrayList<SubProduct> subProductsInSale = new ArrayList<>();

@@ -22,10 +22,12 @@ public class SellerController {
     private Controller mainController;
     private static  final DateFormat dateFormat = Utilities.getDateFormat();
     private Database databaseManager;
+    //private Account currentAccount;
 
     public SellerController(Controller controller) {
         databaseManager = controller.getDatabaseManager();
         mainController = controller;
+        //currentAccount = mainController.getCurrentAccount();
     }
 
     private Account currentAccount(){
