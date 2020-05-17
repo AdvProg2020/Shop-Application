@@ -1,7 +1,6 @@
 package controller;
 
 import java.lang.Exception;
-import java.util.ArrayList;
 
 public class Exceptions {
 
@@ -17,8 +16,8 @@ public class Exceptions {
         }
     }
 
-    public static class ManagerDeleteException extends Exception{
-        public ManagerDeleteException(){
+    public static class ManagerDeleteException extends Exception {
+        public ManagerDeleteException() {
             super("You can not delete manager!");
         }
     }
@@ -113,8 +112,8 @@ public class Exceptions {
         }
     }
 
-    public static class InvalidAccountsForDiscount extends Exception{
-        public InvalidAccountsForDiscount(String accountIds){
+    public static class InvalidAccountsForDiscount extends Exception {
+        public InvalidAccountsForDiscount(String accountIds) {
             super("You can only add customer account to a discount these accountIds are invalid" + accountIds);
         }
     }
@@ -122,12 +121,6 @@ public class Exceptions {
     public static class ExistingDiscountCodeException extends Exception {
         public ExistingDiscountCodeException(String discountCode) {
             super("There is already a discount code with code: " + discountCode);
-        }
-    }
-
-    public static class CustomerIdException extends Exception {
-        public CustomerIdException(String Id) {
-            super("There is no customer with this Id: " + Id);
         }
     }
 
@@ -196,6 +189,5 @@ public class Exceptions {
             super("Your cart is empty!");
         }
     }
-
 
 }

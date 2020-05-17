@@ -4,24 +4,32 @@ import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
-import model.database.DatabaseManager;
+import model.database.Database;
 import model.request.*;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
 
-public class AdminController extends Controller {
+public class AdminController {
 
     private Controller mainController;
+    private static  final DateFormat dateFormat = Utilities.getDateFormat();
+    private Database databaseManager;
 
     public AdminController(Controller controller) {
-        super(controller.getDatabaseManager());
+        databaseManager = controller.getDatabaseManager();
         mainController = controller;
     }
-    //Done!!
+
+    private Account currentAccount(){
+        return mainController.getCurrentAccount();
+    }
+    
+    
 
     /**
      * @return admin:
@@ -31,26 +39,27 @@ public class AdminController extends Controller {
         return Utilities.Field.adminPersonalInfoEditableFields();
     }
 
-    //Done!!
-    @Override
+    
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
-        super.editPersonalInfo(field, newInformation);
+        mainController.editPersonalInfo(field, newInformation);
         databaseManager.editAccount();
     }
 
-    //Done!!
+    
     public ArrayList<String[]> manageUsers() {
         ArrayList<String[]> accounts = new ArrayList<>();
         for (Account account : Account.getAllAccounts()) {
-            String[] IdUsername = new String[2];
-            IdUsername[0] = account.getId();
-            IdUsername[1] = account.getUsername();
-            accounts.add(IdUsername);
+            if( account != currentAccount()) {
+                String[] IdUsername = new String[2];
+                IdUsername[0] = account.getId();
+                IdUsername[1] = account.getUsername();
+                accounts.add(IdUsername);
+            }
         }
         return accounts;
     }
 
-    //Done!!
+    
     public String[] viewUsername(String username) throws Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -60,13 +69,14 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
+    
     public void deleteUsername(String username) throws Exceptions.UsernameDoesntExistException, Exceptions.ManagerDeleteException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
             throw new Exceptions.UsernameDoesntExistException(username);
         if( account != Admin.getManager())
-            account.suspend();
+            if(account != currentAccount())
+                account.suspend();
         else
             throw new Exceptions.ManagerDeleteException();
         switch (account.getClass().getSimpleName()) {
@@ -82,7 +92,7 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
+    
     public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.UsernameAlreadyTakenException(username);
@@ -90,16 +100,18 @@ public class AdminController extends Controller {
         databaseManager.createAdmin();
     }
 
-    //Done!! sort?
+    
     public ArrayList<String[]> manageAllProducts() {
-        ArrayList<String[]> products = new ArrayList<>();
-        for (Product product : Product.getAllProducts()) {
-            products.add(Utilities.Pack.product(product));
+        ArrayList<String[]> productPacks = new ArrayList<>();
+        ArrayList<Product> products = new ArrayList<>(Product.getAllProducts());
+        products.sort( new Utilities.Sort.ProductViewCountComparator(true));
+        for (Product product : products) {
+            productPacks.add(Utilities.Pack.product(product));
         }
-        return products;
+        return productPacks;
     }
 
-    //Done!!
+    
     public void removeProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -110,7 +122,7 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
+    
     public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage,
                                    int maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount {
 
@@ -135,20 +147,7 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!! data base
-    public void addCustomerToDiscount(String customerId, String code, int count) throws Exceptions.DiscountCodeException, Exceptions.CustomerIdException {
-        Discount discount = Discount.getDiscountByCode(code);
-        Account account = Account.getAccountById(customerId);
-        if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
-        else if (account instanceof Customer) {
-            discount.addCustomer(customerId, count);
-            databaseManager.editDiscount();
-        }else
-            throw new Exceptions.CustomerIdException(customerId);
-    }
-
-    //Done!!
+    
     public ArrayList<String> viewDiscountCodes() {
         ArrayList<String> discountCodes = new ArrayList<>();
         for (Discount discount : Discount.getAllDiscounts()) {
@@ -157,7 +156,7 @@ public class AdminController extends Controller {
         return discountCodes;
     }
 
-    //Done!!
+    
     public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
@@ -166,7 +165,7 @@ public class AdminController extends Controller {
             return Utilities.Pack.discountInfo(discount);
     }
 
-    //Done!!
+    
     public ArrayList<String[]> peopleWhoHaveThisDiscount(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
@@ -181,12 +180,12 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
+    
     public String[] getDiscountEditableFields() {
         return Utilities.Field.discountEditableFields();
     }
 
-    //Done!!
+    
 
     /**
      * @param code           String
@@ -238,7 +237,7 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
+    
     public void removeDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
@@ -249,13 +248,13 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!! TODO: Dana: Id, type, date, status,
+    //TODO: Dana: Id, type, date, status,
     public ArrayList<String[]> manageRequests() {
         ArrayList<String[]> requestIds = new ArrayList<>();
         for (Request request : Request.getPendingRequests()) {
             requestIds.add(Utilities.Pack.request(request));
         }
-        if(mainController.getCurrentAccount() == Admin.getManager()){
+        if(currentAccount() == Admin.getManager()){
             for (Request request : Request.getRequestArchive()) {
                 requestIds.add(Utilities.Pack.request(request));
             }
@@ -304,7 +303,6 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
     /**
      * @param review
      * @return String[6]: { reviewerUsername, productId, productName, productBrand, reviewTitle, reviewText }
@@ -320,7 +318,6 @@ public class AdminController extends Controller {
         return reviewInfo;
     }
 
-    //Done!!
     public void acceptRequest(String requestID, boolean accepted) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestID);
         if (request == null)
@@ -334,7 +331,7 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
+    
     public ArrayList<String> manageCategories() {
         ArrayList<String> categoryNames = new ArrayList<>();
         for (Category category : Category.getAllCategories()) {
@@ -343,12 +340,9 @@ public class AdminController extends Controller {
         return categoryNames;
     }
 
-    //Done!!
     public String[] getCategoryEditableFields() {
         return Utilities.Field.getCategoryEditableFields();
     }
-
-    //Done!!
 
     /**
      * @param categoryName
@@ -395,7 +389,6 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
     public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
         if (Category.getCategoryByName(categoryName) != null)
             throw new Exceptions.InvalidCategoryException(categoryName);
@@ -407,7 +400,6 @@ public class AdminController extends Controller {
         }
     }
 
-    //Done!!
     public void removeCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)

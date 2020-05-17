@@ -38,8 +38,8 @@ public class ModelUtilities {
     private ModelUtilities() {
     }
 
-    private static String fixedLengthString(String string, int length) {
-        return String.format("%0" + length + "d", string);
+    private static String fixedLengthNumber(int number, int length) {
+        return String.format("%0" + length + "d", number);
     }
 
     public static String generateNewId(String className, int lastNum) {
@@ -47,10 +47,10 @@ public class ModelUtilities {
         Calendar calendar = Calendar.getInstance();
 
         id.append(abbreviations.get(className));
-        id.append(fixedLengthString(String.valueOf(calendar.get(Calendar.YEAR) % 100), 2));
-        id.append(fixedLengthString(String.valueOf(calendar.get(Calendar.MONTH)), 2));
-        id.append(fixedLengthString(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), 2));
-        id.append(fixedLengthString(String.valueOf(lastNum), 4));
+        id.append(fixedLengthNumber(calendar.get(Calendar.YEAR) % 100, 2));
+        id.append(fixedLengthNumber(calendar.get(Calendar.MONTH), 2));
+        id.append(fixedLengthNumber(calendar.get(Calendar.DAY_OF_MONTH), 2));
+        id.append(fixedLengthNumber(lastNum, 4));
 
         return id.toString();
     }

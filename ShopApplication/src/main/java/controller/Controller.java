@@ -8,46 +8,34 @@ import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
 
-import java.text.DateFormat;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Map;
 
 //TODO: compare to products!
 public class Controller {
     private Account currentAccount;
     private Cart currentCart;
-    protected DateFormat dateFormat;
-    protected Database databaseManager;
+    private Database databaseManager;
 
-
-    //Done
+    
     public Controller(Database DataBaseManager) {
         databaseManager = DataBaseManager;
-        dateFormat = Utilities.getDateFormat();
         currentCart = new Cart(null);
         currentAccount = null;
     }
 
-    public Database getDatabaseManager(){
+    Database getDatabaseManager(){
         return databaseManager;
     }
 
-    public Account getCurrentAccount() {
+    Account getCurrentAccount() {
         return currentAccount;
     }
 
-    public Cart getCurrentCart() {
+    Cart getCurrentCart() {
         return currentCart;
     }
-
-    public DateFormat getDateFormat() {
-        return dateFormat;
-    }
-
-    //Done!
-
+    
     /**
      * @param username
      * @param type
@@ -60,9 +48,7 @@ public class Controller {
         else if (type.equalsIgnoreCase("Admin") && (Admin.getManager() != null))
             throw new Exceptions.AdminRegisterException();
     }
-
-    //Done!!
-
+    
     /**
      * @param type information: 1- customer:
      *             * String username, String password, String firstName, String lastName, String email, String phone, double balance
@@ -89,8 +75,7 @@ public class Controller {
                 break;
         }
     }
-
-    //Done!! TODO: Shayan data base for cart
+    
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -105,14 +90,11 @@ public class Controller {
         }
     }
 
-    //Done!!
     public void logout() {
         currentAccount = null;
         currentCart = new Cart(null);
     }
-
-    //Done!!
-
+    
     /**
      * @return returns the currentAccount type: anonymous, customer, seller, admin.
      */
@@ -122,91 +104,42 @@ public class Controller {
         return currentAccount.getClass().getSimpleName();
     }
 
-    //Done!
-
     /**
      * @return String[5]: {price, rating score, name, category name, view counts}
      */
-    public String[] getAvailableSorts() {
-        String[] availableSorts = new String[5];
-        availableSorts[0] = "price";
-        availableSorts[1] = "rating score";
-        availableSorts[2] = "name";
-        availableSorts[3] = "category name";
-        availableSorts[4] = "default: view counts";
-        return availableSorts;
+    public String[] getProductAvailableSorts() {
+        return Utilities.Sort.productAvailableSorts();
     }
-
-    //Done!! check the directions in the test
-    private ArrayList<Product> sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
-        int direction = isIncreasing ? 1 : -1;
+    
+    private void sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
         switch (sortBy) {
             case "price":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Double.compare(o1.getMinPrice(), o2.getMinPrice());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductPriceComparator(isIncreasing));
                 break;
             case "rating score":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductRatingScoreComparator(isIncreasing));
                 break;
             case "name":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * o1.getName().compareTo(o2.getName());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductNameComparator(isIncreasing));
                 break;
             case "category name":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * o1.getCategory().getName().compareTo(o2.getCategory().getName());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductCategoryNameComparator(isIncreasing));
                 break;
             case "remaining count":
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Integer.compare(o1.getTotalRemainingCount(), o2.getTotalRemainingCount());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductRemainingCountComparator(isIncreasing));
                 break;
+            case "view count":
+                products.sort( new Utilities.Sort.ProductViewCountComparator(isIncreasing));
             default:
-                products.sort(new Comparator<Product>() {
-                    @Override
-                    public int compare(Product o1, Product o2) {
-                        return direction * Integer.compare(o1.getViewCount(), o2.getViewCount());
-                    }
-                });
+                products.sort( new Utilities.Sort.ProductViewCountComparator(true));
                 break;
         }
-        return products;
     }
-
-    //Done!!
+    
     public String[] getProductAvailableFilters() {
-        String[] availableFilters = new String[7];
-        availableFilters[0] = "available";
-        availableFilters[1] = "minPrice";
-        availableFilters[2] = "macPrice";
-        availableFilters[3] = "contains";
-        availableFilters[4] = "brand";
-        availableFilters[5] = "storeName";
-        availableFilters[6] = "minRatingScore";
-        return availableFilters;
+        return Utilities.Filter.productAvailableFilters();
     }
-
-    //Done!!
+    
     private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                 String storeName, double minRatingScore, ArrayList<Product> products) {
         if (available)
@@ -224,8 +157,7 @@ public class Controller {
         }
         products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
     }
-
-    //Done!!
+    
     private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
         for (Product product : products) {
@@ -233,9 +165,7 @@ public class Controller {
         }
         return productIdNames;
     }
-
-    //Done!!
-
+    
     /**
      * for show category action without all.
      *
@@ -259,9 +189,7 @@ public class Controller {
             return categoryIdNames;
         }
     }
-
-    //Done!!
-
+    
     /**
      * @param categoryName
      * @return String[2]: ID, name
@@ -276,14 +204,11 @@ public class Controller {
         }
     }
 
-    //Done!!
     private ArrayList<Product> getProductsInCategory(Category category) {
         ArrayList<Product> products = new ArrayList<>(category.getProducts());
-        sortProducts("view count", false, products);
+        sortProducts("view count", true, products);
         return products;
     }
-
-    //Done!!
 
     /**
      * @param productIds
@@ -315,12 +240,11 @@ public class Controller {
         filterProducts(filterBy[0].equals("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
-        products = sortProducts(sortBy, isIncreasing, products);
+        sortProducts(sortBy, isIncreasing, products);
 
         return productToIdNameBrand(products);
     }
 
-    //Done!!
     public void showProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -329,8 +253,6 @@ public class Controller {
             product.increaseViewCount();
         }
     }
-
-    //Done!!
 
     /**
      * @param productId
@@ -344,7 +266,6 @@ public class Controller {
         return Utilities.Pack.digest(product);
     }
 
-    //Done!!
     public ArrayList<String> getSpecialPropertiesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -353,14 +274,11 @@ public class Controller {
             return new ArrayList<>(product.getSpecialProperties());
     }
 
-    //Done!!
-
     /**
      * @param productId
      * @return String[4]: ID, storeName, price, remaining count.
      * @throws Exceptions.InvalidProductIdException
      */
-
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -372,7 +290,6 @@ public class Controller {
         return subProducts;
     }
 
-    //Done!!
     public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -380,8 +297,6 @@ public class Controller {
         else
             return Utilities.Pack.subProduct(subProduct);
     }
-
-    //Done!!
 
     /**
      * @param productId
@@ -399,7 +314,6 @@ public class Controller {
         return reviews;
     }
 
-    //Done!!
     public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -412,7 +326,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public ArrayList<String[]> getProductsInCart() {
         ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
@@ -422,7 +335,6 @@ public class Controller {
         return shoppingCart;
     }
 
-    //Done!!
     public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (!currentCart.getSubProducts().containsKey(subProduct))
@@ -435,7 +347,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
             Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
         Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
@@ -452,7 +363,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
             Exceptions.NotSubProductIdInTheCartException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
@@ -468,13 +378,10 @@ public class Controller {
         }
     }
 
-    //Done!!
     public double getTotalPriceOfCart() {
         return currentCart.getTotalPrice();
     }
-
-
-    //Done!!
+    
     public void addReview(String productId, String title, String text) throws Exceptions.InvalidProductIdException, Exceptions.NotLoggedInException {
         if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
@@ -488,8 +395,6 @@ public class Controller {
         }
     }
 
-    //Done!!
-
     /**
      * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
@@ -501,8 +406,6 @@ public class Controller {
         return sales;
     }
 
-    //Done!!
-
     /**
      * @return if
      * admin:     6: username, type, firstName, lastName, email, phone;
@@ -513,8 +416,8 @@ public class Controller {
         return Utilities.Pack.personalInfo(currentAccount);
     }
 
-    //Done!!
-    protected void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    
+     void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
                 if (currentAccount.getFirstName().equals(newInformation))
@@ -546,7 +449,6 @@ public class Controller {
         }
     }
 
-    //Done!!
     public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if (sale == null)
@@ -555,8 +457,7 @@ public class Controller {
             return getProductsInSale(sale);
     }
 
-    //Done!!
-    protected ArrayList<String[]> getProductsInSale(Sale sale) {
+     private ArrayList<String[]> getProductsInSale(Sale sale) {
         ArrayList<String[]> productsInSale = new ArrayList<>();
         ArrayList<SubProduct> subProducts = new ArrayList<>(sale.getSubProducts());
         sortSubProducts("view count", false, subProducts);
@@ -566,7 +467,7 @@ public class Controller {
         return productsInSale;
     }
 
-    //Done!!
+    
     public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
         ArrayList<String[]> subProductsSalePacks = new ArrayList<>();
         ArrayList<SubProduct> subProductsInSale = new ArrayList<>();
@@ -601,56 +502,27 @@ public class Controller {
     }
 
     private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts) {
-        int direction = isIncreasing ? 1 : -1;
         switch (sortBy) {
             case "price":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Double.compare(o1.getPriceWithSale(), o2.getPriceWithSale());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductPriceComparator(isIncreasing));
                 break;
             case "name":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * o1.getProduct().getName().compareTo(o2.getProduct().getName());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductNameComparator(isIncreasing));
                 break;
             case "rating score":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Double.compare(o1.getProduct().getAverageRatingScore(), o2.getProduct().getAverageRatingScore());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductRatingScoreComparator(isIncreasing));
                 break;
             case "category name":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * o1.getProduct().getCategory().getName().
-                                compareTo(o2.getProduct().getCategory().getName());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductCategoryNameComparator(isIncreasing));
                 break;
             case "remaining count":
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Integer.compare(o1.getRemainingCount(), o2.getRemainingCount());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductRemainingCountComparator(isIncreasing));
+                break;
+            case "view count":
+                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(isIncreasing));
                 break;
             default:
-                subProducts.sort(new Comparator<SubProduct>() {
-                    @Override
-                    public int compare(SubProduct o1, SubProduct o2) {
-                        return direction * Integer.compare(o1.getProduct().getViewCount(), o2.getProduct().getViewCount());
-                    }
-                });
+                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(true));
                 break;
         }
     }

@@ -112,7 +112,7 @@ class Menus {
         }
 
         private String[] getAvailableSorts() {
-            return mainController.getAvailableSorts();
+            return mainController.getProductAvailableSorts();
         }
 
         private String[] getAvailableFilters() {
@@ -274,7 +274,7 @@ class Menus {
         }
 
         private String[] getAvailableSorts() {
-            return mainController.getAvailableSorts();
+            return mainController.getProductAvailableSorts();
         }
 
         private String[] getAvailableFilters() {
