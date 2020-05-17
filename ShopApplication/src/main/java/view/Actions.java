@@ -2,10 +2,8 @@ package view;
 
 import controller.*;
 
-import java.io.PushbackReader;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 
 //TODO: printSeparator();
@@ -15,7 +13,6 @@ import java.util.regex.Matcher;
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: index choosing
 //TODO: nullptr exception.
-//TODO: bayad in fact ke age taraf anonymous bd betone be sabad kharid az inja ezafe kone mahsoolo handle konim va inke age customer ya anonymous nabd natone.
 //TODO: getDefaultSubProductID();
 public class Actions {
     private static Controller mainController;
@@ -908,7 +905,7 @@ public class Actions {
             try {
                 mainController.addToCart(subProductID.toString(), 1);
                 System.out.println("added to the cart");
-            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException e) {
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnavailableProductException | Exceptions.UnAuthorizedAccountException e) {
                 System.out.println(e.getMessage());
                 System.out.println("please change seller and try again");
             }
@@ -1371,24 +1368,52 @@ public class Actions {
         }
     }
 
-    //TODO: index choosing
-    public static class AdminShowRequests extends Action {
-        AdminShowRequests(String name) {
+    public static class AdminShowPendingRequests extends Action {
+        private ArrayList<String[]> pendingRequests;
+        AdminShowPendingRequests(String name, ArrayList<String[]> pendingRequests) {
             super(name, Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
+            this.pendingRequests = pendingRequests;
+        }
+
+        private void refreshPendingRequests() {
+            pendingRequests.clear();
+            pendingRequests.addAll(adminController.getPendingRequests());
         }
 
         @Override
         public void execute(String command) {
-            System.out.println("request IDs:");
-            adminController.manageRequests().forEach(ID -> System.out.println(ID));
-            System.out.println("you can see a request's detail by: details [requestID]");
+            refreshPendingRequests();
+            System.out.println("pending requests:");
+            printList(pendingRequests);
+            System.out.println("you can see a request's detail by: details [index]");
+            printSeparator();
+        }
+    }
+
+    public static class AdminShowArchiveRequests extends Action {
+        AdminShowArchiveRequests(String name) {
+            super(name, Constants.Actions.adminShowArchiveRequestsPattern, Constants.Actions.adminShowArchiveRequestsCommand);
+        }
+
+
+        @Override
+        public void execute(String command) {
+            ArrayList<String[]> archives = adminController.getArchivedRequests();
+            if (archives.isEmpty()) {
+                System.out.println("you cant see archived requests");
+            } else {
+                System.out.println("archived requests:");
+                printList(archives);
+            }
             printSeparator();
         }
     }
 
     public static class AdminViewRequestDetail extends Action {
-        AdminViewRequestDetail(String name) {
+        private ArrayList<String[]> pendingRequests;
+        AdminViewRequestDetail(String name, ArrayList<String[]> pendingRequests) {
             super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
+            this.pendingRequests = pendingRequests;
         }
 
         private void acceptOrDeclineRequest(String requestID) {
@@ -1415,35 +1440,48 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            try {
-                String requestID = getGroup(command, 1);
-                printList(adminController.detailsOfRequest(requestID));
-                acceptOrDeclineRequest(requestID);
-            } catch (Exceptions.InvalidRequestIdException e) {
-                System.out.println(e.getMessage());
+            int index = getIndex(command, pendingRequests);
+            if (index != 0) {
+                try {
+                    String requestID = pendingRequests.get(index - 1)[0];
+                    printList(adminController.detailsOfRequest(requestID));
+                    acceptOrDeclineRequest(requestID);
+                } catch (Exceptions.InvalidRequestIdException e) {
+                    System.out.println(e.getMessage());
+                }
             }
             printSeparator();
         }
     }
 
     public static class AdminShowCategories extends Action {
-        AdminShowCategories(String name) {
+        private ArrayList<String> currentCategories;
+        AdminShowCategories(String name, ArrayList<String> currentCategories) {
             super(name, Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
+            this.currentCategories = currentCategories;
+        }
+
+        private void refreshCurrentCategories() {
+            currentCategories.clear();
+            currentCategories.addAll(adminController.manageCategories());
         }
 
         @Override
         public void execute(String command) {
+            refreshCurrentCategories();
             System.out.println("categories (category inheritance is not shown in this list): ");
-            adminController.manageCategories().forEach(c -> System.out.println(c));
+            currentCategories.forEach(cc -> System.out.println(cc));
             printSeparator();
         }
     }
 
     public static class AdminEditCategory extends Action {
         private String[] editableFields;
-        AdminEditCategory(String name, String[] editableFields) {
+        private ArrayList<String> currentCategories;
+        AdminEditCategory(String name, String[] editableFields, ArrayList<String> currentCategories) {
             super(name, Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
             this.editableFields = editableFields;
+            this.currentCategories = currentCategories;
         }
 
         private void showEditableFields() {
@@ -1474,20 +1512,22 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String categoryName = commandMatcher.group(1);
-            while (true) {
-                showEditableFields();
-                System.out.println("enter the field to edit (index):");
-                String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response), categoryName) == -1) {continue;}
-                    else break;
-                } else if (response.equalsIgnoreCase("back")) {
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
+            int index = getIndex(command, currentCategories);
+            if(index != 0) {
+                while (true) {
+                    showEditableFields();
+                    System.out.println("enter the field to edit (index):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                        if (editField(Integer.parseInt(response), currentCategories.get(index - 1)) == -1) {
+                            continue;
+                        } else break;
+                    } else if (response.equalsIgnoreCase("back")) {
+                        break;
+                    } else {
+                        System.out.println("invalid entry");
+                        continue;
+                    }
                 }
             }
             printSeparator();
@@ -1528,16 +1568,19 @@ public class Actions {
     }
 
     public static class AdminRemoveCategory extends Action {
-        AdminRemoveCategory(String name) {
+        private ArrayList<String> currentCategories;
+        AdminRemoveCategory(String name, ArrayList<String> currentCategories) {
             super(name, Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
+            this.currentCategories = currentCategories;
         }
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String categoryName = commandMatcher.group(1);
             try {
-                adminController.removeCategory(categoryName);
+                int index = getIndex(command,currentCategories);
+                if (index != 0) {
+                    adminController.removeCategory(currentCategories.get(index - 1));
+                }
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
             }
@@ -1546,21 +1589,31 @@ public class Actions {
     }
 
     public static class SellerShowSales extends Action {
-        SellerShowSales(String name) {
+        private ArrayList<String[]> currentSales;
+        SellerShowSales(String name, ArrayList<String[]> currentSales) {
             super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
+            this.currentSales = currentSales;
+        }
+
+        private void refreshCurrentSales() {
+            currentSales.clear();
+            currentSales.addAll(sellerController.viewSales());
         }
 
         @Override
         public void execute(String command) {
-            ArrayList<String[]> sales = sellerController.viewSales();
-            printList(sales);
+            refreshCurrentSales();
+            System.out.println("seller sales:");
+            printList(currentSales);
             printSeparator();
         }
     }
 
     public static class SellerViewSaleDetails extends Action {
-        SellerViewSaleDetails(String name) {
+        private ArrayList<String[]> currentSales;
+        SellerViewSaleDetails(String name, ArrayList<String[]> currentSales) {
             super(name, Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
+            this.currentSales = currentSales;
         }
 
         private void showSaleInfo(String[] info) {
@@ -1574,11 +1627,11 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String saleID = commandMatcher.group(1);
             try {
-                String[] info = sellerController.viewSaleWithId(saleID);
-                showSaleInfo(info);
+                int index = getIndex(command, currentSales);
+                if (index != 0) {
+                showSaleInfo(sellerController.viewSaleWithId(currentSales.get(index - 1)[0]));
+                }
             } catch (Exceptions.InvalidSaleIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1588,9 +1641,11 @@ public class Actions {
 
     public static class SellerEditSale extends Action {
         private String[] editableFields;
-        SellerEditSale(String name, String[] editableFields) {
+        private ArrayList<String[]> currentSales;
+        SellerEditSale(String name, String[] editableFields, ArrayList<String[]> currentSales) {
             super(name, Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
             this.editableFields = editableFields;
+            this.currentSales = currentSales;
         }
 
         private void showEditableFields() {
@@ -1621,20 +1676,24 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String saleID = commandMatcher.group(1);
-            while (true) {
-                showEditableFields();
-                System.out.println("enter the field to edit (index):");
-                String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response), saleID) == -1) {continue;}
-                    else {break;}
-                } else if (response.equalsIgnoreCase("back")) {
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
+            int index = getIndex(command, currentSales);
+            if (index != 0) {
+                while (true) {
+                    showEditableFields();
+                    System.out.println("enter the field to edit (index):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                        if (editField(Integer.parseInt(response), currentSales.get(index - 1)[0]) == -1) {
+                            continue;
+                        } else {
+                            break;
+                        }
+                    } else if (response.equalsIgnoreCase("back")) {
+                        break;
+                    } else {
+                        System.out.println("invalid entry");
+                        continue;
+                    }
                 }
             }
             printSeparator();
@@ -1681,11 +1740,15 @@ public class Actions {
             this.sellerProducts = sellerProducts;
         }
 
+        private void refreshProducts() {
+            sellerProducts.clear();
+            sellerProducts.addAll(sellerController.manageProducts());
+        }
+
         @Override
         public void execute(String command) {
-            if (sellerProducts.isEmpty()) {
-                sellerProducts.addAll(sellerController.manageProducts());
-            }
+            refreshProducts();
+            System.out.println("seller products:");
             printList(sellerProducts);
             printSeparator();
         }
@@ -1707,26 +1770,13 @@ public class Actions {
         }
 
 
-        private boolean isInProducts(String productID) {
-            for (String[] product : sellerProducts) {
-                if (product[0].equals(productID)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
             try {
-                if ( ! isInProducts(productID)) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    mainController.showProduct(productID);
-                    String[] info = sellerController.viewProduct(productID);
-                    printInfo(info);
+                int index = getIndex(command, sellerProducts);
+                if (index != 0) {
+                    mainController.showProduct(sellerProducts.get(index - 1)[0]);
+                    printInfo(sellerController.viewProduct(sellerProducts.get(index - 1)[0]));
                 }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
@@ -1742,26 +1792,13 @@ public class Actions {
             this.sellerProducts = sellerProducts;
         }
 
-        private boolean isInProducts(String productID) {
-            for (String[] product : sellerProducts) {
-                if (product[0].equals(productID)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
             try {
-                if (!isInProducts(productID)) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    ArrayList<String> buyers = sellerController.viewProductBuyers(productID);
+                int index = getIndex(command, sellerProducts);
+                if (index != 0) {
                     System.out.println("buyers:");
-                    buyers.forEach(b -> System.out.println(b));
+                    sellerController.viewProductBuyers(sellerProducts.get(index - 1)[0]).forEach(by -> System.out.println(by));
                 }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
@@ -1772,9 +1809,11 @@ public class Actions {
 
     public static class SellerEditProduct extends Action {
         private String[] editableFields;
-        SellerEditProduct(String name, String[] editableFields) {
+        private ArrayList<String[]> sellerProducts;
+        SellerEditProduct(String name, String[] editableFields, ArrayList<String[]> sellerProducts) {
             super(name, Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
             this.editableFields = editableFields;
+            this.sellerProducts = sellerProducts;
         }
 
         private void showEditableFields() {
@@ -1805,20 +1844,24 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
-            while (true) {
-                showEditableFields();
-                System.out.println("enter the field to edit (index):");
-                String response = View.getNextLineTrimmed();
-                if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response), productID) == -1) {continue;}
-                    else {break;}
-                } else if (response.equalsIgnoreCase("back")) {
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
+            int index = getIndex(command, sellerProducts);
+            if(index != 0) {
+                while (true) {
+                    showEditableFields();
+                    System.out.println("enter the field to edit (index):");
+                    String response = View.getNextLineTrimmed();
+                    if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
+                        if (editField(Integer.parseInt(response), sellerProducts.get(index - 1)[0]) == -1) {
+                            continue;
+                        } else {
+                            break;
+                        }
+                    } else if (response.equalsIgnoreCase("back")) {
+                        break;
+                    } else {
+                        System.out.println("invalid entry");
+                        continue;
+                    }
                 }
             }
             printSeparator();
@@ -1890,70 +1933,52 @@ public class Actions {
             this.sellerProducts = sellerProducts;
         }
 
-        private boolean isInProducts(String productID) {
-            for (String[] product : sellerProducts) {
-                if (product[0].equals(productID)) {
-                    return true;
+        @Override
+        public void execute(String command) {
+            int index = getIndex(command, sellerProducts);
+            if (index != 0) {
+                try {
+                    sellerController.removeProduct(sellerProducts.get(index - 1)[0]);
+                } catch (Exceptions.InvalidProductIdException e) {
+                    System.out.println(e.getMessage());
                 }
             }
-            return false;
+            printSeparator();
+        }
+    }
+
+    public static class ShoppingCartShowProducts extends Action {
+        private ArrayList<String[]> currentProducts;
+        ShoppingCartShowProducts(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartShowProductsPattern, Constants.Actions.shoppingCartShowProductsCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        private void refreshCurrentProducts() throws Exceptions.UnAuthorizedAccountException {
+            currentProducts.clear();
+            currentProducts.addAll(mainController.getProductsInCart());
         }
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
             try {
-                if (!isInProducts(productID)) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    sellerController.removeProduct(productID);
-                }
-            } catch (Exceptions.InvalidProductIdException e) {
+                refreshCurrentProducts();
+                System.out.println("shopping cart products:");
+                printList(currentProducts);
+                printSeparator();
+            } catch (Exceptions.UnAuthorizedAccountException e) {
                 System.out.println(e.getMessage());
             }
-            printSeparator();
         }
     }
 
-    public static class CustomerCartShowProducts extends Action {
+    public static class ShoppingCartViewProduct extends Action {
         private ArrayList<String[]> currentProducts;
-        CustomerCartShowProducts(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartShowProductsPattern, Constants.Actions.customerCartShowProductsCommand);
+        ShoppingCartViewProduct(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartViewProductPattern, Constants.Actions.shoppingCartViewProductCommand);
             this.currentProducts = currentProducts;
         }
 
-        private void refreshCurrentProducts() {
-            currentProducts.clear();
-            currentProducts.addAll(customerController.getProductsInCart());
-        }
-
-        @Override
-        public void execute(String command) {
-            refreshCurrentProducts();
-            printList(currentProducts);
-            printSeparator();
-        }
-    }
-
-    public static class CustomerCartViewProduct extends Action {
-        private ArrayList<String[]> currentProducts;
-        CustomerCartViewProduct(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartViewProductPattern, Constants.Actions.customerCartViewProductCommand);
-            this.currentProducts = currentProducts;
-        }
-
-        private int getIndexByID(String productID) {
-            int size = currentProducts.size();
-            for (int i = 0; i < size; i++) {
-                if (currentProducts.get(i)[0].equals(productID)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        //wtf is last field.
         private void printInfo(int index) {
             String[] info = currentProducts.get(index);
             System.out.println("1. product ID: " + info[0]);
@@ -1967,27 +1992,55 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
             try {
-                int index = getIndexByID(productID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    customerController.viewProductInCart(productID);
-                    printInfo(index);
+                int index = getIndex(command, currentProducts);
+                if (index != 0) {
+                    mainController.viewProductInCart(currentProducts.get(index - 1)[0]);
+
                 }
-            } catch (Exceptions.InvalidSubProductIdException e) {
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnAuthorizedAccountException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
         }
     }
 
-    public static class CustomerCartIncreaseProductCount extends Action {
+    public static class ShoppingCartIncreaseProductCount extends Action {
         private ArrayList<String[]> currentProducts;
-        CustomerCartIncreaseProductCount(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartIncreaseProductCountPattern, Constants.Actions.customerCartIncreaseProductCountCommand);
+        ShoppingCartIncreaseProductCount(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartIncreaseProductCountPattern, Constants.Actions.shoppingCartIncreaseProductCountCommand);
+            this.currentProducts = currentProducts;
+        }
+
+        @Override
+        public void execute(String command) {
+            Matcher commandMatcher = getMatcherReady(command);
+            int index = Integer.parseInt(commandMatcher.group(1));
+            int count;
+            if (index > currentProducts.size()) {
+                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+            } else {
+                if (commandMatcher.groupCount() == 2) {
+                    count = Integer.parseInt(commandMatcher.group(2));
+                } else {
+                    count = 1;
+                }
+                try {
+                    mainController.increaseProductInCart(currentProducts.get(index - 1)[0], count);
+                } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException | Exceptions.UnAuthorizedAccountException e) {
+                    System.out.println(e.getMessage());
+                } catch (Exceptions.UnavailableProductException e) {
+                    System.out.println("not enough product. try choosing another seller");
+                }
+            }
+            printSeparator();
+        }
+    }
+
+    public static class ShoppingCartDecreaseProductCount extends Action {
+        private ArrayList<String[]> currentProducts;
+        ShoppingCartDecreaseProductCount(String name, ArrayList<String[]> currentProducts) {
+            super(name, Constants.Actions.shoppingCartDecreaseProductCountPattern, Constants.Actions.shoppingCartDecreaseProductCountCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -2004,82 +2057,46 @@ public class Actions {
         @Override
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
+            int index = Integer.parseInt(commandMatcher.group(1));
             int count;
-            if (commandMatcher.groupCount() == 2) {
-                count = Integer.parseInt(commandMatcher.group(2));
-            } else { count = 1; }
-            try {
-                int index = getIndexByID(productID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
+            if (index > currentProducts.size()) {
+                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+            } else {
+                if (commandMatcher.groupCount() == 2) {
+                    count = Integer.parseInt(commandMatcher.group(2));
                 } else {
-                   customerController.increaseProductInCart(productID, count);
+                    count = 1;
                 }
-            } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException e) {
-                System.out.println(e.getMessage());
-            } catch (Exceptions.UnavailableProductException e) {
-                System.out.println("not enough product. try choosing another seller");
+                try {
+                    mainController.decreaseProductInCart(currentProducts.get(index - 1)[0], count);
+                } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException | Exceptions.UnAuthorizedAccountException e) {
+                    System.out.println(e.getMessage());
+                }
             }
             printSeparator();
         }
     }
 
-    public static class CustomerCartDecreaseProductCount extends Action {
-        private ArrayList<String[]> currentProducts;
-        CustomerCartDecreaseProductCount(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.customerCartDecreaseProductCountPattern, Constants.Actions.customerCartDecreaseProductCountCommand);
-            this.currentProducts = currentProducts;
-        }
-
-        private int getIndexByID(String productID) {
-            int size = currentProducts.size();
-            for (int i = 0; i < size; i++) {
-                if (currentProducts.get(i)[0].equals(productID)) {
-                    return i;
-                }
-            }
-            return -1;
+    public static class ShoppingCartShowTotalPrice extends Action {
+        ShoppingCartShowTotalPrice(String name) {
+            super(name, Constants.Actions.shoppingCartShowTotalPricePattern, Constants.Actions.shoppingCartShowTotalPriceCommand);
         }
 
         @Override
         public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String productID = commandMatcher.group(1);
-            int count;
-            if (commandMatcher.groupCount() == 2) {
-                count = Integer.parseInt(commandMatcher.group(2));
-            } else { count = 1; }
             try {
-                int index = getIndexByID(productID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of available IDs with show \"products\"");
-                } else {
-                    customerController.decreaseProductInCart(productID, count);
-                }
-            } catch (Exceptions.InvalidSubProductIdException | Exceptions.NotSubProductIdInTheCartException e) {
+                System.out.println("Total price (ofcourse ghabel nadare :p):" + customerController.getTotalPriceOfCart());
+                printSeparator();
+            }  catch (Exceptions.UnAuthorizedAccountException e) {
                 System.out.println(e.getMessage());
             }
-            printSeparator();
         }
     }
 
-    public static class CustomerCartShowTotalPrice extends Action {
-        CustomerCartShowTotalPrice(String name) {
-            super(name, Constants.Actions.customerCartShowTotalPricePattern, Constants.Actions.customerCartShowTotalPriceCommand);
-        }
-
-        @Override
-        public void execute(String command) {
-            System.out.println("Total price (ofcourse ghabel nadare :p):" + customerController.getTotalPriceOfCart());
-            printSeparator();
-        }
-    }
-
-    public static class CustomerCartPurchase extends Action {
+    public static class ShoppingCartPurchase extends Action {
         private Menu shoppingCartMenu;
-        CustomerCartPurchase(String name, Menu shoppingCartMenu) {
-            super(name, Constants.Actions.customerCartPurchasePattern, Constants.Actions.customerCartPurchaseCommand);
+        ShoppingCartPurchase(String name, Menu shoppingCartMenu) {
+            super(name, Constants.Actions.shoppingCartPurchasePattern, Constants.Actions.shoppingCartPurchaseCommand);
             this.shoppingCartMenu = shoppingCartMenu;
         }
 
@@ -2137,16 +2154,6 @@ public class Actions {
             this.currentOrderLogs = currentOrderLogs;
         }
 
-        private int getIndexByID(String productID) {
-            int size = currentOrderLogs.size();
-            for (int i = 0; i < size; i++) {
-                if (currentOrderLogs.get(i)[0].equals(productID)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
         private void printInfo(ArrayList<String[]> order) {
             String[] orderDetails = order.get(0);
             System.out.println("1. order ID: " + orderDetails[0]);
@@ -2167,17 +2174,13 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            String orderID = getGroup(command, 1);
-            try {
-                int index = getIndexByID(orderID);
-                if (index == -1) {
-                    System.out.println("please enter a valid ID. you can see the list of valid IDs by \"show orders\".");
-                } else {
-                    ArrayList<String[]> info = customerController.getOrderWithId(orderID);
-                    printInfo(info);
+            int index = getIndex(command, currentOrderLogs);
+            if (index != 0) {
+                try {
+                    printInfo(customerController.getOrderWithId(currentOrderLogs.get(index - 1)[0]));
+                } catch (Exceptions.InvalidLogIdException | Exceptions.CustomerLoginException e) {
+                    System.out.println(e.getMessage());
                 }
-            } catch (Exceptions.InvalidLogIdException | Exceptions.CustomerLoginException e) {
-                System.out.println(e.getMessage());
             }
             printSeparator();
         }

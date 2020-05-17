@@ -2,7 +2,6 @@ package view;
 
 import controller.*;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 class Menus {
@@ -65,7 +64,7 @@ class Menus {
             this.execute();
         }
 
-        public void run(Menu previousMenu, Menu nextMenu) {
+        void run(Menu previousMenu, Menu nextMenu) {
             this.previousMenu = previousMenu;
             this.nextMenu = nextMenu;
             this.execute();
@@ -181,6 +180,12 @@ class Menus {
         }
 
         @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show comments");
+            super.show();
+        }
+
+        @Override
         protected void initSubMenus() {
             //no available sub menus.
         }
@@ -244,7 +249,6 @@ class Menus {
         }
     }
 
-    //TODO: show sales joda bayad bashe refresh ham beshe
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
         private String[] currentFilters;
@@ -257,6 +261,12 @@ class Menus {
             this.currentFilters = new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)};
             this.currentProducts = new ArrayList<>();
             this.currentSales = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show offs");
+            super.show();
         }
 
         @Override
@@ -293,17 +303,17 @@ class Menus {
         }
 
         @Override
-        protected void initSubMenus() {
-            subMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
-        }
-
-        @Override
-        public void execute() {
+        public void run() {
             if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
-                super.execute();
+                super.run();
             } else {
                 parent.run();
             }
+        }
+
+        @Override
+        protected void initSubMenus() {
+            subMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
         }
 
         @Override
@@ -443,10 +453,17 @@ class Menus {
         }
     }
 
-    //TODO: show dilemma.
     public static class RequestManagingMenu extends Menu {
+        private ArrayList<String[]> pendingRequests;
         RequestManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
+            pendingRequests = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         @Override
@@ -457,15 +474,18 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1,  new Actions.AdminShowRequests("show requests"));
-            subActions.put(index + 2, new Actions.AdminViewRequestDetail("view request detail"));
+            subActions.put(index + 1, new Actions.AdminShowPendingRequests("show pending requests", pendingRequests));
+            subActions.put(index + 2, new Actions.AdminShowArchiveRequests("show archived requests"));
+            subActions.put(index + 2, new Actions.AdminViewRequestDetail("view request detail", pendingRequests));
             subActions.put(index + 3, new Actions.BackAction("back", parent));
         }
     }
 
     public static class CategoryManagingMenu extends Menu {
+        private ArrayList<String> currentCategories;
         CategoryManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.categoryManagingMenuPattern, Constants.Menus.categoryManagingMenuCommand);
+            this.currentCategories = new ArrayList<>();
         }
 
         private String[] getEditableFields() {
@@ -473,6 +493,12 @@ class Menus {
         }
 
         @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
+        }
+
+        @Override
         protected void initSubMenus() {
             //no available sub menu.
         }
@@ -480,10 +506,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminShowCategories("show categories"));
-            subActions.put(index + 2, new Actions.AdminEditCategory("edit category", getEditableFields()));
+            subActions.put(index + 1, new Actions.AdminShowCategories("show categories", currentCategories));
+            subActions.put(index + 2, new Actions.AdminEditCategory("edit category", getEditableFields(), currentCategories));
             subActions.put(index + 3, new Actions.AdminAddCategory("add category"));
-            subActions.put(index + 4, new Actions.AdminRemoveCategory("remove category"));
+            subActions.put(index + 4, new Actions.AdminRemoveCategory("remove category", currentCategories));
         }
     }
 
@@ -523,12 +549,20 @@ class Menus {
     }
 
     public static class SellerSalesMenu extends Menu {
+        private ArrayList<String[]> currentSales;
         SellerSalesMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.sellerSaleManagingMenuPattern, Constants.Menus.sellerSaleManagingMenuCommand);
+            this.currentSales = new ArrayList<>();
         }
 
         private String[] getEditableFields() {
             return sellerController.getSaleEditableFields();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         @Override
@@ -539,20 +573,25 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.SellerShowSales("show sales"));
-            subActions.put(index + 2, new Actions.SellerViewSaleDetails("view sale details"));
-            subActions.put(index + 3, new Actions.SellerEditSale("edit sale", getEditableFields()));
+            subActions.put(index + 1, new Actions.SellerShowSales("show sales", currentSales));
+            subActions.put(index + 2, new Actions.SellerViewSaleDetails("view sale details", currentSales));
+            subActions.put(index + 3, new Actions.SellerEditSale("edit sale", getEditableFields(), currentSales));
             subActions.put(index + 4, new Actions.SellerAddSale("add sale"));
             subActions.put(index + 5, new Actions.BackAction("back", parent));
         }
     }
 
-    //TODO: show bayad koni avalesh.
     public static class SellerProductMenu extends Menu {
         private ArrayList<String[]> sellerProducts;
         SellerProductMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.sellerProductManagingMenuPattern, Constants.Menus.sellerProductManagingMenuCommand);
             this.sellerProducts = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         private String[] getEditableFields() {
@@ -570,7 +609,7 @@ class Menus {
             subActions.put(index + 1, new Actions.SellerShowProducts("show seller products", sellerProducts));
             subActions.put(index + 2, new Actions.SellerViewProductDetails("view product details", sellerProducts));
             subActions.put(index + 3, new Actions.SellerViewProductBuyers("view product buyers", sellerProducts));
-            subActions.put(index + 4, new Actions.SellerEditProduct("edit product", getEditableFields()));
+            subActions.put(index + 4, new Actions.SellerEditProduct("edit product", getEditableFields(), sellerProducts));
             subActions.put(index + 4, new Actions.SellerAddProduct("add product"));
             subActions.put(index + 4, new Actions.SellerRemoveProduct("remove product", sellerProducts));
             subActions.put(index + 5, new Actions.BackAction("back", parent));
@@ -610,12 +649,24 @@ class Menus {
         }
     }
 
-    //this is both used in product menu and in customer menu
+    //add product detail menu
     public static class ShoppingCartMenu extends Menu {
         private ArrayList<String[]> currentProducts;
         ShoppingCartMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.shoppingCartMenuPattern, Constants.Menus.shoppingCartMenuCommand);
             this.currentProducts = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            String type = mainController.getType();
+            if (type.equalsIgnoreCase(Constants.adminUserType) || type.equalsIgnoreCase(Constants.sellerUserType)) {
+                System.out.println("you dont possess a shopping cart");
+                parent.run();
+            }
+            else {
+                super.show();
+            }
         }
 
         @Override
@@ -626,12 +677,12 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.CustomerCartShowProducts("show products", currentProducts));
-            subActions.put(index + 2, new Actions.CustomerCartViewProduct("view product", currentProducts));
-            subActions.put(index + 3, new Actions.CustomerCartIncreaseProductCount("increase count", currentProducts));
-            subActions.put(index + 4, new Actions.CustomerCartDecreaseProductCount("decrease count", currentProducts));
-            subActions.put(index + 5, new Actions.CustomerCartShowTotalPrice("show total price"));
-            subActions.put(index + 6, new Actions.CustomerCartPurchase("purchase products", this));
+            subActions.put(index + 1, new Actions.ShoppingCartShowProducts("show products", currentProducts));
+            subActions.put(index + 2, new Actions.ShoppingCartViewProduct("view product", currentProducts));
+            subActions.put(index + 3, new Actions.ShoppingCartIncreaseProductCount("increase count", currentProducts));
+            subActions.put(index + 4, new Actions.ShoppingCartDecreaseProductCount("decrease count", currentProducts));
+            subActions.put(index + 5, new Actions.ShoppingCartShowTotalPrice("show total price"));
+            subActions.put(index + 6, new Actions.ShoppingCartPurchase("purchase products", this));
             subActions.put(index + 7, new Actions.BackAction("back", parent));
         }
     }
@@ -641,6 +692,12 @@ class Menus {
         CustomerOrderLogMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.customerOrderLogMenuPattern, Constants.Menus.customerOrderLogMenuCommand);
             this.currentOrderLogs = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            super.show();
         }
 
         @Override
