@@ -2,6 +2,8 @@ package model.account;
 
 import model.ModelBasic;
 import model.ModelUtilities;
+import model.request.AddSellerRequest;
+import model.request.Request;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,19 @@ public abstract class Account implements ModelBasic {
         }
 
         return null;
+    }
+
+    public static boolean isUsernameUsed(String username) {
+        if (getAccountByUsername(username) != null)
+            return true;
+
+        for (Request request : Request.getPendingRequests()) {
+            if (request instanceof AddSellerRequest)
+                if (((AddSellerRequest) request).getSeller().getUsername().equals(username))
+                    return true;
+        }
+
+        return false;
     }
 
     @Override

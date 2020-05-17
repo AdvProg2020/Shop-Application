@@ -5,21 +5,23 @@ import model.ModelUtilities.ModelOnly;
 import java.util.*;
 
 public class Category implements ModelBasic {
-    private static final String EXTRAS_NAME = "extras";
-    private static Category superCategory = null; // parent of all main categories (shouldn't be terminated)
+    public static final String SUPER_CATEGORY_NAME = "SuperCategory";
+    private static Category superCategory = null; // parent of all main categories (shouldn't be suspended)
     private static Map<String, Category> allCategories = new HashMap<>();
     private static int lastNum = 1;
     private String categoryId;
     private String name;
     private String parentId;
-    private List<String> specialProperties;
+    private List<String> properties;
     private transient Set<String> productIds;
     private transient Set<String> subCategoryIds;
+    private boolean suspended;
 
-    public Category(String name, String parentId, ArrayList<String> specialProperties) {
+    public Category(String name, String parentId, ArrayList<String> properties) {
         this.name = name;
         this.parentId = parentId;
-        this.specialProperties = specialProperties;
+        this.properties = properties;
+        suspended = false;
         initialize();
     }
 
@@ -29,23 +31,23 @@ public class Category implements ModelBasic {
 
     public static void setSuperCategory() {
         if (superCategory == null)
-            new Category(null, null, null);
+            new Category(SUPER_CATEGORY_NAME, null, null);
     }
 
-    public static List<Category> getAllCategories() {
-        return new ArrayList<>(allCategories.values());
+    public static List<Category> getAllCategories(boolean... suspense) {
+        return ModelUtilities.getInstances(allCategories.values(), suspense);
     }
 
-    public static Category getCategoryById(String categoryId) {
-        return allCategories.get(categoryId);
+    public static Category getCategoryById(String categoryId, boolean... suspense) {
+        return ModelUtilities.getInstanceById(allCategories, categoryId, suspense);
     }
 
     public static Category getCategoryByName(String name) {
-        if (name.equals(EXTRAS_NAME))
+        if (name.equals(SUPER_CATEGORY_NAME))
             return superCategory;
 
         for (Category category : allCategories.values()) {
-            if (category.getName().equals(name))
+            if (!category.suspended && category.getName().equals(name))
                 return category;
         }
 
@@ -54,34 +56,38 @@ public class Category implements ModelBasic {
 
     @Override
     public void initialize() {
-        subCategoryIds = new HashSet<>();
-        productIds = new HashSet<>();
         if (superCategory == null) {
             superCategory = this;
+            subCategoryIds = new HashSet<>();
         } else {
             if (categoryId == null)
                 categoryId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
             allCategories.put(categoryId, this);
             lastNum++;
-
-            getParent().addSubCategory(categoryId);
+            if (!suspended) {
+                subCategoryIds = new HashSet<>();
+                productIds = new HashSet<>();
+                getParent().addSubCategory(categoryId);
+            }
         }
     }
 
-    public void terminate() {
+    public void suspend() {
         for (Category subCategory : getSubCategories()) {
-            subCategory.terminate();
+            subCategory.suspend();
         }
+        subCategoryIds = null;
         for (Product product : getProducts()) {
-            product.setCategory(parentId);
+            product.suspend();
         }
+        productIds = null;
         getParent().removeSubCategory(categoryId);
-        allCategories.remove(categoryId);
+        suspended = true;
     }
 
     @Override
     public boolean isSuspended() {
-        return false;
+        return suspended;
     }
 
     @Override
@@ -97,8 +103,8 @@ public class Category implements ModelBasic {
         this.name = name;
     }
 
-    public List<String> getSpecialProperties() {
-        return new ArrayList<>(specialProperties);
+    public List<String> getProperties() {
+        return new ArrayList<>(properties);
     }
 
     public Category getParent() {

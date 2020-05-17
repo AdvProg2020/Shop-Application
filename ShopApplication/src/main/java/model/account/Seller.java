@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 public class Seller extends Account {
     private static int lastNum = 1;
     private String storeName;

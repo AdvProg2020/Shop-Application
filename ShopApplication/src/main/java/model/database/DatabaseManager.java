@@ -169,6 +169,7 @@ public class DatabaseManager implements Database {
         updateLogItems();
         updateAccounts();
         updateSubProducts();
+        updateCarts();
     }
 
     @Override
@@ -216,7 +217,7 @@ public class DatabaseManager implements Database {
     @Override
     public void removeCategory() {
         updateCategories();
-        updateProducts();
+        removeProduct();
     }
 
     @Override
@@ -235,7 +236,7 @@ public class DatabaseManager implements Database {
     @Override
     public void removeProduct() {
         updateProducts();
-        updateSubProducts();
+        removeSubProduct();
         updateReviews();
         updateRatings();
     }

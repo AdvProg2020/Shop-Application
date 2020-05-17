@@ -14,18 +14,18 @@ public class Product implements ModelBasic {
     private String infoText;
     private int viewCount;
     private String categoryId;
-    private List<String> specialProperties;
+    private List<String> propertyValues;
     private transient Set<String> subProductIds;
     private transient Set<String> reviewIds;
     private transient Set<String> ratingIds;
     private boolean suspended;
 
-    public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> specialProperties, SubProduct subProduct) {
+    public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> propertyValues, SubProduct subProduct) {
         this.name = name;
         this.brand = brand;
         this.infoText = infoText;
         this.categoryId = categoryId;
-        this.specialProperties = specialProperties;
+        this.propertyValues = propertyValues;
         viewCount = 0;
         suspended = false;
         new AddProductRequest(this, subProduct);
@@ -136,12 +136,6 @@ public class Product implements ModelBasic {
         return Category.getCategoryById(categoryId);
     }
 
-    public void setCategory(String categoryId) {
-        getCategory().removeProduct(productId);
-        this.categoryId = categoryId;
-        getCategory().addProduct(productId);
-    }
-
     public List<SubProduct> getSubProducts() {
         List<SubProduct> subProducts = new ArrayList<>();
         for (String subProductId : subProductIds) {
@@ -179,8 +173,8 @@ public class Product implements ModelBasic {
         subProductIds.remove(subProductId);
     }
 
-    public List<String> getSpecialProperties() {
-        return new ArrayList<>(specialProperties);
+    public List<String> getPropertyValues() {
+        return new ArrayList<>(propertyValues);
     }
 
     public List<Review> getReviews() {
