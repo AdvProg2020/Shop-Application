@@ -357,8 +357,6 @@ class Menus {
         }
     }
 
-
-
     public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent){
             super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
@@ -380,12 +378,17 @@ class Menus {
         protected abstract String[] getEditableFields();
     }
 
-    //TODO: executesh bayad fargh kone.
     public static class UserManagingMenu extends Menu{
         private ArrayList<String[]> users;
         UserManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.userManagingMenuPattern, Constants.Menus.userManagingMenuCommand);
             users = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show users");
+            super.show();
         }
 
         @Override
@@ -404,12 +407,19 @@ class Menus {
         }
     }
 
-    public static class ProductManagingMenu extends Menu{
+    public static class ProductManagingMenu extends Menu {
         private ArrayList<String[]> currentProducts;
         ProductManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.productManagingMenuPattern, Constants.Menus.productManagingMenuCommand);
             this.currentProducts = new ArrayList<>();
         }
+
+        @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show products");
+            super.show();
+        }
+
 
         @Override
         protected void initSubMenus() {
@@ -430,6 +440,12 @@ class Menus {
         DiscountCodesManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
             this.discountCodes = new ArrayList<>();
+        }
+
+        @Override
+        public void show() {
+            subActions.get(subMenus.size() + 1 + floatingMenusIndexModification()).run("show discount codes");
+            super.show();
         }
 
         @Override
@@ -462,7 +478,7 @@ class Menus {
 
         @Override
         public void show() {
-            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show pending requests");
             super.show();
         }
 
@@ -494,7 +510,7 @@ class Menus {
 
         @Override
         public void show() {
-            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show categories");
             super.show();
         }
 
@@ -561,7 +577,7 @@ class Menus {
 
         @Override
         public void show() {
-            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show sales");
             super.show();
         }
 
@@ -590,7 +606,7 @@ class Menus {
 
         @Override
         public void show() {
-            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show seller products");
             super.show();
         }
 
@@ -696,7 +712,7 @@ class Menus {
 
         @Override
         public void show() {
-            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show and refresh");
+            subActions.get(floatingMenusIndexModification() + subMenus.size() + 1).run("show orders");
             super.show();
         }
 
