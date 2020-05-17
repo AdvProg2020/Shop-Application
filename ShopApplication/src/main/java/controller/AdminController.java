@@ -248,12 +248,8 @@ public class AdminController {
         }
     }
 
-    //TODO: Dana: Id, type, date, status,
-    public ArrayList<String[]> manageRequests() {
+    public ArrayList<String[]> getArchivedRequests() {
         ArrayList<String[]> requestIds = new ArrayList<>();
-        for (Request request : Request.getPendingRequests()) {
-            requestIds.add(Utilities.Pack.request(request));
-        }
         if(currentAccount() == Admin.getManager()){
             for (Request request : Request.getRequestArchive()) {
                 requestIds.add(Utilities.Pack.request(request));
@@ -262,7 +258,14 @@ public class AdminController {
         return requestIds;
     }
 
-    //Todo: Dana consider the output
+    public ArrayList<String[]> getPendingRequests(){
+        ArrayList<String[]> requestPacks = new ArrayList<>();
+        for (Request request : Request.getPendingRequests()) {
+            requestPacks.add(Utilities.Pack.request(request));
+        }
+        return requestPacks;
+    }
+
     /**
      * @param requestId
      * @return AddProduct: { {"AddProduct"}, { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }, {specialProperties}
