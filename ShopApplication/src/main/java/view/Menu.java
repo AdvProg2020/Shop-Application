@@ -1,5 +1,6 @@
 package view;
 
+import java.io.IOException;
 import java.util.*;
 
 public abstract class Menu {
@@ -10,7 +11,7 @@ public abstract class Menu {
     protected Menu parent;
     protected Map<Integer, Menu> subMenus;
     protected Map<Integer, Action> subActions;
-    static ArrayList<Menu>  allMenus;
+    static ArrayList<Menu> allMenus;
     static private Stack<Menu> stackTrace;
     private String commandPattern;
     private String command;
@@ -33,6 +34,7 @@ public abstract class Menu {
     }
 
     protected abstract void initSubMenus();
+
     protected abstract void initSubActions();
 
     public static void setAccountMenu(Menus.AccountMenu accountMenu) {
@@ -105,7 +107,10 @@ public abstract class Menu {
 
     public void execute() {
         String command = View.getNextLineTrimmed();
-        if (command.equalsIgnoreCase("help")) {showCommandList(); this.run();}
+        if (command.equalsIgnoreCase("help")) {
+            showCommandList();
+            this.run();
+        }
         for (Integer menuIndex : subMenus.keySet()) {
             if (command.equals(Integer.toString(menuIndex)) || command.matches(subMenus.get(menuIndex).commandPattern)) {
                 subMenus.get(menuIndex).run();
@@ -139,8 +144,11 @@ public abstract class Menu {
 
     protected int floatingMenusIndexModification() {
         int modification = 0;
-        if (isAccountMenuAccessible) {return 1;}
-        else {return 0;}
+        if (isAccountMenuAccessible) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     @Override

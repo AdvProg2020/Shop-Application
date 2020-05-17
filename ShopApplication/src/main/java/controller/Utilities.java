@@ -351,16 +351,25 @@ public class Utilities {
             }
 
             public static void name(ArrayList<Product> products, String contains) {
+                if (contains == null) {
+                    return;
+                }
                 if (!contains.equals(""))
                     products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
             }
 
             public static void brand(ArrayList<Product> products, String brand) {
+                if (brand == null) {
+                    return;
+                }
                 if (!brand.equals(""))
                     products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
 
             public static void storeName(ArrayList<Product> products, String storeName) {
+                if (storeName == null) {
+                    return;
+                }
                 if (!storeName.equals("")) {
                     products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
                 }

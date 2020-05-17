@@ -29,15 +29,16 @@ public class Actions {
 
     public static class BackAction extends Action {
         private Menu parent;
-        BackAction( Menu parent) {
+
+        BackAction(Menu parent) {
             super(Constants.Actions.backPattern, Constants.Actions.backCommand);
             this.parent = parent;
         }
-        
+
         public void setParent(Menu newParent) {
             this.parent = newParent;
         }
-        
+
         @Override
         public void execute(String command) {
             parent.run();
@@ -56,35 +57,39 @@ public class Actions {
         }
     }
 
-    public static  class LoginAction extends Action {
+    public static class LoginAction extends Action {
         LoginAction() {
-            super( Constants.Actions.loginPattern, Constants.Actions.loginCommand);
+            super(Constants.Actions.loginPattern, Constants.Actions.loginCommand);
         }
 
         private String getPassword() {
             System.out.println("Enter your password (enter \"back\" to go back):");
-             String input = View.getNextLineTrimmed();
-             if (input.equalsIgnoreCase("back")) {return null;}
-             else {return input;}
+            String input = View.getNextLineTrimmed();
+            if (input.equalsIgnoreCase("back")) {
+                return null;
+            } else {
+                return input;
+            }
         }
+
 
         @Override
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
             String username = commandMatcher.group(1);
-            while(true) {
+            while (true) {
                 String password = getPassword();
                 if (password != null) {
                     try {
                         mainController.login(username, password);
-                    } catch (Exceptions.UsernameDoesntExistException  e) {
+                        //if without problem
+                        System.out.println("logged-in successfully!");
+                    } catch (Exceptions.UsernameDoesntExistException e) {
                         System.out.println(e.getMessage());
                         break;
                     } catch (Exceptions.WrongPasswordException e) {
                         System.out.println(e.getMessage());
                     }
-                    //if without problem
-                    System.out.println("logged-in successfully!");
                     break;
                 } else {
                     break;
@@ -96,7 +101,7 @@ public class Actions {
 
     public static class RegisterAction extends Action {
         RegisterAction() {
-            super( Constants.Actions.registerPattern, Constants.Actions.registerCommand);
+            super(Constants.Actions.registerPattern, Constants.Actions.registerCommand);
         }
 
         private void registerCustomer(String username) {
@@ -104,11 +109,11 @@ public class Actions {
             String[] fields;
             String[] fieldRegex;
             String[] results;
-            fields = new String[] { "password", "first name", "last name", "email", "phone", "balance"};
-            fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
-                    Constants.argumentPattern, Constants.argumentPattern, Constants.doublePattern};
+            fields = new String[]{"password", "first name", "last name", "email", "phone", "balance"};
+            fieldRegex = new String[]{Constants.argumentPattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+                    Constants.emailPattern, Constants.phonePattern, Constants.doublePattern};
             registerForm = new Form(fields, fieldRegex);
-            if(registerForm.takeInput() == 0) {
+            if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), null);
@@ -124,11 +129,11 @@ public class Actions {
             String[] fields;
             String[] fieldRegex;
             String[] results;
-            fields = new String[] { "password", "first name", "last name", "email", "phone", "balance", "store name"};
-            fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
-                    Constants.argumentPattern, Constants.argumentPattern, Constants.doublePattern, Constants.argumentPattern};
+            fields = new String[]{"password", "first name", "last name", "email", "phone", "balance", "store name"};
+            fieldRegex = new String[]{Constants.argumentPattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+                    Constants.emailPattern, Constants.phonePattern, Constants.doublePattern, Constants.IRLNamePattern};
             registerForm = new Form(fields, fieldRegex);
-            if(registerForm.takeInput() == 0) {
+            if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), results[6]);
@@ -144,11 +149,11 @@ public class Actions {
             String[] fields;
             String[] fieldRegex;
             String[] results;
-            fields = new String[] { "password", "first name", "last name", "email", "phone"};
-            fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
-                    Constants.argumentPattern, Constants.argumentPattern};
+            fields = new String[]{"password", "first name", "last name", "email", "phone"};
+            fieldRegex = new String[]{Constants.argumentPattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+                    Constants.emailPattern, Constants.phonePattern};
             registerForm = new Form(fields, fieldRegex);
-            if(registerForm.takeInput() == 0) {
+            if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], 0.00, null);
@@ -200,8 +205,8 @@ public class Actions {
         private StringBuilder currentSort;
         private ArrayList<String[]> currentProducts;
 
-        ShowProductsAction( ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
+        ShowProductsAction(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
             this.currentSort = currentSort;
@@ -220,6 +225,7 @@ public class Actions {
         private void showAllProducts() {
             refreshCurrentProducts("superCategory");
             try {
+                System.out.println("all products:");
                 printList(mainController.showProducts(productIDs(), null, true,
                         new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)}));
             } catch (Exceptions.InvalidProductIdException e) {
@@ -228,17 +234,21 @@ public class Actions {
         }
 
         private String getSortingField() {
-            if (currentSort.length() == 0) {return null;}
+            if (currentSort.length() == 0) {
+                return null;
+            }
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 3;
             return currentSort.substring(0, indicatorIndex);
         }
 
         private boolean isIncreasing() {
-            if (currentSort.length() == 0) {return true;}
+            if (currentSort.length() == 0) {
+                return true;
+            }
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 2;
-             return currentSort.substring(indicatorIndex).equalsIgnoreCase("increasing");
+            return currentSort.substring(indicatorIndex).equalsIgnoreCase("increasing");
         }
 
         private ArrayList<String> productIDs() {
@@ -252,8 +262,9 @@ public class Actions {
         @Override
         public void execute(String command) {
             String categoryName;
-            if ( getMatcherReady(command).groupCount() == 1) {showAllProducts();}
-            else {
+            if (getMatcherReady(command).groupCount() == 1) {
+                showAllProducts();
+            } else {
                 if (categoryTree.size() == 0) {
                     categoryName = "superCategory";
                 } else {
@@ -261,6 +272,7 @@ public class Actions {
                 }
                 try {
                     refreshCurrentProducts(categoryName);
+                    System.out.println("current products:");
                     printList(mainController.showProducts(productIDs(), getSortingField(), isIncreasing(), currentFilters));
                 } catch (Exceptions.InvalidProductIdException e) {
                     System.out.println(e.getMessage());
@@ -273,8 +285,9 @@ public class Actions {
     public static class ShowCategories extends Action {
         private ArrayList<String> categoryTree;
         private ArrayList<String[]> availableCategories;
-        ShowCategories( ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
-            super( Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
+
+        ShowCategories(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
+            super(Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
             this.availableCategories = availableCategories;
         }
 
@@ -304,8 +317,9 @@ public class Actions {
     public static class ChooseCategoryAction extends Action {
         private ArrayList<String> categoryTree;
         private ArrayList<String[]> availableCategories;
-        ChooseCategoryAction( ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
-            super( Constants.Actions.chooseCategoryPattern, Constants.Actions.chooseCategoryCommand);
+
+        ChooseCategoryAction(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
+            super(Constants.Actions.chooseCategoryPattern, Constants.Actions.chooseCategoryCommand);
             this.availableCategories = availableCategories;
             this.categoryTree = categoryTree;
         }
@@ -321,8 +335,9 @@ public class Actions {
 
     public static class RevertCategoryAction extends Action {
         private ArrayList<String> categoryTree;
-        RevertCategoryAction( ArrayList<String> categoryTree) {
-            super( Constants.Actions.revertCategoryPattern, Constants.Actions.revertCategoryCommand);
+
+        RevertCategoryAction(ArrayList<String> categoryTree) {
+            super(Constants.Actions.revertCategoryPattern, Constants.Actions.revertCategoryCommand);
             this.categoryTree = categoryTree;
         }
 
@@ -354,8 +369,8 @@ public class Actions {
         private StringBuilder currentSort;
         private String[] availableSorts;
 
-        ChooseSorting( StringBuilder currentSort, String[] availableSorts) {
-            super( Constants.Actions.sortPattern, Constants.Actions.sortCommand);
+        ChooseSorting(StringBuilder currentSort, String[] availableSorts) {
+            super(Constants.Actions.sortPattern, Constants.Actions.sortCommand);
             this.currentSort = currentSort;
             this.availableSorts = availableSorts;
         }
@@ -367,13 +382,16 @@ public class Actions {
         }
 
         private int modifySortingArgument() {
-            while(true) {
+            while (true) {
                 System.out.println("choose the sorting method (enter \"back\" to go back):");
                 String input = View.getNextLineTrimmed();
-                if (input.equalsIgnoreCase("back")) {return 0;}
+                if (input.equalsIgnoreCase("back")) {
+                    return 0;
+                }
                 int entry = checkSortingArgument(input);
-                if (entry == -1) {continue;}
-                else {
+                if (entry == -1) {
+                    continue;
+                } else {
                     currentSort.setLength(0);
                     currentSort.append(availableSorts[entry]);
                     return 1;
@@ -392,10 +410,12 @@ public class Actions {
         }
 
         private int modifySortingMethod() {
-            while(true) {
+            while (true) {
                 System.out.println("do want sorting to be increasing or decreasing? (I or D):");
                 String input = View.getNextLineTrimmed();
-                if (input.equalsIgnoreCase("back")) {return 0;}
+                if (input.equalsIgnoreCase("back")) {
+                    return 0;
+                }
                 if (input.equalsIgnoreCase("I")) {
                     currentSort.append(" increasing");
                 } else if (input.equalsIgnoreCase("D")) {
@@ -412,9 +432,13 @@ public class Actions {
             showAvailableSorts();
             while (true) {
                 int response = modifySortingArgument();
-                if (response == 0){break;}
+                if (response == 0) {
+                    break;
+                }
                 response = modifySortingMethod();
-                if (response != 0){break;}
+                if (response != 0) {
+                    break;
+                }
             }
             printSeparator();
         }
@@ -423,8 +447,8 @@ public class Actions {
     public static class ShowCurrentSort extends Action {
         private StringBuilder currentSort;
 
-        ShowCurrentSort( StringBuilder currentSort) {
-            super( Constants.Actions.showCurrentSortPattern, Constants.Actions.showCurrentSortCommand);
+        ShowCurrentSort(StringBuilder currentSort) {
+            super(Constants.Actions.showCurrentSortPattern, Constants.Actions.showCurrentSortCommand);
             this.currentSort = currentSort;
         }
 
@@ -442,8 +466,8 @@ public class Actions {
     public static class DisableSort extends Action {
         private StringBuilder currentSort;
 
-        DisableSort( StringBuilder currentSort) {
-            super( Constants.Actions.disableSortPattern, Constants.Actions.disableSortCommand);
+        DisableSort(StringBuilder currentSort) {
+            super(Constants.Actions.disableSortPattern, Constants.Actions.disableSortCommand);
             this.currentSort = currentSort;
         }
 
@@ -457,8 +481,9 @@ public class Actions {
     public static class ChooseFiltering extends Action {
         private String[] currentFilters;
         private String[] availableFilters;
-        ChooseFiltering( String[] currentFilters, String[] availableFilters) {
-            super( Constants.Actions.filterPattern, Constants.Actions.filterCommand);
+
+        ChooseFiltering(String[] currentFilters, String[] availableFilters) {
+            super(Constants.Actions.filterPattern, Constants.Actions.filterCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
         }
@@ -470,15 +495,18 @@ public class Actions {
         }
 
         private int modifyFilter(int filterIndex) {
-            String[] expectingEntry = new String[] {"Y or N", "Double number", "Double number", "non-space String", "String", "String", "Double number"};
-            String[] expectingRegex = new String[] {Constants.caseInsensitiveMode + "[YN]", Constants.doublePattern, Constants.doublePattern,
-                                        Constants.argumentPattern, ".+", ".+", Constants.doublePattern};
+            String[] expectingEntry = new String[]{"Y or N", "Double number", "Double number", "non-space String", "String", "String", "Double number"};
+            String[] expectingRegex = new String[]{Constants.caseInsensitiveMode + "[YN]", Constants.doublePattern, Constants.doublePattern,
+                    Constants.argumentPattern, ".+", ".+", Constants.doublePattern};
             while (true) {
                 System.out.println("enter new filtering (" + expectingEntry[filterIndex - 1] + "):");
                 String entry = View.getNextLineTrimmed();
                 if (entry.matches(expectingRegex[filterIndex - 1])) {
-                    if (filterIndex == 1) { currentFilters[0] = (entry.equalsIgnoreCase("y") ? "true":"false");}
-                    else {currentFilters[filterIndex - 1] = entry;}
+                    if (filterIndex == 1) {
+                        currentFilters[0] = (entry.equalsIgnoreCase("y") ? "true" : "false");
+                    } else {
+                        currentFilters[filterIndex - 1] = entry;
+                    }
                     return 0;
                 } else if (entry.equalsIgnoreCase("back")) return -1;
                 else {
@@ -494,7 +522,7 @@ public class Actions {
                 System.out.println("choose the filtering field by index (or \"back\" to go back):");
                 String input = View.getNextLineTrimmed();
                 if (input.matches(Constants.unsignedIntPattern) && Integer.parseInt(input) <= availableFilters.length) {
-                    if(modifyFilter(Integer.parseInt(input)) == -1) continue;
+                    if (modifyFilter(Integer.parseInt(input)) == -1) continue;
                     else break;
                 } else if (input.equalsIgnoreCase("back")) break;
                 else {
@@ -510,8 +538,8 @@ public class Actions {
         private String[] currentFilters;
         private String[] availableFilters;
 
-        ShowCurrentFilters( String[] currentFilters, String[] availableFilters) {
-            super( Constants.Actions.showCurrentFiltersPattern, Constants.Actions.showCurrentFiltersCommand);
+        ShowCurrentFilters(String[] currentFilters, String[] availableFilters) {
+            super(Constants.Actions.showCurrentFiltersPattern, Constants.Actions.showCurrentFiltersCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
         }
@@ -533,8 +561,9 @@ public class Actions {
     public static class DisableFilter extends Action {
         private String[] currentFilters;
         private String[] availableFilters;
-        DisableFilter( String[] currentFilters, String[] availableFilters) {
-            super( Constants.Actions.disableFilterPattern, Constants.Actions.disableFilterCommand);
+
+        DisableFilter(String[] currentFilters, String[] availableFilters) {
+            super(Constants.Actions.disableFilterPattern, Constants.Actions.disableFilterCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
         }
@@ -584,7 +613,8 @@ public class Actions {
 
     public static class ShowSales extends Action {
         private ArrayList<String[]> currentSales;
-        ShowSales( ArrayList<String[]> currentSales) {
+
+        ShowSales(ArrayList<String[]> currentSales) {
             super(Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
             this.currentSales = currentSales;
         }
@@ -630,22 +660,26 @@ public class Actions {
         private String[] currentFilters;
         private ArrayList<String[]> currentProducts;
 
-        public ShowInSaleProducts( StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.showInSaleProductsPattern, Constants.Actions.showInSaleProductsCommand);
+        public ShowInSaleProducts(StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.showInSaleProductsPattern, Constants.Actions.showInSaleProductsCommand);
             this.currentSort = currentSort;
             this.currentFilters = currentFilters;
             this.currentProducts = currentProducts;
         }
 
         private String getSortingField() {
-            if (currentSort.length() == 0) {return null;}
+            if (currentSort.length() == 0) {
+                return null;
+            }
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 3;
             return currentSort.substring(0, indicatorIndex);
         }
 
         private boolean isIncreasing() {
-            if (currentSort.length() == 0) {return true;}
+            if (currentSort.length() == 0) {
+                return true;
+            }
             int indicatorIndex = currentSort.lastIndexOf("creasing");
             indicatorIndex -= 2;
             return currentSort.substring(indicatorIndex).equalsIgnoreCase("increasing");
@@ -667,7 +701,7 @@ public class Actions {
 
     public static class ViewPersonalInfo extends Action {
         ViewPersonalInfo() {
-            super( Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
+            super(Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
         }
 
         private void showPersonalInfo(String[] info) {
@@ -695,8 +729,8 @@ public class Actions {
     public static class EditField extends Action {
         private String[] editableFields;
 
-        EditField( String[] editableFields) {
-            super( Constants.Actions.editFieldPattern, Constants.Actions.editFieldCommand);
+        EditField(String[] editableFields) {
+            super(Constants.Actions.editFieldPattern, Constants.Actions.editFieldCommand);
             this.editableFields = editableFields;
         }
 
@@ -709,10 +743,12 @@ public class Actions {
         private int editField(int fieldIndex) {
             String type = mainController.getType();
             String response;
-            while(true) {
+            while (true) {
                 System.out.println("enter new info");
                 response = View.getNextLineTrimmed();
-                if (response.equalsIgnoreCase("back")) {return -1;}
+                if (response.equalsIgnoreCase("back")) {
+                    return -1;
+                }
                 try {
                     if (type.equals("Customer")) {
                         customerController.editPersonalInfo(editableFields[fieldIndex], response);
@@ -734,13 +770,14 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            while(true) {
+            while (true) {
                 showEditableFields();
                 System.out.println("enter the field to edit (index):");
                 String response = View.getNextLineTrimmed();
                 if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                    if (editField(Integer.parseInt(response)) == -1) {continue;}
-                    else break;
+                    if (editField(Integer.parseInt(response) - 1) == -1) {
+                        continue;
+                    } else break;
                 } else if (response.equalsIgnoreCase("back")) {
                     break;
                 } else {
@@ -754,7 +791,7 @@ public class Actions {
 
     public static class ShowSellerCompanyInfo extends Action {
         ShowSellerCompanyInfo() {
-            super( Constants.Actions.showSellerCompanyInfoPattern, Constants.Actions.showSellerCompanyInfoCommand);
+            super(Constants.Actions.showSellerCompanyInfoPattern, Constants.Actions.showSellerCompanyInfoCommand);
         }
 
         @Override
@@ -767,8 +804,9 @@ public class Actions {
 
     public static class ShowSellerSellHistory extends Action {
         private ArrayList<String[]> sellLogs;
-        ShowSellerSellHistory( ArrayList<String[]> sellLogs) {
-            super( Constants.Actions.showSellerSellHistoryPattern, Constants.Actions.showSellerSellHistoryCommand);
+
+        ShowSellerSellHistory(ArrayList<String[]> sellLogs) {
+            super(Constants.Actions.showSellerSellHistoryPattern, Constants.Actions.showSellerSellHistoryCommand);
             this.sellLogs = sellLogs;
         }
 
@@ -788,8 +826,9 @@ public class Actions {
 
     public static class ViewSingleSellHistory extends Action {
         private ArrayList<String[]> sellLogs;
-        ViewSingleSellHistory( ArrayList<String[]> sellLogs) {
-            super( Constants.Actions.showSingleSellLogPattern, Constants.Actions.showSingleSellLogCommand);
+
+        ViewSingleSellHistory(ArrayList<String[]> sellLogs) {
+            super(Constants.Actions.showSingleSellLogPattern, Constants.Actions.showSingleSellLogCommand);
             this.sellLogs = sellLogs;
         }
 
@@ -809,7 +848,7 @@ public class Actions {
 
     public static class ShowSellerBalance extends Action {
         ShowSellerBalance() {
-            super( Constants.Actions.showSellerBalancePattern, Constants.Actions.showSellerBalanceCommand);
+            super(Constants.Actions.showSellerBalancePattern, Constants.Actions.showSellerBalanceCommand);
         }
 
         @Override
@@ -821,7 +860,7 @@ public class Actions {
 
     public static class ShowCustomerBalance extends Action {
         ShowCustomerBalance() {
-            super( Constants.Actions.showCustomerBalancePattern, Constants.Actions.showCustomerBalanceCommand);
+            super(Constants.Actions.showCustomerBalancePattern, Constants.Actions.showCustomerBalanceCommand);
         }
 
         @Override
@@ -833,7 +872,7 @@ public class Actions {
 
     public static class ShowCustomerDiscountCodes extends Action {
         ShowCustomerDiscountCodes() {
-            super( Constants.Actions.showCustomerDiscountCodesPattern, Constants.Actions.showCustomerDiscountCodesCommand);
+            super(Constants.Actions.showCustomerDiscountCodesPattern, Constants.Actions.showCustomerDiscountCodesCommand);
         }
 
         @Override
@@ -846,8 +885,9 @@ public class Actions {
 
     public static class ProductDetailMenu extends Action {
         private ArrayList<String[]> currentProducts;
-        ProductDetailMenu( ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
+
+        ProductDetailMenu(ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -870,8 +910,9 @@ public class Actions {
 
     public static class DigestProduct extends Action {
         private StringBuilder productID;
-        DigestProduct( StringBuilder productID) {
-            super( Constants.Actions.digestProductPattern, Constants.Actions.digestProductCommand);
+
+        DigestProduct(StringBuilder productID) {
+            super(Constants.Actions.digestProductPattern, Constants.Actions.digestProductCommand);
             this.productID = productID;
         }
 
@@ -899,8 +940,9 @@ public class Actions {
 
     public static class AddToCart extends Action {
         private StringBuilder subProductID;
-        AddToCart( StringBuilder subProductID) {
-            super( Constants.Actions.addToCartPattern, Constants.Actions.addToCartCommand);
+
+        AddToCart(StringBuilder subProductID) {
+            super(Constants.Actions.addToCartPattern, Constants.Actions.addToCartCommand);
             this.subProductID = subProductID;
         }
 
@@ -922,8 +964,8 @@ public class Actions {
         private StringBuilder subProductID;
         private ArrayList<String[]> subProducts;
 
-        SelectSeller( StringBuilder productID, StringBuilder subProductID) {
-            super( Constants.Actions.selectSellerPattern, Constants.Actions.selectSellerCommand);
+        SelectSeller(StringBuilder productID, StringBuilder subProductID) {
+            super(Constants.Actions.selectSellerPattern, Constants.Actions.selectSellerCommand);
             this.subProductID = subProductID;
             this.productID = productID;
             this.subProducts = new ArrayList<>();
@@ -943,7 +985,7 @@ public class Actions {
         public void execute(String command) {
             try {
                 refreshSubProducts();
-                while(true) {
+                while (true) {
                     printList(subProducts);
                     System.out.println("enter the seller index:");
                     String input = View.getNextLineTrimmed();
@@ -964,8 +1006,9 @@ public class Actions {
 
     public static class ShowCurrentSeller extends Action {
         private StringBuilder subProductID;
-        ShowCurrentSeller( StringBuilder subProductID) {
-            super( Constants.Actions.showCurrentSellerPattern, Constants.Actions.showCurrentSellerCommand);
+
+        ShowCurrentSeller(StringBuilder subProductID) {
+            super(Constants.Actions.showCurrentSellerPattern, Constants.Actions.showCurrentSellerCommand);
         }
 
         @Override
@@ -981,8 +1024,9 @@ public class Actions {
 
     public static class CompareProductByID extends Action {
         private StringBuilder productID;
-        CompareProductByID( StringBuilder productID) {
-            super( Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
+
+        CompareProductByID(StringBuilder productID) {
+            super(Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
             this.productID = productID;
         }
 
@@ -1022,8 +1066,9 @@ public class Actions {
 
     public static class AddComment extends Action {
         private StringBuilder productID;
-        AddComment( StringBuilder productID) {
-            super( Constants.Actions.addReviewPattern, Constants.Actions.addReviewCommand);
+
+        AddComment(StringBuilder productID) {
+            super(Constants.Actions.addReviewPattern, Constants.Actions.addReviewCommand);
             this.productID = productID;
         }
 
@@ -1046,8 +1091,9 @@ public class Actions {
 
     public static class ShowReviews extends Action {
         private StringBuilder productID;
-        ShowReviews( StringBuilder productID) {
-            super( Constants.Actions.showReviewsPattern, Constants.Actions.showReviewsCommand);
+
+        ShowReviews(StringBuilder productID) {
+            super(Constants.Actions.showReviewsPattern, Constants.Actions.showReviewsCommand);
             this.productID = productID;
         }
 
@@ -1065,8 +1111,9 @@ public class Actions {
 
     public static class AdminViewAllUsers extends Action {
         private ArrayList<String[]> users;
-        AdminViewAllUsers( ArrayList<String[]> users) {
-            super( Constants.Actions.adminViewAllUsersPattern, Constants.Actions.adminViewAllUsersCommand);
+
+        AdminViewAllUsers(ArrayList<String[]> users) {
+            super(Constants.Actions.adminViewAllUsersPattern, Constants.Actions.adminViewAllUsersCommand);
             this.users = users;
         }
 
@@ -1085,8 +1132,9 @@ public class Actions {
 
     public static class AdminViewUser extends Action {
         private ArrayList<String[]> users;
-        AdminViewUser( ArrayList<String[]> users) {
-            super( Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
+
+        AdminViewUser(ArrayList<String[]> users) {
+            super(Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
             this.users = users;
         }
 
@@ -1122,8 +1170,9 @@ public class Actions {
 
     public static class AdminDeleteUser extends Action {
         private ArrayList<String[]> users;
-        AdminDeleteUser( ArrayList<String[]> users) {
-            super( Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
+
+        AdminDeleteUser(ArrayList<String[]> users) {
+            super(Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
             this.users = users;
         }
 
@@ -1144,7 +1193,7 @@ public class Actions {
 
     public static class AdminCreateAdmin extends Action {
         AdminCreateAdmin() {
-            super( Constants.Actions.adminCreateAdminPattern, Constants.Actions.adminCreateAdminCommand);
+            super(Constants.Actions.adminCreateAdminPattern, Constants.Actions.adminCreateAdminCommand);
         }
 
         @Override
@@ -1154,15 +1203,15 @@ public class Actions {
                 String[] fields;
                 String[] fieldRegex;
                 String[] results;
-                fields = new String[] {"username", "password", "first name", "last name", "email", "phone"};
-                fieldRegex = new String[] {Constants.argumentPattern, Constants.argumentPattern, Constants.argumentPattern,Constants.argumentPattern,
-                        Constants.argumentPattern, Constants.argumentPattern};
+                fields = new String[]{"username", "password", "first name", "last name", "email", "phone"};
+                fieldRegex = new String[]{Constants.argumentPattern, Constants.argumentPattern ,Constants.IRLNamePattern, Constants.IRLNamePattern, Constants.emailPattern,
+                        Constants.phonePattern};
                 registerForm = new Form(fields, fieldRegex);
-                if(registerForm.takeInput() == 0) {
+                if (registerForm.takeInput() == 0) {
                     results = registerForm.getResults();
-                    adminController.creatAdminProfile(results[0], results[1], results[2], results[3], results[4],results[5]);
+                    adminController.creatAdminProfile(results[0], results[1], results[2], results[3], results[4], results[5]);
                 }
-            }  catch (Exceptions.UsernameAlreadyTakenException e) {
+            } catch (Exceptions.UsernameAlreadyTakenException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -1171,8 +1220,9 @@ public class Actions {
 
     public static class AdminShowProducts extends Action {
         private ArrayList<String[]> currentProducts;
-        AdminShowProducts( ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.adminShowProductsPattern, Constants.Actions.adminShowProductsCommand);
+
+        AdminShowProducts(ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.adminShowProductsPattern, Constants.Actions.adminShowProductsCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -1192,8 +1242,9 @@ public class Actions {
 
     public static class AdminRemoveProductByID extends Action {
         private ArrayList<String[]> currentProducts;
-        AdminRemoveProductByID( ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
+
+        AdminRemoveProductByID(ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -1214,13 +1265,13 @@ public class Actions {
 
     public static class AdminCreateDiscountCode extends Action {
         AdminCreateDiscountCode() {
-            super( Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
+            super(Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
         }
 
         @Override
         public void execute(String command) {
-            String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
-            String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.unsignedIntPattern};
+            String[] fields = new String[]{"discount code", "start date", "end date", "percentage", "maximum amount of use"};
+            String[] fieldRegex = new String[]{Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.unsignedIntPattern};
             Form discountCodeForm = new Form(fields, fieldRegex);
             discountCodeForm.setupArrayForm(new String[]{"customer ID to add", "numberOfUses"}, new String[]{Constants.argumentPattern, Constants.unsignedIntPattern});
             if (discountCodeForm.takeInput() == 0) {
@@ -1239,8 +1290,9 @@ public class Actions {
 
     public static class AdminShowDiscountCodes extends Action {
         private ArrayList<String> discountCodes;
-        AdminShowDiscountCodes( ArrayList<String> discountCodes) {
-            super( Constants.Actions.adminShowDiscountCodesPattern, Constants.Actions.adminShowDiscountCodesCommand);
+
+        AdminShowDiscountCodes(ArrayList<String> discountCodes) {
+            super(Constants.Actions.adminShowDiscountCodesPattern, Constants.Actions.adminShowDiscountCodesCommand);
             this.discountCodes = discountCodes;
         }
 
@@ -1262,8 +1314,9 @@ public class Actions {
 
     public static class AdminViewDiscountCode extends Action {
         private ArrayList<String> discountCodes;
-        AdminViewDiscountCode( ArrayList<String> discountCodes) {
-            super( Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
+
+        AdminViewDiscountCode(ArrayList<String> discountCodes) {
+            super(Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
             this.discountCodes = discountCodes;
         }
 
@@ -1295,8 +1348,9 @@ public class Actions {
     public static class AdminEditDiscountCode extends Action {
         private String[] editableFields;
         private ArrayList<String> discountCodes;
-        AdminEditDiscountCode( ArrayList<String> discountCodes, String[] editableFields) {
-            super( Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
+
+        AdminEditDiscountCode(ArrayList<String> discountCodes, String[] editableFields) {
+            super(Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
             this.editableFields = editableFields;
             this.discountCodes = discountCodes;
         }
@@ -1309,10 +1363,12 @@ public class Actions {
 
         private int editField(int fieldIndex, String discountCode) {
             String response;
-            while(true) {
+            while (true) {
                 System.out.println("enter new info");
                 response = View.getNextLineTrimmed();
-                if (response.equalsIgnoreCase("back")) {return -1;}
+                if (response.equalsIgnoreCase("back")) {
+                    return -1;
+                }
                 try {
                     adminController.editDiscountCode(discountCode, editableFields[fieldIndex], response);
                     return 0;
@@ -1353,8 +1409,9 @@ public class Actions {
 
     public static class AdminRemoveDiscountCode extends Action {
         private ArrayList<String> discountCodes;
-        AdminRemoveDiscountCode( ArrayList<String> discountCodes) {
-            super( Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
+
+        AdminRemoveDiscountCode(ArrayList<String> discountCodes) {
+            super(Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
             this.discountCodes = discountCodes;
         }
 
@@ -1374,8 +1431,9 @@ public class Actions {
 
     public static class AdminShowPendingRequests extends Action {
         private ArrayList<String[]> pendingRequests;
-        AdminShowPendingRequests( ArrayList<String[]> pendingRequests) {
-            super( Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
+
+        AdminShowPendingRequests(ArrayList<String[]> pendingRequests) {
+            super(Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
             this.pendingRequests = pendingRequests;
         }
 
@@ -1396,7 +1454,7 @@ public class Actions {
 
     public static class AdminShowArchiveRequests extends Action {
         AdminShowArchiveRequests() {
-            super( Constants.Actions.adminShowArchiveRequestsPattern, Constants.Actions.adminShowArchiveRequestsCommand);
+            super(Constants.Actions.adminShowArchiveRequestsPattern, Constants.Actions.adminShowArchiveRequestsCommand);
         }
 
 
@@ -1415,8 +1473,9 @@ public class Actions {
 
     public static class AdminViewRequestDetail extends Action {
         private ArrayList<String[]> pendingRequests;
-        AdminViewRequestDetail( ArrayList<String[]> pendingRequests) {
-            super( Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
+
+        AdminViewRequestDetail(ArrayList<String[]> pendingRequests) {
+            super(Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
             this.pendingRequests = pendingRequests;
         }
 
@@ -1460,8 +1519,9 @@ public class Actions {
 
     public static class AdminShowCategories extends Action {
         private ArrayList<String> currentCategories;
-        AdminShowCategories( ArrayList<String> currentCategories) {
-            super( Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
+
+        AdminShowCategories(ArrayList<String> currentCategories) {
+            super(Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
             this.currentCategories = currentCategories;
         }
 
@@ -1482,8 +1542,9 @@ public class Actions {
     public static class AdminEditCategory extends Action {
         private String[] editableFields;
         private ArrayList<String> currentCategories;
-        AdminEditCategory( String[] editableFields, ArrayList<String> currentCategories) {
-            super( Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
+
+        AdminEditCategory(String[] editableFields, ArrayList<String> currentCategories) {
+            super(Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
             this.editableFields = editableFields;
             this.currentCategories = currentCategories;
         }
@@ -1496,10 +1557,12 @@ public class Actions {
 
         private int editField(int fieldIndex, String categoryName) {
             String response;
-            while(true) {
+            while (true) {
                 System.out.println("enter new info");
                 response = View.getNextLineTrimmed();
-                if (response.equalsIgnoreCase("back")) {return -1;}
+                if (response.equalsIgnoreCase("back")) {
+                    return -1;
+                }
                 try {
                     adminController.editCategory(categoryName, editableFields[fieldIndex], response);
                     return 0;
@@ -1517,7 +1580,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             int index = getIndex(command, currentCategories);
-            if(index != 0) {
+            if (index != 0) {
                 while (true) {
                     showEditableFields();
                     System.out.println("enter the field to edit (index):");
@@ -1540,7 +1603,7 @@ public class Actions {
 
     public static class AdminAddCategory extends Action {
         AdminAddCategory() {
-            super( Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
+            super(Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
         }
 
         private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
@@ -1555,11 +1618,11 @@ public class Actions {
         public void execute(String command) {
             try {
                 String categoryName = getGroup(command, 1);
-                String[] fields = new String[] {"parent category (enter \"root\" for no parent)"};
-                String[] regex = new String[] {".+"};
+                String[] fields = new String[]{"parent category (enter \"root\" for no parent)"};
+                String[] regex = new String[]{".+"};
                 Form categoryForm = new Form(fields, regex);
                 categoryForm.setupArrayForm(new String[]{"special properties"}, new String[]{".+"});
-                if(categoryForm.takeInput() == 0) {
+                if (categoryForm.takeInput() == 0) {
                     String[] results = categoryForm.getResults();
                     ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());
                     adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? "superCategory" : results[0], specialProperties);
@@ -1573,15 +1636,16 @@ public class Actions {
 
     public static class AdminRemoveCategory extends Action {
         private ArrayList<String> currentCategories;
-        AdminRemoveCategory( ArrayList<String> currentCategories) {
-            super( Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
+
+        AdminRemoveCategory(ArrayList<String> currentCategories) {
+            super(Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
             this.currentCategories = currentCategories;
         }
 
         @Override
         public void execute(String command) {
             try {
-                int index = getIndex(command,currentCategories);
+                int index = getIndex(command, currentCategories);
                 if (index != 0) {
                     adminController.removeCategory(currentCategories.get(index - 1));
                 }
@@ -1594,8 +1658,9 @@ public class Actions {
 
     public static class SellerShowSales extends Action {
         private ArrayList<String[]> currentSales;
-        SellerShowSales( ArrayList<String[]> currentSales) {
-            super( Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
+
+        SellerShowSales(ArrayList<String[]> currentSales) {
+            super(Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
             this.currentSales = currentSales;
         }
 
@@ -1615,8 +1680,9 @@ public class Actions {
 
     public static class SellerViewSaleDetails extends Action {
         private ArrayList<String[]> currentSales;
-        SellerViewSaleDetails( ArrayList<String[]> currentSales) {
-            super( Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
+
+        SellerViewSaleDetails(ArrayList<String[]> currentSales) {
+            super(Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
             this.currentSales = currentSales;
         }
 
@@ -1634,7 +1700,7 @@ public class Actions {
             try {
                 int index = getIndex(command, currentSales);
                 if (index != 0) {
-                showSaleInfo(sellerController.viewSaleWithId(currentSales.get(index - 1)[0]));
+                    showSaleInfo(sellerController.viewSaleWithId(currentSales.get(index - 1)[0]));
                 }
             } catch (Exceptions.InvalidSaleIdException e) {
                 System.out.println(e.getMessage());
@@ -1646,8 +1712,9 @@ public class Actions {
     public static class SellerEditSale extends Action {
         private String[] editableFields;
         private ArrayList<String[]> currentSales;
-        SellerEditSale( String[] editableFields, ArrayList<String[]> currentSales) {
-            super( Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
+
+        SellerEditSale(String[] editableFields, ArrayList<String[]> currentSales) {
+            super(Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
             this.editableFields = editableFields;
             this.currentSales = currentSales;
         }
@@ -1660,10 +1727,12 @@ public class Actions {
 
         private int editField(int fieldIndex, String saleID) {
             String response;
-            while(true) {
+            while (true) {
                 System.out.println("enter new info");
                 response = View.getNextLineTrimmed();
-                if (response.equalsIgnoreCase("back")) {return -1;}
+                if (response.equalsIgnoreCase("back")) {
+                    return -1;
+                }
                 try {
                     sellerController.editSale(saleID, editableFields[fieldIndex], response);
                     System.out.println("field edited successfully");
@@ -1705,7 +1774,7 @@ public class Actions {
 
     public static class SellerAddSale extends Action {
         SellerAddSale() {
-            super( Constants.Actions.sellerAddSalePattern, Constants.Actions.sellerAddSaleCommand);
+            super(Constants.Actions.sellerAddSalePattern, Constants.Actions.sellerAddSaleCommand);
         }
 
         private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
@@ -1718,8 +1787,8 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            String[] fields = new String[] {"start date", "end date", "percentage", "maximum price reduction"};
-            String[] fieldRegex = new String[] {Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.doublePattern};
+            String[] fields = new String[]{"start date", "end date", "percentage", "maximum price reduction"};
+            String[] fieldRegex = new String[]{Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.doublePattern};
             Form saleForm = new Form(fields, fieldRegex);
             saleForm.setupArrayForm(new String[]{"product ID"}, new String[]{Constants.argumentPattern});
             if (saleForm.takeInput() == 0) {
@@ -1738,8 +1807,9 @@ public class Actions {
 
     public static class SellerShowProducts extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerShowProducts( ArrayList<String[]> sellerProducts) {
-            super( Constants.Actions.sellerShowProductsPattern, Constants.Actions.sellerShowProductsCommand);
+
+        SellerShowProducts(ArrayList<String[]> sellerProducts) {
+            super(Constants.Actions.sellerShowProductsPattern, Constants.Actions.sellerShowProductsCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1759,8 +1829,9 @@ public class Actions {
 
     public static class SellerViewProductDetails extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerViewProductDetails( ArrayList<String[]> sellerProducts) {
-            super( Constants.Actions.sellerViewProductDetailsPattern, Constants.Actions.sellerViewProductDetailsCommand);
+
+        SellerViewProductDetails(ArrayList<String[]> sellerProducts) {
+            super(Constants.Actions.sellerViewProductDetailsPattern, Constants.Actions.sellerViewProductDetailsCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1790,8 +1861,9 @@ public class Actions {
 
     public static class SellerViewProductBuyers extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerViewProductBuyers( ArrayList<String[]> sellerProducts) {
-            super( Constants.Actions.sellerViewProductBuyersPattern, Constants.Actions.sellerViewProductBuyersCommand);
+
+        SellerViewProductBuyers(ArrayList<String[]> sellerProducts) {
+            super(Constants.Actions.sellerViewProductBuyersPattern, Constants.Actions.sellerViewProductBuyersCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1813,8 +1885,9 @@ public class Actions {
     public static class SellerEditProduct extends Action {
         private String[] editableFields;
         private ArrayList<String[]> sellerProducts;
-        SellerEditProduct( String[] editableFields, ArrayList<String[]> sellerProducts) {
-            super( Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
+
+        SellerEditProduct(String[] editableFields, ArrayList<String[]> sellerProducts) {
+            super(Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
             this.editableFields = editableFields;
             this.sellerProducts = sellerProducts;
         }
@@ -1827,10 +1900,12 @@ public class Actions {
 
         private int editField(int fieldIndex, String productID) {
             String response;
-            while(true) {
+            while (true) {
                 System.out.println("enter new info");
                 response = View.getNextLineTrimmed();
-                if (response.equalsIgnoreCase("back")) {return -1;}
+                if (response.equalsIgnoreCase("back")) {
+                    return -1;
+                }
                 try {
                     sellerController.editProduct(productID, editableFields[fieldIndex], response);
                     System.out.println("field edited successfully");
@@ -1848,7 +1923,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             int index = getIndex(command, sellerProducts);
-            if(index != 0) {
+            if (index != 0) {
                 while (true) {
                     showEditableFields();
                     System.out.println("enter the field to edit (index):");
@@ -1871,7 +1946,7 @@ public class Actions {
 
     public static class SellerAddProduct extends Action {
         SellerAddProduct() {
-            super( Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
+            super(Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
         }
 
         private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
@@ -1883,8 +1958,8 @@ public class Actions {
         }
 
         private void createNewProduct(String[] results) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
-            String[] fields = new String[] {"description", "category name", "price", "count"};
-            String[] regex = new String[] { ".+", ".+", Constants.doublePattern, Constants.unsignedIntPattern};
+            String[] fields = new String[]{"description", "category name", "price", "count"};
+            String[] regex = new String[]{".+", ".+", Constants.doublePattern, Constants.unsignedIntPattern};
             Form productSecondForm = new Form(fields, regex);
             productSecondForm.setupArrayForm(new String[]{"special properties"}, new String[]{".+"});
             if (productSecondForm.takeInput() == 0) {
@@ -1896,8 +1971,8 @@ public class Actions {
         }
 
         private void createExistingProduct(String productID) throws Exceptions.InvalidProductIdException {
-            String[] fields = new String[] {"price", "count"};
-            String[] regex = new String[] {Constants.doublePattern, Constants.unsignedIntPattern};
+            String[] fields = new String[]{"price", "count"};
+            String[] regex = new String[]{Constants.doublePattern, Constants.unsignedIntPattern};
             Form productSecondForm = new Form(fields, regex);
             if (productSecondForm.takeInput() == 0) {
                 String[] results = productSecondForm.getResults();
@@ -1929,8 +2004,9 @@ public class Actions {
 
     public static class SellerRemoveProduct extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerRemoveProduct( ArrayList<String[]> sellerProducts) {
-            super( Constants.Actions.sellerRemoveProductPattern, Constants.Actions.sellerRemoveProductCommand);
+
+        SellerRemoveProduct(ArrayList<String[]> sellerProducts) {
+            super(Constants.Actions.sellerRemoveProductPattern, Constants.Actions.sellerRemoveProductCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1950,8 +2026,9 @@ public class Actions {
 
     public static class ShoppingCartShowProducts extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartShowProducts( ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.shoppingCartShowProductsPattern, Constants.Actions.shoppingCartShowProductsCommand);
+
+        ShoppingCartShowProducts(ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.shoppingCartShowProductsPattern, Constants.Actions.shoppingCartShowProductsCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -1977,8 +2054,9 @@ public class Actions {
     //TODO: detailMeun
     public static class ShoppingCartViewProduct extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartViewProduct( ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.shoppingCartViewProductPattern, Constants.Actions.shoppingCartViewProductCommand);
+
+        ShoppingCartViewProduct(ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.shoppingCartViewProductPattern, Constants.Actions.shoppingCartViewProductCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -2010,8 +2088,9 @@ public class Actions {
 
     public static class ShoppingCartIncreaseProductCount extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartIncreaseProductCount( ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.shoppingCartIncreaseProductCountPattern, Constants.Actions.shoppingCartIncreaseProductCountCommand);
+
+        ShoppingCartIncreaseProductCount(ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.shoppingCartIncreaseProductCountPattern, Constants.Actions.shoppingCartIncreaseProductCountCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -2042,8 +2121,9 @@ public class Actions {
 
     public static class ShoppingCartDecreaseProductCount extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartDecreaseProductCount( ArrayList<String[]> currentProducts) {
-            super( Constants.Actions.shoppingCartDecreaseProductCountPattern, Constants.Actions.shoppingCartDecreaseProductCountCommand);
+
+        ShoppingCartDecreaseProductCount(ArrayList<String[]> currentProducts) {
+            super(Constants.Actions.shoppingCartDecreaseProductCountPattern, Constants.Actions.shoppingCartDecreaseProductCountCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -2072,7 +2152,7 @@ public class Actions {
 
     public static class ShoppingCartShowTotalPrice extends Action {
         ShoppingCartShowTotalPrice() {
-            super( Constants.Actions.shoppingCartShowTotalPricePattern, Constants.Actions.shoppingCartShowTotalPriceCommand);
+            super(Constants.Actions.shoppingCartShowTotalPricePattern, Constants.Actions.shoppingCartShowTotalPriceCommand);
         }
 
         @Override
@@ -2080,7 +2160,7 @@ public class Actions {
             try {
                 System.out.println("Total price (ofcourse ghabel nadare :p):" + customerController.getTotalPriceOfCart());
                 printSeparator();
-            }  catch (Exceptions.UnAuthorizedAccountException e) {
+            } catch (Exceptions.UnAuthorizedAccountException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -2088,8 +2168,9 @@ public class Actions {
 
     public static class ShoppingCartPurchase extends Action {
         private Menu shoppingCartMenu;
-        ShoppingCartPurchase( Menu shoppingCartMenu) {
-            super( Constants.Actions.shoppingCartPurchasePattern, Constants.Actions.shoppingCartPurchaseCommand);
+
+        ShoppingCartPurchase(Menu shoppingCartMenu) {
+            super(Constants.Actions.shoppingCartPurchasePattern, Constants.Actions.shoppingCartPurchaseCommand);
             this.shoppingCartMenu = shoppingCartMenu;
         }
 
@@ -2097,19 +2178,19 @@ public class Actions {
         public void execute(String command) {
             if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
                 System.out.println("you have to be logged-in in order to be able to purchase. please login and try again.");
-                Menu.getAccountMenu().run(shoppingCartMenu,shoppingCartMenu);
+                Menu.getAccountMenu().run(shoppingCartMenu, shoppingCartMenu);
             }
             try {
-                String[] fields = new String[] {"receiver name", "receiver address", "receiver phone",
+                String[] fields = new String[]{"receiver name", "receiver address", "receiver phone",
                         "discount code (if you have any, enter \"-\" if you dont)"};
-                String[] regex = new String[] {".+", ".+", Constants.unsignedIntPattern, Constants.argumentPattern};
+                String[] regex = new String[]{".+", ".+", Constants.unsignedIntPattern, Constants.argumentPattern};
                 Form purchaseForm = new Form(fields, regex);
                 if (purchaseForm.takeInput() == 0) {
                     String[] result = purchaseForm.getResults();
                     customerController.purchaseTheCart(result[0], result[1], result[2], result[3]);
                 }
             } catch (Exceptions.InsufficientCreditException | Exceptions.NotAvailableSubProductsInCart
-             | Exceptions.EmptyCartException | Exceptions.InvalidDiscountException e) {
+                    | Exceptions.EmptyCartException | Exceptions.InvalidDiscountException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -2118,8 +2199,9 @@ public class Actions {
 
     public static class CustomerShowOrders extends Action {
         private ArrayList<String[]> currentOrderLogs;
-        CustomerShowOrders( ArrayList<String[]> currentOrderLogs) {
-            super( Constants.Actions.customerShowOrdersPattern, Constants.Actions.customerShowOrdersCommand);
+
+        CustomerShowOrders(ArrayList<String[]> currentOrderLogs) {
+            super(Constants.Actions.customerShowOrdersPattern, Constants.Actions.customerShowOrdersCommand);
             this.currentOrderLogs = currentOrderLogs;
         }
 
@@ -2142,8 +2224,9 @@ public class Actions {
 
     public static class CustomerViewOrder extends Action {
         private ArrayList<String[]> currentOrderLogs;
-        CustomerViewOrder( ArrayList<String[]> currentOrderLogs) {
-            super( Constants.Actions.customerViewOrderPattern, Constants.Actions.customerViewOrderCommand);
+
+        CustomerViewOrder(ArrayList<String[]> currentOrderLogs) {
+            super(Constants.Actions.customerViewOrderPattern, Constants.Actions.customerViewOrderCommand);
             this.currentOrderLogs = currentOrderLogs;
         }
 
@@ -2181,7 +2264,7 @@ public class Actions {
 
     public static class CustomerRateProduct extends Action {
         CustomerRateProduct() {
-            super( Constants.Actions.customerRateProductPattern, Constants.Actions.customerRateProductCommand);
+            super(Constants.Actions.customerRateProductPattern, Constants.Actions.customerRateProductCommand);
         }
 
         @Override
@@ -2201,12 +2284,13 @@ public class Actions {
 
     public static class Logout extends Action {
         Logout() {
-            super( Constants.Actions.logoutPattern, Constants.Actions.logoutCommand);
+            super(Constants.Actions.logoutPattern, Constants.Actions.logoutCommand);
         }
 
         @Override
         public void execute(String command) {
             mainController.logout();
+            Menu.getAccountMenu().run();
         }
     }
 }

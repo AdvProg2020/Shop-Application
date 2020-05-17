@@ -5,12 +5,12 @@ import controller.*;
 import java.util.Scanner;
 
 /**
-*  @author Dana
- *  This is the non-implemented sketch of the View
-**/
+ * @author Dana
+ * This is the non-implemented sketch of the View
+ **/
 
 public class View {
-     static Controller mainController;
+    static Controller mainController;
     static CustomerController customerController;
     static AdminController adminController;
     static SellerController sellerController;
@@ -31,11 +31,11 @@ public class View {
 
     }
 
-    public static  String getNextLineTrimmed() {
+    public static String getNextLineTrimmed() {
         return sc.nextLine().trim();
     }
 
-    public void start(){
+    public void start() {
         firstMenu.run();
     }
 }
