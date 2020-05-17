@@ -29,24 +29,25 @@ public class Actions {
 
     public static class BackAction extends Action {
         private Menu parent;
-        BackAction(String name, Menu parent) {
-            super(name, Constants.Actions.backPattern, Constants.Actions.backCommand);
+        BackAction( Menu parent) {
+            super(Constants.Actions.backPattern, Constants.Actions.backCommand);
             this.parent = parent;
         }
-
+        
+        public void setParent(Menu newParent) {
+            this.parent = newParent;
+        }
+        
         @Override
         public void execute(String command) {
             parent.run();
         }
 
-        public void setParent(Menu newParent) {
-            this.parent = newParent;
-        }
     }
 
     public static class ExitAction extends Action {
-        ExitAction(String name) {
-            super(name, Constants.Actions.exitPattern, Constants.Actions.exitCommand);
+        ExitAction() {
+            super(Constants.Actions.exitPattern, Constants.Actions.exitCommand);
         }
 
         @Override
@@ -56,8 +57,8 @@ public class Actions {
     }
 
     public static  class LoginAction extends Action {
-        LoginAction(String name) {
-            super(name, Constants.Actions.loginPattern, Constants.Actions.loginCommand);
+        LoginAction() {
+            super( Constants.Actions.loginPattern, Constants.Actions.loginCommand);
         }
 
         private String getPassword() {
@@ -94,8 +95,8 @@ public class Actions {
     }
 
     public static class RegisterAction extends Action {
-        RegisterAction(String name) {
-            super(name, Constants.Actions.registerPattern, Constants.Actions.registerCommand);
+        RegisterAction() {
+            super( Constants.Actions.registerPattern, Constants.Actions.registerCommand);
         }
 
         private void registerCustomer(String username) {
@@ -199,8 +200,8 @@ public class Actions {
         private StringBuilder currentSort;
         private ArrayList<String[]> currentProducts;
 
-        ShowProductsAction(String name, ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
+        ShowProductsAction( ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
             this.currentSort = currentSort;
@@ -272,8 +273,8 @@ public class Actions {
     public static class ShowCategories extends Action {
         private ArrayList<String> categoryTree;
         private ArrayList<String[]> availableCategories;
-        ShowCategories(String name, ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
-            super(name, Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
+        ShowCategories( ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
+            super( Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
             this.availableCategories = availableCategories;
         }
 
@@ -303,8 +304,8 @@ public class Actions {
     public static class ChooseCategoryAction extends Action {
         private ArrayList<String> categoryTree;
         private ArrayList<String[]> availableCategories;
-        ChooseCategoryAction(String name, ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
-            super(name, Constants.Actions.chooseCategoryPattern, Constants.Actions.chooseCategoryCommand);
+        ChooseCategoryAction( ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
+            super( Constants.Actions.chooseCategoryPattern, Constants.Actions.chooseCategoryCommand);
             this.availableCategories = availableCategories;
             this.categoryTree = categoryTree;
         }
@@ -320,8 +321,8 @@ public class Actions {
 
     public static class RevertCategoryAction extends Action {
         private ArrayList<String> categoryTree;
-        RevertCategoryAction(String name, ArrayList<String> categoryTree) {
-            super(name, Constants.Actions.revertCategoryPattern, Constants.Actions.revertCategoryCommand);
+        RevertCategoryAction( ArrayList<String> categoryTree) {
+            super( Constants.Actions.revertCategoryPattern, Constants.Actions.revertCategoryCommand);
             this.categoryTree = categoryTree;
         }
 
@@ -353,8 +354,8 @@ public class Actions {
         private StringBuilder currentSort;
         private String[] availableSorts;
 
-        ChooseSorting(String name, StringBuilder currentSort, String[] availableSorts) {
-            super(name, Constants.Actions.sortPattern, Constants.Actions.sortCommand);
+        ChooseSorting( StringBuilder currentSort, String[] availableSorts) {
+            super( Constants.Actions.sortPattern, Constants.Actions.sortCommand);
             this.currentSort = currentSort;
             this.availableSorts = availableSorts;
         }
@@ -422,8 +423,8 @@ public class Actions {
     public static class ShowCurrentSort extends Action {
         private StringBuilder currentSort;
 
-        ShowCurrentSort(String name, StringBuilder currentSort) {
-            super(name, Constants.Actions.showCurrentSortPattern, Constants.Actions.showCurrentSortCommand);
+        ShowCurrentSort( StringBuilder currentSort) {
+            super( Constants.Actions.showCurrentSortPattern, Constants.Actions.showCurrentSortCommand);
             this.currentSort = currentSort;
         }
 
@@ -441,8 +442,8 @@ public class Actions {
     public static class DisableSort extends Action {
         private StringBuilder currentSort;
 
-        DisableSort(String name, StringBuilder currentSort) {
-            super(name, Constants.Actions.disableSortPattern, Constants.Actions.disableSortCommand);
+        DisableSort( StringBuilder currentSort) {
+            super( Constants.Actions.disableSortPattern, Constants.Actions.disableSortCommand);
             this.currentSort = currentSort;
         }
 
@@ -456,8 +457,8 @@ public class Actions {
     public static class ChooseFiltering extends Action {
         private String[] currentFilters;
         private String[] availableFilters;
-        ChooseFiltering(String name, String[] currentFilters, String[] availableFilters) {
-            super(name, Constants.Actions.filterPattern, Constants.Actions.filterCommand);
+        ChooseFiltering( String[] currentFilters, String[] availableFilters) {
+            super( Constants.Actions.filterPattern, Constants.Actions.filterCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
         }
@@ -509,8 +510,8 @@ public class Actions {
         private String[] currentFilters;
         private String[] availableFilters;
 
-        ShowCurrentFilters(String name, String[] currentFilters, String[] availableFilters) {
-            super(name, Constants.Actions.showCurrentFiltersPattern, Constants.Actions.showCurrentFiltersCommand);
+        ShowCurrentFilters( String[] currentFilters, String[] availableFilters) {
+            super( Constants.Actions.showCurrentFiltersPattern, Constants.Actions.showCurrentFiltersCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
         }
@@ -532,8 +533,8 @@ public class Actions {
     public static class DisableFilter extends Action {
         private String[] currentFilters;
         private String[] availableFilters;
-        DisableFilter(String name, String[] currentFilters, String[] availableFilters) {
-            super(name, Constants.Actions.disableFilterPattern, Constants.Actions.disableFilterCommand);
+        DisableFilter( String[] currentFilters, String[] availableFilters) {
+            super( Constants.Actions.disableFilterPattern, Constants.Actions.disableFilterCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
         }
@@ -583,8 +584,8 @@ public class Actions {
 
     public static class ShowSales extends Action {
         private ArrayList<String[]> currentSales;
-        ShowSales(String name, ArrayList<String[]> currentSales) {
-            super(name, Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
+        ShowSales( ArrayList<String[]> currentSales) {
+            super(Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
             this.currentSales = currentSales;
         }
 
@@ -629,8 +630,8 @@ public class Actions {
         private String[] currentFilters;
         private ArrayList<String[]> currentProducts;
 
-        public ShowInSaleProducts(String name, StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.showInSaleProductsPattern, Constants.Actions.showInSaleProductsCommand);
+        public ShowInSaleProducts( StringBuilder currentSort, String[] currentFilters, ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.showInSaleProductsPattern, Constants.Actions.showInSaleProductsCommand);
             this.currentSort = currentSort;
             this.currentFilters = currentFilters;
             this.currentProducts = currentProducts;
@@ -665,8 +666,8 @@ public class Actions {
     }
 
     public static class ViewPersonalInfo extends Action {
-        ViewPersonalInfo(String name) {
-            super(name, Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
+        ViewPersonalInfo() {
+            super( Constants.Actions.viewPersonalInfoPattern, Constants.Actions.viewPersonalInfoCommand);
         }
 
         private void showPersonalInfo(String[] info) {
@@ -694,8 +695,8 @@ public class Actions {
     public static class EditField extends Action {
         private String[] editableFields;
 
-        EditField(String name, String[] editableFields) {
-            super(name, Constants.Actions.editFieldPattern, Constants.Actions.editFieldCommand);
+        EditField( String[] editableFields) {
+            super( Constants.Actions.editFieldPattern, Constants.Actions.editFieldCommand);
             this.editableFields = editableFields;
         }
 
@@ -752,8 +753,8 @@ public class Actions {
     }
 
     public static class ShowSellerCompanyInfo extends Action {
-        ShowSellerCompanyInfo(String name) {
-            super(name, Constants.Actions.showSellerCompanyInfoPattern, Constants.Actions.showSellerCompanyInfoCommand);
+        ShowSellerCompanyInfo() {
+            super( Constants.Actions.showSellerCompanyInfoPattern, Constants.Actions.showSellerCompanyInfoCommand);
         }
 
         @Override
@@ -766,8 +767,8 @@ public class Actions {
 
     public static class ShowSellerSellHistory extends Action {
         private ArrayList<String[]> sellLogs;
-        ShowSellerSellHistory(String name, ArrayList<String[]> sellLogs) {
-            super(name, Constants.Actions.showSellerSellHistoryPattern, Constants.Actions.showSellerSellHistoryCommand);
+        ShowSellerSellHistory( ArrayList<String[]> sellLogs) {
+            super( Constants.Actions.showSellerSellHistoryPattern, Constants.Actions.showSellerSellHistoryCommand);
             this.sellLogs = sellLogs;
         }
 
@@ -787,8 +788,8 @@ public class Actions {
 
     public static class ViewSingleSellHistory extends Action {
         private ArrayList<String[]> sellLogs;
-        ViewSingleSellHistory(String name, ArrayList<String[]> sellLogs) {
-            super(name, Constants.Actions.showSingleSellLogPattern, Constants.Actions.showSingleSellLogCommand);
+        ViewSingleSellHistory( ArrayList<String[]> sellLogs) {
+            super( Constants.Actions.showSingleSellLogPattern, Constants.Actions.showSingleSellLogCommand);
             this.sellLogs = sellLogs;
         }
 
@@ -807,8 +808,8 @@ public class Actions {
     }
 
     public static class ShowSellerBalance extends Action {
-        ShowSellerBalance(String name) {
-            super(name, Constants.Actions.showSellerBalancePattern, Constants.Actions.showSellerBalanceCommand);
+        ShowSellerBalance() {
+            super( Constants.Actions.showSellerBalancePattern, Constants.Actions.showSellerBalanceCommand);
         }
 
         @Override
@@ -819,8 +820,8 @@ public class Actions {
     }
 
     public static class ShowCustomerBalance extends Action {
-        ShowCustomerBalance(String name) {
-            super(name, Constants.Actions.showCustomerBalancePattern, Constants.Actions.showCustomerBalanceCommand);
+        ShowCustomerBalance() {
+            super( Constants.Actions.showCustomerBalancePattern, Constants.Actions.showCustomerBalanceCommand);
         }
 
         @Override
@@ -831,8 +832,8 @@ public class Actions {
     }
 
     public static class ShowCustomerDiscountCodes extends Action {
-        ShowCustomerDiscountCodes(String name) {
-            super(name, Constants.Actions.showCustomerDiscountCodesPattern, Constants.Actions.showCustomerDiscountCodesCommand);
+        ShowCustomerDiscountCodes() {
+            super( Constants.Actions.showCustomerDiscountCodesPattern, Constants.Actions.showCustomerDiscountCodesCommand);
         }
 
         @Override
@@ -845,8 +846,8 @@ public class Actions {
 
     public static class ProductDetailMenu extends Action {
         private ArrayList<String[]> currentProducts;
-        ProductDetailMenu(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
+        ProductDetailMenu( ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -869,8 +870,8 @@ public class Actions {
 
     public static class DigestProduct extends Action {
         private StringBuilder productID;
-        DigestProduct(String name, StringBuilder productID) {
-            super(name ,Constants.Actions.digestProductPattern, Constants.Actions.digestProductCommand);
+        DigestProduct( StringBuilder productID) {
+            super( Constants.Actions.digestProductPattern, Constants.Actions.digestProductCommand);
             this.productID = productID;
         }
 
@@ -898,8 +899,8 @@ public class Actions {
 
     public static class AddToCart extends Action {
         private StringBuilder subProductID;
-        AddToCart(String name, StringBuilder subProductID) {
-            super(name, Constants.Actions.addToCartPattern, Constants.Actions.addToCartCommand);
+        AddToCart( StringBuilder subProductID) {
+            super( Constants.Actions.addToCartPattern, Constants.Actions.addToCartCommand);
             this.subProductID = subProductID;
         }
 
@@ -921,8 +922,8 @@ public class Actions {
         private StringBuilder subProductID;
         private ArrayList<String[]> subProducts;
 
-        SelectSeller(String name, StringBuilder productID, StringBuilder subProductID) {
-            super(name, Constants.Actions.selectSellerPattern, Constants.Actions.selectSellerCommand);
+        SelectSeller( StringBuilder productID, StringBuilder subProductID) {
+            super( Constants.Actions.selectSellerPattern, Constants.Actions.selectSellerCommand);
             this.subProductID = subProductID;
             this.productID = productID;
             this.subProducts = new ArrayList<>();
@@ -963,8 +964,8 @@ public class Actions {
 
     public static class ShowCurrentSeller extends Action {
         private StringBuilder subProductID;
-        ShowCurrentSeller(String name, StringBuilder subProductID) {
-            super(name, Constants.Actions.showCurrentSellerPattern, Constants.Actions.showCurrentSellerCommand);
+        ShowCurrentSeller( StringBuilder subProductID) {
+            super( Constants.Actions.showCurrentSellerPattern, Constants.Actions.showCurrentSellerCommand);
         }
 
         @Override
@@ -980,8 +981,8 @@ public class Actions {
 
     public static class CompareProductByID extends Action {
         private StringBuilder productID;
-        CompareProductByID(String name, StringBuilder productID) {
-            super(name, Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
+        CompareProductByID( StringBuilder productID) {
+            super( Constants.Actions.compareProductByIDPattern, Constants.Actions.compareProductByIDCommand);
             this.productID = productID;
         }
 
@@ -1021,8 +1022,8 @@ public class Actions {
 
     public static class AddComment extends Action {
         private StringBuilder productID;
-        AddComment(String name, StringBuilder productID) {
-            super(name, Constants.Actions.addReviewPattern, Constants.Actions.addReviewCommand);
+        AddComment( StringBuilder productID) {
+            super( Constants.Actions.addReviewPattern, Constants.Actions.addReviewCommand);
             this.productID = productID;
         }
 
@@ -1045,8 +1046,8 @@ public class Actions {
 
     public static class ShowReviews extends Action {
         private StringBuilder productID;
-        ShowReviews(String name, StringBuilder productID) {
-            super(name, Constants.Actions.showReviewsPattern, Constants.Actions.showReviewsCommand);
+        ShowReviews( StringBuilder productID) {
+            super( Constants.Actions.showReviewsPattern, Constants.Actions.showReviewsCommand);
             this.productID = productID;
         }
 
@@ -1064,8 +1065,8 @@ public class Actions {
 
     public static class AdminViewAllUsers extends Action {
         private ArrayList<String[]> users;
-        AdminViewAllUsers(String name, ArrayList<String[]> users) {
-            super(name, Constants.Actions.adminViewAllUsersPattern, Constants.Actions.adminViewAllUsersCommand);
+        AdminViewAllUsers( ArrayList<String[]> users) {
+            super( Constants.Actions.adminViewAllUsersPattern, Constants.Actions.adminViewAllUsersCommand);
             this.users = users;
         }
 
@@ -1084,8 +1085,8 @@ public class Actions {
 
     public static class AdminViewUser extends Action {
         private ArrayList<String[]> users;
-        AdminViewUser(String name, ArrayList<String[]> users) {
-            super(name, Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
+        AdminViewUser( ArrayList<String[]> users) {
+            super( Constants.Actions.adminViewUserPattern, Constants.Actions.adminViewUserCommand);
             this.users = users;
         }
 
@@ -1121,8 +1122,8 @@ public class Actions {
 
     public static class AdminDeleteUser extends Action {
         private ArrayList<String[]> users;
-        AdminDeleteUser(String name, ArrayList<String[]> users) {
-            super(name, Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
+        AdminDeleteUser( ArrayList<String[]> users) {
+            super( Constants.Actions.adminDeleteUserPattern, Constants.Actions.adminDeleteUserCommand);
             this.users = users;
         }
 
@@ -1142,8 +1143,8 @@ public class Actions {
     }
 
     public static class AdminCreateAdmin extends Action {
-        AdminCreateAdmin(String name) {
-            super(name, Constants.Actions.adminCreateAdminPattern, Constants.Actions.adminCreateAdminCommand);
+        AdminCreateAdmin() {
+            super( Constants.Actions.adminCreateAdminPattern, Constants.Actions.adminCreateAdminCommand);
         }
 
         @Override
@@ -1170,8 +1171,8 @@ public class Actions {
 
     public static class AdminShowProducts extends Action {
         private ArrayList<String[]> currentProducts;
-        AdminShowProducts(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.adminShowProductsPattern, Constants.Actions.adminShowProductsCommand);
+        AdminShowProducts( ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.adminShowProductsPattern, Constants.Actions.adminShowProductsCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -1191,8 +1192,8 @@ public class Actions {
 
     public static class AdminRemoveProductByID extends Action {
         private ArrayList<String[]> currentProducts;
-        AdminRemoveProductByID(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
+        AdminRemoveProductByID( ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -1212,8 +1213,8 @@ public class Actions {
     }
 
     public static class AdminCreateDiscountCode extends Action {
-        AdminCreateDiscountCode(String name) {
-            super(name, Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
+        AdminCreateDiscountCode() {
+            super( Constants.Actions.adminCreateDiscountCodePattern, Constants.Actions.adminCreateDiscountCodeCommand);
         }
 
         @Override
@@ -1238,8 +1239,8 @@ public class Actions {
 
     public static class AdminShowDiscountCodes extends Action {
         private ArrayList<String> discountCodes;
-        AdminShowDiscountCodes(String name, ArrayList<String> discountCodes) {
-            super(name, Constants.Actions.adminShowDiscountCodesPattern, Constants.Actions.adminShowDiscountCodesCommand);
+        AdminShowDiscountCodes( ArrayList<String> discountCodes) {
+            super( Constants.Actions.adminShowDiscountCodesPattern, Constants.Actions.adminShowDiscountCodesCommand);
             this.discountCodes = discountCodes;
         }
 
@@ -1261,8 +1262,8 @@ public class Actions {
 
     public static class AdminViewDiscountCode extends Action {
         private ArrayList<String> discountCodes;
-        AdminViewDiscountCode(String name, ArrayList<String> discountCodes) {
-            super(name, Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
+        AdminViewDiscountCode( ArrayList<String> discountCodes) {
+            super( Constants.Actions.adminViewDiscountCodePattern, Constants.Actions.adminViewDiscountCodeCommand);
             this.discountCodes = discountCodes;
         }
 
@@ -1294,8 +1295,8 @@ public class Actions {
     public static class AdminEditDiscountCode extends Action {
         private String[] editableFields;
         private ArrayList<String> discountCodes;
-        AdminEditDiscountCode(String name, ArrayList<String> discountCodes, String[] editableFields) {
-            super(name, Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
+        AdminEditDiscountCode( ArrayList<String> discountCodes, String[] editableFields) {
+            super( Constants.Actions.adminEditDiscountCodePattern, Constants.Actions.adminEditDiscountCodeCommand);
             this.editableFields = editableFields;
             this.discountCodes = discountCodes;
         }
@@ -1352,8 +1353,8 @@ public class Actions {
 
     public static class AdminRemoveDiscountCode extends Action {
         private ArrayList<String> discountCodes;
-        AdminRemoveDiscountCode(String name, ArrayList<String> discountCodes) {
-            super(name, Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
+        AdminRemoveDiscountCode( ArrayList<String> discountCodes) {
+            super( Constants.Actions.adminRemoveDiscountCodePattern, Constants.Actions.adminRemoveDiscountCodeCommand);
             this.discountCodes = discountCodes;
         }
 
@@ -1373,8 +1374,8 @@ public class Actions {
 
     public static class AdminShowPendingRequests extends Action {
         private ArrayList<String[]> pendingRequests;
-        AdminShowPendingRequests(String name, ArrayList<String[]> pendingRequests) {
-            super(name, Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
+        AdminShowPendingRequests( ArrayList<String[]> pendingRequests) {
+            super( Constants.Actions.adminShowRequestsPattern, Constants.Actions.adminShowRequestsCommand);
             this.pendingRequests = pendingRequests;
         }
 
@@ -1394,8 +1395,8 @@ public class Actions {
     }
 
     public static class AdminShowArchiveRequests extends Action {
-        AdminShowArchiveRequests(String name) {
-            super(name, Constants.Actions.adminShowArchiveRequestsPattern, Constants.Actions.adminShowArchiveRequestsCommand);
+        AdminShowArchiveRequests() {
+            super( Constants.Actions.adminShowArchiveRequestsPattern, Constants.Actions.adminShowArchiveRequestsCommand);
         }
 
 
@@ -1414,8 +1415,8 @@ public class Actions {
 
     public static class AdminViewRequestDetail extends Action {
         private ArrayList<String[]> pendingRequests;
-        AdminViewRequestDetail(String name, ArrayList<String[]> pendingRequests) {
-            super(name, Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
+        AdminViewRequestDetail( ArrayList<String[]> pendingRequests) {
+            super( Constants.Actions.adminViewRequestDetailPattern, Constants.Actions.adminViewRequestDetailCommand);
             this.pendingRequests = pendingRequests;
         }
 
@@ -1459,8 +1460,8 @@ public class Actions {
 
     public static class AdminShowCategories extends Action {
         private ArrayList<String> currentCategories;
-        AdminShowCategories(String name, ArrayList<String> currentCategories) {
-            super(name, Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
+        AdminShowCategories( ArrayList<String> currentCategories) {
+            super( Constants.Actions.adminShowCategoriesPattern, Constants.Actions.adminShowCategoriesCommand);
             this.currentCategories = currentCategories;
         }
 
@@ -1481,8 +1482,8 @@ public class Actions {
     public static class AdminEditCategory extends Action {
         private String[] editableFields;
         private ArrayList<String> currentCategories;
-        AdminEditCategory(String name, String[] editableFields, ArrayList<String> currentCategories) {
-            super(name, Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
+        AdminEditCategory( String[] editableFields, ArrayList<String> currentCategories) {
+            super( Constants.Actions.adminEditCategoryPattern, Constants.Actions.adminEditCategoryCommand);
             this.editableFields = editableFields;
             this.currentCategories = currentCategories;
         }
@@ -1538,8 +1539,8 @@ public class Actions {
     }
 
     public static class AdminAddCategory extends Action {
-        AdminAddCategory(String name) {
-            super(name, Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
+        AdminAddCategory() {
+            super( Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
         }
 
         private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
@@ -1572,8 +1573,8 @@ public class Actions {
 
     public static class AdminRemoveCategory extends Action {
         private ArrayList<String> currentCategories;
-        AdminRemoveCategory(String name, ArrayList<String> currentCategories) {
-            super(name, Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
+        AdminRemoveCategory( ArrayList<String> currentCategories) {
+            super( Constants.Actions.adminRemoveCategoryPattern, Constants.Actions.adminRemoveCategoryCommand);
             this.currentCategories = currentCategories;
         }
 
@@ -1593,8 +1594,8 @@ public class Actions {
 
     public static class SellerShowSales extends Action {
         private ArrayList<String[]> currentSales;
-        SellerShowSales(String name, ArrayList<String[]> currentSales) {
-            super(name, Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
+        SellerShowSales( ArrayList<String[]> currentSales) {
+            super( Constants.Actions.sellerShowSalesPattern, Constants.Actions.sellerShowSalesCommand);
             this.currentSales = currentSales;
         }
 
@@ -1614,8 +1615,8 @@ public class Actions {
 
     public static class SellerViewSaleDetails extends Action {
         private ArrayList<String[]> currentSales;
-        SellerViewSaleDetails(String name, ArrayList<String[]> currentSales) {
-            super(name, Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
+        SellerViewSaleDetails( ArrayList<String[]> currentSales) {
+            super( Constants.Actions.sellerViewSaleDetailsPattern, Constants.Actions.sellerViewSaleDetailsCommand);
             this.currentSales = currentSales;
         }
 
@@ -1645,8 +1646,8 @@ public class Actions {
     public static class SellerEditSale extends Action {
         private String[] editableFields;
         private ArrayList<String[]> currentSales;
-        SellerEditSale(String name, String[] editableFields, ArrayList<String[]> currentSales) {
-            super(name, Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
+        SellerEditSale( String[] editableFields, ArrayList<String[]> currentSales) {
+            super( Constants.Actions.sellerEditSalePattern, Constants.Actions.sellerEditSaleCommand);
             this.editableFields = editableFields;
             this.currentSales = currentSales;
         }
@@ -1695,7 +1696,6 @@ public class Actions {
                         break;
                     } else {
                         System.out.println("invalid entry");
-                        continue;
                     }
                 }
             }
@@ -1704,8 +1704,8 @@ public class Actions {
     }
 
     public static class SellerAddSale extends Action {
-        SellerAddSale(String name) {
-            super(name, Constants.Actions.sellerAddSalePattern, Constants.Actions.sellerAddSaleCommand);
+        SellerAddSale() {
+            super( Constants.Actions.sellerAddSalePattern, Constants.Actions.sellerAddSaleCommand);
         }
 
         private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
@@ -1727,7 +1727,7 @@ public class Actions {
                 ArrayList<String> listResult = getListResult(saleForm.getListResult());
                 try {
                     sellerController.addSale(Date.valueOf(results[0]), Date.valueOf(results[1]),
-                            Double.valueOf(results[2]), Double.valueOf(results[3]), listResult);
+                            Double.parseDouble(results[2]), Double.parseDouble(results[3]), listResult);
                 } catch (Exceptions.InvalidDateException | Exceptions.InvalidProductIdsForASeller e) {
                     System.out.println(e.getMessage());
                 }
@@ -1738,8 +1738,8 @@ public class Actions {
 
     public static class SellerShowProducts extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerShowProducts(String name, ArrayList<String[]> sellerProducts) {
-            super(name, Constants.Actions.sellerShowProductsPattern, Constants.Actions.sellerShowProductsCommand);
+        SellerShowProducts( ArrayList<String[]> sellerProducts) {
+            super( Constants.Actions.sellerShowProductsPattern, Constants.Actions.sellerShowProductsCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1759,8 +1759,8 @@ public class Actions {
 
     public static class SellerViewProductDetails extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerViewProductDetails(String name, ArrayList<String[]> sellerProducts) {
-            super(name, Constants.Actions.sellerViewProductDetailsPattern, Constants.Actions.sellerViewProductDetailsCommand);
+        SellerViewProductDetails( ArrayList<String[]> sellerProducts) {
+            super( Constants.Actions.sellerViewProductDetailsPattern, Constants.Actions.sellerViewProductDetailsCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1790,8 +1790,8 @@ public class Actions {
 
     public static class SellerViewProductBuyers extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerViewProductBuyers(String name, ArrayList<String[]> sellerProducts) {
-            super(name, Constants.Actions.sellerViewProductBuyersPattern, Constants.Actions.sellerViewProductBuyersCommand);
+        SellerViewProductBuyers( ArrayList<String[]> sellerProducts) {
+            super( Constants.Actions.sellerViewProductBuyersPattern, Constants.Actions.sellerViewProductBuyersCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1813,8 +1813,8 @@ public class Actions {
     public static class SellerEditProduct extends Action {
         private String[] editableFields;
         private ArrayList<String[]> sellerProducts;
-        SellerEditProduct(String name, String[] editableFields, ArrayList<String[]> sellerProducts) {
-            super(name, Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
+        SellerEditProduct( String[] editableFields, ArrayList<String[]> sellerProducts) {
+            super( Constants.Actions.sellerEditProductPattern, Constants.Actions.sellerEditProductCommand);
             this.editableFields = editableFields;
             this.sellerProducts = sellerProducts;
         }
@@ -1855,7 +1855,6 @@ public class Actions {
                     String response = View.getNextLineTrimmed();
                     if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
                         if (editField(Integer.parseInt(response), sellerProducts.get(index - 1)[0]) == -1) {
-                            continue;
                         } else {
                             break;
                         }
@@ -1863,7 +1862,6 @@ public class Actions {
                         break;
                     } else {
                         System.out.println("invalid entry");
-                        continue;
                     }
                 }
             }
@@ -1872,8 +1870,8 @@ public class Actions {
     }
 
     public static class SellerAddProduct extends Action {
-        SellerAddProduct(String name) {
-            super(name, Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
+        SellerAddProduct() {
+            super( Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
         }
 
         private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
@@ -1931,8 +1929,8 @@ public class Actions {
 
     public static class SellerRemoveProduct extends Action {
         private ArrayList<String[]> sellerProducts;
-        SellerRemoveProduct(String name, ArrayList<String[]> sellerProducts) {
-            super(name, Constants.Actions.sellerRemoveProductPattern, Constants.Actions.sellerRemoveProductCommand);
+        SellerRemoveProduct( ArrayList<String[]> sellerProducts) {
+            super( Constants.Actions.sellerRemoveProductPattern, Constants.Actions.sellerRemoveProductCommand);
             this.sellerProducts = sellerProducts;
         }
 
@@ -1952,8 +1950,8 @@ public class Actions {
 
     public static class ShoppingCartShowProducts extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartShowProducts(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.shoppingCartShowProductsPattern, Constants.Actions.shoppingCartShowProductsCommand);
+        ShoppingCartShowProducts( ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.shoppingCartShowProductsPattern, Constants.Actions.shoppingCartShowProductsCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -1975,10 +1973,12 @@ public class Actions {
         }
     }
 
+
+    //TODO: detailMeun
     public static class ShoppingCartViewProduct extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartViewProduct(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.shoppingCartViewProductPattern, Constants.Actions.shoppingCartViewProductCommand);
+        ShoppingCartViewProduct( ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.shoppingCartViewProductPattern, Constants.Actions.shoppingCartViewProductCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -2010,8 +2010,8 @@ public class Actions {
 
     public static class ShoppingCartIncreaseProductCount extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartIncreaseProductCount(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.shoppingCartIncreaseProductCountPattern, Constants.Actions.shoppingCartIncreaseProductCountCommand);
+        ShoppingCartIncreaseProductCount( ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.shoppingCartIncreaseProductCountPattern, Constants.Actions.shoppingCartIncreaseProductCountCommand);
             this.currentProducts = currentProducts;
         }
 
@@ -2042,19 +2042,9 @@ public class Actions {
 
     public static class ShoppingCartDecreaseProductCount extends Action {
         private ArrayList<String[]> currentProducts;
-        ShoppingCartDecreaseProductCount(String name, ArrayList<String[]> currentProducts) {
-            super(name, Constants.Actions.shoppingCartDecreaseProductCountPattern, Constants.Actions.shoppingCartDecreaseProductCountCommand);
+        ShoppingCartDecreaseProductCount( ArrayList<String[]> currentProducts) {
+            super( Constants.Actions.shoppingCartDecreaseProductCountPattern, Constants.Actions.shoppingCartDecreaseProductCountCommand);
             this.currentProducts = currentProducts;
-        }
-
-        private int getIndexByID(String productID) {
-            int size = currentProducts.size();
-            for (int i = 0; i < size; i++) {
-                if (currentProducts.get(i)[0].equals(productID)) {
-                    return i;
-                }
-            }
-            return -1;
         }
 
         @Override
@@ -2081,8 +2071,8 @@ public class Actions {
     }
 
     public static class ShoppingCartShowTotalPrice extends Action {
-        ShoppingCartShowTotalPrice(String name) {
-            super(name, Constants.Actions.shoppingCartShowTotalPricePattern, Constants.Actions.shoppingCartShowTotalPriceCommand);
+        ShoppingCartShowTotalPrice() {
+            super( Constants.Actions.shoppingCartShowTotalPricePattern, Constants.Actions.shoppingCartShowTotalPriceCommand);
         }
 
         @Override
@@ -2098,8 +2088,8 @@ public class Actions {
 
     public static class ShoppingCartPurchase extends Action {
         private Menu shoppingCartMenu;
-        ShoppingCartPurchase(String name, Menu shoppingCartMenu) {
-            super(name, Constants.Actions.shoppingCartPurchasePattern, Constants.Actions.shoppingCartPurchaseCommand);
+        ShoppingCartPurchase( Menu shoppingCartMenu) {
+            super( Constants.Actions.shoppingCartPurchasePattern, Constants.Actions.shoppingCartPurchaseCommand);
             this.shoppingCartMenu = shoppingCartMenu;
         }
 
@@ -2128,8 +2118,8 @@ public class Actions {
 
     public static class CustomerShowOrders extends Action {
         private ArrayList<String[]> currentOrderLogs;
-        CustomerShowOrders(String name, ArrayList<String[]> currentOrderLogs) {
-            super(name, Constants.Actions.customerShowOrdersPattern, Constants.Actions.customerShowOrdersCommand);
+        CustomerShowOrders( ArrayList<String[]> currentOrderLogs) {
+            super( Constants.Actions.customerShowOrdersPattern, Constants.Actions.customerShowOrdersCommand);
             this.currentOrderLogs = currentOrderLogs;
         }
 
@@ -2152,8 +2142,8 @@ public class Actions {
 
     public static class CustomerViewOrder extends Action {
         private ArrayList<String[]> currentOrderLogs;
-        CustomerViewOrder(String name, ArrayList<String[]> currentOrderLogs) {
-            super(name, Constants.Actions.customerViewOrderPattern, Constants.Actions.customerViewOrderCommand);
+        CustomerViewOrder( ArrayList<String[]> currentOrderLogs) {
+            super( Constants.Actions.customerViewOrderPattern, Constants.Actions.customerViewOrderCommand);
             this.currentOrderLogs = currentOrderLogs;
         }
 
@@ -2190,8 +2180,8 @@ public class Actions {
     }
 
     public static class CustomerRateProduct extends Action {
-        CustomerRateProduct(String name) {
-            super(name, Constants.Actions.customerRateProductPattern, Constants.Actions.customerRateProductCommand);
+        CustomerRateProduct() {
+            super( Constants.Actions.customerRateProductPattern, Constants.Actions.customerRateProductCommand);
         }
 
         @Override
@@ -2210,8 +2200,8 @@ public class Actions {
     }
 
     public static class Logout extends Action {
-        Logout(String name) {
-            super(name, Constants.Actions.logoutPattern, Constants.Actions.logoutCommand);
+        Logout() {
+            super( Constants.Actions.logoutPattern, Constants.Actions.logoutCommand);
         }
 
         @Override

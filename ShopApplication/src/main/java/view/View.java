@@ -10,16 +10,13 @@ import java.util.Scanner;
 **/
 
 public class View {
-    public static Controller mainController;
-    public static CustomerController customerController;
-    public static AdminController adminController;
-    public static SellerController sellerController;
+     static Controller mainController;
+    static CustomerController customerController;
+    static AdminController adminController;
+    static SellerController sellerController;
     private static Scanner sc = new Scanner(System.in);
 
-    private Menus.ProductDetailMenu productDetailMenu;
-    private Menus.AccountMenu accountMenu;
     private Menus.FirstMenu firstMenu;
-
 
     public View(Controller mainController, SellerController sellerController, AdminController adminController, CustomerController customerController) {
         this.mainController = mainController;
@@ -28,8 +25,8 @@ public class View {
         this.adminController = adminController;
         Menus.init();
         Actions.init();
-        productDetailMenu = new Menus.ProductDetailMenu("product detail menu");
-        accountMenu = new Menus.AccountMenu("account menu");
+        new Menus.ProductDetailMenu("product detail menu");
+        new Menus.AccountMenu("account menu");
         firstMenu = new Menus.FirstMenu("first menu");
 
     }

@@ -65,7 +65,7 @@ final class Constants {
         static final String loginCommand = "login [username]";
         static final String loginPattern = caseInsensitiveMode + "^login" + spacePattern + argumentPattern + "$";
         static final String logoutCommand = "logout";
-        static final String logoutPattern = caseInsensitiveMode + "^" + loginCommand + "$";
+        static final String logoutPattern = caseInsensitiveMode + "^" + logoutCommand + "$";
         static final String registerCommand = "create account [type] [username]";
         static final String registerPattern =
                 caseInsensitiveMode + "^create account" + spacePattern + argumentPattern + spacePattern + argumentPattern + "$";
@@ -141,7 +141,7 @@ final class Constants {
         static final String adminViewUserCommand = "view user [index]";
         static final String adminViewUserPattern = caseInsensitiveMode + "^view user" + spacePattern + unsignedIntPattern + "$";
         static final String adminDeleteUserCommand = "delete user [index]";
-        static final String adminDeleteUserPattern = caseInsensitiveMode + "^delete user " + spacePattern + unsignedIntPattern + "$";
+        static final String adminDeleteUserPattern = caseInsensitiveMode + "^delete user" + spacePattern + unsignedIntPattern + "$";
         static final String adminCreateAdminCommand = "create manager profile";
         static final String adminCreateAdminPattern = caseInsensitiveMode + "^" + adminCreateAdminCommand + "$";
         static final String adminShowProductsCommand = "show products";
