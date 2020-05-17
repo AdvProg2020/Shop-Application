@@ -426,7 +426,6 @@ public class Controller {
         return Utilities.Pack.personalInfo(currentAccount);
     }
 
-    
      void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
