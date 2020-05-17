@@ -15,6 +15,22 @@ import java.util.Map;
 public class AdminController extends Controller {
 
     //Done!!
+
+    /**
+     * @return admin:
+     * { String firstName, String lastName, String phone, String email, String password}
+     */
+    public String[] getPersonalInfoEditableFields() {
+        String[] editableFields = new String[5];
+        editableFields[0] = "firstName";
+        editableFields[1] = "lastName";
+        editableFields[2] = "phone";
+        editableFields[3] = "email";
+        editableFields[4] = "password";
+        return editableFields;
+    }
+
+    //Done!!
     @Override
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         super.editPersonalInfo(field, newInformation);
@@ -211,7 +227,7 @@ public class AdminController extends Controller {
             discount.suspend();
     }
 
-    //Done!!
+    //Done!! TODO: type, username,
     public ArrayList<String> manageRequests() {
         ArrayList<String> requestIds = new ArrayList<>();
         for (Request request : Request.getAllRequests()) {
@@ -254,14 +270,14 @@ public class AdminController extends Controller {
                     detailsOfRequest.add(getPersonalInfo(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProduct":
-                    detailsOfRequest.add(getSubProductInfo(((EditProductRequest)request).getSubProduct()));
+                    detailsOfRequest.add(getSubProductInfo(((EditProductRequest) request).getSubProduct()));
                     String[] productChange = new String[2];
                     productChange[0] = ((EditProductRequest) request).getField().toString();
                     productChange[1] = ((EditProductRequest) request).getNewValue();
                     detailsOfRequest.add(productChange);
                     break;
                 case "EditSale":
-                    detailsOfRequest.add(getSaleInfo(((EditSaleRequest)request).getSale()));
+                    detailsOfRequest.add(getSaleInfo(((EditSaleRequest) request).getSale()));
                     String[] saleChange = new String[2];
                     saleChange[0] = ((EditSaleRequest) request).getField().toString();
                     saleChange[1] = ((EditSaleRequest) request).getNewValue();

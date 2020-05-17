@@ -19,82 +19,27 @@ import java.util.Map;
 //TODO: database constructor
 public class CustomerController extends Controller {
 
+    //Done!!
+
+    /**
+     * @return customer:
+     * { String firstName, String lastName, String phone, String email, String password, balance}
+     */
+    public String[] getPersonalInfoEditableFields() {
+        String[] editableFields = new String[6];
+        editableFields[0] = "firstName";
+        editableFields[1] = "lastName";
+        editableFields[2] = "phone";
+        editableFields[3] = "email";
+        editableFields[4] = "password";
+        editableFields[5] = "balance";
+        return editableFields;
+    }
+
     @Override
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
         super.editPersonalInfo(field, newInformation);
-    }
-
-    //Done!!
-
-    public ArrayList<String[]> getProductsInCart() {
-        ArrayList<String[]> shoppingCart = new ArrayList<>();
-        Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
-        for (SubProduct subProduct : subProducts.keySet()) {
-            shoppingCart.add(productPackInCart(subProduct, subProducts.get(subProduct)));
-        }
-        return shoppingCart;
-    }
-
-    @Label("For getProductInCart method")
-    private String[] productPackInCart(SubProduct subProduct, int count) {
-        String[] productPack = new String[7];
-        productPack[0] = subProduct.getId();
-        productPack[1] = subProduct.getProduct().getName();
-        productPack[2] = subProduct.getProduct().getBrand();
-        productPack[3] = subProduct.getSeller().getUsername();
-        productPack[4] = subProduct.getSeller().getStoreName();
-        productPack[5] = Integer.toString(count);
-        productPack[6] = Double.toString(subProduct.getPriceWithSale());
-        return productPack;
-    }
-
-    //Done!!
-    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if (!currentCart.getSubProducts().containsKey(subProduct))
-            throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else {
-            try {
-                showProduct(subProduct.getProduct().getId());
-            } catch (Exceptions.InvalidProductIdException ignored) {
-            }
-        }
-    }
-
-    //Done!!
-    public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
-            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
-        Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if (subProduct == null)
-            throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (!subProducts.containsKey(subProduct))
-            throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
-        else if (number + subProducts.get(subProduct) > subProduct.getRemainingCount())
-            throw new Exceptions.UnavailableProductException(subProductId);
-        else
-            currentCart.addSubProductCount(subProductId, number);
-    }
-
-    //Done!!
-    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
-            Exceptions.NotSubProductIdInTheCartException {
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if (subProduct == null)
-            throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else {
-            Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
-            if (subProductsInCart.containsKey(subProduct))
-                currentCart.addSubProductCount(subProductId, -number);
-            else
-                throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
-        }
-    }
-
-    //Done!!
-    public double getTotalPriceOfCart() {
-        return currentCart.getTotalPrice();
     }
 
     //Done!!
@@ -165,6 +110,7 @@ public class CustomerController extends Controller {
     }
 
     //Done!!
+
     /**
      * @return ArrayList<String [ 9 ]> : { Id, customerUsername,
      * receiverName, receiverPhone, receiverAddress, date, shippingStatus, paidMoney, totalDiscountAmount}
@@ -189,7 +135,7 @@ public class CustomerController extends Controller {
      * @throws Exceptions.InvalidLogIdException
      */
     public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException, Exceptions.CustomerLoginException {
-        if(! (currentAccount instanceof Customer))
+        if (!(currentAccount instanceof Customer))
             throw new Exceptions.CustomerLoginException();
         BuyLog buyLog = null;
         for (BuyLog log : ((Customer) currentAccount).getBuyLogs()) {

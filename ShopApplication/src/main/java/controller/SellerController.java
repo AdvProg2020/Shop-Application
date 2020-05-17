@@ -20,6 +20,25 @@ import java.util.Date;
 public class SellerController extends Controller {
 
     //Done!!
+
+    /**
+     * @return seller:String[7]
+     *         { String firstName, String lastName, String phone, String email, String password, String storeName, balance}
+     */
+    public String[] getPersonalInfoEditableFields(){
+        String[] editableFields = new String[7];
+        editableFields[0] = "firstName";
+        editableFields[1] = "lastName";
+        editableFields[2] = "phone";
+        editableFields[3] = "email";
+        editableFields[4] = "password";
+        editableFields[5] = "storeName";
+        editableFields[6] = "balance";
+        return editableFields;
+    }
+
+
+    //Done!!
     @Override
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         if (field.equals("storeName")) {
