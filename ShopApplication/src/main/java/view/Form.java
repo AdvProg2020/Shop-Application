@@ -6,9 +6,9 @@ public class Form {
     private String[] fields;
     private String[] fieldRegex;
     private String[] results;
-    private String arrayListRegex;
-    private String arrayListField;
-    private ArrayList<String> listResult;
+    private String[] arrayListRegex;
+    private String[] arrayListField;
+    private ArrayList<String[]> listResult;
 
     Form(String[] fields, String[] fieldRegex) {
         this.fields = fields.clone();
@@ -16,7 +16,7 @@ public class Form {
         this.results = new String[fields.length];
     }
 
-    public void setupArrayForm(String arrayListField, String arrayListRegex) {
+    public void setupArrayForm(String[] arrayListField, String[] arrayListRegex) {
         this.arrayListField = arrayListField;
         this.arrayListRegex = arrayListRegex;
         listResult = new ArrayList<>();
@@ -50,23 +50,34 @@ public class Form {
             return 0;
         }
         while(true) {
-            System.out.print("enter " + arrayListField + " (enter \"back\" to go back or \"exit\" to exit):\n" + (listResult.size() + 1) + ". ");
-            String input = View.getNextLineTrimmed();
-            if (input.equalsIgnoreCase("back")) {
-                if (listResult.size() == 0) {return -1;}
-                else {
-                    listResult.remove(listResult.size() - 1);
-                    continue;
+            String[] sample = new String[arrayListField.length];
+            for (int i = 0; i < arrayListField.length; i++) {
+                System.out.print("enter " + arrayListField[i] + " (enter \"back\" to go back or \"exit\" to exit):\n" + (listResult.size() + 1) + "." + (i + 1) + " ");
+                String input = View.getNextLineTrimmed();
+                if (input.equalsIgnoreCase("back")) {
+                    if (listResult.size() == 0) {
+                        if (i == 0) return -1;
+                        else i--;
+                    } else {
+                        if (i == 0) {
+                            listResult.remove(listResult.size() - 1);
+                            break;
+                        }else {
+                            i--;
+                        }
+                    }
+                } else if (input.equalsIgnoreCase("exit")) {
+                    return 0;
+                } else {
+                    sample[i] = input;
+                    if (i == arrayListField.length - 1)
+                        listResult.add(sample);
                 }
-            } else if (input.equalsIgnoreCase("exit")){
-                return 0;
-            } else {
-                listResult.add(input);
             }
         }
     }
 
-    public ArrayList<String> getListResult() {
+    public ArrayList<String[]> getListResult() {
         return listResult;
     }
 

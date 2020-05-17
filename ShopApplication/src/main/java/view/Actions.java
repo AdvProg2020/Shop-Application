@@ -1134,7 +1134,7 @@ public class Actions {
                     adminController.deleteUsername(users.get(index - 1)[1]);
                     System.out.println("user removed successfully");
                 }
-            } catch (Exceptions.UsernameDoesntExistException e) {
+            } catch (Exceptions.UsernameDoesntExistException | Exceptions.ManagerDeleteException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -1221,14 +1221,14 @@ public class Actions {
             String[] fields = new String[] {"discount code", "start date", "end date", "percentage", "maximum amount of use"};
             String[] fieldRegex = new String[] {Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.unsignedIntPattern};
             Form discountCodeForm = new Form(fields, fieldRegex);
-            discountCodeForm.setupArrayForm("customer ID to add", Constants.argumentPattern);
+            discountCodeForm.setupArrayForm(new String[]{"customer ID to add", "numberOfUses"}, new String[]{Constants.argumentPattern, Constants.unsignedIntPattern});
             if (discountCodeForm.takeInput() == 0) {
                 String[] results = discountCodeForm.getResults();
                 try {
                     adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
                             Double.valueOf(results[3]), Integer.parseInt(results[4]), discountCodeForm.getListResult());
                     System.out.println("discount code created successfully");
-                } catch (Exceptions.ExistingDiscountCodeException e) {
+                } catch (Exceptions.ExistingDiscountCodeException | Exceptions.InvalidAccountsForDiscount e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -1499,6 +1499,14 @@ public class Actions {
             super(name, Constants.Actions.adminAddCategoryPattern, Constants.Actions.adminAddCategoryCommand);
         }
 
+        private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
+            ArrayList<String> listResult = new ArrayList<>();
+            for (String[] result : firstResult) {
+                listResult.add(result[0]);
+            }
+            return listResult;
+        }
+
         @Override
         public void execute(String command) {
             try {
@@ -1506,10 +1514,10 @@ public class Actions {
                 String[] fields = new String[] {"parent category (enter \"root\" for no parent)"};
                 String[] regex = new String[] {".+"};
                 Form categoryForm = new Form(fields, regex);
-                categoryForm.setupArrayForm("special properties", ".+");
+                categoryForm.setupArrayForm(new String[]{"special properties"}, new String[]{".+"});
                 if(categoryForm.takeInput() == 0) {
                     String[] results = categoryForm.getResults();
-                    ArrayList<String> specialProperties = categoryForm.getListResult();
+                    ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());
                     adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? "superCategory" : results[0], specialProperties);
                 }
             } catch (Exceptions.InvalidCategoryException e) {
@@ -1638,17 +1646,26 @@ public class Actions {
             super(name, Constants.Actions.sellerAddSalePattern, Constants.Actions.sellerAddSaleCommand);
         }
 
+        private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
+            ArrayList<String> listResult = new ArrayList<>();
+            for (String[] result : firstResult) {
+                listResult.add(result[0]);
+            }
+            return listResult;
+        }
+
         @Override
         public void execute(String command) {
             String[] fields = new String[] {"start date", "end date", "percentage", "maximum price reduction"};
             String[] fieldRegex = new String[] {Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.doublePattern};
             Form saleForm = new Form(fields, fieldRegex);
-            saleForm.setupArrayForm("product ID", Constants.argumentPattern);
+            saleForm.setupArrayForm(new String[]{"product ID"}, new String[]{Constants.argumentPattern});
             if (saleForm.takeInput() == 0) {
                 String[] results = saleForm.getResults();
+                ArrayList<String> listResult = getListResult(saleForm.getListResult());
                 try {
                     sellerController.addSale(Date.valueOf(results[0]), Date.valueOf(results[1]),
-                            Double.valueOf(results[2]), Double.valueOf(results[3]), saleForm.getListResult());
+                            Double.valueOf(results[2]), Double.valueOf(results[3]), listResult);
                 } catch (Exceptions.InvalidDateException | Exceptions.InvalidProductIdsForASeller e) {
                     System.out.println(e.getMessage());
                 }
@@ -1813,14 +1830,22 @@ public class Actions {
             super(name, Constants.Actions.sellerAddProductPattern, Constants.Actions.sellerAddProductCommand);
         }
 
+        private ArrayList<String> getListResult(ArrayList<String[]> firstResult) {
+            ArrayList<String> listResult = new ArrayList<>();
+            for (String[] result : firstResult) {
+                listResult.add(result[0]);
+            }
+            return listResult;
+        }
+
         private void createNewProduct(String[] results) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
             String[] fields = new String[] {"description", "category name", "price", "count"};
             String[] regex = new String[] { ".+", ".+", Constants.doublePattern, Constants.unsignedIntPattern};
             Form productSecondForm = new Form(fields, regex);
-            productSecondForm.setupArrayForm("special properties", ".+");
+            productSecondForm.setupArrayForm(new String[]{"special properties"}, new String[]{".+"});
             if (productSecondForm.takeInput() == 0) {
                 String[] secondResults = productSecondForm.getResults();
-                ArrayList<String> specialProperties = productSecondForm.getListResult();
+                ArrayList<String> specialProperties = getListResult(productSecondForm.getListResult());
                 sellerController.addNewProduct(results[0], results[1], secondResults[0], secondResults[1],
                         specialProperties, Double.parseDouble(secondResults[2]), Integer.parseInt(secondResults[3]));
             }
