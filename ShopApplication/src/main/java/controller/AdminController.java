@@ -59,7 +59,6 @@ public class AdminController {
         return accounts;
     }
 
-    
     public String[] viewUsername(String username) throws Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -69,7 +68,6 @@ public class AdminController {
         }
     }
 
-    
     public void deleteUsername(String username) throws Exceptions.UsernameDoesntExistException, Exceptions.ManagerDeleteException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -111,7 +109,6 @@ public class AdminController {
         return productPacks;
     }
 
-    
     public void removeProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
@@ -122,7 +119,6 @@ public class AdminController {
         }
     }
 
-    
     public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage,
                                    int maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount {
 
@@ -165,7 +161,6 @@ public class AdminController {
             return Utilities.Pack.discountInfo(discount);
     }
 
-    
     public ArrayList<String[]> peopleWhoHaveThisDiscount(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
@@ -180,7 +175,6 @@ public class AdminController {
         }
     }
 
-    
     public String[] getDiscountEditableFields() {
         return Utilities.Field.discountEditableFields();
     }
