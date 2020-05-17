@@ -56,7 +56,7 @@ public class SubProduct implements ModelBasic {
         getSeller().removeSubProduct(subProductId);
         getProduct().removeSubProduct(subProductId);
         setSale(null);
-        Cart.updateSubProducts();
+        Cart.removeSubProductFromCarts(subProductId);
         suspended = true;
     }
 

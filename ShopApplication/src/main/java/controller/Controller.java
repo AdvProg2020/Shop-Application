@@ -142,20 +142,13 @@ public class Controller {
     
     private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                 String storeName, double minRatingScore, ArrayList<Product> products) {
-        if (available)
-            products.removeIf(product -> (product.getTotalRemainingCount() == 0));
-        if (minPrice != 0)
-            products.removeIf(product -> product.getMaxPrice() < minPrice);
-        if (maxPrice != 0)
-            products.removeIf(product -> product.getMinPrice() > maxPrice);
-        if (!contains.equals(""))
-            products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
-        if (!brand.equals(""))
-            products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
-        if (!storeName.equals("")) {
-            products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
-        }
-        products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
+        Utilities.Filter.ProductFilter.available( products, available);
+        Utilities.Filter.ProductFilter.minPrice(products, minPrice);
+        Utilities.Filter.ProductFilter.maxPrice(products, maxPrice);
+        Utilities.Filter.ProductFilter.name(products, contains);
+        Utilities.Filter.ProductFilter.brand(products, brand);
+        Utilities.Filter.ProductFilter.storeName(products, storeName);
+        Utilities.Filter.ProductFilter.ratingScore(products, minRatingScore);
     }
     
     private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
@@ -494,20 +487,13 @@ public class Controller {
 
     private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                    String storeName, double minRatingScore, ArrayList<SubProduct> subProducts) {
-        if (available)
-            subProducts.removeIf(subProduct -> (subProduct.getRemainingCount() == 0));
-        if (minPrice != 0)
-            subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() < minPrice);
-        if (maxPrice != 0)
-            subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() > maxPrice);
-        if (!contains.equals(""))
-            subProducts.removeIf(subProduct -> !(subProduct.getProduct().getName().toLowerCase().contains(contains.toLowerCase())));
-        if (!brand.equals(""))
-            subProducts.removeIf(subProduct -> !(subProduct.getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
-        if (!storeName.equals("")) {
-            subProducts.removeIf(subProduct -> !subProduct.getSeller().getStoreName().contains(storeName.toLowerCase()));
-        }
-        subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
+        Utilities.Filter.SubProductFilter.available(subProducts, available);
+        Utilities.Filter.SubProductFilter.minPrice(subProducts, minPrice);
+        Utilities.Filter.SubProductFilter.maxPrice(subProducts, maxPrice);
+        Utilities.Filter.SubProductFilter.name(subProducts, contains);
+        Utilities.Filter.SubProductFilter.brand(subProducts, brand);
+        Utilities.Filter.SubProductFilter.storeName(subProducts, storeName);
+        Utilities.Filter.SubProductFilter.ratingScore(subProducts, minRatingScore);
     }
 
     private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts) {

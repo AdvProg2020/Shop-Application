@@ -333,8 +333,74 @@ public class Utilities {
             availableFilters[6] = "minRatingScore";
             return availableFilters;
         }
-    }
 
+        static class ProductFilter {
+            public static void available(ArrayList<Product> products, boolean available) {
+                if (available)
+                    products.removeIf(product -> (product.getTotalRemainingCount() == 0));
+            }
+
+            public static void minPrice(ArrayList<Product> products, double minPrice) {
+                if (minPrice != 0)
+                    products.removeIf(product -> product.getMaxPrice() < minPrice);
+            }
+
+            public static void maxPrice(ArrayList<Product> products, double maxPrice) {
+                if (maxPrice != 0)
+                    products.removeIf(product -> product.getMinPrice() > maxPrice);
+            }
+
+            public static void name(ArrayList<Product> products, String contains) {
+                if (!contains.equals(""))
+                    products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
+            }
+
+            public static void brand(ArrayList<Product> products, String brand) {
+                if (!brand.equals(""))
+                    products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
+            }
+
+            public static void storeName(ArrayList<Product> products, String storeName) {
+                if (!storeName.equals("")) {
+                    products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
+                }
+            }
+
+            public static void ratingScore(ArrayList<Product> products, double minRatingScore) {
+                products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
+            }
+        }
+
+        static class SubProductFilter {
+            public static void available(ArrayList<SubProduct> subProducts, boolean available) {
+                if (available)
+                    subProducts.removeIf(subProduct -> (subProduct.getRemainingCount() == 0));
+            }
+            public static void minPrice(ArrayList<SubProduct> subProducts, double minPrice) {
+                if (minPrice != 0)
+                    subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() < minPrice);
+            }
+            public static void maxPrice(ArrayList<SubProduct> subProducts, double maxPrice) {
+                if (maxPrice != 0)
+                    subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() > maxPrice);
+            }
+            public static void name(ArrayList<SubProduct> subProducts, String contains) {
+                if (!contains.equals(""))
+                    subProducts.removeIf(subProduct -> !(subProduct.getProduct().getName().toLowerCase().contains(contains.toLowerCase())));
+            }
+            public static void brand(ArrayList<SubProduct> subProducts, String brand) {
+                if (!brand.equals(""))
+                    subProducts.removeIf(subProduct -> !(subProduct.getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
+            }
+            public static void storeName(ArrayList<SubProduct> subProducts, String storeName) {
+                if (!storeName.equals(""))
+                    subProducts.removeIf(subProduct -> !subProduct.getSeller().getStoreName().contains(storeName.toLowerCase()));
+            }
+            public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){
+                subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
+            }
+        }
+    }
     static class Sort {
         public static String[] productAvailableSorts() {
             String[] availableSorts = new String[6];
@@ -503,6 +569,4 @@ public class Utilities {
             }
         }
     }
-
-
 }
