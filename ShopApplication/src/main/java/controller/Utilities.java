@@ -77,14 +77,15 @@ public class Utilities {
         }
 
         public static String[] productInCart(SubProduct subProduct, int count) {
-            String[] productPack = new String[7];
+            String[] productPack = new String[8];
             productPack[0] = subProduct.getId();
-            productPack[1] = subProduct.getProduct().getName();
-            productPack[2] = subProduct.getProduct().getBrand();
-            productPack[3] = subProduct.getSeller().getUsername();
-            productPack[4] = subProduct.getSeller().getStoreName();
-            productPack[5] = Integer.toString(count);
-            productPack[6] = Double.toString(subProduct.getPriceWithSale());
+            productPack[1] = subProduct.getProduct().getId();
+            productPack[2] = subProduct.getProduct().getName();
+            productPack[3] = subProduct.getProduct().getBrand();
+            productPack[4] = subProduct.getSeller().getUsername();
+            productPack[5] = subProduct.getSeller().getStoreName();
+            productPack[6] = Integer.toString(count);
+            productPack[7] = Double.toString(subProduct.getPriceWithSale());
             return productPack;
         }
 
