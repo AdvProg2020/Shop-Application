@@ -27,13 +27,7 @@ public class AdminController extends Controller {
      * { String firstName, String lastName, String phone, String email, String password}
      */
     public String[] getPersonalInfoEditableFields() {
-        String[] editableFields = new String[5];
-        editableFields[0] = "firstName";
-        editableFields[1] = "lastName";
-        editableFields[2] = "phone";
-        editableFields[3] = "email";
-        editableFields[4] = "password";
-        return editableFields;
+        return Utilities.Pack.adminPersonalInfoEditableFields();
     }
 
     //Done!!
@@ -61,7 +55,7 @@ public class AdminController extends Controller {
         if (account == null)
             throw new Exceptions.UsernameDoesntExistException(username);
         else {
-            return getPersonalInfo(account);
+            return Utilities.Pack.personalInfo(account);
         }
     }
 
@@ -98,11 +92,8 @@ public class AdminController extends Controller {
     //Done!! sort?
     public ArrayList<String[]> manageAllProducts() {
         ArrayList<String[]> products = new ArrayList<>();
-        String[] productPack = new String[2];
         for (Product product : Product.getAllProducts()) {
-            productPack[0] = product.getId();
-            productPack[1] = product.getName();
-            products.add(productPack);
+            products.add(Utilities.Pack.product(product));
         }
         return products;
     }
@@ -162,15 +153,8 @@ public class AdminController extends Controller {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
-        else {
-            String[] discountInfo = new String[5];
-            discountInfo[0] = discount.getDiscountCode();
-            discountInfo[1] = dateFormat.format(discount.getStartDate());
-            discountInfo[2] = dateFormat.format(discount.getEndDate());
-            discountInfo[3] = Double.toString(discount.getMaximumAmount());
-            discountInfo[4] = Double.toString(discount.getPercentage());
-            return discountInfo;
-        }
+        else
+            return Utilities.Pack.discountInfo(discount);
     }
 
     //Done!!
@@ -181,11 +165,8 @@ public class AdminController extends Controller {
         else {
             Map<Customer, Integer> peopleRemainingCount = discount.getCustomers();
             ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
-            String[] personPack = new String[2];
             for (Customer customer : peopleRemainingCount.keySet()) {
-                personPack[0] = customer.getUsername();
-                personPack[1] = Integer.toString(peopleRemainingCount.get(customer));
-                peopleWithThisCode.add(personPack);
+                peopleWithThisCode.add(Utilities.Pack.customerDiscountRemainingCount(customer, peopleRemainingCount.get(customer)));
             }
             return peopleWithThisCode;
         }
@@ -268,31 +249,20 @@ public class AdminController extends Controller {
     public ArrayList<String[]> manageRequests() {
         ArrayList<String[]> requestIds = new ArrayList<>();
         for (Request request : Request.getPendingRequests()) {
-            requestIds.add(requestPack(request));
+            requestIds.add(Utilities.Pack.request(request));
         }
         if(currentAccount == Admin.getManager()){
             for (Request request : Request.getRequestArchive()) {
-                requestIds.add(requestPack(request));
+                requestIds.add(Utilities.Pack.request(request));
             }
         }
         return requestIds;
     }
 
-    //Done!!
-    private String[] requestPack(Request request){
-        String[] requestPack = new String[4];
-        requestPack[0] = request.getId();
-        requestPack[1] = request.getClass().getSimpleName();
-        requestPack[2] = dateFormat.format(request.getDate());
-        requestPack[3] = request.getStatus().toString();
-        return requestPack;
-    }
-
     //Todo: Dana consider the output
     /**
      * @param requestId
-     * @return AddProduct: { {"AddProduct"}, { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }, {specialProperties}}
-     * AddReview: { {"AddReview"}, {}}
+     * @return AddProduct: { {"AddProduct"}, { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }, {specialProperties}
      * @throws Exceptions.InvalidRequestIdException
      */
     public ArrayList<String[]> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
@@ -301,10 +271,10 @@ public class AdminController extends Controller {
             throw new Exceptions.InvalidRequestIdException(requestId);
         else {
             ArrayList<String[]> detailsOfRequest = new ArrayList<>();
-            detailsOfRequest.add(requestPack(request));
-            switch (requestPack(request)[0]) {
+            detailsOfRequest.add(Utilities.Pack.request(request));
+            switch (Utilities.Pack.request(request)[0]) {
                 case "AddProduct":
-                    detailsOfRequest.add(getSubProductInfo(((AddProductRequest) request).getSubProduct()));
+                    detailsOfRequest.add(Utilities.Pack.subProductExtended(((AddProductRequest) request).getSubProduct()));
                     String[] specialProperties = new String[((AddProductRequest) request).getProduct().getSpecialProperties().size()];
                     detailsOfRequest.add(((AddProductRequest) request).getProduct().getSpecialProperties().toArray(specialProperties));
                     break;
@@ -312,51 +282,25 @@ public class AdminController extends Controller {
                     detailsOfRequest.add(getReviewInfo(((AddReviewRequest) request).getReview()));
                     break;
                 case "AddSale":
-                    detailsOfRequest.add(getSaleInfo(((AddSaleRequest) request).getSale()));
+                    detailsOfRequest.add(Utilities.Pack.saleInfo(((AddSaleRequest) request).getSale()));
                     break;
                 case "AddSeller":
-                    detailsOfRequest.add(getPersonalInfo(((AddSellerRequest) request).getSeller()));
+                    detailsOfRequest.add(Utilities.Pack.personalInfo(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProduct":
-                    detailsOfRequest.add(getSubProductInfo(((EditProductRequest) request).getSubProduct()));
-                    String[] productChange = new String[2];
-                    productChange[0] = ((EditProductRequest) request).getField().toString();
-                    productChange[1] = ((EditProductRequest) request).getNewValue();
-                    detailsOfRequest.add(productChange);
+                    detailsOfRequest.add(Utilities.Pack.subProductExtended(((EditProductRequest) request).getSubProduct()));
+                    detailsOfRequest.add(Utilities.Pack.productChange(((EditProductRequest)request)));
                     break;
                 case "EditSale":
-                    detailsOfRequest.add(getSaleInfo(((EditSaleRequest) request).getSale()));
-                    String[] saleChange = new String[2];
-                    saleChange[0] = ((EditSaleRequest) request).getField().toString();
-                    saleChange[1] = ((EditSaleRequest) request).getNewValue();
-                    detailsOfRequest.add(saleChange);
+                    detailsOfRequest.add(Utilities.Pack.saleInfo(((EditSaleRequest) request).getSale()));
+                    detailsOfRequest.add(Utilities.Pack.saleChange(((EditSaleRequest)request)));
                     break;
             }
             return detailsOfRequest;
         }
     }
 
-    /**
-     * @param subProduct
-     * @return String[9]: { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }
-     */
-    private String[] getSubProductInfo(SubProduct subProduct) {
-        String[] subProductInfo = new String[9];
-        Product product = subProduct.getProduct();
-        subProductInfo[0] = product.getId();
-        subProductInfo[1] = product.getName();
-        subProductInfo[2] = product.getBrand();
-        subProductInfo[3] = product.getInfoText();
-        subProductInfo[4] = product.getCategory().getName();
-        subProductInfo[5] = subProduct.getSeller().getUsername();
-        subProductInfo[6] = subProduct.getSeller().getStoreName();
-        subProductInfo[7] = Double.toString(subProduct.getRawPrice());
-        subProductInfo[8] = Integer.toString(subProduct.getRemainingCount());
-        return subProductInfo;
-    }
-
     //Done!!
-
     /**
      * @param review
      * @return String[6]: { reviewerUsername, productId, productName, productBrand, reviewTitle, reviewText }

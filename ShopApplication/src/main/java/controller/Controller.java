@@ -21,18 +21,19 @@ import java.util.Map;
 public class Controller {
     protected static Account currentAccount;
     protected static Cart currentCart;
-    protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+    protected static DateFormat dateFormat = Utilities.getDateFormat();
     protected Database databaseManager;
 
 
     //Done
-    public Controller( Database DataBaseManager ){
+    public Controller(Database DataBaseManager) {
         databaseManager = DataBaseManager;
         currentCart = new Cart(null);
         currentAccount = null;
     }
 
     //Done!
+
     /**
      * @param username
      * @param type
@@ -47,6 +48,7 @@ public class Controller {
     }
 
     //Done!!
+
     /**
      * @param type information: 1- customer:
      *             * String username, String password, String firstName, String lastName, String email, String phone, double balance
@@ -96,6 +98,7 @@ public class Controller {
     }
 
     //Done!!
+
     /**
      * @return returns the currentAccount type: anonymous, customer, seller, admin.
      */
@@ -177,7 +180,7 @@ public class Controller {
     }
 
     //Done!!
-    public String[] getProductAvailableFilters(){
+    public String[] getProductAvailableFilters() {
         String[] availableFilters = new String[7];
         availableFilters[0] = "available";
         availableFilters[1] = "minPrice";
@@ -212,20 +215,13 @@ public class Controller {
     private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
         for (Product product : products) {
-            productIdNames.add(productPack(product));
+            productIdNames.add(Utilities.Pack.product(product));
         }
         return productIdNames;
     }
 
-    protected String[] productPack(Product product) {
-        String[] productPack = new String[3];
-        productPack[0] = product.getId();
-        productPack[1] = product.getName();
-        productPack[2] = product.getBrand();
-        return productPack;
-    }
-
     //Done!!
+
     /**
      * for show category action without all.
      *
@@ -235,7 +231,7 @@ public class Controller {
      */
     public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category;
-        if( categoryName .equals("superCategory"))
+        if (categoryName.equals("superCategory"))
             category = Category.getCategoryByName(categoryName);
         else
             category = Category.getSuperCategory();
@@ -244,16 +240,14 @@ public class Controller {
         else {
             ArrayList<String[]> categoryIdNames = new ArrayList<>();
             for (Category subCategory : category.getSubCategories()) {
-                String[] categoryPack = new String[2];
-                categoryPack[0] = subCategory.getId();
-                categoryPack[1] = subCategory.getName();
-                categoryIdNames.add(categoryPack);
+                categoryIdNames.add(Utilities.Pack.category(subCategory));
             }
             return categoryIdNames;
         }
     }
 
     //Done!!
+
     /**
      * @param categoryName
      * @return String[2]: ID, name
@@ -263,13 +257,13 @@ public class Controller {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        else{
+        else {
             return productToIdNameBrand(getProductsInCategory(category));
         }
     }
 
     //Done!!
-    private ArrayList<Product> getProductsInCategory(Category category){
+    private ArrayList<Product> getProductsInCategory(Category category) {
         ArrayList<Product> products = new ArrayList<>(category.getProducts());
         sortProducts("view count", false, products);
         return products;
@@ -293,7 +287,7 @@ public class Controller {
      *                                              products
      */
     public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy) throws Exceptions.InvalidProductIdException {
-        if( sortBy == null )
+        if (sortBy == null)
             sortBy = "viewCount";
         ArrayList<Product> products = new ArrayList<>();
         Product product;
@@ -333,18 +327,7 @@ public class Controller {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
-        return digest(product);
-    }
-
-    //Done!!
-    protected String[] digest(Product product) {
-        String[] productInfo = new String[5];
-        productInfo[0] = product.getId();
-        productInfo[1] = product.getName();
-        productInfo[2] = product.getBrand();
-        productInfo[3] = product.getInfoText();
-        productInfo[4] = Double.toString(product.getAverageRatingScore());
-        return productInfo;
+        return Utilities.Pack.digest(product);
     }
 
     //Done!!
@@ -370,12 +353,7 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
         for (SubProduct subProduct : product.getSubProducts()) {
-            String[] subProductPack = new String[4];
-            subProductPack[0] = subProduct.getId();
-            subProductPack[1] = subProduct.getSeller().getStoreName();
-            subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
-            subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
-            subProducts.add(subProductPack);
+            subProducts.add(Utilities.Pack.subProduct(subProduct));
         }
         return subProducts;
     }
@@ -383,21 +361,14 @@ public class Controller {
     //Done!!
     public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if(subProduct == null)
+        if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else
-            return getSubProductPack(subProduct);
+            return Utilities.Pack.subProduct(subProduct);
     }
 
-    private String[] getSubProductPack(SubProduct subProduct){
-        String[] subProductPack = new String[4];
-        subProductPack[0] = subProduct.getId();
-        subProductPack[1] = subProduct.getSeller().getStoreName();
-        subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
-        subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
-        return subProductPack;
-    }
     //Done!!
+
     /**
      * @param productId
      * @return String[3]: usernameOfReviewer, title, body, hasBought.
@@ -409,12 +380,7 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> reviews = new ArrayList<>();
         for (Review review : product.getReviews()) {
-            String[] reviewPack = new String[4];
-            reviewPack[0] = review.getReviewer().getUsername();
-            reviewPack[1] = review.getTitle();
-            reviewPack[2] = review.getText();
-            reviewPack[3] = review.hasBought() ? "yes" : "no";
-            reviews.add(reviewPack);
+            reviews.add(Utilities.Pack.review(review));
         }
         return reviews;
     }
@@ -437,22 +403,9 @@ public class Controller {
         ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
-            shoppingCart.add(productPackInCart(subProduct, subProducts.get(subProduct)));
+            shoppingCart.add(Utilities.Pack.productInCart(subProduct, subProducts.get(subProduct)));
         }
         return shoppingCart;
-    }
-
-    @Label("For getProductInCart method")
-    private String[] productPackInCart(SubProduct subProduct, int count) {
-        String[] productPack = new String[7];
-        productPack[0] = subProduct.getId();
-        productPack[1] = subProduct.getProduct().getName();
-        productPack[2] = subProduct.getProduct().getBrand();
-        productPack[3] = subProduct.getSeller().getUsername();
-        productPack[4] = subProduct.getSeller().getStoreName();
-        productPack[5] = Integer.toString(count);
-        productPack[6] = Double.toString(subProduct.getPriceWithSale());
-        return productPack;
     }
 
     //Done!!
@@ -496,7 +449,7 @@ public class Controller {
             if (subProductsInCart.containsKey(subProduct)) {
                 currentCart.addSubProductCount(subProductId, -number);
                 databaseManager.cart();
-            }else
+            } else
                 throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
         }
     }
@@ -522,36 +475,16 @@ public class Controller {
     }
 
     //Done!!
+
     /**
      * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
      */
     public ArrayList<String[]> sales() {
         ArrayList<String[]> sales = new ArrayList<>();
         for (Sale sale : Sale.getAllSales()) {
-            sales.add(getSaleInfo(sale));
+            sales.add(Utilities.Pack.saleInfo(sale));
         }
         return sales;
-    }
-
-    //Done!!
-    protected String[] getPersonalInfo(Account account) {
-        String[] info;
-        if (account instanceof Customer) {
-            info = new String[7];
-            info[6] = String.valueOf(((Customer) account).getBalance());
-        } else if (account instanceof Seller) {
-            info = new String[8];
-            info[6] = String.valueOf(((Seller) account).getBalance());
-            info[7] = ((Seller) account).getStoreName();
-        } else
-            info = new String[6];
-        info[0] = account.getUsername();
-        info[1] = account.getClass().getName();
-        info[2] = account.getFirstName();
-        info[3] = account.getLastName();
-        info[4] = account.getEmail();
-        info[5] = account.getPhone();
-        return info;
     }
 
     //Done!!
@@ -563,7 +496,7 @@ public class Controller {
      * seller:    8: username, type, firstName, lastName, email, phone, balance, storeName;
      */
     public String[] viewPersonalInfo() {
-        return getPersonalInfo(currentAccount);
+        return Utilities.Pack.personalInfo(currentAccount);
     }
 
     //Done!!
@@ -600,18 +533,6 @@ public class Controller {
     }
 
     //Done!!
-    protected String[] getSaleInfo(Sale sale) {
-        String[] salePack = new String[6];
-        salePack[0] = sale.getId();
-        salePack[1] = Double.toString(sale.getPercentage());
-        salePack[2] = sale.getSeller().getStoreName();
-        salePack[3] = dateFormat.format(sale.getStartDate());
-        salePack[4] = dateFormat.format(sale.getEndDate());
-        salePack[5] = Integer.toString(sale.getSubProducts().size());
-        return salePack;
-    }
-
-    //Done!!
     public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if (sale == null)
@@ -626,7 +547,7 @@ public class Controller {
         ArrayList<SubProduct> subProducts = new ArrayList<>(sale.getSubProducts());
         sortSubProducts("view count", false, subProducts);
         for (SubProduct subProduct : subProducts) {
-            productsInSale.add(productSalePack(subProduct));
+            productsInSale.add(Utilities.Pack.productInSale(subProduct));
         }
         return productsInSale;
     }
@@ -642,23 +563,13 @@ public class Controller {
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), subProductsInSale);
         sortSubProducts(sortBy, isIncreasing, subProductsInSale);
         for (SubProduct subProduct : subProductsInSale) {
-            subProductsSalePacks.add(productSalePack(subProduct));
+            subProductsSalePacks.add(Utilities.Pack.productInSale(subProduct));
         }
         return subProductsSalePacks;
     }
 
-    private String[] productSalePack(SubProduct subProduct){
-        String[] productPack = new String[5];
-        productPack[0] = subProduct.getProduct().getId();
-        productPack[1] = subProduct.getProduct().getName();
-        productPack[2] = subProduct.getProduct().getBrand();
-        productPack[3] = Double.toString(subProduct.getRawPrice());
-        productPack[4] = Double.toString(subProduct.getPriceWithSale());
-        return productPack;
-    }
-
     private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                   String storeName, double minRatingScore, ArrayList<SubProduct> subProducts){
+                                   String storeName, double minRatingScore, ArrayList<SubProduct> subProducts) {
         if (available)
             subProducts.removeIf(subProduct -> (subProduct.getRemainingCount() == 0));
         if (minPrice != 0)
@@ -675,7 +586,7 @@ public class Controller {
         subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
     }
 
-    private void sortSubProducts( String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts){
+    private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts) {
         int direction = isIncreasing ? 1 : -1;
         switch (sortBy) {
             case "price":

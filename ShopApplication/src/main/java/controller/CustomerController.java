@@ -32,14 +32,7 @@ public class CustomerController extends Controller {
      * { String firstName, String lastName, String phone, String email, String password, balance}
      */
     public String[] getPersonalInfoEditableFields() {
-        String[] editableFields = new String[6];
-        editableFields[0] = "firstName";
-        editableFields[1] = "lastName";
-        editableFields[2] = "phone";
-        editableFields[3] = "email";
-        editableFields[4] = "password";
-        editableFields[5] = "balance";
-        return editableFields;
+        return Utilities.Pack.customerPersonalInfoEditableFields();
     }
 
     @Override
@@ -127,7 +120,7 @@ public class CustomerController extends Controller {
         if (currentAccount instanceof Customer) {
             ArrayList<String[]> orders = new ArrayList<>();
             for (BuyLog buyLog : ((Customer) currentAccount).getBuyLogs()) {
-                orders.add(orderPack(buyLog));
+                orders.add(Utilities.Pack.buyLog(buyLog));
             }
             return orders;
         } else
@@ -153,45 +146,15 @@ public class CustomerController extends Controller {
             throw new Exceptions.InvalidLogIdException(orderId);
         else {
             ArrayList<String[]> orderInfo = new ArrayList<>();
-            orderInfo.add(orderPack(buyLog));
+            orderInfo.add(Utilities.Pack.buyLog(buyLog));
             for (LogItem item : buyLog.getLogItems()) {
-                orderInfo.add(logItemPack(item));
+                orderInfo.add(Utilities.Pack.buyLogItem(item));
             }
             return orderInfo;
         }
     }
 
-    @Label("For showing order methods")
-    private String[] orderPack(BuyLog buyLog) {
-        String[] orderPack = new String[9];
-        orderPack[0] = buyLog.getId();
-        orderPack[1] = buyLog.getCustomer().getUsername();
-        orderPack[2] = buyLog.getReceiverName();
-        orderPack[3] = buyLog.getReceiverPhone();
-        orderPack[4] = buyLog.getReceiverAddress();
-        orderPack[5] = dateFormat.format(buyLog.getDate());
-        orderPack[6] = buyLog.getShippingStatus().toString();
-        orderPack[7] = Double.toString(buyLog.getPaidMoney());
-        orderPack[8] = Double.toString(buyLog.getTotalDiscountAmount());
-        return orderPack;
-    }
-
-    @Label("For showing products in an order")
-    private String[] logItemPack(LogItem item) {
-        String[] productPack = new String[8];
-        Product product = item.getSubProduct().getProduct();
-        productPack[0] = product.getId();
-        productPack[1] = product.getName();
-        productPack[2] = product.getBrand();
-        productPack[3] = item.getSeller().getUsername();
-        productPack[4] = item.getSeller().getStoreName();
-        productPack[5] = Integer.toString(item.getCount());
-        productPack[6] = Double.toString(item.getPrice());
-        productPack[7] = Double.toString(item.getSaleAmount());
-        return productPack;
-    }
-
-    //Done!! Todo: Shayan check should I add rating to product
+    //Done!!
     public void rateProduct(String productID, int score) throws
             Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID);

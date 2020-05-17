@@ -31,15 +31,7 @@ public class SellerController extends Controller {
      *         { String firstName, String lastName, String phone, String email, String password, String storeName, balance}
      */
     public String[] getPersonalInfoEditableFields(){
-        String[] editableFields = new String[7];
-        editableFields[0] = "firstName";
-        editableFields[1] = "lastName";
-        editableFields[2] = "phone";
-        editableFields[3] = "email";
-        editableFields[4] = "password";
-        editableFields[5] = "storeName";
-        editableFields[6] = "balance";
-        return editableFields;
+        return Utilities.Pack.sellerPersonalInfoEditableFields();
     }
 
 
@@ -65,7 +57,7 @@ public class SellerController extends Controller {
     public ArrayList<String[]> getAllSellLogs() {
         ArrayList<String[]> allSells = new ArrayList<>();
         for (SellLog sellLog : ((Seller) currentAccount).getSellLogs()) {
-            allSells.add(sellPack(sellLog));
+            allSells.add(Utilities.Pack.sellLog(sellLog));
         }
         return allSells;
     }
@@ -81,47 +73,19 @@ public class SellerController extends Controller {
             throw new Exceptions.InvalidLogIdException(logId);
         else {
             ArrayList<String[]> logInfo = new ArrayList<>();
-            logInfo.add(sellPack(sellLog));
+            logInfo.add(Utilities.Pack.sellLog(sellLog));
             for (LogItem item : sellLog.getLogItems()) {
-                logInfo.add(logItemPack(item));
+                logInfo.add(Utilities.Pack.sellLogItem(item));
             }
             return logInfo;
         }
-    }
-
-    @Label("For showing-sellLog-methods")
-    private String[] sellPack(SellLog sellLog) {
-        String[] sellPack = new String[9];
-        sellPack[0] = sellLog.getId();
-        sellPack[1] = dateFormat.format(sellLog.getDate());
-        sellPack[2] = sellLog.getCustomer().getUsername();
-        sellPack[3] = Double.toString(sellLog.getReceivedMoney());
-        sellPack[4] = Double.toString(sellLog.getTotalSaleAmount());
-        sellPack[5] = sellLog.getReceiverName();
-        sellPack[6] = sellLog.getReceiverPhone();
-        sellPack[7] = sellLog.getReceiverAddress();
-        sellPack[8] = sellLog.getShippingStatus().toString();
-        return sellPack;
-    }
-
-    @Label("For showing a product in a sellLog")
-    private String[] logItemPack(LogItem item) {
-        String[] productPack = new String[8];
-        Product product = item.getSubProduct().getProduct();
-        productPack[0] = product.getId();
-        productPack[1] = product.getName();
-        productPack[2] = product.getBrand();
-        productPack[3] = Integer.toString(item.getCount());
-        productPack[4] = Double.toString(item.getPrice());
-        productPack[5] = Double.toString(item.getSaleAmount());
-        return productPack;
     }
 
     //Done!!
     public ArrayList<String[]> manageProducts() {
         ArrayList<String[]> products = new ArrayList<>();
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
-            products.add(productPack(subProduct.getProduct()));
+            products.add(Utilities.Pack.product(subProduct.getProduct()));
         }
         return products;
     }
@@ -129,20 +93,8 @@ public class SellerController extends Controller {
     //Done!!
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount).getSubProducts()) {
-            if (subProduct.getProduct().getId().equals(productID)){
-                String[] subProductPack = new String[9];
-                subProductPack[0] = subProduct.getProduct().getId();
-                subProductPack[1] = subProduct.getProduct().getName();
-                subProductPack[2] = subProduct.getProduct().getBrand();
-                subProductPack[3] = subProduct.getProduct().getCategory().getName();
-                subProductPack[4] = subProduct.getProduct().getInfoText();
-                subProductPack[5] = Integer.toString(subProduct.getRemainingCount());
-                subProductPack[6] = Double.toString(subProduct.getRawPrice());
-                subProductPack[7] = subProduct.getSale() != null ? subProduct.getSale().getId() : "-";
-                subProductPack[8] = subProduct.getSale() != null ? Double.toString(subProduct.getPriceWithSale()) : "-";
-                return subProductPack;
-            }
-
+            if (subProduct.getProduct().getId().equals(productID))
+                return Utilities.Pack.subProductExtended(subProduct);
         }
         throw new Exceptions.InvalidProductIdException(productID);
 
@@ -291,7 +243,7 @@ public class SellerController extends Controller {
     public ArrayList<String[]> viewSales() {
         ArrayList<String[]> saleInfos = new ArrayList<>();
         for (Sale sale : ((Seller) currentAccount).getSales()) {
-            saleInfos.add(getSaleInfo(sale));
+            saleInfos.add(Utilities.Pack.saleInfo(sale));
         }
         return saleInfos;
     }
@@ -300,7 +252,7 @@ public class SellerController extends Controller {
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
         for (Sale sale : ((Seller) currentAccount).getSales()) {
             if (sale.getId().equals(saleId)) {
-                return getSaleInfo(sale);
+                return Utilities.Pack.saleInfo(sale);
             }
         }
         throw new Exceptions.InvalidSaleIdException(saleId);
