@@ -4,6 +4,7 @@ import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
+import model.database.DatabaseManager;
 import model.request.*;
 
 import java.text.ParseException;
@@ -14,10 +15,32 @@ import java.util.Map;
 //TODO: database constructor
 public class AdminController extends Controller {
 
+
+    public AdminController(DatabaseManager DataBaseManager) {
+        super(DataBaseManager);
+    }
+
+    //Done!!
+
+    /**
+     * @return admin:
+     * { String firstName, String lastName, String phone, String email, String password}
+     */
+    public String[] getPersonalInfoEditableFields() {
+        String[] editableFields = new String[5];
+        editableFields[0] = "firstName";
+        editableFields[1] = "lastName";
+        editableFields[2] = "phone";
+        editableFields[3] = "email";
+        editableFields[4] = "password";
+        return editableFields;
+    }
+
     //Done!!
     @Override
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         super.editPersonalInfo(field, newInformation);
+        databaseManager.editAccount();
     }
 
     //Done!!
@@ -43,11 +66,25 @@ public class AdminController extends Controller {
     }
 
     //Done!!
-    public void deleteUsername(String username) throws Exceptions.UsernameDoesntExistException {
+    public void deleteUsername(String username) throws Exceptions.UsernameDoesntExistException, Exceptions.ManagerDeleteException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
             throw new Exceptions.UsernameDoesntExistException(username);
-        account.suspend();
+        if( account != Admin.getManager())
+            account.suspend();
+        else
+            throw new Exceptions.ManagerDeleteException();
+        switch (account.getClass().getSimpleName()) {
+            case "Admin":
+                databaseManager.removeAdmin();
+                break;
+            case "Customer":
+                databaseManager.removeCustomer();
+                break;
+            case "Seller":
+                databaseManager.removeSeller();
+                break;
+        }
     }
 
     //Done!!
@@ -55,6 +92,7 @@ public class AdminController extends Controller {
         if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.UsernameAlreadyTakenException(username);
         new Admin(username, password, firstName, lastName, email, phone);
+        databaseManager.createAdmin();
     }
 
     //Done!! sort?
@@ -74,19 +112,31 @@ public class AdminController extends Controller {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
-        else
+        else {
             product.suspend();
+            databaseManager.removeProduct();
+        }
     }
 
-    //Done!! TODO: unified exception
-    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount, ArrayList<String> customerIds) throws Exceptions.ExistingDiscountCodeException {
+    //Done!! TODO: unified exception/ database
+    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage, int maximumAmount, ArrayList<String[]> customerIds) throws Exceptions.ExistingDiscountCodeException {
+
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
-        else
-            new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
+        else {
+            ArrayList<String> wrongIds = new ArrayList<>();
+            for (String[] Id : new ArrayList<>(customerIds)) {
+                Account account = Account.getAccountById(Id[0]);
+                if(!(account instanceof Customer)){
+                    wrongIds.add(Id[0]);
+                    customerIds.remove(Id);
+                }
+            }
+            Discount discount = new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
+        }
     }
 
-    //Done!!
+    //Done!! data base
     public void addCustomerToDiscount(String customerId, String code, int count) throws Exceptions.DiscountCodeException, Exceptions.CustomerIdException {
         Discount discount = Discount.getDiscountByCode(code);
         Account account = Account.getAccountById(customerId);
@@ -199,6 +249,7 @@ public class AdminController extends Controller {
                     discount.setPercentage(Double.parseDouble(newInformation));
                 }
             }
+            databaseManager.editDiscount();
         }
     }
 
@@ -207,21 +258,37 @@ public class AdminController extends Controller {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
-        else
+        else{
             discount.suspend();
+            databaseManager.removeDiscount();
+        }
     }
 
-    //Done!!
-    public ArrayList<String> manageRequests() {
-        ArrayList<String> requestIds = new ArrayList<>();
-        for (Request request : Request.getAllRequests()) {
-            requestIds.add(request.getRequestId());
+    //Done!! TODO: Dana: Id, type, date, status,
+    public ArrayList<String[]> manageRequests() {
+        ArrayList<String[]> requestIds = new ArrayList<>();
+        for (Request request : Request.getPendingRequests()) {
+            requestIds.add(requestPack(request));
+        }
+        if(currentAccount == Admin.getManager()){
+            for (Request request : Request.getRequestArchive()) {
+                requestIds.add(requestPack(request));
+            }
         }
         return requestIds;
     }
 
-    //Todo
+    //Done!!
+    private String[] requestPack(Request request){
+        String[] requestPack = new String[4];
+        requestPack[0] = request.getId();
+        requestPack[1] = request.getClass().getSimpleName();
+        requestPack[2] = dateFormat.format(request.getDate());
+        requestPack[3] = request.getStatus().toString();
+        return requestPack;
+    }
 
+    //Todo: Dana consider the output
     /**
      * @param requestId
      * @return AddProduct: { {"AddProduct"}, { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }, {specialProperties}}
@@ -233,12 +300,9 @@ public class AdminController extends Controller {
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
         else {
-            String[] typeDate = new String[2];
-            typeDate[0] = request.getClass().getName();
-            typeDate[1] = dateFormat.format(request.getDate());
             ArrayList<String[]> detailsOfRequest = new ArrayList<>();
-            detailsOfRequest.add(typeDate);
-            switch (typeDate[0]) {
+            detailsOfRequest.add(requestPack(request));
+            switch (requestPack(request)[0]) {
                 case "AddProduct":
                     detailsOfRequest.add(getSubProductInfo(((AddProductRequest) request).getSubProduct()));
                     String[] specialProperties = new String[((AddProductRequest) request).getProduct().getSpecialProperties().size()];
@@ -254,14 +318,14 @@ public class AdminController extends Controller {
                     detailsOfRequest.add(getPersonalInfo(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProduct":
-                    detailsOfRequest.add(getSubProductInfo(((EditProductRequest)request).getSubProduct()));
+                    detailsOfRequest.add(getSubProductInfo(((EditProductRequest) request).getSubProduct()));
                     String[] productChange = new String[2];
                     productChange[0] = ((EditProductRequest) request).getField().toString();
                     productChange[1] = ((EditProductRequest) request).getNewValue();
                     detailsOfRequest.add(productChange);
                     break;
                 case "EditSale":
-                    detailsOfRequest.add(getSaleInfo(((EditSaleRequest)request).getSale()));
+                    detailsOfRequest.add(getSaleInfo(((EditSaleRequest) request).getSale()));
                     String[] saleChange = new String[2];
                     saleChange[0] = ((EditSaleRequest) request).getField().toString();
                     saleChange[1] = ((EditSaleRequest) request).getNewValue();
@@ -318,6 +382,7 @@ public class AdminController extends Controller {
                 request.accept();
             else
                 request.decline();
+            databaseManager.request();
         }
     }
 
@@ -330,6 +395,7 @@ public class AdminController extends Controller {
         return categoryNames;
     }
 
+    //Done!!
     public String[] getCategoryEditableFields() {
         String[] editableFields = new String[2];
         editableFields[0] = "name";
@@ -354,28 +420,34 @@ public class AdminController extends Controller {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
-        if (field.equalsIgnoreCase("name")) {
-            if (category.getName().equals(newInformation))
-                throw new Exceptions.SameAsPreviousValueException(field);
-            else {
-                if (Category.getCategoryByName(newInformation) != null)
-                    throw new Exceptions.ExistedCategoryException(newInformation);
+        switch (field) {
+            case "name":
+                if (category.getName().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
                 else {
-                    category.setName(newInformation);
+                    if (Category.getCategoryByName(newInformation) != null)
+                        throw new Exceptions.ExistedCategoryException(newInformation);
+                    else {
+                        category.setName(newInformation);
+                    }
                 }
-            }
-        } else if (field.equalsIgnoreCase("parent name")) {
-            Category newParentCategory = Category.getCategoryByName(newInformation);
-            if (newParentCategory == null) {
-                category.setParent(Category.getSuperCategory().getId());
-            } else {
-                if (category.hasSubCategoryWithId(newParentCategory.getId()))
-                    throw new Exceptions.SubCategoryException(categoryName, newInformation);
-                else
-                    category.setParent(newParentCategory.getId());
-            }
-        } else
-            throw new Exceptions.InvalidFieldException();
+                databaseManager.editCategory();
+                break;
+            case "parent name":
+                Category newParentCategory = Category.getCategoryByName(newInformation);
+                if (newParentCategory == null) {
+                    category.setParent(Category.getSuperCategory().getId());
+                } else {
+                    if (category.hasSubCategoryWithId(newParentCategory.getId()))
+                        throw new Exceptions.SubCategoryException(categoryName, newInformation);
+                    else
+                        category.setParent(newParentCategory.getId());
+                }
+                databaseManager.editCategory();
+                break;
+            default:
+                throw new Exceptions.InvalidFieldException();
+        }
     }
 
     //Done!!
@@ -386,6 +458,7 @@ public class AdminController extends Controller {
             Category parentCategory = Category.getCategoryByName(parentCategoryName);
             String parentCategoryId = parentCategory == null ? Category.getSuperCategory().getId() : parentCategory.getId();
             new Category(categoryName, parentCategoryId, specialProperties);
+            databaseManager.createCategory();
         }
     }
 
@@ -395,5 +468,6 @@ public class AdminController extends Controller {
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         category.terminate();
+        databaseManager.removeCategory();
     }
 }

@@ -1,15 +1,19 @@
 package controller;
 
+import jdk.jfr.Label;
 import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
+import model.database.Database;
+import model.database.DatabaseManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Map;
 
 //TODO: compare to products!
 //TODO: database constructor
@@ -17,16 +21,23 @@ public class Controller {
     protected static Account currentAccount;
     protected static Cart currentCart;
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+    protected static DatabaseManager databaseManager;
+
+
+    //Done TODO: Shayan please check
+    public Controller(DatabaseManager DataBaseManager){
+        databaseManager = DataBaseManager;
+        currentCart = new Cart(null);
+        currentAccount = null;
+    }
 
     //Done!
-
     /**
      * @param username
      * @param type
      * @throws Exceptions.UsernameAlreadyTakenException
      * @throws Exceptions.AdminRegisterException
      */
-
     public void usernameTypeValidation(String username, String type) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         if (Account.getAccountByUsername(username) != null)
             throw new Exceptions.UsernameAlreadyTakenException(username);
@@ -35,7 +46,6 @@ public class Controller {
     }
 
     //Done!!
-
     /**
      * @param type information: 1- customer:
      *             * String username, String password, String firstName, String lastName, String email, String phone, double balance
@@ -60,7 +70,7 @@ public class Controller {
         }
     }
 
-    //Done!!
+    //Done!! TODO: Shayan data base for cart
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -71,6 +81,7 @@ public class Controller {
         if (currentAccount instanceof Customer) {
             ((Customer) currentAccount).mergeCart(currentCart.getId());
             currentCart = ((Customer) currentAccount).getCart();
+
         }
     }
 
@@ -219,7 +230,7 @@ public class Controller {
      * @throws Exceptions.InvalidCategoryException
      */
     public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
-        Category category = null;
+        Category category;
         if( categoryName .equals("superCategory"))
             category = Category.getCategoryByName(categoryName);
         else
@@ -383,10 +394,9 @@ public class Controller {
         return subProductPack;
     }
     //Done!!
-
     /**
      * @param productId
-     * @return String[3]: usernameOfReviewer, title, body, hasBought. // TODO: Dana, hasBought added!
+     * @return String[3]: usernameOfReviewer, title, body, hasBought.
      * @throws Exceptions.InvalidProductIdException
      */
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidProductIdException {
@@ -414,8 +424,84 @@ public class Controller {
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubProductCount(subProductId, count);
+            databaseManager.cart();
         }
     }
+
+    //Done!!
+    public ArrayList<String[]> getProductsInCart() {
+        ArrayList<String[]> shoppingCart = new ArrayList<>();
+        Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
+        for (SubProduct subProduct : subProducts.keySet()) {
+            shoppingCart.add(productPackInCart(subProduct, subProducts.get(subProduct)));
+        }
+        return shoppingCart;
+    }
+
+    @Label("For getProductInCart method")
+    private String[] productPackInCart(SubProduct subProduct, int count) {
+        String[] productPack = new String[7];
+        productPack[0] = subProduct.getId();
+        productPack[1] = subProduct.getProduct().getName();
+        productPack[2] = subProduct.getProduct().getBrand();
+        productPack[3] = subProduct.getSeller().getUsername();
+        productPack[4] = subProduct.getSeller().getStoreName();
+        productPack[5] = Integer.toString(count);
+        productPack[6] = Double.toString(subProduct.getPriceWithSale());
+        return productPack;
+    }
+
+    //Done!!
+    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (!currentCart.getSubProducts().containsKey(subProduct))
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
+        else {
+            try {
+                showProduct(subProduct.getProduct().getId());
+            } catch (Exceptions.InvalidProductIdException ignored) {
+            }
+        }
+    }
+
+    //Done!!
+    public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
+            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException {
+        Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (subProduct == null)
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
+        else if (!subProducts.containsKey(subProduct))
+            throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
+        else if (number + subProducts.get(subProduct) > subProduct.getRemainingCount())
+            throw new Exceptions.UnavailableProductException(subProductId);
+        else {
+            currentCart.addSubProductCount(subProductId, number);
+            databaseManager.cart();
+        }
+    }
+
+    //Done!!
+    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
+            Exceptions.NotSubProductIdInTheCartException {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (subProduct == null)
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
+        else {
+            Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
+            if (subProductsInCart.containsKey(subProduct)) {
+                currentCart.addSubProductCount(subProductId, -number);
+                databaseManager.cart();
+            }else
+                throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
+        }
+    }
+
+    //Done!!
+    public double getTotalPriceOfCart() {
+        return currentCart.getTotalPrice();
+    }
+
 
     //Done!!
     public void addReview(String productId, String title, String text) throws Exceptions.InvalidProductIdException, Exceptions.NotLoggedInException {
@@ -424,8 +510,10 @@ public class Controller {
         else {
             if (Product.getProductById(productId) == null)
                 throw new Exceptions.InvalidProductIdException(productId);
-            else
+            else {
                 new Review(currentAccount.getId(), productId, title, text);
+                databaseManager.addReview();
+            }
         }
     }
 
@@ -439,35 +527,6 @@ public class Controller {
             sales.add(getSaleInfo(sale));
         }
         return sales;
-    }
-
-    //Done!!
-    //TODO: specific getPersonalInfoEditableFields for each of the admin, seller and customer controller.
-    /**
-     * @return *1- seller:String[6]
-     * * { String firstName, String lastName, String phone, String email, String password, String storeName}
-     * 2- customer:
-     * * { String firstName, String lastName, String phone, String email, String password}
-     * 3- admin:
-     * * { String firstName, String lastName, String phone, String email, String password, String storeName}
-     * @throws Exceptions.NotLoggedInException
-     */
-    public String[] getPersonalInfoEditableFields() throws Exceptions.NotLoggedInException {
-        if (currentAccount == null)
-            throw new Exceptions.NotLoggedInException();
-        else {
-            String[] editableFields = new String[5];
-            if (currentAccount instanceof Seller) {
-                editableFields = new String[6];
-                editableFields[5] = "storeName";
-            }
-            editableFields[0] = "firstName";
-            editableFields[1] = "lastName";
-            editableFields[2] = "phone";
-            editableFields[3] = "email";
-            editableFields[4] = "password";
-            return editableFields;
-        }
     }
 
     //Done!!
@@ -592,14 +651,6 @@ public class Controller {
         productPack[3] = Double.toString(subProduct.getRawPrice());
         productPack[4] = Double.toString(subProduct.getPriceWithSale());
         return productPack;
-    }
-
-    private ArrayList<Product> subProductToProduct( ArrayList<SubProduct> subProducts){
-        ArrayList<Product> products = new ArrayList<>();
-        for (SubProduct subProduct : subProducts) {
-            products.add(subProduct.getProduct());
-        }
-        return products;
     }
 
     private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
