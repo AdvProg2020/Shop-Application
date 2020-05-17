@@ -2,5 +2,6 @@ ShopApplication/.idea/**/*.xml
 ShopApplication/.idea/modules
 ShopApplication/out/
 ShopApplication/target/
+ShopApplication/src/main/resources/database
 *.iml
 *.class
