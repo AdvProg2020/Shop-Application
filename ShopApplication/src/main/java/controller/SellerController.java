@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class SellerController {
 
@@ -195,6 +196,7 @@ public class SellerController {
 
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
+
         Product product = Product.getProductByNameAndBrand(name, brand);
         if (product != null)
             throw new Exceptions.ExistingProductException(product.getId());
@@ -203,7 +205,12 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count);
-            new Product(name, brand, infoText, category.getId(), specialProperties, subProduct);
+            int size = category.getProperties().size();
+            ArrayList<String> alaki = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                alaki.add(Integer.toString(i));
+            }
+            new Product(name, brand, infoText, category.getId(), alaki, subProduct);
             database().request();
         }
     }

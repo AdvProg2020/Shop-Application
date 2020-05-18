@@ -1638,6 +1638,7 @@ public class Actions {
                         } else {
                             adminController.acceptRequest(requestID, false);
                         }
+                        return;
                     } else {
                         System.out.println("invalid entry.");
                     }
@@ -1881,7 +1882,7 @@ public class Actions {
                 }
                 try {
                     sellerController.editSale(saleID, editableFields[fieldIndex - 1], response);
-                    System.out.println("field edited successfully");
+                    System.out.println("edit request has been sent.");
                     return 0;
                 } catch (Exceptions.InvalidSaleIdException | Exceptions.InvalidFormatException |
                         Exceptions.InvalidDateException | Exceptions.InvalidFieldException e) {
@@ -2111,35 +2112,15 @@ public class Actions {
                 if (productSecondForm.takeInput() == 0) {
                     while(true) {
                         String[] secondResults;
-                        ArrayList<String> spResults;
                         System.out.println("category name:");
                         String entry = View.getNextLineTrimmed();
                         if (entry.equalsIgnoreCase("back")) break;
-                        else if (entry.matches(Constants.argumentPattern)) {
-                            ArrayList<String> sp = mainController.getPropertiesOfCategory(entry);
-                            int size = sp.size();
-                            spResults = new ArrayList<>();
-                            for (int i = 0; i < size; i++) {
-                                System.out.println(sp.get(i) + ":");
-                                String input = View.getNextLineTrimmed();
-                                if (input.equalsIgnoreCase("back")) {
-                                    if(i == 0) break;
-                                    else i--;
-                                } else if (input.matches(Constants.argumentPattern)) {
-                                    spResults.add(input);
-                                    if (i == size - 1) {
-                                        secondResults = productSecondForm.getResults();
-                                        sellerController.addNewProduct(results[0], results[1], secondResults[2], entry,
-                                                spResults, Double.parseDouble(secondResults[0]), Integer.parseInt(secondResults[1]));
-                                    }
-                                } else {
-                                    System.out.println("invalid entry");
-                                    continue;
-                                }
-                            }
-                        } else {
-                            System.out.println("invalid entry");
-                            continue;
+                        else {
+                            secondResults = productSecondForm.getResults();
+                            sellerController.addNewProduct(results[0], results[1], secondResults[2],
+                                    entry, null, Double.parseDouble(secondResults[0]),
+                                    Integer.parseInt(secondResults[1]));
+                            return;
                         }
                     }
                 } else {

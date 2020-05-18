@@ -27,7 +27,7 @@ public class AddProductRequest extends Request {
     @Override
     protected boolean isInvalid() {
         if (product != null)
-            return (product.getCategory() == null);
+            return (status == RequestStatus.PENDING) &&(product.getCategory() == null);
 
         return (status == RequestStatus.PENDING) && (subProduct.getProduct() == null || subProduct.getSeller() == null);
     }

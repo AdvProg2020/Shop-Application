@@ -252,10 +252,8 @@ public class AdminController {
 
     public ArrayList<String[]> getArchivedRequests() {
         ArrayList<String[]> requestIds = new ArrayList<>();
-        if (currentAccount() == Admin.getManager()) {
-            for (Request request : Request.getRequestArchive()) {
-                requestIds.add(Utilities.Pack.request(request));
-            }
+        for (Request request : Request.getRequestArchive()) {
+            requestIds.add(Utilities.Pack.request(request));
         }
         return requestIds;
     }
@@ -275,24 +273,24 @@ public class AdminController {
         else {
             ArrayList<String[]> detailsOfRequest = new ArrayList<>();
             detailsOfRequest.add(Utilities.Pack.request(request));
-            switch (Utilities.Pack.request(request)[0]) {
-                case "AddProduct":
+            switch (Utilities.Pack.request(request)[1]) {
+                case "AddProductRequest":
                     detailsOfRequest.add(Utilities.Pack.subProductExtended(((AddProductRequest) request).getSubProduct()));
                     break;
-                case "AddReview":
+                case "AddReviewRequest":
                     detailsOfRequest.add(getReviewInfo(((AddReviewRequest) request).getReview()));
                     break;
-                case "AddSale":
+                case "AddSaleRequest":
                     detailsOfRequest.add(Utilities.Pack.saleInfo(((AddSaleRequest) request).getSale()));
                     break;
-                case "AddSeller":
+                case "AddSellerRequest":
                     detailsOfRequest.add(Utilities.Pack.personalInfo(((AddSellerRequest) request).getSeller()));
                     break;
-                case "EditProduct":
+                case "EditProductRequest":
                     detailsOfRequest.add(Utilities.Pack.subProductExtended(((EditProductRequest) request).getSubProduct()));
                     detailsOfRequest.add(Utilities.Pack.productChange(((EditProductRequest) request)));
                     break;
-                case "EditSale":
+                case "EditSaleRequest":
                     detailsOfRequest.add(Utilities.Pack.saleInfo(((EditSaleRequest) request).getSale()));
                     detailsOfRequest.add(Utilities.Pack.saleChange(((EditSaleRequest) request)));
                     break;
