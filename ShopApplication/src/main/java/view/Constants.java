@@ -16,6 +16,7 @@ final class Constants {
     static final String adminUserType = "Admin";
     static final String customerUserType = "Customer";
     static final String sellerUserType = "Seller";
+    static final String SUPER_CATEGORY_NAME = "SuperCategory";
     static final String[] types = new String[]{anonymousUserType, customerUserType, sellerUserType, adminUserType};
 
     static int getTypeByIndex(String type) {
