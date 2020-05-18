@@ -146,7 +146,7 @@ class Menus {
             subActions.put(index + 2, new Actions.ShowCategories(categoryTree, availableCategories, availableProperties));
             subActions.put(index + 3, new Actions.ChooseCategoryAction(categoryTree, availableCategories));
             subActions.put(index + 4, new Actions.RevertCategoryAction(categoryTree));
-            subActions.put(index + 5, new Actions.ProductDetailMenu(currentProducts));
+            subActions.put(index + 5, new Actions.ProductDetailMenu(currentProducts, this));
             subActions.put(index + 6, new Actions.BackAction(parent));
         }
     }
@@ -158,10 +158,9 @@ class Menus {
         private StringBuilder subProductID;
         private ArrayList<String[]> subProducts;
 
-        ProductDetailMenu(String name) {
-            super(name, false, null, null, null);
-            Menu.setProductDetailMenu(this);
-            productID = new StringBuilder();
+        ProductDetailMenu(String name, Menu parent, StringBuilder productID) {
+            super(name, false, parent, null, null);
+            this.productID = productID;
             subProductID = new StringBuilder();
             subProducts = new ArrayList<>();
             subActionsAnonymousCustomer = new HashMap<>();
@@ -193,25 +192,18 @@ class Menus {
             subActionsAnonymousCustomer.put(index + 4, new Actions.SelectSeller(subProductID, subProducts));
             subActionsAnonymousCustomer.put(index + 5, new Actions.ShowCurrentSeller(subProductID));
             subActionsAnonymousCustomer.put(index + 6, new Actions.CompareProductByID(productID));
-            subActionsAnonymousCustomer.put(index + 7, new Actions.BackAction(null));
+            subActionsAnonymousCustomer.put(index + 7, new Actions.BackAction(parent));
 
             subActionsAdminSeller.put(index + 1, new Actions.DigestProduct(productID));
             subActionsAdminSeller.put(index + 2, new Actions.ShowSubProducts(subProducts, productID, subProductID));
             subActionsAdminSeller.put(index + 3, new Actions.CompareProductByID(productID));
-            subActionsAdminSeller.put(index + 4, new Actions.BackAction(null));
+            subActionsAdminSeller.put(index + 4, new Actions.BackAction(parent));
         }
 
         @Override
         public void run() {
             modifyActions();
             super.run();
-        }
-
-        public void runByProductID(String productID) {
-            this.productID.delete(0, productID.length());
-            this.productID.append(productID);
-            ((Actions.BackAction) subActions.get(subActions.size() - 1)).setParent(Menu.getCallingMenu());
-            this.run();
         }
     }
 
@@ -361,7 +353,7 @@ class Menus {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowSales(currentSales));
             subActions.put(index + 2, new Actions.ShowInSaleProducts(currentSort, currentFilters, currentProducts));
-            subActions.put(index + 3, new Actions.ProductDetailMenu(currentProducts));
+            subActions.put(index + 3, new Actions.ProductDetailMenu(currentProducts, this));
             subActions.put(index + 4, new Actions.BackAction(parent));
         }
 
@@ -594,7 +586,7 @@ class Menus {
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.AdminShowProducts(currentProducts));
-            subActions.put(index + 2, new Actions.AdminRemoveProductByID(currentProducts));
+            subActions.put(index + 2, new Actions.AdminRemoveProduct(currentProducts));
             subActions.put(index + 3, new Actions.BackAction(parent));
         }
     }
@@ -910,7 +902,7 @@ class Menus {
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShoppingCartShowProducts(currentProducts));
-            subActions.put(index + 2, new Actions.ProductDetailMenu(currentProducts));
+            subActions.put(index + 2, new Actions.ProductDetailMenu(currentProducts, this));
             subActions.put(index + 3, new Actions.ShoppingCartIncreaseProductCount(currentProducts));
             subActions.put(index + 4, new Actions.ShoppingCartDecreaseProductCount(currentProducts));
             subActions.put(index + 5, new Actions.ShoppingCartShowTotalPrice());

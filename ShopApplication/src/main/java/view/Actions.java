@@ -1004,26 +1004,35 @@ public class Actions {
 
     public static class ProductDetailMenu extends Action {
         private ArrayList<String[]> currentProducts;
+        private Menus.ProductDetailMenu productDetailMenu;
+        private StringBuilder productID;
 
-        ProductDetailMenu(ArrayList<String[]> currentProducts) {
+        ProductDetailMenu(ArrayList<String[]> currentProducts, Menu parent) {
             super(Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
             this.currentProducts = currentProducts;
+            productID = new StringBuilder();
+            productDetailMenu = new Menus.ProductDetailMenu("product detail menu", parent, productID);
+        }
+
+        private void refreshProductID(int index) {
+            productID.setLength(0);
+            productID.append(currentProducts.get(index - 1)[0]);
         }
 
         @Override
         public void execute(String command) {
             int index = Integer.parseInt(getGroup(command, 1));
             if (index > currentProducts.size()) {
-                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+                System.out.println("invalid index. please enter a number within the range of shown indexes.");
             } else {
+                refreshProductID(index);
                 try {
-                    mainController.showProduct(currentProducts.get(index - 1)[0]);
+                    mainController.showProduct(productID.toString());
+                    productDetailMenu.run();
                 } catch (Exceptions.InvalidProductIdException e) {
                     System.out.println(e.getMessage());
-                    return;
                 }
             }
-            Menu.getProductDetailMenu().runByProductID(currentProducts.get(index - 1)[0]);
         }
     }
 
@@ -1077,12 +1086,11 @@ public class Actions {
         @Override
         public void execute(String command) {
             try {
-                if (subProductID.length() == 0) {
-                    if (subProducts.size() != 0) {
-                        System.out.println("there is no seller for this product");
-                    } else {
-                        subProductID.append(subProducts.get(0)[0]);
-                    }
+                if (subProducts.size() == 0) {
+                    System.out.println("there is no seller for this product");
+                    return;
+                } else {
+                    subProductID.append(subProducts.get(0)[0]);
                 }
                 refreshSubProducts();
                 System.out.println("sub products:");
@@ -1385,10 +1393,10 @@ public class Actions {
     }
 
 
-    public static class AdminRemoveProductByID extends Action {
+    public static class AdminRemoveProduct extends Action {
         private ArrayList<String[]> currentProducts;
 
-        AdminRemoveProductByID(ArrayList<String[]> currentProducts) {
+        AdminRemoveProduct(ArrayList<String[]> currentProducts) {
             super(Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
             this.currentProducts = currentProducts;
         }
@@ -2223,7 +2231,7 @@ public class Actions {
             int index = Integer.parseInt(commandMatcher.group(1));
             int count;
             if (index > currentProducts.size()) {
-                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+                System.out.println("invalid index. please enter a number within the range of shown indexes.");
             } else {
                 if (commandMatcher.groupCount() == 2) {
                     count = Integer.parseInt(commandMatcher.group(2));
@@ -2256,7 +2264,7 @@ public class Actions {
             int index = Integer.parseInt(commandMatcher.group(1));
             int count;
             if (index > currentProducts.size()) {
-                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+                System.out.println("invalid index. please enter a number within the range of shown indexes.");
             } else {
                 if (commandMatcher.groupCount() == 2) {
                     count = Integer.parseInt(commandMatcher.group(2));

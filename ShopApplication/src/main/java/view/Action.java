@@ -37,9 +37,10 @@ public abstract class Action {
             System.out.println("this list is empty!");
             return;
         }
-        int args = list.get(0).length;
+        int args;
         int size = list.size();
         for (int i = 0; i < size; i++) {
+            args = list.get(i).length;
             System.out.print((i + 1) + ".");
             for (int j = 0; j < args; j++) {
                 System.out.print( " " + list.get(i)[j]);
@@ -60,7 +61,7 @@ public abstract class Action {
      int getIndex(String command, ArrayList list) {
         int index = Integer.parseInt(getGroup(command, 1));
         if (index > list.size()) {
-            System.out.println("invalid index. please enter a number between 1 and " + list.size());
+            System.out.println("invalid index. please enter a number within the range of indexes shown.");
             return 0;
         }
         return index;

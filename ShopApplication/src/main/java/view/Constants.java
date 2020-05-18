@@ -37,7 +37,7 @@ final class Constants {
         static final String sortMenuPattern = caseInsensitiveMode + "^" + sortMenuCommand + "$";
         static final String filterMenuCommand = "filtering";
         static final String filterMenuPattern = caseInsensitiveMode + "^" + filterMenuCommand + "$";
-        static final String saleMenuCommand = "offs";
+        static final String saleMenuCommand = "sales";
         static final String saleMenuPattern = caseInsensitiveMode + "^" + saleMenuCommand + "$";
         static final String viewPersonalInfoCommand = "view personal info";
         static final String viewPersonalInfoPattern = caseInsensitiveMode + "^" + viewPersonalInfoCommand + "$";
@@ -112,7 +112,7 @@ final class Constants {
         static final String editFieldPattern = caseInsensitiveMode + "^" + editFieldCommand + "$";
         static final String showSellerCompanyInfoCommand = "view company information";
         static final String showSellerCompanyInfoPattern = caseInsensitiveMode + "^" + showSellerCompanyInfoCommand + "$";
-        static final String showSellerSellHistoryCommand = "view sales history";
+        static final String showSellerSellHistoryCommand = "view sells history";
         static final String showSellerSellHistoryPattern = caseInsensitiveMode + "^" + showSellerSellHistoryCommand + "$";
         static final String showSingleSellLogCommand = "view sell history [sellHistoryIndex]";
         static final String showSingleSellLogPattern = caseInsensitiveMode + "^view sell history" + spacePattern + unsignedIntPattern + "$";

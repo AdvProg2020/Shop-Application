@@ -6,18 +6,15 @@ public abstract class Menu {
     private String name;
     private boolean isAccountMenuAccessible;
     private static Menus.AccountMenu accountMenu;
-    private static Menus.ProductDetailMenu productDetailMenu;
     protected Menu parent;
     protected Map<Integer, Menu> subMenus;
     protected Map<Integer, Action> subActions;
     static ArrayList<Menu> allMenus;
-    static private Stack<Menu> stackTrace;
     private String commandPattern;
     private String command;
 
     static {
         allMenus = new ArrayList<>();
-        stackTrace = new Stack<>();
     }
 
     public Menu(String name, boolean isAccountMenuAccessible, Menu parent, String commandPattern, String command) {
@@ -40,18 +37,9 @@ public abstract class Menu {
         Menu.accountMenu = accountMenu;
     }
 
-    public static void setProductDetailMenu(Menus.ProductDetailMenu productDetailMenu) {
-        Menu.productDetailMenu = productDetailMenu;
-    }
-
     public static Menus.AccountMenu getAccountMenu() {
         return accountMenu;
     }
-
-    public static Menus.ProductDetailMenu getProductDetailMenu() {
-        return productDetailMenu;
-    }
-
 
     public String getName() {
         return name;
@@ -73,11 +61,6 @@ public abstract class Menu {
     protected void run() {
         this.show();
         this.execute();
-    }
-
-
-    public static Stack<Menu> getStackTrace() {
-        return stackTrace;
     }
 
     public void show() {
@@ -128,14 +111,6 @@ public abstract class Menu {
         System.out.println("invalid entry.");
         this.execute();
     }
-
-    protected static Menu getCallingMenu() {
-        Menu temp = stackTrace.pop();
-        Menu callingMenu = stackTrace.peek();
-        stackTrace.push(temp);
-        return callingMenu;
-    }
-
 
     protected int floatingMenusIndexModification() {
         if (isAccountMenuAccessible) {
