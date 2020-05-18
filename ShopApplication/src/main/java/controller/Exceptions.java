@@ -82,6 +82,12 @@ public class Exceptions {
         }
     }
 
+    public static class ExistingCategoryException extends Exception{
+        public ExistingCategoryException(String categoryName){
+            super("There is a category with name: "+ categoryName);
+        }
+    }
+
     public static class InvalidCategoryException extends Exception {
         public InvalidCategoryException(String categoryName) {
             super("There is no category with name:" + categoryName);

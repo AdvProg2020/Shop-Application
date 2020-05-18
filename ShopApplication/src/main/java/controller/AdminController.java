@@ -387,13 +387,14 @@ public class AdminController {
         }
     }
 
-    public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException {
-        if (Category.getCategoryByName(categoryName) != null)
-            throw new Exceptions.InvalidCategoryException(categoryName);
+    public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException, Exceptions.ExistedCategoryException {
+        if (Category.getCategoryByName(categoryName) != null || categoryName.equals("superCategory"))
+            throw new Exceptions.ExistedCategoryException(categoryName);
         else {
             Category parentCategory = Category.getCategoryByName(parentCategoryName);
-            String parentCategoryId = parentCategory == null ? Category.getSuperCategory().getId() : parentCategory.getId();
-            new Category(categoryName, parentCategoryId, specialProperties);
+            if( parentCategory == null)
+                throw new Exceptions.InvalidCategoryException(parentCategoryName);
+            new Category(categoryName, parentCategory.getId(), specialProperties);
             database().createCategory();
         }
     }
