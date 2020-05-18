@@ -9,6 +9,7 @@ import model.account.Seller;
 import model.database.Database;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 //TODO: compare to products!
@@ -222,7 +223,7 @@ public class Controller {
      *                                              minRatingScore if N/A pass 0.00
      *                                              products
      */
-    public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy, ArrayList<String[]> propertyFilters) throws Exceptions.InvalidProductIdException {
+    public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy, HashMap<String, String> propertyFilters) throws Exceptions.InvalidProductIdException {
         if (sortBy == null)
             sortBy = "viewCount";
         ArrayList<Product> products = new ArrayList<>();
@@ -241,16 +242,16 @@ public class Controller {
         filterProducts(filterBy[0].equalsIgnoreCase("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
-        for (String[] propertyFilter : propertyFilters) {
-            if(propertyFilter[1] != null)
-                Utilities.Filter.ProductFilter.property(products, propertyFilter[0], propertyFilter[1]);
+        for (String propertyFilter : propertyFilters.keySet()) {
+            if(propertyFilters.get(propertyFilter) != null)
+                Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
         }
         sortProducts(sortBy, isIncreasing, products);
 
         return productToIdNameBrand(products);
     }
 
-    public static ArrayList<String> getAvailableValuesOfAPropertyOfACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
+    public ArrayList<String> getAvailableValuesOfAPropertyOfACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
         return Utilities.Filter.getAvailableValuesOfAPropertyOfACategory(categoryName, property);
     }
 
@@ -279,8 +280,13 @@ public class Controller {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
-        else
-            return new ArrayList<>(product.getPropertyValues());
+        else{
+            ArrayList<String> properties = new ArrayList<>();
+            for (String property : product.getCategory().getProperties()) {
+                properties.add(product.getPropertyValue(property));
+            }
+            return properties;
+        }
     }
 
     public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException{

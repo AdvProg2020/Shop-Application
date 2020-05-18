@@ -343,9 +343,8 @@ public class Utilities {
                 throw new Exceptions.InvalidCategoryException(categoryName);
             ArrayList<Product> products = new ArrayList<>(category.getProducts(false));
             ArrayList<String> values = new ArrayList<>();
-            int index = category.getProperties().indexOf(property);
             for (Product product : products) {
-                values.add(product.getPropertyValues().get(index));
+                values.add(product.getPropertyValue(property));
             }
             Set<String> valuesSet = new HashSet<>(values);
             values.clear();
@@ -353,13 +352,12 @@ public class Utilities {
             return values;
         }
 
-        private static boolean matchTheProperty(Product product, String property, String value){
+        private static boolean doesMatchTheProperty(Product product, String property, String value){
             ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties());
             if(!categoryProperties.contains(property))
-                return false;
+                return true;
             else {
-                int indexOfProperty = categoryProperties.indexOf(property);
-                return product.getPropertyValues().get(indexOfProperty).equals(value);
+                return !value.equals(product.getPropertyValue(property));
             }
         }
 
@@ -414,7 +412,7 @@ public class Utilities {
             public static void property(ArrayList<Product> products, String property, String value){
                 if(property == null || property.equals(""))
                     return;
-                products.removeIf(product -> !matchTheProperty(product, property, value));
+                products.removeIf(product -> Filter.doesMatchTheProperty(product, property, value));
             }
         }
 
@@ -449,7 +447,7 @@ public class Utilities {
             public static void property(ArrayList<SubProduct> subProducts, String property, String value){
                 if(property == null || property.equals(""))
                     return;
-                subProducts.removeIf(subProduct -> !matchTheProperty(subProduct.getProduct(), property, value));
+                subProducts.removeIf(subProduct -> Filter.doesMatchTheProperty(subProduct.getProduct(), property, value));
             }
         }
     }
