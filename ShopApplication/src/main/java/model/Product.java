@@ -182,6 +182,7 @@ public class Product implements ModelBasic {
     }
 
     private void setPropertyValues(List<String> values) {
+        propertyValues = new HashMap<>();
         List<String> properties = getCategory().getProperties();
         for (int i = 0; i < values.size(); i++) {
             propertyValues.put(properties.get(i), values.get(i));

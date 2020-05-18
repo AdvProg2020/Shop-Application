@@ -71,10 +71,10 @@ public abstract class Menu {
     }
 
     protected void run() {
-        stackTrace.push(this);
         this.show();
         this.execute();
     }
+
 
     public static Stack<Menu> getStackTrace() {
         return stackTrace;
@@ -116,7 +116,7 @@ public abstract class Menu {
             }
         }
         if (command.equals(Integer.toString(subMenus.size() + 1)) || command.matches(accountMenu.getCommandPattern())) {
-            accountMenu.run();
+            accountMenu.run(this);
         }
         for (Integer actionIndex : subActions.keySet()) {
             if (command.matches(subActions.get(actionIndex).getActionPattern())) {
