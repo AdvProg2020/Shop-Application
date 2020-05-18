@@ -194,6 +194,7 @@ public class SellerController {
             return null;
     }
 
+    //Todo: change it again!
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
@@ -315,8 +316,8 @@ public class SellerController {
     }
 
     public void addSale(String StartDate, String EndDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller, Exceptions.InvalidFormatException {
-        Date startDate = null;
-        Date endDate = null;
+        Date startDate ;
+        Date endDate ;
         try {
             startDate = dateFormat.parse(StartDate);
             endDate = dateFormat.parse(EndDate);

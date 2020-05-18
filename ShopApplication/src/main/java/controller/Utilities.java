@@ -312,14 +312,13 @@ public class Utilities {
         }
 
         public static String[] sellerPersonalInfoEditableFields() {
-            String[] editableFields = new String[7];
+            String[] editableFields = new String[6];
             editableFields[0] = "firstName";
             editableFields[1] = "lastName";
             editableFields[2] = "phone";
             editableFields[3] = "email";
             editableFields[4] = "password";
             editableFields[5] = "storeName";
-            editableFields[6] = "balance";
             return editableFields;
         }
 
@@ -488,11 +487,6 @@ public class Utilities {
             }
             public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){
                 subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
-            }
-            public static void property(ArrayList<SubProduct> subProducts, String property, String value){
-                if(property == null || property.equals(""))
-                    return;
-                subProducts.removeIf(subProduct -> Filter.doesMatchTheProperty(subProduct.getProduct(), property, value));
             }
         }
     }

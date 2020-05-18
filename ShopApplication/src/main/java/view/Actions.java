@@ -1714,7 +1714,7 @@ public class Actions {
                     adminController.editCategory(categoryName, editableFields[fieldIndex - 1], response);
                     return 0;
                 } catch (Exceptions.InvalidCategoryException | Exceptions.InvalidFieldException
-                        | Exceptions.ExistedCategoryException | Exceptions.SubCategoryException e) {
+                        | Exceptions.ExistingCategoryException | Exceptions.SubCategoryException e) {
                     System.out.println(e.getMessage());
                     return -1;
                 } catch (Exceptions.SameAsPreviousValueException e) {
@@ -1774,7 +1774,7 @@ public class Actions {
                     ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());
                     adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? Constants.SUPER_CATEGORY_NAME : results[0], specialProperties);
                 }
-            } catch (Exceptions.InvalidCategoryException | Exceptions.ExistedCategoryException e) {
+            } catch (Exceptions.InvalidCategoryException | Exceptions.ExistingCategoryException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();

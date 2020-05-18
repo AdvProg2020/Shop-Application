@@ -3,7 +3,6 @@ package controller;
 import model.Category;
 import model.Discount;
 import model.Product;
-import model.Review;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
@@ -332,11 +331,11 @@ public class AdminController {
      * @throws Exceptions.InvalidCategoryException     if this category doesn't exist
      * @throws Exceptions.InvalidFieldException        if there is no such field to edit
      * @throws Exceptions.SameAsPreviousValueException if new information is as the same as the previous one
-     * @throws Exceptions.ExistedCategoryException     if there is already a category with new name
+     * @throws Exceptions.ExistingCategoryException     if there is already a category with new name
      * @throws Exceptions.SubCategoryException         if the chosen new parent is a child of this category
      */
     public void editCategory(String categoryName, String field, String newInformation) throws Exceptions.InvalidCategoryException,
-            Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException, Exceptions.ExistedCategoryException, Exceptions.SubCategoryException {
+            Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException, Exceptions.ExistingCategoryException, Exceptions.SubCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
@@ -346,7 +345,7 @@ public class AdminController {
                     throw new Exceptions.SameAsPreviousValueException(field);
                 else {
                     if (Category.getCategoryByName(newInformation) != null)
-                        throw new Exceptions.ExistedCategoryException(newInformation);
+                        throw new Exceptions.ExistingCategoryException(newInformation);
                     else {
                         category.setName(newInformation);
                     }
@@ -370,9 +369,9 @@ public class AdminController {
         }
     }
 
-    public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException, Exceptions.ExistedCategoryException {
+    public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException, Exceptions.ExistingCategoryException {
         if (Category.getCategoryByName(categoryName) != null || categoryName.equals("superCategory"))
-            throw new Exceptions.ExistedCategoryException(categoryName);
+            throw new Exceptions.ExistingCategoryException(categoryName);
         else {
             Category parentCategory = Category.getCategoryByName(parentCategoryName);
             if( parentCategory == null)
