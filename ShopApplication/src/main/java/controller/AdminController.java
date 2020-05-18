@@ -75,11 +75,12 @@ public class AdminController {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
             throw new Exceptions.UsernameDoesntExistException(username);
-        if (account != Admin.getManager())
+        if (account != Admin.getManager()) {
             if (account != currentAccount())
                 account.suspend();
-            else
-                throw new Exceptions.ManagerDeleteException();
+        }
+        else
+            throw new Exceptions.ManagerDeleteException();
         switch (account.getClass().getSimpleName()) {
             case "Admin":
                 database().removeAdmin();
@@ -136,7 +137,7 @@ public class AdminController {
                     customersIdCount.remove(Id);
                 }
             }
-            Discount discount ;
+            Discount discount;
             try {
                 discount = new Discount(discountCode, dateFormat.parse(startDate), dateFormat.parse(endDate), percentage, maximumAmount);
                 for (String[] IdCount : customersIdCount) {
@@ -202,36 +203,32 @@ public class AdminController {
         else {
             switch (field) {
                 case "start date":
-                    if (discount.getDiscountCode().equals(newInformation))
-                        throw new Exceptions.SameAsPreviousValueException(field);
-                    else {
-                        try {
-                            discount.setStartDate(dateFormat.parse(newInformation));
-                        } catch (ParseException e) {
-                            throw new Exceptions.InvalidFormatException("date");
-                        }
+                    try {
+                        if (dateFormat.parse(newInformation).equals(discount.getStartDate()))
+                            throw new Exceptions.SameAsPreviousValueException(field);
+                        discount.setStartDate(dateFormat.parse(newInformation));
+                    } catch (ParseException e) {
+                        throw new Exceptions.InvalidFormatException("date");
                     }
                     break;
                 case "end date":
-                    if (discount.getDiscountCode().equals(newInformation))
-                        throw new Exceptions.SameAsPreviousValueException(field);
-                    else {
-                        try {
-                            discount.setEndDate(dateFormat.parse(newInformation));
-                        } catch (ParseException e) {
-                            throw new Exceptions.InvalidFormatException("date");
-                        }
+                    try {
+                        if (dateFormat.parse(newInformation).equals(discount.getEndDate()))
+                            throw new Exceptions.SameAsPreviousValueException(field);
+                        discount.setEndDate(dateFormat.parse(newInformation));
+                    } catch (ParseException e) {
+                        throw new Exceptions.InvalidFormatException("date");
                     }
                     break;
                 case "maximum amount":
-                    if (discount.getDiscountCode().equals(newInformation))
+                    if (Double.parseDouble(newInformation) == discount.getMaximumAmount())
                         throw new Exceptions.SameAsPreviousValueException(field);
                     else {
                         discount.setMaximumAmount(Double.parseDouble(newInformation));
                     }
                     break;
                 case "percentage":
-                    if (discount.getDiscountCode().equals(newInformation))
+                    if (Double.parseDouble(newInformation) == discount.getPercentage())
                         throw new Exceptions.SameAsPreviousValueException(field);
                     else {
                         discount.setPercentage(Double.parseDouble(newInformation));
