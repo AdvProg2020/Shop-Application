@@ -30,8 +30,9 @@ public class Category implements ModelBasic {
     }
 
     public static void setSuperCategory() {
-        if (superCategory == null)
+        if (superCategory == null) {
             new Category(SUPER_CATEGORY_NAME, null, new ArrayList<>());
+        }
     }
 
     public static List<Category> getAllCategories(boolean... suspense) {
@@ -125,8 +126,10 @@ public class Category implements ModelBasic {
                 products.addAll(subCategory.getProducts(true));
             }
         }
-        for (String productId : productIds) {
-            products.add(Product.getProductById(productId));
+        if (this != superCategory) {
+            for (String productId : productIds) {
+                products.add(Product.getProductById(productId));
+            }
         }
 
         return products;

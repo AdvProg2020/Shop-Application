@@ -170,11 +170,7 @@ public class Controller {
      * @throws Exceptions.InvalidCategoryException
      */
     public ArrayList<String[]> getSubCategoriesOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
-        Category category;
-        if (categoryName.equalsIgnoreCase(Category.SUPER_CATEGORY_NAME))
-            category = Category.getCategoryByName(categoryName);
-        else
-            category = Category.getSuperCategory();
+        Category category = Category.getCategoryByName(categoryName);
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else {
@@ -193,8 +189,6 @@ public class Controller {
      */
     public ArrayList<String[]> getProductsOfThisCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if(categoryName.equals("superCategory"))
-            category = Category.getSuperCategory();
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else {
