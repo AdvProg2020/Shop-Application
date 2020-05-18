@@ -1,5 +1,10 @@
 package view;
 
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
+import controller.SellerController;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,31 +13,37 @@ public abstract class Action {
     private String actionPattern;
     private String actionCommand;
 
-     Action( String actionPattern, String actionCommand) {
+    protected static Controller mainController;
+    protected static AdminController adminController;
+    protected static CustomerController customerController;
+    protected static SellerController sellerController;
+
+    protected Action( String actionPattern, String actionCommand) {
         this.actionPattern = actionPattern;
         this.actionCommand = actionCommand;
     }
 
-     String getActionPattern() {
+    protected String getActionPattern() {
         return actionPattern;
     }
 
-     String getActionCommand() {
+    protected String getActionCommand() {
         return actionCommand;
     }
 
-    Matcher getMatcherReady(String command) {
+    protected Matcher getMatcherReady(String command) {
          Matcher matcher = Pattern.compile(this.actionPattern).matcher(command);
          matcher.find();
          return matcher;
     }
 
-    void run(String command) {
+    protected void run(String command) {
         this.execute(command);
     }
 
     //TODO: get field names
-  void printList(ArrayList<String[]> list) {
+
+    protected void printList(ArrayList<String[]> list) {
         if (list.isEmpty()) {
             System.out.println("this list is empty!");
             return;
@@ -48,16 +59,16 @@ public abstract class Action {
         }
     }
 
-     void printSeparator() {
+    protected void printSeparator() {
         System.out.println("-------------------------------");
     }
 
-     String getGroup(String command, int groupIndex) {
+     protected String getGroup(String command, int groupIndex) {
         Matcher commandMatcher = getMatcherReady(command);
         return commandMatcher.group(groupIndex);
     }
 
-     int getIndex(String command, ArrayList list) {
+     protected int getIndex(String command, ArrayList list) {
         int index = Integer.parseInt(getGroup(command, 1));
         if (index > list.size()) {
             System.out.println("invalid index. please enter a number between 1 and " + list.size());

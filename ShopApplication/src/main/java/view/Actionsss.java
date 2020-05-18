@@ -11,236 +11,16 @@ import java.util.regex.Matcher;
 //TODO: printSeparator();
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: check back menu, indexing of subMenus and subActions.
-public class Actions {
+public class Actionsss {
     public static final String SUPER_CATEGORY_NAME = "SuperCategory";
     private static Controller mainController;
     private static AdminController adminController;
     private static SellerController sellerController;
     private static CustomerController customerController;
 
-    public static void init() {
-        mainController = View.mainController;
-        adminController = View.adminController;
-        sellerController = View.sellerController;
-        customerController = View.customerController;
-    }
-
-    public static class BackAction extends Action {
-        private Menu parent;
-
-        BackAction(Menu parent) {
-            super(Constants.Actions.backPattern, Constants.Actions.backCommand);
-            this.parent = parent;
-        }
-
-        public void setParent(Menu newParent) {
-            this.parent = newParent;
-        }
-
-        @Override
-        public void execute(String command) {
-            printSeparator();
-            parent.run();
-        }
-
-    }
-
-    public static class ExitAction extends Action {
-        ExitAction() {
-            super(Constants.Actions.exitPattern, Constants.Actions.exitCommand);
-        }
-
-        @Override
-        public void execute(String command) {
-            System.exit(1);
-        }
-    }
-
-    public static class LoginAction extends Action {
-        LoginAction() {
-            super(Constants.Actions.loginPattern, Constants.Actions.loginCommand);
-        }
-
-        private int getPassword(StringBuilder password) {
-            System.out.println("Enter your password (enter \"back\" to go back):");
-            String input = View.getNextLineTrimmed();
-            if (input.equalsIgnoreCase("back")) {
-                return -1;
-            } else if (input.matches(Constants.usernamePattern)){
-                password.setLength(0);
-                password.append(input);
-                return 0;
-            } else {
-                return -2;
-            }
-        }
 
 
-        @Override
-        public void execute(String command) {
-            Matcher commandMatcher = getMatcherReady(command);
-            String username = commandMatcher.group(1);
-            StringBuilder password = new StringBuilder();
-            while (true) {
-                int output = getPassword(password);
-                if (output  == 0) {
-                    try {
-                        mainController.login(username, password.toString());
-                        //if without problem
-                        System.out.println("logged-in successfully!");
-                    } catch (Exceptions.UsernameDoesntExistException e) {
-                        System.out.println(e.getMessage());
-                        break;
-                    } catch (Exceptions.WrongPasswordException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                } else if (output == -1){
-                    break;
-                } else {
-                    System.out.println("invalid entry");
-                    continue;
-                }
-            }
-            printSeparator();
-        }
-    }
-
-    public static class RegisterAction extends Action {
-        RegisterAction() {
-            super(Constants.Actions.registerPattern, Constants.Actions.registerCommand);
-        }
-
-        private String[] registerCustomer(String username) {
-            Form registerForm;
-            String[] fields;
-            String[] fieldRegex;
-            String[] results;
-            fields = new String[]{"password", "first name", "last name", "email", "phone", "balance"};
-            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
-                    Constants.emailPattern, Constants.phonePattern, Constants.doublePattern};
-            registerForm = new Form(fields, fieldRegex);
-            if (registerForm.takeInput() == 0) {
-                results = registerForm.getResults();
-                try {
-                    mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.parseDouble(results[5]), null);
-                    return new String[] {username, results[0]};
-                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
-                    //wont happen.
-                    System.out.println("sigh! " + e.getMessage());
-                }
-            }
-            return null;
-        }
-
-        private String[] registerSeller(String username) {
-            Form registerForm;
-            String[] fields;
-            String[] fieldRegex;
-            String[] results;
-            fields = new String[]{"password", "first name", "last name", "email", "phone", "balance", "store name"};
-            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
-                    Constants.emailPattern, Constants.phonePattern, Constants.doublePattern, Constants.IRLNamePattern};
-            registerForm = new Form(fields, fieldRegex);
-            if (registerForm.takeInput() == 0) {
-                results = registerForm.getResults();
-                try {
-                    mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.parseDouble(results[5]), results[6]);
-                    return new String[] {username, results[0]};
-                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
-                    //wont happen.
-                    System.out.println("sigh! " + e.getMessage());
-                }
-            }
-            return null;
-        }
-
-        private String[] registerAdmin(String username) {
-            Form registerForm;
-            String[] fields;
-            String[] fieldRegex;
-            String[] results;
-            fields = new String[]{"password", "first name", "last name", "email", "phone"};
-            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
-                    Constants.emailPattern, Constants.phonePattern};
-            registerForm = new Form(fields, fieldRegex);
-            if (registerForm.takeInput() == 0) {
-                results = registerForm.getResults();
-                try {
-                    mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], 0.00, null);
-                    return new String[] {username, results[0]};
-                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
-                    //wont happen.
-                    System.out.println("sigh! " + e.getMessage());
-                }
-            }
-            return null;
-        }
-
-        private String[] register(int typeIndex, String username) {
-            if (username != null) {
-                if (typeIndex == 1) {
-                    return registerCustomer(username);
-                } else if (typeIndex == 2) {
-                    return registerSeller(username);
-                } else {
-                    return registerAdmin(username);
-                }
-            }
-            return null;
-        }
-
-        @Override
-        public void execute(String command) {
-            String type = getGroup(command, 1);
-            String username = getGroup(command, 2);
-            int index = Constants.getTypeByIndex(type);
-            if (index < 1) {
-                System.out.println("invalid type. you can enter customer, seller or admin as type");
-            } else {
-                try {
-                    mainController.usernameTypeValidation(username, type);
-                    register(index, username);
-                } catch (Exceptions.UsernameAlreadyTakenException e) {
-                    System.out.println("username already exists!");
-                } catch (Exceptions.AdminRegisterException e) {
-                    System.out.println("only admin can create another admin!");
-                    printSeparator();
-                    return;
-                }
-            }
-            printSeparator();
-        }
-
-        public void runNLogin(String command) {
-            String type = getGroup(command, 1);
-            String username = getGroup(command, 2);
-            int index = Constants.getTypeByIndex(type);
-            if (index < 1) {
-                System.out.println("invalid type. you can enter customer, seller or admin as type");
-            } else {
-                try {
-                    mainController.usernameTypeValidation(username, type);
-                    System.out.println("after registration you will automatically get logged-in:");
-                    String[] usePass = register(index, username);
-                    if (usePass != null) {
-                        mainController.login(usePass[0], usePass[1]);
-                    }
-                } catch (Exceptions.UsernameAlreadyTakenException e) {
-                    System.out.println("username already exists!");
-                } catch (Exceptions.AdminRegisterException e) {
-                    System.out.println("only admin can create another admin!");
-                    printSeparator();
-                    return;
-                } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException e) {
-                    //wont happen
-                }
-            }
-            printSeparator();
-        }
-    }
-
-    public static class ShowProductsAction extends Action {
+    public static class ShowProducts extends Action {
         private String previousCategory;
         private ArrayList<String> categoryTree;
         private String[] currentFilters;
@@ -249,8 +29,8 @@ public class Actions {
         private ArrayList<String> availableProperties;
         private Map<String, String> currentProperties;
 
-        ShowProductsAction(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts,
-        ArrayList<String> availableProperties, Map<String, String> currentProperties) {
+        ShowProducts(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts,
+                     ArrayList<String> availableProperties, Map<String, String> currentProperties) {
             super(Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
@@ -380,11 +160,11 @@ public class Actions {
         }
     }
 
-    public static class ChooseCategoryAction extends Action {
+    public static class ChooseCategory extends Action {
         private ArrayList<String> categoryTree;
         private ArrayList<String[]> availableCategories;
 
-        ChooseCategoryAction(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
+        ChooseCategory(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
             super(Constants.Actions.chooseCategoryPattern, Constants.Actions.chooseCategoryCommand);
             this.availableCategories = availableCategories;
             this.categoryTree = categoryTree;
@@ -944,10 +724,10 @@ public class Actions {
         }
     }
 
-    public static class ViewSingleSellHistory extends Action {
+    public static class ShowSingleSellHistory extends Action {
         private ArrayList<String[]> sellLogs;
 
-        ViewSingleSellHistory(ArrayList<String[]> sellLogs) {
+        ShowSingleSellHistory(ArrayList<String[]> sellLogs) {
             super(Constants.Actions.showSingleSellLogPattern, Constants.Actions.showSingleSellLogCommand);
             this.sellLogs = sellLogs;
         }
@@ -1384,7 +1164,6 @@ public class Actions {
             printSeparator();
         }
     }
-
 
     public static class AdminRemoveProductByID extends Action {
         private ArrayList<String[]> currentProducts;

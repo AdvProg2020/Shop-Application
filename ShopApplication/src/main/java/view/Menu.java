@@ -70,7 +70,7 @@ public abstract class Menu {
         }
     }
 
-    protected void run() {
+    public void run() {
         this.show();
         this.execute();
     }
@@ -145,8 +145,8 @@ public abstract class Menu {
         }
     }
 
-    Actions.BackAction getBackAction() {
-        return (Actions.BackAction) subActions.get(subMenus.size() + subActions.size() + floatingMenusIndexModification());
+    Actionsss.Back getBackAction() {
+        return (Actionsss.Back) subActions.get(subMenus.size() + subActions.size() + floatingMenusIndexModification());
     }
 
     @Override

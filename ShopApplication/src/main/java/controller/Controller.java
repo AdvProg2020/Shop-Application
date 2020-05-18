@@ -115,6 +115,10 @@ public class Controller {
     }
 
     private void sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
+        if (sortBy == null) {
+            products.sort(new Utilities.Sort.ProductViewCountComparator(true));
+            return;
+        }
         switch (sortBy) {
             case "price":
                 products.sort(new Utilities.Sort.ProductPriceComparator(isIncreasing));

@@ -2,7 +2,6 @@ package view;
 
 import controller.*;
 
-import java.rmi.activation.ActivationGroup_Stub;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +88,7 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ExitAction());
+            subActions.put(index + 1, new Actionsss.Exit());
         }
     }
 
@@ -139,13 +138,13 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowProductsAction(categoryTree, currentFilters, currentSort,
+            subActions.put(index + 1, new Actionsss.ShowProducts(categoryTree, currentFilters, currentSort,
                     currentProducts, availableProperties, currentProperties));
-            subActions.put(index + 2, new Actions.ShowCategories(categoryTree, availableCategories, availableProperties));
-            subActions.put(index + 3, new Actions.ChooseCategoryAction(categoryTree, availableCategories));
-            subActions.put(index + 4, new Actions.RevertCategoryAction(categoryTree));
-            subActions.put(index + 5, new Actions.ProductDetailMenu(currentProducts));
-            subActions.put(index + 6, new Actions.BackAction(parent));
+            subActions.put(index + 2, new Actionsss.ShowCategories(categoryTree, availableCategories, availableProperties));
+            subActions.put(index + 3, new Actionsss.ChooseCategory(categoryTree, availableCategories));
+            subActions.put(index + 4, new Actionsss.RevertCategoryAction(categoryTree));
+            subActions.put(index + 5, new Actionsss.ProductDetailMenu(currentProducts));
+            subActions.put(index + 6, new Actionsss.Back(parent));
         }
     }
 
@@ -185,18 +184,18 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActionsAnonymousCustomer.put(index + 1, new Actions.DigestProduct(productID));
-            subActionsAnonymousCustomer.put(index + 2, new Actions.ShowSubProducts(subProducts, productID, subProductID));
-            subActionsAnonymousCustomer.put(index + 3, new Actions.AddToCart(subProductID));
-            subActionsAnonymousCustomer.put(index + 4, new Actions.SelectSeller(subProductID, subProducts));
-            subActionsAnonymousCustomer.put(index + 5, new Actions.ShowCurrentSeller(subProductID));
-            subActionsAnonymousCustomer.put(index + 6, new Actions.CompareProductByID(productID));
-            subActionsAnonymousCustomer.put(index + 7, new Actions.BackAction(null));
+            subActionsAnonymousCustomer.put(index + 1, new Actionsss.DigestProduct(productID));
+            subActionsAnonymousCustomer.put(index + 2, new Actionsss.ShowSubProducts(subProducts, productID, subProductID));
+            subActionsAnonymousCustomer.put(index + 3, new Actionsss.AddToCart(subProductID));
+            subActionsAnonymousCustomer.put(index + 4, new Actionsss.SelectSeller(subProductID, subProducts));
+            subActionsAnonymousCustomer.put(index + 5, new Actionsss.ShowCurrentSeller(subProductID));
+            subActionsAnonymousCustomer.put(index + 6, new Actionsss.CompareProductByID(productID));
+            subActionsAnonymousCustomer.put(index + 7, new Actionsss.Back(null));
 
-            subActionsAdminSeller.put(index + 1, new Actions.DigestProduct(productID));
-            subActionsAdminSeller.put(index + 2, new Actions.ShowSubProducts(subProducts, productID, subProductID));
-            subActionsAdminSeller.put(index + 3, new Actions.CompareProductByID(productID));
-            subActionsAdminSeller.put(index + 4, new Actions.BackAction(null));
+            subActionsAdminSeller.put(index + 1, new Actionsss.DigestProduct(productID));
+            subActionsAdminSeller.put(index + 2, new Actionsss.ShowSubProducts(subProducts, productID, subProductID));
+            subActionsAdminSeller.put(index + 3, new Actionsss.CompareProductByID(productID));
+            subActionsAdminSeller.put(index + 4, new Actionsss.Back(null));
         }
 
         @Override
@@ -208,7 +207,7 @@ class Menus {
         public void runByProductID(String productID) {
             this.productID.delete(0, productID.length());
             this.productID.append(productID);
-            ((Actions.BackAction) subActions.get(subActions.size() - 1)).setParent(Menu.getCallingMenu());
+            ((Actionsss.Back) subActions.get(subActions.size() - 1)).setParent(Menu.getCallingMenu());
             this.run();
         }
     }
@@ -250,16 +249,16 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActionsAnonymousCustomer.put(index + 1, new Actions.ShowReviews(productID));
-            subActionsAnonymousCustomer.put(index + 2, new Actions.AddComment(productID, this));
-            subActionsAnonymousCustomer.put(index + 3, new Actions.BackAction(parent));
+            subActionsAnonymousCustomer.put(index + 1, new Actionsss.ShowReviews(productID));
+            subActionsAnonymousCustomer.put(index + 2, new Actionsss.AddComment(productID, this));
+            subActionsAnonymousCustomer.put(index + 3, new Actionsss.Back(parent));
 
-            subActionsAdminSeller.put(index + 1, new Actions.ShowReviews(productID));
-            subActionsAdminSeller.put(index + 3, new Actions.BackAction(parent));
+            subActionsAdminSeller.put(index + 1, new Actionsss.ShowReviews(productID));
+            subActionsAdminSeller.put(index + 3, new Actionsss.Back(parent));
         }
 
         @Override
-        protected void run() {
+        public void run() {
             modifyActions();
             super.run();
         }
@@ -285,10 +284,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ChooseSorting(currentSort, availableSorts));
-            subActions.put(index + 2, new Actions.ShowCurrentSort(currentSort));
-            subActions.put(index + 3, new Actions.DisableSort(currentSort));
-            subActions.put(index + 4, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.ChooseSorting(currentSort, availableSorts));
+            subActions.put(index + 2, new Actionsss.ShowCurrentSort(currentSort));
+            subActions.put(index + 3, new Actionsss.DisableSort(currentSort));
+            subActions.put(index + 4, new Actionsss.Back(parent));
         }
     }
 
@@ -319,10 +318,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ChooseFiltering(currentFilters, availableFilters, availableProperties, currentProperties, categoryTree));
-            subActions.put(index + 2, new Actions.ShowCurrentFilters(currentFilters, availableFilters));
-            subActions.put(index + 3, new Actions.DisableFilter(currentFilters, availableFilters));
-            subActions.put(index + 4, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.ChooseFiltering(currentFilters, availableFilters, availableProperties, currentProperties, categoryTree));
+            subActions.put(index + 2, new Actionsss.ShowCurrentFilters(currentFilters, availableFilters));
+            subActions.put(index + 3, new Actionsss.DisableFilter(currentFilters, availableFilters));
+            subActions.put(index + 4, new Actionsss.Back(parent));
         }
     }
 
@@ -357,10 +356,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowSales(currentSales));
-            subActions.put(index + 2, new Actions.ShowInSaleProducts(currentSort, currentFilters, currentProducts));
-            subActions.put(index + 3, new Actions.ProductDetailMenu(currentProducts));
-            subActions.put(index + 4, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.ShowSales(currentSales));
+            subActions.put(index + 2, new Actionsss.ShowInSaleProducts(currentSort, currentFilters, currentProducts));
+            subActions.put(index + 3, new Actionsss.ProductDetailMenu(currentProducts));
+            subActions.put(index + 4, new Actionsss.Back(parent));
         }
 
         private String[] getAvailableSorts() {
@@ -419,13 +418,13 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            primarySubActions.put(index + 1, new Actions.LoginAction());
-            primarySubActions.put(index + 2, new Actions.RegisterAction());
-            primarySubActions.put(index + 3, new Actions.BackAction(null));
+            primarySubActions.put(index + 1, new Actionsss.Login());
+            primarySubActions.put(index + 2, new Actionsss.Register());
+            primarySubActions.put(index + 3, new Actionsss.Back(null));
 
-            loginSubActions.put( 1, new Actions.LoginAction());
-            loginSubActions.put( 2, new Actions.RegisterAction());
-            loginSubActions.put( 3, new Actions.BackAction(null));
+            loginSubActions.put( 1, new Actionsss.Login());
+            loginSubActions.put( 2, new Actionsss.Register());
+            loginSubActions.put( 3, new Actionsss.Back(null));
         }
 
 
@@ -444,7 +443,7 @@ class Menus {
                 this.loginRun(ifDoneMenu);
             }
             if (command.matches(Integer.toString(1))) {
-                ((Actions.RegisterAction)subActions.get(1)).runNLogin(command);
+                ((Actionsss.Register)subActions.get(1)).runNLogin(command);
             } else if (command.matches(Integer.toString(2))) {
                 subActions.get(2).run(command);
             } else {
@@ -457,7 +456,7 @@ class Menus {
         public void loginFirst(Menu ifBackMenu, Menu ifDoneMenu) {
             subMenus = new HashMap<>();
             subActions = loginSubActions;
-            ((Actions.BackAction)subActions.get(3)).setParent(ifBackMenu);
+            ((Actionsss.Back)subActions.get(3)).setParent(ifBackMenu);
             this.loginRun(ifDoneMenu);
         }
     }
@@ -506,8 +505,8 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.Logout());
-            subActions.put(index + 2, new Actions.BackAction(null));
+            subActions.put(index + 1, new Actionsss.Logout());
+            subActions.put(index + 2, new Actionsss.Back(null));
         }
     }
 
@@ -526,9 +525,9 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ViewPersonalInfo());
-            subActions.put(index + 2, new Actions.EditField(getEditableFields()));
-            subActions.put(index + 3, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.ViewPersonalInfo());
+            subActions.put(index + 2, new Actionsss.EditField(getEditableFields()));
+            subActions.put(index + 3, new Actionsss.Back(parent));
         }
 
         protected abstract String[] getEditableFields();
@@ -558,11 +557,11 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminViewAllUsers(users));
-            subActions.put(index + 2, new Actions.AdminViewUser(users));
-            subActions.put(index + 3, new Actions.AdminDeleteUser(users));
-            subActions.put(index + 4, new Actions.AdminCreateAdmin());
-            subActions.put(index + 5, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.AdminViewAllUsers(users));
+            subActions.put(index + 2, new Actionsss.AdminViewUser(users));
+            subActions.put(index + 3, new Actionsss.AdminDeleteUser(users));
+            subActions.put(index + 4, new Actionsss.AdminCreateAdmin());
+            subActions.put(index + 5, new Actionsss.Back(parent));
         }
     }
 
@@ -591,9 +590,9 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminShowProducts(currentProducts));
-            subActions.put(index + 2, new Actions.AdminRemoveProductByID(currentProducts));
-            subActions.put(index + 3, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.AdminShowProducts(currentProducts));
+            subActions.put(index + 2, new Actionsss.AdminRemoveProductByID(currentProducts));
+            subActions.put(index + 3, new Actionsss.Back(parent));
         }
     }
 
@@ -625,12 +624,12 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminShowDiscountCodes(discountCodes));
-            subActions.put(index + 2, new Actions.AdminCreateDiscountCode());
-            subActions.put(index + 3, new Actions.AdminViewDiscountCode(discountCodes));
-            subActions.put(index + 4, new Actions.AdminEditDiscountCode(discountCodes, getEditableFields()));
-            subActions.put(index + 5, new Actions.AdminRemoveDiscountCode(discountCodes));
-            subActions.put(index + 6, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.AdminShowDiscountCodes(discountCodes));
+            subActions.put(index + 2, new Actionsss.AdminCreateDiscountCode());
+            subActions.put(index + 3, new Actionsss.AdminViewDiscountCode(discountCodes));
+            subActions.put(index + 4, new Actionsss.AdminEditDiscountCode(discountCodes, getEditableFields()));
+            subActions.put(index + 5, new Actionsss.AdminRemoveDiscountCode(discountCodes));
+            subActions.put(index + 6, new Actionsss.Back(parent));
         }
     }
 
@@ -658,10 +657,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminShowPendingRequests(pendingRequests));
-            subActions.put(index + 2, new Actions.AdminShowArchiveRequests());
-            subActions.put(index + 2, new Actions.AdminViewRequestDetail(pendingRequests));
-            subActions.put(index + 3, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.AdminShowPendingRequests(pendingRequests));
+            subActions.put(index + 2, new Actionsss.AdminShowArchiveRequests());
+            subActions.put(index + 2, new Actionsss.AdminViewRequestDetail(pendingRequests));
+            subActions.put(index + 3, new Actionsss.Back(parent));
         }
     }
 
@@ -693,11 +692,11 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.AdminShowCategories(currentCategories));
-            subActions.put(index + 2, new Actions.AdminEditCategory(getEditableFields(), currentCategories));
-            subActions.put(index + 3, new Actions.AdminAddCategory());
-            subActions.put(index + 4, new Actions.AdminRemoveCategory(currentCategories));
-            subActions.put(index + 5, new Actions.BackAction(this));
+            subActions.put(index + 1, new Actionsss.AdminShowCategories(currentCategories));
+            subActions.put(index + 2, new Actionsss.AdminEditCategory(getEditableFields(), currentCategories));
+            subActions.put(index + 3, new Actionsss.AdminAddCategory());
+            subActions.put(index + 4, new Actionsss.AdminRemoveCategory(currentCategories));
+            subActions.put(index + 5, new Actionsss.Back(this));
         }
     }
 
@@ -744,12 +743,12 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowSellerCompanyInfo());
-            subActions.put(index + 2, new Actions.ShowSellerBalance());
-            subActions.put(index + 3, new Actions.ShowSellerSellHistory(sellLogs));
-            subActions.put(index + 4, new Actions.ViewSingleSellHistory(sellLogs));
-            subActions.put(index + 5, new Actions.Logout());
-            subActions.put(index + 6, new Actions.BackAction(null));
+            subActions.put(index + 1, new Actionsss.ShowSellerCompanyInfo());
+            subActions.put(index + 2, new Actionsss.ShowSellerBalance());
+            subActions.put(index + 3, new Actionsss.ShowSellerSellHistory(sellLogs));
+            subActions.put(index + 4, new Actionsss.ShowSingleSellHistory(sellLogs));
+            subActions.put(index + 5, new Actionsss.Logout());
+            subActions.put(index + 6, new Actionsss.Back(null));
         }
     }
 
@@ -781,11 +780,11 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.SellerShowSales(currentSales));
-            subActions.put(index + 2, new Actions.SellerViewSaleDetails(currentSales));
-            subActions.put(index + 3, new Actions.SellerEditSale(getEditableFields(), currentSales));
-            subActions.put(index + 4, new Actions.SellerAddSale());
-            subActions.put(index + 5, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.SellerShowSales(currentSales));
+            subActions.put(index + 2, new Actionsss.SellerViewSaleDetails(currentSales));
+            subActions.put(index + 3, new Actionsss.SellerEditSale(getEditableFields(), currentSales));
+            subActions.put(index + 4, new Actionsss.SellerAddSale());
+            subActions.put(index + 5, new Actionsss.Back(parent));
         }
     }
 
@@ -817,13 +816,13 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.SellerShowProducts(sellerProducts));
-            subActions.put(index + 2, new Actions.SellerViewProductDetails(sellerProducts));
-            subActions.put(index + 3, new Actions.SellerViewProductBuyers(sellerProducts));
-            subActions.put(index + 4, new Actions.SellerEditProduct(getEditableFields(), sellerProducts));
-            subActions.put(index + 5, new Actions.SellerAddProduct());
-            subActions.put(index + 6, new Actions.SellerRemoveProduct(sellerProducts));
-            subActions.put(index + 7, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.SellerShowProducts(sellerProducts));
+            subActions.put(index + 2, new Actionsss.SellerViewProductDetails(sellerProducts));
+            subActions.put(index + 3, new Actionsss.SellerViewProductBuyers(sellerProducts));
+            subActions.put(index + 4, new Actionsss.SellerEditProduct(getEditableFields(), sellerProducts));
+            subActions.put(index + 5, new Actionsss.SellerAddProduct());
+            subActions.put(index + 6, new Actionsss.SellerRemoveProduct(sellerProducts));
+            subActions.put(index + 7, new Actionsss.Back(parent));
         }
 
 
@@ -870,10 +869,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowCustomerBalance());
-            subActions.put(index + 2, new Actions.ShowCustomerDiscountCodes());
-            subActions.put(index + 3, new Actions.Logout());
-            subActions.put(index + 4, new Actions.BackAction(null));
+            subActions.put(index + 1, new Actionsss.ShowCustomerBalance());
+            subActions.put(index + 2, new Actionsss.ShowCustomerDiscountCodes());
+            subActions.put(index + 3, new Actionsss.Logout());
+            subActions.put(index + 4, new Actionsss.Back(null));
         }
     }
 
@@ -907,13 +906,13 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShoppingCartShowProducts(currentProducts));
-            subActions.put(index + 2, new Actions.ProductDetailMenu(currentProducts));
-            subActions.put(index + 3, new Actions.ShoppingCartIncreaseProductCount(currentProducts));
-            subActions.put(index + 4, new Actions.ShoppingCartDecreaseProductCount(currentProducts));
-            subActions.put(index + 5, new Actions.ShoppingCartShowTotalPrice());
-            subActions.put(index + 6, new Actions.ShoppingCartPurchase(this));
-            subActions.put(index + 7, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.ShoppingCartShowProducts(currentProducts));
+            subActions.put(index + 2, new Actionsss.ProductDetailMenu(currentProducts));
+            subActions.put(index + 3, new Actionsss.ShoppingCartIncreaseProductCount(currentProducts));
+            subActions.put(index + 4, new Actionsss.ShoppingCartDecreaseProductCount(currentProducts));
+            subActions.put(index + 5, new Actionsss.ShoppingCartShowTotalPrice());
+            subActions.put(index + 6, new Actionsss.ShoppingCartPurchase(this));
+            subActions.put(index + 7, new Actionsss.Back(parent));
         }
     }
 
@@ -941,10 +940,10 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.CustomerShowOrders(currentOrderLogs));
-            subActions.put(index + 2, new Actions.CustomerViewOrder(currentOrderLogs));
-            subActions.put(index + 3, new Actions.CustomerRateProduct());
-            subActions.put(index + 4, new Actions.BackAction(parent));
+            subActions.put(index + 1, new Actionsss.CustomerShowOrders(currentOrderLogs));
+            subActions.put(index + 2, new Actionsss.CustomerViewOrder(currentOrderLogs));
+            subActions.put(index + 3, new Actionsss.CustomerRateProduct());
+            subActions.put(index + 4, new Actionsss.Back(parent));
         }
     }
 }

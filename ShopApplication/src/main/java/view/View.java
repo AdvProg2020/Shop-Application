@@ -24,7 +24,7 @@ public class View {
         this.customerController = customerController;
         this.adminController = adminController;
         Menus.init();
-        Actions.init();
+        Actionsss.init();
         new Menus.ProductDetailMenu("product detail menu");
         new Menus.AccountMenu("account menu");
         firstMenu = new Menus.FirstMenu("first menu");

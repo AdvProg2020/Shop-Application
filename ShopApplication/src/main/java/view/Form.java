@@ -10,7 +10,7 @@ public class Form {
     private String[] arrayListField;
     private ArrayList<String[]> listResult;
 
-    Form(String[] fields, String[] fieldRegex) {
+    public Form(String[] fields, String[] fieldRegex) {
         this.fields = fields.clone();
         this.fieldRegex = fieldRegex.clone();
         this.results = new String[fields.length];
