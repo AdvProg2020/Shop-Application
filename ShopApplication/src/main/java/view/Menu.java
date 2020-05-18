@@ -120,11 +120,7 @@ public abstract class Menu {
         }
         for (Integer actionIndex : subActions.keySet()) {
             if (command.matches(subActions.get(actionIndex).getActionPattern())) {
-                try {
-                    subActions.get(actionIndex).run(command);
-                } catch (Exception actionException) {
-                    System.out.println(actionException.getMessage());
-                }
+                subActions.get(actionIndex).run(command);
                 this.run();
             }
         }
