@@ -29,13 +29,24 @@ public class Utilities {
         public static String[] saleInfo(Sale sale) {
             String[] salePack = new String[6];
             salePack[0] = sale.getId();
-            salePack[1] = Double.toString(sale.getPercentage());
-            salePack[2] = sale.getSeller().getStoreName();
+            salePack[1] = sale.getSeller().getUsername();
+            salePack[2] = Double.toString(sale.getPercentage());
             salePack[3] = dateFormat.format(sale.getStartDate());
             salePack[4] = dateFormat.format(sale.getEndDate());
             salePack[5] = Integer.toString(sale.getSubProducts().size());
             return salePack;
         }
+
+        public static String[] newSaleInReview(Sale sale) {
+            String[] salePack = new String[5];
+            salePack[0] = sale.getSeller().getUsername();
+            salePack[1] = Double.toString(sale.getPercentage());
+            salePack[2] = dateFormat.format(sale.getStartDate());
+            salePack[3] = dateFormat.format(sale.getEndDate());
+            salePack[4] = Integer.toString(sale.getSubProducts().size());
+            return salePack;
+        }
+
 
         public static String[] product(Product product) {
             String[] productPack = new String[3];
@@ -69,6 +80,17 @@ public class Utilities {
             return subProductPack;
         }
 
+        public static String[] productInReview(SubProduct subProduct, Product product){
+            String[] subProductPack = new String[6];
+            subProductPack[0] = product.getName();
+            subProductPack[1] = product.getBrand();
+            subProductPack[2] = product.getCategory().getName();
+            subProductPack[3] = product.getInfoText();
+            subProductPack[4] = Integer.toString(subProduct.getRemainingCount());
+            subProductPack[5] = Double.toString(subProduct.getRawPrice());
+            return subProductPack;
+        }
+
         public static String[] review(Review review) {
             String[] reviewPack = new String[4];
             reviewPack[0] = review.getReviewer().getUsername();
@@ -76,6 +98,17 @@ public class Utilities {
             reviewPack[2] = review.getText();
             reviewPack[3] = review.hasBought() ? "yes" : "no";
             return reviewPack;
+        }
+
+        public static String[] getReviewInfo(Review review) {
+            String[] reviewInfo = new String[6];
+            reviewInfo[0] = review.getReviewer().getUsername();
+            reviewInfo[1] = review.getProduct().getId();
+            reviewInfo[2] = review.getProduct().getName();
+            reviewInfo[3] = review.getProduct().getBrand();
+            reviewInfo[4] = review.getTitle();
+            reviewInfo[5] = review.getText();
+            return reviewInfo;
         }
 
         public static String[] productInCart(SubProduct subProduct, int count) {
