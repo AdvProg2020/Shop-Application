@@ -1516,7 +1516,7 @@ public class Actions {
                     return -1;
                 }
                 try {
-                    adminController.editDiscountCode(discountCode, editableFields[fieldIndex], response);
+                    adminController.editDiscountCode(discountCode, editableFields[fieldIndex - 1], response);
                     return 0;
                 } catch (Exceptions.DiscountCodeException | Exceptions.InvalidFormatException e) {
                     //wont happen.
@@ -1710,7 +1710,7 @@ public class Actions {
                     return -1;
                 }
                 try {
-                    adminController.editCategory(categoryName, editableFields[fieldIndex], response);
+                    adminController.editCategory(categoryName, editableFields[fieldIndex - 1], response);
                     return 0;
                 } catch (Exceptions.InvalidCategoryException | Exceptions.InvalidFieldException
                         | Exceptions.ExistedCategoryException | Exceptions.SubCategoryException e) {
@@ -1880,7 +1880,7 @@ public class Actions {
                     return -1;
                 }
                 try {
-                    sellerController.editSale(saleID, editableFields[fieldIndex], response);
+                    sellerController.editSale(saleID, editableFields[fieldIndex - 1], response);
                     System.out.println("field edited successfully");
                     return 0;
                 } catch (Exceptions.InvalidSaleIdException | Exceptions.InvalidFormatException |
@@ -2054,7 +2054,7 @@ public class Actions {
                     return -1;
                 }
                 try {
-                    sellerController.editProduct(productID, editableFields[fieldIndex], response);
+                    sellerController.editProduct(productID, editableFields[fieldIndex - 1], response);
                     System.out.println("field edited successfully");
                     return 0;
                 } catch (Exceptions.InvalidProductIdException | Exceptions.ExistingProductException

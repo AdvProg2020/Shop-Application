@@ -75,7 +75,7 @@ public class Discount implements ModelBasic {
         if (now.after(endDate))
             suspend();
 
-        return !(suspended || now.before(startDate));
+        return suspended || now.before(startDate);
     }
 
     @Override
