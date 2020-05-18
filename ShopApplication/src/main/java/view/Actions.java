@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 
 //TODO: printSeparator();
 //TODO: sout completion messages. ex: .... done successfully.
+//TODO: check back menu, indexing of subMenus and subActions.
 public class Actions {
     public static final String SUPER_CATEGORY_NAME = "SuperCategory";
     private static Controller mainController;
@@ -369,7 +370,7 @@ public class Actions {
                 System.out.println("category info:");
                 printList(availableCategories);
                 if ( ! availableProperties.isEmpty()) {
-                    System.out.println("category's special properties:");
+                    System.out.println("category's properties:");
                     availableProperties.forEach(ap -> System.out.println(ap));
                 }
             } catch (Exceptions.InvalidCategoryException e) {
@@ -1049,7 +1050,7 @@ public class Actions {
                 String[] productInfo = mainController.digest(productID.toString());
                 showInfo(productInfo);
                 System.out.println("attributes");
-                mainController.getSpecialPropertiesOfAProduct(productID.toString()).forEach(att -> System.out.println(att));
+                mainController.getPropertyValuesOfAProduct(productID.toString()).forEach(att -> System.out.println(att));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1178,7 +1179,7 @@ public class Actions {
         }
 
         private void printSpecialProperties(String productID, ArrayList<String> specialProperties) {
-            System.out.println("product with ID: " + productID + "'s special properties:");
+            System.out.println("product with ID: " + productID + "'s properties:");
             specialProperties.forEach(sp -> System.out.println(sp));
         }
 
@@ -1188,8 +1189,8 @@ public class Actions {
             try {
                 String[] productInfo = mainController.digest(productID.toString());
                 String[] otherProductInfo = mainController.digest(otherProductID);
-                ArrayList<String> productSP = mainController.getSpecialPropertiesOfAProduct(productID.toString());
-                ArrayList<String> otherProductSP = mainController.getSpecialPropertiesOfAProduct(otherProductID);
+                ArrayList<String> productSP = mainController.getPropertyValuesOfAProduct(productID.toString());
+                ArrayList<String> otherProductSP = mainController.getPropertyValuesOfAProduct(otherProductID);
                 printDigestInfo(productInfo, otherProductInfo);
                 printSeparator();
                 printSpecialProperties(productID.toString(), productSP);
@@ -1766,7 +1767,7 @@ public class Actions {
                 String[] fields = new String[]{"parent category (enter \"root\" for no parent)"};
                 String[] regex = new String[]{".+"};
                 Form categoryForm = new Form(fields, regex);
-                categoryForm.setupArrayForm(new String[]{"special properties"}, new String[]{".+"});
+                categoryForm.setupArrayForm(new String[]{"properties"}, new String[]{".+"});
                 if (categoryForm.takeInput() == 0) {
                     String[] results = categoryForm.getResults();
                     ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());

@@ -63,7 +63,7 @@ public class DatabaseManager implements Database {
     }
 
     private void updateCategories() {
-        update(Paths.categories, Category.class, Category.getAllCategories());
+        update(Paths.categories, Category.class, Category.getAllCategories(false));
     }
 
     private void updateProducts() {
