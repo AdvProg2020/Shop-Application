@@ -9,9 +9,10 @@ import view.View;
 
 public class Main {
     public static void main(String[] args) {
-        new DatabaseManager().loadDatabase();
-        Category.setSuperCategory();
         Database mainDatabase = new DatabaseManager();
+        mainDatabase.loadDatabase();
+        Category.setSuperCategory();
+        mainDatabase.createCategory();
         Controller mainController = new Controller(mainDatabase);
         View appView = new View(mainController, new SellerController(mainController), new AdminController(mainController), new CustomerController(mainController));
         appView.start();

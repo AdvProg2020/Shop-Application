@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: getDefaultSubProductID();
 public class Actions {
+    public static final String SUPER_CATEGORY_NAME = "SuperCategory";
     private static Controller mainController;
     private static AdminController adminController;
     private static SellerController sellerController;
@@ -121,7 +122,7 @@ public class Actions {
             if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
-                    mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), null);
+                    mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.parseDouble(results[5]), null);
                     return new String[] {username, results[0]};
                 } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
@@ -143,7 +144,7 @@ public class Actions {
             if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
-                    mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), results[6]);
+                    mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.parseDouble(results[5]), results[6]);
                     return new String[] {username, results[0]};
                 } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
@@ -256,7 +257,7 @@ public class Actions {
             this.currentProducts = currentProducts;
             this.availableProperties = availableProperties;
             this.currentProperties = currentProperties;
-            previousCategory = "superCategory";
+            previousCategory = SUPER_CATEGORY_NAME;
         }
 
         private void refreshAvailableProperties(String lastCategory) throws Exceptions.InvalidCategoryException {
@@ -278,11 +279,11 @@ public class Actions {
         }
 
         private void showAllProducts() {
-            refreshCurrentProducts("superCategory");
+            refreshCurrentProducts(SUPER_CATEGORY_NAME);
             try {
                 System.out.println("all products:");
                 printList(mainController.showProducts(productIDs(), null, true,
-                        new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)}, new HashMap<String, String>()));
+                        new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)}, new HashMap<>()));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -321,7 +322,7 @@ public class Actions {
                 showAllProducts();
             } else {
                 if (categoryTree.size() == 0) {
-                    categoryName = "superCategory";
+                    categoryName = SUPER_CATEGORY_NAME;
                 } else {
                     categoryName = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -360,7 +361,7 @@ public class Actions {
             try {
                 String lastCategory;
                 if (categoryTree.size() == 0) {
-                    lastCategory = "superCategory";
+                    lastCategory = SUPER_CATEGORY_NAME;
                 } else {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -558,7 +559,7 @@ public class Actions {
             this.availableProperties = availableProperties;
             this.currentProperties = currentProperties;
             this.categoryTree = categoryTree;
-            previousCategory = "superCategory";
+            previousCategory = SUPER_CATEGORY_NAME;
         }
 
         private void showAvailableFilters() {
@@ -1760,7 +1761,7 @@ public class Actions {
                 if (categoryForm.takeInput() == 0) {
                     String[] results = categoryForm.getResults();
                     ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());
-                    adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? "superCategory" : results[0], specialProperties);
+                    adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? SUPER_CATEGORY_NAME : results[0], specialProperties);
                 }
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
@@ -2064,8 +2065,7 @@ public class Actions {
                     System.out.println("enter the field to edit (index):");
                     String response = View.getNextLineTrimmed();
                     if (response.matches("\\d+") && Integer.parseInt(response) <= editableFields.length) {
-                        if (editField(Integer.parseInt(response), sellerProducts.get(index - 1)[0]) == -1) {
-                        } else {
+                        if (editField(Integer.parseInt(response), sellerProducts.get(index - 1)[0]) != -1) {
                             break;
                         }
                     } else if (response.equalsIgnoreCase("back")) {
@@ -2100,14 +2100,14 @@ public class Actions {
                 if (productSecondForm.takeInput() == 0) {
                     while(true) {
                         String[] secondResults;
-                        ArrayList spResults;
+                        ArrayList<String> spResults;
                         System.out.println("category name:");
                         String entry = View.getNextLineTrimmed();
                         if (entry.equalsIgnoreCase("back")) break;
                         else if (entry.matches(Constants.argumentPattern)) {
                             ArrayList<String> sp = mainController.getPropertiesOfCategory(entry);
                             int size = sp.size();
-                            spResults = new ArrayList();
+                            spResults = new ArrayList<>();
                             for (int i = 0; i < size; i++) {
                                 System.out.println(sp.get(i) + ":");
                                 String input = View.getNextLineTrimmed();
