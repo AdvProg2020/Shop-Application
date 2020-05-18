@@ -1427,6 +1427,7 @@ public class Actions {
                     System.out.println("discount code created successfully");
                 } catch (Exceptions.ExistingDiscountCodeException | Exceptions.InvalidAccountsForDiscount e) {
                     System.out.println(e.getMessage());
+                } catch (Exceptions.InvalidFormatException ignored) {
                 }
             }
             printSeparator();
@@ -1944,6 +1945,7 @@ public class Actions {
                             Double.parseDouble(results[2]), Double.parseDouble(results[3]), listResult);
                 } catch (Exceptions.InvalidDateException | Exceptions.InvalidProductIdsForASeller e) {
                     System.out.println(e.getMessage());
+                } catch (Exceptions.InvalidFormatException ignored) {
                 }
                 printSeparator();
             }

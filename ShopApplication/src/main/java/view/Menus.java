@@ -1,8 +1,10 @@
 package view;
 
-import controller.*;
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
+import controller.SellerController;
 
-import java.rmi.activation.ActivationGroup_Stub;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -660,8 +662,8 @@ class Menus {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.AdminShowPendingRequests(pendingRequests));
             subActions.put(index + 2, new Actions.AdminShowArchiveRequests());
-            subActions.put(index + 2, new Actions.AdminViewRequestDetail(pendingRequests));
-            subActions.put(index + 3, new Actions.BackAction(parent));
+            subActions.put(index + 3, new Actions.AdminViewRequestDetail(pendingRequests));
+            subActions.put(index + 4, new Actions.BackAction(parent));
         }
     }
 
