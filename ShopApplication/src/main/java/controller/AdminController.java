@@ -275,16 +275,16 @@ public class AdminController {
             detailsOfRequest.add(Utilities.Pack.request(request));
             switch (Utilities.Pack.request(request)[1]) {
                 case "AddProductRequest":
-                    detailsOfRequest.add(Utilities.Pack.subProductExtended(((AddProductRequest) request).getSubProduct()));
+                    detailsOfRequest.add(Utilities.Pack.productInReview(((AddProductRequest) request).getSubProduct(), ((AddProductRequest)request).getProduct()));
                     break;
                 case "AddReviewRequest":
-                    detailsOfRequest.add(getReviewInfo(((AddReviewRequest) request).getReview()));
+                    detailsOfRequest.add(Utilities.Pack.getReviewInfo(((AddReviewRequest) request).getReview()));
                     break;
                 case "AddSaleRequest":
-                    detailsOfRequest.add(Utilities.Pack.saleInfo(((AddSaleRequest) request).getSale()));
+                    detailsOfRequest.add(Utilities.Pack.newSaleInReview(((AddSaleRequest) request).getSale()));
                     break;
                 case "AddSellerRequest":
-                    detailsOfRequest.add(Utilities.Pack.personalInfo(((AddSellerRequest) request).getSeller()));
+                    detailsOfRequest.add(Utilities.Pack.sellerInRequest(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProductRequest":
                     detailsOfRequest.add(Utilities.Pack.subProductExtended(((EditProductRequest) request).getSubProduct()));
@@ -297,21 +297,6 @@ public class AdminController {
             }
             return detailsOfRequest;
         }
-    }
-
-    /**
-     * @param review
-     * @return String[6]: { reviewerUsername, productId, productName, productBrand, reviewTitle, reviewText }
-     */
-    private String[] getReviewInfo(Review review) {
-        String[] reviewInfo = new String[6];
-        reviewInfo[0] = review.getReviewer().getUsername();
-        reviewInfo[1] = review.getProduct().getId();
-        reviewInfo[2] = review.getProduct().getName();
-        reviewInfo[3] = review.getProduct().getBrand();
-        reviewInfo[4] = review.getTitle();
-        reviewInfo[5] = review.getText();
-        return reviewInfo;
     }
 
     public void acceptRequest(String requestID, boolean accepted) throws Exceptions.InvalidRequestIdException {

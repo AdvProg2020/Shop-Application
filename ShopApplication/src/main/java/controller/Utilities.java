@@ -174,10 +174,10 @@ public class Utilities {
             String[] info;
             if (account instanceof Customer) {
                 info = new String[7];
-                info[6] = String.valueOf(((Customer) account).getBalance());
+                info[6] = Double.toString(((Customer) account).getBalance());
             } else if (account instanceof Seller) {
                 info = new String[8];
-                info[6] = String.valueOf(((Seller) account).getBalance());
+                info[6] = Double.toString(((Seller) account).getBalance());
                 info[7] = ((Seller) account).getStoreName();
             } else
                 info = new String[6];
@@ -187,6 +187,18 @@ public class Utilities {
             info[3] = account.getLastName();
             info[4] = account.getEmail();
             info[5] = account.getPhone();
+            return info;
+        }
+
+        public static String[] sellerInRequest(Seller seller){
+            String[] info = new String[7];
+            info[0] = seller.getUsername();
+            info[1] = seller.getFirstName();
+            info[2] = seller.getLastName();
+            info[3] = seller.getEmail();
+            info[4] = seller.getPhone();
+            info[5] = Double.toString(seller.getBalance());
+            info[6] = seller.getStoreName();
             return info;
         }
 
