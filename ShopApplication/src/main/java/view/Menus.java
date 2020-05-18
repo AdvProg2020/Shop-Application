@@ -820,9 +820,9 @@ class Menus {
             subActions.put(index + 2, new Actions.SellerViewProductDetails(sellerProducts));
             subActions.put(index + 3, new Actions.SellerViewProductBuyers(sellerProducts));
             subActions.put(index + 4, new Actions.SellerEditProduct(getEditableFields(), sellerProducts));
-            subActions.put(index + 4, new Actions.SellerAddProduct());
-            subActions.put(index + 4, new Actions.SellerRemoveProduct(sellerProducts));
-            subActions.put(index + 5, new Actions.BackAction(parent));
+            subActions.put(index + 5, new Actions.SellerAddProduct());
+            subActions.put(index + 6, new Actions.SellerRemoveProduct(sellerProducts));
+            subActions.put(index + 7, new Actions.BackAction(parent));
         }
 
 
