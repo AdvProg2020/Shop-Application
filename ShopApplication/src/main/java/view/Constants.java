@@ -154,16 +154,16 @@ final class Constants {
         static final String adminShowProductsPattern = caseInsensitiveMode + "^" + adminShowProductsCommand + "$";
         static final String adminRemoveProductByIDCommand = "remove [index]";
         static final String adminRemoveProductByIDPattern = caseInsensitiveMode + "^remove" + spacePattern + unsignedIntPattern + "$";
-        static final String adminCreateDiscountCodeCommand = "create discount code";
+        static final String adminCreateDiscountCodeCommand = "create discount";
         static final String adminCreateDiscountCodePattern = caseInsensitiveMode + adminCreateDiscountCodeCommand + "$";
-        static final String adminShowDiscountCodesCommand = "show discount codes";
+        static final String adminShowDiscountCodesCommand = "show discount";
         static final String adminShowDiscountCodesPattern = caseInsensitiveMode + "^" + adminShowDiscountCodesCommand + "$";
-        static final String adminViewDiscountCodeCommand = "view discount code [index]";
-        static final String adminViewDiscountCodePattern = caseInsensitiveMode + "^view discount code" + spacePattern + unsignedIntPattern + "$";
-        static final String adminEditDiscountCodeCommand = "edit discount code [index]";
-        static final String adminEditDiscountCodePattern = caseInsensitiveMode + "^edit discount code" + spacePattern + unsignedIntPattern + "$";
-        static final String adminRemoveDiscountCodeCommand = "remove discount code [index]";
-        static final String adminRemoveDiscountCodePattern = caseInsensitiveMode + "^remove discount code" + spacePattern + unsignedIntPattern + "$";
+        static final String adminViewDiscountCodeCommand = "view discount [index]";
+        static final String adminViewDiscountCodePattern = caseInsensitiveMode + "^view discount" + spacePattern + unsignedIntPattern + "$";
+        static final String adminEditDiscountCodeCommand = "edit discount [index]";
+        static final String adminEditDiscountCodePattern = caseInsensitiveMode + "^edit discount" + spacePattern + unsignedIntPattern + "$";
+        static final String adminRemoveDiscountCodeCommand = "remove discount [index]";
+        static final String adminRemoveDiscountCodePattern = caseInsensitiveMode + "^remove discount" + spacePattern + unsignedIntPattern + "$";
         //minor modification cuz of showing dilemma.
         static final String adminViewRequestDetailCommand = "details [index]";
         static final String adminViewRequestDetailPattern = caseInsensitiveMode + "^details" + spacePattern + unsignedIntPattern + "$";

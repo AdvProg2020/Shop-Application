@@ -1452,7 +1452,7 @@ public class Actions {
             refreshDiscountCodes();
             int size = discountCodes.size();
             for (int i = 0; i < size; i++) {
-                System.out.println(i + ". " + discountCodes.get(i));
+                System.out.println((i + 1) + ". " + discountCodes.get(i));
             }
             printSeparator();
         }
@@ -1679,7 +1679,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             refreshCurrentCategories();
-            System.out.println("categories (category inheritance is not shown in this list): ");
+            System.out.println("categories:");
             currentCategories.forEach(cc -> System.out.println(cc));
             printSeparator();
         }

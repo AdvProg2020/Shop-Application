@@ -699,7 +699,7 @@ class Menus {
             subActions.put(index + 2, new Actions.AdminEditCategory(getEditableFields(), currentCategories));
             subActions.put(index + 3, new Actions.AdminAddCategory());
             subActions.put(index + 4, new Actions.AdminRemoveCategory(currentCategories));
-            subActions.put(index + 5, new Actions.BackAction(this));
+            subActions.put(index + 5, new Actions.BackAction(parent));
         }
     }
 

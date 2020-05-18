@@ -57,14 +57,15 @@ public class Category implements ModelBasic {
 
     @Override
     public void initialize() {
+        if (categoryId == null)
+            categoryId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+        lastNum++;
+
         if (superCategory == null) {
             superCategory = this;
             subCategoryIds = new HashSet<>();
         } else {
-            if (categoryId == null)
-                categoryId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
             allCategories.put(categoryId, this);
-            lastNum++;
             if (!suspended) {
                 subCategoryIds = new HashSet<>();
                 productIds = new HashSet<>();
@@ -109,6 +110,9 @@ public class Category implements ModelBasic {
     }
 
     public Category getParent() {
+        if (parentId.equals(superCategory.getId()))
+            return superCategory;
+
         return Category.getCategoryById(parentId);
     }
 
