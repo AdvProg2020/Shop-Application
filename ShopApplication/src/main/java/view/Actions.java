@@ -8,11 +8,7 @@ import java.util.regex.Matcher;
 
 //TODO: printSeparator();
 //TODO: isInProducts --> int IndexByID
-//TODO: getGroup()
-//TODO: types start with capital.
 //TODO: sout completion messages. ex: .... done successfully.
-//TODO: index choosing
-//TODO: nullptr exception.
 //TODO: getDefaultSubProductID();
 public class Actions {
     private static Controller mainController;
@@ -104,76 +100,83 @@ public class Actions {
             super(Constants.Actions.registerPattern, Constants.Actions.registerCommand);
         }
 
-        private void registerCustomer(String username) {
+        private String[] registerCustomer(String username) {
             Form registerForm;
             String[] fields;
             String[] fieldRegex;
             String[] results;
             fields = new String[]{"password", "first name", "last name", "email", "phone", "balance"};
-            fieldRegex = new String[]{Constants.argumentPattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
                     Constants.emailPattern, Constants.phonePattern, Constants.doublePattern};
             registerForm = new Form(fields, fieldRegex);
             if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), null);
+                    return new String[] {username, results[0]};
                 } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
                     System.out.println("sigh! " + e.getMessage());
                 }
             }
+            return null;
         }
 
-        private void registerSeller(String username) {
+        private String[] registerSeller(String username) {
             Form registerForm;
             String[] fields;
             String[] fieldRegex;
             String[] results;
             fields = new String[]{"password", "first name", "last name", "email", "phone", "balance", "store name"};
-            fieldRegex = new String[]{Constants.argumentPattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
                     Constants.emailPattern, Constants.phonePattern, Constants.doublePattern, Constants.IRLNamePattern};
             registerForm = new Form(fields, fieldRegex);
             if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.valueOf(results[5]), results[6]);
+                    return new String[] {username, results[0]};
                 } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
                     System.out.println("sigh! " + e.getMessage());
                 }
             }
+            return null;
         }
 
-        private void registerAdmin(String username) {
+        private String[] registerAdmin(String username) {
             Form registerForm;
             String[] fields;
             String[] fieldRegex;
             String[] results;
             fields = new String[]{"password", "first name", "last name", "email", "phone"};
-            fieldRegex = new String[]{Constants.argumentPattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
                     Constants.emailPattern, Constants.phonePattern};
             registerForm = new Form(fields, fieldRegex);
             if (registerForm.takeInput() == 0) {
                 results = registerForm.getResults();
                 try {
                     mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], 0.00, null);
+                    return new String[] {username, results[0]};
                 } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
                     //wont happen.
                     System.out.println("sigh! " + e.getMessage());
                 }
             }
+            return null;
         }
 
-        private void register(int typeIndex, String username) {
+        private String[] register(int typeIndex, String username) {
             if (username != null) {
                 if (typeIndex == 1) {
-                    registerCustomer(username);
+                    return registerCustomer(username);
                 } else if (typeIndex == 2) {
-                    registerSeller(username);
+                    return registerSeller(username);
                 } else {
-                    registerAdmin(username);
+                    return registerAdmin(username);
                 }
             }
+            return null;
         }
 
         @Override
@@ -193,6 +196,33 @@ public class Actions {
                     System.out.println("only admin can create another admin!");
                     printSeparator();
                     return;
+                }
+            }
+            printSeparator();
+        }
+
+        public void runNLogin(String command) {
+            String type = getGroup(command, 1);
+            String username = getGroup(command, 2);
+            int index = Constants.getTypeByIndex(type);
+            if (index < 1) {
+                System.out.println("invalid type. you can enter customer, seller or admin as type");
+            } else {
+                try {
+                    mainController.usernameTypeValidation(username, type);
+                    System.out.println("after registration you will automatically get logged-in:");
+                    String[] usePass = register(index, username);
+                    if (usePass != null) {
+                        mainController.login(usePass[0], usePass[1]);
+                    }
+                } catch (Exceptions.UsernameAlreadyTakenException e) {
+                    System.out.println("username already exists!");
+                } catch (Exceptions.AdminRegisterException e) {
+                    System.out.println("only admin can create another admin!");
+                    printSeparator();
+                    return;
+                } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException e) {
+                    //wont happen
                 }
             }
             printSeparator();
@@ -938,6 +968,34 @@ public class Actions {
         }
     }
 
+    public static class ShowSubProducts extends Action {
+        private ArrayList<String[]> subProducts;
+        private StringBuilder productID;
+
+        ShowSubProducts(ArrayList<String[]> subProducts, StringBuilder productID) {
+            super(Constants.Actions.showSubProductsPattern, Constants.Actions.showSubProductsCommand);
+            this.subProducts = subProducts;
+            this.productID = productID;
+        }
+
+        private void refreshSubProducts() throws Exceptions.InvalidProductIdException {
+            subProducts.clear();
+            subProducts.addAll(mainController.subProductsOfAProduct(productID.toString()));
+        }
+
+        @Override
+        public void execute(String command) {
+            try {
+                refreshSubProducts();
+                System.out.println("sub products:");
+                printList(subProducts);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
+        }
+    }
+
     public static class AddToCart extends Action {
         private StringBuilder subProductID;
 
@@ -964,16 +1022,11 @@ public class Actions {
         private StringBuilder subProductID;
         private ArrayList<String[]> subProducts;
 
-        SelectSeller(StringBuilder productID, StringBuilder subProductID) {
+        SelectSeller(StringBuilder productID, StringBuilder subProductID, ArrayList<String[]> subProducts) {
             super(Constants.Actions.selectSellerPattern, Constants.Actions.selectSellerCommand);
             this.subProductID = subProductID;
             this.productID = productID;
-            this.subProducts = new ArrayList<>();
-        }
-
-        private void refreshSubProducts() throws Exceptions.InvalidProductIdException {
-            subProducts.clear();
-            subProducts.addAll(mainController.subProductsOfAProduct(productID.toString()));
+            this.subProducts = subProducts;
         }
 
         private void selectSeller(int sellerIndex) {
@@ -983,22 +1036,9 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            try {
-                refreshSubProducts();
-                while (true) {
-                    printList(subProducts);
-                    System.out.println("enter the seller index:");
-                    String input = View.getNextLineTrimmed();
-                    if (input.matches(Constants.unsignedIntPattern) && Integer.parseInt(input) <= subProducts.size()) {
-                        selectSeller(Integer.parseInt(input));
-                    } else if (input.equalsIgnoreCase("back")) break;
-                    else {
-                        System.out.println("invalid entry");
-                    }
-                }
-                printSeparator();
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println("product ID is invalid. unable to refresh sub-products.");
+            int index = getIndex(command, subProducts);
+            if (index != 0) {
+                selectSeller(index);
             }
             printSeparator();
         }
@@ -1022,6 +1062,7 @@ public class Actions {
         }
     }
 
+    //TODO: special shits
     public static class CompareProductByID extends Action {
         private StringBuilder productID;
 
@@ -1066,14 +1107,21 @@ public class Actions {
 
     public static class AddComment extends Action {
         private StringBuilder productID;
+        private Menu productReviewMenu;
 
-        AddComment(StringBuilder productID) {
+        AddComment(StringBuilder productID, Menu productReviewMenu) {
             super(Constants.Actions.addReviewPattern, Constants.Actions.addReviewCommand);
             this.productID = productID;
+            this.productReviewMenu = productReviewMenu;
         }
 
         @Override
         public void execute(String command) {
+            String type = mainController.getType();
+            if (type.equalsIgnoreCase(Constants.anonymousUserType)) {
+                System.out.println("you should login in order to be able to add comments! please login and try again");
+                Menu.getAccountMenu().loginFirst(productReviewMenu, productReviewMenu);
+            }
             try {
                 String[] fields = new String[]{"title", "body"};
                 String[] regex = new String[]{Constants.argumentPattern, ".+"};
@@ -1204,7 +1252,7 @@ public class Actions {
                 String[] fieldRegex;
                 String[] results;
                 fields = new String[]{"username", "password", "first name", "last name", "email", "phone"};
-                fieldRegex = new String[]{Constants.argumentPattern, Constants.argumentPattern ,Constants.IRLNamePattern, Constants.IRLNamePattern, Constants.emailPattern,
+                fieldRegex = new String[]{Constants.usernamePattern, Constants.usernamePattern ,Constants.IRLNamePattern, Constants.IRLNamePattern, Constants.emailPattern,
                         Constants.phonePattern};
                 registerForm = new Form(fields, fieldRegex);
                 if (registerForm.takeInput() == 0) {
@@ -2178,16 +2226,16 @@ public class Actions {
         public void execute(String command) {
             if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
                 System.out.println("you have to be logged-in in order to be able to purchase. please login and try again.");
-                Menu.getAccountMenu().run(shoppingCartMenu, shoppingCartMenu);
+                Menu.getAccountMenu().loginFirst(shoppingCartMenu, shoppingCartMenu);
             }
             try {
                 String[] fields = new String[]{"receiver name", "receiver address", "receiver phone",
                         "discount code (if you have any, enter \"-\" if you dont)"};
-                String[] regex = new String[]{".+", ".+", Constants.unsignedIntPattern, Constants.argumentPattern};
+                String[] regex = new String[]{Constants.IRLNamePattern, ".+", Constants.phonePattern, Constants.argumentPattern};
                 Form purchaseForm = new Form(fields, regex);
                 if (purchaseForm.takeInput() == 0) {
                     String[] result = purchaseForm.getResults();
-                    customerController.purchaseTheCart(result[0], result[1], result[2], result[3]);
+                    customerController.purchaseTheCart(result[0], result[1], result[2], (result[3].equals("-")) ? null: result[3]);
                 }
             } catch (Exceptions.InsufficientCreditException | Exceptions.NotAvailableSubProductsInCart
                     | Exceptions.EmptyCartException | Exceptions.InvalidDiscountException e) {

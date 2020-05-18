@@ -1,8 +1,11 @@
 package view;
 
 import controller.*;
+import model.account.Customer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 class Menus {
     private static Controller mainController;
@@ -19,13 +22,11 @@ class Menus {
 
     public static class AccountMenu extends Menu {
         private Menu previousMenu;
-        private Menu nextMenu;
 
         AccountMenu(String name) {
             super(name, false, null, Constants.Menus.accountMenuPattern, Constants.Menus.accountMenuCommand);
             Menu.setAccountMenu(this);
             previousMenu = null;
-            nextMenu = null;
             initSubMenus();
             initSubActions();
         }
@@ -33,10 +34,14 @@ class Menus {
         @Override
         public void execute() {
             String userType = mainController.getType();
-            for (Menu menu : subMenus.values()) {
-                if (userType.matches(menu.getCommandPattern())) {
-                    menu.run();
-                }
+            if (userType.equalsIgnoreCase(Constants.anonymousUserType)) {
+                ((AnonymousUserAccountMenu)subMenus.get(1)).run(previousMenu);
+            } else if (userType.equalsIgnoreCase(Constants.adminUserType)) {
+                ((AdminMenu)subMenus.get(2)).run(previousMenu);
+            } else if (userType.equalsIgnoreCase(Constants.sellerUserType)) {
+                ((SellerMenu)subMenus.get(3)).run(previousMenu);
+            }else if (userType.equalsIgnoreCase(Constants.customerUserType)) {
+                ((CustomerMenu)subMenus.get(4)).run(previousMenu);
             }
         }
 
@@ -47,10 +52,10 @@ class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this, this.previousMenu, this.nextMenu, Constants.anonymousUserType));
-            subMenus.put(2, new AdminMenu("Admin Menu", this, this.previousMenu, this.nextMenu, Constants.adminUserType));
-            subMenus.put(3, new SellerMenu("Seller Menu", this, this.previousMenu, this.nextMenu, Constants.sellerUserType));
-            subMenus.put(4, new CustomerMenu("Customer Menu", this, this.previousMenu, this.nextMenu, Constants.customerUserType));
+            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this,  Constants.anonymousUserType));
+            subMenus.put(2, new AdminMenu("Admin Menu",this,  Constants.adminUserType));
+            subMenus.put(3, new SellerMenu("Seller Menu",this, Constants.sellerUserType));
+            subMenus.put(4, new CustomerMenu("Customer Menu", this, Constants.customerUserType));
         }
 
         @Override
@@ -62,14 +67,11 @@ class Menus {
         public void run() {
             getStackTrace().push(this);
             previousMenu = Menu.getCallingMenu();
-            nextMenu = null;
             this.execute();
         }
 
-        void run(Menu previousMenu, Menu nextMenu) {
-            this.previousMenu = previousMenu;
-            this.nextMenu = nextMenu;
-            this.execute();
+        public void loginFirst(Menu ifBackMenu,Menu ifDoneMenu) {
+            ((AnonymousUserAccountMenu)subMenus.get(1)).loginFirst(ifBackMenu, ifDoneMenu);
         }
     }
 
@@ -143,18 +145,32 @@ class Menus {
         }
     }
 
-
-    //TODO: this motha fucka.
     public static class ProductDetailMenu extends Menu {
+        private Map<Integer, Action> subActionsAnonymousCustomer;
+        private Map<Integer, Action> subActionsAdminSeller;
         private StringBuilder productID;
         private StringBuilder subProductID;
+        private ArrayList<String[]> subProducts;
 
         ProductDetailMenu(String name) {
             super(name, false, null, null, null);
             Menu.setProductDetailMenu(this);
+            productID = new StringBuilder();
             subProductID = new StringBuilder();
+            subProducts = new ArrayList<>();
+            subActionsAnonymousCustomer = new HashMap<>();
+            subActionsAdminSeller = new HashMap<>();
             initSubMenus();
             initSubActions();
+        }
+
+        private void modifyActions() {
+            String type = mainController.getType();
+            if (type.equalsIgnoreCase(Constants.anonymousUserType) || type.equalsIgnoreCase(Constants.customerUserType)) {
+                subActions = subActionsAnonymousCustomer;
+            } else {
+                subActions = subActionsAdminSeller;
+            }
         }
 
         @Override
@@ -165,12 +181,24 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.DigestProduct(productID));
-            subActions.put(index + 2, new Actions.AddToCart(subProductID));
-            subActions.put(index + 3, new Actions.SelectSeller(subProductID, productID));
-            subActions.put(index + 4, new Actions.ShowCurrentSeller(subProductID));
-            subActions.put(index + 4, new Actions.CompareProductByID(productID));
-            subActions.put(index + 5, new Actions.BackAction(null));
+            subActionsAnonymousCustomer.put(index + 1, new Actions.DigestProduct(productID));
+            subActionsAnonymousCustomer.put(index + 2, new Actions.ShowSubProducts(subProducts, productID));
+            subActionsAnonymousCustomer.put(index + 3, new Actions.AddToCart(subProductID));
+            subActionsAnonymousCustomer.put(index + 4, new Actions.SelectSeller(subProductID, productID, subProducts));
+            subActionsAnonymousCustomer.put(index + 5, new Actions.ShowCurrentSeller(subProductID));
+            subActionsAnonymousCustomer.put(index + 6, new Actions.CompareProductByID(productID));
+            subActionsAnonymousCustomer.put(index + 7, new Actions.BackAction(null));
+
+            subActionsAdminSeller.put(index + 1, new Actions.DigestProduct(productID));
+            subActionsAdminSeller.put(index + 2, new Actions.ShowSubProducts(subProducts, productID));
+            subActionsAdminSeller.put(index + 3, new Actions.CompareProductByID(productID));
+            subActionsAdminSeller.put(index + 4, new Actions.BackAction(null));
+        }
+
+        @Override
+        public void run() {
+            modifyActions();
+            super.run();
         }
 
         public void runByProductID(String productID) {
@@ -183,12 +211,25 @@ class Menus {
 
     public static class ProductReviewMenu extends Menu {
         private StringBuilder productID;
+        private Map<Integer, Action> subActionsAnonymousCustomer;
+        private Map<Integer, Action> subActionsAdminSeller;
 
         ProductReviewMenu(String name, Menu parent, StringBuilder productID) {
             super(name, true, parent, Constants.Menus.productReviewMenuPattern, Constants.Menus.productReviewMenuCommand);
             this.productID = productID;
+            subActionsAdminSeller = new HashMap<>();
+            subActionsAnonymousCustomer = new HashMap<>();
             initSubMenus();
             initSubActions();
+        }
+
+        private void modifyActions() {
+            String type = mainController.getType();
+            if (type.equalsIgnoreCase(Constants.anonymousUserType) || type.equalsIgnoreCase(Constants.customerUserType)) {
+                subActions = subActionsAnonymousCustomer;
+            } else {
+                subActions = subActionsAdminSeller;
+            }
         }
 
         @Override
@@ -205,9 +246,18 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowReviews(productID));
-            subActions.put(index + 2, new Actions.AddComment(productID));
-            subActions.put(index + 3, new Actions.BackAction(parent));
+            subActionsAnonymousCustomer.put(index + 1, new Actions.ShowReviews(productID));
+            subActionsAnonymousCustomer.put(index + 2, new Actions.AddComment(productID, this));
+            subActionsAnonymousCustomer.put(index + 3, new Actions.BackAction(parent));
+
+            subActionsAdminSeller.put(index + 1, new Actions.ShowReviews(productID));
+            subActionsAdminSeller.put(index + 3, new Actions.BackAction(parent));
+        }
+
+        @Override
+        protected void run() {
+            modifyActions();
+            super.run();
         }
     }
 
@@ -312,50 +362,99 @@ class Menus {
     }
 
     public static class AnonymousUserAccountMenu extends Menu {
-        private Menu previousMenu;
-        private Menu nextMenu;
+        private Map<Integer, Menu> primarySubMenus;
+        private Map<Integer, Action> primarySubActions;
+        private Map<Integer, Action> loginSubActions;
 
-        AnonymousUserAccountMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+        AnonymousUserAccountMenu(String name , Menu parent, String userType) {
             super(name, false, parent, userType, null);
-            this.previousMenu = previousMenu;
-            this.nextMenu = nextMenu;
+            primarySubMenus = new HashMap<>();
+            primarySubActions = new HashMap<>();
+            loginSubActions = new HashMap<>();
+            subActions = primarySubActions;
+            subMenus = primarySubMenus;
             initSubMenus();
             initSubActions();
         }
 
-        @Override
-        public void run() {
+        public void run(Menu previousMenu) {
+            this.getBackAction().setParent(previousMenu);
             if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+                subMenus = primarySubMenus;
+                subActions = primarySubActions;
                 super.run();
             } else {
-                parent.run();
+                parent.execute();
             }
         }
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
+            primarySubMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
+            subMenus = primarySubMenus;
         }
 
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.LoginAction());
-            subActions.put(index + 2, new Actions.RegisterAction());
-            subActions.put(index + 3, new Actions.BackAction(previousMenu));
+            primarySubActions.put(index + 1, new Actions.LoginAction());
+            primarySubActions.put(index + 2, new Actions.RegisterAction());
+            primarySubActions.put(index + 3, new Actions.BackAction(null));
+
+            loginSubActions.put( 1, new Actions.LoginAction());
+            loginSubActions.put( 2, new Actions.RegisterAction());
+            loginSubActions.put( 3, new Actions.BackAction(null));
+        }
+
+
+        private void loginRun(Menu ifDoneMenu) {
+            if ( ! mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+                ifDoneMenu.run();
+            }
+            show();
+            loginExecute(ifDoneMenu);
+        }
+
+        private void loginExecute(Menu ifDoneMenu) {
+            String command = View.getNextLineTrimmed();
+            if (command.equalsIgnoreCase("help")) {
+                showCommandList();
+                this.loginRun(ifDoneMenu);
+            }
+            if (command.matches(Integer.toString(1))) {
+                ((Actions.RegisterAction)subActions.get(1)).runNLogin(command);
+            } else if (command.matches(Integer.toString(2))) {
+                subActions.get(2).run(command);
+            } else {
+                //if the command is invalid.
+                System.out.println("invalid entry.");
+            }
+            this.execute();
+        }
+
+        public void loginFirst(Menu ifBackMenu, Menu ifDoneMenu) {
+            subMenus = new HashMap<>();
+            subActions = loginSubActions;
+            ((Actions.BackAction)subActions.get(3)).setParent(ifBackMenu);
+            this.loginRun(ifDoneMenu);
         }
     }
 
     public static class AdminMenu extends Menu {
-        private Menu previousMenu;
-        private Menu nextMenu;
 
-        AdminMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+        AdminMenu(String name, Menu parent,  String userType) {
             super(name, false, parent, userType, null);
-            this.previousMenu = previousMenu;
-            this.nextMenu = nextMenu;
             initSubMenus();
             initSubActions();
+        }
+
+        public void run(Menu previousMenu) {
+            this.getBackAction().setParent(previousMenu);
+            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+                super.run();
+            } else {
+                parent.execute();
+            }
         }
 
         @Override
@@ -377,7 +476,7 @@ class Menus {
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.Logout());
-            subActions.put(index + 2, new Actions.BackAction(previousMenu));
+            subActions.put(index + 2, new Actions.BackAction(null));
         }
     }
 
@@ -571,17 +670,22 @@ class Menus {
     }
 
     public static class SellerMenu extends Menu {
-        private Menu previousMenu;
-        private Menu nextMenu;
         private ArrayList<String[]> sellLogs;
 
-        SellerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+        SellerMenu(String name, Menu parent, String userType) {
             super(name, false, parent, userType, null);
-            this.previousMenu = previousMenu;
-            this.nextMenu = nextMenu;
             this.sellLogs = new ArrayList<>();
             initSubMenus();
             initSubActions();
+        }
+
+        public void run(Menu previousMenu) {
+            this.getBackAction().setParent(previousMenu);
+            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+                super.run();
+            } else {
+                parent.execute();
+            }
         }
 
         @Override
@@ -604,7 +708,7 @@ class Menus {
             subActions.put(index + 3, new Actions.ShowSellerSellHistory(sellLogs));
             subActions.put(index + 4, new Actions.ViewSingleSellHistory(sellLogs));
             subActions.put(index + 5, new Actions.Logout());
-            subActions.put(index + 6, new Actions.BackAction(previousMenu));
+            subActions.put(index + 6, new Actions.BackAction(null));
         }
     }
 
@@ -685,15 +789,20 @@ class Menus {
     }
 
     public static class CustomerMenu extends Menu {
-        private Menu previousMenu;
-        private Menu nextMenu;
 
-        CustomerMenu(String name, Menu parent, Menu previousMenu, Menu nextMenu, String userType) {
+        CustomerMenu(String name, Menu parent, String userType) {
             super(name, false, parent, userType, null);
-            this.previousMenu = previousMenu;
-            this.nextMenu = nextMenu;
             initSubMenus();
             initSubActions();
+        }
+
+        public void run(Menu previousMenu) {
+            this.getBackAction().setParent(previousMenu);
+            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+                super.run();
+            } else {
+                parent.execute();
+            }
         }
 
         @Override
@@ -714,7 +823,7 @@ class Menus {
             subActions.put(index + 1, new Actions.ShowCustomerBalance());
             subActions.put(index + 2, new Actions.ShowCustomerDiscountCodes());
             subActions.put(index + 3, new Actions.Logout());
-            subActions.put(index + 4, new Actions.BackAction(previousMenu));
+            subActions.put(index + 4, new Actions.BackAction(null));
         }
     }
 
@@ -749,7 +858,7 @@ class Menus {
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShoppingCartShowProducts(currentProducts));
-            subActions.put(index + 2, new Actions.ShoppingCartViewProduct(currentProducts));
+            subActions.put(index + 2, new Actions.ProductDetailMenu(currentProducts));
             subActions.put(index + 3, new Actions.ShoppingCartIncreaseProductCount(currentProducts));
             subActions.put(index + 4, new Actions.ShoppingCartDecreaseProductCount(currentProducts));
             subActions.put(index + 5, new Actions.ShoppingCartShowTotalPrice());

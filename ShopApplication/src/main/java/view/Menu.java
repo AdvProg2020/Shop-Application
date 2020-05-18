@@ -151,6 +151,10 @@ public abstract class Menu {
         }
     }
 
+    Actions.BackAction getBackAction() {
+        return (Actions.BackAction) subActions.get(subMenus.size() + subActions.size() + floatingMenusIndexModification());
+    }
+
     @Override
     public String toString() {
         return this.getName();

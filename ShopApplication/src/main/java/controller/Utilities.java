@@ -253,13 +253,12 @@ public class Utilities {
 
     static class Field {
         public static String[] customerPersonalInfoEditableFields() {
-            String[] editableFields = new String[6];
+            String[] editableFields = new String[5];
             editableFields[0] = "firstName";
             editableFields[1] = "lastName";
             editableFields[2] = "phone";
             editableFields[3] = "email";
             editableFields[4] = "password";
-            editableFields[5] = "balance";
             return editableFields;
         }
 

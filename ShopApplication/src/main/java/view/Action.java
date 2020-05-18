@@ -49,7 +49,7 @@ public abstract class Action {
     }
 
      void printSeparator() {
-        System.out.println("-------------------------------\n");
+        System.out.println("-------------------------------");
     }
 
      String getGroup(String command, int groupIndex) {

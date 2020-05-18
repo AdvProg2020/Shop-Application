@@ -5,9 +5,10 @@ final class Constants {
     static final String argumentPattern = "(\\S+)";
     static final String spacePattern = "\\s+";
     static final String unsignedIntPattern = "\\+?(\\d+)";
+    static final String usernamePattern = "(\\w+)";
     static final String doublePattern = "(\\d+(?:\\.\\d+)?)";
     static final String datePattern = "\\d{2}[/-]\\d{2}[/-]\\d{2}";
-    static final String IRLNamePattern = "[a-zA-Z]( [a-zA-Z])+";
+    static final String IRLNamePattern = "[a-zA-Z]+( [a-zA-Z]+)*";
     static final String emailPattern = ".+@.+\\.com";
     static final String phonePattern = "\\d+";
     static final String anonymousUserType = "Anonymous";
@@ -66,12 +67,12 @@ final class Constants {
         static final String exitCommand = "exit";
         static final String exitPattern = caseInsensitiveMode + "^" + exitCommand + "$";
         static final String loginCommand = "login [username]";
-        static final String loginPattern = caseInsensitiveMode + "^login" + spacePattern + argumentPattern + "$";
+        static final String loginPattern = caseInsensitiveMode + "^login" + spacePattern + usernamePattern + "$";
         static final String logoutCommand = "logout";
         static final String logoutPattern = caseInsensitiveMode + "^" + logoutCommand + "$";
         static final String registerCommand = "create account [type] [username]";
         static final String registerPattern =
-                caseInsensitiveMode + "^create account" + spacePattern + argumentPattern + spacePattern + argumentPattern + "$";
+                caseInsensitiveMode + "^create account" + spacePattern + "(anonymous|customer|seller|admin)" + spacePattern + usernamePattern + "$";
         //AllProductsMenu actions.
         static final String showProductsCommand = "show products [-all]";
         static final String showProductsPattern = caseInsensitiveMode + "^show products(?:" + spacePattern + "(-all))?$";
@@ -128,8 +129,8 @@ final class Constants {
         static final String productCurrentSellerCommand = "show current seller";
         static final String productCurrentSellerPattern = caseInsensitiveMode + "^" + productCurrentSellerCommand + "$";
         //different form doc. cuz of index choosing.
-        static final String selectSellerCommand = "select seller";
-        static final String selectSellerPattern = caseInsensitiveMode + "^" + selectSellerCommand + "$";
+        static final String selectSellerCommand = "select seller [index]";
+        static final String selectSellerPattern = caseInsensitiveMode + "^select seller" + spacePattern + unsignedIntPattern + "$";
         static final String showCurrentSellerCommand = "show current seller";
         static final String showCurrentSellerPattern = caseInsensitiveMode + "^" + showCurrentSellerCommand + "$";
         static final String compareProductByIDCommand = "compare [productID]";
