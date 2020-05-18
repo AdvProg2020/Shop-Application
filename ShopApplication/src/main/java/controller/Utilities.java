@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Utilities {
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 
     public static DateFormat getDateFormat() {
         return dateFormat;

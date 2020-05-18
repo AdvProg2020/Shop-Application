@@ -307,7 +307,16 @@ public class SellerController {
         }
     }
 
-    public void addSale(Date startDate, Date endDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller {
+    public void addSale(String StartDate, String EndDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller, Exceptions.InvalidFormatException {
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            startDate = dateFormat.parse(StartDate);
+            endDate = dateFormat.parse(EndDate);
+        } catch (ParseException e) {
+            throw new Exceptions.InvalidFormatException("date");
+        }
+
         if (startDate.before(endDate)) {
             Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum);
             Product product;

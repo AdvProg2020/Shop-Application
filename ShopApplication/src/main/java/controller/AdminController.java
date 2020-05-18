@@ -13,7 +13,6 @@ import model.request.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 
@@ -123,8 +122,8 @@ public class AdminController {
         }
     }
 
-    public void createDiscountCode(String discountCode, Date startDate, Date endDate, double percentage,
-                                   int maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount {
+    public void createDiscountCode(String discountCode, String startDate, String endDate, double percentage,
+                                   int maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount, Exceptions.InvalidFormatException {
 
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
@@ -137,13 +136,18 @@ public class AdminController {
                     customersIdCount.remove(Id);
                 }
             }
-            Discount discount = new Discount(discountCode, startDate, endDate, percentage, maximumAmount);
-            for (String[] IdCount : customersIdCount) {
-                discount.addCustomer(IdCount[0], Integer.parseInt(IdCount[1]));
+            Discount discount ;
+            try {
+                discount = new Discount(discountCode, dateFormat.parse(startDate), dateFormat.parse(endDate), percentage, maximumAmount);
+                for (String[] IdCount : customersIdCount) {
+                    discount.addCustomer(IdCount[0], Integer.parseInt(IdCount[1]));
+                }
+                database().createDiscount();
+                if (wrongIds.size() > 0)
+                    throw new Exceptions.InvalidAccountsForDiscount(Utilities.Pack.invalidAccountIds(wrongIds));
+            } catch (ParseException ignored) {
+                throw new Exceptions.InvalidFormatException("date");
             }
-            database().createDiscount();
-            if (wrongIds.size() > 0)
-                throw new Exceptions.InvalidAccountsForDiscount(Utilities.Pack.invalidAccountIds(wrongIds));
         }
     }
 

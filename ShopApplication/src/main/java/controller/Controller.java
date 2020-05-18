@@ -361,19 +361,6 @@ public class Controller {
         return shoppingCart;
     }
 
-    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
-        checkAuthorityOverCart();
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if (!currentCart.getSubProducts().containsKey(subProduct))
-            throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else {
-            try {
-                showProduct(subProduct.getProduct().getId());
-            } catch (Exceptions.InvalidProductIdException ignored) {
-            }
-        }
-    }
-
     public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
             Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
         checkAuthorityOverCart();
