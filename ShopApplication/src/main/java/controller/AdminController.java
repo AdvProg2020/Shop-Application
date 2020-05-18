@@ -264,11 +264,6 @@ public class AdminController {
         return requestPacks;
     }
 
-    /**
-     * @param requestId
-     * @return AddProduct: { {"AddProduct"}, { productId, productName, ProductBrand, infoText, categoryName, sellerUsername, storeName, rawPrice, remainingCount }, {specialProperties}
-     * @throws Exceptions.InvalidRequestIdException
-     */
     public ArrayList<String[]> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId);
         if (request == null)
@@ -279,8 +274,6 @@ public class AdminController {
             switch (Utilities.Pack.request(request)[0]) {
                 case "AddProduct":
                     detailsOfRequest.add(Utilities.Pack.subProductExtended(((AddProductRequest) request).getSubProduct()));
-                    String[] specialProperties = new String[((AddProductRequest) request).getProduct().getPropertyValues().size()];
-                    detailsOfRequest.add(((AddProductRequest) request).getProduct().getPropertyValues().toArray(specialProperties));
                     break;
                 case "AddReview":
                     detailsOfRequest.add(getReviewInfo(((AddReviewRequest) request).getReview()));
