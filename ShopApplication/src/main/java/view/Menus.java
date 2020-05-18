@@ -2,6 +2,7 @@ package view;
 
 import controller.*;
 
+import java.rmi.activation.ActivationGroup_Stub;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,11 @@ class Menus {
             }
         }
 
+        public void run(Menu previousMenu) {
+            this.previousMenu = previousMenu;
+            super.run();
+        }
+
         @Override
         public void show() {
             // no execution needed!
@@ -60,13 +66,6 @@ class Menus {
         @Override
         protected void initSubActions() {
             //no actions available.
-        }
-
-        @Override
-        public void run() {
-            getStackTrace().push(this);
-            previousMenu = Menu.getCallingMenu();
-            this.execute();
         }
 
         public void loginFirst(Menu ifBackMenu,Menu ifDoneMenu) {
@@ -401,6 +400,17 @@ class Menus {
         }
 
         @Override
+        public void run() {
+            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+                subMenus = primarySubMenus;
+                subActions = primarySubActions;
+                super.run();
+            } else {
+                parent.execute();
+            }
+        }
+
+        @Override
         protected void initSubMenus() {
             primarySubMenus.put(1, new ShoppingCartMenu("anonymous user shopping cart menu", this));
             subMenus = primarySubMenus;
@@ -462,7 +472,16 @@ class Menus {
 
         public void run(Menu previousMenu) {
             this.getBackAction().setParent(previousMenu);
-            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+            if (mainController.getType().equalsIgnoreCase(Constants.adminUserType)) {
+                super.run();
+            } else {
+                parent.execute();
+            }
+        }
+
+        @Override
+        public void run() {
+            if (mainController.getType().equalsIgnoreCase(Constants.adminUserType)) {
                 super.run();
             } else {
                 parent.execute();
@@ -693,7 +712,16 @@ class Menus {
 
         public void run(Menu previousMenu) {
             this.getBackAction().setParent(previousMenu);
-            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+            if (mainController.getType().equalsIgnoreCase(Constants.sellerUserType)) {
+                super.run();
+            } else {
+                parent.execute();
+            }
+        }
+
+        @Override
+        public void run() {
+            if (mainController.getType().equalsIgnoreCase(Constants.sellerUserType)) {
                 super.run();
             } else {
                 parent.execute();
@@ -810,7 +838,16 @@ class Menus {
 
         public void run(Menu previousMenu) {
             this.getBackAction().setParent(previousMenu);
-            if (mainController.getType().equalsIgnoreCase(Constants.anonymousUserType)) {
+            if (mainController.getType().equalsIgnoreCase(Constants.customerUserType)) {
+                super.run();
+            } else {
+                parent.execute();
+            }
+        }
+
+        @Override
+        public void run() {
+            if (mainController.getType().equalsIgnoreCase(Constants.customerUserType)) {
                 super.run();
             } else {
                 parent.execute();
