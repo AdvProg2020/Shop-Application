@@ -100,6 +100,8 @@ class Menus {
         private String[] currentFilters;
         private StringBuilder currentSort;
         private ArrayList<String[]> currentProducts;
+        private ArrayList<String> availableProperties;
+        private Map<String, String> currentProperties;
 
         AllProductsMenu(String name, Menu parent) {
             super(name, true, parent, Constants.Menus.allProductsMenuPattern, Constants.Menus.allProductsMenuCommand);
@@ -108,6 +110,8 @@ class Menus {
             currentSort = new StringBuilder();
             currentProducts = new ArrayList<>();
             this.availableCategories = new ArrayList<>();
+            availableProperties = new ArrayList<>();
+            currentProperties = new HashMap<>();
             initSubMenus();
             initSubActions();
         }
@@ -115,7 +119,8 @@ class Menus {
         @Override
         protected void initSubMenus() {
             subMenus.put(1, new SortMenu("product sorting menu", this, getAvailableSorts(), currentSort));
-            subMenus.put(2, new FilterMenu("product filtering menu", this, getAvailableFilters(), currentFilters));
+            subMenus.put(2, new FilterMenu("product filtering menu", this, getAvailableFilters(), currentFilters,
+                    availableProperties, currentProperties, categoryTree));
         }
 
         private String[] getAvailableSorts() {
@@ -135,8 +140,9 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowProductsAction(this.categoryTree, this.currentFilters, this.currentSort, this.currentProducts));
-            subActions.put(index + 2, new Actions.ShowCategories(this.categoryTree, availableCategories));
+            subActions.put(index + 1, new Actions.ShowProductsAction(categoryTree, currentFilters, currentSort,
+                    currentProducts, availableProperties, currentProperties));
+            subActions.put(index + 2, new Actions.ShowCategories(this.categoryTree, availableCategories, availableProperties));
             subActions.put(index + 3, new Actions.ChooseCategoryAction(this.categoryTree, availableCategories));
             subActions.put(index + 4, new Actions.RevertCategoryAction(categoryTree));
             subActions.put(index + 5, new Actions.ProductDetailMenu(currentProducts));
@@ -290,13 +296,20 @@ class Menus {
     public static class FilterMenu extends Menu {
         private String[] currentFilters;
         private String[] availableFilters;
+        private ArrayList<String> availableProperties;
+        private Map<String, String> currentProperties;
+        private ArrayList<String> categoryTree;
 
-        FilterMenu(String name, Menu parent, String[] availableFilters, String[] currentFilters) {
+        FilterMenu(String name, Menu parent, String[] availableFilters, String[] currentFilters,
+        ArrayList<String> availableProperties, Map<String, String> currentProperties, ArrayList<String> categoryTree) {
             super(name, true, parent, Constants.Menus.filterMenuPattern, Constants.Menus.filterMenuCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters.clone();
             initSubMenus();
             initSubActions();
+            this.availableProperties = availableProperties;
+            this.currentProperties = currentProperties;
+            this.categoryTree = categoryTree;
         }
 
         @Override
@@ -307,7 +320,7 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ChooseFiltering(currentFilters, availableFilters));
+            subActions.put(index + 1, new Actions.ChooseFiltering(currentFilters, availableFilters, availableProperties, currentProperties, categoryTree));
             subActions.put(index + 2, new Actions.ShowCurrentFilters(currentFilters, availableFilters));
             subActions.put(index + 3, new Actions.DisableFilter(currentFilters, availableFilters));
             subActions.put(index + 4, new Actions.BackAction(parent));
@@ -339,7 +352,7 @@ class Menus {
         @Override
         protected void initSubMenus() {
             subMenus.put(1, new SortMenu("sale sort menu", this, getAvailableSorts(), this.currentSort));
-            subMenus.put(2, new FilterMenu("sale filter menu", this, getAvailableFilters(), this.currentFilters));
+            subMenus.put(2, new FilterMenu("sale filter menu", this, getAvailableFilters(), this.currentFilters, null, null, null));
         }
 
         @Override

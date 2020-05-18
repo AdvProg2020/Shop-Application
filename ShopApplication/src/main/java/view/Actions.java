@@ -4,12 +4,16 @@ import controller.*;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 //TODO: printSeparator();
 //TODO: isInProducts --> int IndexByID
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: getDefaultSubProductID();
+//TODO: create category
+//TODO: create new product
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -238,17 +242,33 @@ public class Actions {
     }
 
     public static class ShowProductsAction extends Action {
+        private String previousCategory;
         private ArrayList<String> categoryTree;
         private String[] currentFilters;
         private StringBuilder currentSort;
         private ArrayList<String[]> currentProducts;
+        private ArrayList<String> availableProperties;
+        private Map<String, String> currentProperties;
 
-        ShowProductsAction(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts) {
+        ShowProductsAction(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts,
+        ArrayList<String> availableProperties, Map<String, String> currentProperties) {
             super(Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
             this.currentSort = currentSort;
             this.currentProducts = currentProducts;
+            this.availableProperties = availableProperties;
+            this.currentProperties = currentProperties;
+            previousCategory = "superCategory";
+        }
+
+        private void refreshAvailableProperties(String lastCategory) throws Exceptions.InvalidCategoryException {
+            if ( ! lastCategory.equals(previousCategory)) {
+                availableProperties.clear();
+                availableProperties.addAll(mainController.getPropertiesOfCategory(lastCategory));
+                currentProperties.clear();
+                previousCategory = lastCategory;
+            }
         }
 
         private void refreshCurrentProducts(String categoryName) {
@@ -265,7 +285,7 @@ public class Actions {
             try {
                 System.out.println("all products:");
                 printList(mainController.showProducts(productIDs(), null, true,
-                        new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)}));
+                        new String[]{"false", Double.toString(0.00), Double.toString(0.00), null, null, null, Double.toString(0.00)}, new HashMap<String, String>()));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -309,10 +329,11 @@ public class Actions {
                     categoryName = categoryTree.get(categoryTree.size() - 1);
                 }
                 try {
+                    refreshAvailableProperties(categoryName);
                     refreshCurrentProducts(categoryName);
                     System.out.println("current products:");
-                    printList(mainController.showProducts(productIDs(), getSortingField(), isIncreasing(), currentFilters));
-                } catch (Exceptions.InvalidProductIdException e) {
+                    printList(mainController.showProducts(productIDs(), getSortingField(), isIncreasing(), currentFilters, (HashMap<String, String>) currentProperties));
+                } catch (Exceptions.InvalidProductIdException | Exceptions.InvalidCategoryException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -518,22 +539,45 @@ public class Actions {
     }
 
     public static class ChooseFiltering extends Action {
+        private String previousCategory;
         private String[] currentFilters;
         private String[] availableFilters;
+        private ArrayList<String> availableProperties;
+        private Map<String, String> currentProperties;
+        private ArrayList<String> categoryTree;
 
-        ChooseFiltering(String[] currentFilters, String[] availableFilters) {
+        ChooseFiltering(String[] currentFilters, String[] availableFilters, ArrayList<String> availableProperties,
+                Map<String, String> currentProperties, ArrayList<String> categoryTree) {
             super(Constants.Actions.filterPattern, Constants.Actions.filterCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
+            this.availableProperties = availableProperties;
+            this.currentProperties = currentProperties;
+            this.categoryTree = categoryTree;
+            previousCategory = "superCategory";
         }
 
         private void showAvailableFilters() {
-            for (int i = 0; i < availableFilters.length; i++) {
-                System.out.println((i + 1) + ". " + availableFilters[i] + ": " + currentFilters[i]);
+            int index;
+            System.out.println("normal filters:");
+            for (index = 0; index < availableFilters.length; index++) {
+                System.out.println((index + 1) + ". " + availableFilters[index] + ": " + currentFilters[index]);
+            }
+            int size = availableProperties.size();
+            if (availableProperties == null || availableProperties.isEmpty()) return;
+            System.out.println("available property filters:");
+            for (; index <  availableFilters.length + size; index++) {
+                System.out.println((index + 1) + ". " + availableProperties.get(index));
+            }
+            if (currentProperties.isEmpty()) { System.out.println("no filter is set for this category! start filtering!"); return;}
+            System.out.println("current property filters:");
+            for (String currentProperty : currentProperties.keySet()) {
+                System.out.println(currentProperty + ": " + currentProperties.get(currentProperty));
             }
         }
 
-        private int modifyFilter(int filterIndex) {
+
+        private int modifyNormalFilter(int filterIndex) {
             String[] expectingEntry = new String[]{"Y or N", "Double number", "Double number", "non-space String", "String", "String", "Double number"};
             String[] expectingRegex = new String[]{Constants.caseInsensitiveMode + "[YN]", Constants.doublePattern, Constants.doublePattern,
                     Constants.argumentPattern, ".+", ".+", Constants.doublePattern};
@@ -554,20 +598,51 @@ public class Actions {
             }
         }
 
+        private int modifySpecialProperties(int filterIndex) throws Exceptions.InvalidCategoryException {
+            ArrayList<String> availableValues = mainController.getAvailableValuesOfAPropertyOfACategory(previousCategory, availableProperties.get(filterIndex - 1));
+            if (availableValues.isEmpty()) { System.out.println("there is no available value for this field"); return 0; }
+            int size = availableValues.size();
+            while (true) {
+                System.out.println("available values to filter:");
+                for (int i = 0; i < size; i++) {
+                    System.out.println((i + 1) + ". " + availableValues.get(i));
+                }
+                System.out.println("enter the index of the value you want to filter by:");
+                String entry = View.getNextLineTrimmed();
+                if (entry.matches(Constants.unsignedIntPattern) && Integer.parseInt(entry) <= availableValues.size()) {
+                    currentProperties.put(availableProperties.get(filterIndex - 1), availableValues.get(Integer.parseInt(entry)));
+                    return 0;
+                } else if (entry.equalsIgnoreCase("back")) return -1;
+                else System.out.println("invalid entry");
+            }
+        }
+
+        private int modifyFilter(int filterIndex) throws Exceptions.InvalidCategoryException {
+            if (filterIndex <= availableFilters.length) {
+                return modifyNormalFilter(filterIndex);
+            } else {
+                return modifySpecialProperties(filterIndex - availableFilters.length);
+            }
+        }
+
         @Override
         public void execute(String command) {
-            while (true) {
-                showAvailableFilters();
-                System.out.println("choose the filtering field by index (or \"back\" to go back):");
-                String input = View.getNextLineTrimmed();
-                if (input.matches(Constants.unsignedIntPattern) && Integer.parseInt(input) <= availableFilters.length) {
-                    if (modifyFilter(Integer.parseInt(input)) == -1) continue;
-                    else break;
-                } else if (input.equalsIgnoreCase("back")) break;
-                else {
-                    System.out.println("invalid entry.");
-                    continue;
+            try {
+                while (true) {
+                    showAvailableFilters();
+                    System.out.println("choose the filtering field by index (or \"back\" to go back):");
+                    String input = View.getNextLineTrimmed();
+                    if (input.matches(Constants.unsignedIntPattern) && Integer.parseInt(input) <= availableFilters.length + ((categoryTree == null) ? 0 : availableProperties.size())) {
+                        if (modifyFilter(Integer.parseInt(input)) == -1) continue;
+                        else break;
+                    } else if (input.equalsIgnoreCase("back")) break;
+                    else {
+                        System.out.println("invalid entry.");
+                        continue;
+                    }
                 }
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
             }
             printSeparator();
         }
