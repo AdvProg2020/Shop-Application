@@ -191,44 +191,48 @@ public class AdminController {
      * @throws Exceptions.SameAsPreviousValueException
      * @throws Exceptions.InvalidFormatException
      */
-    // TODO: switch case!
     public void editDiscountCode(String code, String field, String newInformation) throws Exceptions.DiscountCodeException, Exceptions.SameAsPreviousValueException, Exceptions.InvalidFormatException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
         else {
-            if (field.equalsIgnoreCase("start date")) {
-                if (discount.getDiscountCode().equals(newInformation))
-                    throw new Exceptions.SameAsPreviousValueException(field);
-                else {
-                    try {
-                        discount.setStartDate(dateFormat.parse(newInformation));
-                    } catch (ParseException e) {
-                        throw new Exceptions.InvalidFormatException("date");
+            switch (field) {
+                case "start date":
+                    if (discount.getDiscountCode().equals(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
+                    else {
+                        try {
+                            discount.setStartDate(dateFormat.parse(newInformation));
+                        } catch (ParseException e) {
+                            throw new Exceptions.InvalidFormatException("date");
+                        }
                     }
-                }
-            } else if (field.equalsIgnoreCase("end date")) {
-                if (discount.getDiscountCode().equals(newInformation))
-                    throw new Exceptions.SameAsPreviousValueException(field);
-                else {
-                    try {
-                        discount.setEndDate(dateFormat.parse(newInformation));
-                    } catch (ParseException e) {
-                        throw new Exceptions.InvalidFormatException("date");
+                    break;
+                case "end date":
+                    if (discount.getDiscountCode().equals(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
+                    else {
+                        try {
+                            discount.setEndDate(dateFormat.parse(newInformation));
+                        } catch (ParseException e) {
+                            throw new Exceptions.InvalidFormatException("date");
+                        }
                     }
-                }
-            } else if (field.equalsIgnoreCase("maximum amount")) {
-                if (discount.getDiscountCode().equals(newInformation))
-                    throw new Exceptions.SameAsPreviousValueException(field);
-                else {
-                    discount.setMaximumAmount(Double.parseDouble(newInformation));
-                }
-            } else if (field.equalsIgnoreCase("percentage")) {
-                if (discount.getDiscountCode().equals(newInformation))
-                    throw new Exceptions.SameAsPreviousValueException(field);
-                else {
-                    discount.setPercentage(Double.parseDouble(newInformation));
-                }
+                    break;
+                case "maximum amount":
+                    if (discount.getDiscountCode().equals(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
+                    else {
+                        discount.setMaximumAmount(Double.parseDouble(newInformation));
+                    }
+                    break;
+                case "percentage":
+                    if (discount.getDiscountCode().equals(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
+                    else {
+                        discount.setPercentage(Double.parseDouble(newInformation));
+                    }
+                    break;
             }
             database().editDiscount();
         }
@@ -331,10 +335,6 @@ public class AdminController {
             categoryNames.add(category.getName());
         }
         return categoryNames;
-    }
-
-    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException{
-        return mainController.getPropertiesOfCategory(categoryName);
     }
 
     public String[] getCategoryEditableFields() {

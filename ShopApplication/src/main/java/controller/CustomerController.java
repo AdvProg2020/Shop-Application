@@ -159,10 +159,6 @@ public class CustomerController {
         }
     }
 
-    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException{
-        return mainController.getPropertiesOfCategory(categoryName);
-    }
-
     public void rateProduct(String productID, int score) throws
             Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID);
@@ -171,7 +167,7 @@ public class CustomerController {
         else {
             if (currentAccount() != null) {
                 for (SubProduct subProduct : product.getSubProducts()) {
-                    if (new ArrayList<>(subProduct.getCustomers()).contains((Customer) currentAccount())) {
+                    if (new ArrayList<>(subProduct.getCustomers()).contains(currentAccount())) {
                         new Rating(currentAccount().getId(), productID, score);
                         database().addRating();
                         return;
@@ -196,24 +192,6 @@ public class CustomerController {
             discountCodes.add(discountInfo);
         }
         return discountCodes;
-    }
-
-    public ArrayList<String[]> getProductsInCart() throws Exceptions.UnAuthorizedAccountException {
-        return mainController.getProductsInCart();
-    }
-
-    public void viewProductInCart(String subProductId) throws Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
-        mainController.viewProductInCart(subProductId);
-    }
-
-    public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
-            Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
-        mainController.increaseProductInCart(subProductId, number);
-    }
-
-    public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
-            Exceptions.NotSubProductIdInTheCartException, Exceptions.UnAuthorizedAccountException {
-        mainController.decreaseProductInCart(subProductId, number);
     }
 
     public double getTotalPriceOfCart() throws Exceptions.UnAuthorizedAccountException {

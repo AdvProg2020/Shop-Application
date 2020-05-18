@@ -444,11 +444,6 @@ public class Utilities {
             public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){
                 subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
             }
-            public static void property(ArrayList<SubProduct> subProducts, String property, String value){
-                if(property == null || property.equals(""))
-                    return;
-                subProducts.removeIf(subProduct -> Filter.doesMatchTheProperty(subProduct.getProduct(), property, value));
-            }
         }
     }
     static class Sort {
