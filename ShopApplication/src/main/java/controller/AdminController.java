@@ -183,7 +183,6 @@ public class AdminController {
         return Utilities.Field.discountEditableFields();
     }
 
-
     /**
      * @param code           String
      * @param field          String ->                     "start date", "end date", "maximum amount", "percentage"
