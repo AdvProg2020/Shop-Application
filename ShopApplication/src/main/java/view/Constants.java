@@ -3,7 +3,7 @@ package view;
 final class Constants {
     static final String caseInsensitiveMode = "(?i)";
     static final String argumentPattern = "(\\S+)";
-    static final String spacePattern = "\\s+";
+    private static final String spacePattern = "\\s+";
     static final String unsignedIntPattern = "\\+?(\\d+)";
     static final String usernamePattern = "(\\w+)";
     static final String doublePattern = "(\\d+(?:\\.\\d+)?)";

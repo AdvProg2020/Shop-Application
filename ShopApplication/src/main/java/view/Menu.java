@@ -1,6 +1,5 @@
 package view;
 
-import java.io.IOException;
 import java.util.*;
 
 public abstract class Menu {
@@ -17,7 +16,7 @@ public abstract class Menu {
     private String command;
 
     static {
-        allMenus = new ArrayList<Menu>();
+        allMenus = new ArrayList<>();
         stackTrace = new Stack<>();
     }
 
@@ -143,7 +142,6 @@ public abstract class Menu {
 
 
     protected int floatingMenusIndexModification() {
-        int modification = 0;
         if (isAccountMenuAccessible) {
             return 1;
         } else {

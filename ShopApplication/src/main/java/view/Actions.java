@@ -58,13 +58,17 @@ public class Actions {
             super(Constants.Actions.loginPattern, Constants.Actions.loginCommand);
         }
 
-        private String getPassword() {
+        private int getPassword(StringBuilder password) {
             System.out.println("Enter your password (enter \"back\" to go back):");
             String input = View.getNextLineTrimmed();
             if (input.equalsIgnoreCase("back")) {
-                return null;
+                return -1;
+            } else if (input.matches(Constants.usernamePattern)){
+                password.setLength(0);
+                password.append(input);
+                return 0;
             } else {
-                return input;
+                return -2;
             }
         }
 
@@ -73,11 +77,12 @@ public class Actions {
         public void execute(String command) {
             Matcher commandMatcher = getMatcherReady(command);
             String username = commandMatcher.group(1);
+            StringBuilder password = new StringBuilder();
             while (true) {
-                String password = getPassword();
-                if (password != null) {
+                int output = getPassword(password);
+                if (output  == 0) {
                     try {
-                        mainController.login(username, password);
+                        mainController.login(username, password.toString());
                         //if without problem
                         System.out.println("logged-in successfully!");
                     } catch (Exceptions.UsernameDoesntExistException e) {
@@ -87,8 +92,11 @@ public class Actions {
                         System.out.println(e.getMessage());
                     }
                     break;
-                } else {
+                } else if (output == -1){
                     break;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
                 }
             }
             printSeparator();
@@ -319,6 +327,7 @@ public class Actions {
         ShowCategories(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
             super(Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
             this.availableCategories = availableCategories;
+            this.categoryTree = categoryTree;
         }
 
         private void refreshCategories(String lastCategory) throws Exceptions.InvalidCategoryException {
@@ -655,8 +664,8 @@ public class Actions {
         }
 
         private void printSaleInfo(String[] sale) throws Exceptions.InvalidSaleIdException {
-            for (int i = 0; i < sale.length; i++) {
-                System.out.print(" " + sale[i]);
+            for (String s : sale) {
+                System.out.print(" " + s);
             }
             System.out.print("\n");
             ArrayList<String[]> productsInSale = mainController.getProductsInSale(sale[0]);
@@ -1018,14 +1027,12 @@ public class Actions {
     }
 
     public static class SelectSeller extends Action {
-        private StringBuilder productID;
         private StringBuilder subProductID;
         private ArrayList<String[]> subProducts;
 
-        SelectSeller(StringBuilder productID, StringBuilder subProductID, ArrayList<String[]> subProducts) {
+        SelectSeller( StringBuilder subProductID, ArrayList<String[]> subProducts) {
             super(Constants.Actions.selectSellerPattern, Constants.Actions.selectSellerCommand);
             this.subProductID = subProductID;
-            this.productID = productID;
             this.subProducts = subProducts;
         }
 
@@ -1049,6 +1056,7 @@ public class Actions {
 
         ShowCurrentSeller(StringBuilder subProductID) {
             super(Constants.Actions.showCurrentSellerPattern, Constants.Actions.showCurrentSellerCommand);
+            this.subProductID = subProductID;
         }
 
         @Override
@@ -1533,7 +1541,7 @@ public class Actions {
                     System.out.println("please accept/decline the request (accept or decline or \"back\" to go back):");
                     String response = View.getNextLineTrimmed();
                     if (response.equalsIgnoreCase("back")) {
-
+                        return;
                     } else if (response.matches("(accept|decline)")) {
                         if (response.equalsIgnoreCase("accept")) {
                             adminController.acceptRequest(requestID, true);
@@ -2098,42 +2106,6 @@ public class Actions {
         }
     }
 
-
-    //TODO: detailMeun
-    public static class ShoppingCartViewProduct extends Action {
-        private ArrayList<String[]> currentProducts;
-
-        ShoppingCartViewProduct(ArrayList<String[]> currentProducts) {
-            super(Constants.Actions.shoppingCartViewProductPattern, Constants.Actions.shoppingCartViewProductCommand);
-            this.currentProducts = currentProducts;
-        }
-
-        private void printInfo(int index) {
-            String[] info = currentProducts.get(index);
-            System.out.println("1. product ID: " + info[0]);
-            System.out.println("2. product name: " + info[1]);
-            System.out.println("3. product brand: " + info[2]);
-            System.out.println("4. seller username: " + info[3]);
-            System.out.println("5. seller store name: " + info[4]);
-            System.out.println("6. product count: " + info[5]);
-            System.out.println("7. " + info[6]);
-        }
-
-        @Override
-        public void execute(String command) {
-            try {
-                int index = getIndex(command, currentProducts);
-                if (index != 0) {
-                    mainController.viewProductInCart(currentProducts.get(index - 1)[0]);
-
-                }
-            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnAuthorizedAccountException e) {
-                System.out.println(e.getMessage());
-            }
-            printSeparator();
-        }
-    }
-
     public static class ShoppingCartIncreaseProductCount extends Action {
         private ArrayList<String[]> currentProducts;
 
@@ -2338,7 +2310,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             mainController.logout();
-            Menu.getAccountMenu().run();
+            Menu.getAccountMenu().execute();
         }
     }
 }

@@ -1,7 +1,6 @@
 package view;
 
 import controller.*;
-import model.account.Customer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -184,7 +183,7 @@ class Menus {
             subActionsAnonymousCustomer.put(index + 1, new Actions.DigestProduct(productID));
             subActionsAnonymousCustomer.put(index + 2, new Actions.ShowSubProducts(subProducts, productID));
             subActionsAnonymousCustomer.put(index + 3, new Actions.AddToCart(subProductID));
-            subActionsAnonymousCustomer.put(index + 4, new Actions.SelectSeller(subProductID, productID, subProducts));
+            subActionsAnonymousCustomer.put(index + 4, new Actions.SelectSeller(subProductID, subProducts));
             subActionsAnonymousCustomer.put(index + 5, new Actions.ShowCurrentSeller(subProductID));
             subActionsAnonymousCustomer.put(index + 6, new Actions.CompareProductByID(productID));
             subActionsAnonymousCustomer.put(index + 7, new Actions.BackAction(null));
