@@ -1773,7 +1773,7 @@ public class Actions {
                     ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());
                     adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? Constants.SUPER_CATEGORY_NAME : results[0], specialProperties);
                 }
-            } catch (Exceptions.InvalidCategoryException e) {
+            } catch (Exceptions.InvalidCategoryException | Exceptions.ExistedCategoryException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
