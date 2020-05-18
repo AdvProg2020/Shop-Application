@@ -115,7 +115,13 @@ public class Controller {
     }
 
     private void sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
+        if (sortBy == null)
+            sortBy = "view count";
+
         switch (sortBy) {
+            case "view count":
+                products.sort(new Utilities.Sort.ProductViewCountComparator(isIncreasing));
+                break;
             case "price":
                 products.sort(new Utilities.Sort.ProductPriceComparator(isIncreasing));
                 break;
@@ -131,11 +137,8 @@ public class Controller {
             case "remaining count":
                 products.sort(new Utilities.Sort.ProductRemainingCountComparator(isIncreasing));
                 break;
-            case "view count":
-                products.sort(new Utilities.Sort.ProductViewCountComparator(isIncreasing));
             default:
                 products.sort(new Utilities.Sort.ProductViewCountComparator(true));
-                break;
         }
     }
 
@@ -218,19 +221,18 @@ public class Controller {
      *                                              products
      */
     public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy, HashMap<String, String> propertyFilters) throws Exceptions.InvalidProductIdException {
-        if (sortBy == null)
-            sortBy = "viewCount";
         ArrayList<Product> products = new ArrayList<>();
         Product product;
 
         for (String productId : productIds) {
-            if ((product = Product.getProductById(productId)) == null)
+            product = Product.getProductById(productId);
+            if (product == null)
                 throw new Exceptions.InvalidProductIdException(productId);
             else
                 products.add(product);
         }
-        for( int i = 0; i < filterBy.length; i++){
-            if( filterBy[i] == null)
+        for (int i = 0; i < filterBy.length; i++) {
+            if (filterBy[i] == null)
                 filterBy[i] = "";
         }
         filterProducts(filterBy[0].equalsIgnoreCase("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
@@ -270,11 +272,11 @@ public class Controller {
         return Utilities.Pack.digest(product);
     }
 
-    public ArrayList<String> getSpecialPropertiesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+    public ArrayList<String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
-        else{
+        else {
             ArrayList<String> properties = new ArrayList<>();
             for (String property : product.getCategory().getProperties()) {
                 properties.add(product.getPropertyValue(property));
@@ -526,10 +528,12 @@ public class Controller {
 
     private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts) {
         if (sortBy == null) {
-            subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(true));
-            return;
+            sortBy = "view count";
         }
         switch (sortBy) {
+            case "view count":
+                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(isIncreasing));
+                break;
             case "price":
                 subProducts.sort(new Utilities.Sort.SubProductPriceComparator(isIncreasing));
                 break;
@@ -545,12 +549,8 @@ public class Controller {
             case "remaining count":
                 subProducts.sort(new Utilities.Sort.SubProductRemainingCountComparator(isIncreasing));
                 break;
-            case "view count":
-                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(isIncreasing));
-                break;
             default:
                 subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(true));
-                break;
         }
     }
 }

@@ -1050,7 +1050,7 @@ public class Actions {
                 String[] productInfo = mainController.digest(productID.toString());
                 showInfo(productInfo);
                 System.out.println("attributes");
-                mainController.getSpecialPropertiesOfAProduct(productID.toString()).forEach(att -> System.out.println(att));
+                mainController.getPropertyValuesOfAProduct(productID.toString()).forEach(att -> System.out.println(att));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1189,8 +1189,8 @@ public class Actions {
             try {
                 String[] productInfo = mainController.digest(productID.toString());
                 String[] otherProductInfo = mainController.digest(otherProductID);
-                ArrayList<String> productSP = mainController.getSpecialPropertiesOfAProduct(productID.toString());
-                ArrayList<String> otherProductSP = mainController.getSpecialPropertiesOfAProduct(otherProductID);
+                ArrayList<String> productSP = mainController.getPropertyValuesOfAProduct(productID.toString());
+                ArrayList<String> otherProductSP = mainController.getPropertyValuesOfAProduct(otherProductID);
                 printDigestInfo(productInfo, otherProductInfo);
                 printSeparator();
                 printSpecialProperties(productID.toString(), productSP);
