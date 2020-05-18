@@ -626,11 +626,11 @@ class Menus {
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.AdminShowDiscountCodes(discountCodes));
-            subActions.put(index + 1, new Actions.AdminCreateDiscountCode());
-            subActions.put(index + 2, new Actions.AdminViewDiscountCode(discountCodes));
-            subActions.put(index + 3, new Actions.AdminEditDiscountCode(discountCodes, getEditableFields()));
-            subActions.put(index + 4, new Actions.AdminRemoveDiscountCode(discountCodes));
-            subActions.put(index + 5, new Actions.BackAction(parent));
+            subActions.put(index + 2, new Actions.AdminCreateDiscountCode());
+            subActions.put(index + 3, new Actions.AdminViewDiscountCode(discountCodes));
+            subActions.put(index + 4, new Actions.AdminEditDiscountCode(discountCodes, getEditableFields()));
+            subActions.put(index + 5, new Actions.AdminRemoveDiscountCode(discountCodes));
+            subActions.put(index + 6, new Actions.BackAction(parent));
         }
     }
 
