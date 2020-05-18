@@ -9,11 +9,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 //TODO: printSeparator();
-//TODO: isInProducts --> int IndexByID
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: getDefaultSubProductID();
-//TODO: create category
-//TODO: create new product
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -344,11 +341,13 @@ public class Actions {
     public static class ShowCategories extends Action {
         private ArrayList<String> categoryTree;
         private ArrayList<String[]> availableCategories;
+        private ArrayList<String> availableProperties;
 
-        ShowCategories(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
+        ShowCategories(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories, ArrayList<String> availableProperties) {
             super(Constants.Actions.showCategoriesPattern, Constants.Actions.showCategoriesCommand);
             this.availableCategories = availableCategories;
             this.categoryTree = categoryTree;
+            this.availableProperties = availableProperties;
         }
 
         private void refreshCategories(String lastCategory) throws Exceptions.InvalidCategoryException {
@@ -366,7 +365,12 @@ public class Actions {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
                 refreshCategories(lastCategory);
+                System.out.println("category info:");
                 printList(availableCategories);
+                if ( ! availableProperties.isEmpty()) {
+                    System.out.println("category's special properties:");
+                    availableProperties.forEach(ap -> System.out.println(ap));
+                }
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
             }
@@ -2089,15 +2093,47 @@ public class Actions {
         }
 
         private void createNewProduct(String[] results) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
-            String[] fields = new String[]{"description", "category name", "price", "count"};
-            String[] regex = new String[]{".+", ".+", Constants.doublePattern, Constants.unsignedIntPattern};
+            String[] fields = new String[]{"price", "count", "info text"};
+            String[] regex = new String[]{Constants.doublePattern, Constants.unsignedIntPattern, ".+"};
             Form productSecondForm = new Form(fields, regex);
-            productSecondForm.setupArrayForm(new String[]{"special properties"}, new String[]{".+"});
-            if (productSecondForm.takeInput() == 0) {
-                String[] secondResults = productSecondForm.getResults();
-                ArrayList<String> specialProperties = getListResult(productSecondForm.getListResult());
-                sellerController.addNewProduct(results[0], results[1], secondResults[0], secondResults[1],
-                        specialProperties, Double.parseDouble(secondResults[2]), Integer.parseInt(secondResults[3]));
+            while(true) {
+                if (productSecondForm.takeInput() == 0) {
+                    while(true) {
+                        String[] secondResults;
+                        ArrayList spResults;
+                        System.out.println("category name:");
+                        String entry = View.getNextLineTrimmed();
+                        if (entry.equalsIgnoreCase("back")) break;
+                        else if (entry.matches(Constants.argumentPattern)) {
+                            ArrayList<String> sp = mainController.getPropertiesOfCategory(entry);
+                            int size = sp.size();
+                            spResults = new ArrayList();
+                            for (int i = 0; i < size; i++) {
+                                System.out.println(sp.get(i) + ":");
+                                String input = View.getNextLineTrimmed();
+                                if (input.equalsIgnoreCase("back")) {
+                                    if(i == 0) break;
+                                    else i--;
+                                } else if (input.matches(Constants.argumentPattern)) {
+                                    spResults.add(input);
+                                    if (i == size - 1) {
+                                        secondResults = productSecondForm.getResults();
+                                        sellerController.addNewProduct(results[0], results[1], secondResults[2], entry,
+                                                spResults, Double.parseDouble(secondResults[0]), Integer.parseInt(secondResults[1]));
+                                    }
+                                } else {
+                                    System.out.println("invalid entry");
+                                    continue;
+                                }
+                            }
+                        } else {
+                            System.out.println("invalid entry");
+                            continue;
+                        }
+                    }
+                } else {
+                    return;
+                }
             }
         }
 
@@ -2384,8 +2420,14 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            mainController.logout();
-            Menu.getAccountMenu().execute();
+            try {
+                mainController.logout();
+                System.out.println("logged-out successfully");
+                Menu.getAccountMenu().execute();
+            } catch (Exceptions.NotLoggedInException e){
+                System.out.println(e.getMessage());
+            }
+            printSeparator();
         }
     }
 }

@@ -142,8 +142,8 @@ class Menus {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActions.put(index + 1, new Actions.ShowProductsAction(categoryTree, currentFilters, currentSort,
                     currentProducts, availableProperties, currentProperties));
-            subActions.put(index + 2, new Actions.ShowCategories(this.categoryTree, availableCategories, availableProperties));
-            subActions.put(index + 3, new Actions.ChooseCategoryAction(this.categoryTree, availableCategories));
+            subActions.put(index + 2, new Actions.ShowCategories(categoryTree, availableCategories, availableProperties));
+            subActions.put(index + 3, new Actions.ChooseCategoryAction(categoryTree, availableCategories));
             subActions.put(index + 4, new Actions.RevertCategoryAction(categoryTree));
             subActions.put(index + 5, new Actions.ProductDetailMenu(currentProducts));
             subActions.put(index + 6, new Actions.BackAction(parent));
