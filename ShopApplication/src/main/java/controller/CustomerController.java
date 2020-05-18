@@ -159,6 +159,10 @@ public class CustomerController {
         }
     }
 
+    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException{
+        return mainController.getPropertiesOfCategory(categoryName);
+    }
+
     public void rateProduct(String productID, int score) throws
             Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID);

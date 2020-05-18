@@ -341,6 +341,10 @@ public class AdminController {
         return categoryNames;
     }
 
+    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException{
+        return mainController.getPropertiesOfCategory(categoryName);
+    }
+
     public String[] getCategoryEditableFields() {
         return Utilities.Field.getCategoryEditableFields();
     }

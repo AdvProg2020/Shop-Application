@@ -193,6 +193,10 @@ public class SellerController {
             return null;
     }
 
+    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException{
+        return mainController.getPropertiesOfCategory(categoryName);
+    }
+
     public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
         Product product = Product.getProductByNameAndBrand(name, brand);

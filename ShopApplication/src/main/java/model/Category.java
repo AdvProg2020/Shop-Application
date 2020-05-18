@@ -130,6 +130,15 @@ public class Category implements ModelBasic {
         return products;
     }
 
+    public List<Product> getSpecificProducts(){
+        List<Product> products = new ArrayList<>();
+        for (String productId : productIds) {
+            products.add(Product.getProductById(productId));
+        }
+
+        return products;
+    }
+
     @ModelOnly
     public void addProduct(String productId) {
         productIds.add(productId);

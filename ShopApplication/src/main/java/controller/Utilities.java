@@ -11,10 +11,13 @@ import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
 
+import java.awt.image.AbstractMultiResolutionImage;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Utilities {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -156,12 +159,14 @@ public class Utilities {
         }
 
         public static String[] digest(Product product) {
-            String[] productInfo = new String[5];
+            String[] productInfo = new String[7];
             productInfo[0] = product.getId();
             productInfo[1] = product.getName();
             productInfo[2] = product.getBrand();
             productInfo[3] = product.getInfoText();
             productInfo[4] = Double.toString(product.getAverageRatingScore());
+            productInfo[5] = Double.toString(product.getMaxPrice());
+            productInfo[6] = Double.toString(product.getMinPrice());
             return productInfo;
         }
 
@@ -333,6 +338,32 @@ public class Utilities {
             return availableFilters;
         }
 
+        public static ArrayList<String> getAvailableValuesOfAPropertyOfACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
+            Category category = Category.getCategoryByName(categoryName);
+            if(category == null)
+                throw new Exceptions.InvalidCategoryException(categoryName);
+            ArrayList<Product> products = new ArrayList<>(category.getSpecificProducts());
+            ArrayList<String> values = new ArrayList<>();
+            int index = category.getProperties().indexOf(property);
+            for (Product product : products) {
+                values.add(product.getPropertyValues().get(index));
+            }
+            Set<String> valuesSet = new HashSet<>(values);
+            values.clear();
+            values.addAll(valuesSet);
+            return values;
+        }
+
+        private static boolean matchTheProperty(Product product, String property, String value){
+            ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties());
+            if(!categoryProperties.contains(property))
+                return false;
+            else {
+                int indexOfProperty = categoryProperties.indexOf(property);
+                return product.getPropertyValues().get(indexOfProperty).equals(value);
+            }
+        }
+
         static class ProductFilter {
             public static void available(ArrayList<Product> products, boolean available) {
                 if (available)
@@ -380,6 +411,12 @@ public class Utilities {
             public static void ratingScore(ArrayList<Product> products, double minRatingScore) {
                 products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
             }
+
+            public static void property(ArrayList<Product> products, String property, String value){
+                if(property == null || property.equals(""))
+                    return;
+                products.removeIf(product -> !matchTheProperty(product, property, value));
+            }
         }
 
         static class SubProductFilter {
@@ -409,6 +446,11 @@ public class Utilities {
             }
             public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){
                 subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
+            }
+            public static void property(ArrayList<SubProduct> subProducts, String property, String value){
+                if(property == null || property.equals(""))
+                    return;
+                subProducts.removeIf(subProduct -> !matchTheProperty(subProduct.getProduct(), property, value));
             }
         }
     }
