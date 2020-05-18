@@ -92,7 +92,7 @@ public class Controller {
     }
 
     public void logout() throws Exceptions.NotLoggedInException {
-        if( currentAccount == null)
+        if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
         currentAccount = null;
         currentCart = new Cart(null);
@@ -239,7 +239,7 @@ public class Controller {
                 , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
 
         for (String propertyFilter : propertyFilters.keySet()) {
-            if(propertyFilters.get(propertyFilter) != null)
+            if (propertyFilters.get(propertyFilter) != null)
                 Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
         }
         sortProducts(sortBy, isIncreasing, products);
@@ -285,9 +285,9 @@ public class Controller {
         }
     }
 
-    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException{
+    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if( category == null)
+        if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else
             return new ArrayList<>(category.getProperties());
@@ -489,8 +489,8 @@ public class Controller {
         for (Sale sale : Sale.getAllSales()) {
             subProductsInSale.addAll(sale.getSubProducts());
         }
-        for( int i = 0; i < filterBy.length; i++){
-            if( filterBy[i] == null)
+        for (int i = 0; i < filterBy.length; i++) {
+            if (filterBy[i] == null)
                 filterBy[i] = "";
         }
         filterSubProducts(filterBy[0].equalsIgnoreCase("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])

@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Utilities {
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+    private static DateFormat dateFormat = new SimpleDateFormat("yy-mm-dd");
 
     public static DateFormat getDateFormat() {
         return dateFormat;
@@ -443,6 +443,11 @@ public class Utilities {
             }
             public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){
                 subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
+            }
+            public static void property(ArrayList<SubProduct> subProducts, String property, String value){
+                if(property == null || property.equals(""))
+                    return;
+                subProducts.removeIf(subProduct -> Filter.doesMatchTheProperty(subProduct.getProduct(), property, value));
             }
         }
     }

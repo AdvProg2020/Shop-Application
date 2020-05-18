@@ -2,7 +2,6 @@ package view;
 
 import controller.*;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +11,7 @@ import java.util.regex.Matcher;
 //TODO: sout completion messages. ex: .... done successfully.
 //TODO: check back menu, indexing of subMenus and subActions.
 public class Actions {
-    public static final String SUPER_CATEGORY_NAME = "SuperCategory";
+
     private static Controller mainController;
     private static AdminController adminController;
     private static SellerController sellerController;
@@ -258,7 +257,7 @@ public class Actions {
             this.currentProducts = currentProducts;
             this.availableProperties = availableProperties;
             this.currentProperties = currentProperties;
-            previousCategory = SUPER_CATEGORY_NAME;
+            previousCategory = Constants.SUPER_CATEGORY_NAME;
         }
 
         private void refreshAvailableProperties(String lastCategory) throws Exceptions.InvalidCategoryException {
@@ -280,7 +279,7 @@ public class Actions {
         }
 
         private void showAllProducts() {
-            refreshCurrentProducts(SUPER_CATEGORY_NAME);
+            refreshCurrentProducts(Constants.SUPER_CATEGORY_NAME);
             try {
                 System.out.println("all products:");
                 printList(mainController.showProducts(productIDs(), null, true,
@@ -323,7 +322,7 @@ public class Actions {
                 showAllProducts();
             } else {
                 if (categoryTree.size() == 0) {
-                    categoryName = SUPER_CATEGORY_NAME;
+                    categoryName = Constants.SUPER_CATEGORY_NAME;
                 } else {
                     categoryName = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -362,7 +361,7 @@ public class Actions {
             try {
                 String lastCategory;
                 if (categoryTree.size() == 0) {
-                    lastCategory = SUPER_CATEGORY_NAME;
+                    lastCategory = Constants.SUPER_CATEGORY_NAME;
                 } else {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -560,7 +559,7 @@ public class Actions {
             this.availableProperties = availableProperties;
             this.currentProperties = currentProperties;
             this.categoryTree = categoryTree;
-            previousCategory = SUPER_CATEGORY_NAME;
+            previousCategory = Constants.SUPER_CATEGORY_NAME;
         }
 
         private void showAvailableFilters() {
@@ -1423,8 +1422,8 @@ public class Actions {
             if (discountCodeForm.takeInput() == 0) {
                 String[] results = discountCodeForm.getResults();
                 try {
-                    adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
-                            Double.valueOf(results[3]), Integer.parseInt(results[4]), discountCodeForm.getListResult());
+                    adminController.createDiscountCode(results[0], results[1], results[2],
+                            Double.parseDouble(results[3]), Integer.parseInt(results[4]), discountCodeForm.getListResult());
                     System.out.println("discount code created successfully");
                 } catch (Exceptions.ExistingDiscountCodeException | Exceptions.InvalidAccountsForDiscount e) {
                     System.out.println(e.getMessage());
@@ -1771,7 +1770,7 @@ public class Actions {
                 if (categoryForm.takeInput() == 0) {
                     String[] results = categoryForm.getResults();
                     ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());
-                    adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? SUPER_CATEGORY_NAME : results[0], specialProperties);
+                    adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? Constants.SUPER_CATEGORY_NAME : results[0], specialProperties);
                 }
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
@@ -1941,7 +1940,7 @@ public class Actions {
                 String[] results = saleForm.getResults();
                 ArrayList<String> listResult = getListResult(saleForm.getListResult());
                 try {
-                    sellerController.addSale(Date.valueOf(results[0]), Date.valueOf(results[1]),
+                    sellerController.addSale(results[0], results[1],
                             Double.parseDouble(results[2]), Double.parseDouble(results[3]), listResult);
                 } catch (Exceptions.InvalidDateException | Exceptions.InvalidProductIdsForASeller e) {
                     System.out.println(e.getMessage());
