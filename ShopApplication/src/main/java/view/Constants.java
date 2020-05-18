@@ -7,6 +7,7 @@ final class Constants {
     static final String unsignedIntPattern = "\\+?(\\d+)";
     static final String usernamePattern = "(\\w+)";
     static final String doublePattern = "(\\d+(?:\\.\\d+)?)";
+    static final String percentagePattern = "%?" + doublePattern + "%?";
     static final String datePattern = "\\d{2}[/-]\\d{2}[/-]\\d{2}";
     static final String IRLNamePattern = "[a-zA-Z]+( [a-zA-Z]+)*";
     static final String emailPattern = ".+@.+\\.com";

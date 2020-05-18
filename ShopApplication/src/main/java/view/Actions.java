@@ -1416,7 +1416,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             String[] fields = new String[]{"discount code", "start date (yy-mm-dd)", "end date (yy-mm-dd)", "percentage", "maximum amount of use"};
-            String[] fieldRegex = new String[]{Constants.argumentPattern, Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.unsignedIntPattern};
+            String[] fieldRegex = new String[]{Constants.argumentPattern, Constants.datePattern, Constants.datePattern, Constants.percentagePattern, Constants.unsignedIntPattern};
             Form discountCodeForm = new Form(fields, fieldRegex);
             discountCodeForm.setupArrayForm(new String[]{"customer ID to add", "numberOfUses"}, new String[]{Constants.argumentPattern, Constants.unsignedIntPattern});
             if (discountCodeForm.takeInput() == 0) {
@@ -1933,7 +1933,7 @@ public class Actions {
         @Override
         public void execute(String command) {
             String[] fields = new String[]{"start date (yy-mm-dd)", "end date (yy-mm-dd)", "percentage", "maximum price reduction"};
-            String[] fieldRegex = new String[]{Constants.datePattern, Constants.datePattern, "^%?[0-99]\\.\\d+%?$", Constants.doublePattern};
+            String[] fieldRegex = new String[]{Constants.datePattern, Constants.datePattern, Constants.percentagePattern, Constants.doublePattern};
             Form saleForm = new Form(fields, fieldRegex);
             saleForm.setupArrayForm(new String[]{"product ID"}, new String[]{Constants.argumentPattern});
             if (saleForm.takeInput() == 0) {
