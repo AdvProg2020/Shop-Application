@@ -202,7 +202,7 @@ public class Controller {
     }
 
     private ArrayList<Product> getProductsInCategory(Category category) {
-        ArrayList<Product> products = new ArrayList<>(category.getProducts());
+        ArrayList<Product> products = new ArrayList<>(category.getProducts(true));
         sortProducts("view count", true, products);
         return products;
     }

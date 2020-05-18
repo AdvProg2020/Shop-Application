@@ -11,7 +11,6 @@ import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
 
-import java.awt.image.AbstractMultiResolutionImage;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -342,7 +341,7 @@ public class Utilities {
             Category category = Category.getCategoryByName(categoryName);
             if(category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
-            ArrayList<Product> products = new ArrayList<>(category.getSpecificProducts());
+            ArrayList<Product> products = new ArrayList<>(category.getProducts(false));
             ArrayList<String> values = new ArrayList<>();
             int index = category.getProperties().indexOf(property);
             for (Product product : products) {

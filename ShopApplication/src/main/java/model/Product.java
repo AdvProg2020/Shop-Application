@@ -14,18 +14,18 @@ public class Product implements ModelBasic {
     private String infoText;
     private int viewCount;
     private String categoryId;
-    private List<String> propertyValues;
+    private Map<String, String> propertyValues;
     private transient Set<String> subProductIds;
     private transient Set<String> reviewIds;
     private transient Set<String> ratingIds;
     private boolean suspended;
 
-    public Product(String name, String brand, String infoText, String categoryId, ArrayList<String> propertyValues, SubProduct subProduct) {
+    public Product(String name, String brand, String infoText, String categoryId, List<String> values, SubProduct subProduct) {
         this.name = name;
         this.brand = brand;
         this.infoText = infoText;
         this.categoryId = categoryId;
-        this.propertyValues = propertyValues;
+        setPropertyValues(values);
         viewCount = 0;
         suspended = false;
         new AddProductRequest(this, subProduct);
@@ -173,8 +173,19 @@ public class Product implements ModelBasic {
         subProductIds.remove(subProductId);
     }
 
-    public List<String> getPropertyValues() {
-        return new ArrayList<>(propertyValues);
+    public String getPropertyValue(String property) {
+        String value = propertyValues.get(property);
+        if (value == null)
+            value = "";
+
+        return value;
+    }
+
+    private void setPropertyValues(List<String> values) {
+        List<String> properties = getCategory().getProperties();
+        for (int i = 0; i < values.size(); i++) {
+            propertyValues.put(properties.get(i), values.get(i));
+        }
     }
 
     public List<Review> getReviews() {

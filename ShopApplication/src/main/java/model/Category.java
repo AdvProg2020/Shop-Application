@@ -17,7 +17,7 @@ public class Category implements ModelBasic {
     private transient Set<String> subCategoryIds;
     private boolean suspended;
 
-    public Category(String name, String parentId, ArrayList<String> properties) {
+    public Category(String name, String parentId, List<String> properties) {
         this.name = name;
         this.parentId = parentId;
         this.properties = properties;
@@ -31,7 +31,7 @@ public class Category implements ModelBasic {
 
     public static void setSuperCategory() {
         if (superCategory == null)
-            new Category(SUPER_CATEGORY_NAME, null, null);
+            new Category(SUPER_CATEGORY_NAME, null, new ArrayList<>());
     }
 
     public static List<Category> getAllCategories(boolean... suspense) {
@@ -77,7 +77,7 @@ public class Category implements ModelBasic {
             subCategory.suspend();
         }
         subCategoryIds = null;
-        for (Product product : getProducts()) {
+        for (Product product : getProducts(false)) {
             product.suspend();
         }
         productIds = null;
@@ -118,20 +118,13 @@ public class Category implements ModelBasic {
         getParent().addSubCategory(categoryId);
     }
 
-    public List<Product> getProducts() {
+    public List<Product> getProducts(boolean deep) {
         List<Product> products = new ArrayList<>();
-        for (Category subCategory : getSubCategories()) {
-            products.addAll(subCategory.getProducts());
+        if (deep) {
+            for (Category subCategory : getSubCategories()) {
+                products.addAll(subCategory.getProducts(true));
+            }
         }
-        for (String productId : productIds) {
-            products.add(Product.getProductById(productId));
-        }
-
-        return products;
-    }
-
-    public List<Product> getSpecificProducts(){
-        List<Product> products = new ArrayList<>();
         for (String productId : productIds) {
             products.add(Product.getProductById(productId));
         }
