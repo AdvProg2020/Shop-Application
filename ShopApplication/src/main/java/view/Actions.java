@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 
 //TODO: printSeparator();
 //TODO: sout completion messages. ex: .... done successfully.
-//TODO: getDefaultSubProductID();
 public class Actions {
     private static Controller mainController;
     private static AdminController adminController;
@@ -38,6 +37,7 @@ public class Actions {
 
         @Override
         public void execute(String command) {
+            printSeparator();
             parent.run();
         }
 
@@ -1059,11 +1059,13 @@ public class Actions {
     public static class ShowSubProducts extends Action {
         private ArrayList<String[]> subProducts;
         private StringBuilder productID;
+        private StringBuilder subProductID;
 
-        ShowSubProducts(ArrayList<String[]> subProducts, StringBuilder productID) {
+        ShowSubProducts(ArrayList<String[]> subProducts, StringBuilder productID, StringBuilder subProductID) {
             super(Constants.Actions.showSubProductsPattern, Constants.Actions.showSubProductsCommand);
             this.subProducts = subProducts;
             this.productID = productID;
+            this.subProductID = subProductID;
         }
 
         private void refreshSubProducts() throws Exceptions.InvalidProductIdException {
@@ -1074,6 +1076,13 @@ public class Actions {
         @Override
         public void execute(String command) {
             try {
+                if (subProductID.length() == 0) {
+                    if (subProducts.size() != 0) {
+                        System.out.println("there is no seller for this product");
+                    } else {
+                        subProductID.append(subProducts.get(0)[0]);
+                    }
+                }
                 refreshSubProducts();
                 System.out.println("sub products:");
                 printList(subProducts);

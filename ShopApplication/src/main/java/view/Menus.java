@@ -186,7 +186,7 @@ class Menus {
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
             subActionsAnonymousCustomer.put(index + 1, new Actions.DigestProduct(productID));
-            subActionsAnonymousCustomer.put(index + 2, new Actions.ShowSubProducts(subProducts, productID));
+            subActionsAnonymousCustomer.put(index + 2, new Actions.ShowSubProducts(subProducts, productID, subProductID));
             subActionsAnonymousCustomer.put(index + 3, new Actions.AddToCart(subProductID));
             subActionsAnonymousCustomer.put(index + 4, new Actions.SelectSeller(subProductID, subProducts));
             subActionsAnonymousCustomer.put(index + 5, new Actions.ShowCurrentSeller(subProductID));
@@ -194,7 +194,7 @@ class Menus {
             subActionsAnonymousCustomer.put(index + 7, new Actions.BackAction(null));
 
             subActionsAdminSeller.put(index + 1, new Actions.DigestProduct(productID));
-            subActionsAdminSeller.put(index + 2, new Actions.ShowSubProducts(subProducts, productID));
+            subActionsAdminSeller.put(index + 2, new Actions.ShowSubProducts(subProducts, productID, subProductID));
             subActionsAdminSeller.put(index + 3, new Actions.CompareProductByID(productID));
             subActionsAdminSeller.put(index + 4, new Actions.BackAction(null));
         }
