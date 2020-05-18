@@ -38,7 +38,7 @@ public abstract class Request implements ModelBasic {
     @Override
     public void initialize() {
         if (requestId == null)
-            requestId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+            requestId = ModelUtilities.generateNewId(Request.class.getSimpleName(), lastNum);
         allRequests.put(requestId, this);
         lastNum++;
     }

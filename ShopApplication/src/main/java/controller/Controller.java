@@ -71,7 +71,7 @@ public class Controller {
                 break;
             case "Seller":
                 new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
-                database.createSeller();
+                database.request();
                 break;
         }
     }
