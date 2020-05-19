@@ -39,13 +39,13 @@ final class Constants {
         static final String filterMenuPattern = caseInsensitiveMode + "^" + filterMenuCommand + "$";
         static final String saleMenuCommand = "sales";
         static final String saleMenuPattern = caseInsensitiveMode + "^" + saleMenuCommand + "$";
-        static final String viewPersonalInfoCommand = "view personal info";
-        static final String viewPersonalInfoPattern = caseInsensitiveMode + "^" + viewPersonalInfoCommand + "$";
+        static final String personalInfoCommand = "personal info";
+        static final String personalInfoPattern = caseInsensitiveMode + "^" + personalInfoCommand + "$";
         static final String userManagingMenuCommand = "manage users";
         static final String userManagingMenuPattern = caseInsensitiveMode + "^" + userManagingMenuCommand + "$";
         static final String productManagingMenuCommand = "manage all products";
         static final String productManagingMenuPattern = caseInsensitiveMode + "^" + productManagingMenuCommand + "$";
-        static final String discountCodesManagingMenuCommand = "view discount codes";
+        static final String discountCodesManagingMenuCommand = "manage discounts";
         static final String discountCodesManagingMenuPattern = caseInsensitiveMode + "^" + discountCodesManagingMenuCommand + "$";
         static final String requestManagingMenuCommand = "manage requests";
         static final String requestManagingMenuPattern = caseInsensitiveMode + "^" + requestManagingMenuCommand + "$";
@@ -101,8 +101,8 @@ final class Constants {
         static final String disableFilterCommand = "disable filter [index]";
         static final String disableFilterPattern = caseInsensitiveMode + "^disable filter" + spacePattern + unsignedIntPattern + "$";
         //SaleMenu actions.
-        static final String showOffsCommand = "show offs";
-        static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
+        static final String showSalesCommand = "show sales";
+        static final String showSalesPattern = caseInsensitiveMode + "^" + showSalesCommand + "$";
         static final String showInSaleProductsCommand = "show in sale products";
         static final String showInSaleProductsPattern = caseInsensitiveMode + "^" + showInSaleProductsCommand + "$";
         //account menus actions.

@@ -507,7 +507,7 @@ class Menus {
 
     public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent) {
-            super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
+            super(name, false, parent, Constants.Menus.personalInfoPattern, Constants.Menus.personalInfoCommand);
             initSubMenus();
             initSubActions();
         }

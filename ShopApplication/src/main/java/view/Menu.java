@@ -64,7 +64,7 @@ public abstract class Menu {
     }
 
     public void show() {
-        System.out.println(this.name + ":");
+        System.out.println( "|" + this.name.toUpperCase() + "|");
         if (subMenus.size() != 0) {
             System.out.println("Sub Menus:");
         }

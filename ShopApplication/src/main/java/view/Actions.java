@@ -734,7 +734,7 @@ public class Actions {
         private ArrayList<String[]> currentSales;
 
         ShowSales(ArrayList<String[]> currentSales) {
-            super(Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
+            super(Constants.Actions.showSalesPattern, Constants.Actions.showSalesCommand);
             this.currentSales = currentSales;
         }
 
