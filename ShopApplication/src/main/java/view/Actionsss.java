@@ -19,8 +19,234 @@ public class Actionsss {
     private static CustomerController customerController;
 
 
+    private static Controller mainController;
+    private static AdminController adminController;
+    private static SellerController sellerController;
+    private static CustomerController customerController;
 
-    public static class ShowProducts extends Action {
+    public static void init() {
+        mainController = View.mainController;
+        adminController = View.adminController;
+        sellerController = View.sellerController;
+        customerController = View.customerController;
+    }
+
+    public static class BackAction extends Action {
+        private Menu parent;
+
+        BackAction(Menu parent) {
+            super(Constants.Actions.backPattern, Constants.Actions.backCommand);
+            this.parent = parent;
+        }
+
+        public void setParent(Menu newParent) {
+            this.parent = newParent;
+        }
+
+        @Override
+        public void execute(String command) {
+            printSeparator();
+            parent.run();
+        }
+
+    }
+
+    public static class ExitAction extends Action {
+        ExitAction() {
+            super(Constants.Actions.exitPattern, Constants.Actions.exitCommand);
+        }
+
+        @Override
+        public void execute(String command) {
+            System.exit(1);
+        }
+    }
+
+    public static class LoginAction extends Action {
+        LoginAction() {
+            super(Constants.Actions.loginPattern, Constants.Actions.loginCommand);
+        }
+
+        private int getPassword(StringBuilder password) {
+            System.out.println("Enter your password (enter \"back\" to go back):");
+            String input = View.getNextLineTrimmed();
+            if (input.equalsIgnoreCase("back")) {
+                return -1;
+            } else if (input.matches(Constants.usernamePattern)){
+                password.setLength(0);
+                password.append(input);
+                return 0;
+            } else {
+                return -2;
+            }
+        }
+
+
+        @Override
+        public void execute(String command) {
+            Matcher commandMatcher = getMatcherReady(command);
+            String username = commandMatcher.group(1);
+            StringBuilder password = new StringBuilder();
+            while (true) {
+                int output = getPassword(password);
+                if (output  == 0) {
+                    try {
+                        mainController.login(username, password.toString());
+                        //if without problem
+                        System.out.println("logged-in successfully!");
+                    } catch (Exceptions.UsernameDoesntExistException e) {
+                        System.out.println(e.getMessage());
+                        break;
+                    } catch (Exceptions.WrongPasswordException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                } else if (output == -1){
+                    break;
+                } else {
+                    System.out.println("invalid entry");
+                    continue;
+                }
+            }
+            printSeparator();
+        }
+    }
+
+    public static class RegisterAction extends Action {
+        RegisterAction() {
+            super(Constants.Actions.registerPattern, Constants.Actions.registerCommand);
+        }
+
+        private String[] registerCustomer(String username) {
+            Form registerForm;
+            String[] fields;
+            String[] fieldRegex;
+            String[] results;
+            fields = new String[]{"password", "first name", "last name", "email", "phone", "balance"};
+            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+                    Constants.emailPattern, Constants.phonePattern, Constants.doublePattern};
+            registerForm = new Form(fields, fieldRegex);
+            if (registerForm.takeInput() == 0) {
+                results = registerForm.getResults();
+                try {
+                    mainController.creatAccount(Constants.customerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.parseDouble(results[5]), null);
+                    return new String[] {username, results[0]};
+                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
+                    //wont happen.
+                    System.out.println("sigh! " + e.getMessage());
+                }
+            }
+            return null;
+        }
+
+        private String[] registerSeller(String username) {
+            Form registerForm;
+            String[] fields;
+            String[] fieldRegex;
+            String[] results;
+            fields = new String[]{"password", "first name", "last name", "email", "phone", "balance", "store name"};
+            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+                    Constants.emailPattern, Constants.phonePattern, Constants.doublePattern, Constants.IRLNamePattern};
+            registerForm = new Form(fields, fieldRegex);
+            if (registerForm.takeInput() == 0) {
+                results = registerForm.getResults();
+                try {
+                    mainController.creatAccount(Constants.sellerUserType, username, results[0], results[1], results[2], results[3], results[4], Double.parseDouble(results[5]), results[6]);
+                    return new String[] {username, results[0]};
+                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
+                    //wont happen.
+                    System.out.println("sigh! " + e.getMessage());
+                }
+            }
+            return null;
+        }
+
+        private String[] registerAdmin(String username) {
+            Form registerForm;
+            String[] fields;
+            String[] fieldRegex;
+            String[] results;
+            fields = new String[]{"password", "first name", "last name", "email", "phone"};
+            fieldRegex = new String[]{Constants.usernamePattern, Constants.IRLNamePattern, Constants.IRLNamePattern,
+                    Constants.emailPattern, Constants.phonePattern};
+            registerForm = new Form(fields, fieldRegex);
+            if (registerForm.takeInput() == 0) {
+                results = registerForm.getResults();
+                try {
+                    mainController.creatAccount(Constants.adminUserType, username, results[0], results[1], results[2], results[3], results[4], 0.00, null);
+                    return new String[] {username, results[0]};
+                } catch (Exceptions.UsernameAlreadyTakenException | Exceptions.AdminRegisterException e) {
+                    //wont happen.
+                    System.out.println("sigh! " + e.getMessage());
+                }
+            }
+            return null;
+        }
+
+        private String[] register(int typeIndex, String username) {
+            if (username != null) {
+                if (typeIndex == 1) {
+                    return registerCustomer(username);
+                } else if (typeIndex == 2) {
+                    return registerSeller(username);
+                } else {
+                    return registerAdmin(username);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public void execute(String command) {
+            String type = getGroup(command, 1);
+            String username = getGroup(command, 2);
+            int index = Constants.getTypeByIndex(type);
+            if (index < 1) {
+                System.out.println("invalid type. you can enter customer, seller or admin as type");
+            } else {
+                try {
+                    mainController.usernameTypeValidation(username, type);
+                    register(index, username);
+                } catch (Exceptions.UsernameAlreadyTakenException e) {
+                    System.out.println("username already exists!");
+                } catch (Exceptions.AdminRegisterException e) {
+                    System.out.println("only admin can create another admin!");
+                    printSeparator();
+                    return;
+                }
+            }
+            printSeparator();
+        }
+
+        public void runNLogin(String command) {
+            String type = getGroup(command, 1);
+            String username = getGroup(command, 2);
+            int index = Constants.getTypeByIndex(type);
+            if (index < 1) {
+                System.out.println("invalid type. you can enter customer, seller or admin as type");
+            } else {
+                try {
+                    mainController.usernameTypeValidation(username, type);
+                    System.out.println("after registration you will automatically get logged-in:");
+                    String[] usePass = register(index, username);
+                    if (usePass != null) {
+                        mainController.login(usePass[0], usePass[1]);
+                    }
+                } catch (Exceptions.UsernameAlreadyTakenException e) {
+                    System.out.println("username already exists!");
+                } catch (Exceptions.AdminRegisterException e) {
+                    System.out.println("only admin can create another admin!");
+                    printSeparator();
+                    return;
+                } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException e) {
+                    //wont happen
+                }
+            }
+            printSeparator();
+        }
+    }
+
+    public static class ShowProductsAction extends Action {
         private String previousCategory;
         private ArrayList<String> categoryTree;
         private String[] currentFilters;
@@ -29,8 +255,8 @@ public class Actionsss {
         private ArrayList<String> availableProperties;
         private Map<String, String> currentProperties;
 
-        ShowProducts(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts,
-                     ArrayList<String> availableProperties, Map<String, String> currentProperties) {
+        ShowProductsAction(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts,
+                           ArrayList<String> availableProperties, Map<String, String> currentProperties) {
             super(Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
@@ -38,7 +264,7 @@ public class Actionsss {
             this.currentProducts = currentProducts;
             this.availableProperties = availableProperties;
             this.currentProperties = currentProperties;
-            previousCategory = SUPER_CATEGORY_NAME;
+            previousCategory = Constants.SUPER_CATEGORY_NAME;
         }
 
         private void refreshAvailableProperties(String lastCategory) throws Exceptions.InvalidCategoryException {
@@ -60,7 +286,7 @@ public class Actionsss {
         }
 
         private void showAllProducts() {
-            refreshCurrentProducts(SUPER_CATEGORY_NAME);
+            refreshCurrentProducts(Constants.SUPER_CATEGORY_NAME);
             try {
                 System.out.println("all products:");
                 printList(mainController.showProducts(productIDs(), null, true,
@@ -103,7 +329,7 @@ public class Actionsss {
                 showAllProducts();
             } else {
                 if (categoryTree.size() == 0) {
-                    categoryName = SUPER_CATEGORY_NAME;
+                    categoryName = Constants.SUPER_CATEGORY_NAME;
                 } else {
                     categoryName = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -142,7 +368,7 @@ public class Actionsss {
             try {
                 String lastCategory;
                 if (categoryTree.size() == 0) {
-                    lastCategory = SUPER_CATEGORY_NAME;
+                    lastCategory = Constants.SUPER_CATEGORY_NAME;
                 } else {
                     lastCategory = categoryTree.get(categoryTree.size() - 1);
                 }
@@ -160,11 +386,11 @@ public class Actionsss {
         }
     }
 
-    public static class ChooseCategory extends Action {
+    public static class ChooseCategoryAction extends Action {
         private ArrayList<String> categoryTree;
         private ArrayList<String[]> availableCategories;
 
-        ChooseCategory(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
+        ChooseCategoryAction(ArrayList<String> categoryTree, ArrayList<String[]> availableCategories) {
             super(Constants.Actions.chooseCategoryPattern, Constants.Actions.chooseCategoryCommand);
             this.availableCategories = availableCategories;
             this.categoryTree = categoryTree;
@@ -333,14 +559,14 @@ public class Actionsss {
         private ArrayList<String> categoryTree;
 
         ChooseFiltering(String[] currentFilters, String[] availableFilters, ArrayList<String> availableProperties,
-                Map<String, String> currentProperties, ArrayList<String> categoryTree) {
+                        Map<String, String> currentProperties, ArrayList<String> categoryTree) {
             super(Constants.Actions.filterPattern, Constants.Actions.filterCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;
             this.availableProperties = availableProperties;
             this.currentProperties = currentProperties;
             this.categoryTree = categoryTree;
-            previousCategory = SUPER_CATEGORY_NAME;
+            previousCategory = Constants.SUPER_CATEGORY_NAME;
         }
 
         private void showAvailableFilters() {
@@ -515,7 +741,7 @@ public class Actionsss {
         private ArrayList<String[]> currentSales;
 
         ShowSales(ArrayList<String[]> currentSales) {
-            super(Constants.Actions.showOffsPattern, Constants.Actions.showOffsCommand);
+            super(Constants.Actions.showSalesPattern, Constants.Actions.showSalesCommand);
             this.currentSales = currentSales;
         }
 
@@ -724,10 +950,10 @@ public class Actionsss {
         }
     }
 
-    public static class ShowSingleSellHistory extends Action {
+    public static class ViewSingleSellHistory extends Action {
         private ArrayList<String[]> sellLogs;
 
-        ShowSingleSellHistory(ArrayList<String[]> sellLogs) {
+        ViewSingleSellHistory(ArrayList<String[]> sellLogs) {
             super(Constants.Actions.showSingleSellLogPattern, Constants.Actions.showSingleSellLogCommand);
             this.sellLogs = sellLogs;
         }
@@ -785,26 +1011,35 @@ public class Actionsss {
 
     public static class ProductDetailMenu extends Action {
         private ArrayList<String[]> currentProducts;
+        private Menus.ProductDetailMenu productDetailMenu;
+        private StringBuilder productID;
 
-        ProductDetailMenu(ArrayList<String[]> currentProducts) {
+        ProductDetailMenu(ArrayList<String[]> currentProducts, Menu parent) {
             super(Constants.Actions.productDetailMenuPattern, Constants.Actions.productDetailMenuCommand);
             this.currentProducts = currentProducts;
+            productID = new StringBuilder();
+            productDetailMenu = new Menus.ProductDetailMenu("product detail menu", parent, productID);
+        }
+
+        private void refreshProductID(int index) {
+            productID.setLength(0);
+            productID.append(currentProducts.get(index - 1)[0]);
         }
 
         @Override
         public void execute(String command) {
             int index = Integer.parseInt(getGroup(command, 1));
             if (index > currentProducts.size()) {
-                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+                System.out.println("invalid index. please enter a number within the range of shown indexes.");
             } else {
+                refreshProductID(index);
                 try {
-                    mainController.showProduct(currentProducts.get(index - 1)[0]);
+                    mainController.showProduct(productID.toString());
+                    productDetailMenu.run();
                 } catch (Exceptions.InvalidProductIdException e) {
                     System.out.println(e.getMessage());
-                    return;
                 }
             }
-            Menu.getProductDetailMenu().runByProductID(currentProducts.get(index - 1)[0]);
         }
     }
 
@@ -830,7 +1065,7 @@ public class Actionsss {
                 String[] productInfo = mainController.digest(productID.toString());
                 showInfo(productInfo);
                 System.out.println("attributes");
-                mainController.getSpecialPropertiesOfAProduct(productID.toString()).forEach(att -> System.out.println(att));
+                mainController.getPropertyValuesOfAProduct(productID.toString()).forEach(att -> System.out.println(att));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -858,12 +1093,11 @@ public class Actionsss {
         @Override
         public void execute(String command) {
             try {
-                if (subProductID.length() == 0) {
-                    if (subProducts.size() != 0) {
-                        System.out.println("there is no seller for this product");
-                    } else {
-                        subProductID.append(subProducts.get(0)[0]);
-                    }
+                if (subProducts.size() == 0) {
+                    System.out.println("there is no seller for this product");
+                    return;
+                } else {
+                    subProductID.append(subProducts.get(0)[0]);
                 }
                 refreshSubProducts();
                 System.out.println("sub products:");
@@ -969,8 +1203,8 @@ public class Actionsss {
             try {
                 String[] productInfo = mainController.digest(productID.toString());
                 String[] otherProductInfo = mainController.digest(otherProductID);
-                ArrayList<String> productSP = mainController.getSpecialPropertiesOfAProduct(productID.toString());
-                ArrayList<String> otherProductSP = mainController.getSpecialPropertiesOfAProduct(otherProductID);
+                ArrayList<String> productSP = mainController.getPropertyValuesOfAProduct(productID.toString());
+                ArrayList<String> otherProductSP = mainController.getPropertyValuesOfAProduct(otherProductID);
                 printDigestInfo(productInfo, otherProductInfo);
                 printSeparator();
                 printSpecialProperties(productID.toString(), productSP);
@@ -1165,10 +1399,11 @@ public class Actionsss {
         }
     }
 
-    public static class AdminRemoveProductByID extends Action {
+
+    public static class AdminRemoveProduct extends Action {
         private ArrayList<String[]> currentProducts;
 
-        AdminRemoveProductByID(ArrayList<String[]> currentProducts) {
+        AdminRemoveProduct(ArrayList<String[]> currentProducts) {
             super(Constants.Actions.adminRemoveProductByIDPattern, Constants.Actions.adminRemoveProductByIDCommand);
             this.currentProducts = currentProducts;
         }
@@ -1202,11 +1437,12 @@ public class Actionsss {
             if (discountCodeForm.takeInput() == 0) {
                 String[] results = discountCodeForm.getResults();
                 try {
-                    adminController.createDiscountCode(results[0], Date.valueOf(results[1]), Date.valueOf(results[2]),
-                            Double.valueOf(results[3]), Integer.parseInt(results[4]), discountCodeForm.getListResult());
+                    adminController.createDiscountCode(results[0], results[1], results[2],
+                            Double.parseDouble(results[3]), Integer.parseInt(results[4]), discountCodeForm.getListResult());
                     System.out.println("discount code created successfully");
                 } catch (Exceptions.ExistingDiscountCodeException | Exceptions.InvalidAccountsForDiscount e) {
                     System.out.println(e.getMessage());
+                } catch (Exceptions.InvalidFormatException ignored) {
                 }
             }
             printSeparator();
@@ -1231,7 +1467,7 @@ public class Actionsss {
             refreshDiscountCodes();
             int size = discountCodes.size();
             for (int i = 0; i < size; i++) {
-                System.out.println(i + ". " + discountCodes.get(i));
+                System.out.println((i + 1) + ". " + discountCodes.get(i));
             }
             printSeparator();
         }
@@ -1295,7 +1531,7 @@ public class Actionsss {
                     return -1;
                 }
                 try {
-                    adminController.editDiscountCode(discountCode, editableFields[fieldIndex], response);
+                    adminController.editDiscountCode(discountCode, editableFields[fieldIndex - 1], response);
                     return 0;
                 } catch (Exceptions.DiscountCodeException | Exceptions.InvalidFormatException e) {
                     //wont happen.
@@ -1417,6 +1653,7 @@ public class Actionsss {
                         } else {
                             adminController.acceptRequest(requestID, false);
                         }
+                        return;
                     } else {
                         System.out.println("invalid entry.");
                     }
@@ -1458,7 +1695,7 @@ public class Actionsss {
         @Override
         public void execute(String command) {
             refreshCurrentCategories();
-            System.out.println("categories (category inheritance is not shown in this list): ");
+            System.out.println("categories:");
             currentCategories.forEach(cc -> System.out.println(cc));
             printSeparator();
         }
@@ -1489,10 +1726,10 @@ public class Actionsss {
                     return -1;
                 }
                 try {
-                    adminController.editCategory(categoryName, editableFields[fieldIndex], response);
+                    adminController.editCategory(categoryName, editableFields[fieldIndex - 1], response);
                     return 0;
                 } catch (Exceptions.InvalidCategoryException | Exceptions.InvalidFieldException
-                        | Exceptions.ExistedCategoryException | Exceptions.SubCategoryException e) {
+                        | Exceptions.ExistingCategoryException | Exceptions.SubCategoryException e) {
                     System.out.println(e.getMessage());
                     return -1;
                 } catch (Exceptions.SameAsPreviousValueException e) {
@@ -1550,9 +1787,9 @@ public class Actionsss {
                 if (categoryForm.takeInput() == 0) {
                     String[] results = categoryForm.getResults();
                     ArrayList<String> specialProperties = getListResult(categoryForm.getListResult());
-                    adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? SUPER_CATEGORY_NAME : results[0], specialProperties);
+                    adminController.addCategory(categoryName, (results[0].equalsIgnoreCase("root")) ? Constants.SUPER_CATEGORY_NAME : results[0], specialProperties);
                 }
-            } catch (Exceptions.InvalidCategoryException e) {
+            } catch (Exceptions.InvalidCategoryException | Exceptions.ExistingCategoryException e) {
                 System.out.println(e.getMessage());
             }
             printSeparator();
@@ -1659,8 +1896,8 @@ public class Actionsss {
                     return -1;
                 }
                 try {
-                    sellerController.editSale(saleID, editableFields[fieldIndex], response);
-                    System.out.println("field edited successfully");
+                    sellerController.editSale(saleID, editableFields[fieldIndex - 1], response);
+                    System.out.println("edit request has been sent.");
                     return 0;
                 } catch (Exceptions.InvalidSaleIdException | Exceptions.InvalidFormatException |
                         Exceptions.InvalidDateException | Exceptions.InvalidFieldException e) {
@@ -1720,10 +1957,11 @@ public class Actionsss {
                 String[] results = saleForm.getResults();
                 ArrayList<String> listResult = getListResult(saleForm.getListResult());
                 try {
-                    sellerController.addSale(Date.valueOf(results[0]), Date.valueOf(results[1]),
+                    sellerController.addSale(results[0], results[1],
                             Double.parseDouble(results[2]), Double.parseDouble(results[3]), listResult);
                 } catch (Exceptions.InvalidDateException | Exceptions.InvalidProductIdsForASeller e) {
                     System.out.println(e.getMessage());
+                } catch (Exceptions.InvalidFormatException ignored) {
                 }
                 printSeparator();
             }
@@ -1832,7 +2070,7 @@ public class Actionsss {
                     return -1;
                 }
                 try {
-                    sellerController.editProduct(productID, editableFields[fieldIndex], response);
+                    sellerController.editProduct(productID, editableFields[fieldIndex - 1], response);
                     System.out.println("field edited successfully");
                     return 0;
                 } catch (Exceptions.InvalidProductIdException | Exceptions.ExistingProductException
@@ -1889,35 +2127,15 @@ public class Actionsss {
                 if (productSecondForm.takeInput() == 0) {
                     while(true) {
                         String[] secondResults;
-                        ArrayList<String> spResults;
                         System.out.println("category name:");
                         String entry = View.getNextLineTrimmed();
                         if (entry.equalsIgnoreCase("back")) break;
-                        else if (entry.matches(Constants.argumentPattern)) {
-                            ArrayList<String> sp = mainController.getPropertiesOfCategory(entry);
-                            int size = sp.size();
-                            spResults = new ArrayList<>();
-                            for (int i = 0; i < size; i++) {
-                                System.out.println(sp.get(i) + ":");
-                                String input = View.getNextLineTrimmed();
-                                if (input.equalsIgnoreCase("back")) {
-                                    if(i == 0) break;
-                                    else i--;
-                                } else if (input.matches(Constants.argumentPattern)) {
-                                    spResults.add(input);
-                                    if (i == size - 1) {
-                                        secondResults = productSecondForm.getResults();
-                                        sellerController.addNewProduct(results[0], results[1], secondResults[2], entry,
-                                                spResults, Double.parseDouble(secondResults[0]), Integer.parseInt(secondResults[1]));
-                                    }
-                                } else {
-                                    System.out.println("invalid entry");
-                                    continue;
-                                }
-                            }
-                        } else {
-                            System.out.println("invalid entry");
-                            continue;
+                        else {
+                            secondResults = productSecondForm.getResults();
+                            sellerController.addNewProduct(results[0], results[1], secondResults[2],
+                                    entry, null, Double.parseDouble(secondResults[0]),
+                                    Integer.parseInt(secondResults[1]));
+                            return;
                         }
                     }
                 } else {
@@ -2020,7 +2238,7 @@ public class Actionsss {
             int index = Integer.parseInt(commandMatcher.group(1));
             int count;
             if (index > currentProducts.size()) {
-                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+                System.out.println("invalid index. please enter a number within the range of shown indexes.");
             } else {
                 if (commandMatcher.groupCount() == 2) {
                     count = Integer.parseInt(commandMatcher.group(2));
@@ -2053,7 +2271,7 @@ public class Actionsss {
             int index = Integer.parseInt(commandMatcher.group(1));
             int count;
             if (index > currentProducts.size()) {
-                System.out.println("invalid index. please enter a number between 1 and " + currentProducts.size());
+                System.out.println("invalid index. please enter a number within the range of shown indexes.");
             } else {
                 if (commandMatcher.groupCount() == 2) {
                     count = Integer.parseInt(commandMatcher.group(2));
