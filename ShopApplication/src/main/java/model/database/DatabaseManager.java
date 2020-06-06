@@ -95,7 +95,7 @@ public class DatabaseManager implements Database {
     }
 
     @Override
-    public void loadDatabase() {
+    public void loadAll() {
         load(Paths.accounts, Account.class);
         load(Paths.categories, Category.class);
         load(Paths.products, Product.class);
@@ -109,6 +109,23 @@ public class DatabaseManager implements Database {
         load(Paths.buyLogs, BuyLog.class);
         load(Paths.sellLogs, SellLog.class);
         load(Paths.logItems, LogItem.class);
+    }
+
+    @Override
+    public void updateAll() {
+        updateAccounts();
+        updateProducts();
+        updateSubProducts();
+        updateCategories();
+        updateCarts();
+        updateSales();
+        updateDiscounts();
+        updateRatings();
+        updateReviews();
+        updateRequests();
+        updateBuyLogs();
+        updateSellLogs();
+        updateLogItems();
     }
 
     @Override

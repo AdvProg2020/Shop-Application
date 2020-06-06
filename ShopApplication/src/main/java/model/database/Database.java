@@ -1,7 +1,9 @@
 package model.database;
 
 public interface Database {
-    void loadDatabase();
+    void loadAll();
+
+    void updateAll();
 
     void cart();
 
