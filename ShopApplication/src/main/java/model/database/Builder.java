@@ -69,14 +69,14 @@ class Builder {
             JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
             String className = prim.getAsString();
 
-            Class<?> klass;
+            Class<?> classType;
             try {
-                klass = Class.forName(className);
+                classType = Class.forName(className);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 throw new JsonParseException(e.getMessage());
             }
-            return context.deserialize(jsonObject.get(INSTANCE), klass);
+            return context.deserialize(jsonObject.get(INSTANCE), classType);
         }
     }
 }
