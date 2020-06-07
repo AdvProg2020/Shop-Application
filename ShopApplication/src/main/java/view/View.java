@@ -76,6 +76,7 @@ public class View extends Application {
             event.consume();
             close();
         });
+        new Menus.FirstMenu("first menu").run();
     }
 
 
