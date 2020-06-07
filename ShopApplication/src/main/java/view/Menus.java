@@ -1,15 +1,13 @@
 package view;
 
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import controller.SellerController;
+import controller.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import view.Actions.*;
 
-class Menus {
+public class Menus {
     private static Controller mainController;
     private static AdminController adminController;
     private static SellerController sellerController;
@@ -91,7 +89,7 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ExitAction());
+            subActions.put(index + 1, new Exit());
         }
     }
 
@@ -141,13 +139,13 @@ class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Actions.ShowProductsAction(categoryTree, currentFilters, currentSort,
+            subActions.put(index + 1, new ShoProducts(categoryTree, currentFilters, currentSort,
                     currentProducts, availableProperties, currentProperties));
-            subActions.put(index + 2, new Actions.ShowCategories(categoryTree, availableCategories, availableProperties));
-            subActions.put(index + 3, new Actions.ChooseCategoryAction(categoryTree, availableCategories));
-            subActions.put(index + 4, new Actions.RevertCategoryAction(categoryTree));
-            subActions.put(index + 5, new Actions.ProductDetailMenu(currentProducts, this));
-            subActions.put(index + 6, new Actions.BackAction(parent));
+            subActions.put(index + 2, new ShowCategories(categoryTree, availableCategories, availableProperties));
+            subActions.put(index + 3, new ChooseCategoryAction(categoryTree, availableCategories));
+            subActions.put(index + 4, new RevertCategoryAction(categoryTree));
+            subActions.put(index + 5, new ProductDetailMenu(currentProducts, this));
+            subActions.put(index + 6, new BackAction(parent));
         }
     }
 
@@ -294,7 +292,7 @@ class Menus {
         private ArrayList<String> categoryTree;
 
         FilterMenu(String name, Menu parent, String[] availableFilters, String[] currentFilters,
-        ArrayList<String> availableProperties, Map<String, String> currentProperties, ArrayList<String> categoryTree) {
+                   ArrayList<String> availableProperties, Map<String, String> currentProperties, ArrayList<String> categoryTree) {
             super(name, true, parent, Constants.Menus.filterMenuPattern, Constants.Menus.filterMenuCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters.clone();
