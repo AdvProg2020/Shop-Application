@@ -1,6 +1,6 @@
 package view;
 
-final class Constants {
+public final class Constants {
     static final String caseInsensitiveMode = "(?i)";
     static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
@@ -28,6 +28,17 @@ final class Constants {
         return -1;
     }
 
+    public static class FXMLLocations {
+        public static final String AdminAccountMenu = "src/main/resources/fxml/AdminAccountMenu.fxml";
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
+    }
+
     static class Menus {
         static final String accountMenuCommand = "account menu";
         static final String accountMenuPattern = caseInsensitiveMode + "^" + accountMenuCommand + "$";
@@ -39,13 +50,13 @@ final class Constants {
         static final String filterMenuPattern = caseInsensitiveMode + "^" + filterMenuCommand + "$";
         static final String saleMenuCommand = "sales";
         static final String saleMenuPattern = caseInsensitiveMode + "^" + saleMenuCommand + "$";
-        static final String personalInfoCommand = "personal info";
-        static final String personalInfoPattern = caseInsensitiveMode + "^" + personalInfoCommand + "$";
+        static final String viewPersonalInfoCommand = "view personal info";
+        static final String viewPersonalInfoPattern = caseInsensitiveMode + "^" + viewPersonalInfoCommand + "$";
         static final String userManagingMenuCommand = "manage users";
         static final String userManagingMenuPattern = caseInsensitiveMode + "^" + userManagingMenuCommand + "$";
         static final String productManagingMenuCommand = "manage all products";
         static final String productManagingMenuPattern = caseInsensitiveMode + "^" + productManagingMenuCommand + "$";
-        static final String discountCodesManagingMenuCommand = "manage discounts";
+        static final String discountCodesManagingMenuCommand = "view discount codes";
         static final String discountCodesManagingMenuPattern = caseInsensitiveMode + "^" + discountCodesManagingMenuCommand + "$";
         static final String requestManagingMenuCommand = "manage requests";
         static final String requestManagingMenuPattern = caseInsensitiveMode + "^" + requestManagingMenuCommand + "$";
@@ -101,8 +112,8 @@ final class Constants {
         static final String disableFilterCommand = "disable filter [index]";
         static final String disableFilterPattern = caseInsensitiveMode + "^disable filter" + spacePattern + unsignedIntPattern + "$";
         //SaleMenu actions.
-        static final String showSalesCommand = "show sales";
-        static final String showSalesPattern = caseInsensitiveMode + "^" + showSalesCommand + "$";
+        static final String showOffsCommand = "show offs";
+        static final String showOffsPattern = caseInsensitiveMode + "^" + showOffsCommand + "$";
         static final String showInSaleProductsCommand = "show in sale products";
         static final String showInSaleProductsPattern = caseInsensitiveMode + "^" + showInSaleProductsCommand + "$";
         //account menus actions.

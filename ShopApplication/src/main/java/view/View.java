@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Category;
-import model.database.Database;
 import model.database.DatabaseManager;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.util.Scanner;
  **/
 
 public class View extends Application {
-    static Database databaseManager = new DatabaseManager();
+    static DatabaseManager databaseManager = new DatabaseManager();
     static Controller mainController = new Controller(databaseManager);
     static CustomerController customerController = new CustomerController(mainController);
     static AdminController adminController = new AdminController(mainController);
@@ -36,7 +35,7 @@ public class View extends Application {
         databaseManager.createCategory();
 
         Menus.init();
-        Actions.init();
+        view.Actions.init();
         new Menus.AccountMenu("account menu");
         launch(args);
     }
@@ -49,11 +48,11 @@ public class View extends Application {
         return mainScene;
     }
 
-    static void setMainScene(String fxml) throws IOException {
-        mainScene = loadSceneFromFXML(fxml);
-        mainStage.setScene(mainScene);
-        mainStage.show();
-    }
+//    static void setMainScene(String fxml) throws IOException {
+//        mainScene = loadSceneFromFXML(fxml);
+//        mainStage.setScene(mainScene);
+//        mainStage.show();
+//    }
 
     static void close() {
         databaseManager.updateAll();
@@ -69,15 +68,19 @@ public class View extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         View.mainStage = stage;
-        setMainScene("MainMenu");
-        stage.setTitle("ShopApplication");
-        stage.setResizable(false);
-        stage.setOnCloseRequest(event -> {
-            event.consume();
-            close();
-        });
-        new Menus.FirstMenu("first menu").run();
+//        setMainScene("MainMenu");
+//        stage.setTitle("ShopApplication");
+//        stage.setResizable(false);
+//        stage.setOnCloseRequest(event -> {
+//            event.consume();
+//            close();
+//        });
+        new Menus.MainMenu("first menu").run();
     }
 
+    public static void setScene(Scene scene) {
+        mainStage.setScene(scene);
+        mainStage.show();
+    }
 
 }

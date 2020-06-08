@@ -1,5 +1,8 @@
 package view;
 
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+
 import java.util.*;
 
 public abstract class Menu {
@@ -59,8 +62,9 @@ public abstract class Menu {
     }
 
     protected void run() {
-        this.show();
-        this.execute();
+        View.setScene(new Scene(new VBox()));
+        //this.show();
+        //this.execute();
     }
 
     public void show() {

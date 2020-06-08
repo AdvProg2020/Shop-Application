@@ -1,11 +1,14 @@
 package view;
 
-import controller.*;
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
+import controller.SellerController;
+import javafx.fxml.Initializable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import view.Actions.*;
 
 public class Menus {
     private static Controller mainController;
@@ -20,7 +23,8 @@ public class Menus {
         customerController = View.customerController;
     }
 
-    public static class AccountMenu extends Menu {
+    public class AccountMenu extends Menu {
+
         private Menu previousMenu;
 
         AccountMenu(String name) {
@@ -35,13 +39,13 @@ public class Menus {
         public void execute() {
             String userType = mainController.getType();
             if (userType.equalsIgnoreCase(Constants.anonymousUserType)) {
-                ((AnonymousUserAccountMenu)subMenus.get(1)).run(previousMenu);
+                ((LoginPopUpController)subMenus.get(1)).run(previousMenu);
             } else if (userType.equalsIgnoreCase(Constants.adminUserType)) {
-                ((AdminMenu)subMenus.get(2)).run(previousMenu);
+                ((AdminAccountMenu)subMenus.get(2)).run(previousMenu);
             } else if (userType.equalsIgnoreCase(Constants.sellerUserType)) {
-                ((SellerMenu)subMenus.get(3)).run(previousMenu);
+                ((SellerAccountMenu)subMenus.get(3)).run(previousMenu);
             }else if (userType.equalsIgnoreCase(Constants.customerUserType)) {
-                ((CustomerMenu)subMenus.get(4)).run(previousMenu);
+                ((CustomerAccountMenu)subMenus.get(4)).run(previousMenu);
             }
         }
 
@@ -57,10 +61,10 @@ public class Menus {
 
         @Override
         protected void initSubMenus() {
-            subMenus.put(1, new AnonymousUserAccountMenu("Login/Register Menu", this,  Constants.anonymousUserType));
-            subMenus.put(2, new AdminMenu("Admin Menu",this,  Constants.adminUserType));
-            subMenus.put(3, new SellerMenu("Seller Menu",this, Constants.sellerUserType));
-            subMenus.put(4, new CustomerMenu("Customer Menu", this, Constants.customerUserType));
+            subMenus.put(1, new LoginPopUpController("Login/Register Menu", this,  Constants.anonymousUserType));
+            subMenus.put(2, new AdminAccountMenu("Admin Menu",this,  Constants.adminUserType));
+            subMenus.put(3, new SellerAccountMenu("Seller Menu",this, Constants.sellerUserType));
+            subMenus.put(4, new CustomerAccountMenu("Customer Menu", this, Constants.customerUserType));
         }
 
         @Override
@@ -69,12 +73,12 @@ public class Menus {
         }
 
         public void loginFirst(Menu ifBackMenu,Menu ifDoneMenu) {
-            ((AnonymousUserAccountMenu)subMenus.get(1)).loginFirst(ifBackMenu, ifDoneMenu);
+            ((LoginPopUpController)subMenus.get(1)).loginFirst(ifBackMenu, ifDoneMenu);
         }
     }
 
-    public static class FirstMenu extends Menu {
-        FirstMenu(String name) {
+    public static class MainMenu extends Menu {
+        MainMenu(String name) {
             super(name, true, null, null, null);
             initSubMenus();
             initSubActions();
@@ -89,7 +93,7 @@ public class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new Exit());
+            subActions.put(index + 1, new Actions.ExitAction());
         }
     }
 
@@ -139,13 +143,13 @@ public class Menus {
         @Override
         protected void initSubActions() {
             int index = floatingMenusIndexModification() + subMenus.size();
-            subActions.put(index + 1, new ShoProducts(categoryTree, currentFilters, currentSort,
+            subActions.put(index + 1, new Actions.ShowProductsAction(categoryTree, currentFilters, currentSort,
                     currentProducts, availableProperties, currentProperties));
-            subActions.put(index + 2, new ShowCategories(categoryTree, availableCategories, availableProperties));
-            subActions.put(index + 3, new ChooseCategoryAction(categoryTree, availableCategories));
-            subActions.put(index + 4, new RevertCategoryAction(categoryTree));
-            subActions.put(index + 5, new ProductDetailMenu(currentProducts, this));
-            subActions.put(index + 6, new BackAction(parent));
+            subActions.put(index + 2, new Actions.ShowCategories(categoryTree, availableCategories, availableProperties));
+            subActions.put(index + 3, new Actions.ChooseCategoryAction(categoryTree, availableCategories));
+            subActions.put(index + 4, new Actions.RevertCategoryAction(categoryTree));
+            subActions.put(index + 5, new Actions.ProductDetailMenu(currentProducts, this));
+            subActions.put(index + 6, new Actions.BackAction(parent));
         }
     }
 
@@ -205,6 +209,7 @@ public class Menus {
         }
     }
 
+    //TODO: deprecated: added in product detail menu
     public static class ProductReviewMenu extends Menu {
         private StringBuilder productID;
         private Map<Integer, Action> subActionsAnonymousCustomer;
@@ -257,6 +262,7 @@ public class Menus {
         }
     }
 
+    //TODO: deprecated: added in products menu and sale menu
     public static class SortMenu extends Menu {
         private StringBuilder currentSort;
         private String[] availableSorts;
@@ -284,6 +290,7 @@ public class Menus {
         }
     }
 
+    //TODO: deprecated: added in products menu and sale menu
     public static class FilterMenu extends Menu {
         private String[] currentFilters;
         private String[] availableFilters;
@@ -317,6 +324,7 @@ public class Menus {
             subActions.put(index + 4, new Actions.BackAction(parent));
         }
     }
+
 
     public static class SaleMenu extends Menu {
         private StringBuilder currentSort;
@@ -364,12 +372,13 @@ public class Menus {
         }
     }
 
-    public static class AnonymousUserAccountMenu extends Menu {
+    //TODO: controls loginPopUp
+    public static class LoginPopUpController extends Menu {
         private Map<Integer, Menu> primarySubMenus;
         private Map<Integer, Action> primarySubActions;
         private Map<Integer, Action> loginSubActions;
 
-        AnonymousUserAccountMenu(String name , Menu parent, String userType) {
+        LoginPopUpController(String name , Menu parent, String userType) {
             super(name, false, parent, userType, null);
             primarySubMenus = new HashMap<>();
             primarySubActions = new HashMap<>();
@@ -454,9 +463,9 @@ public class Menus {
         }
     }
 
-    public static class AdminMenu extends Menu {
+    public static class AdminAccountMenu extends Menu {
 
-        AdminMenu(String name, Menu parent,  String userType) {
+        AdminAccountMenu(String name, Menu parent, String userType) {
             super(name, false, parent, userType, null);
             initSubMenus();
             initSubActions();
@@ -488,11 +497,11 @@ public class Menus {
                     return adminController.getPersonalInfoEditableFields();
                 }
             });
-            subMenus.put(2, new UserManagingMenu("user managing menu", this));
-            subMenus.put(3, new ProductManagingMenu("product managing menu", this));
-            subMenus.put(4, new DiscountCodesManagingMenu("discount code managing menu", this));
-            subMenus.put(5, new RequestManagingMenu("request managing menu", this));
-            subMenus.put(6, new CategoryManagingMenu("category managing menu", this));
+            subMenus.put(2, new AdminUserManagingMenu("user managing menu", this));
+            subMenus.put(3, new AdminProductManagingMenu("product managing menu", this));
+            subMenus.put(4, new AdminDiscountManagingMenu("discount code managing menu", this));
+            subMenus.put(5, new AdminRequestManagingMenu("request managing menu", this));
+            subMenus.put(6, new AdminCategoryManagingMenu("category managing menu", this));
         }
 
         @Override
@@ -503,9 +512,10 @@ public class Menus {
         }
     }
 
+    //TODO: deprecated add in account menu
     public static abstract class PersonalInfoMenu extends Menu {
         PersonalInfoMenu(String name, Menu parent) {
-            super(name, false, parent, Constants.Menus.personalInfoPattern, Constants.Menus.personalInfoCommand);
+            super(name, false, parent, Constants.Menus.viewPersonalInfoPattern, Constants.Menus.viewPersonalInfoCommand);
             initSubMenus();
             initSubActions();
         }
@@ -526,10 +536,10 @@ public class Menus {
         protected abstract String[] getEditableFields();
     }
 
-    public static class UserManagingMenu extends Menu {
+    public static class AdminUserManagingMenu extends Menu {
         private ArrayList<String[]> users;
 
-        UserManagingMenu(String name, Menu parent) {
+        AdminUserManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.userManagingMenuPattern, Constants.Menus.userManagingMenuCommand);
             users = new ArrayList<>();
             initSubMenus();
@@ -558,10 +568,11 @@ public class Menus {
         }
     }
 
-    public static class ProductManagingMenu extends Menu {
+    //TODO: uses products menu but with different properties.
+    public static class AdminProductManagingMenu extends Menu {
         private ArrayList<String[]> currentProducts;
 
-        ProductManagingMenu(String name, Menu parent) {
+        AdminProductManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.productManagingMenuPattern, Constants.Menus.productManagingMenuCommand);
             this.currentProducts = new ArrayList<>();
             initSubMenus();
@@ -589,10 +600,11 @@ public class Menus {
         }
     }
 
-    public static class DiscountCodesManagingMenu extends Menu {
+
+    public static class AdminDiscountManagingMenu extends Menu {
         private ArrayList<String> discountCodes;
 
-        DiscountCodesManagingMenu(String name, Menu parent) {
+        AdminDiscountManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.discountCodesManagingMenuPattern, Constants.Menus.discountCodesManagingMenuCommand);
             this.discountCodes = new ArrayList<>();
             initSubMenus();
@@ -626,10 +638,10 @@ public class Menus {
         }
     }
 
-    public static class RequestManagingMenu extends Menu {
+    public static class AdminRequestManagingMenu extends Menu {
         private ArrayList<String[]> pendingRequests;
 
-        RequestManagingMenu(String name, Menu parent) {
+        AdminRequestManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.requestManagingMenuPattern, Constants.Menus.requestManagingMenuCommand);
             pendingRequests = new ArrayList<>();
             initSubMenus();
@@ -657,10 +669,10 @@ public class Menus {
         }
     }
 
-    public static class CategoryManagingMenu extends Menu {
+    public static class AdminCategoryManagingMenu extends Menu {
         private ArrayList<String> currentCategories;
 
-        CategoryManagingMenu(String name, Menu parent) {
+        AdminCategoryManagingMenu(String name, Menu parent) {
             super(name, false, parent, Constants.Menus.categoryManagingMenuPattern, Constants.Menus.categoryManagingMenuCommand);
             this.currentCategories = new ArrayList<>();
             initSubMenus();
@@ -693,10 +705,10 @@ public class Menus {
         }
     }
 
-    public static class SellerMenu extends Menu {
+    public static class SellerAccountMenu extends Menu {
         private ArrayList<String[]> sellLogs;
 
-        SellerMenu(String name, Menu parent, String userType) {
+        SellerAccountMenu(String name, Menu parent, String userType) {
             super(name, false, parent, userType, null);
             this.sellLogs = new ArrayList<>();
             initSubMenus();
@@ -821,9 +833,9 @@ public class Menus {
 
     }
 
-    public static class CustomerMenu extends Menu {
+    public static class CustomerAccountMenu extends Menu {
 
-        CustomerMenu(String name, Menu parent, String userType) {
+        CustomerAccountMenu(String name, Menu parent, String userType) {
             super(name, false, parent, userType, null);
             initSubMenus();
             initSubActions();
@@ -909,6 +921,7 @@ public class Menus {
         }
     }
 
+    //TODO: can be added to CustomerMenu??
     public static class CustomerOrderLogMenu extends Menu {
         private ArrayList<String[]> currentOrderLogs;
 
