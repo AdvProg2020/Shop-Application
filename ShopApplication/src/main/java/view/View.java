@@ -49,11 +49,11 @@ public class View extends Application {
         return mainScene;
     }
 
-    static void setMainScene(String fxml) throws IOException {
-        mainScene = loadSceneFromFXML(fxml);
-        mainStage.setScene(mainScene);
-        mainStage.show();
-    }
+//    static void setMainScene(String fxml) throws IOException {
+//        mainScene = loadSceneFromFXML(fxml);
+//        mainStage.setScene(mainScene);
+//        mainStage.show();
+//    }
 
     static void close() {
         databaseManager.updateAll();
@@ -69,15 +69,19 @@ public class View extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         View.mainStage = stage;
-        setMainScene("MainMenu");
-        stage.setTitle("ShopApplication");
-        stage.setResizable(false);
-        stage.setOnCloseRequest(event -> {
-            event.consume();
-            close();
-
-        });
+//        setMainScene("MainMenu");
+//        stage.setTitle("ShopApplication");
+//        stage.setResizable(false);
+//        stage.setOnCloseRequest(event -> {
+//            event.consume();
+//            close();
+//        });
+        new Menus.MainMenu("first menu").run();
     }
 
+    public static void setScene(Scene scene) {
+        mainStage.setScene(scene);
+        mainStage.show();
+    }
 
 }

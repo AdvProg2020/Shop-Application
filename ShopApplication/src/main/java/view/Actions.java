@@ -249,7 +249,7 @@ public class Actions {
         private Map<String, String> currentProperties;
 
         ShowProductsAction(ArrayList<String> categoryTree, String[] currentFilters, StringBuilder currentSort, ArrayList<String[]> currentProducts,
-        ArrayList<String> availableProperties, Map<String, String> currentProperties) {
+                           ArrayList<String> availableProperties, Map<String, String> currentProperties) {
             super(Constants.Actions.showProductsPattern, Constants.Actions.showProductsCommand);
             this.categoryTree = categoryTree;
             this.currentFilters = currentFilters;
@@ -552,7 +552,7 @@ public class Actions {
         private ArrayList<String> categoryTree;
 
         ChooseFiltering(String[] currentFilters, String[] availableFilters, ArrayList<String> availableProperties,
-                Map<String, String> currentProperties, ArrayList<String> categoryTree) {
+                        Map<String, String> currentProperties, ArrayList<String> categoryTree) {
             super(Constants.Actions.filterPattern, Constants.Actions.filterCommand);
             this.currentFilters = currentFilters;
             this.availableFilters = availableFilters;

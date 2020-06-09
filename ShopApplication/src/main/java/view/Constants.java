@@ -1,6 +1,6 @@
 package view;
 
-final class Constants {
+public final class Constants {
     static final String caseInsensitiveMode = "(?i)";
     static final String argumentPattern = "(\\S+)";
     private static final String spacePattern = "\\s+";
@@ -26,6 +26,17 @@ final class Constants {
             }
         }
         return -1;
+    }
+
+    public static class FXMLLocations {
+        public static final String AdminAccountMenu = "src/main/resources/fxml/AdminAccountMenu.fxml";
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
+//        public static final String
     }
 
     static class Menus {

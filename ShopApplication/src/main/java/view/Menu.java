@@ -1,5 +1,8 @@
 package view;
 
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+
 import java.util.*;
 
 public abstract class Menu {
@@ -59,12 +62,13 @@ public abstract class Menu {
     }
 
     protected void run() {
-        this.show();
-        this.execute();
+        View.setScene(new Scene(new VBox()));
+        //this.show();
+        //this.execute();
     }
 
     public void show() {
-        System.out.println(this.name + ":");
+        System.out.println( "|" + this.name.toUpperCase() + "|");
         if (subMenus.size() != 0) {
             System.out.println("Sub Menus:");
         }
