@@ -75,8 +75,8 @@ public class View extends Application {
         stage.setOnCloseRequest(event -> {
             event.consume();
             close();
+
         });
-        new Menus.FirstMenu("first menu").run();
     }
 
 

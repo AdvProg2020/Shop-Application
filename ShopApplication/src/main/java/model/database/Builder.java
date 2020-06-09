@@ -21,23 +21,27 @@ class Builder {
         }
     }
 
-    static Scanner buildScanner(Path filePath) {
-        File file = filePath.toFile();
+    private static File getFile(String fileName) {
+        return Path.of("src/main/resources/database/" + fileName).toFile();
+    }
+
+    static Scanner buildScanner(String fileName) {
+        File file = getFile(fileName);
         try {
             return new Scanner(file);
         } catch (FileNotFoundException e) {
             createMissingFile(file);
-            return buildScanner(filePath);
+            return buildScanner(fileName);
         }
     }
 
-    static PrintWriter buildPrintWriter(Path filePath) {
-        File file = filePath.toFile();
+    static PrintWriter buildPrintWriter(String fileName) {
+        File file = getFile(fileName);
         try {
             return new PrintWriter(file);
-        } catch (FileNotFoundException ignored) {
+        } catch (FileNotFoundException e) {
             createMissingFile(file);
-            return buildPrintWriter(filePath);
+            return buildPrintWriter(fileName);
         }
     }
 

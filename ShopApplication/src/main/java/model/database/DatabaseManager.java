@@ -9,7 +9,6 @@ import model.log.SellLog;
 import model.request.Request;
 
 import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,8 +19,8 @@ public class DatabaseManager implements Database {
         this.gson = Builder.buildGson();
     }
 
-    private <T> void load(Path path, Class<T> classType) {
-        Scanner scanner = Builder.buildScanner(path);
+    private <T> void load(String fileName, Class<T> classType) {
+        Scanner scanner = Builder.buildScanner(fileName);
         while (scanner.hasNextLine()) {
             String gsonString = scanner.nextLine();
             ((ModelBasic) gson.fromJson(gsonString, classType)).initialize();
@@ -29,8 +28,8 @@ public class DatabaseManager implements Database {
         scanner.close();
     }
 
-    private <T> void update(Path path, Class<T> classType, List<T> allInstances) {
-        PrintWriter printWriter = Builder.buildPrintWriter(path);
+    private <T> void update(String fileName, Class<T> classType, List<T> allInstances) {
+        PrintWriter printWriter = Builder.buildPrintWriter(fileName);
         if (classType == Category.class) { // writing superCategory first
             printWriter.println(gson.toJson(Category.getSuperCategory(), classType));
         }
@@ -42,73 +41,73 @@ public class DatabaseManager implements Database {
     }
 
     private void updateAccounts() {
-        update(Paths.accounts, Account.class, Account.getAllAccounts(false));
+        update(FileNames.ACCOUNT, Account.class, Account.getAllAccounts(false));
     }
 
     private void updateBuyLogs() {
-        update(Paths.buyLogs, BuyLog.class, BuyLog.getAllBuyLogs());
+        update(FileNames.BUY_LOG, BuyLog.class, BuyLog.getAllBuyLogs());
     }
 
     private void updateSellLogs() {
-        update(Paths.sellLogs, SellLog.class, SellLog.getAllSellLogs());
+        update(FileNames.SELL_LOG, SellLog.class, SellLog.getAllSellLogs());
     }
 
     private void updateLogItems() {
-        update(Paths.logItems, LogItem.class, LogItem.getAllLogItems());
+        update(FileNames.LOG_ITEM, LogItem.class, LogItem.getAllLogItems());
     }
 
     private void updateRequests() {
-        update(Paths.requests, Request.class, Request.getRequestArchive());
-        update(Paths.requests, Request.class, Request.getPendingRequests());
+        update(FileNames.REQUEST, Request.class, Request.getRequestArchive());
+        update(FileNames.REQUEST, Request.class, Request.getPendingRequests());
     }
 
     private void updateCategories() {
-        update(Paths.categories, Category.class, Category.getAllCategories(false));
+        update(FileNames.CATEGORY, Category.class, Category.getAllCategories(false));
     }
 
     private void updateProducts() {
-        update(Paths.products, Product.class, Product.getAllProducts(false));
+        update(FileNames.PRODUCT, Product.class, Product.getAllProducts(false));
     }
 
     private void updateSubProducts() {
-        update(Paths.subProducts, SubProduct.class, SubProduct.getAllSubProducts(false));
+        update(FileNames.SUB_PRODUCT, SubProduct.class, SubProduct.getAllSubProducts(false));
     }
 
     private void updateCarts() {
-        update(Paths.carts, Cart.class, Cart.getAllCarts());
+        update(FileNames.CART, Cart.class, Cart.getAllCarts());
     }
 
     private void updateReviews() {
-        update(Paths.reviews, Review.class, Review.getAllReviews());
+        update(FileNames.REVIEW, Review.class, Review.getAllReviews());
     }
 
     private void updateRatings() {
-        update(Paths.ratings, Rating.class, Rating.getAllRatings());
+        update(FileNames.RATING, Rating.class, Rating.getAllRatings());
     }
 
     private void updateDiscounts() {
-        update(Paths.discounts, Discount.class, Discount.getAllDiscounts(false));
+        update(FileNames.DISCOUNT, Discount.class, Discount.getAllDiscounts(false));
     }
 
     private void updateSales() {
-        update(Paths.sales, Sale.class, Sale.getAllSales(false));
+        update(FileNames.SALE, Sale.class, Sale.getAllSales(false));
     }
 
     @Override
     public void loadAll() {
-        load(Paths.accounts, Account.class);
-        load(Paths.categories, Category.class);
-        load(Paths.products, Product.class);
-        load(Paths.subProducts, SubProduct.class);
-        load(Paths.carts, Cart.class);
-        load(Paths.sales, Sale.class);
-        load(Paths.discounts, Discount.class);
-        load(Paths.reviews, Review.class);
-        load(Paths.ratings, Rating.class);
-        load(Paths.requests, Request.class);
-        load(Paths.buyLogs, BuyLog.class);
-        load(Paths.sellLogs, SellLog.class);
-        load(Paths.logItems, LogItem.class);
+        load(FileNames.ACCOUNT, Account.class);
+        load(FileNames.CATEGORY, Category.class);
+        load(FileNames.PRODUCT, Product.class);
+        load(FileNames.SUB_PRODUCT, SubProduct.class);
+        load(FileNames.CART, Cart.class);
+        load(FileNames.SALE, Sale.class);
+        load(FileNames.DISCOUNT, Discount.class);
+        load(FileNames.REVIEW, Review.class);
+        load(FileNames.RATING, Rating.class);
+        load(FileNames.REQUEST, Request.class);
+        load(FileNames.BUY_LOG, BuyLog.class);
+        load(FileNames.SELL_LOG, SellLog.class);
+        load(FileNames.LOG_ITEM, LogItem.class);
     }
 
     @Override
