@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="400.0" minWidth="600.0" stylesheets="@../css/BaseStyle.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.BaseController">
+   <top>
+      <HBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" text="back"/>
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="logo"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField text="search bar"/>
+            <Button mnemonicParsing="false" text="search"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button mnemonicParsing="false" text="cart/manage"/>
+            <Button mnemonicParsing="false" text="login/register"/>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </padding>
+      </HBox>
+   </top>
+</BorderPane>

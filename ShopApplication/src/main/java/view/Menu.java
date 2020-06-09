@@ -1,9 +1,8 @@
 package view;
 
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Menu {
     private String name;
@@ -62,7 +61,7 @@ public abstract class Menu {
     }
 
     protected void run() {
-        View.setScene(new Scene(new VBox()));
+//        View.setScene(new Scene(new VBox()));
         //this.show();
         //this.execute();
     }

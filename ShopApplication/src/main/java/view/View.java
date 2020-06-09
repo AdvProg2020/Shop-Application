@@ -6,6 +6,7 @@ import controller.CustomerController;
 import controller.SellerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Category;
@@ -53,6 +54,7 @@ public class View extends Application {
         mainScene = scene;
         mainStage.setScene(scene);
         mainStage.show();
+        System.out.println("salam");
     }
 
     public static void close() {
@@ -60,21 +62,29 @@ public class View extends Application {
         mainStage.close();
     }
 
-    public static Scene loadFxml(String fxml) throws IOException {
+    public static Parent loadFxml(String fxml) {
         FXMLLoader fxmlLoader = new FXMLLoader(View.class.getResource("/fxml/" + fxml + ".fxml"));
-        return new Scene(fxmlLoader.load());
+        try {
+            return fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         View.mainStage = stage;
-        setScene(loadFxml("MainMenu"));
         stage.setTitle("ShopApplication");
-        stage.setResizable(false);
+//        stage.setResizable(false);
         stage.setOnCloseRequest(event -> {
             event.consume();
             close();
         });
+        stage.setMinHeight(600);
+        stage.setMinWidth(900);
+        setScene(new Scene(loadFxml("Base")));
+        BaseController.setMainPane("MainMenu");
         new Menus.MainMenu("first menu").run();
     }
 
