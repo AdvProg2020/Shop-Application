@@ -31,7 +31,7 @@ public class Discount implements ModelBasic {
     }
 
     public static List<Discount> getAllDiscounts(boolean... suspense) {
-        return ModelUtilities.getInstances(allDiscounts.values(), suspense);
+        return ModelUtilities.getAllInstances(allDiscounts.values(), suspense);
     }
 
     public static Discount getDiscountById(String discountId, boolean... suspense) {

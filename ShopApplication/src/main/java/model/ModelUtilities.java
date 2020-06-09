@@ -35,9 +35,6 @@ public class ModelUtilities {
             entry(SubProduct.class.getSimpleName(), "SBP")
     );
 
-    private ModelUtilities() {
-    }
-
     private static String fixedLengthNumber(int number, int length) {
         return String.format("%0" + length + "d", number);
     }
@@ -55,21 +52,21 @@ public class ModelUtilities {
         return id.toString();
     }
 
-    public static <T extends ModelBasic> List<T> getInstances(Collection<T> instances, boolean... suspense) {
+    public static <T extends ModelBasic> List<T> getAllInstances(Collection<T> instances, boolean... suspense) {
         boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
+        ArrayList<T> updatedList = new ArrayList<>(instances);
         if (checkSuspense)
-            instances.removeIf(ModelBasic::isSuspended);
+            updatedList.removeIf(ModelBasic::isSuspended);
+        updatedList.sort(Comparator.comparing(ModelBasic::getId));
 
-        ArrayList<T> retValue = new ArrayList<>(instances);
-        retValue.sort(new InstanceComparator());
-        return retValue;
+        return updatedList;
     }
 
-    public static <T extends ModelBasic> T getInstanceById(Map<String, T> instances, String instanceId, boolean... suspense) {
+    public static <T extends ModelBasic> T getInstanceById(Map<String, T> instances, String id, boolean... suspense) {
         boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
 
-        T instance = instances.get(instanceId);
+        T instance = instances.get(id);
         if (checkSuspense && instance != null && instance.isSuspended())
             instance = null;
 
@@ -79,13 +76,5 @@ public class ModelUtilities {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     public @interface ModelOnly {
-    }
-
-    private static class InstanceComparator implements Comparator<ModelBasic> {
-
-        @Override
-        public int compare(ModelBasic o1, ModelBasic o2) {
-            return o1.getId().compareTo(o2.getId());
-        }
     }
 }

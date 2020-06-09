@@ -36,11 +36,11 @@ public class BuyLog implements ModelBasic {
     }
 
     public static List<BuyLog> getAllBuyLogs() {
-        return new ArrayList<>(allBuyLogs.values());
+        return ModelUtilities.getAllInstances(allBuyLogs.values(), false);
     }
 
     public static BuyLog getBuyLogById(String buyLogId) {
-        return allBuyLogs.get(buyLogId);
+        return ModelUtilities.getInstanceById(allBuyLogs, buyLogId, false);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Category implements ModelBasic {
     }
 
     public static List<Category> getAllCategories(boolean... suspense) {
-        return ModelUtilities.getInstances(allCategories.values(), suspense);
+        return ModelUtilities.getAllInstances(allCategories.values(), suspense);
     }
 
     public static Category getCategoryById(String categoryId, boolean... suspense) {

@@ -6,7 +6,6 @@ import model.SubProduct;
 import model.account.Customer;
 import model.account.Seller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +32,11 @@ public class LogItem implements ModelBasic {
     }
 
     public static List<LogItem> getAllLogItems() {
-        return new ArrayList<>(allLogItems.values());
+        return ModelUtilities.getAllInstances(allLogItems.values(), false);
     }
 
     public static LogItem getLogItemById(String logItemId) {
-        return allLogItems.get(logItemId);
+        return ModelUtilities.getInstanceById(allLogItems, logItemId, false);
     }
 
     @Override

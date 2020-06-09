@@ -4,7 +4,6 @@ import model.ModelUtilities.ModelOnly;
 import model.account.Account;
 import model.request.AddReviewRequest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +28,11 @@ public class Review implements ModelBasic {
     }
 
     public static List<Review> getAllReviews() {
-        return new ArrayList<>(allReviews.values());
+        return ModelUtilities.getAllInstances(allReviews.values(), false);
     }
 
     public static Review getReviewById(String reviewerId) {
-        return allReviews.get(reviewerId);
+        return ModelUtilities.getInstanceById(allReviews, reviewerId, false);
     }
 
     @Override

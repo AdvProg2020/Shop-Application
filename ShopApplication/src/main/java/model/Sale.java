@@ -29,7 +29,7 @@ public class Sale implements ModelBasic {
     }
 
     public static List<Sale> getAllSales(boolean... suspense) {
-        return ModelUtilities.getInstances(allSales.values(), suspense);
+        return ModelUtilities.getAllInstances(allSales.values(), suspense);
     }
 
     public static Sale getSaleById(String saleId, boolean... suspense) {

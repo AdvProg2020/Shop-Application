@@ -27,11 +27,11 @@ public class SellLog implements ModelBasic {
     }
 
     public static List<SellLog> getAllSellLogs() {
-        return new ArrayList<>(allSellLogs.values());
+        return ModelUtilities.getAllInstances(allSellLogs.values(), false);
     }
 
     public static SellLog getSellLogById(String sellLogId) {
-        return allSellLogs.get(sellLogId);
+        return ModelUtilities.getInstanceById(allSellLogs, sellLogId, false);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class Product implements ModelBasic {
     }
 
     public static List<Product> getAllProducts(boolean... suspense) {
-        return ModelUtilities.getInstances(allProducts.values(), suspense);
+        return ModelUtilities.getAllInstances(allProducts.values(), suspense);
     }
 
     public static Product getProductById(String productId, boolean... suspense) {

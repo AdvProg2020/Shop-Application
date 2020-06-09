@@ -31,7 +31,7 @@ public class SubProduct implements ModelBasic {
     }
 
     public static List<SubProduct> getAllSubProducts(boolean... suspense) {
-        return ModelUtilities.getInstances(allSubProducts.values(), suspense);
+        return ModelUtilities.getAllInstances(allSubProducts.values(), suspense);
     }
 
     public static SubProduct getSubProductById(String subProductId, boolean... suspense) {
@@ -56,7 +56,7 @@ public class SubProduct implements ModelBasic {
         getSeller().removeSubProduct(subProductId);
         getProduct().removeSubProduct(subProductId);
         setSale(null);
-        Cart.removeSubProductFromCarts(subProductId);
+        Cart.removeSubProductFromAll(subProductId);
         suspended = true;
     }
 

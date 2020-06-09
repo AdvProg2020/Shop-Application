@@ -3,7 +3,6 @@ package model;
 import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +21,15 @@ public class Cart implements ModelBasic {
     }
 
     public static List<Cart> getAllCarts() {
-        return new ArrayList<>(allCarts.values());
+        return ModelUtilities.getAllInstances(allCarts.values(), false);
     }
 
     public static Cart getCartById(String cartId) {
-        return allCarts.get(cartId);
+        return ModelUtilities.getInstanceById(allCarts, cartId, false);
     }
 
     @ModelOnly
-    public static void removeSubProductFromCarts(String subProductId) {
+    public static void removeSubProductFromAll(String subProductId) {
         for (Cart cart : allCarts.values()) {
             cart.subProductIds.remove(subProductId);
         }
@@ -38,8 +37,8 @@ public class Cart implements ModelBasic {
 
     @ModelOnly
     public static void mergeCarts(String srcCartId, String destCartId) {
-        Cart srcCart = allCarts.get(srcCartId);
-        Cart destCart = allCarts.get(destCartId);
+        Cart srcCart = getCartById(srcCartId);
+        Cart destCart = getCartById(destCartId);
         for (Map.Entry<String, Integer> entry : srcCart.subProductIds.entrySet()) {
             destCart.addSubProductCount(entry.getKey(), entry.getValue());
         }

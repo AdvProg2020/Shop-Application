@@ -1,5 +1,4 @@
-ShopApplication/.idea/**/*.xml
-ShopApplication/.idea/modules
+ShopApplication/.idea/
 ShopApplication/out/
 ShopApplication/target/
 ShopApplication/src/main/resources/database

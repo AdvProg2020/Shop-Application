@@ -45,23 +45,22 @@ public class View extends Application {
         return sc.nextLine().trim();
     }
 
-    static Scene getMainScene() {
+    public static Scene getScene() {
         return mainScene;
     }
 
-//    static void setMainScene(String fxml) throws IOException {
-//        mainScene = loadSceneFromFXML(fxml);
-//        mainStage.setScene(mainScene);
-//        mainStage.show();
-//    }
-
-    static void close() {
-        databaseManager.updateAll();
-        mainStage.close();
-
+    public static void setScene(Scene scene) {
+        mainScene = scene;
+        mainStage.setScene(scene);
+        mainStage.show();
     }
 
-    static Scene loadSceneFromFXML(String fxml) throws IOException {
+    public static void close() {
+        databaseManager.updateAll();
+        mainStage.close();
+    }
+
+    public static Scene loadFxml(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(View.class.getResource("/fxml/" + fxml + ".fxml"));
         return new Scene(fxmlLoader.load());
     }
@@ -69,19 +68,14 @@ public class View extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         View.mainStage = stage;
-//        setMainScene("MainMenu");
-//        stage.setTitle("ShopApplication");
-//        stage.setResizable(false);
-//        stage.setOnCloseRequest(event -> {
-//            event.consume();
-//            close();
-//        });
+        setScene(loadFxml("MainMenu"));
+        stage.setTitle("ShopApplication");
+        stage.setResizable(false);
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+            close();
+        });
         new Menus.MainMenu("first menu").run();
-    }
-
-    public static void setScene(Scene scene) {
-        mainStage.setScene(scene);
-        mainStage.show();
     }
 
 }

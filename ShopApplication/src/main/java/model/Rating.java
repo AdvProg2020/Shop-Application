@@ -3,7 +3,6 @@ package model;
 import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +23,11 @@ public class Rating implements ModelBasic {
     }
 
     public static List<Rating> getAllRatings() {
-        return new ArrayList<>(allRatings.values());
+        return ModelUtilities.getAllInstances(allRatings.values(), false);
     }
 
     public static Rating getRatingById(String ratingId) {
-        return allRatings.get(ratingId);
+        return ModelUtilities.getInstanceById(allRatings, ratingId, false);
     }
 
     @Override

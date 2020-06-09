@@ -31,7 +31,7 @@ public abstract class Account implements ModelBasic {
     }
 
     public static List<Account> getAllAccounts(boolean... suspense) {
-        return ModelUtilities.getInstances(allAccounts.values(), suspense);
+        return ModelUtilities.getAllInstances(allAccounts.values(), suspense);
     }
 
     public static Account getAccountById(String accountId, boolean... suspense) {

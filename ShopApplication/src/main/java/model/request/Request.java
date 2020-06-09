@@ -21,7 +21,7 @@ public abstract class Request implements ModelBasic {
     }
 
     public static List<Request> getPendingRequests() {
-        return ModelUtilities.getInstances(allRequests.values());
+        return ModelUtilities.getAllInstances(allRequests.values());
     }
 
     public static List<Request> getRequestArchive() {
