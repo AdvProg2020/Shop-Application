@@ -4,7 +4,6 @@ import controller.AdminController;
 import controller.Controller;
 import controller.CustomerController;
 import controller.SellerController;
-import javafx.fxml.Initializable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ public class Menus {
         customerController = View.customerController;
     }
 
-    public class AccountMenu extends Menu {
+    public static class AccountMenu extends Menu {
 
         private Menu previousMenu;
 
