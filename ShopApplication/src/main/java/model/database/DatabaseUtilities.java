@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-class Builder {
+class DatabaseUtilities {
     private static void createMissingFile(File file) {
         file.getParentFile().mkdirs();
         try {
@@ -25,27 +25,27 @@ class Builder {
         return Path.of("src/main/resources/database/" + fileName).toFile();
     }
 
-    static Scanner buildScanner(String fileName) {
+    static Scanner getScanner(String fileName) {
         File file = getFile(fileName);
         try {
             return new Scanner(file);
         } catch (FileNotFoundException e) {
             createMissingFile(file);
-            return buildScanner(fileName);
+            return getScanner(fileName);
         }
     }
 
-    static PrintWriter buildPrintWriter(String fileName) {
+    static PrintWriter getPrintWriter(String fileName) {
         File file = getFile(fileName);
         try {
             return new PrintWriter(file);
         } catch (FileNotFoundException e) {
             createMissingFile(file);
-            return buildPrintWriter(fileName);
+            return getPrintWriter(fileName);
         }
     }
 
-    static Gson buildGson() {
+    static Gson getGson() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Account.class, new Adapter<Account>());
         builder.registerTypeAdapter(Request.class, new Adapter<Request>());

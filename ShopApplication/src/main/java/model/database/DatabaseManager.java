@@ -16,11 +16,11 @@ public class DatabaseManager implements Database {
     private Gson gson;
 
     public DatabaseManager() {
-        this.gson = Builder.buildGson();
+        this.gson = DatabaseUtilities.getGson();
     }
 
     private <T> void load(String fileName, Class<T> classType) {
-        Scanner scanner = Builder.buildScanner(fileName);
+        Scanner scanner = DatabaseUtilities.getScanner(fileName);
         while (scanner.hasNextLine()) {
             String gsonString = scanner.nextLine();
             ((ModelBasic) gson.fromJson(gsonString, classType)).initialize();
@@ -29,7 +29,7 @@ public class DatabaseManager implements Database {
     }
 
     private <T> void update(String fileName, Class<T> classType, List<T> allInstances) {
-        PrintWriter printWriter = Builder.buildPrintWriter(fileName);
+        PrintWriter printWriter = DatabaseUtilities.getPrintWriter(fileName);
         if (classType == Category.class) { // writing superCategory first
             printWriter.println(gson.toJson(Category.getSuperCategory(), classType));
         }
