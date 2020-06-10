@@ -1,14 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="fxml.ProductMenu"
-            prefHeight="400.0" prefWidth="600.0">
 
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <Accordion BorderPane.alignment="CENTER">
+        <panes>
+          <TitledPane animated="false" maxWidth="-Infinity" text="untitled 1">
+               <content>
+                  <ToolBar prefHeight="40.0" prefWidth="200.0">
+                     <items>
+                        <HBox spacing="20.0">
+                           <children>
+                              <ToggleButton mnemonicParsing="false" selected="true" text="View count">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="sortingMethod" />
+                                 </toggleGroup>
+                              </ToggleButton>
+                              <ToggleButton fx:id="price" mnemonicParsing="false" text="Price" toggleGroup="$sortingMethod" />
+                              <ToggleButton fx:id="ratingScore" layoutX="99.0" layoutY="10.0" mnemonicParsing="false" text="RatingScore" toggleGroup="$sortingMethod" />
+                              <ToggleButton fx:id="name" layoutX="144.0" layoutY="10.0" mnemonicParsing="false" text="Name" toggleGroup="$sortingMethod" />
+                              <ToggleButton fx:id="categoryName" layoutX="277.0" layoutY="10.0" mnemonicParsing="false" text="Category name" toggleGroup="$sortingMethod" />
+                              <ToggleButton fx:id="remainingCount" layoutX="366.0" layoutY="10.0" mnemonicParsing="false" text="Remaining count" toggleGroup="$sortingMethod" />
+                              <ToggleButton fx:id="isIncreasing" mnemonicParsing="false" selected="true" text="Increasing" />
+                           </children>
+                        </HBox>
+                     </items>
+                  </ToolBar>
+               </content>
+          </TitledPane>
+          <TitledPane animated="false" prefHeight="200.0" prefWidth="800.0" text="untitled 2">
+               <content>
+                  <HBox prefHeight="157.0" prefWidth="798.0" spacing="10.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                           <children>
+                              <VBox prefWidth="100.0">
+                                 <children>
+                                    <Label text="Label" />
+                                    <TextField />
+                                 </children>
+                              </VBox>
+                              <VBox layoutX="10.0" layoutY="10.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Label" />
+                                    <TextField />
+                                 </children>
+                              </VBox>
+                              <VBox layoutX="10.0" layoutY="62.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Label" />
+                                    <TextField />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <VBox layoutX="20.0" layoutY="20.0" prefHeight="200.0" prefWidth="100.0" />
+                        <Slider prefHeight="24.0" prefWidth="260.0" showTickMarks="true" value="50.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </HBox>
+               </content>
+          </TitledPane>
+        </panes>
+      </Accordion>
+   </top>
+   <center>
+      <ScrollPane fx:id="isIncreasing" prefHeight="331.0" prefWidth="622.0" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+        </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
