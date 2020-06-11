@@ -155,7 +155,7 @@ public class Controllers {
         @FXML
         private VBox cartBTNWrapper;
 
-        {
+        static {
             loginBTN = new Button("login");
             loginBTN.setId("login-button");
             loginBTN.setOnAction(event -> LoginPopUpController.display());
