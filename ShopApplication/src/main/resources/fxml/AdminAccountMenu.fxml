@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="view.GUI.Controllers$AdminAccountMenu"
-            prefHeight="400.0" prefWidth="600.0">
 
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Admin Managing Menu" />
+            <Button mnemonicParsing="false" text="Manage Users" />
+            <Button layoutX="284.0" layoutY="198.0" mnemonicParsing="false" text="Manage Products" />
+            <Button layoutX="284.0" layoutY="210.0" mnemonicParsing="false" text="Manage Requests" />
+            <Button layoutX="284.0" layoutY="223.0" mnemonicParsing="false" text="Manage Categories" />
+            <Button layoutX="251.0" layoutY="284.0" mnemonicParsing="false" text="Manage Discounts" />
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
