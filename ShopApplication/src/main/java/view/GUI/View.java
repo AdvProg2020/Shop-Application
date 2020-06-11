@@ -12,10 +12,8 @@ import javafx.stage.Stage;
 import model.Category;
 import model.database.Database;
 import model.database.DatabaseManager;
-import view.consoleView.Menus;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * @author Dana
@@ -57,7 +55,6 @@ public class View extends Application {
     }
 
     public static Parent loadFxml(String fxml) {
-        System.out.println(View.class.getResource("/fxml/" + fxml + ".fxml").toString());
         FXMLLoader fxmlLoader = new FXMLLoader(View.class.getResource("/fxml/" + fxml + ".fxml"));
         try {
             return fxmlLoader.load();

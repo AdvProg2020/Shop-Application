@@ -1,0 +1,53 @@
+#top-box {
+    -fx-background-color: #f0f0f0;
+}
+
+.button {
+    -fx-background-color: transparent;
+
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+#back-button {
+    -fx-background-image: url("../img/back-button.jpg");
+    -fx-background-size: cover;
+}
+
+#logo-button {
+    -fx-background-image: url("../img/logo.png");
+    -fx-padding: 10 50 10 50;
+    -fx-background-size: 100;
+}
+
+#cart-button {
+    -fx-background-image: url("../img/cart-button.png");
+    -fx-padding: 20px;
+    -fx-background-size: 40px;
+}
+
+#login-button {
+    -fx-font-family: "Gill Sans Ultra Bold Condensed";
+    -fx-font-size: 18;
+}
+
+#search-button {
+    -fx-background-image: url("../img/search-button.png");
+    -fx-padding: 15px;
+    -fx-background-size: 30px;
+}
+
+#search-field {
+    -fx-padding: 5, 1, 5, 1;
+    -fx-border-color: grey;
+    -fx-font-size: 18;
+    -fx-font-style: italic;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+    -fx-background-color: transparent;
+}
