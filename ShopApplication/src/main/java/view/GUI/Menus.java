@@ -4,10 +4,19 @@ import controller.AdminController;
 import controller.Controller;
 import controller.CustomerController;
 import controller.SellerController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 //TODO: purchase menu
 
@@ -461,6 +470,10 @@ public class Menus {
             subActions = loginSubActions;
             ((Actions.BackAction)subActions.get(3)).setParent(ifBackMenu);
             this.loginRun(ifDoneMenu);
+        }
+
+        public static void display() {
+
         }
     }
 
@@ -951,6 +964,77 @@ public class Menus {
             subActions.put(index + 2, new Actions.CustomerViewOrder(currentOrderLogs));
             subActions.put(index + 3, new Actions.CustomerRateProduct());
             subActions.put(index + 4, new Actions.BackAction(parent));
+        }
+    }
+
+    public static class ProductBoxController implements Initializable {
+
+        @Override
+        public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        }
+    }
+
+    public static class BaseController implements Initializable {
+        private static BaseController currentBase;
+
+        @FXML
+        private BorderPane mainPane;
+
+        @FXML
+        private Button backBTN;
+
+        @FXML
+        private Button logoBTN;
+
+        @FXML
+        private TextField searchBarField;
+
+        @FXML
+        private Button searchBTN;
+
+        @FXML
+        private Button cartNManageBTN;
+
+        @FXML
+        private Button accountBTN;
+
+        public static void setMainPane(String fxml) {
+            currentBase.mainPane.setCenter(View.loadFxml(fxml));
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            currentBase = this;
+            accountBTN = new Button("salam");
+            initActions();
+        }
+
+        private void initActions() {
+            logoBTN.setOnAction(e -> setMainPane("MainMenu"));
+            accountBTN.setOnAction(e -> {
+                if (mainController.getType().equals(Constants.anonymousUserType)) {
+                }
+            });
+        }
+
+        public void updateBTN() {
+            switch (mainController.getType()) {
+                case Constants.anonymousUserType:
+                    setBTN(accountBTN, "login", e -> LoginPopUpController.display());
+                    setBTN(cartNManageBTN, "Cart", e -> setMainPane("ShoppingCartMenu"));
+                    break;
+                case Constants.customerUserType:
+                    setBTN(accountBTN, "account Menu", e -> setMainPane("CustomerAccountMenu"));
+
+                    break;
+
+            }
+        }
+
+        private void setBTN(Button btn, String text, EventHandler<ActionEvent> e) {
+            btn.setText(text);
+            btn.setOnAction(e);
         }
     }
 }

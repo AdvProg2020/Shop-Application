@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity"
             minHeight="400.0" minWidth="600.0" stylesheets="@../css/BaseStyle.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.BaseController">
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.Menus$BaseController">
    <top>
       <HBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>

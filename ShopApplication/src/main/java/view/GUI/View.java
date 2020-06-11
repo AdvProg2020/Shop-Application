@@ -85,7 +85,7 @@ public class View extends Application {
         stage.setMinWidth(900);
         setScene(new Scene(loadFxml("Base")));
         //setScene(new Scene(new VBox()));
-        BaseController.setMainPane("MainMenu");
+        Menus.BaseController.setMainPane("MainMenu");
         //new Menus.MainMenu("first menu").run();
     }
 
