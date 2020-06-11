@@ -74,7 +74,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>view.View</mainClass>
+                    <mainClass>view.GUI.View</mainClass>
                 </configuration>
             </plugin>
         </plugins>

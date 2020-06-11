@@ -1,4 +1,4 @@
-package view;
+package view.consoleView;
 
 import controller.AdminController;
 import controller.Controller;
@@ -87,5 +87,14 @@ public class View extends Application {
         BaseController.setMainPane("MainMenu");
         new Menus.MainMenu("first menu").run();
     }
+
+    public static void setFXML(String name) {
+        try {
+            View.setScene(new Scene(FXMLLoader.load(View.class.getResource( "/fxml/" + name))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

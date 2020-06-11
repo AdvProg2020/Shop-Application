@@ -1,4 +1,4 @@
-package view;
+package view.consoleView;
 
 import controller.AdminController;
 import controller.Controller;
@@ -8,6 +8,8 @@ import controller.SellerController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+//TODO: purchase menu
 
 public class Menus {
     private static Controller mainController;
@@ -71,7 +73,7 @@ public class Menus {
             //no actions available.
         }
 
-        public void loginFirst(Menu ifBackMenu,Menu ifDoneMenu) {
+        public void loginFirst(Menu ifBackMenu, Menu ifDoneMenu) {
             ((LoginPopUpController)subMenus.get(1)).loginFirst(ifBackMenu, ifDoneMenu);
         }
     }

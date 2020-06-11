@@ -1,4 +1,4 @@
-package view;
+package view.consoleView;
 
 import java.util.ArrayList;
 
