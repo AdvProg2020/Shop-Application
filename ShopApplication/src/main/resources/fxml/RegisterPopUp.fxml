@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="480.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="480.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab closable="false" text="Customer">
          <content>
@@ -26,25 +26,18 @@
                                     <Label fx:id="customerFirstNameError" textFill="RED" />
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="10.0" prefWidth="240.0">
-                                 <children>
-                                    <Label text="Last name:" />
-                                    <TextField fx:id="customerLastName" maxWidth="200.0" />
-                                    <Label fx:id="lastNameError" textFill="RED" />
-                                 </children>
-                              </VBox>
                               <VBox layoutX="10.0" layoutY="69.0" prefWidth="240.0">
                                  <children>
                                     <Label text="Phone number:" />
-                                    <TextField fx:id="customerPhoneNumber" maxWidth="200.0" />
+                                    <TextField fx:id="customerPhoneNumber" maxWidth="200.0" promptText="09123456789" />
                                     <Label fx:id="customerPhoneNumberError" textFill="RED" />
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="138.0" prefWidth="240.0">
+                              <VBox prefWidth="240.0">
                                  <children>
-                                    <Label text="Email:" />
-                                    <TextField fx:id="customerEmail" maxWidth="200.0" />
-                                    <Label fx:id="customerEmailError" textFill="RED" />
+                                    <Label text="Balance:" />
+                                    <TextField fx:id="customerBalance" maxWidth="200.0" />
+                                    <Label fx:id="customerBalanceError" textFill="RED" />
                                  </children>
                               </VBox>
                            </children>
@@ -53,36 +46,56 @@
                            <children>
                               <VBox prefWidth="240.0">
                                  <children>
-                                    <Label text="Balance:" />
-                                    <TextField fx:id="customerBalance" maxWidth="200.0" />
-                                    <Label fx:id="customerBalanceError" textFill="RED" />
+                                    <Label text="Last name:" />
+                                    <TextField fx:id="customerLastName" maxWidth="200.0" />
+                                    <Label fx:id="lastNameError" textFill="RED" />
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="10.0" prefWidth="240.0">
+                              <VBox prefWidth="240.0">
                                  <children>
-                                    <Label text="Username:" />
-                                    <TextField fx:id="customerUsername" maxWidth="200.0" />
-                                    <Label fx:id="customerUsernameError" textFill="RED" />
+                                    <Label text="Email:" />
+                                    <TextField fx:id="customerEmail" maxWidth="200.0" promptText="sample@atm.com" />
+                                    <Label fx:id="customerEmailError" textFill="RED" />
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="69.0" prefWidth="240.0">
-                                 <children>
-                                    <Label text="Password:" />
-                                    <PasswordField fx:id="customerPassword" maxWidth="200.0" />
-                                    <Label fx:id="customerPasswordError" textFill="RED" />
-                                 </children>
-                              </VBox>
-                              <Region prefHeight="46.0" prefWidth="230.0" />
-                              <HBox alignment="BOTTOM_CENTER" prefHeight="70.0" prefWidth="230.0">
-                                 <children>
-                                    <Button fx:id="customerRegister" mnemonicParsing="false" text="Register" />
-                                 </children>
-                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </HBox>
+               </center>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <top>
+                  <HBox prefHeight="29.0" prefWidth="460.0" spacing="20.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <VBox prefWidth="240.0">
+                           <children>
+                              <Label text="Username:" />
+                              <TextField fx:id="customerUsername" maxWidth="200.0" />
+                              <Label fx:id="customerUsernameError" textFill="RED" />
+                           </children>
+                        </VBox>
+                        <VBox prefWidth="240.0">
+                           <children>
+                              <Label text="Password:" />
+                              <PasswordField fx:id="customerPassword" maxWidth="200.0" />
+                              <Label fx:id="customerPasswordError" textFill="RED" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
-               </center>
+               </top>
+               <bottom>
+                  <HBox alignment="BOTTOM_CENTER" prefWidth="230.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="customerRegister" mnemonicParsing="false" text="Register" />
+                     </children>
+                  </HBox>
+               </bottom>
             </BorderPane>
          </content></Tab>
     <Tab closable="false" text="Seller">
@@ -100,25 +113,18 @@
                                     <Label fx:id="sellerFirstNameError" text="Label" textFill="RED" />
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="10.0" prefWidth="100.0">
-                                 <children>
-                                    <Label text="Last name:" />
-                                    <TextField fx:id="sellerLastName" maxWidth="200.0" prefWidth="200.0" />
-                                    <Label fx:id="sellerLastNameError" textFill="RED" />
-                                 </children>
-                              </VBox>
                               <VBox layoutX="10.0" layoutY="69.0" prefWidth="100.0">
                                  <children>
                                     <Label text="Phone number:" />
-                                    <TextField fx:id="sellerPhoneNumber" maxWidth="200.0" prefWidth="200.0" />
+                                    <TextField fx:id="sellerPhoneNumber" maxWidth="200.0" prefWidth="200.0" promptText="09123456789" />
                                     <Label fx:id="sellerPhoneNumberError" textFill="RED" />
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="128.0" prefWidth="100.0">
+                              <VBox prefWidth="100.0">
                                  <children>
-                                    <Label text="Email:" />
-                                    <TextField maxWidth="200.0" prefWidth="200.0" />
-                                    <Label fx:id="sellerEmailError" textFill="RED" />
+                                    <Label text="Balance:" />
+                                    <TextField fx:id="sellerBalance" maxWidth="200.0" prefWidth="200.0" />
+                                    <Label fx:id="sellerBalanceError" textFill="RED" />
                                  </children>
                               </VBox>
                            </children>
@@ -127,9 +133,16 @@
                            <children>
                               <VBox prefWidth="100.0">
                                  <children>
-                                    <Label text="Balance:" />
-                                    <TextField fx:id="sellerBalance" maxWidth="200.0" prefWidth="200.0" />
-                                    <Label fx:id="sellerBalanceError" textFill="RED" />
+                                    <Label text="Last name:" />
+                                    <TextField fx:id="sellerLastName" maxWidth="200.0" prefWidth="200.0" />
+                                    <Label fx:id="sellerLastNameError" textFill="RED" />
+                                 </children>
+                              </VBox>
+                              <VBox prefWidth="100.0">
+                                 <children>
+                                    <Label text="Email:" />
+                                    <TextField fx:id="sellerEmail" maxWidth="200.0" prefWidth="200.0" promptText="sample@atm.com" />
+                                    <Label fx:id="sellerEmailError" textFill="RED" />
                                  </children>
                               </VBox>
                               <VBox layoutX="10.0" layoutY="10.0" prefWidth="100.0">
@@ -139,30 +152,44 @@
                                     <Label fx:id="sellerStoreNameError" textFill="RED" />
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="69.0" prefWidth="100.0">
-                                 <children>
-                                    <Label text="Username:" />
-                                    <TextField maxWidth="200.0" prefWidth="200.0" />
-                                    <Label fx:id="sellerUsernameError" textFill="RED" />
-                                 </children>
-                              </VBox>
-                              <VBox layoutX="10.0" layoutY="128.0" prefWidth="100.0">
-                                 <children>
-                                    <Label text="Password:" />
-                                    <PasswordField fx:id="sellerPassword" maxWidth="200.0" />
-                                    <Label fx:id="sellerPasswordError" textFill="RED" />
-                                 </children>
-                              </VBox>
-                              <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <Button fx:id="sellerRegister" mnemonicParsing="false" text="Register" />
-                                 </children>
-                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </HBox>
+               </center>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <top>
+                  <HBox prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <VBox prefWidth="100.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Username:" />
+                              <TextField fx:id="sellerUsername" maxWidth="200.0" prefWidth="200.0" />
+                              <Label fx:id="sellerUsernameError" textFill="RED" />
+                           </children>
+                        </VBox>
+                        <VBox prefWidth="100.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Password:" />
+                              <PasswordField fx:id="sellerPassword" maxWidth="200.0" />
+                              <Label fx:id="sellerPasswordError" textFill="RED" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
-               </center>
+               </top>
+               <bottom>
+                  <HBox alignment="BOTTOM_CENTER" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="sellerRegister" mnemonicParsing="false" text="Register" />
+                     </children>
+                  </HBox>
+               </bottom>
             </BorderPane>
          </content></Tab>
   </tabs>
