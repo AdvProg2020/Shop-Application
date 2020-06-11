@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import model.Category;
 import model.database.Database;
 import model.database.DatabaseManager;
+import view.consoleView.Menus;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -27,7 +28,6 @@ public class View extends Application {
     public static CustomerController customerController = new CustomerController(mainController);
     public static AdminController adminController = new AdminController(mainController);
     public static SellerController sellerController = new SellerController(mainController);
-    private static Scanner sc = new Scanner(System.in); //TODO: delete...
     private static Stage mainStage;
     private static Scene mainScene;
 
@@ -36,14 +36,8 @@ public class View extends Application {
         Category.setSuperCategory();
         databaseManager.createCategory();
 
-        Menus.init();
-        Actions.init();
-        new Menus.AccountMenu("account menu");
+        Controllers.init();
         launch(args);
-    }
-
-    public static String getNextLineTrimmed() { //TODO: delete...
-        return sc.nextLine().trim();
     }
 
     public static Scene getScene() {
@@ -63,6 +57,7 @@ public class View extends Application {
     }
 
     public static Parent loadFxml(String fxml) {
+        System.out.println(View.class.getResource("/fxml/" + fxml + ".fxml").toString());
         FXMLLoader fxmlLoader = new FXMLLoader(View.class.getResource("/fxml/" + fxml + ".fxml"));
         try {
             return fxmlLoader.load();
@@ -83,19 +78,7 @@ public class View extends Application {
         });
         stage.setMinHeight(600);
         stage.setMinWidth(900);
-        setScene(new Scene(loadFxml("Base")));
-        //setScene(new Scene(new VBox()));
-        Menus.BaseController.setMainPane("MainMenu");
-        //new Menus.MainMenu("first menu").run();
+        setScene(new Scene(loadFxml(Constants.FXMLs.base)));
+        Controllers.BaseController.setMainPane(Constants.FXMLs.mainMenu);
     }
-
-    public static void setFXML(String name) {
-        try {
-            View.setScene(new Scene(FXMLLoader.load(View.class.getResource( "/fxml/" + name))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
