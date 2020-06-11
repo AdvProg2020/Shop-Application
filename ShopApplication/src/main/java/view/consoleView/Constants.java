@@ -1,4 +1,4 @@
-package view;
+package view.consoleView;
 
 public final class Constants {
     static final String caseInsensitiveMode = "(?i)";

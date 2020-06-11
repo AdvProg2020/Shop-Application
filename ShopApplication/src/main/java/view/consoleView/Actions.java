@@ -1,4 +1,4 @@
-package view;
+package view.consoleView;
 
 import controller.*;
 
@@ -1357,7 +1357,7 @@ public class Actions {
                 String[] fieldRegex;
                 String[] results;
                 fields = new String[]{"username", "password", "first name", "last name", "email", "phone"};
-                fieldRegex = new String[]{Constants.usernamePattern, Constants.usernamePattern ,Constants.IRLNamePattern, Constants.IRLNamePattern, Constants.emailPattern,
+                fieldRegex = new String[]{Constants.usernamePattern, Constants.usernamePattern , Constants.IRLNamePattern, Constants.IRLNamePattern, Constants.emailPattern,
                         Constants.phonePattern};
                 registerForm = new Form(fields, fieldRegex);
                 if (registerForm.takeInput() == 0) {

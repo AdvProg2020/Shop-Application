@@ -1,4 +1,4 @@
-package view;
+package view.GUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,9 +61,8 @@ public abstract class Menu {
     }
 
     protected void run() {
-//        View.setScene(new Scene(new VBox()));
-        //this.show();
-        //this.execute();
+        this.show();
+        this.execute();
     }
 
     public void show() {
@@ -87,7 +86,6 @@ public abstract class Menu {
         for (int index = subMenuSize + modification + 1; index <= subMenuSize + subActionSize + modification; index++) {
             System.out.println(subActions.get(index).getActionCommand());
         }
-
     }
 
     public void execute() {
