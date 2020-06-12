@@ -2,13 +2,13 @@ package view.GUI;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
@@ -71,9 +71,9 @@ public class Controllers {
     }
 
     public static class SaleMenu {
-       public static void display() {
+        public static void display() {
 
-       }
+        }
     }
 
     //TODO: controls loginPopUp
@@ -117,9 +117,19 @@ public class Controllers {
     }
 
     //add product detail menu
-    public static class ShoppingCartMenu {
-        public static void display() {
+    public static class ShoppingCartMenu implements Initializable {
+        @FXML
+        private TableView<String> productsTable;
 
+        public static void display() {
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            productsTable.addEventFilter(ScrollEvent.ANY, event -> {
+                if (event.getDeltaX() != 0)
+                    event.consume();
+            });
         }
     }
 
@@ -128,7 +138,7 @@ public class Controllers {
 
     }
 
-    public static class AdminManagingMenuController implements Initializable{
+    public static class AdminManagingMenuController implements Initializable {
         public static void display() {
 
         }
@@ -206,7 +216,7 @@ public class Controllers {
             View.type.set(mainController.getType());
             cartBTN.visibleProperty().bind(
                     Bindings.when(View.type.isEqualTo(Constants.adminUserType).or(View.type.isEqualTo(Constants.sellerUserType)))
-                    .then(false).otherwise(true)
+                            .then(false).otherwise(true)
             );
             manageBTN.visibleProperty().bind(cartBTN.visibleProperty().not());
             loginBTN.visibleProperty().bind(
@@ -234,10 +244,8 @@ public class Controllers {
             backBTN.setOnAction(e -> {
                 ArrayList<String> stackTrace = View.getStackTrace();
                 if (stackTrace.size() < 2) return;
-                else {
-                    stackTrace.remove(stackTrace.size() - 1);
-                    View.setMainPane(stackTrace.get(stackTrace.size() - 1));
-                }
+                stackTrace.remove(stackTrace.size() - 1);
+                View.setMainPane(stackTrace.get(stackTrace.size() - 1));
             });
         }
 
@@ -245,8 +253,7 @@ public class Controllers {
             accountBTN.textProperty().bind(
                     Bindings.createObjectBinding(() -> {
                         try {
-                            String username = mainController.viewPersonalInfo()[0];
-                            return username;
+                            return mainController.viewPersonalInfo()[0];
                         } catch (Exceptions.NotLoggedInException e) {
                             return null;
                         }
@@ -275,7 +282,7 @@ public class Controllers {
         //search utils.
         private ArrayList<String[]> getCurrentProducts() {
             try {
-                return (ArrayList<String[]>) mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME).clone();
+                return new ArrayList<>(mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME));
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
                 return null;
