@@ -10,8 +10,8 @@ public final class Constants {
     public static final String percentagePattern = "%?" + doublePattern + "%?";
     public static final String datePattern = "\\d{2}[/-]\\d{2}[/-]\\d{2}";
     public static final String IRLNamePattern = "[a-zA-Z]+( [a-zA-Z]+)*";
-    public static final String emailPattern = ".+@.+\\.com";
-    public static final String phonePattern = "\\d+";
+    public static final String emailPattern = "^.+@.+\\.com$";
+    public static final String phonePattern = "\\+?\\d{8,12}";
     public static final String anonymousUserType = "Anonymous";
     public static final String adminUserType = "Admin";
     public static final String customerUserType = "Customer";
@@ -33,8 +33,8 @@ public final class Constants {
         public static final String base = "Base";
         public static final String accountMenu = "AccountMenu";
         public static final String shoppingCartMenu = "ShoppingCartMenu";
-//        public static final String
-//        public static final String
+        public static final String loginPopUp = "LoginPopUp";
+        public static final String registerPopUp = "RegisterPopUp";
 //        public static final String
     }
 }
