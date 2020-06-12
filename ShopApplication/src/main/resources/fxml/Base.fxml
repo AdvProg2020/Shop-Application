@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" minHeight="400.0" minWidth="600.0"
             stylesheets="@../css/BaseStyle.css" xmlns="http://javafx.com/javafx/11.0.1"
@@ -22,16 +21,18 @@
             <TextField id="search-field" fx:id="searchField" promptText="search products..." HBox.hgrow="ALWAYS"/>
             <Button id="search-button" fx:id="searchBTN" mnemonicParsing="false"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <VBox fx:id="cartBTNWrapper" alignment="CENTER">
-                <HBox.margin>
-                    <Insets right="10.0"/>
-                </HBox.margin>
-            </VBox>
-            <VBox fx:id="accountBTNWrapper" alignment="CENTER">
-                <HBox.margin>
-                    <Insets/>
-                </HBox.margin>
-            </VBox>
+            <StackPane layoutX="400.0" layoutY="20.0">
+                <children>
+                    <Button id="manage-button" fx:id="manageBTN" mnemonicParsing="false" visible="false"/>
+                    <Button id="cart-button" fx:id="cartBTN" mnemonicParsing="false" visible="false"/>
+                </children>
+            </StackPane>
+            <StackPane>
+                <children>
+                    <Button id="login-button" fx:id="loginBTN" mnemonicParsing="false" text="login"/>
+                    <Button id="account-button" fx:id="accountBTN" mnemonicParsing="false"/>
+                </children>
+            </StackPane>
         </HBox>
     </top>
 </BorderPane>

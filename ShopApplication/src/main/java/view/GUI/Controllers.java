@@ -4,14 +4,13 @@ import controller.AdminController;
 import controller.Controller;
 import controller.CustomerController;
 import controller.SellerController;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -136,10 +135,7 @@ public class Controllers {
 
     public static class BaseController implements Initializable {
         private static BaseController currentBase;
-        private static Button loginBTN;
-        private static Button accountBTN;
-        private static Button cartBTN;
-        private static Button manageBTN;
+
         @FXML
         private BorderPane mainPane;
         @FXML
@@ -151,20 +147,13 @@ public class Controllers {
         @FXML
         private Button searchBTN;
         @FXML
-        private VBox accountBTNWrapper;
+        private Button accountBTN;
         @FXML
-        private VBox cartBTNWrapper;
-
-        static {
-            loginBTN = new Button("login");
-            loginBTN.setId("login-button");
-            loginBTN.setOnAction(event -> LoginPopUpController.display());
-
-            cartBTN = new Button();
-            cartBTN.setId("cart-button");
-            cartBTN.setOnAction(event -> LoginPopUpController.display());
-            //TODO: set the other 3 buttons
-        }
+        private Button loginBTN;
+        @FXML
+        private Button cartBTN;
+        @FXML
+        private Button manageBTN;
 
         public static BaseController getCurrentBase() {
             return currentBase;
@@ -182,45 +171,46 @@ public class Controllers {
         }
 
         private void initButtons() {
-//            initActions();
-//            initTexts();
-            cartBTNWrapper.getChildren().removeAll();
-            cartBTNWrapper.getChildren().add(cartBTN);
-            accountBTNWrapper.getChildren().removeAll();
-            accountBTNWrapper.getChildren().add(loginBTN);
+            initActions();
+            initTexts();
+            initVisibility();
         }
 
-//        private void initActions() {
-//            logoBTN.setOnAction(e -> setMainPane(Constants.FXMLs.mainMenu));
-//            accountBTN.setOnAction(e -> {
-//                switch (View.mainController.getType()) {
-//                    case Constants.anonymousUserType:
-//                        LoginPopUpController.display();
-//                    case Constants.customerUserType:
-//                        setMainPane(Constants.FXMLs.customerAccountMenu);
-//                    case Constants.sellerUserType:
-//                        setMainPane(Constants.FXMLs.sellerAccountMenu);
-//                    case Constants.adminUserType:
-//                        setMainPane(Constants.FXMLs.adminAccountMenu);
-//
-//                }
-//            });
-//        }
-//
-//        private void initTexts() {
-//            logoBTN.setText("SSD (TM)");
-//            SimpleBooleanProperty isLoggedIn = new SimpleBooleanProperty(!View.mainController.getType().equals(Constants.anonymousUserType));
-//            accountBTN.textProperty().bind(
-//                    Bindings.when(isLoggedIn).then("Account Menu")
-//                            .otherwise("Login")
-//            );
-//        }
+        private void initVisibility() {
+            boolean cartBTNVisible = true;
+            boolean loginBTNVisible = true;
 
+            switch (View.mainController.getType()) {
+                case Constants.customerUserType:
+                    loginBTNVisible = false;
+                    break;
+                case Constants.sellerUserType:
+                case Constants.adminUserType:
+                    cartBTNVisible = false;
+                    loginBTNVisible = false;
+                    break;
+            }
 
-        private void setBTN(Button btn, String text, EventHandler<ActionEvent> e) {
-            btn.setText(text);
-            btn.setOnAction(e);
+            cartBTN.setVisible(cartBTNVisible);
+            manageBTN.setVisible(!cartBTNVisible);
+            loginBTN.setVisible(loginBTNVisible);
+            accountBTN.setVisible(!loginBTNVisible);
         }
 
+        private void initActions() {
+            logoBTN.setOnAction(e -> setMainPane(Constants.FXMLs.mainMenu));
+            accountBTN.setOnAction(e -> setMainPane(Constants.FXMLs.customerAccountMenu));
+            loginBTN.setOnAction(e -> LoginPopUpController.display());
+            //TODO : search, cart, manage
+        }
+
+        private void initTexts() {
+            // TODO: bind accountBTN text to <username> (otherwise "login")
+            SimpleBooleanProperty isLoggedIn = new SimpleBooleanProperty(!View.mainController.getType().equals(Constants.anonymousUserType));
+            accountBTN.textProperty().bind(
+                    Bindings.when(isLoggedIn).then("Account Menu")
+                            .otherwise("Login")
+            );
+        }
     }
 }
