@@ -1,9 +1,6 @@
 package view.consoleView;
 
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import controller.SellerController;
+import controller.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -86,6 +83,7 @@ public class View extends Application {
         setScene(new Scene(loadFxml("Base")));
         BaseController.setMainPane("MainMenu");
         new Menus.MainMenu("first menu").run();
+
     }
 
     public static void setFXML(String name) {

@@ -28,17 +28,6 @@ public final class Constants {
         return -1;
     }
 
-    public static class FXMLLocations {
-        public static final String AdminAccountMenu = "src/main/resources/fxml/AdminAccountMenu.fxml";
-//        public static final String
-//        public static final String
-//        public static final String
-//        public static final String
-//        public static final String
-//        public static final String
-//        public static final String
-    }
-
     static class Menus {
         static final String accountMenuCommand = "account menu";
         static final String accountMenuPattern = caseInsensitiveMode + "^" + accountMenuCommand + "$";

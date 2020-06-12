@@ -29,11 +29,10 @@ public final class Constants {
     }
 
     public static class FXMLs {
-        public static final String adminAccountMenu = "AdminAccountMenu";
-        public static final String customerAccountMenu = "CustomerAccountMenu";
-        public static final String sellerAccountMenu = "SellerAccountMenu";
         public static final String mainMenu = "MainMenu";
         public static final String base = "Base";
+        public static final String accountMenu = "AccountMenu";
+        public static final String shoppingCartMenu = "ShoppingCartMenu";
 //        public static final String
 //        public static final String
 //        public static final String

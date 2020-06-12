@@ -1,19 +1,19 @@
 package view.GUI;
 
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import controller.SellerController;
+import controller.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 //TODO: purchase menu
@@ -31,19 +31,28 @@ public class Controllers {
         customerController = View.customerController;
     }
 
-    public static class AccountMenu {
+    public static class PersonalInfoMenuController {
+        public static void display() {
 
+        }
     }
 
     public static class MainMenu {
+        private static void display() {
 
+        }
     }
 
-    public static class AllProductsMenu {
+    public static class ProductsMenuController {
+        public static void display(ArrayList<String[]> products) {
 
+        }
     }
 
     public static class ProductDetailMenu {
+        public static void display(String[] subProduct) {
+
+        }
     }
 
     //TODO: deprecated: added in product detail menu
@@ -62,7 +71,9 @@ public class Controllers {
     }
 
     public static class SaleMenu {
+       public static void display() {
 
+       }
     }
 
     //TODO: controls loginPopUp
@@ -73,9 +84,6 @@ public class Controllers {
         }
     }
 
-    public static class AdminAccountMenu {
-
-    }
 
     public static class AdminUserManagingMenu {
 
@@ -99,9 +107,6 @@ public class Controllers {
 
     }
 
-    public static class SellerAccountMenu {
-
-    }
 
     public static class SellerSalesMenu {
 
@@ -111,18 +116,38 @@ public class Controllers {
 
     }
 
-    public static class CustomerAccountMenu {
-
-    }
-
     //add product detail menu
     public static class ShoppingCartMenu {
+        public static void display() {
 
+        }
     }
 
     //TODO: can be added to CustomerMenu??
     public static class CustomerOrderLogMenu {
 
+    }
+
+    public static class AdminManagingMenuController implements Initializable{
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class SellerManagingMenuController implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
     }
 
     public static class ProductBoxController implements Initializable {
@@ -160,8 +185,8 @@ public class Controllers {
             return currentBase;
         }
 
-        public static void setMainPane(String fxml) {
-            currentBase.mainPane.setCenter(View.loadFxml(fxml));
+        public static void setMainPane(Parent parent) {
+            currentBase.mainPane.setCenter(parent);
         }
 
         @Override
@@ -178,39 +203,91 @@ public class Controllers {
         }
 
         private void initVisibility() {
-            BooleanProperty cartBTNVisible = new SimpleBooleanProperty(true);
-            BooleanProperty loginBTNVisible = new SimpleBooleanProperty(true);
-
-            switch (View.mainController.getType()) {
-                case Constants.customerUserType:
-                    loginBTNVisible.setValue(false);
-                    break;
-                case Constants.sellerUserType:
-                case Constants.adminUserType:
-                    cartBTNVisible.setValue(false);
-                    loginBTNVisible.setValue(false);
-                    break;
-            }
-            cartBTN.visibleProperty().bind(cartBTNVisible);
-            manageBTN.visibleProperty().bind(cartBTNVisible.not());
-            loginBTN.visibleProperty().bind(loginBTNVisible);
-            accountBTN.visibleProperty().bind(loginBTNVisible.not());
+            View.type.set(mainController.getType());
+            cartBTN.visibleProperty().bind(
+                    Bindings.when(View.type.isEqualTo(Constants.adminUserType).or(View.type.isEqualTo(Constants.sellerUserType)))
+                    .then(false).otherwise(true)
+            );
+            manageBTN.visibleProperty().bind(cartBTN.visibleProperty().not());
+            loginBTN.visibleProperty().bind(
+                    Bindings.when(View.type.isEqualTo(Constants.anonymousUserType))
+                            .then(true).otherwise(false)
+            );
+            accountBTN.visibleProperty().bind(loginBTN.visibleProperty().not());
+            backBTN.visibleProperty().bind(View.getStackSizeProperty().greaterThan(1));
         }
 
         private void initActions() {
-            logoBTN.setOnAction(e -> setMainPane(Constants.FXMLs.mainMenu));
-            accountBTN.setOnAction(e -> setMainPane(Constants.FXMLs.customerAccountMenu));
+            logoBTN.setOnAction(e -> MainMenu.display());
+            accountBTN.setOnAction(e -> PersonalInfoMenuController.display());
             loginBTN.setOnAction(e -> LoginPopUpController.display());
-            //TODO : search, cart, manage
+            cartBTN.setOnAction(e -> ShoppingCartMenu.display());
+            searchBTN.setOnAction(e -> search(searchField.getText()));
+            manageBTN.setOnAction(e -> {
+                switch (mainController.getType()) {
+                    case Constants.adminUserType:
+                        AdminManagingMenuController.display();
+                    case Constants.sellerUserType:
+                        SellerManagingMenuController.display();
+                }
+            });
+            backBTN.setOnAction(e -> {
+                ArrayList<String> stackTrace = View.getStackTrace();
+                if (stackTrace.size() < 2) return;
+                else {
+                    stackTrace.remove(stackTrace.size() - 1);
+                    View.setMainPane(stackTrace.get(stackTrace.size() - 1));
+                }
+            });
         }
 
         private void initTexts() {
-            // TODO: bind accountBTN text to <username>
-            SimpleBooleanProperty isLoggedIn = new SimpleBooleanProperty(!View.mainController.getType().equals(Constants.anonymousUserType));
             accountBTN.textProperty().bind(
-                    Bindings.when(isLoggedIn).then("Account Menu")
-                            .otherwise("Login")
+                    Bindings.createObjectBinding(() -> {
+                        try {
+                            String username = mainController.viewPersonalInfo()[0];
+                            return username;
+                        } catch (Exceptions.NotLoggedInException e) {
+                            return null;
+                        }
+                    }, View.type)
             );
+            //TODO: temporary
+            loginBTN.setText("Login");
+            manageBTN.setText("manage");
+        }
+
+        private void search(String input) {
+            if (input != null) {
+                ArrayList<String[]> products = getCurrentProducts();
+                if (products != null) {
+                    try {
+                        ProductsMenuController.display(mainController.showProducts(getProductIDs(products),
+                                null, false, new String[]{"false", "0", "0", input, null, null, "0"},
+                                new HashMap<>()));
+                    } catch (Exceptions.InvalidProductIdException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        //search utils.
+        private ArrayList<String[]> getCurrentProducts() {
+            try {
+                return (ArrayList<String[]>) mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME).clone();
+            } catch (Exceptions.InvalidCategoryException e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+        }
+
+        private ArrayList<String> getProductIDs(ArrayList<String[]> currentProducts) {
+            ArrayList<String> productIDS = new ArrayList<>();
+            for (String[] product : currentProducts) {
+                productIDS.add(product[0]);
+            }
+            return productIDS;
         }
     }
 }

@@ -1,10 +1,9 @@
 package view.GUI;
 
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import controller.SellerController;
+import controller.*;
 import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,6 +13,7 @@ import model.database.Database;
 import model.database.DatabaseManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Dana
@@ -29,11 +29,14 @@ public class View extends Application {
     private static Stage mainStage;
     private static Scene mainScene;
 
+    private static ArrayList<String> stackTrace = new ArrayList<>();
+    private static SimpleIntegerProperty stackSize = new SimpleIntegerProperty(0);
+    public static SimpleStringProperty type = new SimpleStringProperty(Constants.anonymousUserType);
+
     public static void main(String[] args) {
         databaseManager.loadAll();
         Category.setSuperCategory();
         databaseManager.createCategory();
-
         Controllers.init();
         launch(args);
     }
@@ -46,7 +49,6 @@ public class View extends Application {
         mainScene = scene;
         mainStage.setScene(scene);
         mainStage.show();
-        System.out.println("salam");
     }
 
     public static void close() {
@@ -54,18 +56,35 @@ public class View extends Application {
         mainStage.close();
     }
 
-    public static Parent loadFxml(String fxml) {
+    public static Parent loadFxml(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(View.class.getResource("/fxml/" + fxml + ".fxml"));
+        return fxmlLoader.load();
+    }
+
+    public static void setMainPane(String fxml) {
+        Parent p;
         try {
-            return fxmlLoader.load();
+            p = loadFxml(fxml);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            System.out.println("could not load " + fxml + ".fxml");
+            return;
         }
+        stackTrace.add(fxml);
+        stackSize.set(stackSize.get() + 1);
+        Controllers.BaseController.setMainPane(p);
+    }
+
+    public static SimpleIntegerProperty getStackSizeProperty() {
+        return stackSize;
+    }
+
+    public static ArrayList<String> getStackTrace() {
+        return stackTrace;
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
+
         View.mainStage = stage;
         stage.setTitle("ShopApplication");
 //        stage.setResizable(false);
@@ -76,6 +95,12 @@ public class View extends Application {
         stage.setMinHeight(600);
         stage.setMinWidth(900);
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));
-        Controllers.BaseController.setMainPane(Constants.FXMLs.mainMenu);
+        setMainPane(Constants.FXMLs.mainMenu);
+//        try {
+//            mainController.login("adana", "1");
+//            type.set(Constants.adminUserType);
+//        } catch (Exceptions.WrongPasswordException | Exceptions.UsernameDoesntExistException  e) {
+//            e.printStackTrace();
+//        }
     }
 }
