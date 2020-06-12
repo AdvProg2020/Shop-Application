@@ -2,15 +2,19 @@ package view.GUI;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +80,6 @@ public class Controllers {
        }
     }
 
-    //TODO: controls loginPopUp
     public static class LoginPopUpController implements Initializable {
         private static Stage popUpStage;
 
@@ -107,7 +110,7 @@ public class Controllers {
             popUpStage.setHeight(320);
             popUpStage.setResizable(false);
             try {
-                popUpStage.setScene(new Scene(View.loadFxml("LoginPopUp")));
+                popUpStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.loginPopUp)));
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -125,10 +128,12 @@ public class Controllers {
 
         private void initListeners() {
             usernameField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
                 char lastInput = newValue.charAt(newValue.length() - 1);
                 if (String.valueOf(lastInput).matches("\\W"))  usernameField.setText(oldValue);
             }));
             passwordField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
                 char lastInput = newValue.charAt(newValue.length() - 1);
                 if (String.valueOf(lastInput).matches("\\W"))  passwordField.setText(oldValue);
             }));
@@ -142,6 +147,8 @@ public class Controllers {
                 else {
                     try {
                         mainController.login(username, password);
+                        View.type.set(mainController.getType());
+                        popUpStage.close();
                     } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
                         errorLBL.setText("invalid username or password");
                         errorLBL.setTextFill(Color.RED);
@@ -156,10 +163,75 @@ public class Controllers {
     public static class RegisterPopUpController implements Initializable {
         private static Stage popUpStage;
 
+        @FXML private TextField customerFirstName;
+
+        @FXML private Label customerFirstNameError;
+
+        @FXML private TextField customerPhoneNumber;
+
+        @FXML private Label customerPhoneNumberError;
+
+        @FXML private TextField customerBalance;
+
+        @FXML private Label customerBalanceError;
+
+        @FXML private TextField customerLastName;
+
+        @FXML private Label customerLastNameError;
+
+        @FXML private TextField customerEmail;
+
+        @FXML private Label customerEmailError;
+
+        @FXML private TextField customerUsername;
+
+        @FXML private Label customerUsernameError;
+
+        @FXML private PasswordField customerPassword;
+
+        @FXML private Label customerPasswordError;
+
+        @FXML private Button customerRegister;
+
+        @FXML private TextField sellerFirstName;
+
+        @FXML private Label sellerFirstNameError;
+
+        @FXML private TextField sellerPhoneNumber;
+
+        @FXML private Label sellerPhoneNumberError;
+
+        @FXML private TextField sellerBalance;
+
+        @FXML private Label sellerBalanceError;
+
+        @FXML private TextField sellerLastName;
+
+        @FXML private Label sellerLastNameError;
+
+        @FXML private TextField sellerEmail;
+
+        @FXML private Label sellerEmailError;
+
+        @FXML private TextField sellerStoreName;
+
+        @FXML private Label sellerStoreNameError;
+
+        @FXML private TextField sellerUsername;
+
+        @FXML private Label sellerUsernameError;
+
+        @FXML private PasswordField sellerPassword;
+
+        @FXML private Label sellerPasswordError;
+
+        @FXML private Button sellerRegister;
+
         public static void display(Stage stage) {
             popUpStage = stage;
+            popUpStage.setHeight(390);
             try {
-                popUpStage.setScene(new Scene(View.loadFxml("RegisterPopUp")));
+                popUpStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopUp)));
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -168,7 +240,138 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            initTexts();
+            initVisibilities();
+            initListeners();
+            initActions();
+        }
 
+        private void initTexts() {
+            sellerUsernameError.setText("Please enter a username");
+            customerPasswordError.setText("Please enter a password");
+            sellerPasswordError.setText("Please enter a password");
+            customerFirstNameError.setText("Invalid entry!");
+            sellerFirstNameError.setText("Invalid entry!");
+            customerLastNameError.setText("Invalid entry!");
+            sellerLastNameError.setText("Invalid entry!");
+            customerPhoneNumberError.setText("Please enter a phone number");
+            sellerPhoneNumberError.setText("Please enter a phone number");
+            customerEmailError.setText("Invalid entry! enter a valid email address");
+            sellerEmailError.setText("Please enter an email address");
+            customerBalanceError.setText("Please enter your initial balance");
+            sellerBalanceError.setText("Please enter your initial balance");
+        }
+
+        private void initVisibilities() {
+            customerUsernameError.setVisible(false);
+            sellerUsernameError.setVisible(false);
+            customerPasswordError.setVisible(false);
+            sellerPasswordError.setVisible(false);
+            customerFirstNameError.setVisible(false);
+            sellerFirstNameError.setVisible(false);
+            customerLastNameError.setVisible(false);
+            sellerLastNameError.setVisible(false);
+            customerPhoneNumberError.setVisible(false);
+            sellerPhoneNumberError.setVisible(false);
+            customerEmailError.setVisible(false);
+            sellerEmailError.setVisible(false);
+            customerBalanceError.setVisible(false);
+            sellerBalanceError.setVisible(false);
+        }
+
+        private void initListeners() {
+            addListener(customerUsername, "\\w");
+            addListener(sellerUsername, "\\w");
+            addListener(customerPassword, "\\w");
+            addListener(sellerPassword, "\\w");
+            addListener(customerPhoneNumber, "[0-9]");
+            addListener(sellerPhoneNumber, "[0-9]");
+        }
+
+        private void addListener(TextField textField, String regex) {
+            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if ( ! String.valueOf(lastInput).matches(regex))  textField.setText(oldValue);
+            }));
+        }
+
+        private void initActions() {
+            customerRegister.setOnAction(e -> {
+                if (areCustomerFieldsAvailable()) {
+                    try {
+                        mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
+                                customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null);
+                        LoginPopUpController.display(popUpStage);
+                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                        customerUsernameError.setText("sorry! username already taken");
+                        customerUsernameError.setVisible(true);
+                    } catch (Exceptions.AdminRegisterException ex) {
+                        //wont happen
+                    }
+                }
+            });
+            sellerRegister.setOnAction(e -> {
+                if (areSellerFieldsAvailable()) {
+                    try {
+                        mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
+                                sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null);
+                        LoginPopUpController.display(popUpStage);
+                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                        sellerUsernameError.setText("sorry! username already taken");
+                        sellerUsernameError.setVisible(true);
+                    } catch (Exceptions.AdminRegisterException ex) {
+                        //wont happen
+                    }
+                }
+            });
+        }
+
+        private boolean areCustomerFieldsAvailable() {
+            boolean areAvailable = true;
+            if (customerUsername.getText().equals("")) {
+                customerUsernameError.setText("Please enter a username");
+                customerUsernameError.setVisible(true);
+                areAvailable = false;
+            } else customerUsernameError.setVisible(false);
+            if (customerPassword.getText().equals("")) {customerPasswordError.setVisible(true); areAvailable = false;}
+            else customerPasswordError.setVisible(false);
+            if ( ! customerFirstName.getText().matches(Constants.IRLNamePattern)) {customerFirstNameError.setVisible(true); areAvailable = false;}
+            else customerFirstNameError.setVisible(false);
+            if ( ! customerLastName.getText().matches(Constants.IRLNamePattern)) {customerLastNameError.setVisible(true); areAvailable = false;}
+            else customerLastNameError.setVisible(false);
+            if (customerPhoneNumber.getText().equals("")){customerPhoneNumberError.setVisible(true); areAvailable = false;}
+            else customerPhoneNumberError.setVisible(false);
+            if ( ! customerEmail.getText().matches(Constants.emailPattern)) {customerEmailError.setVisible(true); areAvailable = false;}
+            else customerEmailError.setVisible(false);
+            if ( ! customerBalance.getText().matches(Constants.doublePattern)) {customerBalanceError.setVisible(true); areAvailable = false;}
+            else customerBalanceError.setVisible(false);
+            return areAvailable;
+        }
+
+
+        private boolean areSellerFieldsAvailable() {
+            boolean areAvailable = true;
+            if (sellerUsername.getText().equals("")) {
+                sellerUsernameError.setText("Please enter a username");
+                sellerUsernameError.setVisible(true);
+                areAvailable = false;
+            } else sellerUsernameError.setVisible(false);
+            if (sellerPassword.getText().equals("")) {sellerPasswordError.setVisible(true); areAvailable = false;}
+            else sellerPasswordError.setVisible(false);
+            if ( ! sellerFirstName.getText().matches(Constants.IRLNamePattern)) {sellerFirstNameError.setVisible(true); areAvailable = false;}
+            else sellerFirstNameError.setVisible(false);
+            if ( ! sellerLastName.getText().matches(Constants.IRLNamePattern)) {sellerLastNameError.setVisible(true); areAvailable = false;}
+            else sellerLastNameError.setVisible(false);
+            if (sellerPhoneNumber.getText().equals("")){sellerPhoneNumberError.setVisible(true); areAvailable = false;}
+            else sellerPhoneNumberError.setVisible(false);
+            if ( ! sellerEmail.getText().matches(Constants.emailPattern)) {sellerEmailError.setVisible(true); areAvailable = false;}
+            else sellerEmailError.setVisible(false);
+            if ( ! sellerBalance.getText().matches(Constants.doublePattern)) {sellerBalanceError.setVisible(true); areAvailable = false;}
+            else sellerBalanceError.setVisible(false);
+            return areAvailable;
         }
     }
 
