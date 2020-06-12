@@ -1,4 +1,4 @@
-#top-box {
+.bg-pane {
     -fx-background-color: white;
 }
 
@@ -8,9 +8,13 @@
     -fx-background-position: center;
 }
 
-
 .button:hover {
     -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+
+#top-box {
+    -fx-background-color: white;
 }
 
 #back-button {

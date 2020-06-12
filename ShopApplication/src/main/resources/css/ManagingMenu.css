@@ -1,0 +1,42 @@
+.button {
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+#add-button {
+    -fx-background-image: url("../img/add-button.png");
+    -fx-padding: 10 20 10 20px;
+    -fx-background-size: 40px;
+}
+
+#confirm-button {
+    -fx-background-image: url("../img/confirm-button.png");
+    -fx-padding: 10 15 10 15px;
+    -fx-background-size: 30px;
+}
+
+
+.text-field {
+    -fx-font-style: italic;
+    -fx-font-size: 14;
+    -fx-background-color: #e9e9e9;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0.5;
+    -fx-border-radius: 3px;
+}
+
+.text-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: #909090;
+}
+
+#message-label {
+    -fx-text-fill: red;
+    -fx-font-size: 13;
+    -fx-font-family: "Sina";
+}
