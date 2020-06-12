@@ -429,7 +429,8 @@ public class Controller {
      * customer:  7: username, type, firstName, lastName, email, phone, balance;
      * seller:    8: username, type, firstName, lastName, email, phone, balance, storeName;
      */
-    public String[] viewPersonalInfo() {
+    public String[] viewPersonalInfo() throws Exceptions.NotLoggedInException {
+        if (currentAccount == null) throw new Exceptions.NotLoggedInException();
         return Utilities.Pack.personalInfo(currentAccount);
     }
 

@@ -840,7 +840,12 @@ public class Actions {
 
         @Override
         public void execute(String command) {
-            String[] info = mainController.viewPersonalInfo();
+            String[] info = new String[0];
+            try {
+                info = mainController.viewPersonalInfo();
+            } catch (Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+            }
             showPersonalInfo(info);
         }
     }

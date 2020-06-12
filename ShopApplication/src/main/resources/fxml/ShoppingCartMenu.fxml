@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <TableView fixedCellSize="20.0" maxWidth="-Infinity" prefHeight="300.0" BorderPane.alignment="CENTER">
-        <columns>
-          <TableColumn fx:id="productId" prefWidth="154.0" resizable="false" sortable="false" text="ID" />
-          <TableColumn fx:id="productName" minWidth="100.0" prefWidth="100.0" resizable="false" sortable="false" text="Name (Seller)" />
-            <TableColumn fx:id="productUnitPrice" prefWidth="115.0" resizable="false" sortable="false" text="Unit price" />
-            <TableColumn fx:id="count" prefWidth="100.0" resizable="false" sortable="false" text="Count" />
-            <TableColumn fx:id="totalPrice" prefWidth="100.0" resizable="false" sortable="false" text="Total" />
-        </columns>
-         <BorderPane.margin>
-            <Insets top="10.0" />
-         </BorderPane.margin>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
-   </center>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
-   </padding>
-   <bottom>
-      <HBox spacing="10.0">
-         <children>
-          <Button fx:id="addProduct" mnemonicParsing="false" text="Add" />
-            <Button fx:id="decreaseProduct" mnemonicParsing="false" text="Decrease" />
-            <Button fx:id="Digest" layoutX="66.0" layoutY="13.0" mnemonicParsing="false" text="Digest" />
-            <Region prefHeight="30.0" HBox.hgrow="ALWAYS" />
-            <Label text="Possible errors" textFill="RED" />
-            <Button fx:id="Purchase" layoutX="133.0" layoutY="10.0" mnemonicParsing="false" text="Purchase" />
-         </children>
-         <padding>
-            <Insets left="5.0" right="5.0" top="10.0" />
-         </padding>
-      </HBox>
-   </bottom>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ShoppingCartMenu.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.Controllers$ShoppingCartMenu">
+    <center>
+        <VBox alignment="CENTER" maxWidth="-Infinity">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <TableView fx:id="productsTable" fixedCellSize="30.0" focusTraversable="false" maxWidth="-Infinity"
+                       styleClass="bg-pane" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="productId" prefWidth="100.0" resizable="false" sortable="false" text="No."/>
+                    <TableColumn fx:id="productName" minWidth="100.0" prefWidth="250.0" resizable="false"
+                                 sortable="false" text="Name-Brand (Seller)"/>
+                    <TableColumn fx:id="productUnitPrice" prefWidth="100.0" resizable="false" sortable="false"
+                                 text="Unit price"/>
+                    <TableColumn fx:id="count" prefWidth="200.0" resizable="false" sortable="false" text="Count"/>
+                    <TableColumn fx:id="totalPrice" prefWidth="150.0" resizable="false" sortable="false" text="Total"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <padding>
+                    <Insets bottom="5.0"/>
+                </padding>
+            </TableView>
+            <HBox id="bottom-box" alignment="CENTER">
+                <Label id="message-label" fx:id="messageLabel" text="Possible errors" textFill="RED"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button id="purchase-button" fx:id="purchaseBTN" layoutX="133.0" layoutY="10.0" mnemonicParsing="false"
+                        text="Purchase"/>
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+                <padding>
+                    <Insets bottom="10.0" left="20.0" right="5.0" top="10.0"/>
+                </padding>
+            </HBox>
+        </VBox>
+    </center>
 </BorderPane>
