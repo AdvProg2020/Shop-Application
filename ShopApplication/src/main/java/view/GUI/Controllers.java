@@ -205,7 +205,7 @@ public class Controllers {
         }
 
         private void initTexts() {
-            // TODO: bind accountBTN text to <username> (otherwise "login")
+            // TODO: bind accountBTN text to <username>
             SimpleBooleanProperty isLoggedIn = new SimpleBooleanProperty(!View.mainController.getType().equals(Constants.anonymousUserType));
             accountBTN.textProperty().bind(
                     Bindings.when(isLoggedIn).then("Account Menu")
