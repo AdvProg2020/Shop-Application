@@ -14,13 +14,14 @@
             <Region HBox.hgrow="ALWAYS" />
             <VBox>
                <children>
-                  <TableView prefWidth="500.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="users" maxWidth="-Infinity" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn prefWidth="36.0" resizable="false" text="No" />
-                      <TableColumn prefWidth="67.0" resizable="false" text="Type" />
-                        <TableColumn prefWidth="136.0" resizable="false" text="Username" />
-                        <TableColumn prefWidth="129.0" resizable="false" text="First name" />
-                        <TableColumn prefWidth="138.0" resizable="false" text="Last name" />
+                      <TableColumn fx:id="number" prefWidth="36.0" resizable="false" text="No" />
+                      <TableColumn fx:id="type" prefWidth="67.0" resizable="false" text="Type" />
+                        <TableColumn fx:id="username" prefWidth="136.0" resizable="false" text="Username" />
+                        <TableColumn fx:id="firstName" prefWidth="129.0" resizable="false" text="First name" />
+                        <TableColumn fx:id="lastName" prefWidth="180.0" resizable="false" text="Last name" />
+                        <TableColumn fx:id="remove" prefWidth="33.0" text="X" />
                     </columns>
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -28,14 +29,16 @@
                   </TableView>
                   <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Show Personal Info" />
-                        <Button mnemonicParsing="false" text="Remove" />
+                        <Button fx:id="addAdmin" mnemonicParsing="false" text="Add Admin" />
                         <HBox HBox.hgrow="ALWAYS" />
                         <Label fx:id="error" text="Possible error" />
-                        <HBox layoutX="124.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
+                        <HBox layoutX="124.0" layoutY="10.0" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin></HBox>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                        <Insets bottom="10.0" left="40.0" right="40.0" top="10.0" />
                      </VBox.margin>
                   </HBox>
                </children>

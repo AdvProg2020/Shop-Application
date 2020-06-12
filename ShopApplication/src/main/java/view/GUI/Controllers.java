@@ -2,13 +2,13 @@ package view.GUI;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
@@ -71,15 +71,103 @@ public class Controllers {
     }
 
     public static class SaleMenu {
-        public static void display() {
+       public static void display() {
 
-        }
+       }
     }
 
     //TODO: controls loginPopUp
-    public static class LoginPopUpController {
+    public static class LoginPopUpController implements Initializable {
+        private static Stage popUpStage;
 
-        public static void display() {
+        @FXML
+        private ImageView usernameIcon;
+
+        @FXML
+        private TextField usernameField;
+
+        @FXML
+        private ImageView passwordIcon;
+
+        @FXML
+        private PasswordField passwordField;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button loginBTN;
+
+        @FXML
+        private Hyperlink registerLink;
+
+        public static void display(Stage stage) {
+            popUpStage = stage;
+            popUpStage.setWidth(480);
+            popUpStage.setHeight(320);
+            popUpStage.setResizable(false);
+            try {
+                popUpStage.setScene(new Scene(View.loadFxml("LoginPopUp")));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            popUpStage.initModality(Modality.APPLICATION_MODAL);
+            popUpStage.show();
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            errorLBL.setText("");
+            initListeners();
+            initActions();
+        }
+
+        private void initListeners() {
+            usernameField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (String.valueOf(lastInput).matches("\\W"))  usernameField.setText(oldValue);
+            }));
+            passwordField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (String.valueOf(lastInput).matches("\\W"))  passwordField.setText(oldValue);
+            }));
+        }
+
+        private void initActions() {
+            loginBTN.setOnAction(e -> {
+                String username = usernameField.getText();
+                String password = passwordField.getText();
+                if (username == null || password == null) return;
+                else {
+                    try {
+                        mainController.login(username, password);
+                    } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
+                        errorLBL.setText("invalid username or password");
+                        errorLBL.setTextFill(Color.RED);
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            registerLink.setOnAction(e -> RegisterPopUpController.display(popUpStage));
+        }
+    }
+
+    public static class RegisterPopUpController implements Initializable {
+        private static Stage popUpStage;
+
+        public static void display(Stage stage) {
+            popUpStage = stage;
+            try {
+                popUpStage.setScene(new Scene(View.loadFxml("RegisterPopUp")));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
 
         }
     }
@@ -216,7 +304,7 @@ public class Controllers {
             View.type.set(mainController.getType());
             cartBTN.visibleProperty().bind(
                     Bindings.when(View.type.isEqualTo(Constants.adminUserType).or(View.type.isEqualTo(Constants.sellerUserType)))
-                            .then(false).otherwise(true)
+                    .then(false).otherwise(true)
             );
             manageBTN.visibleProperty().bind(cartBTN.visibleProperty().not());
             loginBTN.visibleProperty().bind(
@@ -230,7 +318,7 @@ public class Controllers {
         private void initActions() {
             logoBTN.setOnAction(e -> MainMenu.display());
             accountBTN.setOnAction(e -> PersonalInfoMenuController.display());
-            loginBTN.setOnAction(e -> LoginPopUpController.display());
+            loginBTN.setOnAction(e -> LoginPopUpController.display(new Stage()));
             cartBTN.setOnAction(e -> ShoppingCartMenu.display());
             searchBTN.setOnAction(e -> search(searchField.getText()));
             manageBTN.setOnAction(e -> {
@@ -244,8 +332,10 @@ public class Controllers {
             backBTN.setOnAction(e -> {
                 ArrayList<String> stackTrace = View.getStackTrace();
                 if (stackTrace.size() < 2) return;
-                stackTrace.remove(stackTrace.size() - 1);
-                View.setMainPane(stackTrace.get(stackTrace.size() - 1));
+                else {
+                    View.getStackSizeProperty().subtract(1);
+                    View.setMainPane(stackTrace.get(stackTrace.size() - 1));
+                }
             });
         }
 
@@ -253,7 +343,8 @@ public class Controllers {
             accountBTN.textProperty().bind(
                     Bindings.createObjectBinding(() -> {
                         try {
-                            return mainController.viewPersonalInfo()[0];
+                            String username = mainController.viewPersonalInfo()[0];
+                            return username;
                         } catch (Exceptions.NotLoggedInException e) {
                             return null;
                         }
@@ -282,7 +373,7 @@ public class Controllers {
         //search utils.
         private ArrayList<String[]> getCurrentProducts() {
             try {
-                return new ArrayList<>(mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME));
+                return (ArrayList<String[]>) mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME).clone();
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
                 return null;
