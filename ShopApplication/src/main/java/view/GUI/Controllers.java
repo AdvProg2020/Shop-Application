@@ -5,6 +5,7 @@ import controller.Controller;
 import controller.CustomerController;
 import controller.SellerController;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -177,24 +178,23 @@ public class Controllers {
         }
 
         private void initVisibility() {
-            boolean cartBTNVisible = true;
-            boolean loginBTNVisible = true;
+            BooleanProperty cartBTNVisible = new SimpleBooleanProperty(true);
+            BooleanProperty loginBTNVisible = new SimpleBooleanProperty(true);
 
             switch (View.mainController.getType()) {
                 case Constants.customerUserType:
-                    loginBTNVisible = false;
+                    loginBTNVisible.setValue(false);
                     break;
                 case Constants.sellerUserType:
                 case Constants.adminUserType:
-                    cartBTNVisible = false;
-                    loginBTNVisible = false;
+                    cartBTNVisible.setValue(false);
+                    loginBTNVisible.setValue(false);
                     break;
             }
-
-            cartBTN.setVisible(cartBTNVisible);
-            manageBTN.setVisible(!cartBTNVisible);
-            loginBTN.setVisible(loginBTNVisible);
-            accountBTN.setVisible(!loginBTNVisible);
+            cartBTN.visibleProperty().bind(cartBTNVisible);
+            manageBTN.visibleProperty().bind(cartBTNVisible.not());
+            loginBTN.visibleProperty().bind(loginBTNVisible);
+            accountBTN.visibleProperty().bind(loginBTNVisible.not());
         }
 
         private void initActions() {
