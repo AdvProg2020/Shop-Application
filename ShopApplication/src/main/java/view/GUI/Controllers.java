@@ -7,15 +7,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -210,9 +205,19 @@ public class Controllers {
     }
 
     //add product detail menu
-    public static class ShoppingCartMenu {
-        public static void display() {
+    public static class ShoppingCartMenu implements Initializable {
+        @FXML
+        private TableView<String> productsTable;
 
+        public static void display() {
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            productsTable.addEventFilter(ScrollEvent.ANY, event -> {
+                if (event.getDeltaX() != 0)
+                    event.consume();
+            });
         }
     }
 
@@ -221,7 +226,7 @@ public class Controllers {
 
     }
 
-    public static class AdminManagingMenuController implements Initializable{
+    public static class AdminManagingMenuController implements Initializable {
         public static void display() {
 
         }
