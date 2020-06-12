@@ -30,7 +30,7 @@ public class View extends Application {
     private static Scene mainScene;
 
     private static ArrayList<String> stackTrace = new ArrayList<>();
-    private static SimpleIntegerProperty stackSize = new SimpleIntegerProperty(0);
+    public static SimpleIntegerProperty stackSize = new SimpleIntegerProperty(0);
     public static SimpleStringProperty type = new SimpleStringProperty(Constants.anonymousUserType);
 
     public static void main(String[] args) {
@@ -80,6 +80,20 @@ public class View extends Application {
 
     public static ArrayList<String> getStackTrace() {
         return stackTrace;
+    }
+
+    public static void goBack() {
+        stackSize.set(stackSize.get() - 1);
+        stackTrace.remove(stackSize.get());
+        Parent p;
+        String fxml = stackTrace.get(stackSize.get() - 1);
+        try {
+            p = loadFxml(fxml);
+        } catch (IOException e) {
+            System.out.println("could not load " + fxml + ".fxml");
+            return;
+        }
+        Controllers.BaseController.setMainPane(p);
     }
 
     @Override

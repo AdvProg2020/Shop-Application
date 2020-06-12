@@ -35,6 +35,6 @@ public final class Constants {
         public static final String shoppingCartMenu = "ShoppingCartMenu";
         public static final String loginPopUp = "LoginPopUp";
         public static final String registerPopUp = "RegisterPopUp";
-//        public static final String
+        public static final String personalInfoMenu = "PersonalInfoMenu";
     }
 }

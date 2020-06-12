@@ -35,8 +35,42 @@ public class Controllers {
         customerController = View.customerController;
     }
 
-    public static class PersonalInfoMenuController {
+    public static class PersonalInfoMenuController implements Initializable{
+
+        @FXML private Button Log;
+
+        @FXML private Button discounts;
+
+        @FXML private TextField lastName;
+
+        @FXML private TextField firstName;
+
+        @FXML private Label firstNameLabel;
+
+        @FXML private Label lastNameLabel;
+
+        @FXML private TextField phoneNumber;
+
+        @FXML private TextField Email;
+
+        @FXML private TextField balance;
+
+        @FXML private TextField storeName;
+
+        @FXML private Label phoneNumberLabel;
+
+        @FXML private Label emailLabel;
+
+        @FXML private Label balanceLabel;
+
+        @FXML private Label storeNameLabel;
+
         public static void display() {
+            View.setMainPane(Constants.FXMLs.personalInfoMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
 
         }
     }
@@ -115,7 +149,9 @@ public class Controllers {
                 e.printStackTrace();
                 return;
             }
-            popUpStage.initModality(Modality.APPLICATION_MODAL);
+            try {
+                popUpStage.initModality(Modality.APPLICATION_MODAL);
+            } catch (Exception e) {}
             popUpStage.show();
         }
 
@@ -533,11 +569,9 @@ public class Controllers {
                 }
             });
             backBTN.setOnAction(e -> {
-                ArrayList<String> stackTrace = View.getStackTrace();
-                if (stackTrace.size() < 2) return;
+                if (View.getStackTrace().size() < 2) return;
                 else {
-                    View.getStackSizeProperty().subtract(1);
-                    View.setMainPane(stackTrace.get(stackTrace.size() - 1));
+                    View.goBack();
                 }
             });
         }
