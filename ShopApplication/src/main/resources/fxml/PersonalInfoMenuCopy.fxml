@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="472.0" prefWidth="632.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.Controllers$PersonalInfoMenuController">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+    <center>
+        <HBox>
+            <children>
+                <Region HBox.hgrow="ALWAYS" />
+                <VBox alignment="TOP_CENTER" spacing="20.0">
+                    <children>
+                        <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0">
+                            <children>
+                                <ImageView fx:id="ProfileIMG" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button fx:id="ProfileIMGEditBTN" mnemonicParsing="false" text="edit" />
+                            </children>
+                        </VBox>
+                        <Button fx:id="logoutBTN" mnemonicParsing="false" text="Logout" />
+                        <Button fx:id="changePasswordBTN" layoutX="83.0" layoutY="280.0" mnemonicParsing="false" text="Change Password" />
+                        <Button fx:id="buyLogBTN" mnemonicParsing="false" text="Buy Logs" />
+                        <Button fx:id="discountsBTN" mnemonicParsing="false" text="Discounts" />
+                    </children>
+                    <padding>
+                        <Insets top="20.0" />
+                    </padding>
+                </VBox>
+                <Region prefWidth="50.0" />
+                <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Region prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER" prefHeight="100.0">
+                            <children>
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="181.0" minWidth="10.0" prefWidth="178.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="164.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.0" minWidth="10.0" prefWidth="26.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <TextField fx:id="lastName" editable="false" layoutX="210.0" layoutY="10.0" prefHeight="50.0" prefWidth="165.0" promptText="lastName" GridPane.columnIndex="1" />
+                                        <TextField fx:id="firstName" editable="false" prefHeight="50.0" prefWidth="165.0" promptText="firstName" />
+                                        <Label fx:id="firstNameLBL" text="Label" GridPane.halignment="CENTER" />
+                                        <Label fx:id="lastNameLBL" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                              <Button fx:id="IrlNameEditBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="47.0" text="edit" GridPane.columnIndex="3" />
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </HBox>
+                        <Region prefHeight="95.0" prefWidth="374.0" />
+                        <Label text="Personal Info" />
+                        <HBox alignment="CENTER" />
+                        <GridPane vgap="10.0">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="175.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.0" minWidth="10.0" prefWidth="22.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <TextField fx:id="phoneNumberField" editable="false" GridPane.columnIndex="1" />
+                                <Label text="Phone number:" />
+                                <TextField fx:id="EmailField" editable="false" layoutX="139.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Label layoutX="10.0" layoutY="17.0" text="E-mail:" GridPane.rowIndex="1" />
+                                <Label fx:id="balanceLBL" text="Balance:" GridPane.rowIndex="2" />
+                                <TextField fx:id="balanceField" editable="false" layoutX="139.0" layoutY="43.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <TextField fx:id="storeNameField" editable="false" layoutX="139.0" layoutY="73.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <Label fx:id="storeNameLBL" layoutX="10.0" layoutY="77.0" text="StoreName:" GridPane.rowIndex="3" />
+                        <Button fx:id="phoneNumberEditBTN" mnemonicParsing="false" text="edit" GridPane.columnIndex="3" />
+                        <Button fx:id="emailEditBTN" mnemonicParsing="false" text="edit" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Button fx:id="balanceEditBTN" mnemonicParsing="false" text="edit" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Button fx:id="storeNameEditBTN" mnemonicParsing="false" text="edit" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                            </children>
+                        </GridPane>
+                        <Region VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+    </center>
+</BorderPane>

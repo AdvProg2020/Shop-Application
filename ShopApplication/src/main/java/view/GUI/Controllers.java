@@ -37,33 +37,49 @@ public class Controllers {
 
     public static class PersonalInfoMenuController implements Initializable{
 
-        @FXML private Button Log;
+        @FXML private ImageView ProfileIMG;
 
-        @FXML private Button discounts;
+        @FXML private Button ProfileIMGEditBTN;
+
+        @FXML private Button logoutBTN;
+
+        @FXML private Button changePasswordBTN;
+
+        @FXML private Button buyLogBTN;
+
+        @FXML private Button discountsBTN;
 
         @FXML private TextField lastName;
 
         @FXML private TextField firstName;
 
-        @FXML private Label firstNameLabel;
+        @FXML private Label firstNameLBL;
 
-        @FXML private Label lastNameLabel;
+        @FXML private Label lastNameLBL;
 
-        @FXML private TextField phoneNumber;
+        @FXML private Button IrlNameEditBTN;
 
-        @FXML private TextField Email;
+        @FXML private TextField phoneNumberField;
 
-        @FXML private TextField balance;
+        @FXML private TextField EmailField;
 
-        @FXML private TextField storeName;
+        @FXML private TextField balanceField;
 
-        @FXML private Label phoneNumberLabel;
+        @FXML private TextField storeNameField;
 
-        @FXML private Label emailLabel;
+        @FXML private Button phoneNumberEditBTN;
 
-        @FXML private Label balanceLabel;
+        @FXML private Button emailEditBTN;
 
-        @FXML private Label storeNameLabel;
+        @FXML private Button balanceEditBTN;
+
+        @FXML private Button storeNameEditBTN;
+
+        @FXML private Label storeNameLBL;
+
+        @FXML private Label balanceLBL;
+
+        private String[] personalInfo;
 
         public static void display() {
             View.setMainPane(Constants.FXMLs.personalInfoMenu);
@@ -71,13 +87,101 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            try {
+                personalInfo = mainController.viewPersonalInfo();
+            } catch (Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+                return;
+            }
+            switch (View.type.get()) {
+                case Constants.customerUserType:
+                    initCustomer();
+                    break;
+                case Constants.sellerUserType:
+                    initSeller();
+                    break;
+                case Constants.adminUserType:
+                    initAdmin();
+                    break;
+            }
+        }
 
+        private void initCustomer() {
+            storeNameEditBTN.setVisible(false);
+            storeNameField.setVisible(false);
+            storeNameLBL.setVisible(false);
+
+            initCustomerValues();
+            initCustomerActions();
+        }
+
+        private void initCustomerValues() {
+            initAdminValues();
+        }
+
+        private void initCustomerActions() {
+
+        }
+
+        private void initSeller() {
+            discountsBTN.setVisible(false);
+            buyLogBTN.setVisible(false);
+
+            initSellerValues();
+            initSellerActions();
+        }
+
+        private void initSellerValues() {
+            initCustomerValues();
+        }
+
+        private void initSellerActions() {
+
+        }
+
+        private void initAdmin() {
+            storeNameEditBTN.setVisible(false);
+            storeNameField.setVisible(false);
+            storeNameLBL.setVisible(false);
+
+            balanceEditBTN.setVisible(false);
+            balanceField.setVisible(false);
+            balanceLBL.setVisible(false);
+
+            discountsBTN.setVisible(false);
+            buyLogBTN.setVisible(false);
+
+            initAdminValues();
+            initAdminActions();
+        }
+
+        private void initAdminValues() {
+
+        }
+
+        private void initAdminActions() {
+
+        }
+
+        private void showPersonalInfo(String[] info) {
+            System.out.println("1. username: " + info[0]);
+            System.out.println("2. type: " + info[1]);
+            System.out.println("3. first name: " + info[2]);
+            System.out.println("4. last name: " + info[3]);
+            System.out.println("5. email: " + info[4]);
+            System.out.println("6. phone number: " + info[5]);
+            if (info.length > 6) {
+                System.out.println("7. balance: " + info[6]);
+            }
+            if (info.length > 7) {
+                System.out.println("8. store name: " + info[7]);
+            }
         }
     }
 
     public static class MainMenu {
         private static void display() {
-
+            View.setMainPane(Constants.FXMLs.mainMenu);
         }
     }
 
