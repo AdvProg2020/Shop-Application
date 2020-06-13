@@ -69,7 +69,10 @@ public class View extends Application {
             System.out.println("could not load " + fxml + ".fxml");
             return;
         }
-        if (stackTrace.size() > 0 && ! fxml.equals(stackTrace.get(stackTrace.size() - 1))) {
+        if (stackTrace.size() == 0) {
+            stackTrace.add(fxml);
+            stackSize.set(stackSize.get() + 1);
+        } else if ( ! stackTrace.get(stackTrace.size() - 1).equals(fxml)) {
             stackTrace.add(fxml);
             stackSize.set(stackSize.get() + 1);
         }

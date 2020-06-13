@@ -187,6 +187,7 @@ public class Controllers {
 
     public static class MainMenu {
         private static void display() {
+
             View.setMainPane(Constants.FXMLs.mainMenu);
         }
     }
