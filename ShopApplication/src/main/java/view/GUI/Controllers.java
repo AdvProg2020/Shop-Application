@@ -17,11 +17,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.SubProduct;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 //TODO: purchase menu
@@ -193,7 +195,7 @@ public class Controllers {
 
 
         @FXML
-        private ChoiceBox sortBy;
+        private ChoiceBox<String> sortBy;
 
         @FXML
         private ToggleButton isIncreasing;
@@ -208,7 +210,7 @@ public class Controllers {
         private CheckBox available;
 
         @FXML
-        private Slider minPrice;
+        private Slider minPriceSlider;
 
         @FXML
         private Slider maxPriceSlider;
@@ -217,13 +219,13 @@ public class Controllers {
         private TextField filterName;
 
         @FXML
-        private ChoiceBox filterBrand;
+        private ChoiceBox<String> filterBrand;
 
         @FXML
-        private ChoiceBox filterSeller;
+        private ChoiceBox<String> filterSeller;
 
         @FXML
-        private ChoiceBox filterCategory;
+        private ChoiceBox<String> filterCategory;
 
         @FXML
         private ScrollPane productsPane;
@@ -601,7 +603,7 @@ public class Controllers {
 
 
         @FXML
-        private TableView<?> discounts;
+        private TableView<String> discounts;
 
         @FXML
         private TableColumn<?, ?> numberCOL;
