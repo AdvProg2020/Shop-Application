@@ -2,18 +2,22 @@ package view.GUI;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.SubProduct;
 
 import java.io.IOException;
 import java.net.URL;
@@ -643,11 +647,89 @@ public class Controllers {
     }
 
     //add product detail menu
-    public static class ShoppingCartMenu implements Initializable {
-        @FXML
-        private TableView<String> productsTable;
+    public static class ShoppingCartMenuController implements Initializable {
 
-        public static void display() {
+        private static ArrayList<String[]> cartProducts = new ArrayList<>();
+        private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
+        private SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
+
+        private static class SubProductWrapper {
+            int id;
+            Button nameBrandSeller;
+            double unitPrice;
+            int count;
+            SimpleDoubleProperty totalPrice;
+
+            public SubProductWrapper(int id, String nameBrandSeller, double unitPrice, int count) {
+                this.id = id;
+                this.nameBrandSeller = new Button(nameBrandSeller);
+                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(id -  1)));
+                this.unitPrice = unitPrice;
+                this.count = count;
+                this.totalPrice.set(unitPrice * count);
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public Button getNameBrandSeller() {
+                return nameBrandSeller;
+            }
+
+            public double getUnitPrice() {
+                return unitPrice;
+            }
+
+            public int getCount() {
+                return count;
+            }
+
+            public double getTotalPrice() {
+                return totalPrice.get();
+            }
+
+            public SimpleDoubleProperty getTotalPriceProperty() {
+                return totalPrice;
+            }
+        }
+
+        @FXML
+        private TableView<SubProductWrapper> productsTable;
+
+        @FXML
+        private TableColumn<SubProductWrapper, Integer> productId;
+
+        @FXML
+        private TableColumn<SubProductWrapper, Button> productName;
+
+        @FXML
+        private TableColumn<SubProductWrapper, Double> productUnitPrice;
+
+        @FXML
+        private TableColumn<SubProductWrapper, Integer> count;
+
+        @FXML
+        private TableColumn<SubProductWrapper, Double> totalPrice;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button purchaseBTN;
+
+        @FXML
+        private Label totalPriceLBL;
+
+        public static void display(){
+            try {
+                cartProducts = mainController.getProductsInCart();
+            } catch (Exceptions.UnAuthorizedAccountException e) {
+                e.printStackTrace();
+                return;
+            }
+            View.setMainPane(Constants.FXMLs.shoppingCartMenu);
+
         }
 
         @Override
@@ -656,6 +738,55 @@ public class Controllers {
                 if (event.getDeltaX() != 0)
                     event.consume();
             });
+
+            purchaseBTN.setOnAction(e -> PurchaseMenuController.display());
+
+            iniTable();
+            initLabels();
+        }
+
+        private void initLabels() {
+            errorLBL.setText("");
+
+            NumberBinding totalPriceBinding = null;
+
+            for (SubProductWrapper subProduct : subProducts) {
+                if (totalPriceBinding == null) {
+                    totalPriceBinding = subProduct.getTotalPriceProperty().add(0);
+                } else {
+                    totalPriceBinding = totalPriceBinding.add(subProduct.getTotalPriceProperty());
+                }
+            }
+            totalPriceProperty.bind(totalPriceBinding);
+
+            totalPriceLBL.textProperty().bind(totalPriceBinding.asString().concat("$"));
+        }
+
+        private void iniTable() {
+            initCols();
+
+            //TODO: name-brand(storeName)
+            for (String[] cartProduct : cartProducts) {
+                subProducts.add(new SubProductWrapper(Integer.parseInt(cartProduct[0]),
+                        cartProduct[2] + "-" + cartProduct[3] + "(" + cartProduct[5] + ")",
+                        Double.valueOf(cartProduct[7]), Integer.valueOf(cartProduct[6])));
+            }
+
+            productsTable.setItems(FXCollections.observableArrayList(subProducts));
+        }
+
+        private void initCols() {
+            productId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
+            productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+            count.setCellValueFactory(new PropertyValueFactory<>("count"));
+            totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+        }
+    }
+
+    public static class PurchaseMenuController {
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.purchaseMenu);
         }
     }
 
@@ -757,7 +888,7 @@ public class Controllers {
             logoBTN.setOnAction(e -> MainMenu.display());
             accountBTN.setOnAction(e -> PersonalInfoMenuController.display());
             loginBTN.setOnAction(e -> LoginPopUpController.display(new Stage()));
-            cartBTN.setOnAction(e -> ShoppingCartMenu.display());
+            cartBTN.setOnAction(e -> ShoppingCartMenuController.display());
             searchBTN.setOnAction(e -> search(searchField.getText()));
             manageBTN.setOnAction(e -> {
                 switch (mainController.getType()) {

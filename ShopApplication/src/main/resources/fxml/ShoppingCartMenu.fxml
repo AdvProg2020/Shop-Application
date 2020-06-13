@@ -9,8 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane styleClass="bg-pane" stylesheets="@../css/ShoppingCartMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.Controllers$ShoppingCartMenu">
+<BorderPane styleClass="bg-pane" stylesheets="@../css/ShoppingCartMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.Controllers$ShoppingCartMenuController">
     <center>
         <VBox alignment="CENTER" maxWidth="-Infinity">
             <padding>
@@ -32,8 +33,18 @@
                 </padding>
             </TableView>
             <HBox id="bottom-box" alignment="CENTER">
-                <Label id="message-label" fx:id="messageLabel" text="Possible errors" textFill="RED" />
+                <Label id="message-label" fx:id="errorLBL" text="Possible errors" textFill="RED" />
                 <Region HBox.hgrow="ALWAYS" />
+            <Label text="Total Price: ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="totalPriceLBL" text="Label">
+               <padding>
+                  <Insets left="10.0" right="15.0" />
+               </padding>
+            </Label>
                 <Button id="purchase-button" fx:id="purchaseBTN" layoutX="133.0" layoutY="10.0" mnemonicParsing="false" text="Purchase" />
                 <VBox.margin>
                     <Insets />
