@@ -2,6 +2,7 @@ package view.GUI;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -16,9 +17,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 //TODO: purchase menu
 
@@ -185,8 +185,67 @@ public class Controllers {
         }
     }
 
-    public static class ProductsMenuController {
+    public static class ProductsMenuController implements Initializable{
+
+
+        @FXML
+        private ChoiceBox sortBy;
+
+        @FXML
+        private ToggleButton isIncreasing;
+
+        @FXML
+        private ToggleGroup increasingToggleGroup;
+
+        @FXML
+        private ToggleButton isDecreasing;
+
+        @FXML
+        private CheckBox available;
+
+        @FXML
+        private Slider minPrice;
+
+        @FXML
+        private Slider maxPriceSlider;
+
+        @FXML
+        private TextField filterName;
+
+        @FXML
+        private ChoiceBox filterBrand;
+
+        @FXML
+        private ChoiceBox filterSeller;
+
+        @FXML
+        private ChoiceBox filterCategory;
+
+        @FXML
+        private ScrollPane productsPane;
+
+        public static ArrayList<String[]> products;
+
         public static void display(ArrayList<String[]> products) {
+            ProductsMenuController.products = products;
+            View.setMainPane(Constants.FXMLs.productsMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initChoiceBoxes();
+            initActions();
+        }
+
+        private void initChoiceBoxes() {
+            ArrayList<String> brands = (ArrayList<String>) products.stream().map(p -> p[2]).collect(Collectors.toList());
+            HashSet<String> b = new HashSet<>(brands);
+            filterBrand.setItems(FXCollections.observableArrayList(b));
+
+
+        }
+
+        private void initActions() {
 
         }
     }
@@ -536,6 +595,30 @@ public class Controllers {
 
     public static class AdminCategoryManagingMenu {
 
+        @FXML private TableView<?> discounts;
+
+        @FXML private TableColumn<?, ?> number;
+
+        @FXML private TableColumn<?, ?> discountCode;
+
+        @FXML private TableColumn<?, ?> percentage;
+
+        @FXML private TableColumn<?, ?> maximumAmount;
+
+        @FXML private TableColumn<?, ?> remove;
+
+        @FXML private Button addCategoryBTN;
+
+        @FXML private Label errorLBL;
+
+        @FXML private TextField categoryNameField;
+
+        @FXML private TextField categoryParentFIeld;
+
+        @FXML private Button confirmBTN;
+
+        public static void display() {
+        }
     }
 
 
@@ -703,7 +786,7 @@ public class Controllers {
                     try {
                         ProductsMenuController.display(mainController.showProducts(getProductIDs(products),
                                 null, false, new String[]{"false", "0", "0", input, null, null, "0"},
-                                new HashMap<>()));
+                                new HashMap<>()) );
                     } catch (Exceptions.InvalidProductIdException e) {
                         e.printStackTrace();
                     }

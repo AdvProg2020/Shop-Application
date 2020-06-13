@@ -36,5 +36,7 @@ public final class Constants {
         public static final String loginPopUp = "LoginPopUp";
         public static final String registerPopUp = "RegisterPopUp";
         public static final String personalInfoMenu = "PersonalInfoMenuCopy";
+        public static final String productsMenu = "ProductsMenu";
+        public static final String adminCategoryManagingMenu = "AdminCategoryManagingMenu";
     }
 }
