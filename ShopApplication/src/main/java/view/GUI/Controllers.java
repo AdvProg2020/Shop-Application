@@ -595,27 +595,39 @@ public class Controllers {
 
     public static class AdminCategoryManagingMenu {
 
-        @FXML private TableView<?> discounts;
 
-        @FXML private TableColumn<?, ?> number;
+        @FXML
+        private TableView<?> discounts;
 
-        @FXML private TableColumn<?, ?> discountCode;
+        @FXML
+        private TableColumn<?, ?> numberCOL;
 
-        @FXML private TableColumn<?, ?> percentage;
+        @FXML
+        private TableColumn<?, ?> nameCOL;
 
-        @FXML private TableColumn<?, ?> maximumAmount;
+        @FXML
+        private TableColumn<?, ?> parentCOL;
 
-        @FXML private TableColumn<?, ?> remove;
+        @FXML
+        private TableColumn<?, ?> subCategoriesCOL;
 
-        @FXML private Button addCategoryBTN;
+        @FXML
+        private TableColumn<?, ?> removeCOL;
 
-        @FXML private Label errorLBL;
+        @FXML
+        private Button addCategoryBTN;
 
-        @FXML private TextField categoryNameField;
+        @FXML
+        private Label errorLBL;
 
-        @FXML private TextField categoryParentFIeld;
+        @FXML
+        private TextField categoryNameField;
 
-        @FXML private Button confirmBTN;
+        @FXML
+        private TextField categoryParentField;
+
+        @FXML
+        private Button confirmBTN;
 
         public static void display() {
         }
