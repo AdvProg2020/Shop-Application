@@ -42,6 +42,7 @@
                         <Label fx:id="priceBeforeSale" layoutX="10.0" layoutY="10.0" text="Price before + sale percentage" />
                         <Label fx:id="priceAfter" layoutX="10.0" layoutY="27.0" text="price after" />
                         <Button mnemonicParsing="false" text="Add to cart" />
+                        <Button fx:id="compare" layoutX="122.0" layoutY="178.0" mnemonicParsing="false" text="Compare" />
                      </children>
                   </VBox>
                </children>
