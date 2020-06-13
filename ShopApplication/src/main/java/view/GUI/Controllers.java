@@ -654,6 +654,7 @@ public class Controllers {
         private static ArrayList<String[]> cartProducts = new ArrayList<>();
         private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
         private SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
+        NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
         private static class SubProductWrapper {
             int id;
@@ -668,7 +669,7 @@ public class Controllers {
                 this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(id -  1)));
                 this.unitPrice = unitPrice;
                 this.count = count;
-                this.totalPrice.set(unitPrice * count);
+                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(count));
             }
 
             public int getId() {
@@ -749,8 +750,6 @@ public class Controllers {
 
         private void initLabels() {
             errorLBL.setText("");
-
-            NumberBinding totalPriceBinding = null;
 
             for (SubProductWrapper subProduct : subProducts) {
                 if (totalPriceBinding == null) {

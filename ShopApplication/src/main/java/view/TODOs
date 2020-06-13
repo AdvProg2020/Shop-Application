@@ -1,8 +1,24 @@
 A: afa T: talaee M: mohammadi
 
-T: add back to login button for register menu
 M: styling of manage button and login button in base
-T: update product pack (specially product box methods)
+T: update product pack (specially product box methods) send view what it needs to wrap.
+    has: productId, subProductId, imagePath, name, brand, rating, price before/after, percentage.
+T: fxml product box add css id.
 T: getAll categories method for view
+M & T & A: image for users
+    M: model support: image path and getter and setter
+    T: connecting model and view with image path. adding and editing support for image view.
+    fxml: have to get the image in register.
+    A: connect the thing.
+T & M: null catching for default subProduct
+M: tab adding for requests
+A: handle opacity of non existing products
+A & T & M: compare! new box fxml and pass it to productsMenu and create a compare.
+A & T & M: video
+A: button.setGraphic for table show of products and for user managing of admin
+A & T & M: sale details in product box
+M & A: add commercial request and reduce balance. (Slide show)
+T & A: commercial box
+A: login button in register and back bug and main menu clear stack trace.
 
 

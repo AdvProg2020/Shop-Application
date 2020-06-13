@@ -69,8 +69,10 @@ public class View extends Application {
             System.out.println("could not load " + fxml + ".fxml");
             return;
         }
-        stackTrace.add(fxml);
-        stackSize.set(stackSize.get() + 1);
+        if (stackTrace.size() > 0 && ! fxml.equals(stackTrace.get(stackTrace.size() - 1))) {
+            stackTrace.add(fxml);
+            stackSize.set(stackSize.get() + 1);
+        }
         Controllers.BaseController.setMainPane(p);
     }
 
