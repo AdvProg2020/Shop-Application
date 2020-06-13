@@ -7,92 +7,122 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <ScrollPane BorderPane.alignment="CENTER">
-         <content>
-            <VBox alignment="CENTER">
+      <VBox alignment="CENTER">
+         <children>
+            <HBox spacing="10.0">
                <children>
-                  <HBox spacing="10.0">
+                  <ImageView fx:id="image" fitHeight="250.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
+                  <VBox spacing="20.0">
                      <children>
-                        <ImageView fx:id="image" fitHeight="350.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
-                        <VBox spacing="20.0">
+                        <Label fx:id="name" text="Name">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <HBox prefWidth="200.0" spacing="20.0">
                            <children>
-                              <Label fx:id="name" text="Name">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <HBox prefWidth="200.0" spacing="20.0">
-                                 <children>
-                                    <Label text="Brand:" />
-                                    <Label fx:id="brand" layoutX="10.0" layoutY="10.0" text="brand" />
-                                 </children>
-                              </HBox>
-                              <HBox layoutX="10.0" layoutY="65.0" prefWidth="200.0" spacing="20.0">
-                                 <children>
-                                    <Label text="Category:" />
-                                    <Label fx:id="category" layoutX="10.0" layoutY="10.0" text="category" />
-                                 </children>
-                              </HBox>
-                              <Label text="Attributes:" />
-                              <TableView fx:id="properties" prefHeight="200.0" prefWidth="400.0">
-                                <columns>
-                                  <TableColumn fx:id="property" prefWidth="200.0" text="Property" />
-                                  <TableColumn fx:id="value" prefWidth="200.0" text="Value" />
-                                </columns>
-                              </TableView>
+                              <Label text="Brand:" />
+                              <Label fx:id="brand" layoutX="10.0" layoutY="10.0" text="brand" />
                            </children>
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="20.0">
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="65.0" prefWidth="200.0" spacing="20.0">
                            <children>
-                              <Label text="Seller" />
-                              <Label fx:id="priceBeforeSale" layoutX="10.0" layoutY="10.0" text="Price before + sale percentage" />
-                              <Label fx:id="priceAfter" layoutX="10.0" layoutY="27.0" text="price after" />
-                              <Button mnemonicParsing="false" text="Add to cart" />
+                              <Label text="Category:" />
+                              <Label fx:id="category" layoutX="10.0" layoutY="10.0" text="category" />
                            </children>
-                        </VBox>
+                        </HBox>
                      </children>
-                     <VBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <TableView fx:id="sellers" prefHeight="200.0" prefWidth="1000.0">
-                    <columns>
-                      <TableColumn fx:id="number" prefWidth="100.0" text="No" />
-                        <TableColumn fx:id="seller" prefWidth="300.0" text="Seller" />
-                        <TableColumn fx:id="price" prefWidth="200.0" text="Price" />
-                        <TableColumn fx:id="numberAvailable" prefWidth="200.0" text="Number Available" />
-                        <TableColumn fx:id="add" prefWidth="200.0" text="Add" />
-                    </columns>
-                     <VBox.margin>
-                        <Insets left="100.0" right="100.0" top="50.0" />
-                     </VBox.margin>
-                  </TableView>
+                  </VBox>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="20.0">
+                     <children>
+                        <Label text="Seller" />
+                        <Label fx:id="priceBeforeSale" layoutX="10.0" layoutY="10.0" text="Price before + sale percentage" />
+                        <Label fx:id="priceAfter" layoutX="10.0" layoutY="27.0" text="price after" />
+                        <Button mnemonicParsing="false" text="Add to cart" />
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
-         </content>
-      </ScrollPane>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <TableView fx:id="sellers" prefHeight="150.0" prefWidth="1000.0">
+              <columns>
+                <TableColumn fx:id="number" prefWidth="100.0" text="No" />
+                  <TableColumn fx:id="seller" prefWidth="300.0" text="Seller" />
+                  <TableColumn fx:id="price" prefWidth="282.0" text="Price" />
+                  <TableColumn fx:id="numberAvailable" prefWidth="317.0" text="Number Available" />
+              </columns>
+               <VBox.margin>
+                  <Insets left="100.0" right="100.0" top="10.0" />
+               </VBox.margin>
+            </TableView>
+         </children>
+      </VBox>
    </center>
    <bottom>
-      <Accordion BorderPane.alignment="CENTER">
-        <panes>
-          <TitledPane animated="false" text="Reviews">
+      <TabPane prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Product Info">
                <content>
-                  <ScrollPane>
-                     <content>
-                        <VBox fx:id="reviews" spacing="20.0">
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="121.0" prefWidth="1003.0" spacing="10.0">
+                           <children>
+                              <Label text="Product Info" />
+                              <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="578.13671875" />
+                           </children>
                            <padding>
-                              <Insets left="10.0" right="10.0" />
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
+                        </VBox>
+                        <ImageView fitHeight="121.0" fitWidth="199.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/search-button.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </content>
+          </Tab>
+          <Tab text="Properties">
+            <content>
+                  <VBox layoutX="109.0" layoutY="-86.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <children>
+                        <Label text="Properties" />
+                        <TableView prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="property" prefWidth="306.0" text="Property" />
+                            <TableColumn fx:id="value" prefWidth="560.0" text="value" />
+                          </columns>
+                        </TableView>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+            </content>
+          </Tab>
+            <Tab text="Reviews">
+               <content>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox fx:id="reviews" spacing="10.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                           <children>
+                              <Label text="Reviews" />
+                           </children>
                         </VBox>
                      </content>
                   </ScrollPane>
                </content>
-          </TitledPane>
-        </panes>
-      </Accordion>
+            </Tab>
+        </tabs>
+      </TabPane>
    </bottom>
 </BorderPane>

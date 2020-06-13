@@ -71,7 +71,11 @@
                               <TextField fx:id="filterName" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
                               <ChoiceBox fx:id="filterBrand" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                               <ChoiceBox fx:id="filterSeller" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                              <Label text="Name:" />
+                              <HBox>
+                                 <children>
+                                    <Label text="Name:" />
+                                 </children>
+                              </HBox>
                               <Label text="Brand: " GridPane.rowIndex="1" />
                               <Label text="Seller: " GridPane.rowIndex="3" />
                               <Label text="Category: " GridPane.rowIndex="2" />
