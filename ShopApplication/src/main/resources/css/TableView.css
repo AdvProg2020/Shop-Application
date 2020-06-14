@@ -5,12 +5,33 @@
     text-color-2: lightgrey
 }
 
-.details-button {
+.button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
 
+.details-button {
+    -fx-graphic: url("../img/details-button.png");
 }
 
 .remove-button {
+    -fx-graphic: url("../img/details-button.png");
+}
 
+.increase-button {
+    -fx-graphic: url("../img/increase-button.png");
+}
+
+.decrease-button {
+    -fx-graphic: url("../img/decrease-button.png");
+}
+
+.count-field {
+    -fx-background-color: white;
+    -fx-font-size: 14;
+    -fx-text-fill: darkgrey;
+    -fx-alignment: center;
 }
 
 .table-view {
@@ -38,7 +59,6 @@
     -fx-cell-size: 35;
     -fx-alignment: center;
     -fx-background-color: table-color-1;
-
     -fx-text-fill: text-color-2;
     -fx-border-color: darkgrey;
     -fx-border-width: 0 0 0 0.2;
