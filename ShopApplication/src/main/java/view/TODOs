@@ -24,5 +24,6 @@ T: update product detail menu fxml so that it can be used both in managing pages
 A: isPopUp for digestMenus
 T: mainController.clearCart();
 T: remove column for shopping cart menu
+A & T & M : add tabs to discount, sale, account managing menu
 
 

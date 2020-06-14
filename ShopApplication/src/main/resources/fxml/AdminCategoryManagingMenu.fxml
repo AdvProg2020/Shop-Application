@@ -3,11 +3,12 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.Controllers$AdminCategoryManagingMenu">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.Controllers$AdminCategoryManagingMenu">
     <center>
         <VBox alignment="CENTER" maxWidth="-Infinity" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
             <TableView fx:id="categories" focusTraversable="false" stylesheets="@../css/TableView.css"
                        VBox.vgrow="ALWAYS">

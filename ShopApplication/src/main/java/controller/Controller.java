@@ -419,7 +419,7 @@ public class Controller {
      */
     public ArrayList<String[]> sales() {
         ArrayList<String[]> sales = new ArrayList<>();
-        for (Sale sale : Sale.getAllSales()) {
+        for (Sale sale : Sale.getActiveSales()) {
             sales.add(Utilities.Pack.saleInfo(sale));
         }
         return sales;
@@ -489,7 +489,7 @@ public class Controller {
     public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
         ArrayList<String[]> subProductsSalePacks = new ArrayList<>();
         ArrayList<SubProduct> subProductsInSale = new ArrayList<>();
-        for (Sale sale : Sale.getAllSales()) {
+        for (Sale sale : Sale.getActiveSales()) {
             subProductsInSale.addAll(sale.getSubProducts());
         }
         for (int i = 0; i < filterBy.length; i++) {

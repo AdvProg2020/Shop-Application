@@ -28,8 +28,15 @@ public class Sale implements ModelBasic {
         new AddSaleRequest(this);
     }
 
-    public static List<Sale> getAllSales(boolean... suspense) {
-        return ModelUtilities.getAllInstances(allSales.values(), suspense);
+    public static List<Sale> getActiveSales() {
+        return ModelUtilities.getAllInstances(allSales.values());
+    }
+
+    public static List<Sale> getSaleArchive() {
+        ArrayList<Sale> archive = new ArrayList<>(allSales.values());
+        archive.removeAll(getActiveSales());
+
+        return archive;
     }
 
     public static Sale getSaleById(String saleId, boolean... suspense) {
@@ -55,7 +62,6 @@ public class Sale implements ModelBasic {
         for (SubProduct subProduct : getSubProducts()) {
             subProduct.setSale(null);
         }
-        subProductIds = null;
         getSeller().removeSale(saleId);
         suspended = true;
     }
