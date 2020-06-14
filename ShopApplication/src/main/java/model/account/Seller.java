@@ -7,12 +7,10 @@ import model.SubProduct;
 import model.log.SellLog;
 import model.request.AddSellerRequest;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Seller extends Account {
+    protected static Map<String, Seller> allSellers = new HashMap<>();
     private static int lastNum = 1;
     private String storeName;
     private double balance;
@@ -28,16 +26,22 @@ public class Seller extends Account {
         new AddSellerRequest(this);
     }
 
+    public static List<Seller> getAllSellers(boolean... suspense) {
+        return ModelUtilities.getAllInstances(allSellers.values(), suspense);
+    }
+
     public static Seller getSellerById(String accountId, boolean... suspense) {
-        return (Seller) getAccountById(accountId, suspense);
+        return ModelUtilities.getInstanceById(allSellers, accountId, suspense);
     }
 
     @Override
     public void initialize() {
         if (accountId == null)
             accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+        allSellers.put(accountId, this);
         allAccounts.put(accountId, this);
         lastNum++;
+
         sellLogIds = new HashSet<>();
         if (!suspended) {
             subProductIds = new HashSet<>();
