@@ -8,16 +8,36 @@
     -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
 }
 
+.action-button {
+    -fx-background-color: #e9e9e9;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0.5;
+    -fx-border-radius: 3px;
+    -fx-font-size: 14;
+}
+
 #add-button {
-    -fx-background-image: url("../img/add-button.png");
-    -fx-padding: 10 20 10 20px;
-    -fx-background-size: 40px;
+    -fx-graphic: url("../img/add-button.png");
+}
+
+#register-admin-button {
+    -fx-graphic: url("../img/register-admin-button.png");
+}
+
+#purchase-button {
+    -fx-graphic: url("../img/purchase-button.png");
+}
+
+#clear-cart-button {
+    -fx-graphic: url("../img/clear-cart-button.png");
 }
 
 #confirm-button {
-    -fx-background-image: url("../img/confirm-button.png");
-    -fx-padding: 10 15 10 15px;
-    -fx-background-size: 30px;
+    -fx-graphic: url("../img/confirm-button.png");
+}
+
+#confirm-button {
+    -fx-graphic: url("../img/cancel-button.png");
 }
 
 
@@ -38,5 +58,5 @@
 #message-label {
     -fx-text-fill: red;
     -fx-font-size: 13;
-    -fx-font-family: "Sina";
+    -fx-font-family: normal-font;
 }

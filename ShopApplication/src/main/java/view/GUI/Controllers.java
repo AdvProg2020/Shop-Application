@@ -582,7 +582,7 @@ public class Controllers {
     }
 
 
-    public static class AdminUserManagingMenu {
+    public static class AdminAccountManagingMenu {
 
     }
 
@@ -604,10 +604,10 @@ public class Controllers {
 
 
         @FXML
-        private TableView<String> discounts;
+        private TableView<String> categories;
 
         @FXML
-        private TableColumn<?, ?> numberCOL;
+        private TableColumn<?, ?> idCOL;
 
         @FXML
         private TableColumn<?, ?> nameCOL;
@@ -616,7 +616,7 @@ public class Controllers {
         private TableColumn<?, ?> parentCOL;
 
         @FXML
-        private TableColumn<?, ?> subCategoriesCOL;
+        private TableColumn<?, ?> detailsCOL;
 
         @FXML
         private TableColumn<?, ?> removeCOL;
@@ -626,15 +626,6 @@ public class Controllers {
 
         @FXML
         private Label errorLBL;
-
-        @FXML
-        private TextField categoryNameField;
-
-        @FXML
-        private TextField categoryParentField;
-
-        @FXML
-        private Button confirmBTN;
 
         public static void display() {
         }
@@ -733,7 +724,6 @@ public class Controllers {
                 return;
             }
             View.setMainPane(Constants.FXMLs.shoppingCartMenu);
-
         }
 
         @Override

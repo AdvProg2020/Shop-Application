@@ -1,6 +1,9 @@
 package view.GUI;
 
-import controller.*;
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
+import controller.SellerController;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -106,20 +109,19 @@ public class View extends Application {
 
         View.mainStage = stage;
         stage.setTitle("ShopApplication");
-//        stage.setResizable(false);
         stage.setOnCloseRequest(event -> {
             event.consume();
             close();
         });
-        stage.setMinHeight(600);
-        stage.setMinWidth(900);
+
+        stage.setMaximized(true);
+        stage.setMinHeight(800);
+        stage.setMinWidth(1200);
+        stage.setHeight(800);
+        stage.setWidth(1200);
+        stage.centerOnScreen();
+
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));
         setMainPane(Constants.FXMLs.mainMenu);
-//        try {
-//            mainController.login("adana", "1");
-//            type.set(Constants.adminUserType);
-//        } catch (Exceptions.WrongPasswordException | Exceptions.UsernameDoesntExistException  e) {
-//            e.printStackTrace();
-//        }
     }
 }
