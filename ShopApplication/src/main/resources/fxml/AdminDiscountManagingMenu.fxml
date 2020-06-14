@@ -37,7 +37,7 @@
                 </padding>
                 <Label id="message-label" fx:id="errorLBL" text="Possible error"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button id="add-button" fx:id="addCategoryBTN" mnemonicParsing="false" styleClass="action-button"
+                <Button id="add-button" fx:id="addDiscountBTN" mnemonicParsing="false" styleClass="action-button"
                         text="Add Discount"/>
             </HBox>
         </VBox>
