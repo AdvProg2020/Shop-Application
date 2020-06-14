@@ -161,12 +161,13 @@ public class Utilities {
         }
 
         public static String[] discountInfo(Discount discount) {
-            String[] discountInfo = new String[5];
-            discountInfo[0] = discount.getDiscountCode();
-            discountInfo[1] = dateFormat.format(discount.getStartDate());
-            discountInfo[2] = dateFormat.format(discount.getEndDate());
-            discountInfo[3] = Double.toString(discount.getMaximumAmount());
-            discountInfo[4] = Double.toString(discount.getPercentage());
+            String[] discountInfo = new String[6];
+            discountInfo[0] = discount.getId();
+            discountInfo[1] = discount.getDiscountCode();
+            discountInfo[2] = dateFormat.format(discount.getStartDate());
+            discountInfo[3] = dateFormat.format(discount.getEndDate());
+            discountInfo[4] = Double.toString(discount.getMaximumAmount());
+            discountInfo[5] = Double.toString(discount.getPercentage());
             return discountInfo;
         }
 

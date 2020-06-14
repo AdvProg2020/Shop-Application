@@ -354,7 +354,9 @@ public class Controller {
     public ArrayList<String[]> getProductsInCart() throws Exceptions.UnAuthorizedAccountException {
         checkAuthorityOverCart();
         ArrayList<String[]> shoppingCart = new ArrayList<>();
-        Map<SubProduct, Integer> subProducts = ((Customer) currentAccount).getCart().getSubProducts();
+        Map<SubProduct, Integer> subProducts;
+        if (currentAccount == null) subProducts = currentCart.getSubProducts();
+        else subProducts = ((Customer) currentAccount).getCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
             shoppingCart.add(Utilities.Pack.productInCart(subProduct, subProducts.get(subProduct)));
         }
