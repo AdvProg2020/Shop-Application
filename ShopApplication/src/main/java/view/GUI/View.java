@@ -1,9 +1,6 @@
 package view.GUI;
 
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import controller.SellerController;
+import controller.*;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -139,5 +136,13 @@ public class View extends Application {
 
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));
         setMainPane(Constants.FXMLs.mainMenu);
+
+//        try {
+//            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
+//        } catch (Exceptions.UsernameAlreadyTakenException e) {
+//            e.printStackTrace();
+//        } catch (Exceptions.AdminRegisterException e) {
+//            e.printStackTrace();
+//        }
     }
 }

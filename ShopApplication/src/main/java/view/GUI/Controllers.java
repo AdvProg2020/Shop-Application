@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import view.consoleView.Menus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -673,12 +674,11 @@ public class Controllers {
     }
 
 
-    public static class AdminAccountManagingMenu {
-
-    }
 
     public static class AdminProductManagingMenu {
-
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.adminProductManagingMenu);
+        }
     }
 
 
@@ -838,7 +838,9 @@ public class Controllers {
     }
 
     public static class AdminRequestManagingMenu {
-
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.adminRequestManagingMenu);
+        }
     }
 
     public static class AdminCategoryManagingMenu {
@@ -869,6 +871,7 @@ public class Controllers {
         private Label errorLBL;
 
         public static void display() {
+            View.setMainPane(Constants.FXMLs.adminCategoryManagingMenu);
         }
     }
 
@@ -1054,7 +1057,42 @@ public class Controllers {
 
     public static class AdminManagingMenuController implements Initializable {
         public static void display() {
+            View.setMainPane(Constants.FXMLs.adminManagingMenu);
+        }
 
+        @FXML
+        private Button manageUsers;
+
+        @FXML
+        private Button manageProducts;
+
+        @FXML
+        private Button manageCategories;
+
+        @FXML
+        private Button manageDiscounts;
+
+        @FXML
+        private Button manageRequests;
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initActions();
+        }
+
+        private void initActions() {
+            manageUsers.setOnAction(e -> AdminUserManagingMenuController.display());
+            manageCategories.setOnAction(e -> AdminCategoryManagingMenu.display());
+            manageDiscounts.setOnAction(e -> AdminDiscountManagingMenu.display());
+            manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
+            manageRequests.setOnAction(e -> AdminRequestManagingMenu.display());
+        }
+    }
+
+    public static class AdminUserManagingMenuController implements Initializable {
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.adminUserManagingMenu);
         }
 
         @Override

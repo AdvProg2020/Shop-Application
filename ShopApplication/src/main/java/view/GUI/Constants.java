@@ -39,7 +39,10 @@ public final class Constants {
         public static final String productsMenu = "ProductsMenu";
         public static final String adminCategoryManagingMenu = "AdminCategoryManagingMenu";
         public static final String adminDiscountManagingMenu = "AdminDiscountManagingMenu";
-        public static final String adminManagingMenuController = "AdminManagingMenuController";
+        public static final String adminUserManagingMenu = "AdminUserManagingMenu";
+        public static final String adminProductManagingMenu =  "AdminProductManagingMenu";
+        public static final String adminRequestManagingMenu = "AdminRequestManagingMenu";
+        public static final String adminManagingMenu = "AdminManagingMenu";
         public static final String purchaseMenu = "PurchaseMenu";
     }
 }
