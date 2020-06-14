@@ -11,6 +11,10 @@
     -fx-border-width: 0;
 }
 
+.button:hover {
+
+}
+
 .details-button {
     -fx-graphic: url("../img/details-button.png");
 }
