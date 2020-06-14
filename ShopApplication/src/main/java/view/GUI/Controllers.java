@@ -5,6 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -894,9 +895,11 @@ public class Controllers {
             int index;
             Button nameBrandSeller;
             double unitPrice;
+            SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
             TextField countField;
             HBox countGroup = new HBox();
             SimpleDoubleProperty totalPrice;
+            Button remove = new Button();
 
             public SubProductWrapper(String id, int index, String nameBrandSeller, double unitPrice, int count) {
                 this.id = id;
@@ -904,7 +907,20 @@ public class Controllers {
                 this.nameBrandSeller = new Button(nameBrandSeller);
                 this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(index - 1)));
                 this.unitPrice = unitPrice;
-                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(count));
+                this.countProperty.set(count);
+                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
+                remove.getStyleClass().add("remove-button");
+                remove.setOnAction(e -> {
+                    try {
+                        mainController.decreaseProductInCart(id, countProperty.get());
+                    } catch (Exceptions.InvalidSubProductIdException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.NotSubProductIdInTheCartException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.UnAuthorizedAccountException ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
 
 
@@ -927,13 +943,13 @@ public class Controllers {
         }
 
         @FXML
+        private TableColumn<SubProductWrapper, Button> removeCOL;
+
+        @FXML
         private TableView<SubProductWrapper> productsTable;
 
         @FXML
-        private TableColumn<SubProductWrapper, Integer> productId;
-
-        @FXML
-        private TableColumn<SubProductWrapper, Button> productName;
+        private TableColumn<SubProductWrapper, String> productName;
 
         @FXML
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
@@ -945,16 +961,16 @@ public class Controllers {
         private TableColumn<SubProductWrapper, Double> totalPrice;
 
         @FXML
-        private Label errorLBL;
+        private Button clearCartBTN;
 
         @FXML
-        private Button purchaseBTN;
+        private Label errorLBL;
 
         @FXML
         private Label totalPriceLBL;
 
         @FXML
-        private Button clearCartBTN;
+        private Button purchaseBTN;
 
         public static void display() {
             try {
@@ -1017,11 +1033,11 @@ public class Controllers {
         }
 
         private void initCols() {
-            productId.setCellValueFactory(new PropertyValueFactory<>("id"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
             count.setCellValueFactory(new PropertyValueFactory<>("count"));
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
     }
 

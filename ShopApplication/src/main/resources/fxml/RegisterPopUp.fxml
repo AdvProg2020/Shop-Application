@@ -34,7 +34,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <Hyperlink fx:id="loginHL" text="Login" />
+                        <Hyperlink fx:id="sellerLoginHL" text="Login" />
                             </children>
                         </HBox>
                     </bottom>
@@ -194,7 +194,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Hyperlink fx:id="loginHL" text="Login" />
+                        <Hyperlink fx:id="customerLoginHL" text="Login" />
                             </children>
                         </HBox>
                     </bottom>
