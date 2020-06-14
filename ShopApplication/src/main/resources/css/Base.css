@@ -2,13 +2,13 @@
     -fx-background-color: white;
 }
 
-.button {
+.base-button {
     -fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
 
-.button:hover {
+.base-button:hover {
     -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
 }
 
@@ -18,21 +18,17 @@
 }
 
 #back-button {
-    -fx-background-image: url("../img/back-button.jpg");
-    -fx-background-size: cover;
+    -fx-graphic: url("../img/back-button.png");
 }
 
 #logo-button {
     -fx-background-image: url("../img/logo.png");
-    -fx-padding: 10 50 10 50;
-    -fx-background-size: 100;
+    -fx-padding: 10 70 10 70;
+    -fx-background-size: 150;
 }
 
 #cart-button {
-    -fx-background-image: url("../img/cart-button.png");
-    -fx-padding: 20 20 20 20px;
-    -fx-background-size: 40px;
-    -fx-background-position: center;
+    -fx-graphic: url("../img/cart-button.png");
 }
 
 #cart-button-wrapper {
@@ -54,9 +50,7 @@
 }
 
 #search-button {
-    -fx-background-image: url("../img/search-button.png");
-    -fx-padding: 10 15 10 15;
-    -fx-background-size: 30px;
+    -fx-graphic: url("../img/search-button.png");
 }
 
 #search-box {

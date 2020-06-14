@@ -3,26 +3,27 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" minHeight="400.0" minWidth="600.0"
-            stylesheets="@../css/Base.css" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="view.GUI.Controllers$BaseController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" stylesheets="@../css/Base.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.Controllers$BaseController">
     <top>
         <HBox id="top-box" alignment="CENTER" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                <Insets bottom="10.0" right="20.0" top="10.0"/>
             </padding>
-            <Button id="back-button" fx:id="backBTN" alignment="CENTER" mnemonicParsing="false">
+            <Button id="back-button" fx:id="backBTN" alignment="CENTER" mnemonicParsing="false"
+                    styleClass="base-button">
                 <HBox.margin>
                     <Insets right="10.0"/>
                 </HBox.margin>
             </Button>
-            <Button id="logo-button" fx:id="logoBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false"/>
+            <Button id="logo-button" fx:id="logoBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false"
+                    styleClass="base-button"/>
             <Region HBox.hgrow="ALWAYS"/>
             <HBox id="search-box" alignment="CENTER" HBox.hgrow="ALWAYS">
                 <children>
                     <TextField id="search-field" fx:id="searchField" promptText="search products..."
                                HBox.hgrow="ALWAYS"/>
-                    <Button id="search-button" fx:id="searchBTN" mnemonicParsing="false"/>
+                    <Button id="search-button" fx:id="searchBTN" mnemonicParsing="false" styleClass="base-button"/>
                 </children>
                 <padding>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
@@ -30,12 +31,14 @@
             </HBox>
             <Region HBox.hgrow="ALWAYS"/>
             <StackPane id="cart-button-wrapper" layoutX="400.0" layoutY="20.0">
-                <Button id="manage-button" fx:id="manageBTN" mnemonicParsing="false" text="manage" visible="false"/>
-                <Button id="cart-button" fx:id="cartBTN" mnemonicParsing="false"/>
+                <Button id="manage-button" fx:id="manageBTN" mnemonicParsing="false" styleClass="base-button"
+                        text="manage" visible="false"/>
+                <Button id="cart-button" fx:id="cartBTN" mnemonicParsing="false" styleClass="base-button"/>
             </StackPane>
             <StackPane>
-                <Button id="login-button" fx:id="loginBTN" mnemonicParsing="false" text="login"/>
-                <Button id="account-button" fx:id="accountBTN" mnemonicParsing="false"/>
+                <Button id="login-button" fx:id="loginBTN" mnemonicParsing="false" styleClass="base-button"
+                        text="login"/>
+                <Button id="account-button" fx:id="accountBTN" mnemonicParsing="false" styleClass="base-button"/>
             </StackPane>
         </HBox>
     </top>
