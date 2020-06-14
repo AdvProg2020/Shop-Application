@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="480.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.Controllers$RegisterPopUpController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="480.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.Controllers$RegisterPopUpController">
     <tabs>
         <Tab closable="false" text="Customer">
             <content>
@@ -33,7 +34,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <Button fx:id="customerLogin" layoutX="210.0" layoutY="10.0" mnemonicParsing="false" text="Login" />
+                        <Hyperlink fx:id="sellerLoginHL" text="Login" />
                             </children>
                         </HBox>
                     </bottom>
@@ -193,7 +194,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Button fx:id="sellerLogin" mnemonicParsing="false" text="Login" />
+                        <Hyperlink fx:id="customerLoginHL" text="Login" />
                             </children>
                         </HBox>
                     </bottom>

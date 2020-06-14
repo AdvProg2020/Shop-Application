@@ -5,10 +5,6 @@ public interface Database {
 
     void updateAll();
 
-    void cart();
-
-    void request();
-
     void createAdmin();
 
     void createCustomer();
@@ -23,7 +19,7 @@ public interface Database {
 
     void removeSeller();
 
-    void purchase();
+    void request();
 
     void createDiscount();
 
@@ -54,6 +50,10 @@ public interface Database {
     void editSubProduct();
 
     void removeSubProduct();
+
+    void cart();
+
+    void purchase();
 
     void addReview();
 

@@ -2,10 +2,7 @@ package model;
 
 import model.account.Customer;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Discount implements ModelBasic {
     private static Map<String, Discount> allDiscounts = new HashMap<>();
@@ -30,8 +27,15 @@ public class Discount implements ModelBasic {
         initialize();
     }
 
-    public static List<Discount> getAllDiscounts(boolean... suspense) {
-        return ModelUtilities.getAllInstances(allDiscounts.values(), suspense);
+    public static List<Discount> getActiveDiscounts() {
+        return ModelUtilities.getAllInstances(allDiscounts.values());
+    }
+
+    public static List<Discount> getDiscountArchive() {
+        ArrayList<Discount> archive = new ArrayList<>(allDiscounts.values());
+        archive.removeAll(getActiveDiscounts());
+
+        return archive;
     }
 
     public static Discount getDiscountById(String discountId, boolean... suspense) {
@@ -65,7 +69,6 @@ public class Discount implements ModelBasic {
         for (Customer customer : getCustomers().keySet()) {
             customer.removeDiscount(discountId);
         }
-        customerIds = null;
         suspended = true;
     }
 

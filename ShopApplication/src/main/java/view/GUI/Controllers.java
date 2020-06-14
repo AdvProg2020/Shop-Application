@@ -3,7 +3,10 @@ package view.GUI;
 import controller.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,9 +17,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import view.consoleView.Menus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,49 +46,70 @@ public class Controllers {
         customerController = View.customerController;
     }
 
-    public static class PersonalInfoMenuController implements Initializable{
+    public static class PersonalInfoMenuController implements Initializable {
 
-        @FXML private ImageView ProfileIMG;
+        @FXML
+        private ImageView ProfileIMG;
 
-        @FXML private Button ProfileIMGEditBTN;
+        @FXML
+        private Button ProfileIMGEditBTN;
 
-        @FXML private Button logoutBTN;
+        @FXML
+        private Button logoutBTN;
 
-        @FXML private Button changePasswordBTN;
+        @FXML
+        private Button changePasswordBTN;
 
-        @FXML private Button buyLogBTN;
+        @FXML
+        private Button buyLogBTN;
 
-        @FXML private Button discountsBTN;
+        @FXML
+        private Button discountsBTN;
 
-        @FXML private TextField lastName;
+        @FXML
+        private TextField lastName;
 
-        @FXML private TextField firstName;
+        @FXML
+        private TextField firstName;
 
-        @FXML private Label firstNameLBL;
+        @FXML
+        private Label firstNameLBL;
 
-        @FXML private Label lastNameLBL;
+        @FXML
+        private Label lastNameLBL;
 
-        @FXML private Button IrlNameEditBTN;
+        @FXML
+        private Button IrlNameEditBTN;
 
-        @FXML private TextField phoneNumberField;
+        @FXML
+        private TextField phoneNumberField;
 
-        @FXML private TextField EmailField;
+        @FXML
+        private TextField EmailField;
 
-        @FXML private TextField balanceField;
+        @FXML
+        private TextField balanceField;
 
-        @FXML private TextField storeNameField;
+        @FXML
+        private TextField storeNameField;
 
-        @FXML private Button phoneNumberEditBTN;
+        @FXML
+        private Button phoneNumberEditBTN;
 
-        @FXML private Button emailEditBTN;
+        @FXML
+        private Button emailEditBTN;
 
-        @FXML private Button balanceEditBTN;
+        @FXML
+        private Button balanceEditBTN;
 
-        @FXML private Button storeNameEditBTN;
+        @FXML
+        private Button storeNameEditBTN;
 
-        @FXML private Label storeNameLBL;
+        @FXML
+        private Label storeNameLBL;
 
-        @FXML private Label balanceLBL;
+        @FXML
+        private Label balanceLBL;
 
         private String[] personalInfo;
 
@@ -187,12 +213,13 @@ public class Controllers {
 
     public static class MainMenu {
         private static void display() {
-
+            View.getStackTrace().clear();
+            View.stackSize.set(0);
             View.setMainPane(Constants.FXMLs.mainMenu);
         }
     }
 
-    public static class ProductsMenuController implements Initializable{
+    public static class ProductsMenuController implements Initializable {
 
 
         @FXML
@@ -279,9 +306,9 @@ public class Controllers {
     }
 
     public static class SaleMenu {
-       public static void display() {
+        public static void display() {
 
-       }
+        }
     }
 
     public static class LoginPopUpController implements Initializable {
@@ -321,7 +348,8 @@ public class Controllers {
             }
             try {
                 popUpStage.initModality(Modality.APPLICATION_MODAL);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             popUpStage.show();
         }
 
@@ -336,12 +364,12 @@ public class Controllers {
             usernameField.textProperty().addListener(((observable, oldValue, newValue) -> {
                 if (newValue.length() == 0) return;
                 char lastInput = newValue.charAt(newValue.length() - 1);
-                if (String.valueOf(lastInput).matches("\\W"))  usernameField.setText(oldValue);
+                if (String.valueOf(lastInput).matches("\\W")) usernameField.setText(oldValue);
             }));
             passwordField.textProperty().addListener(((observable, oldValue, newValue) -> {
                 if (newValue.length() == 0) return;
                 char lastInput = newValue.charAt(newValue.length() - 1);
-                if (String.valueOf(lastInput).matches("\\W"))  passwordField.setText(oldValue);
+                if (String.valueOf(lastInput).matches("\\W")) passwordField.setText(oldValue);
             }));
         }
 
@@ -369,69 +397,107 @@ public class Controllers {
     public static class RegisterPopUpController implements Initializable {
         private static Stage popUpStage;
 
-        @FXML private TextField customerFirstName;
+        @FXML
+        private Hyperlink customerLoginHL;
 
-        @FXML private Label customerFirstNameError;
+        @FXML
+        private Hyperlink sellerLoginHL;
 
-        @FXML private TextField customerPhoneNumber;
+        @FXML
+        private TextField customerFirstName;
 
-        @FXML private Label customerPhoneNumberError;
+        @FXML
+        private Label customerFirstNameError;
 
-        @FXML private TextField customerBalance;
+        @FXML
+        private TextField customerPhoneNumber;
 
-        @FXML private Label customerBalanceError;
+        @FXML
+        private Label customerPhoneNumberError;
 
-        @FXML private TextField customerLastName;
+        @FXML
+        private TextField customerBalance;
 
-        @FXML private Label customerLastNameError;
+        @FXML
+        private Label customerBalanceError;
 
-        @FXML private TextField customerEmail;
+        @FXML
+        private TextField customerLastName;
 
-        @FXML private Label customerEmailError;
+        @FXML
+        private Label customerLastNameError;
 
-        @FXML private TextField customerUsername;
+        @FXML
+        private TextField customerEmail;
 
-        @FXML private Label customerUsernameError;
+        @FXML
+        private Label customerEmailError;
 
-        @FXML private PasswordField customerPassword;
+        @FXML
+        private TextField customerUsername;
 
-        @FXML private Label customerPasswordError;
+        @FXML
+        private Label customerUsernameError;
 
-        @FXML private Button customerRegister;
+        @FXML
+        private PasswordField customerPassword;
 
-        @FXML private TextField sellerFirstName;
+        @FXML
+        private Label customerPasswordError;
 
-        @FXML private Label sellerFirstNameError;
+        @FXML
+        private Button customerRegister;
 
-        @FXML private TextField sellerPhoneNumber;
+        @FXML
+        private TextField sellerFirstName;
 
-        @FXML private Label sellerPhoneNumberError;
+        @FXML
+        private Label sellerFirstNameError;
 
-        @FXML private TextField sellerBalance;
+        @FXML
+        private TextField sellerPhoneNumber;
 
-        @FXML private Label sellerBalanceError;
+        @FXML
+        private Label sellerPhoneNumberError;
 
-        @FXML private TextField sellerLastName;
+        @FXML
+        private TextField sellerBalance;
 
-        @FXML private Label sellerLastNameError;
+        @FXML
+        private Label sellerBalanceError;
 
-        @FXML private TextField sellerEmail;
+        @FXML
+        private TextField sellerLastName;
 
-        @FXML private Label sellerEmailError;
+        @FXML
+        private Label sellerLastNameError;
 
-        @FXML private TextField sellerStoreName;
+        @FXML
+        private TextField sellerEmail;
 
-        @FXML private Label sellerStoreNameError;
+        @FXML
+        private Label sellerEmailError;
 
-        @FXML private TextField sellerUsername;
+        @FXML
+        private TextField sellerStoreName;
 
-        @FXML private Label sellerUsernameError;
+        @FXML
+        private Label sellerStoreNameError;
 
-        @FXML private PasswordField sellerPassword;
+        @FXML
+        private TextField sellerUsername;
 
-        @FXML private Label sellerPasswordError;
+        @FXML
+        private Label sellerUsernameError;
 
-        @FXML private Button sellerRegister;
+        @FXML
+        private PasswordField sellerPassword;
+
+        @FXML
+        private Label sellerPasswordError;
+
+        @FXML
+        private Button sellerRegister;
 
         public static void display(Stage stage) {
             popUpStage = stage;
@@ -498,7 +564,7 @@ public class Controllers {
             textField.textProperty().addListener(((observable, oldValue, newValue) -> {
                 if (newValue.length() == 0) return;
                 char lastInput = newValue.charAt(newValue.length() - 1);
-                if ( ! String.valueOf(lastInput).matches(regex))  textField.setText(oldValue);
+                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
             }));
         }
 
@@ -533,6 +599,8 @@ public class Controllers {
                     }
                 }
             });
+            sellerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
+            customerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
         }
 
         private boolean areCustomerFieldsAvailable() {
@@ -542,18 +610,30 @@ public class Controllers {
                 customerUsernameError.setVisible(true);
                 areAvailable = false;
             } else customerUsernameError.setVisible(false);
-            if (customerPassword.getText().equals("")) {customerPasswordError.setVisible(true); areAvailable = false;}
-            else customerPasswordError.setVisible(false);
-            if ( ! customerFirstName.getText().matches(Constants.IRLNamePattern)) {customerFirstNameError.setVisible(true); areAvailable = false;}
-            else customerFirstNameError.setVisible(false);
-            if ( ! customerLastName.getText().matches(Constants.IRLNamePattern)) {customerLastNameError.setVisible(true); areAvailable = false;}
-            else customerLastNameError.setVisible(false);
-            if (customerPhoneNumber.getText().equals("")){customerPhoneNumberError.setVisible(true); areAvailable = false;}
-            else customerPhoneNumberError.setVisible(false);
-            if ( ! customerEmail.getText().matches(Constants.emailPattern)) {customerEmailError.setVisible(true); areAvailable = false;}
-            else customerEmailError.setVisible(false);
-            if ( ! customerBalance.getText().matches(Constants.doublePattern)) {customerBalanceError.setVisible(true); areAvailable = false;}
-            else customerBalanceError.setVisible(false);
+            if (customerPassword.getText().equals("")) {
+                customerPasswordError.setVisible(true);
+                areAvailable = false;
+            } else customerPasswordError.setVisible(false);
+            if (!customerFirstName.getText().matches(Constants.IRLNamePattern)) {
+                customerFirstNameError.setVisible(true);
+                areAvailable = false;
+            } else customerFirstNameError.setVisible(false);
+            if (!customerLastName.getText().matches(Constants.IRLNamePattern)) {
+                customerLastNameError.setVisible(true);
+                areAvailable = false;
+            } else customerLastNameError.setVisible(false);
+            if (customerPhoneNumber.getText().equals("")) {
+                customerPhoneNumberError.setVisible(true);
+                areAvailable = false;
+            } else customerPhoneNumberError.setVisible(false);
+            if (!customerEmail.getText().matches(Constants.emailPattern)) {
+                customerEmailError.setVisible(true);
+                areAvailable = false;
+            } else customerEmailError.setVisible(false);
+            if (!customerBalance.getText().matches(Constants.doublePattern)) {
+                customerBalanceError.setVisible(true);
+                areAvailable = false;
+            } else customerBalanceError.setVisible(false);
             return areAvailable;
         }
 
@@ -565,49 +645,212 @@ public class Controllers {
                 sellerUsernameError.setVisible(true);
                 areAvailable = false;
             } else sellerUsernameError.setVisible(false);
-            if (sellerPassword.getText().equals("")) {sellerPasswordError.setVisible(true); areAvailable = false;}
-            else sellerPasswordError.setVisible(false);
-            if ( ! sellerFirstName.getText().matches(Constants.IRLNamePattern)) {sellerFirstNameError.setVisible(true); areAvailable = false;}
-            else sellerFirstNameError.setVisible(false);
-            if ( ! sellerLastName.getText().matches(Constants.IRLNamePattern)) {sellerLastNameError.setVisible(true); areAvailable = false;}
-            else sellerLastNameError.setVisible(false);
-            if (sellerPhoneNumber.getText().equals("")){sellerPhoneNumberError.setVisible(true); areAvailable = false;}
-            else sellerPhoneNumberError.setVisible(false);
-            if ( ! sellerEmail.getText().matches(Constants.emailPattern)) {sellerEmailError.setVisible(true); areAvailable = false;}
-            else sellerEmailError.setVisible(false);
-            if ( ! sellerBalance.getText().matches(Constants.doublePattern)) {sellerBalanceError.setVisible(true); areAvailable = false;}
-            else sellerBalanceError.setVisible(false);
+            if (sellerPassword.getText().equals("")) {
+                sellerPasswordError.setVisible(true);
+                areAvailable = false;
+            } else sellerPasswordError.setVisible(false);
+            if (!sellerFirstName.getText().matches(Constants.IRLNamePattern)) {
+                sellerFirstNameError.setVisible(true);
+                areAvailable = false;
+            } else sellerFirstNameError.setVisible(false);
+            if (!sellerLastName.getText().matches(Constants.IRLNamePattern)) {
+                sellerLastNameError.setVisible(true);
+                areAvailable = false;
+            } else sellerLastNameError.setVisible(false);
+            if (sellerPhoneNumber.getText().equals("")) {
+                sellerPhoneNumberError.setVisible(true);
+                areAvailable = false;
+            } else sellerPhoneNumberError.setVisible(false);
+            if (!sellerEmail.getText().matches(Constants.emailPattern)) {
+                sellerEmailError.setVisible(true);
+                areAvailable = false;
+            } else sellerEmailError.setVisible(false);
+            if (!sellerBalance.getText().matches(Constants.doublePattern)) {
+                sellerBalanceError.setVisible(true);
+                areAvailable = false;
+            } else sellerBalanceError.setVisible(false);
             return areAvailable;
         }
     }
 
 
-    public static class AdminUserManagingMenu {
 
-    }
-
-    //TODO: uses products menu but with different properties.
     public static class AdminProductManagingMenu {
-
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.adminProductManagingMenu);
+        }
     }
 
 
-    public static class AdminDiscountManagingMenu {
+    public static class AdminDiscountManagingMenu implements Initializable {
+        @FXML
+        private TableView<DiscountWrapper> discounts;
 
+        @FXML
+        private TableColumn<DiscountWrapper, String> idCol;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> codeCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> percentageCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> startDateCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> endDateCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, Button> detailsCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, Button> removeCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button addDiscountBTN;
+
+        private static ArrayList<String> allDiscounts = new ArrayList<>();
+        private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
+
+        private static class DiscountWrapper {
+            String id;
+            String code;
+            double percentage;
+            int maximumUse;
+            Button detail = new Button();
+            Button remove = new Button();
+            String startDate;
+            String endDate;
+           ;
+
+            DiscountWrapper(String id, String code, String startDate, String endDate, double percentage, int maximumUse) {
+                this.id = id;
+                this.code = code;
+                this.percentage = percentage;
+                this.maximumUse = maximumUse;
+                detail.setOnAction(e -> showDiscountDetails());
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeDiscountCode(code);
+                    } catch (Exceptions.DiscountCodeException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                detail.getStyleClass().add("detail-button");
+                remove.getStyleClass().add("remove-button");
+            }
+
+            private void showDiscountDetails() {
+                //TODO
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public Property percentageProperty() {
+                SimpleStringProperty percentageProperty = new SimpleStringProperty();
+                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
+                return percentageProperty;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+
+            public Button getDetail() {
+                return detail;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+
+            public double getPercentage() {
+                return percentage;
+            }
+
+            public void setPercentage(double percentage) {
+                this.percentage = percentage;
+            }
+
+            public int getMaximumUse() {
+                return maximumUse;
+            }
+
+            public void setMaximumUse(int maximumUse) {
+                this.maximumUse = maximumUse;
+            }
+        }
+
+        public static void display() {
+            allDiscounts = adminController.viewDiscountCodes();
+            View.setMainPane(Constants.FXMLs.adminDiscountManagingMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            addDiscountBTN.setOnAction(e -> AddDiscountPopUpController.display(new Stage()));
+            initDiscounts();
+            initTable();
+        }
+
+        private void initDiscounts() {
+            allDiscountWrappers.clear();
+            for (String discount : allDiscounts) {
+                String[] details;
+                try {
+                    details = adminController.viewDiscountCode(discount);
+                } catch (Exceptions.DiscountCodeException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                allDiscountWrappers.add(new DiscountWrapper(details[0], details[1], details[2], details[3], Double.valueOf(details[5]), Integer.valueOf(details[4])));
+            }
+        }
+
+        private void initTable() {
+            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            codeCOL.setCellValueFactory(new PropertyValueFactory<>("code"));
+            percentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+            startDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+            endDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detail"));
+
+            discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
+        }
+    }
+
+    public static class AddDiscountPopUpController implements Initializable {
+        public static void display(Stage popUpStage) {
+
+        }
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
     }
 
     public static class AdminRequestManagingMenu {
-
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.adminRequestManagingMenu);
+        }
     }
 
     public static class AdminCategoryManagingMenu {
 
 
         @FXML
-        private TableView<String> discounts;
+        private TableView<String> categories;
 
         @FXML
-        private TableColumn<?, ?> numberCOL;
+        private TableColumn<?, ?> idCOL;
 
         @FXML
         private TableColumn<?, ?> nameCOL;
@@ -616,7 +859,7 @@ public class Controllers {
         private TableColumn<?, ?> parentCOL;
 
         @FXML
-        private TableColumn<?, ?> subCategoriesCOL;
+        private TableColumn<?, ?> detailsCOL;
 
         @FXML
         private TableColumn<?, ?> removeCOL;
@@ -627,16 +870,8 @@ public class Controllers {
         @FXML
         private Label errorLBL;
 
-        @FXML
-        private TextField categoryNameField;
-
-        @FXML
-        private TextField categoryParentField;
-
-        @FXML
-        private Button confirmBTN;
-
         public static void display() {
+            View.setMainPane(Constants.FXMLs.adminCategoryManagingMenu);
         }
     }
 
@@ -651,6 +886,7 @@ public class Controllers {
 
     //add product detail menu
     public static class ShoppingCartMenuController implements Initializable {
+        //TODO decrease/increase buttons.
 
         private static ArrayList<String[]> cartProducts = new ArrayList<>();
         private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
@@ -658,24 +894,38 @@ public class Controllers {
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
         private static class SubProductWrapper {
-            int id;
+            String id;
+            int index;
             Button nameBrandSeller;
             double unitPrice;
-            int count;
+            SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
+            TextField countField;
+            HBox countGroup = new HBox();
             SimpleDoubleProperty totalPrice;
+            Button remove = new Button();
 
-            public SubProductWrapper(int id, String nameBrandSeller, double unitPrice, int count) {
+            public SubProductWrapper(String id, int index, String nameBrandSeller, double unitPrice, int count) {
                 this.id = id;
+                this.index = index;
                 this.nameBrandSeller = new Button(nameBrandSeller);
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(id -  1)));
+                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(index - 1)));
                 this.unitPrice = unitPrice;
-                this.count = count;
-                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(count));
+                this.countProperty.set(count);
+                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
+                remove.getStyleClass().add("remove-button");
+                remove.setOnAction(e -> {
+                    try {
+                        mainController.decreaseProductInCart(id, countProperty.get());
+                    } catch (Exceptions.InvalidSubProductIdException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.NotSubProductIdInTheCartException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.UnAuthorizedAccountException ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
 
-            public int getId() {
-                return id;
-            }
 
             public Button getNameBrandSeller() {
                 return nameBrandSeller;
@@ -685,9 +935,6 @@ public class Controllers {
                 return unitPrice;
             }
 
-            public int getCount() {
-                return count;
-            }
 
             public double getTotalPrice() {
                 return totalPrice.get();
@@ -699,13 +946,13 @@ public class Controllers {
         }
 
         @FXML
+        private TableColumn<SubProductWrapper, Button> removeCOL;
+
+        @FXML
         private TableView<SubProductWrapper> productsTable;
 
         @FXML
-        private TableColumn<SubProductWrapper, Integer> productId;
-
-        @FXML
-        private TableColumn<SubProductWrapper, Button> productName;
+        private TableColumn<SubProductWrapper, String> productName;
 
         @FXML
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
@@ -717,15 +964,18 @@ public class Controllers {
         private TableColumn<SubProductWrapper, Double> totalPrice;
 
         @FXML
-        private Label errorLBL;
+        private Button clearCartBTN;
 
         @FXML
-        private Button purchaseBTN;
+        private Label errorLBL;
 
         @FXML
         private Label totalPriceLBL;
 
-        public static void display(){
+        @FXML
+        private Button purchaseBTN;
+
+        public static void display() {
             try {
                 cartProducts = mainController.getProductsInCart();
             } catch (Exceptions.UnAuthorizedAccountException e) {
@@ -733,7 +983,6 @@ public class Controllers {
                 return;
             }
             View.setMainPane(Constants.FXMLs.shoppingCartMenu);
-
         }
 
         @Override
@@ -744,6 +993,14 @@ public class Controllers {
             });
 
             purchaseBTN.setOnAction(e -> PurchaseMenuController.display());
+
+            clearCartBTN.setOnAction(e -> {
+                if (cartProducts.size() == 0) {
+                    errorLBL.setText("the cart is already empty!");
+                } else {
+                    //mainController.clearCart();
+                }
+            });
 
             iniTable();
             initLabels();
@@ -768,8 +1025,9 @@ public class Controllers {
             initCols();
 
             //TODO: name-brand(storeName)
+            int index = 0;
             for (String[] cartProduct : cartProducts) {
-                subProducts.add(new SubProductWrapper(Integer.parseInt(cartProduct[0]),
+                subProducts.add(new SubProductWrapper(cartProduct[0], ++index,
                         cartProduct[2] + "-" + cartProduct[3] + "(" + cartProduct[5] + ")",
                         Double.valueOf(cartProduct[7]), Integer.valueOf(cartProduct[6])));
             }
@@ -778,11 +1036,11 @@ public class Controllers {
         }
 
         private void initCols() {
-            productId.setCellValueFactory(new PropertyValueFactory<>("id"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
             count.setCellValueFactory(new PropertyValueFactory<>("count"));
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
     }
 
@@ -799,7 +1057,42 @@ public class Controllers {
 
     public static class AdminManagingMenuController implements Initializable {
         public static void display() {
+            View.setMainPane(Constants.FXMLs.adminManagingMenu);
+        }
 
+        @FXML
+        private Button manageUsers;
+
+        @FXML
+        private Button manageProducts;
+
+        @FXML
+        private Button manageCategories;
+
+        @FXML
+        private Button manageDiscounts;
+
+        @FXML
+        private Button manageRequests;
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initActions();
+        }
+
+        private void initActions() {
+            manageUsers.setOnAction(e -> AdminUserManagingMenuController.display());
+            manageCategories.setOnAction(e -> AdminCategoryManagingMenu.display());
+            manageDiscounts.setOnAction(e -> AdminDiscountManagingMenu.display());
+            manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
+            manageRequests.setOnAction(e -> AdminRequestManagingMenu.display());
+        }
+    }
+
+    public static class AdminUserManagingMenuController implements Initializable {
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.adminUserManagingMenu);
         }
 
         @Override
@@ -875,7 +1168,7 @@ public class Controllers {
             View.type.set(mainController.getType());
             cartBTN.visibleProperty().bind(
                     Bindings.when(View.type.isEqualTo(Constants.adminUserType).or(View.type.isEqualTo(Constants.sellerUserType)))
-                    .then(false).otherwise(true)
+                            .then(false).otherwise(true)
             );
             manageBTN.visibleProperty().bind(cartBTN.visibleProperty().not());
             loginBTN.visibleProperty().bind(
@@ -931,7 +1224,7 @@ public class Controllers {
                     try {
                         ProductsMenuController.display(mainController.showProducts(getProductIDs(products),
                                 null, false, new String[]{"false", "0", "0", input, null, null, "0"},
-                                new HashMap<>()) );
+                                new HashMap<>()));
                     } catch (Exceptions.InvalidProductIdException e) {
                         e.printStackTrace();
                     }

@@ -4,10 +4,12 @@ import controller.*;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Category;
 import model.database.Database;
 import model.database.DatabaseManager;
@@ -26,12 +28,11 @@ public class View extends Application {
     public static CustomerController customerController = new CustomerController(mainController);
     public static AdminController adminController = new AdminController(mainController);
     public static SellerController sellerController = new SellerController(mainController);
-    private static Stage mainStage;
-    private static Scene mainScene;
-
-    private static ArrayList<String> stackTrace = new ArrayList<>();
     public static SimpleIntegerProperty stackSize = new SimpleIntegerProperty(0);
     public static SimpleStringProperty type = new SimpleStringProperty(Constants.anonymousUserType);
+    private static Stage mainStage;
+    private static Scene mainScene;
+    private static ArrayList<String> stackTrace = new ArrayList<>();
 
     public static void main(String[] args) {
         databaseManager.loadAll();
@@ -72,7 +73,7 @@ public class View extends Application {
         if (stackTrace.size() == 0) {
             stackTrace.add(fxml);
             stackSize.set(stackSize.get() + 1);
-        } else if ( ! stackTrace.get(stackTrace.size() - 1).equals(fxml)) {
+        } else if (!stackTrace.get(stackTrace.size() - 1).equals(fxml)) {
             stackTrace.add(fxml);
             stackSize.set(stackSize.get() + 1);
         }
@@ -101,24 +102,46 @@ public class View extends Application {
         Controllers.BaseController.setMainPane(p);
     }
 
+    public void popupWindow(String title, String fxml, EventHandler<WindowEvent> close) {
+        Stage popup = new Stage();
+        popup.setTitle(title);
+        popup.setOnCloseRequest(close);
+        popup.setResizable(false);
+        popup.setWidth(750);
+        popup.setHeight(500);
+        popup.centerOnScreen();
+        try {
+            popup.setScene(new Scene(loadFxml(fxml)));
+        } catch (IOException e) {
+            System.out.println("could not load " + fxml + ".fxml");
+        }
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
 
         View.mainStage = stage;
         stage.setTitle("ShopApplication");
-//        stage.setResizable(false);
         stage.setOnCloseRequest(event -> {
             event.consume();
             close();
         });
-        stage.setMinHeight(600);
-        stage.setMinWidth(900);
+
+        stage.setMaximized(true);
+        stage.setMinWidth(1050);
+        stage.setMinHeight(700);
+        stage.setWidth(1050);
+        stage.setHeight(700);
+        stage.centerOnScreen();
+
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));
         setMainPane(Constants.FXMLs.mainMenu);
+
 //        try {
-//            mainController.login("adana", "1");
-//            type.set(Constants.adminUserType);
-//        } catch (Exceptions.WrongPasswordException | Exceptions.UsernameDoesntExistException  e) {
+//            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
+//        } catch (Exceptions.UsernameAlreadyTakenException e) {
+//            e.printStackTrace();
+//        } catch (Exceptions.AdminRegisterException e) {
 //            e.printStackTrace();
 //        }
     }

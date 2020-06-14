@@ -154,7 +154,7 @@ public class AdminController {
 
     public ArrayList<String> viewDiscountCodes() {
         ArrayList<String> discountCodes = new ArrayList<>();
-        for (Discount discount : Discount.getAllDiscounts()) {
+        for (Discount discount : Discount.getActiveDiscounts()) {
             discountCodes.add(discount.getDiscountCode());
         }
         return discountCodes;

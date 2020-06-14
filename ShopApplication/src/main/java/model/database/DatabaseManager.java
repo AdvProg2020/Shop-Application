@@ -3,6 +3,9 @@ package model.database;
 import com.google.gson.Gson;
 import model.*;
 import model.account.Account;
+import model.account.Admin;
+import model.account.Customer;
+import model.account.Seller;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
@@ -28,11 +31,10 @@ public class DatabaseManager implements Database {
         scanner.close();
     }
 
-    private <T> void update(String fileName, Class<T> classType, List<T> allInstances) {
+    private <T> void update(String fileName, Class<T> classType, List<? extends T> allInstances) {
         PrintWriter printWriter = DatabaseUtilities.getPrintWriter(fileName);
-        if (classType == Category.class) { // writing superCategory first
+        if (classType == Category.class) // writing superCategory first
             printWriter.println(gson.toJson(Category.getSuperCategory(), classType));
-        }
 
         for (T instance : allInstances) {
             printWriter.println(gson.toJson(instance, classType));
@@ -40,25 +42,37 @@ public class DatabaseManager implements Database {
         printWriter.close();
     }
 
-    private void updateAccounts() {
-        update(FileNames.ACCOUNT, Account.class, Account.getAllAccounts(false));
+    private void updateAdmins() {
+        update(FileNames.ADMIN, Account.class, Admin.getAllAdmins(false));
     }
 
-    private void updateBuyLogs() {
+    private void updateSellers() {
+        update(FileNames.SELL_LOG, Account.class, Seller.getAllSellers(false));
+    }
+
+    private void updateCustomers() {
+        update(FileNames.CUSTOMER, Account.class, Customer.getAllCustomers(false));
+    }
+
+    private void updateLogs() {
         update(FileNames.BUY_LOG, BuyLog.class, BuyLog.getAllBuyLogs());
-    }
-
-    private void updateSellLogs() {
         update(FileNames.SELL_LOG, SellLog.class, SellLog.getAllSellLogs());
-    }
-
-    private void updateLogItems() {
         update(FileNames.LOG_ITEM, LogItem.class, LogItem.getAllLogItems());
     }
 
     private void updateRequests() {
         update(FileNames.REQUEST, Request.class, Request.getRequestArchive());
         update(FileNames.REQUEST, Request.class, Request.getPendingRequests());
+    }
+
+    private void updateDiscounts() {
+        update(FileNames.DISCOUNT, Discount.class, Discount.getDiscountArchive());
+        update(FileNames.DISCOUNT, Discount.class, Discount.getActiveDiscounts());
+    }
+
+    private void updateSales() {
+        update(FileNames.SALE, Sale.class, Sale.getSaleArchive());
+        update(FileNames.SALE, Sale.class, Sale.getActiveSales());
     }
 
     private void updateCategories() {
@@ -85,17 +99,11 @@ public class DatabaseManager implements Database {
         update(FileNames.RATING, Rating.class, Rating.getAllRatings());
     }
 
-    private void updateDiscounts() {
-        update(FileNames.DISCOUNT, Discount.class, Discount.getAllDiscounts(false));
-    }
-
-    private void updateSales() {
-        update(FileNames.SALE, Sale.class, Sale.getAllSales(false));
-    }
-
     @Override
     public void loadAll() {
-        load(FileNames.ACCOUNT, Account.class);
+        load(FileNames.ADMIN, Account.class);
+        load(FileNames.SELLER, Account.class);
+        load(FileNames.CUSTOMER, Account.class);
         load(FileNames.CATEGORY, Category.class);
         load(FileNames.PRODUCT, Product.class);
         load(FileNames.SUB_PRODUCT, SubProduct.class);
@@ -112,7 +120,9 @@ public class DatabaseManager implements Database {
 
     @Override
     public void updateAll() {
-        updateAccounts();
+        updateAdmins();
+        updateSellers();
+        updateCustomers();
         updateProducts();
         updateSubProducts();
         updateCategories();
@@ -122,9 +132,7 @@ public class DatabaseManager implements Database {
         updateRatings();
         updateReviews();
         updateRequests();
-        updateBuyLogs();
-        updateSellLogs();
-        updateLogItems();
+        updateLogs();
     }
 
     @Override
@@ -139,51 +147,52 @@ public class DatabaseManager implements Database {
 
     @Override
     public void createAdmin() {
-        updateAccounts();
+        updateAdmins();
     }
 
     @Override
     public void createCustomer() {
-        updateAccounts();
+        updateCustomers();
         updateCarts();
     }
 
     @Override
     public void createSeller() {
         updateRequests();
-        updateAccounts();
+        updateSellers();
     }
 
     @Override
     public void editAccount() {
-        updateAccounts();
+        updateAdmins();
+        updateSellers();
+        updateCustomers();
     }
 
     @Override
     public void removeAdmin() {
-        updateAccounts();
+        updateAdmins();
     }
 
     @Override
     public void removeCustomer() {
-        updateAccounts();
+        updateCustomers();
         updateDiscounts();
-        cart();
+        updateCarts();
     }
 
     @Override
     public void removeSeller() {
-        updateAccounts();
+        updateSellers();
         updateSubProducts();
         updateSales();
     }
 
     @Override
     public void purchase() {
-        updateBuyLogs();
-        updateSellLogs();
-        updateLogItems();
-        updateAccounts();
+        updateLogs();
+        updateSellers();
+        updateCustomers();
         updateSubProducts();
         updateCarts();
     }

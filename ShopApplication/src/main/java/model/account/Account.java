@@ -48,8 +48,7 @@ public abstract class Account implements ModelBasic {
     }
 
     public static boolean isUsernameUsed(String username) {
-        if (getAccountByUsername(username) != null)
-            return true;
+        if (getAccountByUsername(username) != null) return true;
 
         for (Request request : Request.getPendingRequests()) {
             if (request instanceof AddSellerRequest)
@@ -59,9 +58,6 @@ public abstract class Account implements ModelBasic {
 
         return false;
     }
-
-    @Override
-    public abstract void initialize();
 
     public void suspend() {
         suspended = true;

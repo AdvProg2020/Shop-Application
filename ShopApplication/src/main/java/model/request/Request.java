@@ -27,12 +27,12 @@ public abstract class Request implements ModelBasic {
     public static List<Request> getRequestArchive() {
         ArrayList<Request> archive = new ArrayList<>(allRequests.values());
         archive.removeAll(getPendingRequests());
+
         return archive;
     }
 
     public static Request getRequestById(String requestId) {
         return ModelUtilities.getInstanceById(allRequests, requestId);
-
     }
 
     @Override

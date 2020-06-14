@@ -10,6 +10,7 @@ import java.util.*;
 
 
 public class Customer extends Account {
+    protected static Map<String, Customer> allCustomers = new HashMap<>();
     private static int lastNum = 1;
     private double balance;
     private transient String cartId;
@@ -24,16 +25,22 @@ public class Customer extends Account {
         new Cart(accountId);
     }
 
+    public static List<Customer> getAllCustomers(boolean... suspense) {
+        return ModelUtilities.getAllInstances(allCustomers.values(), suspense);
+    }
+
     public static Customer getCustomerById(String accountId, boolean... suspense) {
-        return (Customer) getAccountById(accountId, suspense);
+        return ModelUtilities.getInstanceById(allCustomers, accountId, suspense);
     }
 
     @Override
     public void initialize() {
         if (accountId == null)
             accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+        allCustomers.put(accountId, this);
         allAccounts.put(accountId, this);
         lastNum++;
+
         buyLogIds = new HashSet<>();
         if (!suspended) {
             discountIds = new HashMap<>();
