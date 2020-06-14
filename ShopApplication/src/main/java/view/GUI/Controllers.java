@@ -396,6 +396,12 @@ public class Controllers {
         private static Stage popUpStage;
 
         @FXML
+        private Hyperlink customerLoginHL;
+
+        @FXML
+        private Hyperlink sellerLoginHL;
+
+        @FXML
         private TextField customerFirstName;
 
         @FXML
@@ -591,6 +597,8 @@ public class Controllers {
                     }
                 }
             });
+            sellerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
+            customerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
         }
 
         private boolean areCustomerFieldsAvailable() {
@@ -668,7 +676,6 @@ public class Controllers {
 
     }
 
-    //TODO: uses products menu but with different properties.
     public static class AdminProductManagingMenu {
 
     }
@@ -875,6 +882,7 @@ public class Controllers {
 
     //add product detail menu
     public static class ShoppingCartMenuController implements Initializable {
+        //TODO decrease/increase buttons.
 
         private static ArrayList<String[]> cartProducts = new ArrayList<>();
         private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
@@ -886,7 +894,8 @@ public class Controllers {
             int index;
             Button nameBrandSeller;
             double unitPrice;
-            int count;
+            TextField countField;
+            HBox countGroup = new HBox();
             SimpleDoubleProperty totalPrice;
 
             public SubProductWrapper(String id, int index, String nameBrandSeller, double unitPrice, int count) {
@@ -895,7 +904,6 @@ public class Controllers {
                 this.nameBrandSeller = new Button(nameBrandSeller);
                 this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(index - 1)));
                 this.unitPrice = unitPrice;
-                this.count = count;
                 this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(count));
             }
 
@@ -908,9 +916,6 @@ public class Controllers {
                 return unitPrice;
             }
 
-            public int getCount() {
-                return count;
-            }
 
             public double getTotalPrice() {
                 return totalPrice.get();
@@ -948,6 +953,9 @@ public class Controllers {
         @FXML
         private Label totalPriceLBL;
 
+        @FXML
+        private Button clearCartBTN;
+
         public static void display() {
             try {
                 cartProducts = mainController.getProductsInCart();
@@ -966,6 +974,14 @@ public class Controllers {
             });
 
             purchaseBTN.setOnAction(e -> PurchaseMenuController.display());
+
+            clearCartBTN.setOnAction(e -> {
+                if (cartProducts.size() == 0) {
+                    errorLBL.setText("the cart is already empty!");
+                } else {
+                    //mainController.clearCart();
+                }
+            });
 
             iniTable();
             initLabels();
