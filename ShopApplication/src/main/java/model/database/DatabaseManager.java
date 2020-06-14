@@ -22,11 +22,11 @@ public class DatabaseManager implements Database {
         this.gson = DatabaseUtilities.getGson();
     }
 
-    private <T extends ModelBasic> void load(String fileName, Class<T> classType) {
+    private <T> void load(String fileName, Class<T> classType) {
         Scanner scanner = DatabaseUtilities.getScanner(fileName);
         while (scanner.hasNextLine()) {
             String gsonString = scanner.nextLine();
-            gson.fromJson(gsonString, classType).initialize();
+            ((ModelBasic) gson.fromJson(gsonString, classType)).initialize();
         }
         scanner.close();
     }
@@ -43,15 +43,15 @@ public class DatabaseManager implements Database {
     }
 
     private void updateAdmins() {
-        update(FileNames.ADMIN, Admin.class, Admin.getAllAdmins(false));
+        update(FileNames.ADMIN, Account.class, Admin.getAllAdmins(false));
     }
 
     private void updateSellers() {
-        update(FileNames.SELL_LOG, Seller.class, Seller.getAllSellers(false));
+        update(FileNames.SELL_LOG, Account.class, Seller.getAllSellers(false));
     }
 
     private void updateCustomers() {
-        update(FileNames.CUSTOMER, Customer.class, Customer.getAllCustomers(false));
+        update(FileNames.CUSTOMER, Account.class, Customer.getAllCustomers(false));
     }
 
     private void updateLogs() {
