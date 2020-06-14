@@ -14,13 +14,11 @@
             <TableView fx:id="productsTable" fixedCellSize="30.0" focusTraversable="false" maxWidth="-Infinity"
                        styleClass="bg-pane" stylesheets="@../css/TableView.css" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="productId" prefWidth="100.0" resizable="false" sortable="false" text="No."/>
-                    <TableColumn fx:id="productName" minWidth="100.0" prefWidth="250.0" resizable="false"
-                                 sortable="false" text="Name-Brand (Seller)"/>
-                    <TableColumn fx:id="productUnitPrice" prefWidth="100.0" resizable="false" sortable="false"
-                                 text="Unit price"/>
-                    <TableColumn fx:id="count" prefWidth="200.0" resizable="false" sortable="false" text="Count"/>
-                    <TableColumn fx:id="totalPrice" prefWidth="150.0" resizable="false" sortable="false" text="Total"/>
+                    <TableColumn fx:id="productName" prefWidth="250.0" resizable="false" text="Name-Brand (Seller)"/>
+                    <TableColumn fx:id="productUnitPrice" prefWidth="150.0" resizable="false" text="Unit Price"/>
+                    <TableColumn fx:id="count" prefWidth="200.0" resizable="false" text="Count"/>
+                    <TableColumn fx:id="totalPrice" prefWidth="150.0" resizable="false" text="Total Price"/>
+                    <TableColumn fx:id="remove" prefWidth="100.0" resizable="false" sortable="false" text="Remove"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -39,21 +37,19 @@
                 </Label>
                 <Region HBox.hgrow="ALWAYS"/>
                 <HBox alignment="CENTER">
-                    <children>
-                        <Label text="Total Price: " textAlignment="CENTER">
-                            <font>
-                                <Font size="14.0"/>
-                            </font>
-                        </Label>
-                        <Label fx:id="totalPriceLBL" layoutX="10.0" layoutY="31.0" text="29$" textAlignment="CENTER">
-                            <font>
-                                <Font size="14.0"/>
-                            </font>
-                        </Label>
-                    </children>
                     <HBox.margin>
                         <Insets right="10.0"/>
                     </HBox.margin>
+                    <Label text="Total Price: " textAlignment="CENTER">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="totalPriceLBL" layoutX="10.0" layoutY="31.0" text="29$" textAlignment="CENTER">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
                 </HBox>
                 <Button id="purchase-button" fx:id="purchaseBTN" layoutX="133.0" layoutY="10.0" mnemonicParsing="false"
                         styleClass="action-button" text="Purchase"/>
