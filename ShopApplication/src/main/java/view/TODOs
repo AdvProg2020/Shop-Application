@@ -1,5 +1,9 @@
 A: afa T: talaee M: mohammadi
 
+T: salesMenu and productsMenu compare  product box (PRIORITY)
+A & T: addRating to product detail menu addReview button (popUp)
+A & T: booting add admin.
+
 M: styling of manage button and login button in base
 T: update product pack (specially product box methods) send view what it needs to wrap.
     has: productId, subProductId, imagePath, name, brand, rating, price before/after, percentage.
@@ -25,5 +29,8 @@ A: isPopUp for digestMenus
 T: mainController.clearCart();
 T: remove column for shopping cart menu
 A & T & M : add tabs to discount, sale, account managing menu
+
+
+
 
 

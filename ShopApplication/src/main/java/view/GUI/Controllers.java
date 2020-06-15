@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import view.consoleView.Menus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,6 +45,52 @@ public class Controllers {
         adminController = View.adminController;
         sellerController = View.sellerController;
         customerController = View.customerController;
+    }
+
+    public static class ProductBoxController {
+
+        @FXML
+        private Label sale;
+
+        @FXML
+        private ImageView image;
+
+        @FXML
+        private Label name;
+
+        @FXML
+        private Label rating;
+
+        @FXML
+        private Label priceBefore;
+
+        @FXML
+        private Label priceAfter;
+
+        private String[] subProduct;
+
+        public static Parent createBox(String[] subProduct) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                ProductBoxController pbc = loader.getController();
+                pbc.setInfo(subProduct);
+                pbc.setAction(p);
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private void setInfo(String[] subProductInfo) {
+            subProduct = subProductInfo;
+        }
+
+        private void setAction(Parent p) {
+            p.setOnMouseClicked(e -> ProductDetailMenu.display(subProduct));
+        }
     }
 
     public static class PersonalInfoMenuController implements Initializable {
@@ -221,31 +269,43 @@ public class Controllers {
     public static class ProductsMenuController implements Initializable {
 
 
-        public static ArrayList<String[]> products;
         @FXML
         private ChoiceBox<String> sortBy;
+
         @FXML
         private ToggleButton isIncreasing;
+
         @FXML
         private ToggleGroup increasingToggleGroup;
+
         @FXML
         private ToggleButton isDecreasing;
+
         @FXML
         private CheckBox available;
+
         @FXML
         private Slider minPriceSlider;
+
         @FXML
         private Slider maxPriceSlider;
+
         @FXML
         private TextField filterName;
+
         @FXML
         private ChoiceBox<String> filterBrand;
+
         @FXML
         private ChoiceBox<String> filterSeller;
+
         @FXML
         private ChoiceBox<String> filterCategory;
+
         @FXML
         private ScrollPane productsPane;
+
+        public static ArrayList<String[]> products;
 
         public static void display(ArrayList<String[]> products) {
             ProductsMenuController.products = products;
@@ -672,66 +732,38 @@ public class Controllers {
 
 
     public static class AdminDiscountManagingMenu implements Initializable {
-        private static ArrayList<String> allDiscounts = new ArrayList<>();
-        private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
         @FXML
         private TableView<DiscountWrapper> discounts;
+
         @FXML
         private TableColumn<DiscountWrapper, String> idCol;
+
         @FXML
         private TableColumn<DiscountWrapper, String> codeCOL;
+
         @FXML
         private TableColumn<DiscountWrapper, String> percentageCOL;
+
         @FXML
         private TableColumn<DiscountWrapper, String> startDateCOL;
+
         @FXML
         private TableColumn<DiscountWrapper, String> endDateCOL;
+
         @FXML
         private TableColumn<DiscountWrapper, Button> detailsCOL;
+
         @FXML
         private TableColumn<DiscountWrapper, Button> removeCOL;
+
         @FXML
         private Label errorLBL;
+
         @FXML
         private Button addDiscountBTN;
 
-        public static void display() {
-            allDiscounts = adminController.viewDiscountCodes();
-            View.setMainPane(Constants.FXMLs.adminDiscountManagingMenu);
-        }
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-            addDiscountBTN.setOnAction(e -> AddDiscountPopUpController.display(new Stage()));
-            initDiscounts();
-            initTable();
-        }
-
-        private void initDiscounts() {
-            allDiscountWrappers.clear();
-            for (String discount : allDiscounts) {
-                String[] details;
-                try {
-                    details = adminController.viewDiscountCode(discount);
-                } catch (Exceptions.DiscountCodeException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                allDiscountWrappers.add(new DiscountWrapper(details[0], details[1], details[2], details[3], Double.parseDouble(details[5]), Integer.parseInt(details[4])));
-            }
-        }
-
-        private void initTable() {
-            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            codeCOL.setCellValueFactory(new PropertyValueFactory<>("code"));
-            percentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentage"));
-            startDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-            endDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
-            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detail"));
-
-            discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
-        }
+        private static ArrayList<String> allDiscounts = new ArrayList<>();
+        private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
 
         private static class DiscountWrapper {
             String id;
@@ -768,15 +800,16 @@ public class Controllers {
                 return id;
             }
 
-            public void setId(String id) {
-                this.id = id;
-            }
-
             public Property percentageProperty() {
                 SimpleStringProperty percentageProperty = new SimpleStringProperty();
                 percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
                 return percentageProperty;
             }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
 
             public Button getDetail() {
                 return detail;
@@ -802,13 +835,50 @@ public class Controllers {
                 this.maximumUse = maximumUse;
             }
         }
+
+        public static void display() {
+            allDiscounts = adminController.viewDiscountCodes();
+            View.setMainPane(Constants.FXMLs.adminDiscountManagingMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            addDiscountBTN.setOnAction(e -> AddDiscountPopUpController.display(new Stage()));
+            initDiscounts();
+            initTable();
+        }
+
+        private void initDiscounts() {
+            allDiscountWrappers.clear();
+            for (String discount : allDiscounts) {
+                String[] details;
+                try {
+                    details = adminController.viewDiscountCode(discount);
+                } catch (Exceptions.DiscountCodeException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                allDiscountWrappers.add(new DiscountWrapper(details[0], details[1], details[2], details[3], Double.valueOf(details[5]), Integer.valueOf(details[4])));
+            }
+        }
+
+        private void initTable() {
+            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            codeCOL.setCellValueFactory(new PropertyValueFactory<>("code"));
+            percentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+            startDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+            endDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detail"));
+
+            discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
+        }
     }
 
     public static class AddDiscountPopUpController implements Initializable {
         public static void display(Stage popUpStage) {
 
         }
-
         @Override
         public void initialize(URL location, ResourceBundle resources) {
 
@@ -868,26 +938,85 @@ public class Controllers {
 
         private static ArrayList<String[]> cartProducts = new ArrayList<>();
         private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
-        NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
         private SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
+        NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
+
+        private static class SubProductWrapper {
+            String id;
+            int index;
+            Button nameBrandSeller;
+            double unitPrice;
+            SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
+            TextField countField;
+            HBox countGroup = new HBox();
+            SimpleDoubleProperty totalPrice;
+            Button remove;
+
+            public SubProductWrapper(String id, int index, String nameBrandSeller, double unitPrice, int count) {
+                this.id = id;
+                this.index = index;
+                this.nameBrandSeller = new Button(nameBrandSeller);
+                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(index - 1)));
+                this.unitPrice = unitPrice;
+                this.countProperty.set(count);
+                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
+                remove = new Button();
+                remove.getStyleClass().add("remove-button");
+                remove.setOnAction(e -> {
+                    try {
+                        mainController.removeSubProduct(this.id);
+                    } catch (Exceptions.InvalidSubProductIdException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
+
+            public Button getNameBrandSeller() {
+                return nameBrandSeller;
+            }
+
+            public double getUnitPrice() {
+                return unitPrice;
+            }
+
+
+            public double getTotalPrice() {
+                return totalPrice.get();
+            }
+
+            public SimpleDoubleProperty getTotalPriceProperty() {
+                return totalPrice;
+            }
+        }
+
         @FXML
         private TableColumn<SubProductWrapper, Button> removeCOL;
+
         @FXML
         private TableView<SubProductWrapper> productsTable;
+
         @FXML
         private TableColumn<SubProductWrapper, String> productName;
+
         @FXML
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
+
         @FXML
         private TableColumn<SubProductWrapper, Integer> count;
+
         @FXML
         private TableColumn<SubProductWrapper, Double> totalPrice;
+
         @FXML
         private Button clearCartBTN;
+
         @FXML
         private Label errorLBL;
+
         @FXML
         private Label totalPriceLBL;
+
         @FXML
         private Button purchaseBTN;
 
@@ -908,18 +1037,21 @@ public class Controllers {
                     event.consume();
             });
 
+            iniTable();
+            initLabels();
+            initActions();
+        }
+
+        private void initActions() {
             purchaseBTN.setOnAction(e -> PurchaseMenuController.display());
 
             clearCartBTN.setOnAction(e -> {
                 if (cartProducts.size() == 0) {
                     errorLBL.setText("the cart is already empty!");
                 } else {
-                    //mainController.clearCart();
+                    mainController.clearCart();
                 }
             });
-
-            iniTable();
-            initLabels();
         }
 
         private void initLabels() {
@@ -958,58 +1090,6 @@ public class Controllers {
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
-
-        private static class SubProductWrapper {
-            String id;
-            int index;
-            Button nameBrandSeller;
-            double unitPrice;
-            SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
-            TextField countField;
-            HBox countGroup = new HBox();
-            SimpleDoubleProperty totalPrice;
-            Button remove = new Button();
-
-            public SubProductWrapper(String id, int index, String nameBrandSeller, double unitPrice, int count) {
-                this.id = id;
-                this.index = index;
-                this.nameBrandSeller = new Button(nameBrandSeller);
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(index - 1)));
-                this.unitPrice = unitPrice;
-                this.countProperty.set(count);
-                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
-                remove.getStyleClass().add("remove-button");
-                remove.setOnAction(e -> {
-                    try {
-                        mainController.decreaseProductInCart(id, countProperty.get());
-                    } catch (Exceptions.InvalidSubProductIdException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.NotSubProductIdInTheCartException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.UnAuthorizedAccountException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-
-
-            public Button getNameBrandSeller() {
-                return nameBrandSeller;
-            }
-
-            public double getUnitPrice() {
-                return unitPrice;
-            }
-
-
-            public double getTotalPrice() {
-                return totalPrice.get();
-            }
-
-            public SimpleDoubleProperty getTotalPriceProperty() {
-                return totalPrice;
-            }
-        }
     }
 
     public static class PurchaseMenuController {
@@ -1021,23 +1101,25 @@ public class Controllers {
     //TODO: can be added to CustomerMenu??
     public static class CustomerLogsMenu {
 
-    }
-
     public static class AdminManagingMenu implements Initializable {
-        @FXML
-        private Button manageUsers;
-        @FXML
-        private Button manageProducts;
-        @FXML
-        private Button manageCategories;
-        @FXML
-        private Button manageDiscounts;
-        @FXML
-        private Button manageRequests;
-
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminManagingMenu);
         }
+
+        @FXML
+        private Button manageUsers;
+
+        @FXML
+        private Button manageProducts;
+
+        @FXML
+        private Button manageCategories;
+
+        @FXML
+        private Button manageDiscounts;
+
+        @FXML
+        private Button manageRequests;
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
@@ -1072,14 +1154,6 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-
-        }
-    }
-
-    public static class ProductBoxController implements Initializable {
-
-        @Override
-        public void initialize(URL url, ResourceBundle resourceBundle) {
 
         }
     }
@@ -1175,6 +1249,9 @@ public class Controllers {
                         }
                     }, View.type)
             );
+            //TODO: temporary
+            loginBTN.setText("Login");
+            manageBTN.setText("manage");
         }
 
         private void search(String input) {

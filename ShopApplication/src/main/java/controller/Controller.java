@@ -543,4 +543,13 @@ public class Controller {
                 subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(true));
         }
     }
+
+    public void clearCart() {
+        currentCart.clearCart();
+    }
+
+    public void removeSubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
+        if (SubProduct.getSubProductById(subProductId) == null) throw new Exceptions.InvalidSubProductIdException(subProductId);
+        else currentCart.removeSubProduct(subProductId);
+    }
 }

@@ -31,7 +31,6 @@ public final class Constants {
     public static class FXMLs {
         public static final String mainMenu = "MainMenu";
         public static final String base = "Base";
-        public static final String accountMenu = "AccountMenu";
         public static final String shoppingCartMenu = "ShoppingCartMenu";
         public static final String loginPopUp = "LoginPopUp";
         public static final String registerPopUp = "RegisterPopUp";
@@ -44,5 +43,6 @@ public final class Constants {
         public static final String adminRequestManagingMenu = "AdminRequestManagingMenu";
         public static final String adminManagingMenu = "AdminManagingMenu";
         public static final String purchaseMenu = "PurchaseMenu";
+        public static final String productBox = "ProductBox";
     }
 }
