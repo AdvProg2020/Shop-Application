@@ -1,9 +1,10 @@
 package model.request;
 
 import model.Sale;
+import model.account.Seller;
 import model.database.Database;
 
-public class AddSaleRequest extends Request {
+public class AddSaleRequest extends Request implements SellerRequest {
     private Sale sale;
 
     public AddSaleRequest(Sale sale) {
@@ -24,6 +25,11 @@ public class AddSaleRequest extends Request {
 
     public Sale getSale() {
         return sale;
+    }
+
+    @Override
+    public Seller getSeller() {
+        return sale.getSeller();
     }
 
     @Override

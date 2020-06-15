@@ -2,9 +2,10 @@ package model.request;
 
 import model.Product;
 import model.SubProduct;
+import model.account.Seller;
 import model.database.Database;
 
-public class EditProductRequest extends Request {
+public class EditProductRequest extends Request implements SellerRequest {
     private String subProductId;
     private Field field;
     private String newValue;
@@ -47,6 +48,11 @@ public class EditProductRequest extends Request {
 
     public SubProduct getSubProduct() {
         return SubProduct.getSubProductById(subProductId);
+    }
+
+    @Override
+    public Seller getSeller() {
+        return getSubProduct().getSeller();
     }
 
     public Field getField() {

@@ -1,12 +1,13 @@
 package model.request;
 
 import model.Sale;
+import model.account.Seller;
 import model.database.Database;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class EditSaleRequest extends Request {
+public class EditSaleRequest extends Request implements SellerRequest {
     private String saleId;
     private Field field;
     private String newValue;
@@ -49,6 +50,11 @@ public class EditSaleRequest extends Request {
 
     public Sale getSale() {
         return Sale.getSaleById(saleId);
+    }
+
+    @Override
+    public Seller getSeller() {
+        return getSale().getSeller();
     }
 
     public Field getField() {

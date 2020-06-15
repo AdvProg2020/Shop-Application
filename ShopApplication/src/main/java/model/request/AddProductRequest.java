@@ -2,9 +2,10 @@ package model.request;
 
 import model.Product;
 import model.SubProduct;
+import model.account.Seller;
 import model.database.Database;
 
-public class AddProductRequest extends Request {
+public class AddProductRequest extends Request implements SellerRequest {
     private Product product;
     private SubProduct subProduct;
 
@@ -38,6 +39,11 @@ public class AddProductRequest extends Request {
 
     public SubProduct getSubProduct() {
         return subProduct;
+    }
+
+    @Override
+    public Seller getSeller() {
+        return subProduct.getSeller();
     }
 
     @Override
