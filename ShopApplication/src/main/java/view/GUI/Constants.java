@@ -38,6 +38,7 @@ public final class Constants {
         public static final String productsMenu = "ProductsMenu";
         public static final String adminCategoryManagingMenu = "AdminCategoryManagingMenu";
         public static final String adminDiscountManagingMenu = "AdminDiscountManagingMenu";
+        public static final String discountPopUp = "discountPopUp";
         public static final String adminUserManagingMenu = "AdminUserManagingMenu";
         public static final String adminProductManagingMenu =  "AdminProductManagingMenu";
         public static final String adminRequestManagingMenu = "AdminRequestManagingMenu";

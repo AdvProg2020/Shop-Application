@@ -794,11 +794,15 @@ public class Controllers {
             }
 
             private void showDiscountDetails() {
-                //TODO
-            }
+                ArrayList<String[]> customersWithCode;
+                try {
+                    customersWithCode = adminController.peopleWhoHaveThisDiscount(code);
+                } catch (Exceptions.DiscountCodeException e) {
+                    e.printStackTrace();
+                    return;
+                }
 
-            public String getId() {
-                return id;
+                DiscountPopUpController.display(new Stage(), this, customersWithCode);
             }
 
             public Property percentageProperty() {
@@ -807,34 +811,6 @@ public class Controllers {
                 return percentageProperty;
             }
 
-            public void setId(String id) {
-                this.id = id;
-            }
-
-
-            public Button getDetail() {
-                return detail;
-            }
-
-            public Button getRemove() {
-                return remove;
-            }
-
-            public double getPercentage() {
-                return percentage;
-            }
-
-            public void setPercentage(double percentage) {
-                this.percentage = percentage;
-            }
-
-            public int getMaximumUse() {
-                return maximumUse;
-            }
-
-            public void setMaximumUse(int maximumUse) {
-                this.maximumUse = maximumUse;
-            }
         }
 
         public static void display() {
@@ -873,6 +849,28 @@ public class Controllers {
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detail"));
 
             discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
+        }
+    }
+
+    public static class DiscountPopUpController implements Initializable{
+
+
+
+        public static void display(Stage popUp, AdminDiscountManagingMenu.DiscountWrapper discount, ArrayList<String[]> customers) {
+            popUp.setTitle("Discount Details");
+            popUp.setResizable(false);
+            popUp.setWidth(750);
+            popUp.setHeight(500);
+            popUp.centerOnScreen();
+
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.discountPopUp + ".fxml"));
+            DiscountPopUpController controller = loader.getController();
+            //controller.setInfo();
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
         }
     }
 
