@@ -11,6 +11,11 @@
     -fx-font-size: 14;
 }
 
+#message-label {
+    -fx-text-fill: red;
+    -fx-font-size: 14;
+}
+
 .text-field {
     -fx-background-color: transparent;
     -fx-font-size: 14;
