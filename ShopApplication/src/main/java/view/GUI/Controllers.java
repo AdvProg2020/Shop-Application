@@ -357,8 +357,8 @@ public class Controllers {
         }
     }
 
-    public static class LoginPopUpController implements Initializable {
-        private static Stage popUpStage;
+    public static class LoginPopupController implements Initializable {
+        private static Stage PopupStage;
 
         @FXML
         private ImageView usernameIcon;
@@ -382,21 +382,21 @@ public class Controllers {
         private Hyperlink registerLink;
 
         public static void display(Stage stage) {
-            popUpStage = stage;
-            popUpStage.setWidth(480);
-            popUpStage.setHeight(320);
-            popUpStage.setResizable(false);
+            PopupStage = stage;
+            PopupStage.setWidth(480);
+            PopupStage.setHeight(320);
+            PopupStage.setResizable(false);
             try {
-                popUpStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.loginPopUp)));
+                PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.loginPopup)));
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
             try {
-                popUpStage.initModality(Modality.APPLICATION_MODAL);
+                PopupStage.initModality(Modality.APPLICATION_MODAL);
             } catch (Exception e) {
             }
-            popUpStage.show();
+            PopupStage.show();
         }
 
         @Override
@@ -428,19 +428,19 @@ public class Controllers {
                 try {
                     mainController.login(username, password);
                     View.type.set(mainController.getType());
-                    popUpStage.close();
+                    PopupStage.close();
                 } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
                     errorLBL.setText("invalid username or password");
                     errorLBL.setTextFill(Color.RED);
                     ex.printStackTrace();
                 }
             });
-            registerLink.setOnAction(e -> RegisterPopUpController.display(popUpStage));
+            registerLink.setOnAction(e -> RegisterPopupController.display(PopupStage));
         }
     }
 
-    public static class RegisterPopUpController implements Initializable {
-        private static Stage popUpStage;
+    public static class RegisterPopupController implements Initializable {
+        private static Stage PopupStage;
 
         @FXML
         private Hyperlink customerLoginHL;
@@ -545,10 +545,10 @@ public class Controllers {
         private Button sellerRegister;
 
         public static void display(Stage stage) {
-            popUpStage = stage;
-            popUpStage.setHeight(390);
+            PopupStage = stage;
+            PopupStage.setHeight(390);
             try {
-                popUpStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopUp)));
+                PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopup)));
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -620,7 +620,7 @@ public class Controllers {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
                                 customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null);
-                        LoginPopUpController.display(popUpStage);
+                        LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
                         customerUsernameError.setVisible(true);
@@ -635,7 +635,7 @@ public class Controllers {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
                                 sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null);
-                        LoginPopUpController.display(popUpStage);
+                        LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
                         sellerUsernameError.setVisible(true);
@@ -644,8 +644,8 @@ public class Controllers {
                     }
                 }
             });
-            sellerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
-            customerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
+            sellerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
+            customerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
         }
 
         private boolean areCustomerFieldsAvailable() {
@@ -771,7 +771,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            addDiscountBTN.setOnAction(e -> AddDiscountPopUpController.display(new Stage()));
+            addDiscountBTN.setOnAction(e -> AddDiscountPopupController.display(new Stage()));
             initDiscounts();
             initTable();
         }
@@ -838,7 +838,7 @@ public class Controllers {
                     return;
                 }
 
-                DiscountPopUpController.display(new Stage(), this, customersWithCode);
+                DiscountPopupController.display(new Stage(), this, customersWithCode);
             }
 
             public Property percentageProperty() {
@@ -850,19 +850,19 @@ public class Controllers {
         }
     }
 
-    public static class DiscountPopUpController implements Initializable{
+    public static class DiscountPopupController implements Initializable{
 
 
 
-        public static void display(Stage popUp, AdminDiscountManagingMenu.DiscountWrapper discount, ArrayList<String[]> customers) {
-            popUp.setTitle("Discount Details");
-            popUp.setResizable(false);
-            popUp.setWidth(750);
-            popUp.setHeight(500);
-            popUp.centerOnScreen();
+        public static void display(Stage Popup, AdminDiscountManagingMenu.DiscountWrapper discount, ArrayList<String[]> customers) {
+            Popup.setTitle("Discount Details");
+            Popup.setResizable(false);
+            Popup.setWidth(750);
+            Popup.setHeight(500);
+            Popup.centerOnScreen();
 
-            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.discountPopUp + ".fxml"));
-            DiscountPopUpController controller = loader.getController();
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.adminDiscountManagingPopup + ".fxml"));
+            DiscountPopupController controller = loader.getController();
             //controller.setInfo();
         }
 
@@ -872,8 +872,8 @@ public class Controllers {
         }
     }
 
-    public static class AddDiscountPopUpController implements Initializable {
-        public static void display(Stage popUpStage) {
+    public static class AddDiscountPopupController implements Initializable {
+        public static void display(Stage PopupStage) {
 
         }
         @Override
@@ -1217,7 +1217,7 @@ public class Controllers {
         }
 
         @FXML
-        private Button manageUsers;
+        private Button manageAccounts;
 
         @FXML
         private Button manageProducts;
@@ -1237,7 +1237,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            manageUsers.setOnAction(e -> AdminUserManagingMenuController.display());
+            manageAccounts.setOnAction(e -> AdminAccountManagingMenuController.display());
             manageCategories.setOnAction(e -> AdminCategoryManagingMenu.display());
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenu.display());
             manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
@@ -1245,10 +1245,10 @@ public class Controllers {
         }
     }
 
-    public static class AdminUserManagingMenuController implements Initializable {
+    public static class AdminAccountManagingMenuController implements Initializable {
 
         public static void display() {
-            View.setMainPane(Constants.FXMLs.adminUserManagingMenu);
+            View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
         }
 
         @Override
@@ -1346,7 +1346,7 @@ public class Controllers {
     }
 
 
-    public static class SellerManagingMenu implements Initializable {
+    public static class SellerManagingMenuController implements Initializable {
         @FXML
         private Button manageProducts;
 
@@ -1432,7 +1432,7 @@ public class Controllers {
         private void initActions() {
             logoBTN.setOnAction(e -> MainMenu.display());
             accountBTN.setOnAction(e -> PersonalInfoMenuController.display());
-            loginBTN.setOnAction(e -> LoginPopUpController.display(new Stage()));
+            loginBTN.setOnAction(e -> LoginPopupController.display(new Stage()));
             cartBTN.setOnAction(e -> ShoppingCartMenuController.display());
             searchBTN.setOnAction(e -> search(searchField.getText()));
             manageBTN.setOnAction(e -> {
