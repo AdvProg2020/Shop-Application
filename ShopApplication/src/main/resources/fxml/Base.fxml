@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" stylesheets="@../css/Base.css"
@@ -33,9 +33,6 @@
                         <StackPane.margin>
                             <Insets right="50.0"/>
                         </StackPane.margin>
-                        <padding>
-                            <Insets right="50.0"/>
-                        </padding>
                     </Button>
                     <Button id="account-button" fx:id="accountBTN" mnemonicParsing="false" styleClass="base-button"
                             visible="false"/>
