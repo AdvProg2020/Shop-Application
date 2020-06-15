@@ -8,13 +8,14 @@
     <center>
         <BorderPane>
             <center>
-                <TabPane maxWidth="-Infinity" stylesheets="@../css/TableView.css">
+                <TabPane maxWidth="-Infinity" stylesheets="@../css/TabPane.css">
                     <Tab closable="false" text="Pending Requests">
                         <VBox alignment="CENTER" maxWidth="-Infinity">
                             <padding>
                                 <Insets bottom="20.0" left="20.0" right="20.0"/>
                             </padding>
-                            <TableView fx:id="pending" focusTraversable="false" VBox.vgrow="ALWAYS">
+                            <TableView fx:id="pending" focusTraversable="false" stylesheets="@../css/TableView.css"
+                                       VBox.vgrow="ALWAYS">
                                 <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                                 </columnResizePolicy>
@@ -51,7 +52,8 @@
                             <padding>
                                 <Insets bottom="20.0" left="20.0" right="20.0"/>
                             </padding>
-                            <TableView fx:id="archive" focusTraversable="false" VBox.vgrow="ALWAYS">
+                            <TableView fx:id="archive" focusTraversable="false" stylesheets="@../css/TableView.css"
+                                       VBox.vgrow="ALWAYS">
                                 <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                                 </columnResizePolicy>
