@@ -50,11 +50,13 @@ public abstract class Request implements ModelBasic {
 
     @Override
     public boolean isSuspended() {
+        if (status != RequestStatus.PENDING) return true;
+
         boolean invalid = isInvalid();
         if (invalid)
             terminate();
 
-        return (invalid || status != RequestStatus.PENDING);
+        return invalid;
     }
 
     @Override

@@ -345,7 +345,7 @@ public class Controllers {
         }
     }
 
-    public static class LoginPopUpController implements Initializable {
+    public static class LoginPopupController implements Initializable {
         private static Stage popUpStage;
 
         @FXML
@@ -423,11 +423,11 @@ public class Controllers {
                     ex.printStackTrace();
                 }
             });
-            registerLink.setOnAction(e -> RegisterPopUpController.display(popUpStage));
+            registerLink.setOnAction(e -> RegisterPopupController.display(popUpStage));
         }
     }
 
-    public static class RegisterPopUpController implements Initializable {
+    public static class RegisterPopupController implements Initializable {
         private static Stage popUpStage;
 
         @FXML
@@ -608,7 +608,7 @@ public class Controllers {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
                                 customerEmail.getText(), customerPhoneNumber.getText(), Double.parseDouble(customerBalance.getText()), null);
-                        LoginPopUpController.display(popUpStage);
+                        LoginPopupController.display(popUpStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
                         customerUsernameError.setVisible(true);
@@ -623,7 +623,7 @@ public class Controllers {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
                                 sellerEmail.getText(), sellerPhoneNumber.getText(), Double.parseDouble(sellerBalance.getText()), null);
-                        LoginPopUpController.display(popUpStage);
+                        LoginPopupController.display(popUpStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
                         sellerUsernameError.setVisible(true);
@@ -632,8 +632,8 @@ public class Controllers {
                     }
                 }
             });
-            sellerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
-            customerLoginHL.setOnAction(e -> LoginPopUpController.display(popUpStage));
+            sellerLoginHL.setOnAction(e -> LoginPopupController.display(popUpStage));
+            customerLoginHL.setOnAction(e -> LoginPopupController.display(popUpStage));
         }
 
         private boolean areCustomerFieldsAvailable() {
@@ -1112,6 +1112,95 @@ public class Controllers {
         }
     }
 
+    public static class AdminCategoryManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminDiscountManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminRequestManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminProductManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminAccountManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class SellerSaleManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class SellerProductManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class CategoryPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+
     public static class SellerManagingMenu implements Initializable {
         public static void display() {
 
@@ -1185,7 +1274,7 @@ public class Controllers {
         private void initActions() {
             logoBTN.setOnAction(e -> MainMenu.display());
             accountBTN.setOnAction(e -> PersonalInfoMenuController.display());
-            loginBTN.setOnAction(e -> LoginPopUpController.display(new Stage()));
+            loginBTN.setOnAction(e -> LoginPopupController.display(new Stage()));
             cartBTN.setOnAction(e -> ShoppingCartMenuController.display());
             searchBTN.setOnAction(e -> search(searchField.getText()));
             manageBTN.setOnAction(e -> {

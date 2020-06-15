@@ -17,6 +17,7 @@ public class Seller extends Account {
     private transient Set<String> subProductIds;
     private transient Set<String> saleIds;
     private transient Set<String> sellLogIds;
+    private transient Set<String> pendingRequestIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone,
                   String storeName, double balance) {
@@ -46,6 +47,7 @@ public class Seller extends Account {
         if (!suspended) {
             subProductIds = new HashSet<>();
             saleIds = new HashSet<>();
+            pendingRequestIds = new HashSet<>();
         }
     }
 

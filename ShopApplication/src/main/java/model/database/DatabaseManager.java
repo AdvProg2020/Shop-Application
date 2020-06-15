@@ -12,6 +12,7 @@ import model.log.SellLog;
 import model.request.Request;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -61,18 +62,24 @@ public class DatabaseManager implements Database {
     }
 
     private void updateRequests() {
-        update(FileNames.REQUEST, Request.class, Request.getRequestArchive());
-        update(FileNames.REQUEST, Request.class, Request.getPendingRequests());
+        ArrayList<Request> requests = new ArrayList<>();
+        requests.addAll(Request.getRequestArchive());
+        requests.addAll(Request.getPendingRequests());
+        update(FileNames.REQUEST, Request.class, requests);
     }
 
     private void updateDiscounts() {
-        update(FileNames.DISCOUNT, Discount.class, Discount.getDiscountArchive());
-        update(FileNames.DISCOUNT, Discount.class, Discount.getActiveDiscounts());
+        ArrayList<Discount> discounts = new ArrayList<>();
+        discounts.addAll(Discount.getDiscountArchive());
+        discounts.addAll(Discount.getActiveDiscounts());
+        update(FileNames.DISCOUNT, Discount.class, discounts);
     }
 
     private void updateSales() {
-        update(FileNames.SALE, Sale.class, Sale.getSaleArchive());
-        update(FileNames.SALE, Sale.class, Sale.getActiveSales());
+        ArrayList<Sale> sales = new ArrayList<>();
+        sales.addAll(Sale.getSaleArchive());
+        sales.addAll(Sale.getActiveSales());
+        update(FileNames.SALE, Sale.class, sales);
     }
 
     private void updateCategories() {
