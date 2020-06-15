@@ -13,10 +13,12 @@ public abstract class Request implements ModelBasic {
     protected String requestId;
     protected Date date;
     protected RequestStatus status;
+    protected boolean suspended;
 
     public Request() {
         status = RequestStatus.PENDING;
         date = new Date();
+        suspended = false;
         initialize();
     }
 
@@ -41,21 +43,33 @@ public abstract class Request implements ModelBasic {
             requestId = ModelUtilities.generateNewId(Request.class.getSimpleName(), lastNum);
         allRequests.put(requestId, this);
         lastNum++;
+
+        if (!suspended && this instanceof SellerRequest)
+            ((SellerRequest) this).getSeller().addRequest(requestId);
     }
 
     @ModelOnly
     public void terminate() {
+        suspend();
         allRequests.remove(requestId);
     }
 
     @Override
     public boolean isSuspended() {
-        if (status != RequestStatus.PENDING) return true;
-        boolean invalid = isInvalid();
-        if (invalid)
+        if (suspended) return true;
+        if (isInvalid()) {
             terminate();
+            return true;
+        }
 
-        return invalid;
+        return false;
+    }
+
+    public void suspend() {
+        if (this instanceof SellerRequest)
+            ((SellerRequest) this).getSeller().removeRequest(requestId);
+
+        suspended = true;
     }
 
     @Override
@@ -79,10 +93,12 @@ public abstract class Request implements ModelBasic {
 
     public void accept() {
         status = RequestStatus.ACCEPTED;
+        suspend();
     }
 
     public void decline() {
         status = RequestStatus.DECLINED;
+        suspend();
     }
 
     public abstract void updateDatabase(Database database);

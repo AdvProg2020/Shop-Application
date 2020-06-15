@@ -2,7 +2,6 @@ package view.GUI;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -23,7 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Sale;
 
 import java.io.IOException;
 import java.net.URL;
@@ -426,16 +424,15 @@ public class Controllers {
                 String username = usernameField.getText();
                 String password = passwordField.getText();
                 if (username == null || password == null) return;
-                else {
-                    try {
-                        mainController.login(username, password);
-                        View.type.set(mainController.getType());
-                        popUpStage.close();
-                    } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
-                        errorLBL.setText("invalid username or password");
-                        errorLBL.setTextFill(Color.RED);
-                        ex.printStackTrace();
-                    }
+
+                try {
+                    mainController.login(username, password);
+                    View.type.set(mainController.getType());
+                    popUpStage.close();
+                } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
+                    errorLBL.setText("invalid username or password");
+                    errorLBL.setTextFill(Color.RED);
+                    ex.printStackTrace();
                 }
             });
             registerLink.setOnAction(e -> RegisterPopUpController.display(popUpStage));
@@ -729,8 +726,14 @@ public class Controllers {
         }
     }
 
+    public static class SellerLogsMenu {
+
+    }
+
 
     public static class AdminDiscountManagingMenu implements Initializable {
+        private static ArrayList<String> allDiscounts = new ArrayList<>();
+        private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
         @FXML
         private TableView<DiscountWrapper> discounts;
 
@@ -760,58 +763,6 @@ public class Controllers {
 
         @FXML
         private Button addDiscountBTN;
-
-        private static ArrayList<String> allDiscounts = new ArrayList<>();
-        private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
-
-        private  class DiscountWrapper {
-            String id;
-            String code;
-            double percentage;
-            int maximumUse;
-            Button detail = new Button();
-            Button remove = new Button();
-            String startDate;
-            String endDate;
-           ;
-
-            DiscountWrapper(String id, String code, String startDate, String endDate, double percentage, int maximumUse) {
-                this.id = id;
-                this.code = code;
-                this.percentage = percentage;
-                this.maximumUse = maximumUse;
-                detail.setOnAction(e -> showDiscountDetails());
-                remove.setOnAction(e -> {
-                    try {
-                        adminController.removeDiscountCode(code);
-                        discounts.getItems().remove(this);
-                    } catch (Exceptions.DiscountCodeException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                detail.getStyleClass().add("detail-button");
-                remove.getStyleClass().add("remove-button");
-            }
-
-            private void showDiscountDetails() {
-                ArrayList<String[]> customersWithCode;
-                try {
-                    customersWithCode = adminController.peopleWhoHaveThisDiscount(code);
-                } catch (Exceptions.DiscountCodeException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                DiscountPopUpController.display(new Stage(), this, customersWithCode);
-            }
-
-            public Property percentageProperty() {
-                SimpleStringProperty percentageProperty = new SimpleStringProperty();
-                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
-                return percentageProperty;
-            }
-
-        }
 
         public static void display() {
             allDiscounts = adminController.viewDiscountCodes();
@@ -849,6 +800,53 @@ public class Controllers {
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detail"));
 
             discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
+        }
+
+        private  class DiscountWrapper {
+            String id;
+            String code;
+            double percentage;
+            int maximumUse;
+            Button detail = new Button();
+            Button remove = new Button();
+            String startDate;
+            String endDate;
+
+            DiscountWrapper(String id, String code, String startDate, String endDate, double percentage, int maximumUse) {
+                this.id = id;
+                this.code = code;
+                this.percentage = percentage;
+                this.maximumUse = maximumUse;
+                detail.setOnAction(e -> showDiscountDetails());
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeDiscountCode(code);
+                    } catch (Exceptions.DiscountCodeException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                detail.getStyleClass().add("detail-button");
+                remove.getStyleClass().add("remove-button");
+            }
+
+            private void showDiscountDetails() {
+                ArrayList<String[]> customersWithCode;
+                try {
+                    customersWithCode = adminController.peopleWhoHaveThisDiscount(code);
+                } catch (Exceptions.DiscountCodeException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                DiscountPopUpController.display(new Stage(), this, customersWithCode);
+            }
+
+            public Property percentageProperty() {
+                SimpleStringProperty percentageProperty = new SimpleStringProperty();
+                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
+                return percentageProperty;
+            }
+
         }
     }
 
@@ -1259,7 +1257,96 @@ public class Controllers {
         }
     }
 
-    public static class SellerManagingMenuController implements Initializable {
+    public static class AdminCategoryManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminDiscountManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminRequestManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminProductManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminAccountManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class SellerSaleManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class SellerProductManagingPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class CategoryPopup implements Initializable {
+        public static void display() {
+
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+
+    public static class SellerManagingMenu implements Initializable {
         @FXML
         private Button manageProducts;
 
@@ -1268,7 +1355,6 @@ public class Controllers {
 
         @FXML
         private Button sellLogs;
-
         public static void display() {
             View.setMainPane(Constants.FXMLs.sellerManagingMenu);
         }
@@ -1360,9 +1446,8 @@ public class Controllers {
             });
             backBTN.setOnAction(e -> {
                 if (View.getStackTrace().size() < 2) return;
-                else {
-                    View.goBack();
-                }
+
+                View.goBack();
             });
         }
 

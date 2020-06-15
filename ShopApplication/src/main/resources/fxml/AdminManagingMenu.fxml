@@ -1,35 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" fx:controller="view.GUI.Controllers$AdminManagingMenuController">
-   <center>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Region HBox.hgrow="ALWAYS"/>
-            <VBox alignment="CENTER" spacing="20.0">
-               <children>
-                  <Label text="Admin Managing Menu">
-                     <VBox.margin>
-                        <Insets bottom="10.0"/>
-                     </VBox.margin>
-                  </Label>
-                  <Button fx:id="manageUsers" mnemonicParsing="false" text="Manage Users"/>
-                  <Button fx:id="manageProducts" mnemonicParsing="false" text="Manage Products"/>
-                  <Button fx:id="manageCategories" mnemonicParsing="false" text="Manage Categories"/>
-                  <Button fx:id="manageDiscounts" mnemonicParsing="false" text="Manage Discounts"/>
-                  <Button fx:id="manageRequests" mnemonicParsing="false" text="Manage Requests"/>
-               </children>
-               <HBox.margin>
-                  <Insets left="20.0" right="20.0"/>
-               </HBox.margin>
-            </VBox>
-            <Region layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS"/>
-         </children>
-      </HBox>
-   </center>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingIntro.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.Controllers$AdminManagingMenu">
+    <center>
+        <VBox alignment="CENTER" spacing="40.0">
+            <Button id="accounts-button" fx:id="manageAccounts" mnemonicParsing="false" text="Manage Accounts"/>
+            <Button id="products-button" fx:id="manageProducts" mnemonicParsing="false" text="Manage Products"/>
+            <Button id="categories-button" fx:id="manageCategories" mnemonicParsing="false" text="Manage Categories"/>
+            <Button id="sales-button" fx:id="manageDiscounts" mnemonicParsing="false" text="Manage Discounts"/>
+            <Button id="requests-button" fx:id="manageRequests" mnemonicParsing="false" text="Manage Requests"/>
+        </VBox>
+    </center>
 </BorderPane>

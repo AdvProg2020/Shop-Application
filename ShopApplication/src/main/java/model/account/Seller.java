@@ -6,6 +6,7 @@ import model.Sale;
 import model.SubProduct;
 import model.log.SellLog;
 import model.request.AddSellerRequest;
+import model.request.Request;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ public class Seller extends Account {
     private transient Set<String> subProductIds;
     private transient Set<String> saleIds;
     private transient Set<String> sellLogIds;
+    private transient Set<String> pendingRequestIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone,
                   String storeName, double balance) {
@@ -46,6 +48,7 @@ public class Seller extends Account {
         if (!suspended) {
             subProductIds = new HashSet<>();
             saleIds = new HashSet<>();
+            pendingRequestIds = new HashSet<>();
         }
     }
 
@@ -128,6 +131,25 @@ public class Seller extends Account {
     @ModelOnly
     public void addSellLog(String sellLogId) {
         sellLogIds.add(sellLogId);
+    }
+
+    public List<Request> getPendingRequests() {
+        List<Request> requests = new ArrayList<>();
+        for (String requestId : pendingRequestIds) {
+            requests.add(Request.getRequestById(requestId));
+        }
+
+        return requests;
+    }
+
+    @ModelOnly
+    public void addRequest(String requestId) {
+        pendingRequestIds.add(requestId);
+    }
+
+    @ModelOnly
+    public void removeRequest(String requestId) {
+        pendingRequestIds.remove(requestId);
     }
 }
 

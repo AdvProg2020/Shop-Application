@@ -1,6 +1,6 @@
 .action-button {
     -fx-background-color: #e9e9e9;
-    -fx-border-color: #e0e0e0;
+    -fx-border-color: #d0d0d0;
     -fx-border-width: 0.5;
     -fx-border-radius: 3px;
     -fx-font-size: 14;
@@ -8,6 +8,10 @@
 
 .action-button:hover {
     -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+.action-button:pressed {
+    -fx-background-color: #d0d0d0;
 }
 
 #add-button {

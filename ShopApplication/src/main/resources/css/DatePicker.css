@@ -1,0 +1,81 @@
+* {
+    color-1: #29292D;
+    color-2: green;
+}
+
+.date-picker {
+    -fx-background-color: transparent;
+}
+
+.date-picker .button {
+    -fx-background-color: transparent;
+}
+
+.date-picker .combo-box {
+    -fx-background-insets: 0px;
+    -fx-border-width: 0px;
+    -fx-background-color: white;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #e0e0e0;
+    -fx-border-width: 0.5;
+    -fx-border-color: darkgrey;
+    -fx-background-radius: 0 5 5 0;
+    -fx-border-radius: 0 5 5 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-font-size: 16;
+    -fx-background-color: color-1;
+}
+
+.date-picker .arrow-button:hover .arrow {
+    -fx-background-color: color-2;
+}
+
+.date-picker .button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-pref-height: 35px;
+    -fx-pref-width: 35px;
+}
+
+.date-picker .button:hover {
+    -fx-border-color: transparent;
+    -fx-pref-height: 35px;
+    -fx-pref-width: 35px;
+}
+
+.date-picker .button .arrow:pressed {
+    -fx-border-color: transparent;
+    -fx-pref-height: 35px;
+    -fx-pref-width: 35px;
+}
+
+.date-picker .cell {
+    -fx-background-color: whitesmoke;
+    -fx-background-radius: 5;
+    -fx-pref-width: 20px;
+    -fx-pref-height: 25px;
+}
+
+.date-picker .cell:hover {
+    -fx-background-color: color-1;
+    -fx-text-fill: lightgrey;
+    -fx-pref-width: 20px;
+    -fx-pref-height: 25px;
+}
+
+.date-picker .cell:focused {
+    -fx-background-color: color-2;
+    -fx-text-fill: white;
+    -fx-pref-width: 20px;
+    -fx-pref-height: 25px;
+}
+
+.date-picker-popup {
+    -fx-padding: 2;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}

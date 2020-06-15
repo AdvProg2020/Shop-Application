@@ -12,7 +12,11 @@
 }
 
 .button:hover {
+    -fx-effect: dropshadow(one-pass-box, whitesmoke, 6, 0.0, 0, 0);
+}
 
+.button:pressed {
+    -fx-opacity: 80%;
 }
 
 .details-button {
@@ -41,7 +45,9 @@
 .table-view {
     -fx-focus-traversable: false;
     -fx-background-color: table-color-1;
+    -fx-background-insets: 1px;
     -fx-background-radius: 5px;
+    -fx-padding: 0 0 6 0;
 }
 
 .table-view .column-header,
@@ -105,44 +111,4 @@
     -fx-min-height: 0;
     -fx-pref-height: 0;
     -fx-max-height: 0;
-}
-
-.tab-pane:focused {
-}
-
-.tab-pane .tab-header-area .tab-header-background {
-    -fx-opacity: 0;
-}
-
-.tab-pane .tab-header-area {
-    -fx-padding: 0 0 0 40;
-}
-
-.tab-pane .tab {
-    -fx-background-color: table-color-1;
-    -fx-opacity: 80%;
-    -fx-background-insets: 1 3 1 3;
-    -fx-padding: 4 7 4 7px;
-    -fx-background-radius: 5 5 5 5;
-    -fx-font-size: 14;
-    -fx-focus-color: transparent;
-}
-
-
-.tab-pane .tab:selected {
-    -fx-background-color: table-color-2;
-    -fx-background-radius: 5 5 0 0;
-    -fx-opacity: 100%;
-    -fx-background-insets: 0;
-}
-
-.tab .tab-label {
-    -fx-alignment: CENTER;
-    -fx-text-fill: text-color-2;
-    -fx-font-weight: bold;
-}
-
-.tab:selected .tab-label {
-    -fx-alignment: CENTER;
-    -fx-text-fill: text-color-1;
 }

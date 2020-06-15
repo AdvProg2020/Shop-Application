@@ -1,0 +1,43 @@
+* {
+    table-color-1: #29292D;
+    table-color-2: green;
+    text-color-1: white;
+    text-color-2: lightgrey
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane .tab-header-area {
+    -fx-padding: 0 0 0 40;
+}
+
+.tab-pane .tab {
+    -fx-background-color: table-color-1;
+    -fx-opacity: 80%;
+    -fx-background-insets: 3 3 3 3;
+    -fx-padding: 7 7 7 7px;
+    -fx-background-radius: 5 5 5 5;
+    -fx-font-size: 14;
+    -fx-focus-color: transparent;
+}
+
+
+.tab-pane .tab:selected {
+    -fx-background-color: table-color-2;
+    -fx-background-radius: 5 5 0 0;
+    -fx-opacity: 100%;
+    -fx-background-insets: 0;
+}
+
+.tab .tab-label {
+    -fx-alignment: center;
+    -fx-text-fill: text-color-2;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: center;
+    -fx-text-fill: text-color-1;
+}
