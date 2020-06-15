@@ -3,9 +3,9 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="800.0"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="650.0"
             stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="view.GUI.Controllers$AdminDiscountManagingPopupController">
+            fx:controller="view.GUI.Controllers$AdminDiscountManagingPopup">
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="40.0"/>
     </padding>
@@ -13,12 +13,10 @@
         <VBox BorderPane.alignment="CENTER">
             <TableView fx:id="customers" maxWidth="-Infinity" stylesheets="@../css/TableView.css">
                 <columns>
-                    <TableColumn fx:id="removeCOL" editable="false" maxWidth="50.0" minWidth="50.0" prefWidth="50.0"
+                    <TableColumn fx:id="selectCOL" editable="false" maxWidth="50.0" minWidth="50.0" prefWidth="50.0"
                                  resizable="false" sortable="false"/>
-                    <TableColumn fx:id="usernameCOL" maxWidth="200.0" minWidth="200.0" prefWidth="200.0"
-                                 text="Customer"/>
-                    <TableColumn fx:id="countCOL" editable="false" maxWidth="150.0" minWidth="150.0" prefWidth="150.0"
-                                 text="Count"/>
+                    <TableColumn fx:id="usernameCOL" maxWidth="250.0" minWidth="250.0" prefWidth="250.0"
+                                 text="Name-Brand"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -34,7 +32,7 @@
     <center>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <Region VBox.vgrow="ALWAYS"/>
-            <GridPane alignment="CENTER" vgap="10.0" VBox.vgrow="NEVER">
+            <GridPane alignment="CENTER" VBox.vgrow="ALWAYS">
                 <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.60001220703126" minWidth="10.0"
                                        prefWidth="84.80003662109375"/>
@@ -47,16 +45,14 @@
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 </rowConstraints>
                 <Label layoutX="10.0" layoutY="47.0" styleClass="property-label" text="ID:"/>
                 <Label fx:id="idLBL" layoutX="110.0" layoutY="47.0" styleClass="value-label" text="Label"
                        GridPane.columnIndex="1"/>
-                <Label styleClass="property-label" text="Code:" GridPane.rowIndex="1"/>
-                <Label styleClass="property-label" text="Percentage:" GridPane.rowIndex="2"/>
-                <Label styleClass="property-label" text="Max:" GridPane.rowIndex="3"/>
-                <Label styleClass="property-label" text="Start Date:" GridPane.rowIndex="4"/>
-                <Label styleClass="property-label" text="End Date:" GridPane.rowIndex="5"/>
+                <Label styleClass="property-label" text="Percentage:" GridPane.rowIndex="1"/>
+                <Label styleClass="property-label" text="Max:" GridPane.rowIndex="2"/>
+                <Label styleClass="property-label" text="Start Date:" GridPane.rowIndex="3"/>
+                <Label styleClass="property-label" text="End Date:" GridPane.rowIndex="4"/>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="property-box" GridPane.columnIndex="1"
                       GridPane.rowIndex="1">
                     <GridPane.margin>
@@ -65,7 +61,12 @@
                     <padding>
                         <Insets right="5.0"/>
                     </padding>
-                    <TextField fx:id="codeField"/>
+                    <TextField fx:id="percentageField" prefWidth="125.0" promptText="0 - 100"/>
+                    <Label alignment="CENTER" text="\%" textAlignment="CENTER">
+                        <HBox.margin>
+                            <Insets/>
+                        </HBox.margin>
+                    </Label>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="property-box" GridPane.columnIndex="1"
                       GridPane.rowIndex="2">
@@ -75,32 +76,17 @@
                     <padding>
                         <Insets right="5.0"/>
                     </padding>
-                    <TextField fx:id="percentageField" prefWidth="145.0" promptText="0 - 100"/>
-                    <Label alignment="CENTER" text="\%" textAlignment="CENTER">
-                        <HBox.margin>
-                            <Insets/>
-                        </HBox.margin>
-                    </Label>
-                </HBox>
-                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="property-box" GridPane.columnIndex="1"
-                      GridPane.rowIndex="3">
-                    <GridPane.margin>
-                        <Insets bottom="10.0" top="10.0"/>
-                    </GridPane.margin>
-                    <padding>
-                        <Insets right="5.0"/>
-                    </padding>
-                    <TextField fx:id="maxField" prefWidth="145.0"/>
+                    <TextField fx:id="maxField" prefWidth="125.0"/>
                     <Label alignment="CENTER" text="\$" textAlignment="CENTER"/>
                 </HBox>
-                <HBox alignment="CENTER_LEFT" styleClass="property-box" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <HBox alignment="CENTER_LEFT" styleClass="property-box" GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <GridPane.margin>
                         <Insets bottom="10.0" top="10.0"/>
                     </GridPane.margin>
                     <DatePicker fx:id="startDate" editable="false" promptText="select date..."
                                 stylesheets="@../css/DatePicker.css"/>
                 </HBox>
-                <HBox alignment="CENTER_LEFT" styleClass="property-box" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <HBox alignment="CENTER_LEFT" styleClass="property-box" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <GridPane.margin>
                         <Insets bottom="10.0" top="10.0"/>
                     </GridPane.margin>

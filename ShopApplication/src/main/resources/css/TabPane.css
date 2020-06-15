@@ -10,7 +10,7 @@
 }
 
 .tab-pane .tab-header-area {
-    -fx-padding: 0 0 0 40;
+    -fx-padding: 0 0 0 15;
 }
 
 .tab-pane .tab {
