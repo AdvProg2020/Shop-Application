@@ -24,6 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -732,6 +733,7 @@ public class Controllers {
 
 
     public static class AdminDiscountManagingMenu implements Initializable {
+
         private static ArrayList<String> allDiscounts = new ArrayList<>();
         private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
         @FXML
@@ -771,7 +773,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            addDiscountBTN.setOnAction(e -> AddDiscountPopupController.display(new Stage()));
+            addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(new Stage(), null, null));
             initDiscounts();
             initTable();
         }
@@ -838,7 +840,7 @@ public class Controllers {
                     return;
                 }
 
-                DiscountPopupController.display(new Stage(), this, customersWithCode);
+                AdminDiscountManagingPopupController.display(new Stage(), this, customersWithCode);
             }
 
             public Property percentageProperty() {
@@ -846,38 +848,6 @@ public class Controllers {
                 percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
                 return percentageProperty;
             }
-
-        }
-    }
-
-    public static class DiscountPopupController implements Initializable{
-
-
-
-        public static void display(Stage Popup, AdminDiscountManagingMenu.DiscountWrapper discount, ArrayList<String[]> customers) {
-            Popup.setTitle("Discount Details");
-            Popup.setResizable(false);
-            Popup.setWidth(750);
-            Popup.setHeight(500);
-            Popup.centerOnScreen();
-
-            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.adminDiscountManagingPopup + ".fxml"));
-            DiscountPopupController controller = loader.getController();
-            //controller.setInfo();
-        }
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-
-        }
-    }
-
-    public static class AddDiscountPopupController implements Initializable {
-        public static void display(Stage PopupStage) {
-
-        }
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
 
         }
     }
@@ -1247,6 +1217,17 @@ public class Controllers {
 
     public static class AdminAccountManagingMenuController implements Initializable {
 
+        public static ArrayList<CustomerWrapper> customers = new ArrayList<>();
+        public static ArrayList<SellerWrapper> sellers = new ArrayList<>();
+
+        public  class CustomerWrapper {
+
+        }
+
+        public  class SellerWrapper {
+
+        }
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
         }
@@ -1268,9 +1249,57 @@ public class Controllers {
         }
     }
 
-    public static class AdminDiscountManagingPopup implements Initializable {
-        public static void display() {
+    public static class AdminDiscountManagingPopupController implements Initializable {
 
+        @FXML
+        private TableView<?> customers;
+
+        @FXML
+        private TableColumn<?, ?> usernameCOL;
+
+        @FXML
+        private TableColumn<?, ?> countCOL;
+
+        @FXML
+        private TableColumn<?, ?> removeCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Label idLBL;
+
+        @FXML
+        private TextField codeField;
+
+        @FXML
+        private TextField percentageField;
+
+        @FXML
+        private TextField maxField;
+
+        @FXML
+        private DatePicker startDate;
+
+        @FXML
+        private DatePicker endDate;
+
+        @FXML
+        private Button addBTN;
+
+        @FXML
+        private Button editBTN;
+
+        public static void display(Stage Popup, AdminDiscountManagingMenu.DiscountWrapper discount, ArrayList<String[]> customers) {
+            Popup.setTitle("Discount Details");
+            Popup.setResizable(false);
+            Popup.setWidth(750);
+            Popup.setHeight(500);
+            Popup.centerOnScreen();
+
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.adminDiscountManagingPopup + ".fxml"));
+            AdminDiscountManagingPopupController controller = loader.getController();
+            //controller.setInfo();
         }
 
         @Override
@@ -1463,8 +1492,6 @@ public class Controllers {
                     }, View.type)
             );
             //TODO: temporary
-            loginBTN.setText("Login");
-            manageBTN.setText("manage");
         }
 
         private void search(String input) {
