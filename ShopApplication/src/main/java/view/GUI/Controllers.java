@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -44,6 +45,52 @@ public class Controllers {
         adminController = View.adminController;
         sellerController = View.sellerController;
         customerController = View.customerController;
+    }
+
+    public static class ProductBoxController {
+
+        @FXML
+        private Label sale;
+
+        @FXML
+        private ImageView image;
+
+        @FXML
+        private Label name;
+
+        @FXML
+        private Label rating;
+
+        @FXML
+        private Label priceBefore;
+
+        @FXML
+        private Label priceAfter;
+
+        private String[] subProduct;
+
+        public static Parent createBox(String[] subProduct) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                ProductBoxController pbc = loader.getController();
+                pbc.setInfo(subProduct);
+                pbc.setAction(p);
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private void setInfo(String[] subProductInfo) {
+            subProduct = subProductInfo;
+        }
+
+        private void setAction(Parent p) {
+            p.setOnMouseClicked(e -> ProductDetailMenu.display(subProduct));
+        }
     }
 
     public static class PersonalInfoMenuController implements Initializable {
@@ -902,7 +949,7 @@ public class Controllers {
             TextField countField;
             HBox countGroup = new HBox();
             SimpleDoubleProperty totalPrice;
-            Button remove = new Button();
+            Button remove;
 
             public SubProductWrapper(String id, int index, String nameBrandSeller, double unitPrice, int count) {
                 this.id = id;
@@ -912,15 +959,12 @@ public class Controllers {
                 this.unitPrice = unitPrice;
                 this.countProperty.set(count);
                 this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
+                remove = new Button();
                 remove.getStyleClass().add("remove-button");
                 remove.setOnAction(e -> {
                     try {
-                        mainController.decreaseProductInCart(id, countProperty.get());
+                        mainController.removeSubProduct(this.id);
                     } catch (Exceptions.InvalidSubProductIdException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.NotSubProductIdInTheCartException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.UnAuthorizedAccountException ex) {
                         ex.printStackTrace();
                     }
                 });
@@ -992,18 +1036,21 @@ public class Controllers {
                     event.consume();
             });
 
+            iniTable();
+            initLabels();
+            initActions();
+        }
+
+        private void initActions() {
             purchaseBTN.setOnAction(e -> PurchaseMenuController.display());
 
             clearCartBTN.setOnAction(e -> {
                 if (cartProducts.size() == 0) {
                     errorLBL.setText("the cart is already empty!");
                 } else {
-                    //mainController.clearCart();
+                    mainController.clearCart();
                 }
             });
-
-            iniTable();
-            initLabels();
         }
 
         private void initLabels() {
@@ -1108,14 +1155,6 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-
-        }
-    }
-
-    public static class ProductBoxController implements Initializable {
-
-        @Override
-        public void initialize(URL url, ResourceBundle resourceBundle) {
 
         }
     }
