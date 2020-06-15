@@ -7,28 +7,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Region HBox.hgrow="ALWAYS" />
-            <VBox alignment="CENTER" spacing="20.0">
-               <children>
-                  <Label text="Seller Managing Menu">
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Button fx:id="manageProducts" mnemonicParsing="false" text="Manage Products" />
-                  <Button fx:id="manageSales" mnemonicParsing="false" text="Manage Sales" />
-                  <Button fx:id="sellLogs" mnemonicParsing="false" text="Sell Logs" />
-               </children>
-               <HBox.margin>
-                  <Insets left="20.0" right="20.0" />
-               </HBox.margin>
-            </VBox>
-            <Region layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-   </center>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.Controllers$SellerManagingMenuController">
+    <center>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <Label text="Seller Managing Menu">
+                            <VBox.margin>
+                                <Insets bottom="10.0"/>
+                            </VBox.margin>
+                        </Label>
+                        <Button fx:id="manageProducts" mnemonicParsing="false" text="Manage Products"/>
+                        <Button fx:id="manageSales" mnemonicParsing="false" text="Manage Sales"/>
+                        <Button fx:id="sellLogs" mnemonicParsing="false" text="Sell Logs"/>
+                    </children>
+                    <HBox.margin>
+                        <Insets left="20.0" right="20.0"/>
+                    </HBox.margin>
+                </VBox>
+                <Region layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+    </center>
 </BorderPane>

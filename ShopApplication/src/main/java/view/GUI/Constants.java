@@ -44,5 +44,9 @@ public final class Constants {
         public static final String adminManagingMenu = "AdminManagingMenu";
         public static final String purchaseMenu = "PurchaseMenu";
         public static final String productBox = "ProductBox";
+        public static final String sellerManagingMenu = "SellerManagingMenu";
+        public static final String sellerProductManagingMenu = "SellerProductManagingMenu";
+        public static final String sellerSaleManagingMenu = "SellerSaleManagingMenu";
+        public static final String sellerLogsMenu = "SellerLogsMenu";
     }
 }

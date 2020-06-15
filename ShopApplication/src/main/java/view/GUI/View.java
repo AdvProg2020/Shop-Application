@@ -137,12 +137,34 @@ public class View extends Application {
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));
         setMainPane(Constants.FXMLs.mainMenu);
 
-//        try {
-//            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
-//        } catch (Exceptions.UsernameAlreadyTakenException e) {
+        //create a seller and accept request by admin.
+        try {
+            mainController.creatAccount(Constants.sellerUserType, "sdana", "a", "a", "a", "1@1.com", "1",0, null);
+        } catch (Exceptions.UsernameAlreadyTakenException e) {
+            e.printStackTrace();
+        } catch (Exceptions.AdminRegisterException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            adminController.acceptRequest(adminController.getPendingRequests().get(0)[0], true);
+         //   mainController.creatAccount(Constants.customerUserType, "dana", "a", "a", "a", "1@1.com", "23", 12, null);
+//            adminController.deleteUsername("dana");
+        } catch (Exceptions.InvalidRequestIdException e) {
+            e.printStackTrace();
+//        } catch (Exceptions.ManagerDeleteException e) {
+//            e.printStackTrace();
+//        } catch (Exceptions.ExistingProductException e) {
+//            e.printStackTrace();
+//        } catch (Exceptions.InvalidCategoryException e) {
 //            e.printStackTrace();
 //        } catch (Exceptions.AdminRegisterException e) {
 //            e.printStackTrace();
-//        }
+//        } catch (Exceptions.UsernameAlreadyTakenException e) {
+//            e.printStackTrace();
+//        } catch (Exceptions.UsernameDoesntExistException e) {
+//            e.printStackTrace();
+        }
+
     }
 }

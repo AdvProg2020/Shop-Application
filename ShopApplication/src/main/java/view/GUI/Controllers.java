@@ -2,6 +2,7 @@ package view.GUI;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -22,7 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import view.consoleView.Menus;
+import model.Sale;
 
 import java.io.IOException;
 import java.net.URL;
@@ -763,7 +764,7 @@ public class Controllers {
         private static ArrayList<String> allDiscounts = new ArrayList<>();
         private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
 
-        private static class DiscountWrapper {
+        private  class DiscountWrapper {
             String id;
             String code;
             double percentage;
@@ -783,6 +784,7 @@ public class Controllers {
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
+                        discounts.getItems().remove(this);
                     } catch (Exceptions.DiscountCodeException ex) {
                         ex.printStackTrace();
                     }
@@ -923,12 +925,122 @@ public class Controllers {
     }
 
 
-    public static class SellerSalesMenu {
+    public static class SellerSalesManagingMenuController implements Initializable {
+        private ArrayList<SaleWrapper> sellerSales = new ArrayList<>();
 
+        @FXML
+        private TableView<SaleWrapper> sales;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> idCol;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> percentageCOL;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> startDateCOL;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> endDateCOL;
+
+        @FXML
+        private TableColumn<SaleWrapper, Button> detailsCOL;
+
+        @FXML
+        private TableColumn<SaleWrapper, Button> removeCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button addSaleBTN;
+
+        private class SaleWrapper {
+            String id, seller, startDate, endDate;
+            double percentage;
+            int numOfProducts;
+            Button remove = new Button();
+            Button details = new Button();
+
+            public SaleWrapper(String[] info) {
+                this(info[0], info[1], info[3], info[4], Double.parseDouble(info[2]), Integer.parseInt(info[5]));
+            }
+
+            public SaleWrapper(String id, String seller, String startDate, String endDate, double percentage, int numOfProducts) {
+                this.id = id;
+                this.seller = seller;
+                this.startDate = startDate;
+                this.endDate = endDate;
+                this.percentage = percentage;
+                this.numOfProducts = numOfProducts;
+
+                remove.getStyleClass().add("remove-button");
+                remove.setOnAction(e -> {
+                    //TODO:
+                    //sellerController.sale
+                    sales.getItems().remove(this);
+                });
+                details.getStyleClass().add("detail-button");
+                //TODO:
+                //details.setOnAction(e -> );
+
+            }
+
+            public Property percentageProperty() {
+                SimpleStringProperty percentageProperty = new SimpleStringProperty();
+                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
+                return percentageProperty;
+            }
+        }
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.sellerSaleManagingMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            for (String[] sale : sellerController.viewSales()) {
+                sellerSales.add(new SaleWrapper(sale));
+            }
+
+            initTable();
+            initActions();
+        }
+
+        private void initTable() {
+            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            percentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+            startDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+            endDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+        }
+
+        private void initActions() {
+            //TODO:
+            //addSaleBTN.setOnAction(e -> );
+        }
     }
 
-    public static class SellerProductMenu {
+    public static class SellerProductManagingMenuController implements Initializable{
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.sellerProductManagingMenu);
+        }
 
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class SellerLogMenuController implements Initializable {
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.sellerLogsMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+        }
     }
 
     //add product detail menu
@@ -940,7 +1052,7 @@ public class Controllers {
         private SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
-        private static class SubProductWrapper {
+        private class SubProductWrapper {
             String id;
             int index;
             Button nameBrandSeller;
@@ -964,6 +1076,7 @@ public class Controllers {
                 remove.setOnAction(e -> {
                     try {
                         mainController.removeSubProduct(this.id);
+                        productsTable.getItems().remove(this);
                     } catch (Exceptions.InvalidSubProductIdException ex) {
                         ex.printStackTrace();
                     }
@@ -1149,13 +1262,27 @@ public class Controllers {
     }
 
     public static class SellerManagingMenuController implements Initializable {
-        public static void display() {
+        @FXML
+        private Button manageProducts;
 
+        @FXML
+        private Button manageSales;
+
+        @FXML
+        private Button sellLogs;
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.sellerManagingMenu);
         }
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            initActions();
+        }
 
+        private void initActions() {
+            manageProducts.setOnAction(e -> SellerProductManagingMenuController.display());
+            manageSales.setOnAction(e -> SellerSalesManagingMenuController.display());
         }
     }
 
@@ -1228,6 +1355,7 @@ public class Controllers {
                 switch (mainController.getType()) {
                     case Constants.adminUserType:
                         AdminManagingMenuController.display();
+                        break;
                     case Constants.sellerUserType:
                         SellerManagingMenuController.display();
                 }

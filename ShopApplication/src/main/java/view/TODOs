@@ -1,6 +1,7 @@
 A: afa T: talaee M: mohammadi
 
 T: salesMenu and productsMenu compare  product box (PRIORITY)
+T: addSalePopUp saleDetailPopUp (PRIORITY)
 A & T: addRating to product detail menu addReview button (popUp)
 A & T: booting add admin.
 
@@ -29,8 +30,3 @@ A: isPopUp for digestMenus
 T: mainController.clearCart();
 T: remove column for shopping cart menu
 A & T & M : add tabs to discount, sale, account managing menu
-
-
-
-
-
