@@ -2,6 +2,7 @@ A: afa T: talaee M: mohammadi
 
 T: salesMenu and productsMenu compare  product box (PRIORITY)
 T: addSalePopUp saleDetailPopUp (PRIORITY)
+T: getDefaultSubProductOfAProduct (returns subProductPack)
 A & T: addRating to product detail menu addReview button (popUp)
 A & T: booting add admin.
 

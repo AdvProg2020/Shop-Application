@@ -24,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +88,7 @@ public class Controllers {
         }
 
         private void setAction(Parent p) {
-            p.setOnMouseClicked(e -> ProductDetailMenu.display(subProduct));
+            p.setOnMouseClicked(e -> ProductDetailMenu.display(subProduct[4]));
         }
     }
 
@@ -332,28 +331,7 @@ public class Controllers {
     }
 
     public static class ProductDetailMenu {
-        public static void display(String[] subProduct) {
-
-        }
-    }
-
-    //TODO: deprecated: added in product detail menu
-    public static class ProductReviewMenu {
-
-    }
-
-    //TODO: deprecated: added in products menu and sale menu
-    public static class SortMenu {
-
-    }
-
-    //TODO: deprecated: added in products menu and sale menu
-    public static class FilterMenu {
-
-    }
-
-    public static class SaleMenu {
-        public static void display() {
+        public static void display(String productId) {
 
         }
     }
@@ -719,11 +697,80 @@ public class Controllers {
         }
     }
 
+    public static class AdminProductManagingMenu implements Initializable{
+        @FXML
+        private TableView<ProductWrapper> productsTable;
 
+        @FXML
+        private TableColumn<ProductWrapper, String> idCol;
 
-    public static class AdminProductManagingMenu {
+        @FXML
+        private TableColumn<ProductWrapper, String> nameCOL;
+
+        @FXML
+        private TableColumn<ProductWrapper, String> categoryCOL;
+
+        @FXML
+        private TableColumn<ProductWrapper, Button> detailsCOL;
+
+        @FXML
+        private TableColumn<ProductWrapper, Button> removeCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        private ArrayList<ProductWrapper> allProducts;
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminProductManagingMenu);
+        }
+
+        private class ProductWrapper {
+            String id;
+            String nameBrand;
+            String category;
+            Button detailBTN = new Button();
+            Button removeBTN = new Button();
+
+            public ProductWrapper(String[] productPack) {
+                this(productPack[0], productPack[1] + "-" + productPack[2], productPack[3]);
+            }
+
+            public ProductWrapper(String id, String nameBrand, String category) {
+                this.id = id;
+                this.nameBrand = nameBrand;
+                this.category = category;
+
+                detailBTN.setOnAction(e -> ProductDetailMenu.display(id));
+                detailBTN.getStyleClass().add("detail-button");
+
+                removeBTN.setOnAction(e -> {
+                    try {
+                        adminController.removeProduct(id);
+                    } catch (Exceptions.InvalidProductIdException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                removeBTN.getStyleClass().add("remove-button");
+            }
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            allProducts =  new ArrayList<>();
+            for (String[] product : adminController.manageAllProducts()) {
+                allProducts.add(new ProductWrapper(product));
+            }
+
+            initTable();
+        }
+
+        private void initTable() {
+            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            nameCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            categoryCOL.setCellValueFactory(new PropertyValueFactory<>("category"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailBTN"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
         }
     }
 
@@ -1019,8 +1066,8 @@ public class Controllers {
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
         private class SubProductWrapper {
-            String id;
-            int index;
+            String subProductId;
+            String productId;
             Button nameBrandSeller;
             double unitPrice;
             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
@@ -1029,11 +1076,17 @@ public class Controllers {
             SimpleDoubleProperty totalPrice;
             Button remove;
 
-            public SubProductWrapper(String id, int index, String nameBrandSeller, double unitPrice, int count) {
-                this.id = id;
-                this.index = index;
+            public SubProductWrapper(String[] productInCartPack) {
+                this(productInCartPack[0], productInCartPack[1],
+                        productInCartPack[2] + " " + productInCartPack[3] + "(" + productInCartPack[4] + ")",
+                        Double.parseDouble(productInCartPack[7]), Integer.parseInt(productInCartPack[6]));
+            }
+
+            public SubProductWrapper(String id, String productId, String nameBrandSeller, double unitPrice, int count) {
+                this.subProductId = id;
+                this.productId =productId;
                 this.nameBrandSeller = new Button(nameBrandSeller);
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(cartProducts.get(index - 1)));
+                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(productId));
                 this.unitPrice = unitPrice;
                 this.countProperty.set(count);
                 this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
@@ -1041,26 +1094,12 @@ public class Controllers {
                 remove.getStyleClass().add("remove-button");
                 remove.setOnAction(e -> {
                     try {
-                        mainController.removeSubProduct(this.id);
+                        mainController.removeSubProduct(this.subProductId);
                         productsTable.getItems().remove(this);
                     } catch (Exceptions.InvalidSubProductIdException ex) {
                         ex.printStackTrace();
                     }
                 });
-            }
-
-
-            public Button getNameBrandSeller() {
-                return nameBrandSeller;
-            }
-
-            public double getUnitPrice() {
-                return unitPrice;
-            }
-
-
-            public double getTotalPrice() {
-                return totalPrice.get();
             }
 
             public SimpleDoubleProperty getTotalPriceProperty() {
@@ -1151,11 +1190,8 @@ public class Controllers {
             initCols();
 
             //TODO: name-brand(storeName)
-            int index = 0;
             for (String[] cartProduct : cartProducts) {
-                subProducts.add(new SubProductWrapper(cartProduct[0], ++index,
-                        cartProduct[2] + "-" + cartProduct[3] + "(" + cartProduct[5] + ")",
-                        Double.valueOf(cartProduct[7]), Integer.valueOf(cartProduct[6])));
+                subProducts.add(new SubProductWrapper(cartProduct));
             }
 
             productsTable.setItems(FXCollections.observableArrayList(subProducts));
@@ -1252,10 +1288,10 @@ public class Controllers {
     public static class AdminDiscountManagingPopupController implements Initializable {
 
         @FXML
-        private TableView<?> customers;
+        private TableView<AdminAccountManagingMenuController.CustomerWrapper> customers;
 
         @FXML
-        private TableColumn<?, ?> usernameCOL;
+        private TableColumn<AdminAccountManagingMenuController.CustomerWrapper, String> usernameCOL;
 
         @FXML
         private TableColumn<?, ?> countCOL;

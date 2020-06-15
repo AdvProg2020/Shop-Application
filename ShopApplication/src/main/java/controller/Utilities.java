@@ -49,19 +49,21 @@ public class Utilities {
 
 
         public static String[] product(Product product) {
-            String[] productPack = new String[3];
+            String[] productPack = new String[4];
             productPack[0] = product.getId();
             productPack[1] = product.getName();
             productPack[2] = product.getBrand();
+            productPack[3] = product.getCategory().getName();
             return productPack;
         }
 
         public static String[] subProduct(SubProduct subProduct) {
-            String[] subProductPack = new String[4];
+            String[] subProductPack = new String[5];
             subProductPack[0] = subProduct.getId();
             subProductPack[1] = subProduct.getSeller().getStoreName();
             subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
             subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
+            subProductPack[4] = subProduct.getProduct().getId();
             return subProductPack;
         }
 
