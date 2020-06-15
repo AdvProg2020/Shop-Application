@@ -59,7 +59,7 @@ public abstract class Account implements ModelBasic {
         return false;
     }
 
-    public void suspend() {
+    protected void suspend() {
         suspended = true;
     }
 

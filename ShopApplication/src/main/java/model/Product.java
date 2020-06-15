@@ -173,6 +173,18 @@ public class Product implements ModelBasic {
         subProductIds.remove(subProductId);
     }
 
+    public SubProduct getDefaultSubProduct() {
+        SubProduct defaultSP = null;
+        for (SubProduct subProduct : getSubProducts()) {
+            if (defaultSP == null) defaultSP = subProduct;
+
+            if (subProduct.getRemainingCount() > 0 && subProduct.getPriceWithSale() < defaultSP.getPriceWithSale())
+                defaultSP = subProduct;
+        }
+
+        return defaultSP;
+    }
+
     public String getPropertyValue(String property) {
         String value = propertyValues.get(property);
         if (value == null)
@@ -226,6 +238,7 @@ public class Product implements ModelBasic {
         return sum / ratingIds.size();
     }
 
+    //TODO: delete
     public double getMinPrice() {
         double minimum = Double.MAX_VALUE;
         for (SubProduct subProduct : getSubProducts()) {
@@ -237,6 +250,7 @@ public class Product implements ModelBasic {
         return minimum;
     }
 
+    //TODO: delete
     public double getMaxPrice() {
         double maximum = 0.0;
         for (SubProduct subProduct : getSubProducts()) {
