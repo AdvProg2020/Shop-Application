@@ -3,10 +3,7 @@ package view.GUI;
 import controller.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -774,12 +773,12 @@ public class Controllers {
         }
     }
 
-    public static class SellerLogsMenu {
+    public static class SellerLogsManagingMenuController {
 
     }
 
 
-    public static class AdminDiscountManagingMenu implements Initializable {
+    public static class AdminDiscountManagingMenuController implements Initializable {
 
         private static ArrayList<String> allDiscounts = new ArrayList<>();
         private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
@@ -820,7 +819,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(new Stage(), null, null));
+            addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(new Stage(), null));
             initDiscounts();
             initTable();
         }
@@ -835,7 +834,7 @@ public class Controllers {
                     e.printStackTrace();
                     return;
                 }
-                allDiscountWrappers.add(new DiscountWrapper(details[0], details[1], details[2], details[3], Double.valueOf(details[5]), Integer.valueOf(details[4])));
+                allDiscountWrappers.add(new DiscountWrapper(details));
             }
         }
 
@@ -855,17 +854,21 @@ public class Controllers {
             String id;
             String code;
             double percentage;
-            int maximumUse;
+            double maximumAmount;
             Button detail = new Button();
             Button remove = new Button();
             String startDate;
             String endDate;
 
-            DiscountWrapper(String id, String code, String startDate, String endDate, double percentage, int maximumUse) {
+            public DiscountWrapper(String[] details) {
+                this(details[0], details[1], details[2], details[3], Double.parseDouble(details[5]), Double.parseDouble(details[4]));
+            }
+
+            DiscountWrapper(String id, String code, String startDate, String endDate, double percentage, double maximumAmount) {
                 this.id = id;
                 this.code = code;
                 this.percentage = percentage;
-                this.maximumUse = maximumUse;
+                this.maximumAmount = maximumAmount;
                 detail.setOnAction(e -> showDiscountDetails());
                 remove.setOnAction(e -> {
                     try {
@@ -887,15 +890,15 @@ public class Controllers {
                     return;
                 }
 
-                AdminDiscountManagingPopupController.display(new Stage(), this, customersWithCode);
+                AdminDiscountManagingPopupController.display(new Stage(), this);
             }
 
             public Property percentageProperty() {
                 SimpleStringProperty percentageProperty = new SimpleStringProperty();
-                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
+                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("% (")
+                        .concat(new SimpleDoubleProperty(maximumAmount)).concat(")"));
                 return percentageProperty;
             }
-
         }
     }
 
@@ -1078,7 +1081,7 @@ public class Controllers {
 
             public SubProductWrapper(String[] productInCartPack) {
                 this(productInCartPack[0], productInCartPack[1],
-                        productInCartPack[2] + " " + productInCartPack[3] + "(" + productInCartPack[4] + ")",
+                        productInCartPack[2] + " " + productInCartPack[3] + " (" + productInCartPack[4] + ")",
                         Double.parseDouble(productInCartPack[7]), Integer.parseInt(productInCartPack[6]));
             }
 
@@ -1245,7 +1248,7 @@ public class Controllers {
         private void initActions() {
             manageAccounts.setOnAction(e -> AdminAccountManagingMenuController.display());
             manageCategories.setOnAction(e -> AdminCategoryManagingMenu.display());
-            manageDiscounts.setOnAction(e -> AdminDiscountManagingMenu.display());
+            manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
             manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
             manageRequests.setOnAction(e -> AdminRequestManagingMenu.display());
         }
@@ -1285,19 +1288,19 @@ public class Controllers {
         }
     }
 
-    public static class AdminDiscountManagingPopupController implements Initializable {
+    public static class AdminDiscountManagingPopupController {
 
         @FXML
-        private TableView<AdminAccountManagingMenuController.CustomerWrapper> customers;
+        private TableView<CustomerWrapper> customersTable;
 
         @FXML
-        private TableColumn<AdminAccountManagingMenuController.CustomerWrapper, String> usernameCOL;
+        private TableColumn<CustomerWrapper, String> usernameCOL;
 
         @FXML
-        private TableColumn<?, ?> countCOL;
+        private TableColumn<CustomerWrapper, TextField> countCOL;
 
         @FXML
-        private TableColumn<?, ?> removeCOL;
+        private TableColumn<CustomerWrapper, CheckBox> removeCOL;
 
         @FXML
         private Label errorLBL;
@@ -1326,21 +1329,211 @@ public class Controllers {
         @FXML
         private Button editBTN;
 
-        public static void display(Stage Popup, AdminDiscountManagingMenu.DiscountWrapper discount, ArrayList<String[]> customers) {
-            Popup.setTitle("Discount Details");
-            Popup.setResizable(false);
-            Popup.setWidth(750);
-            Popup.setHeight(500);
-            Popup.centerOnScreen();
+        @FXML
+        private Button discardBTN;
+
+        @FXML
+        private HBox saveDiscardHBox;
+
+        private AdminDiscountManagingMenuController.DiscountWrapper discount;
+        private ArrayList<CustomerWrapper> allCustomers;
+
+        private SimpleBooleanProperty codeFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty percentageFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty maxFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
+
+        private class CustomerWrapper {
+            CheckBox hasCode;
+            String id;
+            String username;
+            TextField count;
+
+            public CustomerWrapper(String[] customerPack, boolean hasCode) {
+                this(customerPack[2], customerPack[0], Integer.parseInt(customerPack[1]), true);
+
+            }
+
+            public CustomerWrapper(String id, String username, int count, boolean hasCode) {
+                if (hasCode) this.count.setText(count + "");
+                else this.count.setText("5");
+                this.id = id;
+                this.username = username;
+                this.hasCode.setSelected(hasCode);
+                this.count.editableProperty().bind(this.hasCode.selectedProperty());
+                this.count.opacityProperty().bind(
+                        Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
+                );
+                //TODO: count listener and save changes and add handle customers
+            }
+
+            public Property hasCodeProperty() {
+                return hasCode.selectedProperty();
+            }
+        }
+
+        public static void display(Stage popup, AdminDiscountManagingMenuController.DiscountWrapper discount) {
+            popup.setTitle("Discount Details");
+            popup.setResizable(false);
+            popup.setWidth(750);
+            popup.setHeight(500);
+            popup.centerOnScreen();
 
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.adminDiscountManagingPopup + ".fxml"));
             AdminDiscountManagingPopupController controller = loader.getController();
-            //controller.setInfo();
+            controller.setInfo(discount);
         }
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
+        private void setInfo(AdminDiscountManagingMenuController.DiscountWrapper discount) {
+            this.discount = discount;
+            ArrayList<String[]> customersWithCode = null;
+            try {
+                customersWithCode = adminController.peopleWhoHaveThisDiscount(discount.id);
+            } catch (Exceptions.DiscountCodeException e) {
+                e.printStackTrace();
+                return;
+            }
 
+            allCustomers = new ArrayList<>();
+            for (String[] customer : customersWithCode) {
+                allCustomers.add(new CustomerWrapper(customer, true));
+            }
+
+            ArrayList<String[]> allUsers = adminController.manageUsers();
+            allUsers.removeAll(customersWithCode.stream().map(s -> new String[]{s[2], s[0]}).collect(Collectors.toList()));
+
+            for (String[] user: allUsers) {
+                allCustomers.add(new CustomerWrapper(user[2], user[0], 0, false));
+            }
+
+            initBindings();
+            initVisibility();
+            initActions();
+            initTable();
+            initValues();
+
+        }
+
+        private void initBindings() {
+            codeFieldChanged.bind(Bindings.when(codeField.textProperty().isEqualTo(discount.code)).then(false).otherwise(true));
+            percentageFieldChanged.bind(Bindings.when(percentageField.textProperty().isEqualTo(discount.percentage + "")).then(false).otherwise(true));
+            maxFieldChanged.bind(Bindings.when(maxField.textProperty().isEqualTo(discount.maximumAmount + "")).then(false).otherwise(true));
+            startDateChanged.bind(Bindings.when(startDate.accessibleTextProperty().isEqualTo(discount.startDate)).then(false).otherwise(true));
+            endDateChanged.bind(Bindings.when(endDate.accessibleTextProperty().isEqualTo(discount.endDate)).then(false).otherwise(true));
+        }
+
+        private void initVisibility() {
+            boolean isDetail = discount != null;
+            saveDiscardHBox.setVisible(isDetail);
+            addBTN.setVisible( ! isDetail);
+            codeField.editableProperty().setValue( ! isDetail);
+
+            editBTN.opacityProperty().bind(
+                    Bindings.createObjectBinding(() -> {
+                        if (codeFieldChanged.get() || percentageFieldChanged.get() || maxFieldChanged.get()
+                        || endDateChanged.get() || startDateChanged.get()) return 1;
+                        else return 0.5;
+                    }, codeFieldChanged, percentageFieldChanged, maxFieldChanged, endDateChanged, startDateChanged)
+            );
+
+            editBTN.disableProperty().bind(editBTN.opacityProperty().isEqualTo(1));
+            discardBTN.opacityProperty().bind(editBTN.opacityProperty());
+            discardBTN.disableProperty().bind(editBTN.disableProperty());
+        }
+
+        private void initActions() {
+            addBTN.setOnAction(e -> {
+                if (fieldValidation()) {
+                    try {
+                        adminController.createDiscountCode(codeField.getText(), startDate.getValue().toString(), endDate.getValue().toString(),
+                                Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()),
+                                allCustomers.stream().map(c -> new String[] {c.id, String.valueOf(c.count)}).collect(Collectors.toCollection(ArrayList::new)));
+
+                        customersTable.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidAccountsForDiscount invalidAccountsForDiscount) {
+                        invalidAccountsForDiscount.printStackTrace();
+                    } catch (Exceptions.InvalidFormatException ex) {
+                        ex.printStackTrace();
+                        printError("Invalid date format question mark.");
+                    } catch (Exceptions.ExistingDiscountCodeException ex) {
+                        ex.printStackTrace();
+                        printError("This code already exists!");
+                    }
+                }
+            });
+
+            editBTN.setOnAction(e -> {
+                if (fieldValidation()) {
+                    try {
+                        if (percentageFieldChanged.get()) {
+                            adminController.editDiscountCode(discount.code, "percentage", percentageField.getText());
+                            discount.percentage = Double.parseDouble(percentageField.getText());
+                        }
+                        if (maxFieldChanged.get()) {
+                            adminController.editDiscountCode(discount.code, "maximum amount", maxField.getText());
+                            discount.maximumAmount = Double.parseDouble(maxField.getText());
+                        }
+                        if (startDateChanged.get()) {
+                            adminController.editDiscountCode(discount.code, "start date", startDate.getAccessibleText());
+                            discount.startDate = startDate.getAccessibleText();
+                        }
+                        if (endDateChanged.get()) {
+                            adminController.editDiscountCode(discount.code, "end date", endDate.getAccessibleText());
+                            discount.endDate = endDate.getAccessibleText();
+                        }
+
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Changes saved successfully!");
+                    } catch (Exception ex) {
+                        printError(ex.getMessage());
+                    }
+                }
+            });
+
+            discardBTN.setOnAction(e -> initValues());
+        }
+
+        private void printError(String errorText) {
+            errorLBL.setTextFill(Color.RED);
+            errorLBL.setText(errorText);
+        }
+
+        private boolean fieldValidation() {
+            if ( ! codeField.getText().matches("^\\w+$")) {
+                printError("Invalid discount code! use only characters, digits and _ .");
+                return false;
+            } else if ( ! percentageField.getText().matches(Constants.doublePattern)) {
+                printError("Invalid percentage! enter a floating point number (ex. 50.5)");
+                return false;
+            } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
+                printError("Invalid maximum amount! enter a floating point number (ex. 40.5)");
+                return false;
+            } else if ( ! startDate.accessibleTextProperty().get().matches(Constants.datePattern)) {
+                printError("Please enter a valid starting date");
+                return false;
+            } else if (( ! endDate.accessibleTextProperty().get().matches(Constants.datePattern) ) || endDate.getValue().compareTo(startDate.getValue()) <= 0) {
+                printError("Please enter a valid ending date.");
+                return false;
+            } else return true;
+        }
+
+        private void initTable() {
+            //CheckBox hasCode;
+            //            String id;
+            //            String username;
+            //            TextField count;
+            countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("hasCode"));
+            usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+        }
+
+        private void initValues() {
+            codeField.setText(discount.code);
+            percentageField.setText(discount.percentage + "");
+            maxField.setText(discount.maximumAmount + "");
+            startDate.setValue(LocalDate.parse(discount.startDate));
+            endDate.setValue(LocalDate.parse(discount.endDate));
         }
     }
 

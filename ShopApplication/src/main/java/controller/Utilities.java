@@ -276,9 +276,10 @@ public class Utilities {
         }
 
         public static String[] customerDiscountRemainingCount(Customer customer, int count) {
-            String[] personPack = new String[2];
+            String[] personPack = new String[3];
             personPack[0] = customer.getUsername();
             personPack[1] = Integer.toString(count);
+            personPack[2] = customer.getId();
             return personPack;
         }
 

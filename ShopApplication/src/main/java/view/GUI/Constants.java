@@ -8,7 +8,7 @@ public final class Constants {
     public static final String usernamePattern = "(\\w+)";
     public static final String doublePattern = "(\\d+(?:\\.\\d+)?)";
     public static final String percentagePattern = "%?" + doublePattern + "%?";
-    public static final String datePattern = "\\d{2}[/-]\\d{2}[/-]\\d{2}";
+    public static final String datePattern = "\\d{2}[/-]\\d{2}[/-]\\d{2, 4}";
     public static final String IRLNamePattern = "[a-zA-Z]+( [a-zA-Z]+)*";
     public static final String emailPattern = "^.+@.+\\.com$";
     public static final String phonePattern = "\\+?\\d{8,12}";

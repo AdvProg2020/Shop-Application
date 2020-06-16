@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="800.0"
-            stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1"
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="500.0" prefWidth="800.0" stylesheets="@../css/ManagingPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="view.GUI.Controllers$AdminDiscountManagingPopupController">
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="40.0"/>
@@ -24,7 +37,7 @@
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
             </TableView>
-            <Label id="message-label" fx:id="errorLBL" text="Possible Error">
+            <Label id="message-label" fx:id="errorLBL">
                 <VBox.margin>
                     <Insets bottom="22.0" left="10.0" top="22.0"/>
                 </VBox.margin>
@@ -114,7 +127,7 @@
                     <Insets/>
                 </VBox.margin>
                 <Button id="add-button" fx:id="addBTN" mnemonicParsing="false" text="Add" visible="false"/>
-                <HBox alignment="CENTER" spacing="10.0">
+                <HBox fx:id="saveDiscardHBox" alignment="CENTER" spacing="10.0">
                     <Button id="save-button" fx:id="editBTN" mnemonicParsing="false" text="Save changes"/>
                     <Button id="discard-button" fx:id="discardBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false"
                             text="Discard"/>

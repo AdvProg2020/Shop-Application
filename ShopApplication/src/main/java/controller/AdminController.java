@@ -123,7 +123,7 @@ public class AdminController {
     }
 
     public void createDiscountCode(String discountCode, String startDate, String endDate, double percentage,
-                                   int maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount, Exceptions.InvalidFormatException {
+                                   double maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount, Exceptions.InvalidFormatException {
 
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
