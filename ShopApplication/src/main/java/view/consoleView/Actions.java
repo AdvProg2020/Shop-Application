@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 //TODO: printSeparator();
 //TODO: sout completion messages. ex: .... done successfully.
@@ -1687,7 +1688,7 @@ public class Actions {
 
         private void refreshCurrentCategories() {
             currentCategories.clear();
-            currentCategories.addAll(adminController.manageCategories());
+            currentCategories.addAll(adminController.manageCategories().stream().map(c -> c[1]).collect(Collectors.toCollection(ArrayList::new)));
         }
 
         @Override

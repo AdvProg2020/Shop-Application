@@ -841,7 +841,8 @@ public class Controllers {
         }
         private void initDiscounts() {
             allDiscountWrappers.clear();
-            for (String discount : allDiscounts) {
+
+            for (String discount : adminController.viewDiscountCodes()) {
                 String[] details;
                 try {
                     details = adminController.viewDiscountCode(discount);
@@ -905,14 +906,39 @@ public class Controllers {
                     return;
                 }
 
-                AdminDiscountManagingPopupController.display(new Stage(), this);
+                AdminDiscountManagingPopupController.display( this);
             }
 
-            public Property percentageProperty() {
-                SimpleStringProperty percentageProperty = new SimpleStringProperty();
-                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("% (")
-                        .concat(new SimpleDoubleProperty(maximumAmount)).concat(")"));
-                return percentageProperty;
+            public String getId() {
+                return id;
+            }
+
+            public String getCode() {
+                return code;
+            }
+
+            public String getPercentage() {
+                return percentage + "%";
+            }
+
+            public double getMaximumAmount() {
+                return maximumAmount;
+            }
+
+            public Button getDetail() {
+                return detail;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+
+            public String getStartDate() {
+                return startDate;
+            }
+
+            public String getEndDate() {
+                return endDate;
             }
         }
     }
