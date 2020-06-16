@@ -1,7 +1,9 @@
 A: afa T: talaee M: mohammadi
 
 T: salesMenu and productsMenu compare  product box (PRIORITY)
-T: addSalePopUp saleDetailPopUp (PRIORITY)
+T: addSalePopUp saleDetailPopup AdminRegistrationPopup (PRIORITY)
+T: add customers with code edit field in discount.
+T (notice from afa): man yedone mainController.viewPersonalInfo(String username) baraye detail menu ezafe kardam.
 T: getDefaultSubProductOfAProduct (returns subProductPack)
 A & T: addRating to product detail menu addReview button (popUp)
 A & T: booting add admin.

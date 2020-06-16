@@ -176,14 +176,18 @@ public class Utilities {
         public static String[] personalInfo(Account account) {
             String[] info;
             if (account instanceof Customer) {
-                info = new String[7];
-                info[6] = Double.toString(((Customer) account).getBalance());
-            } else if (account instanceof Seller) {
                 info = new String[8];
+                info[6] = Double.toString(((Customer) account).getBalance());
+                info[7] = "Customer";
+            } else if (account instanceof Seller) {
+                info = new String[9];
                 info[6] = Double.toString(((Seller) account).getBalance());
                 info[7] = ((Seller) account).getStoreName();
-            } else
-                info = new String[6];
+                info[8] = "Seller";
+            } else {
+                info = new String[7];
+                info[6] = "Admin";
+            }
             info[0] = account.getUsername();
             info[1] = account.getClass().getSimpleName();
             info[2] = account.getFirstName();

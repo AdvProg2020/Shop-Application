@@ -12,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -20,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Category;
 
 import java.io.IOException;
 import java.net.URL;
@@ -91,7 +91,7 @@ public class Controllers {
         }
     }
 
-    public static class PersonalInfoMenuController implements Initializable {
+    public static class PersonalInfoMenuController {
 
         @FXML
         private ImageView ProfileIMG;
@@ -158,19 +158,33 @@ public class Controllers {
 
         private String[] personalInfo;
 
-        public static void display() {
-            View.setMainPane(Constants.FXMLs.personalInfoMenu);
+        public static void display(String username) {
+            if (username == null) {
+                View.setMainPane(Constants.FXMLs.personalInfoMenu);
+            } else {
+                Stage popup = new Stage();
+                FXMLLoader loader = new FXMLLoader(View.class.getResource( "/fxml/PersonalInfoMenu.fxml"));
+                try {
+                    Parent p = loader.load();
+                    PersonalInfoMenuController controller = loader.getController();
+                    controller.setInfo(username);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+            }
         }
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
+        private void setInfo(String username) {
             try {
-                personalInfo = mainController.viewPersonalInfo();
-            } catch (Exceptions.NotLoggedInException e) {
+                personalInfo = mainController.viewPersonalInfo(username);
+            } catch (Exceptions.UsernameDoesntExistException e) {
                 e.printStackTrace();
                 return;
             }
-            switch (View.type.get()) {
+
+            switch (personalInfo[personalInfo.length - 1]) {
                 case Constants.customerUserType:
                     initCustomer();
                     break;
@@ -361,8 +375,8 @@ public class Controllers {
 
         public static void display(Stage stage) {
             PopupStage = stage;
-            PopupStage.setWidth(480);
-            PopupStage.setHeight(320);
+            PopupStage.setWidth(600);
+            PopupStage.setHeight(400);
             PopupStage.setResizable(false);
             try {
                 PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.loginPopup)));
@@ -908,35 +922,181 @@ public class Controllers {
         }
     }
 
-    public static class AdminCategoryManagingMenu {
+    public static class AdminCategoryManagingMenuController implements Initializable{
 
-
-        @FXML
-        private TableView<String> categories;
+        ArrayList<CategoryWrapper> wrappers;
 
         @FXML
-        private TableColumn<?, ?> idCOL;
+        private TableView<CategoryWrapper> categories;
 
         @FXML
-        private TableColumn<?, ?> nameCOL;
+        private TableColumn<CategoryWrapper, String> idCOL;
 
         @FXML
-        private TableColumn<?, ?> parentCOL;
+        private TableColumn<CategoryWrapper, String> nameCOL;
 
         @FXML
-        private TableColumn<?, ?> detailsCOL;
+        private TableColumn<CategoryWrapper, String> parentCOL;
 
         @FXML
-        private TableColumn<?, ?> removeCOL;
+        private TableColumn<CategoryWrapper, Button> detailsCOL;
 
         @FXML
-        private Button addCategoryBTN;
+        private TableColumn<CategoryWrapper, Button> removeCOL;
 
         @FXML
         private Label errorLBL;
 
+        @FXML
+        private Button addCategoryBTN;
+
+        public class CategoryWrapper {
+            String id, name, parent;
+            Button remove, details;
+
+            public CategoryWrapper(String[] info) {
+                this(info[0], info[1], info[2]);
+            }
+
+            public CategoryWrapper(String id, String name, String parent) {
+                this.id = id;
+                this.name = name;
+                this.parent = parent;
+                remove = new Button();
+                details = new Button();
+
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeCategory(name);
+                        categories.getItems().remove(this);
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+                details.setOnAction(e -> AdminCategoryManagingPopupController.display(name));
+            }
+
+
+            public String getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getParent() {
+                return parent;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+        }
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminCategoryManagingMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initCategories();
+            initTable();
+            initActions();
+        }
+
+        private void initCategories() {
+            var categories = adminController.manageCategories();
+            wrappers = new ArrayList<>();
+            for (String[] category : categories) {
+                wrappers.add(new CategoryWrapper(category));
+            }
+        }
+
+        private void initTable() {
+            idCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            nameCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
+            parentCOL.setCellValueFactory(new PropertyValueFactory<>("parent"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+
+            this.categories.getItems().addAll(wrappers);
+        }
+
+        private void initActions() {
+            addCategoryBTN.setOnAction(e -> AdminCategoryManagingPopupController.display(null));
+        }
+    }
+
+    public static class AdminCategoryManagingPopupController {
+
+        @FXML
+        private TableView<?> properties;
+
+        @FXML
+        private TableColumn<?, ?> Property;
+
+        @FXML
+        private TableView<?> products;
+
+        @FXML
+        private TableColumn<?, ?> productCOL;
+
+        @FXML
+        private TableColumn<?, ?> productRemoveCOL;
+
+        @FXML
+        private TableView<?> subCategories;
+
+        @FXML
+        private TableColumn<?, ?> subCategoryCOL;
+
+        @FXML
+        private TableColumn<?, ?> subCategoryRemoveCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Label idLBL;
+
+        @FXML
+        private TextField codeField;
+
+        @FXML
+        private TextField maxField;
+
+        @FXML
+        private Button addBTN;
+
+        @FXML
+        private Button editBTN;
+
+        @FXML
+        private Button discardBTN;
+
+        public static void display(String categoryName) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource(View.getLocation(Constants.FXMLs.adminCategoryManagingPopup)));
+            Parent p = null;
+            try {
+                p = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            AdminCategoryManagingPopupController controller = loader.getController();
+            controller.init(categoryName);
+
+            View.popupWindow("Add category", p, 650, 500);
+        }
+
+        private void init(String categoryName) {
+
         }
     }
 
@@ -1242,12 +1402,13 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+
             initActions();
         }
 
         private void initActions() {
             manageAccounts.setOnAction(e -> AdminAccountManagingMenuController.display());
-            manageCategories.setOnAction(e -> AdminCategoryManagingMenu.display());
+            manageCategories.setOnAction(e -> AdminCategoryManagingMenuController.display());
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
             manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
             manageRequests.setOnAction(e -> AdminRequestManagingMenu.display());
@@ -1256,16 +1417,119 @@ public class Controllers {
 
     public static class AdminAccountManagingMenuController implements Initializable {
 
-        public static ArrayList<CustomerWrapper> customers = new ArrayList<>();
-        public static ArrayList<SellerWrapper> sellers = new ArrayList<>();
+        public static ArrayList<AccountWrapper> customers = new ArrayList<>();
+        public static ArrayList<AccountWrapper> sellers = new ArrayList<>();
 
-        public  class CustomerWrapper {
+        public class AccountWrapper {
+            String id, username, firstName, lastName, phone, email, fullName;
+            SimpleStringProperty type;
+            Button remove = new Button();
+            Button details = new Button();
 
+            public AccountWrapper(String[] pack) {
+                this(pack[0], pack[1], pack[2], pack[3], pack[4], pack[5], pack[6]);
+            }
+
+            public AccountWrapper(String id, String username, String firstName, String lastName, String phone, String email, String type) {
+                this.id = id;
+                this.username = username;
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.phone = phone;
+                this.email = email;
+                this.type  = new SimpleStringProperty(type);
+                fullName = firstName + " " + lastName;
+
+                this.remove.getStyleClass().add("remove-button");
+                this.details.getStyleClass().add("detail-button");
+                initButtons();
+            }
+
+            private void initButtons() {
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.deleteUsername(username);
+                        //assumed its in customers.
+                        accounts.getItems().remove(this);
+                    } catch (Exceptions.UsernameDoesntExistException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.ManagerDeleteException ex) {
+                        errorLBL.setText("You cannot remove omni-admin");
+                    }
+                });
+
+                remove.disableProperty().bind(
+                        Bindings.when(View.isManager.or(type.isEqualTo(Constants.sellerUserType)).or(type.isEqualTo(Constants.customerUserType)))
+                        .then(false).otherwise(true)
+                );
+                remove.opacityProperty().bind(Bindings.when(remove.disableProperty()).then(0.5).otherwise(1));
+
+                details.setOnAction(e -> PersonalInfoMenuController.display(username));
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public String getFirstName() {
+                return firstName;
+            }
+
+            public String getLastName() {
+                return lastName;
+            }
+
+            public String getPhone() {
+                return phone;
+            }
+
+            public String getEmail() {
+                return email;
+            }
+
+            public String getFullName() {
+                return fullName;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
         }
 
-        public  class SellerWrapper {
+        @FXML
+        private TableView<AccountWrapper> accounts;
 
-        }
+        @FXML
+        private TableColumn<AccountWrapper, String> idCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> usernameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> fullNameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> phoneCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> detailsCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> removeCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button registerAdminBTN;
 
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
@@ -1273,7 +1537,38 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            initActions();
+            initTable();
+            initAccounts();
+        }
 
+        private void initActions() {
+            //TODO: registerAdminBTN.setOnAction(e -> AdminRegistrationPopup.display());
+        }
+
+        private void initTable() {
+            idCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            fullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            phoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+        }
+
+        private void initAccounts(){
+            ArrayList<String[]> all = adminController.manageUsers();
+            for (String[] strings : all) {
+                if (strings[6].equals("Seller")) {
+                    sellers.add(new AccountWrapper(strings));
+                } else if (strings[6].equals("Customer")) {
+                    customers.add(new AccountWrapper(strings));
+                } else {
+
+                }
+            }
+
+            accounts.getItems().addAll(sellers);
+            accounts.getItems().addAll(customers);
         }
     }
 
@@ -1352,7 +1647,6 @@ public class Controllers {
 
             public CustomerWrapper(String[] customerPack, boolean hasCode) {
                 this(customerPack[2], customerPack[0], Integer.parseInt(customerPack[1]), true);
-
             }
 
             public CustomerWrapper(String id, String username, int count, boolean hasCode) {
@@ -1365,7 +1659,7 @@ public class Controllers {
                 this.count.opacityProperty().bind(
                         Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
                 );
-                //TODO: count listener and save changes and add handle customers
+                //TODO: count listener and save changes handle customers
             }
 
             public Property hasCodeProperty() {
@@ -1448,8 +1742,7 @@ public class Controllers {
                     try {
                         adminController.createDiscountCode(codeField.getText(), startDate.getValue().toString(), endDate.getValue().toString(),
                                 Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()),
-                                allCustomers.stream().map(c -> new String[] {c.id, String.valueOf(c.count)}).collect(Collectors.toCollection(ArrayList::new)));
-
+                                allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[] {c.id, String.valueOf(c.count)}).collect(Collectors.toCollection(ArrayList::new)));
                         customersTable.getScene().getWindow().hide();
                     } catch (Exceptions.InvalidAccountsForDiscount invalidAccountsForDiscount) {
                         invalidAccountsForDiscount.printStackTrace();
@@ -1689,7 +1982,7 @@ public class Controllers {
 
         private void initActions() {
             logoBTN.setOnAction(e -> MainMenu.display());
-            accountBTN.setOnAction(e -> PersonalInfoMenuController.display());
+            accountBTN.setOnAction(e -> PersonalInfoMenuController.display(null));
             loginBTN.setOnAction(e -> LoginPopupController.display(new Stage()));
             cartBTN.setOnAction(e -> ShoppingCartMenuController.display());
             searchBTN.setOnAction(e -> search(searchField.getText()));
