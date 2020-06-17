@@ -24,7 +24,7 @@
 }
 
 .remove-button {
-    -fx-graphic: url("../img/details-button.png");
+    -fx-graphic: url("../img/remove-button.png");
 }
 
 .increase-button {
