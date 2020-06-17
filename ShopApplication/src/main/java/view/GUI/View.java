@@ -145,13 +145,13 @@ public class View extends Application {
         );
 
         //create a seller and accept request by admin.
-//        try {
-//            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
-//        } catch (Exceptions.UsernameAlreadyTakenException e) {
-//            e.printStackTrace();
-//        } catch (Exceptions.AdminRegisterException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
+        } catch (Exceptions.UsernameAlreadyTakenException e) {
+            e.printStackTrace();
+        } catch (Exceptions.AdminRegisterException e) {
+            e.printStackTrace();
+        }
 
 //        try {
 //            adminController.acceptRequest(adminController.getPendingRequests().get(0)[0], true);

@@ -754,7 +754,7 @@ public class Controllers {
                 this.category = category;
 
                 detailBTN.setOnAction(e -> ProductDetailMenu.display(id));
-                detailBTN.getStyleClass().add("detail-button");
+                detailBTN.getStyleClass().add("details-button");
 
                 removeBTN.setOnAction(e -> {
                     try {
@@ -893,7 +893,7 @@ public class Controllers {
                         ex.printStackTrace();
                     }
                 });
-                detail.getStyleClass().add("detail-button");
+                detail.getStyleClass().add("details-button");
                 remove.getStyleClass().add("remove-button");
             }
 
@@ -1183,7 +1183,7 @@ public class Controllers {
                     //sellerController.sale
                     sales.getItems().remove(this);
                 });
-                details.getStyleClass().add("detail-button");
+                details.getStyleClass().add("details-button");
                 //TODO:
                 //details.setOnAction(e -> );
 
@@ -1468,7 +1468,7 @@ public class Controllers {
                 fullName = firstName + " " + lastName;
 
                 this.remove.getStyleClass().add("remove-button");
-                this.details.getStyleClass().add("detail-button");
+                this.details.getStyleClass().add("details-button");
                 initButtons();
             }
 
