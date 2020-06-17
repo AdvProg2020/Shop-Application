@@ -22,7 +22,7 @@
                 </columnResizePolicy>
                 <columns>
                     <TableColumn fx:id="idCol" prefWidth="200.0" resizable="false" text="ID" />
-                    <TableColumn fx:id="nameCOL" prefWidth="200.0" resizable="false" text="Product Name-Brand" />
+                    <TableColumn fx:id="nameCOL" prefWidth="200.0" resizable="false" text="Name-Brand" />
                     <TableColumn fx:id="categoryCOL" prefWidth="200.0" resizable="false" text="Category Name" />
                     <TableColumn fx:id="detailsCOL" prefWidth="100.0" resizable="false" text="Details" />
                     <TableColumn fx:id="removeCOL" prefWidth="100.0" resizable="false" text="Remove" />

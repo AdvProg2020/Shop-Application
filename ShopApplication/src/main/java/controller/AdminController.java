@@ -52,9 +52,14 @@ public class AdminController {
         ArrayList<String[]> accounts = new ArrayList<>();
         for (Account account : Account.getAllAccounts()) {
             if (account != currentAccount()) {
-                String[] IdUsername = new String[2];
+                String[] IdUsername = new String[7];
                 IdUsername[0] = account.getId();
                 IdUsername[1] = account.getUsername();
+                IdUsername[2] = account.getFirstName();
+                IdUsername[3] = account.getLastName();
+                IdUsername[4] = account.getPhone();
+                IdUsername[5] = account.getEmail();
+                IdUsername[6] = account.getClass().getSimpleName();
                 accounts.add(IdUsername);
             }
         }
@@ -123,7 +128,7 @@ public class AdminController {
     }
 
     public void createDiscountCode(String discountCode, String startDate, String endDate, double percentage,
-                                   int maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount, Exceptions.InvalidFormatException {
+                                   double maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount, Exceptions.InvalidFormatException {
 
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
@@ -312,10 +317,14 @@ public class AdminController {
     }
 
 
-    public ArrayList<String> manageCategories() {
-        ArrayList<String> categoryNames = new ArrayList<>();
+    public ArrayList<String[]> manageCategories() {
+        ArrayList<String[]> categoryNames = new ArrayList<>();
         for (Category category : Category.getAllCategories()) {
-            categoryNames.add(category.getName());
+            String[] info = new String[3];
+            info[0] = category.getId();
+            info[1] = category.getName();
+            info[2] = category.getParent().getName();
+            categoryNames.add(info);
         }
         return categoryNames;
     }

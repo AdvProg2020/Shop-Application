@@ -49,19 +49,21 @@ public class Utilities {
 
 
         public static String[] product(Product product) {
-            String[] productPack = new String[3];
+            String[] productPack = new String[4];
             productPack[0] = product.getId();
             productPack[1] = product.getName();
             productPack[2] = product.getBrand();
+            productPack[3] = product.getCategory().getName();
             return productPack;
         }
 
         public static String[] subProduct(SubProduct subProduct) {
-            String[] subProductPack = new String[4];
+            String[] subProductPack = new String[5];
             subProductPack[0] = subProduct.getId();
             subProductPack[1] = subProduct.getSeller().getStoreName();
             subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
             subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
+            subProductPack[4] = subProduct.getProduct().getId();
             return subProductPack;
         }
 
@@ -174,14 +176,18 @@ public class Utilities {
         public static String[] personalInfo(Account account) {
             String[] info;
             if (account instanceof Customer) {
-                info = new String[7];
-                info[6] = Double.toString(((Customer) account).getBalance());
-            } else if (account instanceof Seller) {
                 info = new String[8];
+                info[6] = Double.toString(((Customer) account).getBalance());
+                info[7] = "Customer";
+            } else if (account instanceof Seller) {
+                info = new String[9];
                 info[6] = Double.toString(((Seller) account).getBalance());
                 info[7] = ((Seller) account).getStoreName();
-            } else
-                info = new String[6];
+                info[8] = "Seller";
+            } else {
+                info = new String[7];
+                info[6] = "Admin";
+            }
             info[0] = account.getUsername();
             info[1] = account.getClass().getSimpleName();
             info[2] = account.getFirstName();
@@ -274,9 +280,10 @@ public class Utilities {
         }
 
         public static String[] customerDiscountRemainingCount(Customer customer, int count) {
-            String[] personPack = new String[2];
+            String[] personPack = new String[3];
             personPack[0] = customer.getUsername();
             personPack[1] = Integer.toString(count);
+            personPack[2] = customer.getId();
             return personPack;
         }
 

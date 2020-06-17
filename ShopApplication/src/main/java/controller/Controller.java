@@ -77,6 +77,10 @@ public class Controller {
         }
     }
 
+    public boolean isManager() {
+        return (currentAccount != null) && currentAccount == Admin.getManager();
+    }
+
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)
@@ -434,6 +438,13 @@ public class Controller {
     public String[] viewPersonalInfo() throws Exceptions.NotLoggedInException {
         if (currentAccount == null) throw new Exceptions.NotLoggedInException();
         return Utilities.Pack.personalInfo(currentAccount);
+    }
+
+
+    public String[] viewPersonalInfo(String username) throws Exceptions.UsernameDoesntExistException {
+        Account account = Account.getAccountByUsername(username);
+        if (account == null) throw new Exceptions.UsernameDoesntExistException(username);
+        else return Utilities.Pack.personalInfo(account);
     }
 
     void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {

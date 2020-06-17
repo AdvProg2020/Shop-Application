@@ -2,6 +2,8 @@ package view.GUI;
 
 import controller.*;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
@@ -30,6 +32,7 @@ public class View extends Application {
     public static SellerController sellerController = new SellerController(mainController);
     public static SimpleIntegerProperty stackSize = new SimpleIntegerProperty(0);
     public static SimpleStringProperty type = new SimpleStringProperty(Constants.anonymousUserType);
+    public static SimpleBooleanProperty isManager = new SimpleBooleanProperty(false);
     private static Stage mainStage;
     private static Scene mainScene;
     private static ArrayList<String> stackTrace = new ArrayList<>();
@@ -102,19 +105,19 @@ public class View extends Application {
         Controllers.BaseController.setMainPane(p);
     }
 
-    public void popupWindow(String title, String fxml, EventHandler<WindowEvent> close) {
+    public static void popupWindow(String title, Parent parent, int width, int height) {
         Stage popup = new Stage();
         popup.setTitle(title);
-        popup.setOnCloseRequest(close);
+//        popup.setOnCloseRequest(close);
         popup.setResizable(false);
-        popup.setWidth(750);
-        popup.setHeight(500);
+        popup.setWidth(width);
+        popup.setHeight(height);
         popup.centerOnScreen();
-        try {
-            popup.setScene(new Scene(loadFxml(fxml)));
-        } catch (IOException e) {
-            System.out.println("could not load " + fxml + ".fxml");
-        }
+        popup.setScene(new Scene(parent));
+    }
+
+    public static String getLocation(String fxml) {
+        return "/fxml/" + fxml + ".fxml";
     }
 
     @Override
@@ -136,6 +139,10 @@ public class View extends Application {
 
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));
         setMainPane(Constants.FXMLs.mainMenu);
+
+        isManager.bind(
+                Bindings.createBooleanBinding(() -> mainController.isManager(), type)
+        );
 
         //create a seller and accept request by admin.
 //        try {
