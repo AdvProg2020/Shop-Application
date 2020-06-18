@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import view.consoleView.Menus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -244,8 +245,10 @@ public class Controllers {
                 try {
                     mainController.logout();
                     View.type.set(Constants.anonymousUserType);
+
+                    MainMenuController.display();
+
                     if (isPopup) balanceLBL.getScene().getWindow().hide();
-                    else View.goBack();
 
                 } catch (Exceptions.NotLoggedInException ex) {
                     ex.printStackTrace();
@@ -425,6 +428,8 @@ public class Controllers {
                 try {
                     mainController.login(username, password);
                     View.type.set(mainController.getType());
+                    if( ! View.type.get().equals(Constants.customerUserType)) MainMenuController.display();
+
                     PopupStage.close();
                 } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
                     errorLBL.setText("invalid username or password");
