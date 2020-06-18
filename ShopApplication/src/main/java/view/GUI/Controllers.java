@@ -94,10 +94,7 @@ public class Controllers {
     public static class PersonalInfoMenuController {
 
         @FXML
-        private ImageView ProfileIMG;
-
-        @FXML
-        private Button ProfileIMGEditBTN;
+        private ToggleButton imageEditBTN;
 
         @FXML
         private Button logoutBTN;
@@ -118,19 +115,22 @@ public class Controllers {
         private TextField firstName;
 
         @FXML
-        private Label firstNameLBL;
+        private Label firstNameLabel;
 
         @FXML
-        private Label lastNameLBL;
+        private Label lastNameLabel;
 
         @FXML
-        private Button IrlNameEditBTN;
+        private ToggleButton fullNameEditBTN;
+
+        @FXML
+        private Label typeLBL;
 
         @FXML
         private TextField phoneNumberField;
 
         @FXML
-        private TextField EmailField;
+        private TextField emailField;
 
         @FXML
         private TextField balanceField;
@@ -139,50 +139,66 @@ public class Controllers {
         private TextField storeNameField;
 
         @FXML
-        private Button phoneNumberEditBTN;
+        private Label phoneNumberLBL;
 
         @FXML
-        private Button emailEditBTN;
+        private Label emailLBL;
 
         @FXML
-        private Button balanceEditBTN;
-
-        @FXML
-        private Button storeNameEditBTN;
+        private Label balanceLBL;
 
         @FXML
         private Label storeNameLBL;
 
         @FXML
-        private Label balanceLBL;
+        private ToggleButton PhoneNumberEditBTN;
+
+        @FXML
+        private ToggleButton emailEditBTN;
+
+        @FXML
+        private ToggleButton balanceEditBTN;
+
+        @FXML
+        private ToggleButton StoreNameEditBTN;
 
         private String[] personalInfo;
+        private boolean isPopup;
+
 
         public static void display(String username) {
-            if (username == null) {
-                View.setMainPane(Constants.FXMLs.personalInfoMenu);
-            } else {
-                Stage popup = new Stage();
-                FXMLLoader loader = new FXMLLoader(View.class.getResource( "/fxml/PersonalInfoMenu.fxml"));
-                try {
-                    Parent p = loader.load();
-                    PersonalInfoMenuController controller = loader.getController();
-                    controller.setInfo(username);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-            }
-        }
-
-        private void setInfo(String username) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource( "/fxml/" + Constants.FXMLs.personalInfoMenu + ".fxml"));
+            Parent p = null;
             try {
-                personalInfo = mainController.viewPersonalInfo(username);
-            } catch (Exceptions.UsernameDoesntExistException e) {
+                p = loader.load();
+            } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
+
+            if (username == null) {
+                ((PersonalInfoMenuController)loader.getController()).setInfo(null, false);
+                View.addToStack(Constants.FXMLs.personalInfoMenu);
+                BaseController.setMainPane(p);
+            } else {
+                ((PersonalInfoMenuController)loader.getController()).setInfo(username, true);
+                View.popupWindow("Account detail menu", p, 632, 472);
+            }
+        }
+
+        private void setInfo(String username, boolean isPopup) {
+            try {
+                if (username == null) {
+                    personalInfo = mainController.viewPersonalInfo();
+                } else {
+                    personalInfo = mainController.viewPersonalInfo(username);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            this.isPopup = isPopup;
 
             switch (personalInfo[personalInfo.length - 1]) {
                 case Constants.customerUserType:
@@ -198,61 +214,50 @@ public class Controllers {
         }
 
         private void initCustomer() {
-            storeNameEditBTN.setVisible(false);
-            storeNameField.setVisible(false);
-            storeNameLBL.setVisible(false);
-
-            initCustomerValues();
-            initCustomerActions();
+            initCustomerButtons();
+            initValues();
         }
 
-        private void initCustomerValues() {
-            initAdminValues();
-        }
-
-        private void initCustomerActions() {
-
+        private void initCustomerButtons() {
+            //TODO: complete
+            initAdminButtons();
         }
 
         private void initSeller() {
-            discountsBTN.setVisible(false);
-            buyLogBTN.setVisible(false);
-
-            initSellerValues();
-            initSellerActions();
+            initSellerButtons();
+            initValues();
         }
 
-        private void initSellerValues() {
-            initCustomerValues();
-        }
-
-        private void initSellerActions() {
-
+        private void initSellerButtons() {
+            //TODO: complete
+            initAdminButtons();
         }
 
         private void initAdmin() {
-            storeNameEditBTN.setVisible(false);
-            storeNameField.setVisible(false);
-            storeNameLBL.setVisible(false);
-
-            balanceEditBTN.setVisible(false);
-            balanceField.setVisible(false);
-            balanceLBL.setVisible(false);
-
-            discountsBTN.setVisible(false);
-            buyLogBTN.setVisible(false);
-
-            initAdminValues();
-            initAdminActions();
+            initAdminButtons();
+            initValues();
         }
 
-        private void initAdminValues() {
+        private void initAdminButtons() {
+            //TODO: complete
+            logoutBTN.setOnAction(e -> {
+                try {
+                    mainController.logout();
+                    View.type.set(Constants.anonymousUserType);
+                    if (isPopup) balanceLBL.getScene().getWindow().hide();
+                    else View.goBack();
+
+                } catch (Exceptions.NotLoggedInException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+            });
+        }
+
+        private void initValues() {
 
         }
 
-        private void initAdminActions() {
-
-        }
 
         private void showPersonalInfo(String[] info) {
             System.out.println("1. username: " + info[0]);
@@ -270,7 +275,7 @@ public class Controllers {
         }
     }
 
-    public static class MainMenu {
+    public static class MainMenuController {
         private static void display() {
             View.getStackTrace().clear();
             View.stackSize.set(0);
@@ -787,11 +792,6 @@ public class Controllers {
         }
     }
 
-    public static class SellerLogsManagingMenuController {
-
-    }
-
-
     public static class AdminDiscountManagingMenuController implements Initializable {
 
         private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
@@ -991,10 +991,10 @@ public class Controllers {
 
         public class RequestWrapper {
             String id, type, date, status;
-            Button remove = new Button();
+            Button decline = new Button();
             Button details = new Button();
             Button accept = new Button();
-            HBox acceptRemove = new HBox(accept, remove);
+            HBox acceptDecline = new HBox(accept, decline);
 
             public RequestWrapper(String[] info) {
                 this(info[0], info[1], info[2], info[3]);
@@ -1010,16 +1010,13 @@ public class Controllers {
             }
 
             private void initButtons() {
-                remove.getStyleClass().add("remove-button");
+                decline.getStyleClass().add("decline-button");
                 details.getStyleClass().add("details-button");
-//                TODO: what is the style class.
-//                accept.getStyleClass().add()
-                accept.setText("test");
-                accept.setTextFill(Color.RED);
+                accept.getStyleClass().add("accept-button");
 
-                acceptRemove.setAlignment(Pos.CENTER);
+                acceptDecline.setAlignment(Pos.CENTER);
 
-                remove.setOnAction(e -> {
+                decline.setOnAction(e -> {
                     try {
                         adminController.acceptRequest(id, false);
                     } catch (Exceptions.InvalidRequestIdException ex) {
@@ -1068,8 +1065,8 @@ public class Controllers {
                 return status;
             }
 
-            public Button getRemove() {
-                return remove;
+            public Button getDecline() {
+                return decline;
             }
 
             public Button getDetails() {
@@ -1080,8 +1077,8 @@ public class Controllers {
                 return accept;
             }
 
-            public HBox getAcceptRemove() {
-                return acceptRemove;
+            public HBox getAcceptDecline() {
+                return acceptDecline;
             }
         }
 
@@ -1108,7 +1105,7 @@ public class Controllers {
             pendingIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
             pendingTypeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
             pendingDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
-            pendingAcceptCOL.setCellValueFactory(new PropertyValueFactory<>("acceptRemove"));
+            pendingAcceptCOL.setCellValueFactory(new PropertyValueFactory<>("acceptDecline"));
             pendingDateCOL.setCellValueFactory(new PropertyValueFactory<>("date"));
 
             archiveIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -2098,7 +2095,6 @@ public class Controllers {
         }
     }
 
-
     public static class SellerManagingMenuController implements Initializable {
         @FXML
         private Button manageProducts;
@@ -2123,6 +2119,9 @@ public class Controllers {
         }
     }
 
+    public static class SellerLogsManagingMenuController {
+
+    }
 
     public static class BaseController implements Initializable {
         private static BaseController currentBase;
@@ -2183,7 +2182,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            logoBTN.setOnAction(e -> MainMenu.display());
+            logoBTN.setOnAction(e -> MainMenuController.display());
             accountBTN.setOnAction(e -> PersonalInfoMenuController.display(null));
             loginBTN.setOnAction(e -> LoginPopupController.display(new Stage()));
             cartBTN.setOnAction(e -> ShoppingCartMenuController.display());

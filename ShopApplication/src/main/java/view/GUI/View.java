@@ -35,7 +35,7 @@ public class View extends Application {
     public static SimpleBooleanProperty isManager = new SimpleBooleanProperty(false);
     private static Stage mainStage;
     private static Scene mainScene;
-    private static ArrayList<String> stackTrace = new ArrayList<>();
+    static ArrayList<String> stackTrace = new ArrayList<>();
 
     public static void main(String[] args) {
         databaseManager.loadAll();
@@ -73,6 +73,13 @@ public class View extends Application {
             System.out.println("could not load " + fxml + ".fxml");
             return;
         }
+
+        addToStack(fxml);
+
+        Controllers.BaseController.setMainPane(p);
+    }
+
+    public static void addToStack(String fxml) {
         if (stackTrace.size() == 0) {
             stackTrace.add(fxml);
             stackSize.set(stackSize.get() + 1);
@@ -80,7 +87,6 @@ public class View extends Application {
             stackTrace.add(fxml);
             stackSize.set(stackSize.get() + 1);
         }
-        Controllers.BaseController.setMainPane(p);
     }
 
     public static SimpleIntegerProperty getStackSizeProperty() {
