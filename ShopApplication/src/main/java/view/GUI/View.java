@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -65,18 +66,21 @@ public class View extends Application {
         return fxmlLoader.load();
     }
 
-    public static void setMainPane(String fxml) {
+    public static <T> T setMainPane(String fxml) {
+        FXMLLoader loader = new FXMLLoader(View.class.getResource(getLocation(fxml)));
         Parent p;
         try {
-            p = loadFxml(fxml);
+            p = loader.load();
         } catch (IOException e) {
             System.out.println("could not load " + fxml + ".fxml");
-            return;
+            return null;
         }
 
         addToStack(fxml);
 
         Controllers.BaseController.setMainPane(p);
+
+        return loader.getController();
     }
 
     public static void addToStack(String fxml) {
@@ -111,7 +115,8 @@ public class View extends Application {
         Controllers.BaseController.setMainPane(p);
     }
 
-    public static void popupWindow(String title, Parent parent, int width, int height) {
+
+    public static <T> T popupWindow(String title, String fxml, int width, int height) {
         Stage popup = new Stage();
         popup.setTitle(title);
 //        popup.setOnCloseRequest(close);
@@ -119,7 +124,16 @@ public class View extends Application {
         popup.setWidth(width);
         popup.setHeight(height);
         popup.centerOnScreen();
+        FXMLLoader loader = new FXMLLoader(View.class.getResource(getLocation(fxml)));
+        Parent parent = null;
+        try {
+            parent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("could not load " + fxml + ".fxml");
+        }
         popup.setScene(new Scene(parent));
+        return loader.getController();
     }
 
     public static String getLocation(String fxml) {
@@ -150,33 +164,13 @@ public class View extends Application {
                 Bindings.createBooleanBinding(() -> mainController.isManager(), type)
         );
 
-        //create a seller and accept request by admin.
-        try {
-            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
-        } catch (Exceptions.UsernameAlreadyTakenException e) {
-            e.printStackTrace();
-        } catch (Exceptions.AdminRegisterException e) {
-            e.printStackTrace();
-        }
-
+        //create an admin.
 //        try {
-//            adminController.acceptRequest(adminController.getPendingRequests().get(0)[0], true);
-//         //   mainController.creatAccount(Constants.customerUserType, "dana", "a", "a", "a", "1@1.com", "23", 12, null);
-////            adminController.deleteUsername("dana");
-//        } catch (Exceptions.InvalidRequestIdException e) {
+//            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
+//        } catch (Exceptions.UsernameAlreadyTakenException e) {
 //            e.printStackTrace();
-////        } catch (Exceptions.ManagerDeleteException e) {
-////            e.printStackTrace();
-////        } catch (Exceptions.ExistingProductException e) {
-////            e.printStackTrace();
-////        } catch (Exceptions.InvalidCategoryException e) {
-////            e.printStackTrace();
-////        } catch (Exceptions.AdminRegisterException e) {
-////            e.printStackTrace();
-////        } catch (Exceptions.UsernameAlreadyTakenException e) {
-////            e.printStackTrace();
-////        } catch (Exceptions.UsernameDoesntExistException e) {
-////            e.printStackTrace();
+//        } catch (Exceptions.AdminRegisterException e) {
+//            e.printStackTrace();
 //        }
 
     }
