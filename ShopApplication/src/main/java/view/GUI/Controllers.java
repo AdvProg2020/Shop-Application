@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -943,9 +944,181 @@ public class Controllers {
         }
     }
 
-    public static class AdminRequestManagingMenu {
+    public static class AdminRequestManagingMenuController implements Initializable {
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminRequestManagingMenu);
+        }
+
+        @FXML
+        private TableView<RequestWrapper> pending;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> pendingIdCol;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> pendingTypeCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> pendingDateCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, Button> pendingDetailsCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, HBox> pendingAcceptCOL;
+
+        @FXML
+        private TableView<RequestWrapper> archive;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveIdCol;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveTypeCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveDateCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, Button> archiveDetailsCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveStatusCOL;
+
+        ArrayList<RequestWrapper> pendingRequests;
+        ArrayList<RequestWrapper> archivedRequests;
+
+        public class RequestWrapper {
+            String id, type, date, status;
+            Button remove = new Button();
+            Button details = new Button();
+            Button accept = new Button();
+            HBox acceptRemove = new HBox(accept, remove);
+
+            public RequestWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3]);
+            }
+
+            public RequestWrapper(String id, String type, String date, String status) {
+                this.id = id;
+                this.type = type;
+                this.date = date;
+                this.status = status;
+
+                initButtons();
+            }
+
+            private void initButtons() {
+                remove.getStyleClass().add("remove-button");
+                details.getStyleClass().add("details-button");
+//                TODO: what is the style class.
+//                accept.getStyleClass().add()
+                accept.setText("test");
+                accept.setTextFill(Color.RED);
+
+                acceptRemove.setAlignment(Pos.CENTER);
+
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.acceptRequest(id, false);
+                    } catch (Exceptions.InvalidRequestIdException ex) {
+                        ex.printStackTrace();
+                        return;
+                    }
+                    status = Constants.REQUEST_DECLINE;
+                    archive.getItems().add(this);
+                    archivedRequests.add(this);
+
+                    pending.getItems().remove(this);
+                    pendingRequests.remove(this);
+                });
+//                TODO: wtf.
+//                details.setOnAction(e -> );
+
+                accept.setOnAction(e -> {
+                    try {
+                        adminController.acceptRequest(id, true);
+                    } catch (Exceptions.InvalidRequestIdException ex) {
+                        ex.printStackTrace();
+                        return;
+                    }
+                    status = Constants.REQUEST_ACCEPT;
+                    archive.getItems().add(this);
+                    archivedRequests.add(this);
+
+                    pending.getItems().remove(this);
+                    pendingRequests.remove(this);
+                });
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+
+            public Button getAccept() {
+                return accept;
+            }
+
+            public HBox getAcceptRemove() {
+                return acceptRemove;
+            }
+        }
+
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initRequests();
+            initTable();
+        }
+
+        private void initRequests() {
+            pendingRequests = new ArrayList<>();
+            for (String[] pendingRequest : adminController.getPendingRequests()) {
+                pendingRequests.add(new RequestWrapper(pendingRequest));
+            }
+
+            archivedRequests = new ArrayList<>();
+            for (String[] archivedRequest : adminController.getArchivedRequests()) {
+                archivedRequests.add(new RequestWrapper(archivedRequest));
+            }
+        }
+
+        private void initTable() {
+            pendingIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            pendingTypeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
+            pendingDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            pendingAcceptCOL.setCellValueFactory(new PropertyValueFactory<>("acceptRemove"));
+            pendingDateCOL.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+            archiveIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            archiveTypeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
+            archiveDateCOL.setCellValueFactory(new PropertyValueFactory<>("date"));
+            archiveDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            archiveStatusCOL.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+            pending.getItems().addAll(pendingRequests);
+            archive.getItems().addAll(archivedRequests);
         }
     }
 
@@ -1438,7 +1611,7 @@ public class Controllers {
             manageCategories.setOnAction(e -> AdminCategoryManagingMenuController.display());
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
             manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
-            manageRequests.setOnAction(e -> AdminRequestManagingMenu.display());
+            manageRequests.setOnAction(e -> AdminRequestManagingMenuController.display());
         }
     }
 
