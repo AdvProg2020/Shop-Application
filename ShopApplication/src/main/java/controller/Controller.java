@@ -595,4 +595,10 @@ public class Controller {
         else currentCart.removeSubProduct(subProductId);
     }
 
+    public String[] getDefaultSubProductOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if( product == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        return Utilities.Pack.subProduct(product.getDefaultSubProduct());
+    }
 }
