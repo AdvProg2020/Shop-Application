@@ -18,7 +18,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 public class SellerController {
 
@@ -333,7 +332,7 @@ public class SellerController {
             for (String productId : productIds) {
                 product = Product.getProductById(productId);
                 if (product != null) {
-                    subProduct = product.getSubProductWithSellerId(currentAccount().getId());
+                    subProduct = product.getSubProductOfSeller(currentAccount().getId());
                     if (subProduct != null)
                         sale.addSubProduct(subProduct.getId());
                     else
@@ -348,7 +347,38 @@ public class SellerController {
             throw new Exceptions.InvalidDateException();
     }
 
+    public void addProductsToSale(String saleId, ArrayList<String> subProductIds){
+        Sale sale = Sale.getSaleById(saleId);
+        for (String subProductId : subProductIds) {
+            sale.addSubProduct(subProductId);
+        }
+    }
+
+    public void removeProductsFromSale(String saleId, ArrayList<String> subProductIds){
+        Sale sale = Sale.getSaleById(saleId);
+        for (String subProductId : subProductIds) {
+            sale.removeSubProduct(subProductId);
+        }
+    }
+
     public double viewBalance() {
         return ((Seller) currentAccount()).getBalance();
     }
+
+    private void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {
+        Sale sale = Sale.getSaleById(saleId);
+        if( sale != null ){
+            sale.suspend();
+        }else {
+            throw new Exceptions.InvalidSaleIdException(saleId);
+        }
+    }
+
+    public void removeSale(ArrayList<String> saleIds) throws Exceptions.InvalidSaleIdException {
+        for (String saleId : saleIds) {
+            removeSale(saleId);
+        }
+    }
+
+
 }

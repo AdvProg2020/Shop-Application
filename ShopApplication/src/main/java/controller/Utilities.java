@@ -332,6 +332,14 @@ public class Utilities {
             }
             return invalidAccountIds.toString();
         }
+
+        public static ArrayList<String[]> subProductBoxes(ArrayList<SubProduct> subProducts){
+            ArrayList<String[]> subProductBoxes = new ArrayList<>();
+            for (SubProduct subProduct : subProducts) {
+                subProductBoxes.add(subProduct(subProduct));
+            }
+            return subProductBoxes;
+        }
     }
 
     static class Field {

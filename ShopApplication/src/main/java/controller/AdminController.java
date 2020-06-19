@@ -12,6 +12,7 @@ import model.request.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -396,5 +397,23 @@ public class AdminController {
             throw new Exceptions.InvalidCategoryException(categoryName);
         category.suspend();
         database().removeCategory();
+    }
+
+    public void setAccounts(String code, HashMap<String, Integer> customerIds){
+        Discount discount = Discount.getDiscountByCode(code);
+        if( discount != null){
+            for (String customerId : customerIds.keySet()) {
+                discount.addCustomer( customerId, customerIds.get(customerId));
+            }
+        }
+    }
+
+    public void removeAccounts(String code, ArrayList<String> customerIds){
+        Discount discount = Discount.getDiscountByCode(code);
+        if( discount != null){
+            for (String customerId : customerIds) {
+                discount.removeCustomer(customerId);
+            }
+        }
     }
 }
