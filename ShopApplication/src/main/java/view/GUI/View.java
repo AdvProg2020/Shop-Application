@@ -1,17 +1,18 @@
 package view.GUI;
 
-import controller.*;
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
+import controller.SellerController;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.Category;
 import model.database.Database;
 import model.database.DatabaseManager;
@@ -151,13 +152,13 @@ public class View extends Application {
         );
 
         //create a seller and accept request by admin.
-        try {
-            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
-        } catch (Exceptions.UsernameAlreadyTakenException e) {
-            e.printStackTrace();
-        } catch (Exceptions.AdminRegisterException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
+//        } catch (Exceptions.UsernameAlreadyTakenException e) {
+//            e.printStackTrace();
+//        } catch (Exceptions.AdminRegisterException e) {
+//            e.printStackTrace();
+//        }
 
 //        try {
 //            adminController.acceptRequest(adminController.getPendingRequests().get(0)[0], true);
