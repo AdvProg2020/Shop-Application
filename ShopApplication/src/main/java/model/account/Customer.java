@@ -17,9 +17,9 @@ public class Customer extends Account {
     private transient Map<String, Integer> discountIds;
     private transient Set<String> buyLogIds;
 
-    public Customer(String username, String password, String firstName, String lastName, String email, String phone,
-                    double balance) {
-        super(username, password, firstName, lastName, email, phone);
+    public Customer(String username, String password, String firstName, String lastName, String email, String phone, String image, double balance) {
+        super(username, password, firstName, lastName, email, phone, image);
+        this.balance = balance;
         this.balance = balance;
         initialize();
         new Cart(accountId);
@@ -38,8 +38,8 @@ public class Customer extends Account {
         if (accountId == null)
             accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allCustomers.put(accountId, this);
-        allAccounts.put(accountId, this);
         lastNum++;
+        super.initialize();
 
         buyLogIds = new HashSet<>();
         if (!suspended) {

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Account implements ModelBasic {
+    private static String DEFAULT_IMAGE_PATH = ""; //TODO: set value
     protected static Map<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
     protected boolean suspended;
@@ -19,14 +20,16 @@ public abstract class Account implements ModelBasic {
     private String lastName;
     private String email;
     private String phone;
+    private String imagePath;
 
-    protected Account(String username, String password, String firstName, String lastName, String email, String phone) {
+    protected Account(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+        this.imagePath = imagePath;
         suspended = false;
     }
 
@@ -57,6 +60,12 @@ public abstract class Account implements ModelBasic {
         }
 
         return false;
+    }
+
+    @Override
+    public void initialize() {
+        allAccounts.put(accountId, this);
+        fixImagePath();
     }
 
     public void suspend() {
@@ -115,5 +124,19 @@ public abstract class Account implements ModelBasic {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getImagePath() {
+        fixImagePath();
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+        fixImagePath();
+    }
+
+    private void fixImagePath() {
+        //TODO: implement
     }
 }

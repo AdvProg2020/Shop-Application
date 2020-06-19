@@ -20,9 +20,8 @@ public class Seller extends Account {
     private transient Set<String> sellLogIds;
     private transient Set<String> pendingRequestIds;
 
-    public Seller(String username, String password, String firstName, String lastName, String email, String phone,
-                  String storeName, double balance) {
-        super(username, password, firstName, lastName, email, phone);
+    public Seller(String username, String password, String firstName, String lastName, String email, String phone, String image, String storeName, double balance) {
+        super(username, password, firstName, lastName, email, phone, image);
         this.storeName = storeName;
         this.balance = balance;
         new AddSellerRequest(this);
@@ -41,8 +40,8 @@ public class Seller extends Account {
         if (accountId == null)
             accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allSellers.put(accountId, this);
-        allAccounts.put(accountId, this);
         lastNum++;
+        super.initialize();
 
         sellLogIds = new HashSet<>();
         if (!suspended) {

@@ -6,12 +6,14 @@ import model.request.AddProductRequest;
 import java.util.*;
 
 public class Product implements ModelBasic {
+    private static String DEFAULT_IMAGE_PATH = ""; //TODO: set value
     private static Map<String, Product> allProducts = new HashMap<>();
     private static int lastNum = 1;
     private String productId;
     private String name;
     private String brand;
     private String infoText;
+    private String imagePath;
     private int viewCount;
     private String categoryId;
     private Map<String, String> propertyValues;
@@ -20,10 +22,11 @@ public class Product implements ModelBasic {
     private transient Set<String> ratingIds;
     private boolean suspended;
 
-    public Product(String name, String brand, String infoText, String categoryId, List<String> values, SubProduct subProduct) {
+    public Product(String name, String brand, String infoText, String imagePath, String categoryId, List<String> values, SubProduct subProduct) {
         this.name = name;
         this.brand = brand;
         this.infoText = infoText;
+        this.imagePath = imagePath;
         this.categoryId = categoryId;
         setPropertyValues(values);
         viewCount = 0;
@@ -64,6 +67,7 @@ public class Product implements ModelBasic {
             productId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allProducts.put(productId, this);
         lastNum++;
+        fixImagePath();
 
         if (!suspended) {
             subProductIds = new HashSet<>();
@@ -122,6 +126,20 @@ public class Product implements ModelBasic {
 
     public void setInfoText(String infoText) {
         this.infoText = infoText;
+    }
+
+    public String getImagePath() {
+        fixImagePath();
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+        fixImagePath();
+    }
+
+    private void fixImagePath() {
+        //TODO: implement
     }
 
     public int getViewCount() {
@@ -236,6 +254,10 @@ public class Product implements ModelBasic {
             sum += Rating.getRatingById(ratingId).getScore();
         }
         return sum / ratingIds.size();
+    }
+
+    public int getRatingsCount() {
+        return ratingIds.size();
     }
 
     //TODO: delete

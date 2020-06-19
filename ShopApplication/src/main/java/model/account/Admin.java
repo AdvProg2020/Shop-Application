@@ -11,8 +11,8 @@ public class Admin extends Account {
     protected static Map<String, Admin> allAdmins = new HashMap<>();
     private static int lastNum = 1;
 
-    public Admin(String username, String password, String firstName, String lastName, String email, String phone) {
-        super(username, password, firstName, lastName, email, phone);
+    public Admin(String username, String password, String firstName, String lastName, String email, String phone, String image) {
+        super(username, password, firstName, lastName, email, phone, image);
         initialize();
     }
 
@@ -33,8 +33,8 @@ public class Admin extends Account {
         if (accountId == null)
             accountId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allAdmins.put(accountId, this);
-        allAccounts.put(accountId, this);
         lastNum++;
+        super.initialize();
 
         if (manager == null)
             manager = this;
