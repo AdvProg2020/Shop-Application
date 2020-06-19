@@ -105,7 +105,8 @@ public class Category implements ModelBasic {
         this.name = name;
     }
 
-    public List<String> getProperties() {
+    //TODO: fix deep
+    public List<String> getProperties(boolean deep) {
         return new ArrayList<>(properties);
     }
 

@@ -1,0 +1,59 @@
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+#add-to-cart-button {
+    -fx-graphic: url("../img/add-to-cart-button.png");
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: #009000;
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-padding: 10 30 10 30;
+}
+
+#compare-button {
+    -fx-graphic: url("../img/compare-button.png");
+    -fx-text-fill: lightgrey;
+    -fx-background-color: #29292D;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-padding: 5 20 5 20;
+}
+
+#name-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 26;
+}
+
+#rating-count {
+    -fx-font-size: 12;
+    -fx-text-fill: darkgrey;
+    -fx-font-weight: bold;
+}
+
+#seller-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+}
+
+#price-before-label {
+    -fx-font-size: 18;
+    -fx-text-fill: red;
+}
+
+#price-before-label .text {
+    -fx-strikethrough: true;
+}
+
+#price-after-label {
+    -fx-font-size: 20;
+}
+
+.property-label {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+.value-label {
+    -fx-font-size: 14;
+}
