@@ -350,4 +350,14 @@ public class SellerController {
     public double viewBalance() {
         return ((Seller) currentAccount()).getBalance();
     }
+
+    public void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {
+        Sale sale = Sale.getSaleById(saleId);
+        if( sale != null ){
+            sale.suspend();
+        }else {
+            throw new Exceptions.InvalidSaleIdException(saleId);
+        }
+    }
+
 }
