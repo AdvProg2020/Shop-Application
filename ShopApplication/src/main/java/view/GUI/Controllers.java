@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -93,10 +94,7 @@ public class Controllers {
     public static class PersonalInfoMenuController {
 
         @FXML
-        private ImageView ProfileIMG;
-
-        @FXML
-        private Button ProfileIMGEditBTN;
+        private ToggleButton imageEditBTN;
 
         @FXML
         private Button logoutBTN;
@@ -117,19 +115,22 @@ public class Controllers {
         private TextField firstName;
 
         @FXML
-        private Label firstNameLBL;
+        private Label firstNameLabel;
 
         @FXML
-        private Label lastNameLBL;
+        private Label lastNameLabel;
 
         @FXML
-        private Button IrlNameEditBTN;
+        private ToggleButton fullNameEditBTN;
+
+        @FXML
+        private Label typeLBL;
 
         @FXML
         private TextField phoneNumberField;
 
         @FXML
-        private TextField EmailField;
+        private TextField emailField;
 
         @FXML
         private TextField balanceField;
@@ -138,50 +139,66 @@ public class Controllers {
         private TextField storeNameField;
 
         @FXML
-        private Button phoneNumberEditBTN;
+        private Label phoneNumberLBL;
 
         @FXML
-        private Button emailEditBTN;
+        private Label emailLBL;
 
         @FXML
-        private Button balanceEditBTN;
-
-        @FXML
-        private Button storeNameEditBTN;
+        private Label balanceLBL;
 
         @FXML
         private Label storeNameLBL;
 
         @FXML
-        private Label balanceLBL;
+        private ToggleButton PhoneNumberEditBTN;
+
+        @FXML
+        private ToggleButton emailEditBTN;
+
+        @FXML
+        private ToggleButton balanceEditBTN;
+
+        @FXML
+        private ToggleButton StoreNameEditBTN;
 
         private String[] personalInfo;
+        private boolean isPopup;
+
 
         public static void display(String username) {
-            if (username == null) {
-                View.setMainPane(Constants.FXMLs.personalInfoMenu);
-            } else {
-                Stage popup = new Stage();
-                FXMLLoader loader = new FXMLLoader(View.class.getResource( "/fxml/PersonalInfoMenu.fxml"));
-                try {
-                    Parent p = loader.load();
-                    PersonalInfoMenuController controller = loader.getController();
-                    controller.setInfo(username);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-            }
-        }
-
-        private void setInfo(String username) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource( "/fxml/" + Constants.FXMLs.personalInfoMenu + ".fxml"));
+            Parent p = null;
             try {
-                personalInfo = mainController.viewPersonalInfo(username);
-            } catch (Exceptions.UsernameDoesntExistException e) {
+                p = loader.load();
+            } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
+
+            if (username == null) {
+                ((PersonalInfoMenuController)loader.getController()).setInfo(null, false);
+                View.addToStack(Constants.FXMLs.personalInfoMenu);
+                BaseController.setMainPane(p);
+            } else {
+                ((PersonalInfoMenuController)loader.getController()).setInfo(username, true);
+                View.popupWindow("Account detail menu", p, 632, 472);
+            }
+        }
+
+        private void setInfo(String username, boolean isPopup) {
+            try {
+                if (username == null) {
+                    personalInfo = mainController.viewPersonalInfo();
+                } else {
+                    personalInfo = mainController.viewPersonalInfo(username);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            this.isPopup = isPopup;
 
             switch (personalInfo[personalInfo.length - 1]) {
                 case Constants.customerUserType:
@@ -197,61 +214,50 @@ public class Controllers {
         }
 
         private void initCustomer() {
-            storeNameEditBTN.setVisible(false);
-            storeNameField.setVisible(false);
-            storeNameLBL.setVisible(false);
-
-            initCustomerValues();
-            initCustomerActions();
+            initCustomerButtons();
+            initValues();
         }
 
-        private void initCustomerValues() {
-            initAdminValues();
-        }
-
-        private void initCustomerActions() {
-
+        private void initCustomerButtons() {
+            //TODO: complete
+            initAdminButtons();
         }
 
         private void initSeller() {
-            discountsBTN.setVisible(false);
-            buyLogBTN.setVisible(false);
-
-            initSellerValues();
-            initSellerActions();
+            initSellerButtons();
+            initValues();
         }
 
-        private void initSellerValues() {
-            initCustomerValues();
-        }
-
-        private void initSellerActions() {
-
+        private void initSellerButtons() {
+            //TODO: complete
+            initAdminButtons();
         }
 
         private void initAdmin() {
-            storeNameEditBTN.setVisible(false);
-            storeNameField.setVisible(false);
-            storeNameLBL.setVisible(false);
-
-            balanceEditBTN.setVisible(false);
-            balanceField.setVisible(false);
-            balanceLBL.setVisible(false);
-
-            discountsBTN.setVisible(false);
-            buyLogBTN.setVisible(false);
-
-            initAdminValues();
-            initAdminActions();
+            initAdminButtons();
+            initValues();
         }
 
-        private void initAdminValues() {
+        private void initAdminButtons() {
+            //TODO: complete
+            logoutBTN.setOnAction(e -> {
+                try {
+                    mainController.logout();
+                    View.type.set(Constants.anonymousUserType);
+                    if (isPopup) balanceLBL.getScene().getWindow().hide();
+                    else View.goBack();
+
+                } catch (Exceptions.NotLoggedInException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+            });
+        }
+
+        private void initValues() {
 
         }
 
-        private void initAdminActions() {
-
-        }
 
         private void showPersonalInfo(String[] info) {
             System.out.println("1. username: " + info[0]);
@@ -269,7 +275,7 @@ public class Controllers {
         }
     }
 
-    public static class MainMenu {
+    public static class MainMenuController {
         private static void display() {
             View.getStackTrace().clear();
             View.stackSize.set(0);
@@ -754,7 +760,7 @@ public class Controllers {
                 this.category = category;
 
                 detailBTN.setOnAction(e -> ProductDetailMenu.display(id));
-                detailBTN.getStyleClass().add("detail-button");
+                detailBTN.getStyleClass().add("details-button");
 
                 removeBTN.setOnAction(e -> {
                     try {
@@ -785,11 +791,6 @@ public class Controllers {
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
         }
     }
-
-    public static class SellerLogsManagingMenuController {
-
-    }
-
 
     public static class AdminDiscountManagingMenuController implements Initializable {
 
@@ -893,7 +894,7 @@ public class Controllers {
                         ex.printStackTrace();
                     }
                 });
-                detail.getStyleClass().add("detail-button");
+                detail.getStyleClass().add("details-button");
                 remove.getStyleClass().add("remove-button");
             }
 
@@ -943,9 +944,178 @@ public class Controllers {
         }
     }
 
-    public static class AdminRequestManagingMenu {
+    public static class AdminRequestManagingMenuController implements Initializable {
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminRequestManagingMenu);
+        }
+
+        @FXML
+        private TableView<RequestWrapper> pending;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> pendingIdCol;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> pendingTypeCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> pendingDateCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, Button> pendingDetailsCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, HBox> pendingAcceptCOL;
+
+        @FXML
+        private TableView<RequestWrapper> archive;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveIdCol;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveTypeCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveDateCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, Button> archiveDetailsCOL;
+
+        @FXML
+        private TableColumn<RequestWrapper, String> archiveStatusCOL;
+
+        ArrayList<RequestWrapper> pendingRequests;
+        ArrayList<RequestWrapper> archivedRequests;
+
+        public class RequestWrapper {
+            String id, type, date, status;
+            Button decline = new Button();
+            Button details = new Button();
+            Button accept = new Button();
+            HBox acceptDecline = new HBox(accept, decline);
+
+            public RequestWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3]);
+            }
+
+            public RequestWrapper(String id, String type, String date, String status) {
+                this.id = id;
+                this.type = type;
+                this.date = date;
+                this.status = status;
+
+                initButtons();
+            }
+
+            private void initButtons() {
+                decline.getStyleClass().add("decline-button");
+                details.getStyleClass().add("details-button");
+                accept.getStyleClass().add("accept-button");
+
+                acceptDecline.setAlignment(Pos.CENTER);
+
+                decline.setOnAction(e -> {
+                    try {
+                        adminController.acceptRequest(id, false);
+                    } catch (Exceptions.InvalidRequestIdException ex) {
+                        ex.printStackTrace();
+                        return;
+                    }
+                    status = Constants.REQUEST_DECLINE;
+                    archive.getItems().add(this);
+                    archivedRequests.add(this);
+
+                    pending.getItems().remove(this);
+                    pendingRequests.remove(this);
+                });
+//                TODO: wtf.
+//                details.setOnAction(e -> );
+
+                accept.setOnAction(e -> {
+                    try {
+                        adminController.acceptRequest(id, true);
+                    } catch (Exceptions.InvalidRequestIdException ex) {
+                        ex.printStackTrace();
+                        return;
+                    }
+                    status = Constants.REQUEST_ACCEPT;
+                    archive.getItems().add(this);
+                    archivedRequests.add(this);
+
+                    pending.getItems().remove(this);
+                    pendingRequests.remove(this);
+                });
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public Button getDecline() {
+                return decline;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+
+            public Button getAccept() {
+                return accept;
+            }
+
+            public HBox getAcceptDecline() {
+                return acceptDecline;
+            }
+        }
+
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initRequests();
+            initTable();
+        }
+
+        private void initRequests() {
+            pendingRequests = new ArrayList<>();
+            for (String[] pendingRequest : adminController.getPendingRequests()) {
+                pendingRequests.add(new RequestWrapper(pendingRequest));
+            }
+
+            archivedRequests = new ArrayList<>();
+            for (String[] archivedRequest : adminController.getArchivedRequests()) {
+                archivedRequests.add(new RequestWrapper(archivedRequest));
+            }
+        }
+
+        private void initTable() {
+            pendingIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            pendingTypeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
+            pendingDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            pendingAcceptCOL.setCellValueFactory(new PropertyValueFactory<>("acceptDecline"));
+            pendingDateCOL.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+            archiveIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            archiveTypeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
+            archiveDateCOL.setCellValueFactory(new PropertyValueFactory<>("date"));
+            archiveDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            archiveStatusCOL.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+            pending.getItems().addAll(pendingRequests);
+            archive.getItems().addAll(archivedRequests);
         }
     }
 
@@ -1183,7 +1353,7 @@ public class Controllers {
                     //sellerController.sale
                     sales.getItems().remove(this);
                 });
-                details.getStyleClass().add("detail-button");
+                details.getStyleClass().add("details-button");
                 //TODO:
                 //details.setOnAction(e -> );
 
@@ -1438,7 +1608,7 @@ public class Controllers {
             manageCategories.setOnAction(e -> AdminCategoryManagingMenuController.display());
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
             manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
-            manageRequests.setOnAction(e -> AdminRequestManagingMenu.display());
+            manageRequests.setOnAction(e -> AdminRequestManagingMenuController.display());
         }
     }
 
@@ -1468,7 +1638,7 @@ public class Controllers {
                 fullName = firstName + " " + lastName;
 
                 this.remove.getStyleClass().add("remove-button");
-                this.details.getStyleClass().add("detail-button");
+                this.details.getStyleClass().add("details-button");
                 initButtons();
             }
 
@@ -1925,7 +2095,6 @@ public class Controllers {
         }
     }
 
-
     public static class SellerManagingMenuController implements Initializable {
         @FXML
         private Button manageProducts;
@@ -1950,6 +2119,9 @@ public class Controllers {
         }
     }
 
+    public static class SellerLogsManagingMenuController {
+
+    }
 
     public static class BaseController implements Initializable {
         private static BaseController currentBase;
@@ -2010,7 +2182,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            logoBTN.setOnAction(e -> MainMenu.display());
+            logoBTN.setOnAction(e -> MainMenuController.display());
             accountBTN.setOnAction(e -> PersonalInfoMenuController.display(null));
             loginBTN.setOnAction(e -> LoginPopupController.display(new Stage()));
             cartBTN.setOnAction(e -> ShoppingCartMenuController.display());

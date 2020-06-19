@@ -17,6 +17,9 @@ public final class Constants {
     public static final String customerUserType = "Customer";
     public static final String sellerUserType = "Seller";
     public static final String SUPER_CATEGORY_NAME = "SuperCategory";
+    public static final String REQUEST_ACCEPT = "ACCEPTED";
+    public static final String REQUEST_DECLINE = "DECLINED";
+    public static final String REQUEST_PENDING = "PENDING";
     public static final String[] types = new String[]{anonymousUserType, customerUserType, sellerUserType, adminUserType};
 
     public static int getTypeByIndex(String type) {
@@ -34,7 +37,7 @@ public final class Constants {
         public static final String shoppingCartMenu = "ShoppingCartMenu";
         public static final String loginPopup = "LoginPopup";
         public static final String registerPopup = "RegisterPopup";
-        public static final String personalInfoMenu = "PersonalInfoMenuCopy";
+        public static final String personalInfoMenu = "PersonalInfoMenu";
         public static final String productsMenu = "ProductsMenu";
         public static final String adminCategoryManagingMenu = "AdminCategoryManagingMenu";
         public static final String adminCategoryManagingPopup = "AdminCategoryManagingPopup";
@@ -50,5 +53,6 @@ public final class Constants {
         public static final String sellerProductManagingMenu = "SellerProductManagingMenu";
         public static final String sellerSaleManagingMenu = "SellerSaleManagingMenu";
         public static final String sellerLogsMenu = "SellerLogsMenu";
+        public static final String customerBuyLogDetailsPopup = "customerBuyLogDetailsPopup";
     }
 }
