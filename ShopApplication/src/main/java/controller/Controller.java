@@ -59,19 +59,19 @@ public class Controller {
      *             * String username, String password, String firstName, String lastName, String email, String phone
      */
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
-                             String email, String phone, double balance, String storeName) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
+                             String email, String phone, double balance, String storeName, String imagePath) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         usernameTypeValidation(username, type);
         switch (type) {
             case "Customer":
-                new Customer(username, password, firstName, lastName, email, phone, balance);
+                new Customer(username, password, firstName, lastName, email, phone, imagePath ,balance);
                 database.createCustomer();
                 break;
             case "Admin":
-                new Admin(username, password, firstName, lastName, email, phone);
+                new Admin(username, password, firstName, lastName, email, phone, imagePath);
                 database.createAdmin();
                 break;
             case "Seller":
-                new Seller(username, password, firstName, lastName, email, phone, storeName, balance);
+                new Seller(username, password, firstName, lastName, email, phone, imagePath, storeName, balance);
                 database.request();
                 break;
         }
@@ -308,11 +308,12 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
         for (SubProduct subProduct : product.getSubProducts()) {
-            subProducts.add(Utilities.Pack.subProduct(subProduct));
+            subProducts.add(Utilities.Pack.subProductInProduct(subProduct));
         }
         return subProducts;
     }
 
+    //TODO: Useless
     public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -563,4 +564,5 @@ public class Controller {
         if (SubProduct.getSubProductById(subProductId) == null) throw new Exceptions.InvalidSubProductIdException(subProductId);
         else currentCart.removeSubProduct(subProductId);
     }
+
 }

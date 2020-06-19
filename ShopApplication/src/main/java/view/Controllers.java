@@ -16,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -81,6 +82,7 @@ public class Controllers {
 
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
+            name =
         }
 
         private void setAction(Parent p) {
@@ -292,9 +294,13 @@ public class Controllers {
         private ChoiceBox<String> filterCategory;
 
         @FXML
-        private ScrollPane productsPane;
+        private GridPane productsPane;
+
+        @FXML
+        private ScrollPane scrollPane;
 
         public static ArrayList<String[]> products;
+        private static final int numberOfColumns = 3;
 
         public static void display(ArrayList<String[]> products) {
             ProductsMenuController.products = products;
@@ -305,6 +311,7 @@ public class Controllers {
         public void initialize(URL location, ResourceBundle resources) {
             initChoiceBoxes();
             initActions();
+
         }
 
         private void initChoiceBoxes() {
@@ -316,6 +323,43 @@ public class Controllers {
         }
 
         private void initActions() {
+
+        }
+
+        private void initGridPane(ArrayList<String[]> products){
+            int numberOfProducts = products.size();
+            int numberOfRows = numberOfProducts / numberOfColumns +1;
+            productsPane.addColumn(numberOfColumns);
+            productsPane.addRow(numberOfRows);
+
+        }
+
+        private void updatePane(ArrayList<String[]> products){
+            int numberOfProducts = products.size();
+            int numberOfRows = numberOfProducts / numberOfColumns +1;
+            setPaneSize(numberOfRows);
+            int index;
+            for (String[] subProductPack : products) {
+                index = products.indexOf(subProductPack);
+
+            }
+        }
+
+        private void setPaneSize(int numberOfRows){
+            productsPane = new GridPane();
+            int currentRowsNumber = productsPane.getRowCount();
+            int currentColumnsNumber = productsPane.getColumnCount();
+            if(numberOfRows > currentRowsNumber){
+                productsPane.addRow(numberOfRows - currentRowsNumber);
+            }else {
+                productsPane.addRow(currentRowsNumber - numberOfRows);
+            }
+
+            if(numberOfColumns > currentColumnsNumber){
+                productsPane.addColumn(numberOfColumns - currentColumnsNumber);
+            }else {
+                productsPane.addColumn(currentColumnsNumber - numberOfColumns);
+            }
 
         }
     }
@@ -366,7 +410,7 @@ public class Controllers {
             }
             try {
                 PopupStage.initModality(Modality.APPLICATION_MODAL);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             PopupStage.show();
         }

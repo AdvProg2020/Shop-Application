@@ -8,39 +8,66 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="250.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox alignment="TOP_CENTER">
             <children>
                 <Region layoutX="108.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
-                <Label fx:id="sale" text="50%" />
-                <ImageView fx:id="image" fitHeight="90.0" fitWidth="90.0" pickOnBounds="true">
+            <StackPane alignment="TOP_LEFT" prefHeight="175.0" prefWidth="135.0">
+               <children>
+                      <Label id="sale-percentage-label" fx:id="salePercentages" text="50%" />
+                  <VBox alignment="CENTER">
+                     <children>
+                            <ImageView id="product-image" fx:id="image" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
                 </ImageView>
+                        <Label fx:id="available" text="available?" />
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
                 <Region prefHeight="90.0" prefWidth="18.0" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
         <Label fx:id="name" text="name" />
-        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+        <HBox alignment="CENTER_LEFT">
             <children>
                 <Label fx:id="rating" text="rating">
                     <HBox.margin>
-                        <Insets bottom="25.0" />
+                        <Insets />
                     </HBox.margin>
                 </Label>
             </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="149.0" prefHeight="40.0" prefWidth="179.0">
-            <children>
-                <Label fx:id="priceBefore" text="price before" />
-            </children>
-        </HBox>
-        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="204.0" prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <Label fx:id="priceAfter" text="price after" />
-            </children>
-        </HBox>
+      <Region VBox.vgrow="ALWAYS" />
+      <VBox>
+         <children>
+              <HBox alignment="CENTER_LEFT" />
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                      <Label fx:id="priceBefore" text="price before" />
+                      <Label fx:id="priceAfter" text="price after" GridPane.rowIndex="1" />
+                  <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <children>
+                        <ImageView pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="remainingTime" alignment="CENTER" text="R date" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+            <Region HBox.hgrow="ALWAYS" />
+         </children>
+      </VBox>
     </children>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 </VBox>
