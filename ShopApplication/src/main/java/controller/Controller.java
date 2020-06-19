@@ -251,6 +251,36 @@ public class Controller {
         return productToIdNameBrand(products);
     }
 
+    public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale,  String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
+                                                  String storeName, double minRatingScore, HashMap<String, String> propertyFilters){
+        Category category = Category.getCategoryByName(categoryName) != null ? Category.getCategoryByName(categoryName) : Category.getSuperCategory();
+        ArrayList<Product> products;
+        if( category != null){
+            products = new ArrayList<>(category.getProducts(true));
+        }else {
+            products = new ArrayList<>(Product.getAllProducts());
+        }
+
+        ArrayList<SubProduct> subProducts = new ArrayList<>();
+        if( inSale ){
+            for (Product product : products) {
+                subProducts.addAll(product.getSubProductsInSale());
+            }
+        }else {
+            for (Product product : products) {
+                subProducts.add(product.getDefaultSubProduct());
+            }
+        }
+
+        filterSubProducts(available, minPrice, maxPrice, contains, brand, storeName, minRatingScore, subProducts);
+        for (String propertyFilter : propertyFilters.keySet()) {
+            if (propertyFilters.get(propertyFilter) != null)
+                Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
+        }
+        sortSubProducts(sortBy, isIncreasing, subProducts);
+        return Utilities.Pack.subProductBoxes(subProducts);
+    }
+
     public ArrayList<String> getAvailableValuesOfAPropertyOfACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
         return Utilities.Filter.getAvailableValuesOfAPropertyOfACategory(categoryName, property);
     }

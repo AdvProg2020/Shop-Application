@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -23,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Product;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,53 +47,7 @@ public class Controllers {
         customerController = View.customerController;
     }
 
-    public static class ProductBoxController {
 
-        @FXML
-        private Label sale;
-
-        @FXML
-        private ImageView image;
-
-        @FXML
-        private Label name;
-
-        @FXML
-        private Label rating;
-
-        @FXML
-        private Label priceBefore;
-
-        @FXML
-        private Label priceAfter;
-
-        private String[] subProduct;
-
-        public static Parent createBox(String[] subProduct) {
-            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
-            Parent p;
-            try {
-                p = loader.load();
-                ProductBoxController pbc = loader.getController();
-                pbc.setInfo(subProduct);
-                pbc.setAction(p);
-                return p;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        private void setInfo(String[] subProductInfo) {
-            subProduct = subProductInfo;
-
-        }
-
-        private void setAction(Parent p) {
-            //TODO: check the String[] index.
-            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[4],  false));
-        }
-    }
 
     public static class PersonalInfoMenuController {
 
@@ -294,18 +250,16 @@ public class Controllers {
         private ChoiceBox<String> filterSeller;
 
         @FXML
-        private ChoiceBox<String> filterCategory;
+        private GridPane propertyFilters;
 
         @FXML
         private GridPane productsPane;
 
-        @FXML
-        private ScrollPane scrollPane;
 
         public static ArrayList<String[]> products;
         private static final int numberOfColumns = 3;
 
-        public static void display(ArrayList<String[]> products) {
+        public static void display(String categoryName, boolean inSale) {
             ProductsMenuController.products = products;
             View.setMainPane(Constants.FXMLs.productsMenu);
         }
@@ -317,22 +271,18 @@ public class Controllers {
         }
 
         private void initChoiceBoxes() {
-            ArrayList<String> brands = (ArrayList<String>) products.stream().map(p -> p[2]).collect(Collectors.toList());
+            ArrayList<String> brands = (ArrayList<String>) products.stream().map(p -> p[3]).collect(Collectors.toList());
             HashSet<String> b = new HashSet<>(brands);
             filterBrand.setItems(FXCollections.observableArrayList(b));
+
+            ArrayList<String> sellers = (ArrayList<String>) products.stream().map(p -> p[12]).collect(Collectors.toList());
+            HashSet<String> s = new HashSet<>(sellers);
+            filterSeller.setItems(FXCollections.observableArrayList(s));
 
 
         }
 
         private void initActions() {
-
-        }
-
-        private void initGridPane(ArrayList<String[]> products){
-            int numberOfProducts = products.size();
-            int numberOfRows = numberOfProducts / numberOfColumns +1;
-            productsPane.addColumn(numberOfColumns);
-            productsPane.addRow(numberOfRows);
 
         }
 
@@ -343,7 +293,8 @@ public class Controllers {
             int index;
             for (String[] subProductPack : products) {
                 index = products.indexOf(subProductPack);
-
+                Parent productBox = ProductBoxController.createBox(subProductPack);
+                productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns, 1, 1);
             }
         }
 
@@ -363,6 +314,55 @@ public class Controllers {
                 productsPane.addColumn(currentColumnsNumber - numberOfColumns);
             }
 
+        }
+    }
+
+    public static class ProductBoxController {
+
+        @FXML
+        private Label sale;
+
+        @FXML
+        private ImageView image;
+
+        @FXML
+        private Label name;
+
+        @FXML
+        private Label rating;
+
+        @FXML
+        private Label priceBefore;
+
+        @FXML
+        private Label priceAfter;
+
+        private String[] subProduct;
+
+        public static Parent createBox(String[] subProduct) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                ProductBoxController pbc = loader.getController();
+                pbc.setInfo(subProduct);
+                pbc.setAction(p);
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private void setInfo(String[] subProductInfo) {
+            subProduct = subProductInfo;
+            name.setText(subProductInfo[2] + " " + subProductInfo[3]);
+            image.setImage(new Image(subProductInfo[6]));
+
+        }
+
+        private void setAction(Parent p) {
+            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0],  false));
         }
     }
 
@@ -2586,13 +2586,7 @@ public class Controllers {
             if (input != null) {
                 ArrayList<String[]> products = getCurrentProducts();
                 if (products != null) {
-                    try {
-                        ProductsMenuController.display(mainController.showProducts(getProductIDs(products),
-                                null, false, new String[]{"false", "0", "0", input, null, null, "0"},
-                                new HashMap<>()));
-                    } catch (Exceptions.InvalidProductIdException e) {
-                        e.printStackTrace();
-                    }
+                        ProductsMenuController.display("SuperCategory", false);
                 }
             }
         }
@@ -2600,7 +2594,8 @@ public class Controllers {
         //search utils.
         private ArrayList<String[]> getCurrentProducts() {
             try {
-                return (ArrayList<String[]>) mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME).clone();
+                return new ArrayList<>( mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME));
+
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
                 return null;
