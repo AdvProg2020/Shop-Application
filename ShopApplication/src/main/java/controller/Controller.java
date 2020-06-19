@@ -560,7 +560,7 @@ public class Controller {
         currentCart.clearCart();
     }
 
-    public void removeSubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
+    public void removeSubProductFromCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
         if (SubProduct.getSubProductById(subProductId) == null) throw new Exceptions.InvalidSubProductIdException(subProductId);
         else currentCart.removeSubProduct(subProductId);
     }
