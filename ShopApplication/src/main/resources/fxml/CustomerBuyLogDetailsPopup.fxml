@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="850.0"
-            stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="view.GUI.Controllers$">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="500.0" prefWidth="850.0" stylesheets="@../css/ManagingPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="view.GUI.Controllers$CustomerBuyLogDetailsPopupController">
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="40.0"/>
     </padding>
@@ -17,8 +26,8 @@
                                  text="Name-Brand (Seller)"/>
                     <TableColumn fx:id="countCOL" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0"
                                  text="Count"/>
-                    <TableColumn fx:id="priceCOL" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0"
-                                 resizable="false" sortable="false" text="Unit Price"/>
+                    <TableColumn fx:id="unitPriceCOL" editable="false" maxWidth="100.0" minWidth="100.0"
+                                 prefWidth="100.0" resizable="false" sortable="false" text="Unit Price"/>
                     <TableColumn fx:id="saleCOL" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0"
                                  resizable="false" sortable="false" text="Sale"/>
                 </columns>
@@ -60,9 +69,9 @@
                 <Label styleClass="property-label" text="Rcvr. Address:" GridPane.rowIndex="8"/>
                 <Label styleClass="property-label" text="Rcvr. Phone:" GridPane.rowIndex="7"/>
                 <Label styleClass="property-label" text="Ship Status:" GridPane.rowIndex="5"/>
-                <Label fx:id="phoneLBL" styleClass="value-label" text="Label" GridPane.columnIndex="1"
+                <Label fx:id="recieverPhoneLBL" styleClass="value-label" text="Label" GridPane.columnIndex="1"
                        GridPane.rowIndex="7"/>
-                <Label fx:id="nameLBL" styleClass="value-label" text="Label" GridPane.columnIndex="1"
+                <Label fx:id="recieverNameLBL" styleClass="value-label" text="Label" GridPane.columnIndex="1"
                        GridPane.rowIndex="6"/>
                 <Label fx:id="saleLBL" styleClass="value-label" text="Label" GridPane.columnIndex="1"
                        GridPane.rowIndex="3"/>
@@ -73,7 +82,6 @@
                 <Label fx:id="shipStatusLBL" styleClass="value-label" text="Label" GridPane.columnIndex="1"
                        GridPane.rowIndex="5"/>
                 <TextArea fx:id="addressArea" editable="false" stylesheets="@../css/TextArea.css"
-                          text="nendolkmcpejsvdvzdbf&#10;djvpsjvpseidjvvevsdhvn&#10;io klsndoiz knsodzdv&#10;dfbdb&#10;dbfdfbd&#10;bdfbdbf&#10;&#10;x"
                           GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.rowSpan="2"/>
                 <Label styleClass="property-label" text="Discount:" GridPane.rowIndex="4"/>
                 <Label fx:id="discountLBL" styleClass="value-label" text="Label" GridPane.columnIndex="1"

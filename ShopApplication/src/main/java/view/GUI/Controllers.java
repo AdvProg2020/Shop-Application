@@ -24,10 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //TODO: purchase menu
@@ -167,26 +164,15 @@ public class Controllers {
 
 
         public static void display(String username) {
-            FXMLLoader loader = new FXMLLoader(View.class.getResource( "/fxml/" + Constants.FXMLs.personalInfoMenu + ".fxml"));
-            Parent p = null;
-            try {
-                p = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
             if (username == null) {
-                ((PersonalInfoMenuController)loader.getController()).setInfo(null, false);
-                View.addToStack(Constants.FXMLs.personalInfoMenu);
-                BaseController.setMainPane(p);
+                ((PersonalInfoMenuController)View.setMainPane(Constants.FXMLs.personalInfoMenu)).init(null, false);
             } else {
-                ((PersonalInfoMenuController)loader.getController()).setInfo(username, true);
-                View.popupWindow("Account detail menu", p, 632, 472);
+                ((PersonalInfoMenuController)
+                        View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 632, 472)).init(username, true);
             }
         }
 
-        private void setInfo(String username, boolean isPopup) {
+        private void init(String username, boolean isPopup) {
             try {
                 if (username == null) {
                     personalInfo = mainController.viewPersonalInfo();
@@ -244,8 +230,10 @@ public class Controllers {
                 try {
                     mainController.logout();
                     View.type.set(Constants.anonymousUserType);
+
+                    MainMenuController.display();
+
                     if (isPopup) balanceLBL.getScene().getWindow().hide();
-                    else View.goBack();
 
                 } catch (Exceptions.NotLoggedInException ex) {
                     ex.printStackTrace();
@@ -256,22 +244,6 @@ public class Controllers {
 
         private void initValues() {
 
-        }
-
-
-        private void showPersonalInfo(String[] info) {
-            System.out.println("1. username: " + info[0]);
-            System.out.println("2. type: " + info[1]);
-            System.out.println("3. first name: " + info[2]);
-            System.out.println("4. last name: " + info[3]);
-            System.out.println("5. email: " + info[4]);
-            System.out.println("6. phone number: " + info[5]);
-            if (info.length > 6) {
-                System.out.println("7. balance: " + info[6]);
-            }
-            if (info.length > 7) {
-                System.out.println("8. store name: " + info[7]);
-            }
         }
     }
 
@@ -425,6 +397,8 @@ public class Controllers {
                 try {
                     mainController.login(username, password);
                     View.type.set(mainController.getType());
+                    if( ! View.type.get().equals(Constants.customerUserType)) MainMenuController.display();
+
                     PopupStage.close();
                 } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
                     errorLBL.setText("invalid username or password");
@@ -1278,25 +1252,14 @@ public class Controllers {
         private Button discardBTN;
 
         public static void display(String categoryName) {
-            FXMLLoader loader = new FXMLLoader(View.class.getResource(View.getLocation(Constants.FXMLs.adminCategoryManagingPopup)));
-            Parent p = null;
-            try {
-                p = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            AdminCategoryManagingPopupController controller = loader.getController();
-            controller.init(categoryName);
-
-            View.popupWindow("Add category", p, 650, 500);
+            ((AdminCategoryManagingPopupController)
+                    View.popupWindow("Add category", Constants.FXMLs.adminCategoryManagingPopup, 650, 500)).init(categoryName);
         }
 
         private void init(String categoryName) {
 
         }
     }
-
 
     public static class SellerSalesManagingMenuController implements Initializable {
         private ArrayList<SaleWrapper> sellerSales = new ArrayList<>();
@@ -1566,6 +1529,253 @@ public class Controllers {
         }
     }
 
+    public static class CustomerBuyLogMenuController implements Initializable {
+
+        public class BuyLogWrapper {
+            String id, date, receiverUsername, receiverName, shippingStatus;
+            double paidMoney, totalDiscount;
+            Button details = new Button();
+
+            public BuyLogWrapper(String[] info) {
+                this(info[0], info[5], info[1], info[2], info[6],Double.parseDouble(info[7]), Double.parseDouble(info[8]));
+            }
+
+            public BuyLogWrapper(String id, String date, String receiverUsername, String receiverName, String shippingStatus, double paidMoney, double totalDiscount) {
+                this.id = id;
+                this.date = date;
+                this.receiverUsername = receiverUsername;
+                this.receiverName = receiverName;
+                this.shippingStatus = shippingStatus;
+                this.paidMoney = paidMoney;
+                this.totalDiscount = totalDiscount;
+
+                details.getStyleClass().add("details-button");
+                details.setOnAction(e -> CustomerBuyLogDetailsPopupController.display(id));
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getReceiverUsername() {
+                return receiverUsername;
+            }
+
+            public String getReceiverName() {
+                return receiverName;
+            }
+
+            public String getShippingStatus() {
+                return shippingStatus;
+            }
+
+            public double getPaidMoney() {
+                return paidMoney;
+            }
+
+            public double getTotalDiscount() {
+                return totalDiscount;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+
+            public String getReceiver() {
+                return receiverName + " (" + receiverUsername + ")";
+            }
+        }
+
+        @FXML
+        private TableView<BuyLogWrapper> products;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, String> dateCol;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, String> customerCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, Double> paidMoneyCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, Double> discountAmountCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, String> shippingStatusCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, Button> detailsCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initTable();
+        }
+
+        private void initTable() {
+            dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+            customerCOL.setCellValueFactory(new PropertyValueFactory<>("receiver"));
+            paidMoneyCOL.setCellValueFactory(new PropertyValueFactory<>("paidMoney"));
+            discountAmountCOL.setCellValueFactory(new PropertyValueFactory<>("totalDiscount"));
+            shippingStatusCOL.setCellValueFactory(new PropertyValueFactory<>("shippingStatus"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+        }
+    }
+
+    public static class CustomerBuyLogDetailsPopupController {
+
+        private ArrayList<BuyLogItemWrapper> buyItems;
+
+        public static void display(String logId) {
+            ((CustomerBuyLogDetailsPopupController)
+            View.setMainPane(Constants.FXMLs.customerBuyLogDetailsPopup)).init(logId);
+        }
+
+        private void init(String logId) {
+            try {
+                ArrayList<String[]> logDetails = customerController.getOrderWithId(logId);
+                initTable(logDetails.subList(1, logDetails.size()));
+                initValues(logDetails.get(0));
+            } catch (Exceptions.InvalidLogIdException e) {
+                e.printStackTrace();
+            } catch (Exceptions.CustomerLoginException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void initTable(List<String[]> items) {
+            buyItems = new ArrayList<>();
+            for (String[] item : items) {
+                buyItems.add(new BuyLogItemWrapper(item));
+            }
+
+            logItems.getItems().addAll(buyItems);
+
+            subProductCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
+            countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
+            saleCOL.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
+            unitPriceCOL.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        }
+
+        private void initValues(String[] info) {
+            idLBL.setText(info[0]);
+            dateLBL.setText(info[5]);
+            priceLBL.setText(info[7] + "$");
+            discountLBL.setText(info[8]);
+            shipStatusLBL.setText(info[6]);
+            receiverNameLBL.setText(info[6]);
+            receiverPhoneLBL.setText(info[3]);
+
+            StringBuilder address = new StringBuilder(info[4]);
+            int offset = 0 , size = address.length();
+            while (offset + 19 < size) {
+                offset += 19;
+                address.insert(offset, "\n");
+            }
+            addressArea.setText(address.toString());
+            addressArea.setEditable(false);
+
+            double totalSale = 0;
+            for (BuyLogItemWrapper buyItem : buyItems) {
+                totalSale += buyItem.getSaleAmount();
+            }
+
+            saleLBL.setText(totalSale + "$");
+        }
+
+        public class BuyLogItemWrapper {
+            String id, nameBrandSeller, sellerStoreName;
+            int count;
+            double unitPrice, saleAmount;
+
+            private BuyLogItemWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), Double.parseDouble(info[6]), Double.parseDouble(info[7]));
+            }
+
+            public BuyLogItemWrapper(String id, String name, String brand, String sellerName, String sellerStoreName, int count, double unitPrice, double saleAmount) {
+                this.id = id;
+                nameBrandSeller = name + " " + brand + "(" + sellerName + ")";
+                this.sellerStoreName = sellerStoreName;
+                this.count = count;
+                this.unitPrice = unitPrice;
+                this.saleAmount = saleAmount;
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getNameBrandSeller() {
+                return nameBrandSeller;
+            }
+
+            public String getSellerStoreName() {
+                return sellerStoreName;
+            }
+
+            public int getCount() {
+                return count;
+            }
+
+            public double getUnitPrice() {
+                return unitPrice;
+            }
+
+            public double getSaleAmount() {
+                return saleAmount;
+            }
+        }
+
+        @FXML
+        private TableView<BuyLogItemWrapper> logItems;
+
+        @FXML
+        private TableColumn<BuyLogItemWrapper, String> subProductCOL;
+
+        @FXML
+        private TableColumn<BuyLogItemWrapper, Integer> countCOL;
+
+        @FXML
+        private TableColumn<BuyLogItemWrapper, Double> unitPriceCOL;
+
+        @FXML
+        private TableColumn<BuyLogItemWrapper, Double> saleCOL;
+
+        @FXML
+        private Label idLBL;
+
+        @FXML
+        private Label receiverPhoneLBL;
+
+        @FXML
+        private Label receiverNameLBL;
+
+        @FXML
+        private Label saleLBL;
+
+        @FXML
+        private Label priceLBL;
+
+        @FXML
+        private Label dateLBL;
+
+        @FXML
+        private Label shipStatusLBL;
+
+        @FXML
+        private TextArea addressArea;
+
+        @FXML
+        private Label discountLBL;
+    }
+
     public static class PurchaseMenuController {
         public static void display() {
             View.setMainPane(Constants.FXMLs.purchaseMenu);
@@ -1614,8 +1824,8 @@ public class Controllers {
 
     public static class AdminAccountManagingMenuController implements Initializable {
 
-        public static ArrayList<AccountWrapper> customers = new ArrayList<>();
-        public static ArrayList<AccountWrapper> sellers = new ArrayList<>();
+        public  ArrayList<AccountWrapper> customers;
+        public  ArrayList<AccountWrapper> sellers;
 
         public class AccountWrapper {
             String id, username, firstName, lastName, phone, email, fullName;
@@ -1754,6 +1964,9 @@ public class Controllers {
 
         private void initAccounts(){
             ArrayList<String[]> all = adminController.manageUsers();
+            sellers = new ArrayList<>();
+            customers = new ArrayList<>();
+
             for (String[] strings : all) {
                 if (strings[6].equals("Seller")) {
                     sellers.add(new AccountWrapper(strings));
@@ -1865,17 +2078,8 @@ public class Controllers {
         }
 
         public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount) {
-
-            FXMLLoader loader = new FXMLLoader(View.class.getResource(View.getLocation(Constants.FXMLs.adminDiscountManagingPopup)));
-            Parent p = null;
-            try {
-                p = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            AdminDiscountManagingPopupController controller = loader.getController();
-            controller.init(discount);
-            View.popupWindow((discount == null) ? "Create Discount":"Discount Details", p, 800, 500);
+            ((AdminDiscountManagingPopupController)
+                    View.popupWindow((discount == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).init(discount);
         }
 
         private void init(AdminDiscountManagingMenuController.DiscountWrapper discount) {
