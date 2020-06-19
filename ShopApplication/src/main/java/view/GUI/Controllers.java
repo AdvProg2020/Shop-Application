@@ -1531,42 +1531,110 @@ public class Controllers {
 
     public static class CustomerBuyLogMenuController implements Initializable {
 
-        @FXML
-        private TableView<?> products;
+        public class BuyLogWrapper {
+            String id, date, receiverUsername, receiverName, shippingStatus;
+            double paidMoney, totalDiscount;
+            Button details = new Button();
+
+            public BuyLogWrapper(String[] info) {
+                this(info[0], info[5], info[1], info[2], info[6],Double.parseDouble(info[7]), Double.parseDouble(info[8]));
+            }
+
+            public BuyLogWrapper(String id, String date, String receiverUsername, String receiverName, String shippingStatus, double paidMoney, double totalDiscount) {
+                this.id = id;
+                this.date = date;
+                this.receiverUsername = receiverUsername;
+                this.receiverName = receiverName;
+                this.shippingStatus = shippingStatus;
+                this.paidMoney = paidMoney;
+                this.totalDiscount = totalDiscount;
+
+                details.getStyleClass().add("details-button");
+                details.setOnAction(e -> CustomerBuyLogDetailsPopupController.display(id));
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getReceiverUsername() {
+                return receiverUsername;
+            }
+
+            public String getReceiverName() {
+                return receiverName;
+            }
+
+            public String getShippingStatus() {
+                return shippingStatus;
+            }
+
+            public double getPaidMoney() {
+                return paidMoney;
+            }
+
+            public double getTotalDiscount() {
+                return totalDiscount;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+
+            public String getReceiver() {
+                return receiverName + " (" + receiverUsername + ")";
+            }
+        }
 
         @FXML
-        private TableColumn<?, ?> dateCol;
+        private TableView<BuyLogWrapper> products;
 
         @FXML
-        private TableColumn<?, ?> customerCOL;
+        private TableColumn<BuyLogWrapper, String> dateCol;
 
         @FXML
-        private TableColumn<?, ?> paidMoneyCOL;
+        private TableColumn<BuyLogWrapper, String> customerCOL;
 
         @FXML
-        private TableColumn<?, ?> discountAmountCOL;
+        private TableColumn<BuyLogWrapper, Double> paidMoneyCOL;
 
         @FXML
-        private TableColumn<?, ?> shippingStatusCOL;
+        private TableColumn<BuyLogWrapper, Double> discountAmountCOL;
 
         @FXML
-        private TableColumn<?, ?> detailsCOL;
+        private TableColumn<BuyLogWrapper, String> shippingStatusCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, Button> detailsCOL;
 
         @FXML
         private Label errorLBL;
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            initTable();
+        }
 
+        private void initTable() {
+            dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+            customerCOL.setCellValueFactory(new PropertyValueFactory<>("receiver"));
+            paidMoneyCOL.setCellValueFactory(new PropertyValueFactory<>("paidMoney"));
+            discountAmountCOL.setCellValueFactory(new PropertyValueFactory<>("totalDiscount"));
+            shippingStatusCOL.setCellValueFactory(new PropertyValueFactory<>("shippingStatus"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
         }
     }
 
-    public static class CustomerBuyLogDetailsPopup {
+    public static class CustomerBuyLogDetailsPopupController {
 
         private ArrayList<BuyLogItemWrapper> buyItems;
 
-        public void display(String logId) {
-            ((CustomerBuyLogDetailsPopup)
+        public static void display(String logId) {
+            ((CustomerBuyLogDetailsPopupController)
             View.setMainPane(Constants.FXMLs.customerBuyLogDetailsPopup)).init(logId);
         }
 
