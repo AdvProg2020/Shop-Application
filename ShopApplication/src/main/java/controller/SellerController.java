@@ -18,7 +18,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 public class SellerController {
 
@@ -333,7 +332,7 @@ public class SellerController {
             for (String productId : productIds) {
                 product = Product.getProductById(productId);
                 if (product != null) {
-                    subProduct = product.getSubProductWithSellerId(currentAccount().getId());
+                    subProduct = product.getSubProductOfSeller(currentAccount().getId());
                     if (subProduct != null)
                         sale.addSubProduct(subProduct.getId());
                     else

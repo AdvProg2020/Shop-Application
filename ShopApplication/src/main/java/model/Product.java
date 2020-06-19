@@ -6,7 +6,7 @@ import model.request.AddProductRequest;
 import java.util.*;
 
 public class Product implements ModelBasic {
-    private static String DEFAULT_IMAGE_PATH = ""; //TODO: set value
+    private static String DEFAULT_IMAGE_PATH = "/img/default-product-pic.png"; //TODO: set value
     private static Map<String, Product> allProducts = new HashMap<>();
     private static int lastNum = 1;
     private String productId;
@@ -163,13 +163,23 @@ public class Product implements ModelBasic {
         return subProducts;
     }
 
-    public SubProduct getSubProductWithSellerId(String sellerId) {
+    public SubProduct getSubProductOfSeller(String sellerId) {
         for (SubProduct subProduct : getSubProducts()) {
             if (subProduct.getSeller().getId().equals(sellerId))
                 return subProduct;
         }
 
         return null;
+    }
+
+    public List<SubProduct> getSubProductsInSale() {
+        List<SubProduct> subProducts = new ArrayList<>();
+        for (SubProduct subProduct : getSubProducts()) {
+            if (subProduct.getSale() == null)
+                subProducts.add(subProduct);
+        }
+
+        return subProducts;
     }
 
     public boolean isSoldInStoreWithName(String storeName) {
@@ -284,6 +294,7 @@ public class Product implements ModelBasic {
         return maximum;
     }
 
+    //TODO: delete
     public int getTotalRemainingCount() {
         int total = 0;
         for (SubProduct subProduct : getSubProducts()) {
