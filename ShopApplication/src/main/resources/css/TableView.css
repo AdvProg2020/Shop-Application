@@ -35,6 +35,14 @@
     -fx-graphic: url("../img/decrease-button.png");
 }
 
+.accept-button {
+    -fx-graphic: url("../img/accept-button.png");
+}
+
+.decline-button {
+    -fx-graphic: url("../img/decline-button.png");
+}
+
 .count-field {
     -fx-background-color: white;
     -fx-font-size: 14;
@@ -72,6 +80,7 @@
     -fx-text-fill: text-color-2;
     -fx-border-color: darkgrey;
     -fx-border-width: 0 0 0 0.2;
+    -fx-font-size: 14;
 }
 
 
