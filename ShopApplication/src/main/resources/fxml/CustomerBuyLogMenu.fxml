@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.Controllers$CustomerLogsMenu">
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$CustomerBuyLogMenuController">
     <center>
         <VBox alignment="CENTER" maxWidth="-Infinity" BorderPane.alignment="CENTER">
             <padding>

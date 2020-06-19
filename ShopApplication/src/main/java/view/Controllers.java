@@ -1,4 +1,4 @@
-package view.GUI;
+package view;
 
 import controller.*;
 import javafx.beans.binding.Bindings;
@@ -322,6 +322,9 @@ public class Controllers {
 
     public static class ProductDetailMenu {
         public static void display(String productId) {
+        }
+
+        private void init(String productId) {
 
         }
     }
@@ -1584,10 +1587,6 @@ public class Controllers {
             public Button getDetails() {
                 return details;
             }
-
-            public String getReceiver() {
-                return receiverName + " (" + receiverUsername + ")";
-            }
         }
 
         @FXML
@@ -1621,7 +1620,7 @@ public class Controllers {
 
         private void initTable() {
             dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
-            customerCOL.setCellValueFactory(new PropertyValueFactory<>("receiver"));
+            customerCOL.setCellValueFactory(new PropertyValueFactory<>("receiverName"));
             paidMoneyCOL.setCellValueFactory(new PropertyValueFactory<>("paidMoney"));
             discountAmountCOL.setCellValueFactory(new PropertyValueFactory<>("totalDiscount"));
             shippingStatusCOL.setCellValueFactory(new PropertyValueFactory<>("shippingStatus"));

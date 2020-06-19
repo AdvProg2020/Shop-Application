@@ -18,7 +18,7 @@
 
 <BorderPane prefHeight="500.0" prefWidth="800.0" stylesheets="@../css/ManagingPopup.css"
             xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="view.GUI.Controllers$AdminDiscountManagingPopupController">
+            fx:controller="view.Controllers$AdminDiscountManagingPopupController">
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="40.0"/>
     </padding>

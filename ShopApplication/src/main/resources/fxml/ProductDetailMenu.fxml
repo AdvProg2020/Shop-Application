@@ -26,7 +26,7 @@
                   <ImageView fx:id="image" fitHeight="250.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
                   <VBox spacing="20.0">
                      <children>
-                        <Label fx:id="name" text="Name">
+                        <Label fx:id="nameLBL" text="Name">
                            <font>
                               <Font size="24.0" />
                            </font>
@@ -34,13 +34,13 @@
                         <HBox prefWidth="200.0" spacing="20.0">
                            <children>
                               <Label text="Brand:" />
-                              <Label fx:id="brand" layoutX="10.0" layoutY="10.0" text="brand" />
+                              <Label fx:id="brandLBL" layoutX="10.0" layoutY="10.0" text="brand" />
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="65.0" prefWidth="200.0" spacing="20.0">
                            <children>
                               <Label text="Category:" />
-                              <Label fx:id="category" layoutX="10.0" layoutY="10.0" text="category" />
+                              <Label fx:id="categoryLBL" layoutX="10.0" layoutY="10.0" text="category" />
                            </children>
                         </HBox>
                      </children>
@@ -48,11 +48,11 @@
                   <Region HBox.hgrow="ALWAYS" />
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="20.0">
                      <children>
-                        <Label text="Seller" />
-                        <Label fx:id="priceBeforeSale" layoutX="10.0" layoutY="10.0" text="Price before + sale percentage" />
-                        <Label fx:id="priceAfter" layoutX="10.0" layoutY="27.0" text="price after" />
-                        <Button mnemonicParsing="false" text="Add to cart" />
-                        <Button fx:id="compare" layoutX="122.0" layoutY="178.0" mnemonicParsing="false" text="Compare" />
+                        <Label fx:id="defSellerLBL" text="Seller" />
+                        <Label fx:id="priceBeforeAndPercentageLBL" layoutX="10.0" layoutY="10.0" text="Price before + sale percentage" />
+                        <Label fx:id="priceAfterLBL" layoutX="10.0" layoutY="27.0" text="price after" />
+                        <Button fx:id="addToCartBTN" mnemonicParsing="false" text="Add to cart" />
+                        <Button fx:id="compareBTN" layoutX="122.0" layoutY="178.0" mnemonicParsing="false" text="Compare" />
                      </children>
                   </VBox>
                </children>
@@ -60,12 +60,12 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="sellers" prefHeight="150.0" prefWidth="1000.0">
+            <TableView fx:id="sellersTBL" prefHeight="150.0" prefWidth="1000.0">
               <columns>
-                <TableColumn fx:id="number" prefWidth="100.0" text="No" />
-                  <TableColumn fx:id="seller" prefWidth="300.0" text="Seller" />
-                  <TableColumn fx:id="price" prefWidth="282.0" text="Price" />
-                  <TableColumn fx:id="numberAvailable" prefWidth="317.0" text="Number Available" />
+                <TableColumn fx:id="sellersTBLNumberCOL" prefWidth="100.0" text="No" />
+                  <TableColumn fx:id="sellersTBLSellerCOL" prefWidth="300.0" text="Seller" />
+                  <TableColumn fx:id="sellersTBLPriceCOL" prefWidth="282.0" text="Price" />
+                  <TableColumn fx:id="sellersTBLNumberAvailableCOL" prefWidth="317.0" text="Number Available" />
               </columns>
                <VBox.margin>
                   <Insets left="100.0" right="100.0" top="10.0" />
@@ -84,7 +84,7 @@
                         <VBox prefHeight="121.0" prefWidth="1003.0" spacing="10.0">
                            <children>
                               <Label text="Product Info" />
-                              <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="578.13671875" />
+                              <Text fx:id="productInfoTXT" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="578.13671875" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -104,10 +104,10 @@
                   <VBox layoutX="109.0" layoutY="-86.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                      <children>
                         <Label text="Properties" />
-                        <TableView prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="PropertiesTBL" prefHeight="200.0" prefWidth="200.0">
                           <columns>
-                            <TableColumn fx:id="property" prefWidth="306.0" text="Property" />
-                            <TableColumn fx:id="value" prefWidth="560.0" text="value" />
+                            <TableColumn fx:id="propertyTab" prefWidth="306.0" text="Property" />
+                            <TableColumn fx:id="valueTab" prefWidth="560.0" text="value" />
                           </columns>
                         </TableView>
                      </children>

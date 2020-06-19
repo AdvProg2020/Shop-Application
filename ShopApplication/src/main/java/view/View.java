@@ -1,4 +1,4 @@
-package view.GUI;
+package view;
 
 import controller.*;
 import javafx.application.Application;
@@ -6,13 +6,10 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.Category;
 import model.database.Database;
 import model.database.DatabaseManager;

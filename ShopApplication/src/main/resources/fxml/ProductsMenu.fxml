@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="view.GUI.Controllers$ProductsMenuController">
+            fx:controller="view.Controllers$ProductsMenuController">
     <top>
         <Accordion BorderPane.alignment="CENTER">
             <panes>

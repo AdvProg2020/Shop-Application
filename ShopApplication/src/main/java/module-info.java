@@ -10,6 +10,6 @@ module view {
     opens model.request to com.google.gson, javafx.base;
     opens model.log to com.google.gson, javafx.base;
 
-    opens view.GUI to javafx.fxml, javafx.base;
-    exports view.GUI;
+    opens view to javafx.fxml, javafx.base;
+    exports view;
 }

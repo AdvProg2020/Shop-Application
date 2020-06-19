@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingIntro.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.GUI.Controllers$SellerManagingMenuController">
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$SellerManagingMenuController">
     <center>
         <VBox alignment="CENTER" spacing="40.0">
             <Button id="products-button" fx:id="manageProducts" mnemonicParsing="false" text="Manage Products"/>
