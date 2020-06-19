@@ -89,18 +89,18 @@ public class SellerController {
     public ArrayList<String[]> manageProducts() {
         ArrayList<String[]> products = new ArrayList<>();
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
-            products.add(Utilities.Pack.product(subProduct.getProduct()));
+            products.add(Utilities.Pack.sellerSubProduct(subProduct));
         }
         return products;
     }
 
+    //TODO: Useless
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID))
-                return Utilities.Pack.subProductExtended(subProduct);
+                return Utilities.Pack.subProduct(subProduct);
         }
         throw new Exceptions.InvalidProductIdException(productID);
-
     }
 
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
@@ -194,7 +194,7 @@ public class SellerController {
     }
 
     //Todo: change it again!
-    public void addNewProduct(String name, String brand, String infoText, String categoryName, ArrayList<String> specialProperties,
+    public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, ArrayList<String> specialProperties,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
         Product product = Product.getProductByNameAndBrand(name, brand);
@@ -210,7 +210,7 @@ public class SellerController {
             for (int i = 0; i < size; i++) {
                 alaki.add(Integer.toString(i));
             }
-            new Product(name, brand, infoText, category.getId(), alaki, subProduct);
+            new Product(name, brand, infoText, imagePath, category.getId(), alaki, subProduct);
             database().request();
         }
     }
@@ -315,8 +315,8 @@ public class SellerController {
     }
 
     public void addSale(String StartDate, String EndDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller, Exceptions.InvalidFormatException {
-        Date startDate ;
-        Date endDate ;
+        Date startDate;
+        Date endDate;
         try {
             startDate = dateFormat.parse(StartDate);
             endDate = dateFormat.parse(EndDate);

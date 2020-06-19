@@ -16,8 +16,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -81,10 +84,12 @@ public class Controllers {
 
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
+
         }
 
         private void setAction(Parent p) {
-            p.setOnMouseClicked(e -> ProductDetailMenu.display(subProduct[4]));
+            //TODO: check the String[] index.
+            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[4],  false));
         }
     }
 
@@ -292,9 +297,13 @@ public class Controllers {
         private ChoiceBox<String> filterCategory;
 
         @FXML
-        private ScrollPane productsPane;
+        private GridPane productsPane;
+
+        @FXML
+        private ScrollPane scrollPane;
 
         public static ArrayList<String[]> products;
+        private static final int numberOfColumns = 3;
 
         public static void display(ArrayList<String[]> products) {
             ProductsMenuController.products = products;
@@ -318,15 +327,114 @@ public class Controllers {
         private void initActions() {
 
         }
+
+        private void initGridPane(ArrayList<String[]> products){
+            int numberOfProducts = products.size();
+            int numberOfRows = numberOfProducts / numberOfColumns +1;
+            productsPane.addColumn(numberOfColumns);
+            productsPane.addRow(numberOfRows);
+
+        }
+
+        private void updatePane(ArrayList<String[]> products){
+            int numberOfProducts = products.size();
+            int numberOfRows = numberOfProducts / numberOfColumns +1;
+            setPaneSize(numberOfRows);
+            int index;
+            for (String[] subProductPack : products) {
+                index = products.indexOf(subProductPack);
+
+            }
+        }
+
+        private void setPaneSize(int numberOfRows){
+            productsPane = new GridPane();
+            int currentRowsNumber = productsPane.getRowCount();
+            int currentColumnsNumber = productsPane.getColumnCount();
+            if(numberOfRows > currentRowsNumber){
+                productsPane.addRow(numberOfRows - currentRowsNumber);
+            }else {
+                productsPane.addRow(currentRowsNumber - numberOfRows);
+            }
+
+            if(numberOfColumns > currentColumnsNumber){
+                productsPane.addColumn(numberOfColumns - currentColumnsNumber);
+            }else {
+                productsPane.addColumn(currentColumnsNumber - numberOfColumns);
+            }
+
+        }
     }
 
-    public static class ProductDetailMenu {
-        public static void display(String productId) {
+    public static class ProductDetailMenuController {
+        public static void display(String productId, boolean isPopup) {
+            if (isPopup) {
+                ((ProductDetailMenuController)
+                View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600)).init(productId);
+            } else {
+                ((ProductDetailMenuController)
+                        View.setMainPane(Constants.FXMLs.productDetailMenu)).init(productId);
+            }
         }
 
         private void init(String productId) {
-
         }
+        @FXML
+        private ImageView productIMG;
+
+        @FXML
+        private Label nameLBL;
+
+        @FXML
+        private Label brandLBL;
+
+        @FXML
+        private Label categoryLBL;
+
+        @FXML
+        private Label defSellerLBL;
+
+        @FXML
+        private Label priceBeforeAndPercentageLBL;
+
+        @FXML
+        private Label priceAfterLBL;
+
+        @FXML
+        private Button addToCartBTN;
+
+        @FXML
+        private Button compareBTN;
+
+        @FXML
+        private TableView<?> sellersTBL;
+
+        @FXML
+        private TableColumn<?, ?> sellersTBLNumberCOL;
+
+        @FXML
+        private TableColumn<?, ?> sellersTBLSellerCOL;
+
+        @FXML
+        private TableColumn<?, ?> sellersTBLPriceCOL;
+
+        @FXML
+        private TableColumn<?, ?> sellersTBLNumberAvailableCOL;
+
+        @FXML
+        private Text productInfoTXT;
+
+        @FXML
+        private TableView<?> PropertiesTBL;
+
+        @FXML
+        private TableColumn<?, ?> propertyTab;
+
+        @FXML
+        private TableColumn<?, ?> valueTab;
+
+        @FXML
+        private VBox reviewsVB;
     }
 
     public static class LoginPopupController implements Initializable {
@@ -366,7 +474,7 @@ public class Controllers {
             }
             try {
                 PopupStage.initModality(Modality.APPLICATION_MODAL);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             PopupStage.show();
         }
@@ -593,7 +701,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null);
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, null);
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
@@ -608,7 +716,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null);
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null, null);
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
@@ -736,7 +844,7 @@ public class Controllers {
                 this.nameBrand = nameBrand;
                 this.category = category;
 
-                detailBTN.setOnAction(e -> ProductDetailMenu.display(id));
+                detailBTN.setOnAction(e -> ProductDetailMenuController.display(id, true));
                 detailBTN.getStyleClass().add("details-button");
 
                 removeBTN.setOnAction(e -> {
@@ -1361,7 +1469,8 @@ public class Controllers {
         }
     }
 
-    public static class SellerProductManagingMenuController implements Initializable{
+    public static class SellerProductManagingMenuController implements Initializable {
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.sellerProductManagingMenu);
         }
@@ -1370,6 +1479,59 @@ public class Controllers {
         public void initialize(URL location, ResourceBundle resources) {
 
         }
+
+        public class SellerSubProductWrapper {
+            String productId, id, name, brand, saleId;
+            double price;
+            Button details = new Button(), remove = new Button();
+
+            public SellerSubProductWrapper(String productId, String id, String name, String brand, String saleId, double price) {
+                this.productId = productId;
+                this.id = id;
+                this.name = name;
+                this.brand = brand;
+                this.saleId = saleId;
+                this.price = price;
+                details.getStyleClass().add("details-button");
+                remove.getStyleClass().add("remove-button");
+
+                //TODO: details button action.
+                remove.setOnAction(e -> {
+                    try {
+                        sellerController.removeProduct(id);
+                    } catch (Exceptions.InvalidProductIdException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+        }
+
+        @FXML
+        private TableView<?> sales;
+
+        @FXML
+        private TableColumn<?, ?> idCol;
+
+        @FXML
+        private TableColumn<?, ?> nameCOL;
+
+        @FXML
+        private TableColumn<?, ?> priceCOL;
+
+        @FXML
+        private TableColumn<?, ?> saleCOL;
+
+        @FXML
+        private TableColumn<?, ?> detailsCOL;
+
+        @FXML
+        private TableColumn<?, ?> removeCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button addProductBTN;
     }
 
     public static class SellerLogMenuController implements Initializable {
@@ -1412,7 +1574,7 @@ public class Controllers {
                 this.subProductId = id;
                 this.productId =productId;
                 this.nameBrandSeller = new Button(nameBrandSeller);
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenu.display(productId));
+                this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId, false));
                 this.unitPrice = unitPrice;
                 this.countProperty.set(count);
                 this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
@@ -1420,7 +1582,7 @@ public class Controllers {
                 remove.getStyleClass().add("remove-button");
                 remove.setOnAction(e -> {
                     try {
-                        mainController.removeSubProduct(this.subProductId);
+                        mainController.removeSubProductFromCart(this.subProductId);
                         productsTable.getItems().remove(this);
                     } catch (Exceptions.InvalidSubProductIdException ex) {
                         ex.printStackTrace();
@@ -2276,7 +2438,7 @@ public class Controllers {
         }
     }
 
-    public static class SellerProductManagingPopup implements Initializable {
+    public static class SellerProductManagingPopupController implements Initializable {
         public static void display() {
 
         }

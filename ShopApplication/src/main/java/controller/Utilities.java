@@ -37,7 +37,7 @@ public class Utilities {
             return salePack;
         }
 
-        public static String[] newSaleInReview(Sale sale) {
+        public static String[] newSaleInRequest(Sale sale) {
             String[] salePack = new String[5];
             salePack[0] = sale.getSeller().getUsername();
             salePack[1] = Double.toString(sale.getPercentage());
@@ -46,7 +46,6 @@ public class Utilities {
             salePack[4] = Integer.toString(sale.getSubProducts().size());
             return salePack;
         }
-
 
         public static String[] product(Product product) {
             String[] productPack = new String[4];
@@ -57,40 +56,65 @@ public class Utilities {
             return productPack;
         }
 
-        public static String[] subProduct(SubProduct subProduct) {
-            String[] subProductPack = new String[5];
-            subProductPack[0] = subProduct.getId();
-            subProductPack[1] = subProduct.getSeller().getStoreName();
-            subProductPack[2] = Double.toString(subProduct.getPriceWithSale());
-            subProductPack[3] = Integer.toString(subProduct.getRemainingCount());
-            subProductPack[4] = subProduct.getProduct().getId();
-            return subProductPack;
-        }
-
-        public static String[] subProductExtended(SubProduct subProduct) {
-            String[] subProductPack = new String[9];
+        public static String[] subProduct(SubProduct subProduct){
+            String[] subProductBoxPack = new String[13];
             Product product = subProduct.getProduct();
+            Sale sale = subProduct.getSale();
+            subProductBoxPack[0] = product.getId();
+            subProductBoxPack[1] = subProduct.getId();
+            subProductBoxPack[2] = product.getName();
+            subProductBoxPack[3] = product.getBrand();
+            subProductBoxPack[4] = Double.toString(product.getAverageRatingScore());
+            subProductBoxPack[5] = Integer.toString(product.getRatingsCount());
+            subProductBoxPack[6] = product.getImagePath();
+            subProductBoxPack[7] = Double.toString(subProduct.getRawPrice());
+            subProductBoxPack[8] = Double.toString(subProduct.getPriceWithSale());
+            subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
+            subProductBoxPack[10] = sale != null ? dateFormat.format(sale.getEndDate()) : null;
+            subProductBoxPack[11] = sale != null ? Double.toString(sale.getPercentage()) : null;
+            subProductBoxPack[12] = subProduct.getSeller().getStoreName();
+            return subProductBoxPack;
+        }
+
+        public static String[] subProductInProduct(SubProduct subProduct){
+            String[] subProductPack = new String[8];
+            Product product = subProduct.getProduct();
+            Sale sale = subProduct.getSale();
             subProductPack[0] = product.getId();
-            subProductPack[1] = product.getName();
-            subProductPack[2] = product.getBrand();
-            subProductPack[3] = product.getCategory().getName();
-            subProductPack[4] = product.getInfoText();
-            subProductPack[5] = Integer.toString(subProduct.getRemainingCount());
-            subProductPack[6] = Double.toString(subProduct.getRawPrice());
-            subProductPack[7] = subProduct.getSale() != null ? subProduct.getSale().getId() : "-";
-            subProductPack[8] = subProduct.getSale() != null ? Double.toString(subProduct.getPriceWithSale()) : "-";
+            subProductPack[1] = subProduct.getId();
+            subProductPack[2] = Double.toString(subProduct.getRawPrice());
+            subProductPack[3] = Double.toString(subProduct.getPriceWithSale());
+            subProductPack[4] = Integer.toString(subProduct.getRemainingCount());
+            subProductPack[5] = sale != null ? dateFormat.format(sale.getEndDate()) : null;
+            subProductPack[6] = sale != null ? Double.toString(sale.getPercentage()) : null;
+            subProductPack[7] = subProduct.getSeller().getStoreName();
             return subProductPack;
         }
 
-        public static String[] productInReview(SubProduct subProduct, Product product){
-            String[] subProductPack = new String[6];
-            subProductPack[0] = product.getName();
-            subProductPack[1] = product.getBrand();
-            subProductPack[2] = product.getCategory().getName();
-            subProductPack[3] = product.getInfoText();
-            subProductPack[4] = Integer.toString(subProduct.getRemainingCount());
-            subProductPack[5] = Double.toString(subProduct.getRawPrice());
+        public static String[] sellerSubProduct(SubProduct subProduct){
+            String[] subProductPack = new String[7];
+            Product product = subProduct.getProduct();
+            Sale sale = subProduct.getSale();
+            subProductPack[0] = product.getId();
+            subProductPack[1] = subProduct.getId();
+            subProductPack[2] = product.getName();
+            subProductPack[3] = product.getBrand();
+            subProductPack[4] = Double.toString(subProduct.getRawPrice());
+            subProductPack[5] = Integer.toString(subProduct.getRemainingCount());
+            subProductPack[6] = sale != null ? sale.getId() : null;
             return subProductPack;
+        }
+
+        public static String[] addProductRequest(SubProduct subProduct, Product product){
+            String[] productPack = new String[7];
+            productPack[0] = product.getName();
+            productPack[1] = product.getBrand();
+            productPack[2] = product.getImagePath();
+            productPack[3] = product.getCategory().getName();
+            productPack[4] = product.getInfoText();
+            productPack[5] = Integer.toString(subProduct.getRemainingCount());
+            productPack[6] = Double.toString(subProduct.getRawPrice());
+            return productPack;
         }
 
         public static String[] review(Review review) {
@@ -210,14 +234,15 @@ public class Utilities {
         }
 
         public static String[] digest(Product product) {
-            String[] productInfo = new String[7];
+            String[] productInfo = new String[8];
             productInfo[0] = product.getId();
             productInfo[1] = product.getName();
             productInfo[2] = product.getBrand();
             productInfo[3] = product.getInfoText();
             productInfo[4] = Double.toString(product.getAverageRatingScore());
-            productInfo[5] = Double.toString(product.getMaxPrice());
-            productInfo[6] = Double.toString(product.getMinPrice());
+            productInfo[5] = Integer.toString(product.getRatingsCount());
+            productInfo[6] = product.getDefaultSubProduct().getId();
+            productInfo[7] = product.getCategory().getName();
             return productInfo;
         }
 

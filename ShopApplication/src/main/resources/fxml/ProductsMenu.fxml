@@ -1,86 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="view.Controllers$ProductsMenuController">
+            fx:controller="view.GUI.Controllers$ProductsMenuController">
     <top>
         <Accordion BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" expanded="false" text="Sort &amp; Filter">
-                    <HBox>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <VBox spacing="20.0">
-                            <HBox alignment="CENTER" spacing="5.0" VBox.vgrow="ALWAYS">
-                                <Label text="Sort: "/>
-                                <ChoiceBox fx:id="sortBy"/>
-                                <HBox>
-                                    <ToggleButton fx:id="isIncreasing" layoutX="10.0" layoutY="10.0"
-                                                  mnemonicParsing="false" selected="true" text="INC">
-                                        <toggleGroup>
-                                            <ToggleGroup fx:id="increasingToggleGroup"/>
-                                        </toggleGroup>
-                                    </ToggleButton>
-                                    <ToggleButton fx:id="isDecreasing" mnemonicParsing="false" text="DEC"
-                                                  toggleGroup="$increasingToggleGroup"/>
-                                </HBox>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <CheckBox fx:id="available" alignment="CENTER" mnemonicParsing="false" text="available">
-                                    <HBox.margin>
-                                        <Insets left="20.0"/>
-                                    </HBox.margin>
-                                </CheckBox>
-                            </HBox>
-                            <HBox VBox.vgrow="ALWAYS">
-                                <VBox alignment="CENTER" spacing="15.0" HBox.hgrow="ALWAYS">
-                                    <Label text="Min Price"/>
-                                    <Slider fx:id="minPriceSlider" minorTickCount="1" showTickLabels="true"
-                                            showTickMarks="true" snapToTicks="true">
-                                        <VBox.margin>
-                                            <Insets bottom="10.0"/>
-                                        </VBox.margin>
-                                    </Slider>
-                                    <Label text="Max Price"/>
-                                    <Slider fx:id="maxPriceSlider" minorTickCount="1" showTickLabels="true"
-                                            showTickMarks="true" snapToTicks="true" value="100.0"/>
-                                </VBox>
-                            </HBox>
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <GridPane alignment="CENTER">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="55.0"/>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="10.0"
-                                                   prefWidth="145.0"/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            </rowConstraints>
-                            <TextField fx:id="filterName" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
-                            <ChoiceBox fx:id="filterBrand" prefWidth="150.0" GridPane.columnIndex="1"
-                                       GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"/>
-                            <ChoiceBox fx:id="filterSeller" prefWidth="150.0" GridPane.columnIndex="1"
-                                       GridPane.hgrow="ALWAYS" GridPane.rowIndex="3"/>
-                            <Label text="Name:"/>
-                            <Label text="Brand: " GridPane.rowIndex="1"/>
-                            <Label text="Seller: " GridPane.rowIndex="3"/>
-                            <Label text="Category: " GridPane.rowIndex="2"/>
-                            <ChoiceBox fx:id="filterCategory" prefWidth="150.0" GridPane.columnIndex="1"
-                                       GridPane.rowIndex="2"/>
-                        </GridPane>
-                        <Region layoutX="20.0" layoutY="20.0" HBox.hgrow="ALWAYS"/>
-                    </HBox>
+                   <content>
+                       <HBox>
+                          <children>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <VBox spacing="20.0">
+                                 <children>
+                                     <HBox alignment="CENTER" spacing="5.0" VBox.vgrow="ALWAYS">
+                                        <children>
+                                            <Label text="Sort: " />
+                                            <ChoiceBox fx:id="sortBy" />
+                                            <HBox>
+                                               <children>
+                                                   <ToggleButton fx:id="isIncreasing" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" selected="true" text="INC">
+                                                       <toggleGroup>
+                                                           <ToggleGroup fx:id="increasingToggleGroup" />
+                                                       </toggleGroup>
+                                                   </ToggleButton>
+                                                   <ToggleButton fx:id="isDecreasing" mnemonicParsing="false" text="DEC" toggleGroup="$increasingToggleGroup" />
+                                               </children>
+                                            </HBox>
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <CheckBox fx:id="available" alignment="CENTER" mnemonicParsing="false" text="available">
+                                                <HBox.margin>
+                                                    <Insets left="20.0" />
+                                                </HBox.margin>
+                                            </CheckBox>
+                                        </children>
+                                     </HBox>
+                                     <HBox VBox.vgrow="ALWAYS">
+                                        <children>
+                                            <VBox alignment="CENTER" spacing="15.0" HBox.hgrow="ALWAYS">
+                                               <children>
+                                                   <Label text="Min Price" />
+                                                   <Slider fx:id="minPriceSlider" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true">
+                                                       <VBox.margin>
+                                                           <Insets bottom="10.0" />
+                                                       </VBox.margin>
+                                                   </Slider>
+                                                   <Label text="Max Price" />
+                                                   <Slider fx:id="maxPriceSlider" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="100.0" />
+                                               </children>
+                                            </VBox>
+                                        </children>
+                                     </HBox>
+                                 </children>
+                              </VBox>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <GridPane alignment="CENTER">
+                                  <columnConstraints>
+                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="55.0" />
+                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="10.0" prefWidth="145.0" />
+                                  </columnConstraints>
+                                  <rowConstraints>
+                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  </rowConstraints>
+                                 <children>
+                                     <TextField fx:id="filterName" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+                                     <ChoiceBox fx:id="filterBrand" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                                     <ChoiceBox fx:id="filterSeller" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                                     <Label text="Name:" />
+                                     <Label text="Brand: " GridPane.rowIndex="1" />
+                                     <Label text="Seller: " GridPane.rowIndex="3" />
+                                     <Label text="Category: " GridPane.rowIndex="2" />
+                                     <ChoiceBox fx:id="filterCategory" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                              <Region layoutX="20.0" layoutY="20.0" HBox.hgrow="ALWAYS" />
+                          </children>
+                       </HBox>
+                   </content>
                 </TitledPane>
             </panes>
         </Accordion>
     </top>
     <center>
-        <ScrollPane fx:id="productsPane" BorderPane.alignment="CENTER">
-            <VBox/>
+        <ScrollPane fx:id="scrollPane" BorderPane.alignment="CENTER">
+         <content>
+            <GridPane fx:id="productsPane" alignment="CENTER" hgap="20.0">
+               <columnConstraints>
+                  <ColumnConstraints />
+               </columnConstraints>
+            </GridPane>
+         </content>
         </ScrollPane>
     </center>
 </BorderPane>

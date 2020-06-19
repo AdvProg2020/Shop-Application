@@ -33,3 +33,5 @@ A: isPopUp for digestMenus
 T: mainController.clearCart();
 T: remove column for shopping cart menu
 A & T & M : add tabs to discount, sale, account managing menu
+
+

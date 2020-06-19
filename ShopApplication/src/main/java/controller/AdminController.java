@@ -99,10 +99,10 @@ public class AdminController {
     }
 
 
-    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.UsernameAlreadyTakenException {
+    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
-        new Admin(username, password, firstName, lastName, email, phone);
+        new Admin(username, password, firstName, lastName, email, phone, imagePath);
         database().createAdmin();
     }
 
@@ -279,19 +279,19 @@ public class AdminController {
             detailsOfRequest.add(Utilities.Pack.request(request));
             switch (Utilities.Pack.request(request)[1]) {
                 case "AddProductRequest":
-                    detailsOfRequest.add(Utilities.Pack.productInReview(((AddProductRequest) request).getSubProduct(), ((AddProductRequest)request).getProduct()));
+                    detailsOfRequest.add(Utilities.Pack.addProductRequest(((AddProductRequest) request).getSubProduct(), ((AddProductRequest)request).getProduct()));
                     break;
                 case "AddReviewRequest":
                     detailsOfRequest.add(Utilities.Pack.getReviewInfo(((AddReviewRequest) request).getReview()));
                     break;
                 case "AddSaleRequest":
-                    detailsOfRequest.add(Utilities.Pack.newSaleInReview(((AddSaleRequest) request).getSale()));
+                    detailsOfRequest.add(Utilities.Pack.newSaleInRequest(((AddSaleRequest) request).getSale()));
                     break;
                 case "AddSellerRequest":
                     detailsOfRequest.add(Utilities.Pack.sellerInRequest(((AddSellerRequest) request).getSeller()));
                     break;
                 case "EditProductRequest":
-                    detailsOfRequest.add(Utilities.Pack.subProductExtended(((EditProductRequest) request).getSubProduct()));
+                    detailsOfRequest.add(Utilities.Pack.subProduct(((EditProductRequest) request).getSubProduct()));
                     detailsOfRequest.add(Utilities.Pack.productChange(((EditProductRequest) request)));
                     break;
                 case "EditSaleRequest":
