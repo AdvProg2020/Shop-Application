@@ -99,10 +99,10 @@ public class AdminController {
     }
 
 
-    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone) throws Exceptions.UsernameAlreadyTakenException {
+    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
-        new Admin(username, password, firstName, lastName, email, phone);
+        new Admin(username, password, firstName, lastName, email, phone, imagePath);
         database().createAdmin();
     }
 
