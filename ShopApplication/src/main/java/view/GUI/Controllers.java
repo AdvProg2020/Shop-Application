@@ -24,10 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //TODO: purchase menu
@@ -1564,7 +1561,9 @@ public class Controllers {
         }
     }
 
-    public static class CustomerBuyLogDetailsPopup implements Initializable {
+    public static class CustomerBuyLogDetailsPopup {
+
+        private ArrayList<BuyLogItemWrapper> buyItems;
 
         public void display(String logId) {
             ((CustomerBuyLogDetailsPopup)
@@ -1572,23 +1571,114 @@ public class Controllers {
         }
 
         private void init(String logId) {
+            try {
+                ArrayList<String[]> logDetails = customerController.getOrderWithId(logId);
+                initTable(logDetails.subList(1, logDetails.size()));
+                initValues(logDetails.get(0));
+            } catch (Exceptions.InvalidLogIdException e) {
+                e.printStackTrace();
+            } catch (Exceptions.CustomerLoginException e) {
+                e.printStackTrace();
+            }
+        }
 
+        private void initTable(List<String[]> items) {
+            buyItems = new ArrayList<>();
+            for (String[] item : items) {
+                buyItems.add(new BuyLogItemWrapper(item));
+            }
+
+            logItems.getItems().addAll(buyItems);
+
+            subProductCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
+            countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
+            saleCOL.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
+            unitPriceCOL.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        }
+
+        private void initValues(String[] info) {
+            idLBL.setText(info[0]);
+            dateLBL.setText(info[5]);
+            priceLBL.setText(info[7] + "$");
+            discountLBL.setText(info[8]);
+            shipStatusLBL.setText(info[6]);
+            receiverNameLBL.setText(info[6]);
+            receiverPhoneLBL.setText(info[3]);
+
+            StringBuilder address = new StringBuilder(info[4]);
+            int offset = 0 , size = address.length();
+            while (offset + 19 < size) {
+                offset += 19;
+                address.insert(offset, "\n");
+            }
+            addressArea.setText(address.toString());
+            addressArea.setEditable(false);
+
+            double totalSale = 0;
+            for (BuyLogItemWrapper buyItem : buyItems) {
+                totalSale += buyItem.getSaleAmount();
+            }
+
+            saleLBL.setText(totalSale + "$");
+        }
+
+        public class BuyLogItemWrapper {
+            String id, nameBrandSeller, sellerStoreName;
+            int count;
+            double unitPrice, saleAmount;
+
+            private BuyLogItemWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), Double.parseDouble(info[6]), Double.parseDouble(info[7]));
+            }
+
+            public BuyLogItemWrapper(String id, String name, String brand, String sellerName, String sellerStoreName, int count, double unitPrice, double saleAmount) {
+                this.id = id;
+                nameBrandSeller = name + " " + brand + "(" + sellerName + ")";
+                this.sellerStoreName = sellerStoreName;
+                this.count = count;
+                this.unitPrice = unitPrice;
+                this.saleAmount = saleAmount;
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getNameBrandSeller() {
+                return nameBrandSeller;
+            }
+
+            public String getSellerStoreName() {
+                return sellerStoreName;
+            }
+
+            public int getCount() {
+                return count;
+            }
+
+            public double getUnitPrice() {
+                return unitPrice;
+            }
+
+            public double getSaleAmount() {
+                return saleAmount;
+            }
         }
 
         @FXML
-        private TableView<?> logItems;
+        private TableView<BuyLogItemWrapper> logItems;
 
         @FXML
-        private TableColumn<?, ?> subProductCOL;
+        private TableColumn<BuyLogItemWrapper, String> subProductCOL;
 
         @FXML
-        private TableColumn<?, ?> countCOL;
+        private TableColumn<BuyLogItemWrapper, Integer> countCOL;
 
         @FXML
-        private TableColumn<?, ?> unitPriceCOL;
+        private TableColumn<BuyLogItemWrapper, Double> unitPriceCOL;
 
         @FXML
-        private TableColumn<?, ?> saleCOL;
+        private TableColumn<BuyLogItemWrapper, Double> saleCOL;
 
         @FXML
         private Label idLBL;
@@ -1616,11 +1706,6 @@ public class Controllers {
 
         @FXML
         private Label discountLBL;
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-
-        }
     }
 
     public static class PurchaseMenuController {
@@ -1671,8 +1756,8 @@ public class Controllers {
 
     public static class AdminAccountManagingMenuController implements Initializable {
 
-        public static ArrayList<AccountWrapper> customers = new ArrayList<>();
-        public static ArrayList<AccountWrapper> sellers = new ArrayList<>();
+        public  ArrayList<AccountWrapper> customers;
+        public  ArrayList<AccountWrapper> sellers;
 
         public class AccountWrapper {
             String id, username, firstName, lastName, phone, email, fullName;
@@ -1811,6 +1896,9 @@ public class Controllers {
 
         private void initAccounts(){
             ArrayList<String[]> all = adminController.manageUsers();
+            sellers = new ArrayList<>();
+            customers = new ArrayList<>();
+
             for (String[] strings : all) {
                 if (strings[6].equals("Seller")) {
                     sellers.add(new AccountWrapper(strings));
