@@ -220,10 +220,10 @@ public class Controllers {
 
 
         @FXML
-        private ChoiceBox<String> sortBy;
+        private ChoiceBox<String> sortByChoiceBox;
 
         @FXML
-        private ToggleButton isIncreasing;
+        private ToggleButton isIncreasingButton;
 
         @FXML
         private ToggleGroup increasingToggleGroup;
@@ -232,7 +232,7 @@ public class Controllers {
         private ToggleButton isDecreasing;
 
         @FXML
-        private CheckBox available;
+        private CheckBox availableCheckBox;
 
         @FXML
         private Slider minPriceSlider;
@@ -256,11 +256,19 @@ public class Controllers {
         private GridPane productsPane;
 
 
-        public static ArrayList<String[]> products;
         private static final int numberOfColumns = 3;
+        public ArrayList<String[]> products;
+        private String categoryName;
+        private boolean inSale;
+        private DoubleProperty minPrice;
+        private DoubleProperty maxPrice;
+        private BooleanProperty available;
+        private BooleanProperty isIncreasing;
+        private StringProperty sortBy;
+        private StringProperty name;
+
 
         public static void display(String categoryName, boolean inSale) {
-            ProductsMenuController.products = products;
             View.setMainPane(Constants.FXMLs.productsMenu);
         }
 
@@ -278,6 +286,26 @@ public class Controllers {
             ArrayList<String> sellers = (ArrayList<String>) products.stream().map(p -> p[12]).collect(Collectors.toList());
             HashSet<String> s = new HashSet<>(sellers);
             filterSeller.setItems(FXCollections.observableArrayList(s));
+        }
+
+        private void initFilterBar(){
+            minPrice = new SimpleDoubleProperty();
+            minPrice.bind(minPriceSlider.valueProperty());
+
+            maxPrice = new SimpleDoubleProperty();
+            maxPrice.bind(maxPriceSlider.valueProperty());
+
+            available = new SimpleBooleanProperty();
+            available.bind(availableCheckBox.selectedProperty());
+
+            isIncreasing = new SimpleBooleanProperty();
+            isIncreasing.bind(isIncreasingButton.selectedProperty());
+
+            sortBy = new SimpleStringProperty();
+            sortBy.bind(sortByChoiceBox.valueProperty());
+
+            name = new SimpleStringProperty();
+            name.bind(filterName.textProperty());
 
 
         }
