@@ -149,6 +149,7 @@ public class Discount implements ModelBasic {
         Customer.getCustomerById(customerId).addDiscount(discountId, count);
     }
 
+    //TODO: delete
     public void changeCount(String customerId, int changeAmount) {
         int newCount = customerIds.get(customerId) + changeAmount;
         if (newCount <= 0)
