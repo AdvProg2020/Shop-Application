@@ -48,7 +48,7 @@ public class DatabaseManager implements Database {
     }
 
     private void updateSellers() {
-        update(FileNames.SELL_LOG, Account.class, Seller.getAllSellers(false));
+        update(FileNames.SELLER, Account.class, Seller.getAllSellers(false));
     }
 
     private void updateCustomers() {
