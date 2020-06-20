@@ -1082,7 +1082,7 @@ public class Controllers {
                 this.code = code;
                 this.percentage = percentage;
                 this.maximumAmount = maximumAmount;
-                detail.setOnAction(e -> showDiscountDetails());
+                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this));
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
@@ -1092,18 +1092,6 @@ public class Controllers {
                 });
                 detail.getStyleClass().add("details-button");
                 remove.getStyleClass().add("remove-button");
-            }
-
-            private void showDiscountDetails() {
-                ArrayList<String[]> customersWithCode;
-                try {
-                    customersWithCode = adminController.peopleWhoHaveThisDiscount(code);
-                } catch (Exceptions.DiscountCodeException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                AdminDiscountManagingPopupController.display( this);
             }
 
             public String getId() {

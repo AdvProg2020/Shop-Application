@@ -83,7 +83,7 @@ public class Seller extends Account {
     public List<Sale> getSales() {
         List<Sale> sales = new ArrayList<>();
         for (String saleId : saleIds) {
-            sales.add(Sale.getSaleById(saleId));
+            sales.add(Sale.getSaleById(saleId, false));
         }
 
         return sales;
