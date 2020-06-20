@@ -218,12 +218,14 @@ public class Controllers {
 
     public static class ProductsMenuController implements Initializable {
 
+        @FXML
+        private Button update;
 
         @FXML
-        private ChoiceBox<String> sortBy;
+        private ChoiceBox<String> sortByChoiceBox;
 
         @FXML
-        private ToggleButton isIncreasing;
+        private ToggleButton isIncreasingButton;
 
         @FXML
         private ToggleGroup increasingToggleGroup;
@@ -232,7 +234,7 @@ public class Controllers {
         private ToggleButton isDecreasing;
 
         @FXML
-        private CheckBox available;
+        private CheckBox availableCheckBox;
 
         @FXML
         private Slider minPriceSlider;
@@ -256,37 +258,113 @@ public class Controllers {
         private GridPane productsPane;
 
 
-        public static ArrayList<String[]> products;
         private static final int numberOfColumns = 3;
+        public ArrayList<String[]> products;
+        private String categoryName;
+        private boolean inSale;
+        private DoubleProperty minPrice;
+        private DoubleProperty maxPrice;
+        private BooleanProperty available;
+        private BooleanProperty isIncreasing;
+        private StringProperty sortBy;
+        private StringProperty name;
+        private StringProperty brand;
+        private StringProperty seller;
+        private HashMap<String, SimpleStringProperty> properties;
+        private HashMap<String, ChoiceBox<String>> propertyChoiceBox;
+
 
         public static void display(String categoryName, boolean inSale) {
-            ProductsMenuController.products = products;
-            View.setMainPane(Constants.FXMLs.productsMenu);
+            ProductsMenuController controller =  View.setMainPane(Constants.FXMLs.productsMenu);
+            if( controller != null){
+                controller.categoryName = categoryName;
+                controller.inSale = inSale;
+                controller.update();
+                controller.initChoiceBoxes();
+                controller.initActions();
+                controller.initFilterBar();
+                controller.initPropertyFilters();
+            }
         }
 
         @Override
-        public void initialize(URL location, ResourceBundle resources) {
-            initChoiceBoxes();
-            initActions();
+        public void initialize(URL location, ResourceBundle resources) { }
+
+        private void initPropertyFilters(){
+            try {
+                ArrayList<String> propertyKeys = mainController.getPropertiesOfCategory(categoryName, false);
+                int numberOfProperties = propertyKeys.size();
+                int numberOfColumns = numberOfProperties / 3 + (numberOfProperties % 3 == 0 ? 0 : 1);
+                setFilterPropertiesPaneSize( numberOfColumns );
+                for (String propertyKey : propertyKeys) {
+                    VBox propertyBox = creatPropertyChoiceBox(propertyKey);
+                    int propertyIndex = propertyKeys.indexOf(propertyKey);
+                    propertyFilters.add(propertyBox, propertyIndex / 3, propertyIndex % 3, 1, 1);
+                }
+            } catch (Exceptions.InvalidCategoryException e) {
+                e.printStackTrace();
+            }
         }
 
         private void initChoiceBoxes() {
             ArrayList<String> brands = (ArrayList<String>) products.stream().map(p -> p[3]).collect(Collectors.toList());
+            brands.add(null);
             HashSet<String> b = new HashSet<>(brands);
             filterBrand.setItems(FXCollections.observableArrayList(b));
 
             ArrayList<String> sellers = (ArrayList<String>) products.stream().map(p -> p[12]).collect(Collectors.toList());
+            sellers.add(null);
             HashSet<String> s = new HashSet<>(sellers);
             filterSeller.setItems(FXCollections.observableArrayList(s));
+        }
 
+        private void initFilterBar(){
+            minPrice = new SimpleDoubleProperty();
+            minPrice.bind(minPriceSlider.valueProperty());
 
+            maxPrice = new SimpleDoubleProperty();
+            maxPrice.bind(maxPriceSlider.valueProperty());
+
+            available = new SimpleBooleanProperty();
+            available.bind(availableCheckBox.selectedProperty());
+
+            isIncreasing = new SimpleBooleanProperty();
+            isIncreasing.bind(isIncreasingButton.selectedProperty());
+
+            sortBy = new SimpleStringProperty();
+            sortBy.bind(sortByChoiceBox.valueProperty());
+
+            name = new SimpleStringProperty();
+            name.bind(filterName.textProperty());
+
+            brand = new SimpleStringProperty();
+            brand.bind(filterBrand.valueProperty());
+
+            seller = new SimpleStringProperty();
+            seller.bind(filterSeller.valueProperty());
+
+            //properties
         }
 
         private void initActions() {
-
+            update.setOnAction(e -> update());
         }
 
-        private void updatePane(ArrayList<String[]> products){
+        private void update(){
+            updateProducts();
+            updatePane();
+        }
+
+        private void updateProducts(){
+            HashMap<String, String> propertyValues = new HashMap<>();
+            for (String s : properties.keySet()) {
+                propertyValues.put(s, properties.get(s).getValue());
+            }
+            products = mainController.sortFilterProducts(categoryName, inSale, sortBy.getValue(), isIncreasing.getValue(), available.getValue(),
+            minPrice.getValue(), maxPrice.getValue(), name.getValue(), brand.getValue(), seller.getValue(), 0, propertyValues);
+        }
+
+        private void updatePane(){
             int numberOfProducts = products.size();
             int numberOfRows = numberOfProducts / numberOfColumns +1;
             setPaneSize(numberOfRows);
@@ -298,22 +376,47 @@ public class Controllers {
             }
         }
 
+        //TODO: creat each row and column , with hGap and vGap, you can give ID to control them
         private void setPaneSize(int numberOfRows){
             productsPane = new GridPane();
             int currentRowsNumber = productsPane.getRowCount();
             int currentColumnsNumber = productsPane.getColumnCount();
-            if(numberOfRows > currentRowsNumber){
+            if(numberOfRows > currentRowsNumber) {
                 productsPane.addRow(numberOfRows - currentRowsNumber);
-            }else {
-                productsPane.addRow(currentRowsNumber - numberOfRows);
             }
-
             if(numberOfColumns > currentColumnsNumber){
                 productsPane.addColumn(numberOfColumns - currentColumnsNumber);
-            }else {
-                productsPane.addColumn(currentColumnsNumber - numberOfColumns);
             }
 
+        }
+
+        private void setFilterPropertiesPaneSize(int numberOfColumns){
+            propertyFilters = new GridPane();
+            int currentRowsNumber = propertyFilters.getRowCount();
+            int currentColumnsNumber = propertyFilters.getColumnCount();
+            if(numberOfColumns > currentColumnsNumber){
+                propertyFilters.addColumn(numberOfColumns - currentColumnsNumber);
+            }
+
+            if( currentRowsNumber < 3){
+                propertyFilters.addRow( 3 - currentRowsNumber);
+            }
+        }
+
+        private VBox creatPropertyChoiceBox(String property){
+            VBox vBox = new VBox();
+            vBox.getChildren().add(new Label(property));
+            ChoiceBox<String> choiceBox = new ChoiceBox<>();
+            try {
+                HashSet<String> values = new HashSet<>(mainController.getPropertyValuesInCategory(categoryName, property));
+                choiceBox.setItems(FXCollections.observableArrayList(values));
+            } catch (Exceptions.InvalidCategoryException e) {
+                return null;
+            }
+            SimpleStringProperty valueProperty = new SimpleStringProperty();
+            valueProperty.bind(choiceBox.valueProperty());
+            properties.put(property, valueProperty);
+            return vBox;
         }
     }
 
@@ -337,6 +440,9 @@ public class Controllers {
         @FXML
         private Label priceAfter;
 
+        @FXML
+        private Label remainingTime;
+
         private String[] subProduct;
 
         public static Parent createBox(String[] subProduct) {
@@ -358,12 +464,17 @@ public class Controllers {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
             image.setImage(new Image(subProductInfo[6]));
-
+            priceBefore.setText(subProductInfo[7]);
+            priceAfter.setText(subProductInfo[8]);
+            sale.setText(subProductInfo[11] != null ? subProductInfo[11] : "");
+            remainingTime.setText(subProductInfo[10] != null ? subProductInfo[10] : "");
         }
 
         private void setAction(Parent p) {
             p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0],  false));
         }
+
+
     }
 
     public static class ProductDetailMenuController {
