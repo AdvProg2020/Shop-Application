@@ -13,8 +13,8 @@ public class AddReviewRequest extends Request {
 
     @Override
     public void accept() {
-        super.accept();
         review.initialize();
+        super.accept();
     }
 
     @Override

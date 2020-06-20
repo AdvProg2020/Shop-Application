@@ -22,7 +22,6 @@ public class EditSaleRequest extends Request implements SellerRequest {
 
     @Override
     public void accept() {
-        super.accept();
         Sale sale = Sale.getSaleById(saleId);
         try {
             SimpleDateFormat parser = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -41,6 +40,7 @@ public class EditSaleRequest extends Request implements SellerRequest {
             }
         } catch (ParseException ignored) {
         }
+        super.accept();
     }
 
     @Override

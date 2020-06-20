@@ -17,12 +17,12 @@ public class AddProductRequest extends Request implements SellerRequest {
 
     @Override
     public void accept() {
-        super.accept();
         if (product != null) {
             product.initialize();
             subProduct.setProductId(product.getId());
         }
         subProduct.initialize();
+        super.accept();
     }
 
     @Override

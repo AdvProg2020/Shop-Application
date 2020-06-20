@@ -13,8 +13,8 @@ public class AddSellerRequest extends Request {
 
     @Override
     public void accept() {
-        super.accept();
         seller.initialize();
+        super.accept();
     }
 
     @Override

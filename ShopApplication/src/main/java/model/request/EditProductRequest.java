@@ -19,7 +19,6 @@ public class EditProductRequest extends Request implements SellerRequest {
 
     @Override
     public void accept() {
-        super.accept();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         Product product = subProduct.getProduct();
         switch (field) {
@@ -39,6 +38,7 @@ public class EditProductRequest extends Request implements SellerRequest {
                 int changeAmount = Integer.parseInt(newValue) - subProduct.getRemainingCount();
                 subProduct.changeRemainingCount(changeAmount);
         }
+        super.accept();
     }
 
     @Override

@@ -14,8 +14,8 @@ public class AddSaleRequest extends Request implements SellerRequest {
 
     @Override
     public void accept() {
-        super.accept();
         sale.initialize();
+        super.accept();
     }
 
     @Override
