@@ -24,12 +24,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Product;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -2338,10 +2336,10 @@ public class Controllers {
 
         public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount) {
             ((AdminDiscountManagingPopupController)
-                    View.popupWindow((discount == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).init(discount);
+                    View.popupWindow((discount == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discount);
         }
 
-        private void init(AdminDiscountManagingMenuController.DiscountWrapper discount) {
+        private void initialize(AdminDiscountManagingMenuController.DiscountWrapper discount) {
             //TODO: should be checked.
             this.discount = discount;
             ArrayList<String[]> customersWithCode = null;
