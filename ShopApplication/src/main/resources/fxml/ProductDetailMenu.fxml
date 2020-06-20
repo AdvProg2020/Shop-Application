@@ -1,144 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-            prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductDetailMenuController">
-    <center>
-        <VBox alignment="CENTER">
-            <children>
-                <HBox spacing="10.0">
+<VBox xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/ProductMenu.css" xmlns="http://javafx.com/javafx/11.0.1"
+      fx:controller="view.Controllers$ProductDetailMenuController">
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <VBox alignment="CENTER" spacing="20.0">
+                <children>
+                    <ImageView fx:id="productIMG" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true"
+                               preserveRatio="true">
+                        <image>
+                            <Image url="@../img/default-product-pic.png"/>
+                        </image>
+                    </ImageView>
+                    <Button id="compare-button" fx:id="compareBTN" mnemonicParsing="false" text="Compare"/>
+                </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" spacing="20.0">
+                <HBox alignment="CENTER_LEFT">
                     <children>
-                        <ImageView fx:id="productIMG" fitHeight="250.0" fitWidth="350.0" pickOnBounds="true"
-                                   preserveRatio="true"/>
-                        <VBox spacing="20.0">
-                            <children>
-                                <Label fx:id="nameLBL" text="Name">
-                                    <font>
-                                        <Font size="24.0"/>
-                                    </font>
-                                </Label>
-                                <HBox prefWidth="200.0" spacing="20.0">
-                                    <children>
-                                        <Label text="Brand:"/>
-                                        <Label fx:id="brandLBL" layoutX="10.0" layoutY="10.0" text="brand"/>
-                                    </children>
-                                </HBox>
-                                <HBox layoutX="10.0" layoutY="65.0" prefWidth="200.0" spacing="20.0">
-                                    <children>
-                                        <Label text="Category:"/>
-                                        <Label fx:id="categoryLBL" layoutX="10.0" layoutY="10.0" text="category"/>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="20.0">
-                            <children>
-                                <Label fx:id="defSellerLBL" text="Seller"/>
-                                <Label fx:id="priceBeforeAndPercentageLBL" layoutX="10.0" layoutY="10.0"
-                                       text="Price before + sale percentage"/>
-                                <Label fx:id="priceAfterLBL" layoutX="10.0" layoutY="27.0" text="price after"/>
-                                <Button fx:id="addToCartBTN" mnemonicParsing="false" text="Add to cart"/>
-                                <Button fx:id="compareBTN" layoutX="122.0" layoutY="178.0" mnemonicParsing="false"
-                                        text="Compare"/>
-                            </children>
-                        </VBox>
+                        <Label id="name-label" fx:id="nameLBL" text="Product1">
+                            <font>
+                                <Font size="24.0"/>
+                            </font>
+                            <HBox.margin>
+                                <Insets right="20.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <ImageView id="rating-icon" fitHeight="22.0" fitWidth="22.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../img/full-star.png"/>
+                            </image>
+                        </ImageView>
+                        <Label id="rating-count" fx:id="ratingCountLBL" layoutX="10.0" layoutY="10.0" text="Rating">
+                            <font>
+                                <Font size="24.0"/>
+                            </font>
+                        </Label>
                     </children>
-                    <VBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-                    </VBox.margin>
+                    <padding>
+                        <Insets bottom="20.0"/>
+                    </padding>
                 </HBox>
-                <TableView fx:id="sellersTBL" prefHeight="150.0" prefWidth="1000.0">
+                <HBox>
+                    <children>
+                        <GridPane>
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="92.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.20001220703125" minWidth="10.0"
+                                                   prefWidth="108.80000000000001"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                            <children>
+                                <Label styleClass="property-label" text="Brand:"/>
+                                <Label fx:id="brandLBL" styleClass="value-label" text="brand" GridPane.columnIndex="1"/>
+                                <Label styleClass="property-label" text="Category:" GridPane.rowIndex="1"/>
+                                <Label fx:id="categoryLBL" styleClass="value-label" text="category"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            </children>
+                        </GridPane>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </children>
+                </HBox>
+                <VBox spacing="5.0">
+                    <Label styleClass="property-label" text="Product Info:"/>
+                    <Text fx:id="productInfoTXT" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="value-label"
+                          text="dfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfvdfk;x mcv ,[vbfdvdfvdfv"
+                          wrappingWidth="578.13671875"/>
+                </VBox>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER" spacing="60.0" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER" spacing="10.0">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                    <children>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/shop.png"/>
+                            </image>
+                        </ImageView>
+                        <Label id="seller-label" fx:id="sellerLBL" text="Store Name"/>
+                    </children>
+                </HBox>
+                <VBox alignment="CENTER">
+                    <children>
+                        <Label id="price-before-label" fx:id="priceBeforeLBL" text="\$99.99"/>
+                        <Label id="price-after-label" fx:id="priceAfterLBL" text="\$79.99"/>
+                    </children>
+                </VBox>
+                <Button id="add-to-cart-button" fx:id="addToCartBTN" mnemonicParsing="false" text="+Add to cart">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                </Button>
+                <padding>
+                    <Insets top="30.0"/>
+                </padding>
+            </VBox>
+            <padding>
+                <Insets bottom="30.0" left="60.0" right="60.0" top="30.0"/>
+            </padding>
+        </HBox>
+        <TabPane stylesheets="@../css/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Sellers">
+                <TableView fx:id="sellersTBL" stylesheets="@../css/TableView.css">
                     <columns>
-                        <TableColumn fx:id="sellersTBLNumberCOL" prefWidth="100.0" text="No"/>
-                        <TableColumn fx:id="sellersTBLSellerCOL" prefWidth="300.0" text="Seller"/>
-                        <TableColumn fx:id="sellersTBLPriceCOL" prefWidth="282.0" text="Price"/>
-                        <TableColumn fx:id="sellersTBLNumberAvailableCOL" prefWidth="317.0" text="Number Available"/>
+                        <TableColumn fx:id="sellersTBLNumberCOL" maxWidth="100.0" minWidth="100.0" prefWidth="100.0"/>
+                        <TableColumn fx:id="sellersTBLSellerCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0"
+                                     text="Seller"/>
+                        <TableColumn fx:id="sellersTBLPriceCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0"
+                                     text="Price"/>
+                        <TableColumn fx:id="sellersTBLNumberAvailableCOL" maxWidth="1000.0" minWidth="200.0"
+                                     prefWidth="200.0" text="Number Available"/>
                     </columns>
                     <VBox.margin>
                         <Insets left="100.0" right="100.0" top="10.0"/>
                     </VBox.margin>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
                 </TableView>
-            </children>
-        </VBox>
-    </center>
-    <bottom>
-        <TabPane prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-            <tabs>
-                <Tab text="Product Info">
-                    <content>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
-                            <children>
-                                <VBox prefHeight="121.0" prefWidth="1003.0" spacing="10.0">
-                                    <children>
-                                        <Label text="Product Info"/>
-                                        <Text fx:id="productInfoTXT" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"
-                                              wrappingWidth="578.13671875"/>
-                                    </children>
-                                    <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </padding>
-                                </VBox>
-                                <ImageView fitHeight="121.0" fitWidth="199.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../img/search-button.png"/>
-                                    </image>
-                                </ImageView>
-                            </children>
-                        </HBox>
-                    </content>
-                </Tab>
-                <Tab text="Properties">
-                    <content>
-                        <VBox layoutX="109.0" layoutY="-86.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                            <children>
-                                <Label text="Properties"/>
-                                <TableView fx:id="PropertiesTBL" prefHeight="200.0" prefWidth="200.0">
-                                    <columns>
-                                        <TableColumn fx:id="propertyTab" prefWidth="306.0" text="Property"/>
-                                        <TableColumn fx:id="valueTab" prefWidth="560.0" text="value"/>
-                                    </columns>
-                                </TableView>
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                            </padding>
-                        </VBox>
-                    </content>
-                </Tab>
-                <Tab text="Reviews">
-                    <content>
-                        <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                            <content>
-                                <VBox fx:id="reviewsVB" spacing="10.0">
-                                    <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </padding>
-                                    <children>
-                                        <Label text="Reviews"/>
-                                    </children>
-                                </VBox>
-                            </content>
-                        </ScrollPane>
-                    </content>
-                </Tab>
-            </tabs>
+            </Tab>
+            <Tab text="Properties">
+                <TableView fx:id="PropertiesTBL" stylesheets="@../css/TableView.css">
+                    <columns>
+                        <TableColumn fx:id="propertyTab" minWidth="200.0" prefWidth="200.0" text="Property"/>
+                        <TableColumn fx:id="valueTab" minWidth="200.0" prefWidth="200.0" text="value"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </Tab>
+            <Tab text="Reviews">
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                    <VBox fx:id="reviewsVB" spacing="10.0">
+                        <padding>
+                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        </padding>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            <padding>
+                <Insets bottom="20.0" left="200.0" right="200.0" top="40.0"/>
+            </padding>
         </TabPane>
-    </bottom>
-</BorderPane>
+    </children>
+    <padding>
+        <Insets top="50.0"/>
+    </padding>
+</VBox>
