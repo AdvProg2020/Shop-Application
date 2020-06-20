@@ -29,6 +29,7 @@ import model.Product;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -2438,7 +2439,7 @@ public class Controllers {
                         }
 
                         errorLBL.setTextFill(Color.GREEN);
-                        errorLBL.setText("Changes saved successfully!");
+                        errorLBL.setText("Edition request has been sent!");
                     } catch (Exception ex) {
                         printError(ex.getMessage());
                     }
@@ -2554,7 +2555,7 @@ public class Controllers {
         @FXML
         private Button addSaleBTN;
 
-        private class SaleWrapper {
+        public class SaleWrapper {
             String id, seller, startDate, endDate;
             double percentage;
             int numOfProducts;
@@ -2584,10 +2585,36 @@ public class Controllers {
                 details.setOnAction(e -> SellerSaleManagingPopupController.display(id));
             }
 
-            public Property percentageProperty() {
-                SimpleStringProperty percentageProperty = new SimpleStringProperty();
-                percentageProperty.bind(new SimpleStringProperty(String.valueOf(percentage)).concat("%"));
-                return percentageProperty;
+            public String getId() {
+                return id;
+            }
+
+            public String getSeller() {
+                return seller;
+            }
+
+            public String getStartDate() {
+                return startDate;
+            }
+
+            public String getEndDate() {
+                return endDate;
+            }
+
+            public double getPercentage() {
+                return percentage;
+            }
+
+            public int getNumOfProducts() {
+                return numOfProducts;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+
+            public Button getDetails() {
+                return details;
             }
         }
 
@@ -2612,6 +2639,8 @@ public class Controllers {
             endDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+
+            sales.getItems().setAll(sellerSales);
         }
 
         private void initActions() {
@@ -2675,6 +2704,11 @@ public class Controllers {
             View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId);
         }
 
+        private void printError(String err) {
+            errorLBL.setTextFill(Color.RED);
+            errorLBL.setText(err);
+        }
+
         private void initialize(String saleId) {
             if (saleId != null) {
                 try {
@@ -2724,6 +2758,8 @@ public class Controllers {
 
         private void initValues(String saleId) {
             if (saleId != null) {
+                sale[3] = "20" + sale[3];
+                sale[4] = "20" + sale[4];
                 percentageField.setText(sale[2]);
                 maxField.setText(sale[6]);
                 startDate.setValue(LocalDate.parse(sale[3]));
@@ -2741,7 +2777,7 @@ public class Controllers {
                                 Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()), productIds);
                         products.getScene().getWindow().hide();
                     } catch (Exceptions.InvalidDateException ex) {
-                        errorLBL.setText("Dates selected do not match");
+                        printError("Dates selected do not match");
                         ex.printStackTrace();
                     } catch (Exceptions.InvalidProductIdsForASeller invalidProductIdsForASeller) {
                         invalidProductIdsForASeller.printStackTrace();
@@ -2762,6 +2798,9 @@ public class Controllers {
                             sellerController.editSale(sale[0], "start date", startDate.getValue().toString());
                         if (endDateChanged.get())
                             sellerController.editSale(sale[0], "end date", endDate.getValue().toString());
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Changes saved successfully!");
+
                     } catch (Exceptions.InvalidDateException ex) {
                         ex.printStackTrace();
                     } catch (Exceptions.InvalidFieldException ex) {
@@ -2781,16 +2820,16 @@ public class Controllers {
 
         private boolean validateFields() {
             if( ! percentageField.getText().matches(Constants.doublePattern)) {
-                errorLBL.setText("Invalid percentage! (ex. 33.33)");
+                printError("Invalid percentage! (ex. 33.33)");
                 return false;
             } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
-                errorLBL.setText("Invalid maximum amount! (ex. 25.75)");
+                printError("Invalid maximum amount! (ex. 25.75)");
                 return false;
             } else if (startDate.getValue() == null) {
-                errorLBL.setText("Invalid start date!");
+                printError("Invalid start date!");
                 return false;
             } else if (endDate.getValue() == null) {
-                errorLBL.setText("Invalid end date");
+                printError("Invalid end date");
                 return false;
             } else return true;
         }
@@ -2828,6 +2867,7 @@ public class Controllers {
             addBTN.setVisible( ! editHB.isVisible());
             idKeyLBL.setVisible(editHB.isVisible());
             idValueLBL.setVisible(editHB.isVisible());
+
         }
 
         @FXML
