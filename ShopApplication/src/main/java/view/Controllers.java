@@ -2296,7 +2296,7 @@ public class Controllers {
         private SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
         private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
 
-        private class CustomerWrapper {
+        public class CustomerWrapper {
             CheckBox hasCode;
             String id;
             String username;
@@ -2318,7 +2318,18 @@ public class Controllers {
                 this.count.opacityProperty().bind(
                         Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
                 );
-                //TODO: count listener and save changes handle customers
+                this.count.textProperty().addListener((observable, oldValue, newValue) -> {
+
+                });
+                this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        removedCustomers.remove(this);
+                        this.count.setText("1");
+                    } else {
+                        removedCustomers.add(this);
+                        this.count.setText("");
+                    }
+                });
             }
 
             public Property hasCodeProperty() {
@@ -2340,6 +2351,11 @@ public class Controllers {
             public TextField getCount() {
                 return count;
             }
+
+            @Override
+            public boolean equals(Object obj) {
+                return this.id.equals(((CustomerWrapper)obj).id);
+            }
         }
 
         public static void display(String discountId) {
@@ -2358,19 +2374,6 @@ public class Controllers {
                     e.printStackTrace();
                     return;
                 }
-            }
-
-            customersWithCode = adminController.peopleWhoHaveThisDiscount(discountId);
-            allCustomers = new ArrayList<>();
-            for (String[] customer : customersWithCode) {
-                allCustomers.add(new CustomerWrapper(customer, true));
-            }
-
-            ArrayList<String[]> allUsers = adminController.manageUsers();
-            allUsers.removeAll(customersWithCode.stream().map(s -> new String[]{s[2], s[0]}).collect(Collectors.toList()));
-
-            for (String[] user: allUsers) {
-                allCustomers.add(new CustomerWrapper(user[2], user[0], 0, false));
             }
 
             initBindings(discountId);
@@ -2445,6 +2448,11 @@ public class Controllers {
                         if (endDateChanged.get()) {
                             adminController.editDiscountCode(discount[1], "end date", endDate.getValue().toString());
                         }
+                        adminController.setAccounts(discount[1],
+                                customersTable.getItems().stream().filter(cw -> cw.hasCode.isSelected()).
+                                        map(cw -> new String[]{cw.getId(), cw.getCount().getText()}).collect(Collectors.toCollection(ArrayList::new)));
+                        adminController.removeAccountsFromDiscount(discount[1],
+                                removedCustomers.stream().map(cw -> cw.getId()).collect(Collectors.toCollection(ArrayList::new)));
 
                         errorLBL.setTextFill(Color.GREEN);
                         errorLBL.setText("Changed saved successfully!");
@@ -2490,7 +2498,34 @@ public class Controllers {
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("hasCode"));
             usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
 
+            initTableContent(saleId);
+        }
 
+        private void initTableContent(String saleId) {
+            ArrayList<String[]> withCode = new ArrayList<>();
+            if (saleId != null) {
+                try {
+                    withCode = adminController.peopleWhoHaveThisDiscount(saleId);
+                } catch (Exceptions.DiscountCodeException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+
+            for (String[] customer : withCode) {
+                customersWithDiscount.add(new CustomerWrapper(customer, true));
+            }
+            allCustomers.addAll(customersWithDiscount);
+
+            for (String[] user : adminController.manageUsers()) {
+                if (user[6].equals(Constants.customerUserType)) {
+                    CustomerWrapper cw = new CustomerWrapper(user[0], user[1], 0, false);
+                    if ( ! customersWithDiscount.contains(cw)) {
+                        allCustomers.add(cw);
+                    }
+                }
+            }
+            customersTable.getItems().setAll(allCustomers);
         }
 
         private void initValues(String saleId) {

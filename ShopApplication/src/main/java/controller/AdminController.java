@@ -406,11 +406,11 @@ public class AdminController {
         database().removeCategory();
     }
 
-    public void setAccounts(String code, HashMap<String, Integer> customerIds){
+    public void setAccounts(String code, ArrayList<String[]> customerIds){
         Discount discount = Discount.getDiscountByCode(code);
         if( discount != null){
-            for (String customerId : customerIds.keySet()) {
-                discount.addCustomer( customerId, customerIds.get(customerId));
+            for (String[] customerId : customerIds) {
+                discount.addCustomer( customerId[0], Integer.parseInt(customerId[1]));
             }
         }
     }
