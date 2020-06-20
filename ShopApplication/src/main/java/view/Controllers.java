@@ -2429,12 +2429,12 @@ public class Controllers {
                             discount.maximumAmount = Double.parseDouble(maxField.getText());
                         }
                         if (startDateChanged.get()) {
-                            adminController.editDiscountCode(discount.code, "start date", startDate.getAccessibleText());
-                            discount.startDate = startDate.getAccessibleText();
+                            adminController.editDiscountCode(discount.code, "start date", startDate.getValue().toString());
+                            discount.startDate = startDate.getValue().toString();
                         }
                         if (endDateChanged.get()) {
-                            adminController.editDiscountCode(discount.code, "end date", endDate.getAccessibleText());
-                            discount.endDate = endDate.getAccessibleText();
+                            adminController.editDiscountCode(discount.code, "end date", endDate.getValue().toString());
+                            discount.endDate = endDate.getValue().toString();
                         }
 
                         errorLBL.setTextFill(Color.GREEN);
@@ -2621,7 +2621,7 @@ public class Controllers {
 
     public static class SellerSaleManagingPopupController {
 
-        private ArrayList<ProductInSaleWrapper> inSales;
+        private ArrayList<ProductInSaleWrapper> inSales = new ArrayList<>();
         private ArrayList<ProductInSaleWrapper> removedFormSale = new ArrayList<>();
         private ArrayList<ProductInSaleWrapper> addedToSale = new ArrayList<>();
 
@@ -2629,10 +2629,12 @@ public class Controllers {
 
         public class ProductInSaleWrapper {
             CheckBox hasSale = new CheckBox();
-            String productId;
+            String productId, name, brand;
 
-            public ProductInSaleWrapper(String productId, boolean hasSale) {
+            public ProductInSaleWrapper(String productId, String name, String brand, boolean hasSale) {
                 this.productId = productId;
+                this.name = name;
+                this.brand = brand;
                 this.hasSale.setSelected(hasSale);
 
                 this.hasSale.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -2648,12 +2650,22 @@ public class Controllers {
                 });
             }
 
+            public String getNameBrand() {
+                return name + " (" + brand + ")";
+            }
+
             public CheckBox getHasSale() {
                 return hasSale;
             }
 
             public String getProductId() {
                 return productId;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                ProductInSaleWrapper p = (ProductInSaleWrapper) o;
+                return this.productId.equals(p.productId);
             }
         }
 
@@ -2664,10 +2676,12 @@ public class Controllers {
         }
 
         private void initialize(String saleId) {
-            try {
-                sale =  sellerController.viewSaleWithId(saleId);
-            } catch (Exceptions.InvalidSaleIdException e) {
-                e.printStackTrace();
+            if (saleId != null) {
+                try {
+                    sale = sellerController.viewSaleWithId(saleId);
+                } catch (Exceptions.InvalidSaleIdException e) {
+                    e.printStackTrace();
+                }
             }
             initTable(saleId);
             initValues(saleId);
@@ -2677,7 +2691,35 @@ public class Controllers {
         }
 
         private void initTable(String saleId) {
+            selectCOL.setCellValueFactory(new PropertyValueFactory<>("hasSale"));
+            nameBrandCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
 
+            initItems(saleId);
+        }
+
+        private void initItems(String saleId) {
+            ArrayList<ProductInSaleWrapper> allProducts = new ArrayList<>();
+            if (saleId == null) {
+                for (String[] product : sellerController.manageProducts()) {
+                    allProducts.add(new ProductInSaleWrapper(product[0], product[2], product[3], false));
+                }
+            } else {
+                try {
+                    for (String[] product : sellerController.getProductsInSale(saleId)) {
+                        inSales.add(new ProductInSaleWrapper(product[0], product[1], product[2], true));
+                    }
+                    allProducts.addAll(inSales);
+
+                    for (String[] product : sellerController.manageProducts()) {
+                        ProductInSaleWrapper p = new ProductInSaleWrapper(product[0], product[2], product[3], false);
+                        if ( ! inSales.contains(p)) allProducts.add(p);
+                    }
+                } catch (Exceptions.InvalidSaleIdException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            products.getItems().setAll(allProducts);
         }
 
         private void initValues(String saleId) {
@@ -2693,9 +2735,64 @@ public class Controllers {
             addBTN.setOnAction(e -> {
                 if (validateFields()) {
                     ArrayList<String> productIds;
-                    productIds =
+                    productIds = inSales.stream().map(ProductInSaleWrapper::getProductId).collect(Collectors.toCollection(ArrayList::new));
+                    try {
+                        sellerController.addSale(startDate.getValue().toString(), endDate.getValue().toString(),
+                                Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()), productIds);
+                        products.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidDateException ex) {
+                        errorLBL.setText("Dates selected do not match");
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidProductIdsForASeller invalidProductIdsForASeller) {
+                        invalidProductIdsForASeller.printStackTrace();
+                    } catch (Exceptions.InvalidFormatException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
+
+            editBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        if (percentageChanged.get())
+                            sellerController.editSale(sale[0], "percentage", percentageField.getText());
+                        if (maxFieldChanged.get())
+                            sellerController.editSale(sale[0], "maximum", maxField.getText());
+                        if (startDateChanged.get())
+                            sellerController.editSale(sale[0], "start date", startDate.getValue().toString());
+                        if (endDateChanged.get())
+                            sellerController.editSale(sale[0], "end date", endDate.getValue().toString());
+                    } catch (Exceptions.InvalidDateException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidFieldException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidFormatException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidSaleIdException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.SameAsPreviousValueException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            discardBTN.setOnAction(e -> products.getScene().getWindow().hide());
+        }
+
+        private boolean validateFields() {
+            if( ! percentageField.getText().matches(Constants.doublePattern)) {
+                errorLBL.setText("Invalid percentage! (ex. 33.33)");
+                return false;
+            } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
+                errorLBL.setText("Invalid maximum amount! (ex. 25.75)");
+                return false;
+            } else if (startDate.getValue() == null) {
+                errorLBL.setText("Invalid start date!");
+                return false;
+            } else if (endDate.getValue() == null) {
+                errorLBL.setText("Invalid end date");
+                return false;
+            } else return true;
         }
 
         private void initBindings(String saleId) {
@@ -2729,8 +2826,15 @@ public class Controllers {
         private void initVisibilities(String saleId) {
             editHB.setVisible(saleId != null);
             addBTN.setVisible( ! editHB.isVisible());
+            idKeyLBL.setVisible(editHB.isVisible());
+            idValueLBL.setVisible(editHB.isVisible());
         }
 
+        @FXML
+        private Label idKeyLBL;
+
+        @FXML
+        private Label idValueLBL;
 
         @FXML
         private TableView<ProductInSaleWrapper> products;
@@ -2739,7 +2843,7 @@ public class Controllers {
         private TableColumn<ProductInSaleWrapper, CheckBox> selectCOL;
 
         @FXML
-        private TableColumn<ProductInSaleWrapper, String> productIdCOL;
+        private TableColumn<ProductInSaleWrapper, String> nameBrandCOL;
 
         @FXML
         private Label errorLBL;

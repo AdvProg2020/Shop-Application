@@ -130,6 +130,7 @@ public class View extends Application {
             System.out.println("could not load " + fxml + ".fxml");
         }
         popup.setScene(new Scene(parent));
+        popup.show();
         return loader.getController();
     }
 
@@ -162,13 +163,13 @@ public class View extends Application {
         );
 
         //create an admin.
-//        try {
-//            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null);
-//        } catch (Exceptions.UsernameAlreadyTakenException e) {
-//            e.printStackTrace();
-//        } catch (Exceptions.AdminRegisterException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null, null);
+        } catch (Exceptions.UsernameAlreadyTakenException e) {
+            e.printStackTrace();
+        } catch (Exceptions.AdminRegisterException e) {
+            e.printStackTrace();
+        }
 
     }
 }
