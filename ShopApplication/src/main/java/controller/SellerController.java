@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class SellerController {
 
@@ -252,6 +253,14 @@ public class SellerController {
         throw new Exceptions.InvalidSaleIdException(saleId);
     }
 
+    public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
+        Sale sale = Sale.getSaleById(saleId);
+        if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
+
+        return sale.getSubProducts().stream().map(Utilities.Pack::productInSale).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    //TODO: DEPRECATED
     public String[] getSaleEditableFields() {
         return Utilities.Field.saleEditableFields();
     }
