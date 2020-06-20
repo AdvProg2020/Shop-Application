@@ -10,6 +10,7 @@ import model.database.Database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 //TODO: compare to products!
@@ -312,19 +313,19 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         else {
             ArrayList<String> properties = new ArrayList<>();
-            for (String property : product.getCategory().getProperties()) {
+            for (String property : product.getCategory().getProperties(true)) {
                 properties.add(product.getPropertyValue(property));
             }
             return properties;
         }
     }
 
-    public ArrayList<String> getPropertiesOfCategory(String categoryName) throws Exceptions.InvalidCategoryException {
+    public ArrayList<String> getPropertiesOfCategory(String categoryName, boolean deep) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)
             throw new Exceptions.InvalidCategoryException(categoryName);
         else
-            return new ArrayList<>(category.getProperties());
+            return new ArrayList<>(category.getProperties(deep));
     }
 
     /**
@@ -595,4 +596,23 @@ public class Controller {
         else currentCart.removeSubProduct(subProductId);
     }
 
+    public String[] getDefaultSubProductOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if( product == null)
+            throw new Exceptions.InvalidProductIdException(productId);
+        return Utilities.Pack.subProduct(product.getDefaultSubProduct());
+    }
+
+    public ArrayList<String> getPropertyValuesInCategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
+        Category category = Category.getCategoryByName(categoryName);
+        if( category != null){
+            ArrayList<String> values = new ArrayList<>();
+            values.add(null);
+            for (Product product : category.getProducts(true)) {
+                values.add(product.getPropertyValue(property));
+            }
+            return values;
+        }else
+            throw new Exceptions.InvalidCategoryException(categoryName);
+    }
 }

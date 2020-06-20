@@ -27,13 +27,14 @@ public class Utilities {
 
     static class Pack {
         public static String[] saleInfo(Sale sale) {
-            String[] salePack = new String[6];
+            String[] salePack = new String[7];
             salePack[0] = sale.getId();
             salePack[1] = sale.getSeller().getUsername();
             salePack[2] = Double.toString(sale.getPercentage());
             salePack[3] = dateFormat.format(sale.getStartDate());
             salePack[4] = dateFormat.format(sale.getEndDate());
             salePack[5] = Integer.toString(sale.getSubProducts().size());
+            salePack[6] = String.valueOf(sale.getMaximumAmount());
             return salePack;
         }
 
@@ -438,7 +439,7 @@ public class Utilities {
         }
 
         private static boolean doesMatchTheProperty(Product product, String property, String value){
-            ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties());
+            ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties(false));
             if(!categoryProperties.contains(property))
                 return true;
             else {

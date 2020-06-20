@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class SellerController {
 
@@ -205,7 +206,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count);
-            int size = category.getProperties().size();
+            int size = category.getProperties(true).size();
             ArrayList<String> alaki = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 alaki.add(Integer.toString(i));
@@ -252,6 +253,14 @@ public class SellerController {
         throw new Exceptions.InvalidSaleIdException(saleId);
     }
 
+    public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
+        Sale sale = Sale.getSaleById(saleId);
+        if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
+
+        return sale.getSubProducts().stream().map(Utilities.Pack::productInSale).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    //TODO: DEPRECATED
     public String[] getSaleEditableFields() {
         return Utilities.Field.saleEditableFields();
     }
