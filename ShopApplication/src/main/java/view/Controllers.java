@@ -471,7 +471,7 @@ public class Controllers {
         }
 
         private void setAction(Parent p) {
-            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0],  false));
+            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0]));
         }
 
 

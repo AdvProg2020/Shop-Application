@@ -38,16 +38,15 @@ public class AdminController {
      * @return admin:
      * { String firstName, String lastName, String phone, String email, String password}
      */
+    //TODO: DEPRECATED
     public String[] getPersonalInfoEditableFields() {
         return Utilities.Field.adminPersonalInfoEditableFields();
     }
-
 
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
     }
-
 
     public ArrayList<String[]> manageUsers() {
         ArrayList<String[]> accounts = new ArrayList<>();
@@ -189,6 +188,7 @@ public class AdminController {
         }
     }
 
+    //TODO: DEPRECATED
     public String[] getDiscountEditableFields() {
         return Utilities.Field.discountEditableFields();
     }
@@ -330,6 +330,7 @@ public class AdminController {
         return categoryNames;
     }
 
+    //TODO: DEPRECATED
     public String[] getCategoryEditableFields() {
         return Utilities.Field.getCategoryEditableFields();
     }
@@ -408,7 +409,7 @@ public class AdminController {
         }
     }
 
-    public void removeAccounts(String code, ArrayList<String> customerIds){
+    public void removeAccountsFromDiscount(String code, ArrayList<String> customerIds){
         Discount discount = Discount.getDiscountByCode(code);
         if( discount != null){
             for (String customerId : customerIds) {

@@ -33,3 +33,24 @@ T: remove column for shopping cart menu
 A & T & M : add tabs to discount, sale, account managing menu
 
 
+
+A:  discount-sale-category => popup
+    productDetailMenu
+    add product
+    managing
+    CustomerBuyLogMenu
+    personalInfo (After css)
+    compare
+
+
+T:  SellerAddProduct
+    requests details popupS
+    adminProductBox
+    mainMenu
+    check purchase procedure
+
+M:  SellerAddProduct css
+    purchase css
+    personal info css
+
+

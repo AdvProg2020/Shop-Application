@@ -205,7 +205,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count);
-            int size = category.getProperties().size();
+            int size = category.getProperties(true).size();
             ArrayList<String> alaki = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 alaki.add(Integer.toString(i));
