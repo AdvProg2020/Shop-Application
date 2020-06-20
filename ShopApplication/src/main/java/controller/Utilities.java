@@ -438,7 +438,7 @@ public class Utilities {
         }
 
         private static boolean doesMatchTheProperty(Product product, String property, String value){
-            ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties());
+            ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties(false));
             if(!categoryProperties.contains(property))
                 return true;
             else {
