@@ -13,6 +13,7 @@ public class AddProductRequest extends Request implements SellerRequest {
         super();
         this.product = product;
         this.subProduct = subProduct;
+        initialize();
     }
 
     @Override

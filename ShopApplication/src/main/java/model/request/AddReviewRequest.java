@@ -9,6 +9,7 @@ public class AddReviewRequest extends Request {
     public AddReviewRequest(Review review) {
         super();
         this.review = review;
+        initialize();
     }
 
     @Override

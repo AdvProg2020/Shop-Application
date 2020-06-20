@@ -18,6 +18,7 @@ public class EditSaleRequest extends Request implements SellerRequest {
         this.saleId = saleId;
         this.field = field;
         this.newValue = newValue;
+        initialize();
     }
 
     @Override

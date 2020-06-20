@@ -15,6 +15,7 @@ public class EditProductRequest extends Request implements SellerRequest {
         this.subProductId = subProductId;
         this.field = field;
         this.newValue = newValue;
+        initialize();
     }
 
     @Override

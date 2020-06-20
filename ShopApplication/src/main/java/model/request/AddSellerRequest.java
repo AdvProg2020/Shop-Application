@@ -9,6 +9,7 @@ public class AddSellerRequest extends Request {
     public AddSellerRequest(Seller seller) {
         super();
         this.seller = seller;
+        initialize();
     }
 
     @Override

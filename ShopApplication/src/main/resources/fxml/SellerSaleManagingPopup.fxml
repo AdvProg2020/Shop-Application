@@ -67,7 +67,7 @@
                         <Insets right="5.0" />
                     </padding>
                     <TextField fx:id="percentageField" prefWidth="125.0" promptText="0 - 100" />
-                    <Label alignment="CENTER" text="\%" textAlignment="CENTER">
+                    <Label alignment="CENTER" prefHeight="17.0" prefWidth="26.0" text="\%" textAlignment="CENTER">
                         <HBox.margin>
                             <Insets />
                         </HBox.margin>

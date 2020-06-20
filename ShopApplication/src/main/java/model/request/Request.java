@@ -19,7 +19,6 @@ public abstract class Request implements ModelBasic {
         status = RequestStatus.PENDING;
         date = new Date();
         suspended = false;
-        initialize();
     }
 
     public static List<Request> getPendingRequests() {

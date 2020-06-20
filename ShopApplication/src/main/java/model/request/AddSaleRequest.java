@@ -10,6 +10,7 @@ public class AddSaleRequest extends Request implements SellerRequest {
     public AddSaleRequest(Sale sale) {
         super();
         this.sale = sale;
+        initialize();
     }
 
     @Override
