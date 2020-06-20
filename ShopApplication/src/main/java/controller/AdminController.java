@@ -166,18 +166,24 @@ public class AdminController {
     }
 
 
-    public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
-        Discount discount = Discount.getDiscountByCode(code);
-        if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
-        else
-            return Utilities.Pack.discountInfo(discount);
+//    public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
+//        Discount discount = Discount.getDiscountByCode(code);
+//        if (discount == null)
+//            throw new Exceptions.DiscountCodeException(code);
+//        else
+//            return Utilities.Pack.discountInfo(discount);
+//    }
+
+    public String[] viewDiscountCode(String discountId) throws Exceptions.DiscountCodeException {
+        Discount discount = Discount.getDiscountById(discountId);
+        if (discount == null) throw new Exceptions.DiscountCodeException(discountId); // :P
+        else return Utilities.Pack.discountInfo(discount);
     }
 
-    public ArrayList<String[]> peopleWhoHaveThisDiscount(String code) throws Exceptions.DiscountCodeException {
-        Discount discount = Discount.getDiscountByCode(code);
+    public ArrayList<String[]> peopleWhoHaveThisDiscount(String id) throws Exceptions.DiscountCodeException {
+        Discount discount = Discount.getDiscountById(id);
         if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
+            throw new Exceptions.DiscountCodeException(id);
         else {
             Map<Customer, Integer> peopleRemainingCount = discount.getCustomers();
             ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
