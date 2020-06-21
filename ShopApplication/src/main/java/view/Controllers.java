@@ -1486,6 +1486,12 @@ public class Controllers {
         @FXML
         private HBox editHB;
 
+        @FXML
+        private Tab productsTAB;
+
+        @FXML
+        private Tab subCategoriesTAB;
+
         private AdminCategoryManagingMenuController.CategoryWrapper category;
         private ArrayList<String> categoryProperties = new ArrayList<>();
         private ArrayList<MiniProductWrapper> categoryProducts = new ArrayList<>();
@@ -1529,10 +1535,10 @@ public class Controllers {
         }
 
         public class SubCategoryWrapper {
-            String name;
+            String id, name;
             Button remove = new Button();
 
-            public SubCategoryWrapper(String name) {
+            public SubCategoryWrapper(String id, String name) {
                 this.name = name;
                 remove.getStyleClass().add("remove-button");
 
@@ -1556,7 +1562,7 @@ public class Controllers {
 
         public static void display(AdminCategoryManagingMenuController.CategoryWrapper category) {
             ((AdminCategoryManagingPopupController)
-                    View.popupWindow("Add category", Constants.FXMLs.adminCategoryManagingPopup, 650, 500)).initialize(category);
+                    View.popupWindow("Add category", Constants.FXMLs.adminCategoryManagingPopup, 800, 600)).initialize(category);
         }
 
         private void initialize(AdminCategoryManagingMenuController.CategoryWrapper category) {
@@ -1576,6 +1582,8 @@ public class Controllers {
             addBTN.setVisible(! isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
+            productsTAB.setDisable(! isDetail);
+            subCategoriesTAB.setDisable(! isDetail);
         }
 
         private void initValues() {
@@ -1587,26 +1595,114 @@ public class Controllers {
         }
 
         private void initBindings() {
-            nameFieldChanged.bind(
-                    Bindings.when(nameField.textProperty().isEqualTo(category.name.get())).then(false).otherwise(true)
-            );
-            parentFieldChanged.bind(
-                    Bindings.when(parentField.textProperty().isEqualTo(category.parent.get())).then(false).otherwise(true)
-            );
-            editBTN.disableProperty().bind(
-                    Bindings.createObjectBinding(() -> {
-                        if (nameFieldChanged.get() || parentFieldChanged.get()) return false;
-                        else return true;
-                    }, nameFieldChanged, parentFieldChanged)
-            );
-            editBTN.opacityProperty().bind(
-                    Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
-            );
+            if (category != null) {
+                nameFieldChanged.bind(
+                        Bindings.when(nameField.textProperty().isEqualTo(category.name)).then(false).otherwise(true)
+                );
+                parentFieldChanged.bind(
+                        Bindings.when(parentField.textProperty().isEqualTo(category.parent)).then(false).otherwise(true)
+                );
+                editBTN.disableProperty().bind(
+                        Bindings.createObjectBinding(() -> {
+                            if (nameFieldChanged.get() || parentFieldChanged.get()) return false;
+                            else return true;
+                        }, nameFieldChanged, parentFieldChanged)
+                );
+                editBTN.opacityProperty().bind(
+                        Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
+                );
+            }
         }
 
         private void initTable() {
-            productCOL.setCellValueFactory(new PropertyValueFactory<>());
+            productCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            subCategoryCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
+            subCategoryRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
             initTableItems();
+        }
+
+        private void initTableItems() {
+            if (category != null) {
+                try {
+                    categoryProperties = mainController.getPropertiesOfCategory(category.name.get(), false);
+                    for (String[] subCategory : mainController.getSubCategoriesOfThisCategory(category.name.get())) {
+                        categorySubCategories.add(new SubCategoryWrapper(subCategory[0], subCategory[1]));
+                    }
+                    for (String[] product : mainController.getProductsOfThisCategory(category.name.get())) {
+                        categoryProducts.add(new MiniProductWrapper(product));
+                    }
+                } catch (Exceptions.InvalidCategoryException e) {
+                    e.printStackTrace();
+                }
+            }
+            //TODO: when property is done
+        }
+
+        private void initActions() {
+            addBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        adminController.addCategory(nameField.getText(), parentField.getText(), categoryProperties);
+                        properties.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                        printError("Invalid parent category.");
+                    } catch (Exceptions.ExistingCategoryException ex) {
+                        ex.printStackTrace();
+                        printError("Sorry, this category already exists.");
+                    }
+                }
+            });
+
+            editBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        if (parentFieldChanged.get()) {
+                            adminController.editCategory(category.name.get(), "parent", parentField.getText());
+                            category.parent.set(parentField.getText());
+                        }
+                        if (nameFieldChanged.get()) {
+                            adminController.editCategory(category.name.get(), "name", nameField.getText());
+                            category.name.set(nameField.getText());
+                        }
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Changes saved successfully");
+                    } catch (Exceptions.SubCategoryException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidFieldException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.ExistingCategoryException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.SameAsPreviousValueException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            discardBTN.setOnAction(e -> properties.getScene().getWindow().hide());
+        }
+
+        private void printError(String err) {
+            errorLBL.setTextFill(Color.RED);
+            errorLBL.setText(err);
+        }
+
+        private boolean validateFields() {
+            if ( ! nameField.getText().matches("\\w+")) {
+                printError("Invalid category name! you can use alphabet and digits and \"_\".");
+                return false;
+            } else if ( ! parentField.getText().matches("\\w+")) {
+                printError("Invalid parent category name! you can use alphabet and digits and \"_\".");
+                return false;
+            } else return true;
         }
     }
 
