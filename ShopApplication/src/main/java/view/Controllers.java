@@ -3276,11 +3276,290 @@ public class Controllers {
         private void initActions() {
             manageProducts.setOnAction(e -> SellerProductManagingMenuController.display());
             manageSales.setOnAction(e -> SellerSaleManagingMenuController.display());
+            sellLogs.setOnAction(e -> SellerSellLogsManagingMenuController.display());
         }
     }
 
-    public static class SellerLogsManagingMenuController {
+    public static class SellerSellLogsManagingMenuController implements Initializable {
 
+        @FXML
+        private TableView<SellLogWrapper> sellLogs;
+
+        @FXML
+        private TableColumn<SellLogWrapper, String> dateCol;
+
+        @FXML
+        private TableColumn<SellLogWrapper, String> customerCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, Double> receivedMoneyCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, Double> saleAmountCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, String> shippingStatusCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, Button> detailsCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        private ArrayList<SellLogWrapper> allSellLogs = new ArrayList<>();
+
+        public static class SellLogWrapper {
+            String id, date, username, receiverName, receiverPhone, receiverAddress, shippingStatus;
+            Double receivedMoney, totalSale;
+            Button details = new Button();
+
+            public SellLogWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[5], info[6], info[7], info[8], Double.parseDouble(info[3]), Double.valueOf(info[4]));
+            }
+
+            public SellLogWrapper(String id, String date, String username, String receiverName, String receiverPhone,
+                                  String receiverAddress, String shippingStatus, Double receivedMoney, Double totalSale) {
+                this.id = id;
+                this.date = date;
+                this.username = username;
+                this.receiverName = receiverName;
+                this.receiverPhone = receiverPhone;
+                this.receiverAddress = receiverAddress;
+                this.shippingStatus = shippingStatus;
+                this.receivedMoney = receivedMoney;
+                this.totalSale = totalSale;
+
+                details.getStyleClass().add("details-button");
+                details.setOnAction(e -> SellerSellLogDetailMenuController.display(this.id));
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public String getReceiverName() {
+                return receiverName;
+            }
+
+            public String getReceiverPhone() {
+                return receiverPhone;
+            }
+
+            public String getReceiverAddress() {
+                return receiverAddress;
+            }
+
+            public String getShippingStatus() {
+                return shippingStatus;
+            }
+
+            public Double getReceivedMoney() {
+                return receivedMoney;
+            }
+
+            public Double getTotalSale() {
+                return totalSale;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+        }
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.sellerSellLogsManagingMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initTable();
+        }
+
+        private void initTable() {
+            initColumns();
+            initTableItems();
+        }
+
+        private void initColumns() {
+            dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+            customerCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            receivedMoneyCOL.setCellValueFactory(new PropertyValueFactory<>("receivedMoney"));
+            saleAmountCOL.setCellValueFactory(new PropertyValueFactory<>("totalSale"));
+            shippingStatusCOL.setCellValueFactory(new PropertyValueFactory<>("shippingStatus"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+        }
+
+        private void initTableItems() {
+            for (String[] sellLog : sellerController.getAllSellLogs()) {
+                allSellLogs.add(new SellLogWrapper(sellLog));
+            }
+
+            sellLogs.getItems().addAll(allSellLogs);
+        }
+    }
+
+    public static class SellerSellLogDetailMenuController {
+
+        @FXML
+        private TableView<SellLogItemWrapper> logItems;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, String> subProductCOL;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, Integer> countCOL;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, Double> priceCOL;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, Double> saleCOL;
+
+        @FXML
+        private Label idLBL;
+
+        @FXML
+        private Label customerLBL;
+
+        @FXML
+        private Label phoneLBL;
+
+        @FXML
+        private Label nameLBL;
+
+        @FXML
+        private Label saleLBL;
+
+        @FXML
+        private Label priceLBL;
+
+        @FXML
+        private Label dateLBL;
+
+        @FXML
+        private Label shipStatusLBL;
+
+        @FXML
+        private TextArea addressArea;
+
+        SellerSellLogsManagingMenuController.SellLogWrapper sellLog;
+        ArrayList<String[]> sellItems = new ArrayList<>();
+
+        public class SellLogItemWrapper {
+            String id, name, brand;
+            Double price, saleAmount;
+            int count;
+
+            public SellLogItemWrapper(String[] pack) {
+                this(pack[0], pack[1], pack[2], Double.parseDouble(pack[4]), Double.parseDouble(pack[5]), Integer.parseInt(pack[3]));
+            }
+
+            public SellLogItemWrapper(String id, String name, String brand, Double price, Double saleAmount, int count) {
+                this.id = id;
+                this.name = name;
+                this.brand = brand;
+                this.price = price;
+                this.saleAmount = saleAmount;
+                this.count = count;
+            }
+
+            public String nameBrand() {
+                return name + " (" + brand + ")";
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getBrand() {
+                return brand;
+            }
+
+            public Double getPrice() {
+                return price;
+            }
+
+            public Double getSaleAmount() {
+                return saleAmount;
+            }
+
+            public int getCount() {
+                return count;
+            }
+        }
+
+        public static void display(String id) {
+            ((SellerSellLogDetailMenuController)
+                    View.popupWindow("Sell Log Details", Constants.FXMLs.sellerSellLogDetailsPopup, 850, 500)).initialize(id);
+        }
+
+        public void initialize(String id) {
+            ArrayList<String[]> info;
+            try {
+                info = sellerController.getSellLogWithId(id);
+            } catch (Exceptions.InvalidLogIdException e) {
+                e.printStackTrace();
+                return;
+            }
+            sellLog = new SellerSellLogsManagingMenuController.SellLogWrapper(info.remove(0));
+            sellItems.addAll(info);
+
+            initValues();
+            initTable();
+        }
+
+        private void initValues() {
+            idLBL.setText(sellLog.id);
+            customerLBL.setText(sellLog.username);
+            dateLBL.setText(sellLog.date);
+            nameLBL.setText(sellLog.receiverName);
+            phoneLBL.setText(sellLog.receiverPhone);
+            priceLBL.setText(sellLog.receivedMoney + "");
+            saleLBL.setText(sellLog.totalSale + "");
+            shipStatusLBL.setText(sellLog.shippingStatus);
+
+            StringBuilder address = new StringBuilder(sellLog.receiverAddress);
+            int offset = 0 , size = address.length();
+            while (offset + 19 < size) {
+                offset += 19;
+                address.insert(offset, "\n");
+            }
+            addressArea.setText(address.toString());
+            addressArea.setEditable(false);
+        }
+
+        private void initTable() {
+            initColumns();
+            initItems();
+        }
+
+        private void initColumns() {
+            subProductCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
+            saleCOL.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
+            priceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
+        }
+
+        private void initItems() {
+            ArrayList<SellLogItemWrapper> items = new ArrayList<>();
+            for (String[] sellItem : sellItems) {
+                items.add(new SellLogItemWrapper(sellItem));
+            }
+
+            logItems.getItems().addAll(items);
+        }
     }
 
     public static class BaseController implements Initializable {
