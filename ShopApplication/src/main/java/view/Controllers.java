@@ -1319,10 +1319,10 @@ public class Controllers {
         private TableColumn<CategoryWrapper, String> idCOL;
 
         @FXML
-        private TableColumn<CategoryWrapper, String> nameCOL;
+        private TableColumn<CategoryWrapper, SimpleStringProperty> nameCOL;
 
         @FXML
-        private TableColumn<CategoryWrapper, String> parentCOL;
+        private TableColumn<CategoryWrapper, SimpleStringProperty> parentCOL;
 
         @FXML
         private TableColumn<CategoryWrapper, Button> detailsCOL;
@@ -1337,8 +1337,10 @@ public class Controllers {
         private Button addCategoryBTN;
 
         public class CategoryWrapper {
-            String id, name, parent;
+            String id;
             Button remove, details;
+            SimpleStringProperty name = new SimpleStringProperty();
+            SimpleStringProperty parent = new SimpleStringProperty();
 
             public CategoryWrapper(String[] info) {
                 this(info[0], info[1], info[2]);
@@ -1346,10 +1348,13 @@ public class Controllers {
 
             public CategoryWrapper(String id, String name, String parent) {
                 this.id = id;
-                this.name = name;
-                this.parent = parent;
+                this.name.set(name);
+                this.parent.set(parent);
                 remove = new Button();
                 details = new Button();
+
+                remove.getStyleClass().add("remove-button");
+                details.getStyleClass().add("details-button");
 
                 remove.setOnAction(e -> {
                     try {
@@ -1360,7 +1365,7 @@ public class Controllers {
                     }
                 });
 
-                details.setOnAction(e -> AdminCategoryManagingPopupController.display(name));
+                details.setOnAction(e -> AdminCategoryManagingPopupController.display(this));
             }
 
 
@@ -1369,10 +1374,18 @@ public class Controllers {
             }
 
             public String getName() {
+                return name.get();
+            }
+
+            public SimpleStringProperty nameProperty() {
                 return name;
             }
 
             public String getParent() {
+                return parent.get();
+            }
+
+            public SimpleStringProperty parentProperty() {
                 return parent;
             }
 
@@ -1421,41 +1434,45 @@ public class Controllers {
 
     public static class AdminCategoryManagingPopupController {
 
-        @FXML
-        private TableView<?> properties;
 
         @FXML
-        private TableColumn<?, ?> Property;
+        private TableView<String> properties;
 
         @FXML
-        private TableView<?> products;
+        private TableColumn<String, String> propertyCOL;
 
         @FXML
-        private TableColumn<?, ?> productCOL;
+        private TableView<MiniProductWrapper> products;
 
         @FXML
-        private TableColumn<?, ?> productRemoveCOL;
+        private TableColumn<MiniProductWrapper, String> productCOL;
 
         @FXML
-        private TableView<?> subCategories;
+        private TableColumn<MiniProductWrapper, Button> productRemoveCOL;
 
         @FXML
-        private TableColumn<?, ?> subCategoryCOL;
+        private TableView<SubCategoryWrapper> subCategories;
 
         @FXML
-        private TableColumn<?, ?> subCategoryRemoveCOL;
+        private TableColumn<SubCategoryWrapper, String> subCategoryCOL;
+
+        @FXML
+        private TableColumn<SubCategoryWrapper, Button> subCategoryRemoveCOL;
 
         @FXML
         private Label errorLBL;
 
         @FXML
-        private Label idLBL;
+        private Label idKeyLBL;
 
         @FXML
-        private TextField codeField;
+        private Label idValueLBL;
 
         @FXML
-        private TextField maxField;
+        private TextField nameField;
+
+        @FXML
+        private TextField parentField;
 
         @FXML
         private Button addBTN;
@@ -1466,13 +1483,130 @@ public class Controllers {
         @FXML
         private Button discardBTN;
 
-        public static void display(String categoryName) {
-            ((AdminCategoryManagingPopupController)
-                    View.popupWindow("Add category", Constants.FXMLs.adminCategoryManagingPopup, 650, 500)).init(categoryName);
+        @FXML
+        private HBox editHB;
+
+        private AdminCategoryManagingMenuController.CategoryWrapper category;
+        private ArrayList<String> categoryProperties = new ArrayList<>();
+        private ArrayList<MiniProductWrapper> categoryProducts = new ArrayList<>();
+        private ArrayList<SubCategoryWrapper> categorySubCategories = new ArrayList<>();
+
+        private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty parentFieldChanged = new SimpleBooleanProperty(false);
+
+        public class MiniProductWrapper {
+            String id, name, brand, category;
+            Button remove = new Button();
+
+            public MiniProductWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3]);
+            }
+
+            public MiniProductWrapper(String id, String name, String brand, String category) {
+                this.id = id;
+                this.name = name;
+                this.brand = brand;
+                this.category = category;
+
+                remove.getStyleClass().add("remove-button");
+
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeProduct(this.id);
+                    } catch (Exceptions.InvalidProductIdException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
+            public String getNameBrand() {
+                return name + " (" + brand + ")";
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
         }
 
-        private void init(String categoryName) {
+        public class SubCategoryWrapper {
+            String name;
+            Button remove = new Button();
 
+            public SubCategoryWrapper(String name) {
+                this.name = name;
+                remove.getStyleClass().add("remove-button");
+
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeCategory(name);
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+        }
+
+        public static void display(AdminCategoryManagingMenuController.CategoryWrapper category) {
+            ((AdminCategoryManagingPopupController)
+                    View.popupWindow("Add category", Constants.FXMLs.adminCategoryManagingPopup, 650, 500)).initialize(category);
+        }
+
+        private void initialize(AdminCategoryManagingMenuController.CategoryWrapper category) {
+            this.category = category;
+
+            initVisibility();
+            initValues();
+            initBindings();
+            initTable();
+            initActions();
+        }
+
+        private void initVisibility() {
+            boolean isDetail = category != null;
+
+            editHB.setVisible(isDetail);
+            addBTN.setVisible(! isDetail);
+            idKeyLBL.setVisible(isDetail);
+            idValueLBL.setVisible(isDetail);
+        }
+
+        private void initValues() {
+            if (category != null) {
+                nameField.setText(category.name.get());
+                parentField.setText(category.parent.get());
+                idValueLBL.setText(category.id);
+            }
+        }
+
+        private void initBindings() {
+            nameFieldChanged.bind(
+                    Bindings.when(nameField.textProperty().isEqualTo(category.name.get())).then(false).otherwise(true)
+            );
+            parentFieldChanged.bind(
+                    Bindings.when(parentField.textProperty().isEqualTo(category.parent.get())).then(false).otherwise(true)
+            );
+            editBTN.disableProperty().bind(
+                    Bindings.createObjectBinding(() -> {
+                        if (nameFieldChanged.get() || parentFieldChanged.get()) return false;
+                        else return true;
+                    }, nameFieldChanged, parentFieldChanged)
+            );
+            editBTN.opacityProperty().bind(
+                    Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
+            );
+        }
+
+        private void initTable() {
+            productCOL.setCellValueFactory(new PropertyValueFactory<>());
+            initTableItems();
         }
     }
 
@@ -2246,6 +2380,12 @@ public class Controllers {
     public static class AdminDiscountManagingPopupController {
 
         @FXML
+        private Label idKeyLBL;
+
+        @FXML
+        private Label idValueLBL;
+
+        @FXML
         private TableView<CustomerWrapper> customersTable;
 
         @FXML
@@ -2408,6 +2548,8 @@ public class Controllers {
             boolean isDetail = discountId != null;
             saveDiscardHBox.setVisible(isDetail);
             addBTN.setVisible( ! isDetail);
+            idKeyLBL.setVisible(isDetail);
+            idValueLBL.setVisible(isDetail);
 
             editBTN.opacityProperty().bind(
                     Bindings.createObjectBinding(() -> {
@@ -2543,6 +2685,7 @@ public class Controllers {
 
         private void initValues(String discountId) {
             if (discountId != null) {
+                idValueLBL.setText(discount.getId());
                 codeField.setText(discount.code);
                 percentageField.setText(discount.percentage.get() + "");
                 maxField.setText(discount.maximumAmount.get() + "");
