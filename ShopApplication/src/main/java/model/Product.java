@@ -175,7 +175,7 @@ public class Product implements ModelBasic {
     public List<SubProduct> getSubProductsInSale() {
         List<SubProduct> subProducts = new ArrayList<>();
         for (SubProduct subProduct : getSubProducts()) {
-            if (subProduct.getSale() == null)
+            if (subProduct.getSale() != null)
                 subProducts.add(subProduct);
         }
 
