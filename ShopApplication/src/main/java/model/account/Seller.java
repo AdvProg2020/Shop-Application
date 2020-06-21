@@ -57,7 +57,7 @@ public class Seller extends Account {
             subProduct.suspend();
         }
         subProductIds = null;
-        for (Sale sale : getSales()) {
+        for (Sale sale : getActiveSales()) {
             sale.suspend();
         }
         saleIds = null;
@@ -80,14 +80,25 @@ public class Seller extends Account {
         balance += changeAmount;
     }
 
-    public List<Sale> getSales() {
+    public List<Sale> getActiveSales() {
         List<Sale> sales = new ArrayList<>();
         for (String saleId : saleIds) {
-            sales.add(Sale.getSaleById(saleId, false));
+            sales.add(Sale.getSaleById(saleId));
         }
 
         return sales;
     }
+
+    public List<Sale> getSaleArchive() {
+        List<Sale> sales = new ArrayList<>();
+        for (String saleId : saleIds) {
+            sales.add(Sale.getSaleById(saleId, false));
+        }
+        sales.removeAll(getActiveSales());
+
+        return sales;
+    }
+
 
     @ModelOnly
     public void addSale(String saleId) {

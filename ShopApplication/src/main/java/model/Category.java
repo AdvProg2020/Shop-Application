@@ -105,14 +105,17 @@ public class Category implements ModelBasic {
         this.name = name;
     }
 
-    //TODO: fix deep
     public List<String> getProperties(boolean deep) {
-        return new ArrayList<>(properties);
+        if (!deep || getParent() == superCategory) return new ArrayList<>(properties);
+
+        List<String> deepProperties = getParent().getProperties(true);
+        deepProperties.addAll(properties);
+
+        return deepProperties;
     }
 
     public Category getParent() {
-        if (parentId.equals(superCategory.getId()))
-            return superCategory;
+        if (parentId.equals(superCategory.getId())) return superCategory;
 
         return Category.getCategoryById(parentId);
     }
