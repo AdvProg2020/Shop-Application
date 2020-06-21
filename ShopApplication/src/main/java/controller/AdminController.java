@@ -166,7 +166,7 @@ public class AdminController {
     }
 
 
-    public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
+    public String[] viewDiscountCodeByCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount == null)
             throw new Exceptions.DiscountCodeException(code);
@@ -174,10 +174,16 @@ public class AdminController {
             return Utilities.Pack.discountInfo(discount);
     }
 
-    public ArrayList<String[]> peopleWhoHaveThisDiscount(String code) throws Exceptions.DiscountCodeException {
-        Discount discount = Discount.getDiscountByCode(code);
+    public String[] viewDiscountCodeById(String discountId) throws Exceptions.DiscountCodeException {
+        Discount discount = Discount.getDiscountById(discountId);
+        if (discount == null) throw new Exceptions.DiscountCodeException(discountId); // :P
+        else return Utilities.Pack.discountInfo(discount);
+    }
+
+    public ArrayList<String[]> peopleWhoHaveThisDiscount(String id) throws Exceptions.DiscountCodeException {
+        Discount discount = Discount.getDiscountById(id);
         if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
+            throw new Exceptions.DiscountCodeException(id);
         else {
             Map<Customer, Integer> peopleRemainingCount = discount.getCustomers();
             ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
@@ -400,11 +406,11 @@ public class AdminController {
         database().removeCategory();
     }
 
-    public void setAccounts(String code, HashMap<String, Integer> customerIds){
+    public void setAccounts(String code, ArrayList<String[]> customerIds){
         Discount discount = Discount.getDiscountByCode(code);
         if( discount != null){
-            for (String customerId : customerIds.keySet()) {
-                discount.addCustomer( customerId, customerIds.get(customerId));
+            for (String[] customerId : customerIds) {
+                discount.addCustomer( customerId[0], Integer.parseInt(customerId[1]));
             }
         }
     }
