@@ -238,14 +238,14 @@ public class SellerController {
 
     public ArrayList<String[]> viewSales() {
         ArrayList<String[]> saleInfos = new ArrayList<>();
-        for (Sale sale : ((Seller) currentAccount()).getSales()) {
+        for (Sale sale : ((Seller) currentAccount()).getActiveSales()) {
             saleInfos.add(Utilities.Pack.saleInfo(sale));
         }
         return saleInfos;
     }
 
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
-        for (Sale sale : ((Seller) currentAccount()).getSales()) {
+        for (Sale sale : ((Seller) currentAccount()).getActiveSales()) {
             if (sale.getId().equals(saleId)) {
                 return Utilities.Pack.saleInfo(sale);
             }
@@ -268,7 +268,7 @@ public class SellerController {
     public void editSale(String saleId, String field, String newInformation) throws
             Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         Sale targetedSale = null;
-        for (Sale sale : ((Seller) currentAccount()).getSales()) {
+        for (Sale sale : ((Seller) currentAccount()).getActiveSales()) {
             if (sale.getId().equals(saleId)) {
                 targetedSale = sale;
                 break;

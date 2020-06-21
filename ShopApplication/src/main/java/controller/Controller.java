@@ -10,7 +10,6 @@ import model.database.Database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 //TODO: compare to products!
@@ -455,7 +454,7 @@ public class Controller {
      */
     public ArrayList<String[]> sales() {
         ArrayList<String[]> sales = new ArrayList<>();
-        for (Sale sale : Sale.getActiveSales()) {
+        for (Sale sale : Sale.getAllSales()) {
             sales.add(Utilities.Pack.saleInfo(sale));
         }
         return sales;
@@ -532,7 +531,7 @@ public class Controller {
     public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
         ArrayList<String[]> subProductsSalePacks = new ArrayList<>();
         ArrayList<SubProduct> subProductsInSale = new ArrayList<>();
-        for (Sale sale : Sale.getActiveSales()) {
+        for (Sale sale : Sale.getAllSales()) {
             subProductsInSale.addAll(sale.getSubProducts());
         }
         for (int i = 0; i < filterBy.length; i++) {

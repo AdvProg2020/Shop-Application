@@ -74,11 +74,14 @@ public class Discount implements ModelBasic {
 
     @Override
     public boolean isSuspended() {
-        Date now = new Date();
-        if (now.after(endDate))
+        if (new Date().after(endDate))
             suspend();
 
-        return suspended || now.before(startDate);
+        return suspended;
+    }
+
+    public boolean hasStarted() {
+        return !(new Date().before(startDate));
     }
 
     @Override

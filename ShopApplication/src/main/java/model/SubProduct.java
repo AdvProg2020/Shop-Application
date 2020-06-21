@@ -87,7 +87,10 @@ public class SubProduct implements ModelBasic {
     }
 
     public Sale getSale() {
-        return Sale.getSaleById(saleId);
+        Sale sale = Sale.getSaleById(saleId);
+        if (sale == null || !sale.hasStarted()) return null;
+
+        return sale;
     }
 
     @ModelOnly

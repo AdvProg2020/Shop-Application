@@ -76,10 +76,7 @@ public class DatabaseManager implements Database {
     }
 
     private void updateSales() {
-        ArrayList<Sale> sales = new ArrayList<>();
-        sales.addAll(Sale.getSaleArchive());
-        sales.addAll(Sale.getActiveSales());
-        update(FileNames.SALE, Sale.class, sales);
+        update(FileNames.SALE, Sale.class, Sale.getAllSales(false));
     }
 
     private void updateCategories() {
