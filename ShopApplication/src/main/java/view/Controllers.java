@@ -1310,6 +1310,7 @@ public class Controllers {
 
     public static class AdminCategoryManagingMenuController implements Initializable{
 
+        static AdminCategoryManagingMenuController currentController;
         ArrayList<CategoryWrapper> wrappers;
 
         @FXML
@@ -1336,6 +1337,10 @@ public class Controllers {
         @FXML
         private Button addCategoryBTN;
 
+        void addItem(String[] info) {
+            categories.getItems().add(new CategoryWrapper(info));
+        }
+
         public class CategoryWrapper {
             String id;
             Button remove, details;
@@ -1358,8 +1363,12 @@ public class Controllers {
 
                 remove.setOnAction(e -> {
                     try {
-                        adminController.removeCategory(name);
-                        categories.getItems().remove(this);
+                        adminController.removeCategory(this.name.get());
+                        ArrayList<CategoryWrapper> toBeRemoved = new ArrayList<>();
+                        for (CategoryWrapper item : categories.getItems()) {
+                            if(item.parent.get().equals(this.name.get()) || item.name.get().equals(this.name.get())) toBeRemoved.add(item);
+                        }
+                        categories.getItems().removeAll(toBeRemoved);
                     } catch (Exceptions.InvalidCategoryException ex) {
                         ex.printStackTrace();
                     }
@@ -1404,6 +1413,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            currentController = this;
             initCategories();
             initTable();
             initActions();
@@ -1644,6 +1654,8 @@ public class Controllers {
                 if (validateFields()) {
                     try {
                         adminController.addCategory(nameField.getText(), parentField.getText(), categoryProperties);
+                        String[] newCategory = adminController.getCategory(nameField.getText());
+                        AdminCategoryManagingMenuController.currentController.addItem(newCategory);
                         properties.getScene().getWindow().hide();
                     } catch (Exceptions.InvalidCategoryException ex) {
                         ex.printStackTrace();
@@ -1697,10 +1709,10 @@ public class Controllers {
 
         private boolean validateFields() {
             if ( ! nameField.getText().matches("\\w+")) {
-                printError("Invalid category name! you can use alphabet and digits and \"_\".");
+                printError("Invalid characters in category name!");
                 return false;
             } else if ( ! parentField.getText().matches("\\w+")) {
-                printError("Invalid parent category name! you can use alphabet and digits and \"_\".");
+                printError("Invalid characters in parent category name!");
                 return false;
             } else return true;
         }
@@ -1854,7 +1866,7 @@ public class Controllers {
 
     public static class SellerLogMenuController implements Initializable {
         public static void display() {
-            View.setMainPane(Constants.FXMLs.sellerLogsMenu);
+            View.setMainPane(Constants.FXMLs.sellerSellLogsManagingMenu);
         }
 
         @Override
@@ -3251,6 +3263,7 @@ public class Controllers {
 
         @FXML
         private Button sellLogs;
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.sellerManagingMenu);
         }

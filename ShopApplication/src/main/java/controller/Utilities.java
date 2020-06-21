@@ -248,9 +248,10 @@ public class Utilities {
         }
 
         public static String[] category(Category category) {
-            String[] categoryPack = new String[2];
+            String[] categoryPack = new String[3];
             categoryPack[0] = category.getId();
             categoryPack[1] = category.getName();
+            categoryPack[2] = category.getParent().getName();
             return categoryPack;
         }
 

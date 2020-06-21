@@ -398,6 +398,12 @@ public class AdminController {
         }
     }
 
+    public String[] getCategory(String categoryName) throws Exceptions.InvalidCategoryException {
+        Category category = Category.getCategoryByName(categoryName);
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+        else return Utilities.Pack.category(category);
+    }
+
     public void removeCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null)

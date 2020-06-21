@@ -34,7 +34,7 @@ A & T & M : add tabs to discount, sale, account managing menu
 
 
 
-A:  discount-sale-category => popup
+A:   popup
     productDetailMenu
     add product
     managing
