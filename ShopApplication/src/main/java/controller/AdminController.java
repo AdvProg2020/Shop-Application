@@ -166,15 +166,15 @@ public class AdminController {
     }
 
 
-//    public String[] viewDiscountCode(String code) throws Exceptions.DiscountCodeException {
-//        Discount discount = Discount.getDiscountByCode(code);
-//        if (discount == null)
-//            throw new Exceptions.DiscountCodeException(code);
-//        else
-//            return Utilities.Pack.discountInfo(discount);
-//    }
+    public String[] viewDiscountCodeByCode(String code) throws Exceptions.DiscountCodeException {
+        Discount discount = Discount.getDiscountByCode(code);
+        if (discount == null)
+            throw new Exceptions.DiscountCodeException(code);
+        else
+            return Utilities.Pack.discountInfo(discount);
+    }
 
-    public String[] viewDiscountCode(String discountId) throws Exceptions.DiscountCodeException {
+    public String[] viewDiscountCodeById(String discountId) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountById(discountId);
         if (discount == null) throw new Exceptions.DiscountCodeException(discountId); // :P
         else return Utilities.Pack.discountInfo(discount);

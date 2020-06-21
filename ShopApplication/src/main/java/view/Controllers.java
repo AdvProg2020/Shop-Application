@@ -1002,13 +1002,13 @@ public class Controllers {
         private TableColumn<DiscountWrapper, String> codeCOL;
 
         @FXML
-        private TableColumn<DiscountWrapper, String> percentageCOL;
+        private TableColumn<DiscountWrapper, SimpleStringProperty> percentageCOL;
 
         @FXML
-        private TableColumn<DiscountWrapper, String> startDateCOL;
+        private TableColumn<DiscountWrapper, SimpleStringProperty> startDateCOL;
 
         @FXML
-        private TableColumn<DiscountWrapper, String> endDateCOL;
+        private TableColumn<DiscountWrapper, SimpleStringProperty> endDateCOL;
 
         @FXML
         private TableColumn<DiscountWrapper, Button> detailsCOL;
@@ -1042,12 +1042,11 @@ public class Controllers {
             for (String discount : adminController.viewDiscountCodes()) {
                 String[] details;
                 try {
-                    details = adminController.viewDiscountCode(discount);
+                    details = adminController.viewDiscountCodeByCode(discount);
+                    allDiscountWrappers.add(new DiscountWrapper(details));
                 } catch (Exceptions.DiscountCodeException e) {
                     e.printStackTrace();
-                    return;
                 }
-                allDiscountWrappers.add(new DiscountWrapper(details));
             }
         }
 
@@ -1063,15 +1062,16 @@ public class Controllers {
             discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
         }
 
-        private  class DiscountWrapper {
+        public  class DiscountWrapper {
             String id;
             String code;
-            double percentage;
-            double maximumAmount;
+            SimpleDoubleProperty percentage = new SimpleDoubleProperty();
+            SimpleDoubleProperty maximumAmount = new SimpleDoubleProperty();
             Button detail = new Button();
             Button remove = new Button();
-            String startDate;
-            String endDate;
+            SimpleStringProperty startDate = new SimpleStringProperty();
+            SimpleStringProperty endDate = new SimpleStringProperty();
+            SimpleStringProperty perMax = new SimpleStringProperty();
 
             public DiscountWrapper(String[] details) {
                 this(details[0], details[1], details[2], details[3], Double.parseDouble(details[5]), Double.parseDouble(details[4]));
@@ -1080,9 +1080,12 @@ public class Controllers {
             DiscountWrapper(String id, String code, String startDate, String endDate, double percentage, double maximumAmount) {
                 this.id = id;
                 this.code = code;
-                this.percentage = percentage;
-                this.maximumAmount = maximumAmount;
-                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this.id));
+                this.percentage.set(percentage);
+                this.maximumAmount.set(maximumAmount);
+                this.startDate.set(startDate);
+                this.endDate.set(endDate);
+                perMax.bind(this.percentage.asString().concat("% (").concat(this.maximumAmount).concat("$)"));
+                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this));
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
@@ -1102,12 +1105,8 @@ public class Controllers {
                 return code;
             }
 
-            public String getPercentage() {
-                return percentage + "%";
-            }
-
-            public double getMaximumAmount() {
-                return maximumAmount;
+            public SimpleStringProperty percentageProperty() {
+                return perMax;
             }
 
             public Button getDetail() {
@@ -1118,11 +1117,17 @@ public class Controllers {
                 return remove;
             }
 
-            public String getStartDate() {
+
+            public SimpleDoubleProperty maximumAmountProperty() {
+                return maximumAmount;
+            }
+
+
+            public SimpleStringProperty startDateProperty() {
                 return startDate;
             }
 
-            public String getEndDate() {
+            public SimpleStringProperty endDateProperty() {
                 return endDate;
             }
         }
@@ -2285,7 +2290,8 @@ public class Controllers {
         @FXML
         private HBox saveDiscardHBox;
 
-        private String[] discount;
+        private String[] discountInfo;
+        private AdminDiscountManagingMenuController.DiscountWrapper discount;
         private ArrayList<CustomerWrapper> allCustomers = new ArrayList<>();
         private ArrayList<CustomerWrapper> removedCustomers = new ArrayList<>();
         private ArrayList<CustomerWrapper> customersWithDiscount = new ArrayList<>();
@@ -2358,41 +2364,43 @@ public class Controllers {
             }
         }
 
-        public static void display(String discountId) {
+        public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount) {
+            String discountId = discount == null ? null : discount.getId();
             ((AdminDiscountManagingPopupController)
-                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId);
+                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount);
         }
 
-        private void initialize(String discountId) {
+        private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount) {
             //TODO: should be checked.
             ArrayList<String[]> customersWithCode = null;
 
             if (discountId != null) {
                 try {
-                    discount = adminController.viewDiscountCode(discountId);
+                    this.discount = discount;
+                    discountInfo = adminController.viewDiscountCodeById(discountId);
                 } catch (Exceptions.DiscountCodeException e) {
                     e.printStackTrace();
                     return;
                 }
             }
 
-            initBindings(discountId);
             initVisibility(discountId);
             initActions(discountId);
             initTable(discountId);
+            initBindings(discountId);
             initValues(discountId);
         }
 
         private void initBindings(String discountId) {
             if (discountId != null) {
-                discount[2] = "20" + discount[2];
-                discount[3] = "20" + discount[3];
+                discount.startDate.set("20" + discount.startDate.get());
+                discount.endDate.set("20" + discount.endDate.get());
 
-                codeFieldChanged.bind(Bindings.when(codeField.textProperty().isEqualTo(discount[0])).then(false).otherwise(true));
-                percentageFieldChanged.bind(Bindings.when(percentageField.textProperty().isEqualTo(discount[5])).then(false).otherwise(true));
-                maxFieldChanged.bind(Bindings.when(maxField.textProperty().isEqualTo(discount[4])).then(false).otherwise(true));
-                startDateChanged.bind(Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse(discount[2]))).then(false).otherwise(true));
-                endDateChanged.bind(Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse(discount[3]))).then(false).otherwise(true));
+                codeFieldChanged.bind(Bindings.when(codeField.textProperty().isEqualTo(discount.getCode())).then(false).otherwise(true));
+                percentageFieldChanged.bind(Bindings.when(percentageField.textProperty().isEqualTo(discount.percentage.asString())).then(false).otherwise(true));
+                maxFieldChanged.bind(Bindings.when(maxField.textProperty().isEqualTo(discount.maximumAmount.asString())).then(false).otherwise(true));
+                startDateChanged.bind(Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse(discount.startDate.get()))).then(false).otherwise(true));
+                endDateChanged.bind(Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse(discount.endDate.get()))).then(false).otherwise(true));
             }
         }
 
@@ -2410,7 +2418,8 @@ public class Controllers {
             );
 
             editBTN.disableProperty().bind(editBTN.opacityProperty().isNotEqualTo(1));
-            discardBTN.disableProperty().bind(editBTN.disableProperty());
+
+            codeField.setEditable( ! isDetail);
         }
 
         private void initActions(String discountId) {
@@ -2437,21 +2446,26 @@ public class Controllers {
                 if (fieldValidation()) {
                     try {
                         if (percentageFieldChanged.get()) {
-                            adminController.editDiscountCode(discount[1], "percentage", percentageField.getText());
+                            adminController.editDiscountCode(discountInfo[1], "percentage", percentageField.getText());
+                            discount.percentage.set(Double.parseDouble(percentageField.getText()));
                         }
                         if (maxFieldChanged.get()) {
-                            adminController.editDiscountCode(discount[1], "maximum amount", maxField.getText());
+                            adminController.editDiscountCode(discountInfo[1], "maximum amount", maxField.getText());
+                            discount.maximumAmount.set(Double.parseDouble(maxField.getText()));
                         }
                         if (startDateChanged.get()) {
-                            adminController.editDiscountCode(discount[1], "start date", startDate.getValue().toString());
+                            adminController.editDiscountCode(discountInfo[1], "start date", startDate.getValue().toString());
+                            discount.startDate.set(startDate.getValue().toString());
                         }
                         if (endDateChanged.get()) {
-                            adminController.editDiscountCode(discount[1], "end date", endDate.getValue().toString());
+                            adminController.editDiscountCode(discountInfo[1], "end date", endDate.getValue().toString());
+                            discount.endDate.set(endDate.getValue().toString());
                         }
-                        adminController.setAccounts(discount[1],
+
+                        adminController.setAccounts(discountInfo[1],
                                 customersTable.getItems().stream().filter(cw -> cw.hasCode.isSelected()).
                                         map(cw -> new String[]{cw.getId(), cw.getCount().getText()}).collect(Collectors.toCollection(ArrayList::new)));
-                        adminController.removeAccountsFromDiscount(discount[1],
+                        adminController.removeAccountsFromDiscount(discountInfo[1],
                                 removedCustomers.stream().map(cw -> cw.getId()).collect(Collectors.toCollection(ArrayList::new)));
 
                         errorLBL.setTextFill(Color.GREEN);
@@ -2489,7 +2503,7 @@ public class Controllers {
             } else return true;
         }
 
-        private void initTable(String saleId) {
+        private void initTable(String discountId) {
             //CheckBox hasCode;
             //            String id;
             //            String username;
@@ -2498,16 +2512,15 @@ public class Controllers {
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("hasCode"));
             usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-            initTableContent(saleId);
+            initTableContent(discountId);
         }
 
-        private void initTableContent(String saleId) {
+        private void initTableContent(String discountId) {
             ArrayList<String[]> withCode = new ArrayList<>();
-            if (saleId != null) {
+            if (discountId != null) {
                 try {
-                    withCode = adminController.peopleWhoHaveThisDiscount(saleId);
+                    withCode = adminController.peopleWhoHaveThisDiscount(discountId);
                 } catch (Exceptions.DiscountCodeException e) {
-                    e.printStackTrace();
                     return;
                 }
             }
@@ -2528,13 +2541,13 @@ public class Controllers {
             customersTable.getItems().setAll(allCustomers);
         }
 
-        private void initValues(String saleId) {
-            if (saleId != null) {
-                codeField.setText(discount[1]);
-                percentageField.setText(discount[5]);
-                maxField.setText(discount[4]);
-                startDate.setValue(LocalDate.parse(discount[2]));
-                endDate.setValue(LocalDate.parse(discount[3]));
+        private void initValues(String discountId) {
+            if (discountId != null) {
+                codeField.setText(discount.code);
+                percentageField.setText(discount.percentage.get() + "");
+                maxField.setText(discount.maximumAmount.get() + "");
+                startDate.setValue(LocalDate.parse(discount.startDate.get()));
+                endDate.setValue(LocalDate.parse(discount.endDate.get()));
             }
         }
     }
