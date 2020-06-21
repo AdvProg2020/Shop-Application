@@ -28,7 +28,7 @@ public class Discount implements ModelBasic {
     }
 
     public static List<Discount> getActiveDiscounts() {
-        return ModelUtilities.getAllInstances(allDiscounts.values(), false);
+        return ModelUtilities.getAllInstances(allDiscounts.values());
     }
 
     public static List<Discount> getDiscountArchive() {
