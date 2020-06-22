@@ -2017,11 +2017,20 @@ public class Controllers {
         }
 
         private void initActions() {
-            purchaseBTN.setOnAction(e -> PurchaseMenuController.display());
+            purchaseBTN.setOnAction(e -> {
+                if (productsTable.getItems().isEmpty()) {
+                    errorLBL.setText("Cart is empty!");
+                } else if (View.type.get().equals(Constants.anonymousUserType)) {
+                    errorLBL.setText("Login First!");
+                    LoginPopupController.display(new Stage());
+                } else {
+                    PurchaseMenuController.display();
+                }
+            });
 
             clearCartBTN.setOnAction(e -> {
                 if (cartProducts.size() == 0) {
-                    errorLBL.setText("the cart is already empty!");
+                    errorLBL.setText("The cart is already empty!");
                 } else {
                     mainController.clearCart();
                 }
@@ -2060,6 +2069,87 @@ public class Controllers {
             count.setCellValueFactory(new PropertyValueFactory<>("count"));
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+        }
+    }
+
+    public static class PurchaseMenuController implements Initializable{
+        @FXML
+        private TextField receiverName;
+
+        @FXML
+        private TextField phoneNumber;
+
+        @FXML
+        private Label phoneError;
+
+        @FXML
+        private TextArea address;
+
+        @FXML
+        private TextField discountCode;
+
+        @FXML
+        private Label discountError;
+
+        @FXML
+        private Button purchase;
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.purchaseMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initButtons();
+            initBindings();
+            initListeners();
+        }
+
+        private void initButtons() {
+            purchase.setOnAction(e -> {
+                try {
+                    discountError.setText("");
+                    customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText());
+                    mainController.clearCart();
+                    View.goBack();
+                } catch (Exceptions.InsufficientCreditException ex) {
+                    ex.printStackTrace();
+                } catch (Exceptions.NotAvailableSubProductsInCart notAvailableSubProductsInCart) {
+                    notAvailableSubProductsInCart.printStackTrace();
+                } catch (Exceptions.InvalidDiscountException ex) {
+                    discountError.setText("Invalid discount code!");
+                    ex.printStackTrace();
+                } catch (Exceptions.EmptyCartException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        }
+
+        private void initBindings() {
+           discountCode.disableProperty().bind(
+                   Bindings.createObjectBinding(() -> !receiverName.getText().matches(Constants.IRLNamePattern) ||
+                           address.getText().equals("") || phoneNumber.getText().equals(""),
+                           receiverName.textProperty(), address.textProperty(), phoneNumber.textProperty())
+           );
+           discountCode.opacityProperty().bind(Bindings.when(discountCode.disableProperty()).then(0.5).otherwise(1));
+
+           purchase.disableProperty().bind(
+                   Bindings.when(discountCode.disableProperty().not().and(discountCode.textProperty().isNotNull())).then(false).otherwise(true)
+           );
+           purchase.opacityProperty().bind(Bindings.when(purchase.disableProperty()).then(0.5).otherwise(1));
+        }
+
+        private void initListeners() {
+            phoneNumber.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (!String.valueOf(lastInput).matches("[0-9]")) phoneNumber.setText(oldValue);
+            }));
+            discountCode.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (!String.valueOf(lastInput).matches("\\w")) discountCode.setText(oldValue);
+            }));
         }
     }
 
@@ -2308,12 +2398,6 @@ public class Controllers {
 
         @FXML
         private Label discountLBL;
-    }
-
-    public static class PurchaseMenuController {
-        public static void display() {
-            View.setMainPane(Constants.FXMLs.purchaseMenu);
-        }
     }
 
     public static class AdminManagingMenuController implements Initializable {
