@@ -1310,6 +1310,7 @@ public class Controllers {
 
     public static class AdminCategoryManagingMenuController implements Initializable{
 
+        static AdminCategoryManagingMenuController currentController;
         ArrayList<CategoryWrapper> wrappers;
 
         @FXML
@@ -1319,10 +1320,10 @@ public class Controllers {
         private TableColumn<CategoryWrapper, String> idCOL;
 
         @FXML
-        private TableColumn<CategoryWrapper, String> nameCOL;
+        private TableColumn<CategoryWrapper, SimpleStringProperty> nameCOL;
 
         @FXML
-        private TableColumn<CategoryWrapper, String> parentCOL;
+        private TableColumn<CategoryWrapper, SimpleStringProperty> parentCOL;
 
         @FXML
         private TableColumn<CategoryWrapper, Button> detailsCOL;
@@ -1336,9 +1337,15 @@ public class Controllers {
         @FXML
         private Button addCategoryBTN;
 
+        void addItem(String[] info) {
+            categories.getItems().add(new CategoryWrapper(info));
+        }
+
         public class CategoryWrapper {
-            String id, name, parent;
+            String id;
             Button remove, details;
+            SimpleStringProperty name = new SimpleStringProperty();
+            SimpleStringProperty parent = new SimpleStringProperty();
 
             public CategoryWrapper(String[] info) {
                 this(info[0], info[1], info[2]);
@@ -1346,21 +1353,28 @@ public class Controllers {
 
             public CategoryWrapper(String id, String name, String parent) {
                 this.id = id;
-                this.name = name;
-                this.parent = parent;
+                this.name.set(name);
+                this.parent.set(parent);
                 remove = new Button();
                 details = new Button();
 
+                remove.getStyleClass().add("remove-button");
+                details.getStyleClass().add("details-button");
+
                 remove.setOnAction(e -> {
                     try {
-                        adminController.removeCategory(name);
-                        categories.getItems().remove(this);
+                        adminController.removeCategory(this.name.get());
+                        ArrayList<CategoryWrapper> toBeRemoved = new ArrayList<>();
+                        for (CategoryWrapper item : categories.getItems()) {
+                            if(item.parent.get().equals(this.name.get()) || item.name.get().equals(this.name.get())) toBeRemoved.add(item);
+                        }
+                        categories.getItems().removeAll(toBeRemoved);
                     } catch (Exceptions.InvalidCategoryException ex) {
                         ex.printStackTrace();
                     }
                 });
 
-                details.setOnAction(e -> AdminCategoryManagingPopupController.display(name));
+                details.setOnAction(e -> AdminCategoryManagingPopupController.display(this));
             }
 
 
@@ -1369,10 +1383,18 @@ public class Controllers {
             }
 
             public String getName() {
+                return name.get();
+            }
+
+            public SimpleStringProperty nameProperty() {
                 return name;
             }
 
             public String getParent() {
+                return parent.get();
+            }
+
+            public SimpleStringProperty parentProperty() {
                 return parent;
             }
 
@@ -1391,6 +1413,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            currentController = this;
             initCategories();
             initTable();
             initActions();
@@ -1421,41 +1444,45 @@ public class Controllers {
 
     public static class AdminCategoryManagingPopupController {
 
-        @FXML
-        private TableView<?> properties;
 
         @FXML
-        private TableColumn<?, ?> Property;
+        private TableView<String> properties;
 
         @FXML
-        private TableView<?> products;
+        private TableColumn<String, String> propertyCOL;
 
         @FXML
-        private TableColumn<?, ?> productCOL;
+        private TableView<MiniProductWrapper> products;
 
         @FXML
-        private TableColumn<?, ?> productRemoveCOL;
+        private TableColumn<MiniProductWrapper, String> productCOL;
 
         @FXML
-        private TableView<?> subCategories;
+        private TableColumn<MiniProductWrapper, Button> productRemoveCOL;
 
         @FXML
-        private TableColumn<?, ?> subCategoryCOL;
+        private TableView<SubCategoryWrapper> subCategories;
 
         @FXML
-        private TableColumn<?, ?> subCategoryRemoveCOL;
+        private TableColumn<SubCategoryWrapper, String> subCategoryCOL;
+
+        @FXML
+        private TableColumn<SubCategoryWrapper, Button> subCategoryRemoveCOL;
 
         @FXML
         private Label errorLBL;
 
         @FXML
-        private Label idLBL;
+        private Label idKeyLBL;
 
         @FXML
-        private TextField codeField;
+        private Label idValueLBL;
 
         @FXML
-        private TextField maxField;
+        private TextField nameField;
+
+        @FXML
+        private TextField parentField;
 
         @FXML
         private Button addBTN;
@@ -1466,13 +1493,228 @@ public class Controllers {
         @FXML
         private Button discardBTN;
 
-        public static void display(String categoryName) {
-            ((AdminCategoryManagingPopupController)
-                    View.popupWindow("Add category", Constants.FXMLs.adminCategoryManagingPopup, 650, 500)).init(categoryName);
+        @FXML
+        private HBox editHB;
+
+        @FXML
+        private Tab productsTAB;
+
+        @FXML
+        private Tab subCategoriesTAB;
+
+        private AdminCategoryManagingMenuController.CategoryWrapper category;
+        private ArrayList<String> categoryProperties = new ArrayList<>();
+        private ArrayList<MiniProductWrapper> categoryProducts = new ArrayList<>();
+        private ArrayList<SubCategoryWrapper> categorySubCategories = new ArrayList<>();
+
+        private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty parentFieldChanged = new SimpleBooleanProperty(false);
+
+        public class MiniProductWrapper {
+            String id, name, brand, category;
+            Button remove = new Button();
+
+            public MiniProductWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3]);
+            }
+
+            public MiniProductWrapper(String id, String name, String brand, String category) {
+                this.id = id;
+                this.name = name;
+                this.brand = brand;
+                this.category = category;
+
+                remove.getStyleClass().add("remove-button");
+
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeProduct(this.id);
+                    } catch (Exceptions.InvalidProductIdException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
+            public String getNameBrand() {
+                return name + " (" + brand + ")";
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
         }
 
-        private void init(String categoryName) {
+        public class SubCategoryWrapper {
+            String id, name;
+            Button remove = new Button();
 
+            public SubCategoryWrapper(String id, String name) {
+                this.name = name;
+                remove.getStyleClass().add("remove-button");
+
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeCategory(name);
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+        }
+
+        public static void display(AdminCategoryManagingMenuController.CategoryWrapper category) {
+            ((AdminCategoryManagingPopupController)
+                    View.popupWindow("Add category", Constants.FXMLs.adminCategoryManagingPopup, 800, 600)).initialize(category);
+        }
+
+        private void initialize(AdminCategoryManagingMenuController.CategoryWrapper category) {
+            this.category = category;
+
+            initVisibility();
+            initValues();
+            initBindings();
+            initTable();
+            initActions();
+        }
+
+        private void initVisibility() {
+            boolean isDetail = category != null;
+
+            editHB.setVisible(isDetail);
+            addBTN.setVisible(! isDetail);
+            idKeyLBL.setVisible(isDetail);
+            idValueLBL.setVisible(isDetail);
+            productsTAB.setDisable(! isDetail);
+            subCategoriesTAB.setDisable(! isDetail);
+        }
+
+        private void initValues() {
+            if (category != null) {
+                nameField.setText(category.name.get());
+                parentField.setText(category.parent.get());
+                idValueLBL.setText(category.id);
+            }
+        }
+
+        private void initBindings() {
+            if (category != null) {
+                nameFieldChanged.bind(
+                        Bindings.when(nameField.textProperty().isEqualTo(category.name)).then(false).otherwise(true)
+                );
+                parentFieldChanged.bind(
+                        Bindings.when(parentField.textProperty().isEqualTo(category.parent)).then(false).otherwise(true)
+                );
+                editBTN.disableProperty().bind(
+                        Bindings.createObjectBinding(() -> {
+                            if (nameFieldChanged.get() || parentFieldChanged.get()) return false;
+                            else return true;
+                        }, nameFieldChanged, parentFieldChanged)
+                );
+                editBTN.opacityProperty().bind(
+                        Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
+                );
+            }
+        }
+
+        private void initTable() {
+            productCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            subCategoryCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
+            subCategoryRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            initTableItems();
+        }
+
+        private void initTableItems() {
+            if (category != null) {
+                try {
+                    categoryProperties = mainController.getPropertiesOfCategory(category.name.get(), false);
+                    for (String[] subCategory : mainController.getSubCategoriesOfThisCategory(category.name.get())) {
+                        categorySubCategories.add(new SubCategoryWrapper(subCategory[0], subCategory[1]));
+                    }
+                    for (String[] product : mainController.getProductsOfThisCategory(category.name.get())) {
+                        categoryProducts.add(new MiniProductWrapper(product));
+                    }
+                } catch (Exceptions.InvalidCategoryException e) {
+                    e.printStackTrace();
+                }
+            }
+            //TODO: when property is done
+        }
+
+        private void initActions() {
+            addBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        adminController.addCategory(nameField.getText(), parentField.getText(), categoryProperties);
+                        String[] newCategory = adminController.getCategory(nameField.getText());
+                        AdminCategoryManagingMenuController.currentController.addItem(newCategory);
+                        properties.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                        printError("Invalid parent category.");
+                    } catch (Exceptions.ExistingCategoryException ex) {
+                        ex.printStackTrace();
+                        printError("Sorry, this category already exists.");
+                    }
+                }
+            });
+
+            editBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        if (parentFieldChanged.get()) {
+                            adminController.editCategory(category.name.get(), "parent", parentField.getText());
+                            category.parent.set(parentField.getText());
+                        }
+                        if (nameFieldChanged.get()) {
+                            adminController.editCategory(category.name.get(), "name", nameField.getText());
+                            category.name.set(nameField.getText());
+                        }
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Changes saved successfully");
+                    } catch (Exceptions.SubCategoryException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidFieldException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.ExistingCategoryException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    } catch (Exceptions.SameAsPreviousValueException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            discardBTN.setOnAction(e -> properties.getScene().getWindow().hide());
+        }
+
+        private void printError(String err) {
+            errorLBL.setTextFill(Color.RED);
+            errorLBL.setText(err);
+        }
+
+        private boolean validateFields() {
+            if ( ! nameField.getText().matches("\\w+")) {
+                printError("Invalid characters in category name!");
+                return false;
+            } else if ( ! parentField.getText().matches("\\w+")) {
+                printError("Invalid characters in parent category name!");
+                return false;
+            } else return true;
         }
     }
 
@@ -1624,7 +1866,7 @@ public class Controllers {
 
     public static class SellerLogMenuController implements Initializable {
         public static void display() {
-            View.setMainPane(Constants.FXMLs.sellerLogsMenu);
+            View.setMainPane(Constants.FXMLs.sellerSellLogsManagingMenu);
         }
 
         @Override
@@ -2246,6 +2488,12 @@ public class Controllers {
     public static class AdminDiscountManagingPopupController {
 
         @FXML
+        private Label idKeyLBL;
+
+        @FXML
+        private Label idValueLBL;
+
+        @FXML
         private TableView<CustomerWrapper> customersTable;
 
         @FXML
@@ -2408,6 +2656,8 @@ public class Controllers {
             boolean isDetail = discountId != null;
             saveDiscardHBox.setVisible(isDetail);
             addBTN.setVisible( ! isDetail);
+            idKeyLBL.setVisible(isDetail);
+            idValueLBL.setVisible(isDetail);
 
             editBTN.opacityProperty().bind(
                     Bindings.createObjectBinding(() -> {
@@ -2543,6 +2793,7 @@ public class Controllers {
 
         private void initValues(String discountId) {
             if (discountId != null) {
+                idValueLBL.setText(discount.getId());
                 codeField.setText(discount.code);
                 percentageField.setText(discount.percentage.get() + "");
                 maxField.setText(discount.maximumAmount.get() + "");
@@ -3012,6 +3263,7 @@ public class Controllers {
 
         @FXML
         private Button sellLogs;
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.sellerManagingMenu);
         }
@@ -3024,11 +3276,290 @@ public class Controllers {
         private void initActions() {
             manageProducts.setOnAction(e -> SellerProductManagingMenuController.display());
             manageSales.setOnAction(e -> SellerSaleManagingMenuController.display());
+            sellLogs.setOnAction(e -> SellerSellLogsManagingMenuController.display());
         }
     }
 
-    public static class SellerLogsManagingMenuController {
+    public static class SellerSellLogsManagingMenuController implements Initializable {
 
+        @FXML
+        private TableView<SellLogWrapper> sellLogs;
+
+        @FXML
+        private TableColumn<SellLogWrapper, String> dateCol;
+
+        @FXML
+        private TableColumn<SellLogWrapper, String> customerCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, Double> receivedMoneyCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, Double> saleAmountCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, String> shippingStatusCOL;
+
+        @FXML
+        private TableColumn<SellLogWrapper, Button> detailsCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        private ArrayList<SellLogWrapper> allSellLogs = new ArrayList<>();
+
+        public static class SellLogWrapper {
+            String id, date, username, receiverName, receiverPhone, receiverAddress, shippingStatus;
+            Double receivedMoney, totalSale;
+            Button details = new Button();
+
+            public SellLogWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[5], info[6], info[7], info[8], Double.parseDouble(info[3]), Double.valueOf(info[4]));
+            }
+
+            public SellLogWrapper(String id, String date, String username, String receiverName, String receiverPhone,
+                                  String receiverAddress, String shippingStatus, Double receivedMoney, Double totalSale) {
+                this.id = id;
+                this.date = date;
+                this.username = username;
+                this.receiverName = receiverName;
+                this.receiverPhone = receiverPhone;
+                this.receiverAddress = receiverAddress;
+                this.shippingStatus = shippingStatus;
+                this.receivedMoney = receivedMoney;
+                this.totalSale = totalSale;
+
+                details.getStyleClass().add("details-button");
+                details.setOnAction(e -> SellerSellLogDetailMenuController.display(this.id));
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public String getReceiverName() {
+                return receiverName;
+            }
+
+            public String getReceiverPhone() {
+                return receiverPhone;
+            }
+
+            public String getReceiverAddress() {
+                return receiverAddress;
+            }
+
+            public String getShippingStatus() {
+                return shippingStatus;
+            }
+
+            public Double getReceivedMoney() {
+                return receivedMoney;
+            }
+
+            public Double getTotalSale() {
+                return totalSale;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+        }
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.sellerSellLogsManagingMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initTable();
+        }
+
+        private void initTable() {
+            initColumns();
+            initTableItems();
+        }
+
+        private void initColumns() {
+            dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+            customerCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            receivedMoneyCOL.setCellValueFactory(new PropertyValueFactory<>("receivedMoney"));
+            saleAmountCOL.setCellValueFactory(new PropertyValueFactory<>("totalSale"));
+            shippingStatusCOL.setCellValueFactory(new PropertyValueFactory<>("shippingStatus"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+        }
+
+        private void initTableItems() {
+            for (String[] sellLog : sellerController.getAllSellLogs()) {
+                allSellLogs.add(new SellLogWrapper(sellLog));
+            }
+
+            sellLogs.getItems().addAll(allSellLogs);
+        }
+    }
+
+    public static class SellerSellLogDetailMenuController {
+
+        @FXML
+        private TableView<SellLogItemWrapper> logItems;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, String> subProductCOL;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, Integer> countCOL;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, Double> priceCOL;
+
+        @FXML
+        private TableColumn<SellLogItemWrapper, Double> saleCOL;
+
+        @FXML
+        private Label idLBL;
+
+        @FXML
+        private Label customerLBL;
+
+        @FXML
+        private Label phoneLBL;
+
+        @FXML
+        private Label nameLBL;
+
+        @FXML
+        private Label saleLBL;
+
+        @FXML
+        private Label priceLBL;
+
+        @FXML
+        private Label dateLBL;
+
+        @FXML
+        private Label shipStatusLBL;
+
+        @FXML
+        private TextArea addressArea;
+
+        SellerSellLogsManagingMenuController.SellLogWrapper sellLog;
+        ArrayList<String[]> sellItems = new ArrayList<>();
+
+        public class SellLogItemWrapper {
+            String id, name, brand;
+            Double price, saleAmount;
+            int count;
+
+            public SellLogItemWrapper(String[] pack) {
+                this(pack[0], pack[1], pack[2], Double.parseDouble(pack[4]), Double.parseDouble(pack[5]), Integer.parseInt(pack[3]));
+            }
+
+            public SellLogItemWrapper(String id, String name, String brand, Double price, Double saleAmount, int count) {
+                this.id = id;
+                this.name = name;
+                this.brand = brand;
+                this.price = price;
+                this.saleAmount = saleAmount;
+                this.count = count;
+            }
+
+            public String nameBrand() {
+                return name + " (" + brand + ")";
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getBrand() {
+                return brand;
+            }
+
+            public Double getPrice() {
+                return price;
+            }
+
+            public Double getSaleAmount() {
+                return saleAmount;
+            }
+
+            public int getCount() {
+                return count;
+            }
+        }
+
+        public static void display(String id) {
+            ((SellerSellLogDetailMenuController)
+                    View.popupWindow("Sell Log Details", Constants.FXMLs.sellerSellLogDetailsPopup, 850, 500)).initialize(id);
+        }
+
+        public void initialize(String id) {
+            ArrayList<String[]> info;
+            try {
+                info = sellerController.getSellLogWithId(id);
+            } catch (Exceptions.InvalidLogIdException e) {
+                e.printStackTrace();
+                return;
+            }
+            sellLog = new SellerSellLogsManagingMenuController.SellLogWrapper(info.remove(0));
+            sellItems.addAll(info);
+
+            initValues();
+            initTable();
+        }
+
+        private void initValues() {
+            idLBL.setText(sellLog.id);
+            customerLBL.setText(sellLog.username);
+            dateLBL.setText(sellLog.date);
+            nameLBL.setText(sellLog.receiverName);
+            phoneLBL.setText(sellLog.receiverPhone);
+            priceLBL.setText(sellLog.receivedMoney + "");
+            saleLBL.setText(sellLog.totalSale + "");
+            shipStatusLBL.setText(sellLog.shippingStatus);
+
+            StringBuilder address = new StringBuilder(sellLog.receiverAddress);
+            int offset = 0 , size = address.length();
+            while (offset + 19 < size) {
+                offset += 19;
+                address.insert(offset, "\n");
+            }
+            addressArea.setText(address.toString());
+            addressArea.setEditable(false);
+        }
+
+        private void initTable() {
+            initColumns();
+            initItems();
+        }
+
+        private void initColumns() {
+            subProductCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
+            saleCOL.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
+            priceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
+        }
+
+        private void initItems() {
+            ArrayList<SellLogItemWrapper> items = new ArrayList<>();
+            for (String[] sellItem : sellItems) {
+                items.add(new SellLogItemWrapper(sellItem));
+            }
+
+            logItems.getItems().addAll(items);
+        }
     }
 
     public static class BaseController implements Initializable {

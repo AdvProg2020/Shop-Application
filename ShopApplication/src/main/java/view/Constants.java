@@ -53,7 +53,8 @@ public final class Constants {
         public static final String sellerProductManagingMenu = "SellerProductManagingMenu";
         public static final String sellerSaleManagingMenu = "SellerSaleManagingMenu";
         public static final String sellerSaleManagingPopup = "SellerSaleManagingPopup";
-        public static final String sellerLogsMenu = "SellerLogsMenu";
+        public static final String sellerSellLogsManagingMenu = "SellerSellLogsManagingMenu";
+        public static final String sellerSellLogDetailsPopup = "SellerSellLogDetailsPopup";
         public static final String customerBuyLogDetailsPopup = "CustomerBuyLogDetailsPopup";
         public static final String productDetailMenu = "ProductDetailMenu";
     }
