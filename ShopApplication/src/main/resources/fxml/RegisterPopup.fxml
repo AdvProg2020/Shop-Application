@@ -72,6 +72,17 @@
                         <TextField fx:id="customerBalance"/>
                         <Label fx:id="customerBalanceError" textFill="RED"/>
                     </VBox>
+                    <columnConstraints>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                    </rowConstraints>
                 </GridPane>
             </center>
         </BorderPane>
@@ -79,7 +90,7 @@
     <Tab closable="false" text="Seller">
         <BorderPane>
             <center>
-                <GridPane hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
+                <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
                     <VBox>
                         <Label text="Username:"/>
                         <TextField fx:id="sellerUsername"/>
@@ -128,6 +139,17 @@
                         </HBox>
                         <Label fx:id="sellerImageError" textFill="RED"/>
                     </VBox>
+                    <columnConstraints>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                    </rowConstraints>
                 </GridPane>
             </center>
             <padding>

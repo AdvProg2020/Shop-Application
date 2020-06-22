@@ -739,7 +739,7 @@ public class Controllers {
 
         public static void display(Stage stage) {
             PopupStage = stage;
-            PopupStage.setHeight(390);
+            PopupStage.setHeight(600);
             try {
                 PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopup)));
             } catch (IOException e) {
