@@ -3,9 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<TabPane xmlns:fx="http://javafx.com/fxml/1" rotateGraphic="true" stylesheets="@../css/TabPane.css"
-         tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1"
-         fx:controller="view.Controllers$RegisterPopupController">
+<TabPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/TabPane.css" tabClosingPolicy="UNAVAILABLE"
+         xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$RegisterPopupController">
     <opaqueInsets>
         <Insets/>
     </opaqueInsets>
@@ -27,7 +26,7 @@
                 </HBox>
             </bottom>
             <center>
-                <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
+                <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
                     <VBox>
                         <Label text="Username:"/>
                         <TextField fx:id="customerUsername"/>
@@ -51,8 +50,7 @@
                         <TextField fx:id="customerFirstName"/>
                         <Label fx:id="customerFirstNameError" textFill="RED"/>
                     </VBox>
-                    <VBox GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"
-                          GridPane.valignment="CENTER">
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
                         <Label text="Last name:"/>
                         <TextField fx:id="customerLastName"/>
                         <Label fx:id="customerLastNameError" textFill="RED"/>
@@ -90,7 +88,7 @@
     <Tab closable="false" text="Seller">
         <BorderPane>
             <center>
-                <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
+                <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
                     <VBox>
                         <Label text="Username:"/>
                         <TextField fx:id="sellerUsername"/>

@@ -22,11 +22,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -742,7 +740,7 @@ public class Controllers {
         public static void display(Stage stage) {
             PopupStage = stage;
             PopupStage.setWidth(500);
-            PopupStage.setHeight(700);
+            PopupStage.setHeight(600);
             try {
                 PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopup)));
             } catch (IOException e) {
