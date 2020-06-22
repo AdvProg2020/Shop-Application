@@ -14,11 +14,15 @@
             <TableView fx:id="productsTable" fixedCellSize="30.0" focusTraversable="false" maxWidth="-Infinity"
                        styleClass="bg-pane" stylesheets="@../css/TableView.css" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="productName" prefWidth="250.0" resizable="false" text="Name-Brand (Seller)"/>
-                    <TableColumn fx:id="productUnitPrice" prefWidth="150.0" resizable="false" text="Unit Price"/>
-                    <TableColumn fx:id="count" prefWidth="200.0" resizable="false" text="Count"/>
-                    <TableColumn fx:id="totalPrice" prefWidth="150.0" resizable="false" text="Total Price"/>
-                    <TableColumn fx:id="removeCOL" prefWidth="100.0" resizable="false" sortable="false" text="Remove"/>
+                    <TableColumn fx:id="productName" editable="false" prefWidth="250.0" resizable="false"
+                                 text="Name-Brand (Seller)"/>
+                    <TableColumn fx:id="productUnitPrice" editable="false" prefWidth="150.0" resizable="false"
+                                 text="Unit Price"/>
+                    <TableColumn fx:id="count" editable="false" prefWidth="200.0" resizable="false" text="Count"/>
+                    <TableColumn fx:id="totalPrice" editable="false" prefWidth="150.0" resizable="false"
+                                 text="Total Price"/>
+                    <TableColumn fx:id="removeCOL" editable="false" prefWidth="100.0" resizable="false" sortable="false"
+                                 text="Remove"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

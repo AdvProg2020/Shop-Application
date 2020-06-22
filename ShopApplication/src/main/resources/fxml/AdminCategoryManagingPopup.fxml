@@ -11,51 +11,103 @@
         <VBox BorderPane.alignment="CENTER">
             <TabPane maxWidth="-Infinity" stylesheets="@../css/TabPane.css">
                 <Tab closable="false" text="Properties">
-                    <TableView fx:id="properties" maxWidth="-Infinity" stylesheets="@../css/TableView.css">
-                        <columns>
-                            <TableColumn fx:id="propertyCOL" editable="false" maxWidth="400.0" minWidth="300.0"
-                                         prefWidth="300.0" text="Property"/>
-                        </columns>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                        </columnResizePolicy>
-                    </TableView>
+                    <VBox>
+                        <TableView fx:id="properties" stylesheets="@../css/TableView.css">
+                            <columns>
+                                <TableColumn fx:id="propertyCOL" editable="false" maxWidth="200.0" minWidth="200.0"
+                                             prefWidth="200.0" text="Property"/>
+                                <TableColumn fx:id="propertyRemoveCOL" editable="false" maxWidth="100.0"
+                                             minWidth="100.0" prefWidth="100.0" text="Remove"/>
+                            </columns>
+                        </TableView>
+                        <StackPane>
+                            <padding>
+                                <Insets top="10.0"/>
+                            </padding>
+                            <HBox>
+                                <Label id="message-label" fx:id="propertyErrorLBL"/>
+                            </HBox>
+                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0">
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="property-box">
+                                    <padding>
+                                        <Insets right="5.0"/>
+                                    </padding>
+                                    <TextField fx:id="newPropertyField" promptText="add property..."/>
+                                </HBox>
+                                <Button id="confirm-button" fx:id="confirmBTN" mnemonicParsing="false"/>
+                                <Button id="cancel-button" fx:id="cancelBTN" mnemonicParsing="false"/>
+                            </HBox>
+                        </StackPane>
+                    </VBox>
                 </Tab>
                 <Tab closable="false" text="Products">
-                    <TableView fx:id="products" maxWidth="-Infinity" stylesheets="@../css/TableView.css">
-                        <columns>
-                            <TableColumn fx:id="productCOL" maxWidth="200.0" minWidth="200.0" prefWidth="200.0"
-                                         text="Name-Brand"/>
-                            <TableColumn fx:id="productRemoveCOL" editable="false" maxWidth="100.0" minWidth="100.0"
-                                         prefWidth="100.0" resizable="false" sortable="false" text="Remove"/>
-                        </columns>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                        </columnResizePolicy>
-                    </TableView>
+                    <VBox>
+                        <TableView fx:id="products" stylesheets="@../css/TableView.css">
+                            <columns>
+                                <TableColumn fx:id="productCOL" maxWidth="200.0" minWidth="200.0" prefWidth="200.0"
+                                             text="Name-Brand"/>
+                                <TableColumn fx:id="productRemoveCOL" editable="false" maxWidth="100.0" minWidth="100.0"
+                                             prefWidth="100.0" resizable="false" sortable="false" text="Remove"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                        <StackPane>
+                            <padding>
+                                <Insets top="10.0"/>
+                            </padding>
+                            <HBox>
+                                <Label id="message-label" fx:id="productErrorLBL"/>
+                            </HBox>
+                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" visible="false">
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="property-box">
+                                    <padding>
+                                        <Insets right="5.0"/>
+                                    </padding>
+                                    <TextField promptText="add property..."/>
+                                </HBox>
+                                <Button id="confirm-button" mnemonicParsing="false"/>
+                                <Button id="cancel-button" mnemonicParsing="false"/>
+                            </HBox>
+                        </StackPane>
+                    </VBox>
                 </Tab>
                 <Tab closable="false" text="Sub Categories">
-                    <TableView fx:id="subCategories" maxWidth="-Infinity" stylesheets="@../css/TableView.css">
-                        <columns>
-                            <TableColumn fx:id="subCategoryCOL" maxWidth="200.0" minWidth="200.0" prefWidth="200.0"
-                                         text="Name"/>
-                            <TableColumn fx:id="subCategoryRemoveCOL" editable="false" maxWidth="100.0" minWidth="100.0"
-                                         prefWidth="100.0" resizable="false" sortable="false" text="Remove"/>
-                        </columns>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                        </columnResizePolicy>
-                    </TableView>
+                    <VBox>
+                        <TableView fx:id="subCategories" stylesheets="@../css/TableView.css">
+                            <columns>
+                                <TableColumn fx:id="subCategoryCOL" maxWidth="200.0" minWidth="200.0" prefWidth="200.0"
+                                             resizable="false" text="Name"/>
+                                <TableColumn fx:id="subCategoryRemoveCOL" editable="false" maxWidth="100.0"
+                                             minWidth="100.0" prefWidth="100.0" resizable="false" sortable="false"
+                                             text="Remove"/>
+                            </columns>
+                        </TableView>
+                        <StackPane>
+                            <padding>
+                                <Insets top="10.0"/>
+                            </padding>
+                            <HBox>
+                                <Label id="message-label" fx:id="subCategoryErrorLBL"/>
+                            </HBox>
+                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" visible="false">
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="property-box">
+                                    <padding>
+                                        <Insets right="5.0"/>
+                                    </padding>
+                                    <TextField promptText="add property..."/>
+                                </HBox>
+                                <Button id="confirm-button" mnemonicParsing="false"/>
+                                <Button id="cancel-button" mnemonicParsing="false"/>
+                            </HBox>
+                        </StackPane>
+                    </VBox>
                 </Tab>
                 <padding>
-                    <Insets top="20.0" />
+                    <Insets bottom="20.0"/>
                 </padding>
             </TabPane>
-            <Label id="message-label" fx:id="errorLBL">
-                <VBox.margin>
-                    <Insets bottom="22.0" left="10.0" top="22.0" />
-                </VBox.margin>
-            </Label>
         </VBox>
     </left>
     <center>

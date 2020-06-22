@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$AdminCategoryManagingMenuController">
+            xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="view.Controllers$AdminCategoryManagingMenuController">
     <center>
         <VBox alignment="CENTER" maxWidth="-Infinity" BorderPane.alignment="CENTER">
             <padding>
@@ -13,11 +14,15 @@
             <TableView fx:id="categories" focusTraversable="false" stylesheets="@../css/TableView.css"
                        VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="idCOL" prefWidth="200.0" resizable="false" text="ID"/>
-                    <TableColumn fx:id="nameCOL" prefWidth="200.0" resizable="false" text="Category Name"/>
-                    <TableColumn fx:id="parentCOL" prefWidth="200.0" resizable="false" text="Parent Name"/>
-                    <TableColumn fx:id="detailsCOL" prefWidth="100.0" resizable="false" text="Details"/>
-                    <TableColumn fx:id="removeCOL" prefWidth="100.0" resizable="false" text="Remove"/>
+                    <TableColumn fx:id="idCOL" editable="false" prefWidth="200.0" resizable="false" text="ID"/>
+                    <TableColumn fx:id="nameCOL" editable="false" prefWidth="200.0" resizable="false"
+                                 text="Category Name"/>
+                    <TableColumn fx:id="parentCOL" editable="false" prefWidth="200.0" resizable="false"
+                                 text="Parent Name"/>
+                    <TableColumn fx:id="detailsCOL" editable="false" prefWidth="100.0" resizable="false"
+                                 sortable="false" text="Details"/>
+                    <TableColumn fx:id="removeCOL" editable="false" prefWidth="100.0" resizable="false" sortable="false"
+                                 text="Remove"/>
                 </columns>
                 <VBox.margin>
                     <Insets/>

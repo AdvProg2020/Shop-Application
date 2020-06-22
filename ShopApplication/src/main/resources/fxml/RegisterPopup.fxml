@@ -3,195 +3,151 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<TabPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-         minWidth="-Infinity" prefHeight="350.0" prefWidth="480.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
-         xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$RegisterPopupController">
-    <tabs>
-        <Tab closable="false" text="Customer">
-            <content>
-                <BorderPane prefHeight="200.0" prefWidth="200.0">
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </padding>
-                    <bottom>
-                        <HBox alignment="BOTTOM_CENTER" prefWidth="230.0" spacing="5.0" BorderPane.alignment="CENTER">
-                            <children>
-                        <Region prefWidth="144.0" />
-                                <Button fx:id="customerRegister" mnemonicParsing="false" text="Register" />
-                        <Label text="already registered?">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Hyperlink fx:id="sellerLoginHL" text="Login" />
-                            </children>
-                        </HBox>
-                    </bottom>
-               <center>
-                  <GridPane prefHeight="257.0" prefWidth="616.0" BorderPane.alignment="CENTER">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="314.0" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="308.0" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                                  <VBox layoutX="10.0" layoutY="69.0" GridPane.rowIndex="2">
-                                      <children>
-                                          <Label text="Phone number:" />
-                                          <TextField fx:id="customerPhoneNumber" maxWidth="200.0" promptText="09123456789" />
-                                          <Label fx:id="customerPhoneNumberError" textFill="RED" />
-                                      </children>
-                                  </VBox>
-                                  <VBox prefWidth="100.0" GridPane.rowIndex="1">
-                                      <children>
-                                          <Label text="First name:" />
-                                          <TextField fx:id="customerFirstName" maxWidth="200.0" />
-                                          <Label fx:id="customerFirstNameError" textFill="RED" />
-                                      </children>
-                                  </VBox>
-                                  <VBox prefWidth="240.0" GridPane.rowIndex="3">
-                                      <children>
-                                          <Label text="Balance:" />
-                                          <TextField fx:id="customerBalance" maxWidth="200.0" />
-                                          <Label fx:id="customerBalanceError" textFill="RED" />
-                                      </children>
-                                  </VBox>
-                                  <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                      <children>
-                                          <Label text="Last name:" />
-                                          <TextField fx:id="customerLastName" maxWidth="200.0" />
-                                          <Label fx:id="customerLastNameError" textFill="RED" />
-                                      </children>
-                                  </VBox>
-                                  <VBox prefWidth="240.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                      <children>
-                                          <Label text="Email:" />
-                                          <TextField fx:id="customerEmail" maxWidth="200.0" promptText="sample@atm.com" />
-                                          <Label fx:id="customerEmailError" textFill="RED" />
-                                      </children>
-                                  </VBox>
-                                <VBox>
-                                    <children>
-                                        <Label text="Username:" />
-                                        <TextField fx:id="customerUsername" maxWidth="200.0" />
-                                        <Label fx:id="customerUsernameError" textFill="RED" />
-                                    </children>
-                                </VBox>
-                                <VBox prefWidth="240.0" GridPane.columnIndex="1">
-                                    <children>
-                                        <Label text="Password:" />
-                                        <PasswordField fx:id="customerPassword" maxWidth="200.0" />
-                                        <Label fx:id="customerPasswordError" textFill="RED" />
-                                    </children>
-                                </VBox>
-                     </children>
-                  </GridPane>
-               </center>
-                </BorderPane>
-            </content>
-        </Tab>
-        <Tab closable="false" text="Seller">
-            <content>
-                <BorderPane prefHeight="200.0" prefWidth="200.0">
-                    <center>
-                  <GridPane>
-                     <children>
-                        <VBox GridPane.rowIndex="1">
-                           <children>
-                              <Label text="First name:" />
-                              <TextField fx:id="sellerFirstName" maxWidth="200.0" prefWidth="200.0" />
-                              <Label fx:id="sellerFirstNameError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                        <VBox>
-                           <children>
-                              <Label text="Username:" />
-                              <TextField fx:id="sellerUsername" maxWidth="200.0" prefWidth="200.0" />
-                              <Label fx:id="sellerUsernameError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                        <VBox prefWidth="100.0" GridPane.columnIndex="1">
-                           <children>
-                              <Label text="Password:" />
-                              <PasswordField fx:id="sellerPassword" maxWidth="200.0" />
-                              <Label fx:id="sellerPasswordError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <children>
-                              <Label text="Last name:" />
-                              <TextField fx:id="sellerLastName" maxWidth="200.0" prefWidth="200.0" />
-                              <Label fx:id="sellerLastNameError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                        <VBox GridPane.rowIndex="3">
-                           <children>
-                              <Label text="Balance:" />
-                              <TextField fx:id="sellerBalance" maxWidth="200.0" prefWidth="200.0" />
-                              <Label fx:id="sellerBalanceError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                        <VBox GridPane.rowIndex="2">
-                           <children>
-                              <Label text="Phone number:" />
-                              <TextField fx:id="sellerPhoneNumber" maxWidth="200.0" prefWidth="200.0" promptText="09123456789" />
-                              <Label fx:id="sellerPhoneNumberError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                        <VBox prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                           <children>
-                              <Label text="Store name:" />
-                              <TextField fx:id="sellerStoreName" maxWidth="200.0" prefWidth="200.0" />
-                              <Label fx:id="sellerStoreNameError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                        <VBox prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <children>
-                              <Label text="Email:" />
-                              <TextField fx:id="sellerEmail" maxWidth="200.0" prefWidth="200.0" promptText="sample@atm.com" />
-                              <Label fx:id="sellerEmailError" prefHeight="17.0" textFill="RED" />
-                           </children>
-                        </VBox>
-                     </children>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                  </GridPane>
-                    </center>
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                    </padding>
-                    <bottom>
-                        <HBox alignment="BOTTOM_CENTER" prefWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER">
-                            <children>
-                        <Region prefWidth="144.0" />
-                                <Button fx:id="sellerRegister" mnemonicParsing="false" text="Register" />
-                        <Label text="already registered?">
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Hyperlink fx:id="customerLoginHL" text="Login" />
-                            </children>
-                        </HBox>
-                    </bottom>
-                </BorderPane>
-            </content>
-        </Tab>
-    </tabs>
+<TabPane xmlns:fx="http://javafx.com/fxml/1" rotateGraphic="true" stylesheets="@../css/TabPane.css"
+         tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1"
+         fx:controller="view.Controllers$RegisterPopupController">
     <opaqueInsets>
-        <Insets />
+        <Insets/>
     </opaqueInsets>
+    <Tab closable="false" text="Customer">
+        <BorderPane>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <bottom>
+                <HBox alignment="BOTTOM_CENTER" BorderPane.alignment="CENTER">
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="customerRegister" mnemonicParsing="false" text="Register"/>
+                    <Label text="already registered?">
+                        <HBox.margin>
+                            <Insets bottom="3.0" left="15.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Hyperlink fx:id="sellerLoginHL" text="Login"/>
+                </HBox>
+            </bottom>
+            <center>
+                <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
+                    <VBox>
+                        <Label text="Username:"/>
+                        <TextField fx:id="customerUsername"/>
+                        <Label fx:id="customerUsernameError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="1">
+                        <Label text="Password:"/>
+                        <PasswordField fx:id="customerPassword"/>
+                        <Label fx:id="customerPasswordError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
+                        <Label text="Profile Picture:"/>
+                        <HBox spacing="10.0">
+                            <TextField fx:id="customerImageField" promptText="upload image..."/>
+                            <Button fx:id="customerBrowseBTN" mnemonicParsing="false" text="Browse"/>
+                        </HBox>
+                        <Label fx:id="customerImageError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.rowIndex="2">
+                        <Label text="First name:"/>
+                        <TextField fx:id="customerFirstName"/>
+                        <Label fx:id="customerFirstNameError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                          GridPane.valignment="CENTER">
+                        <Label text="Last name:"/>
+                        <TextField fx:id="customerLastName"/>
+                        <Label fx:id="customerLastNameError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <Label text="Phone number:"/>
+                        <TextField fx:id="customerPhoneNumber" promptText="09123456789"/>
+                        <Label fx:id="customerPhoneNumberError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label text="Email:"/>
+                        <TextField fx:id="customerEmail" promptText="sample@atm.com"/>
+                        <Label fx:id="customerEmailError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.rowIndex="4">
+                        <Label text="Balance:"/>
+                        <TextField fx:id="customerBalance"/>
+                        <Label fx:id="customerBalanceError" textFill="RED"/>
+                    </VBox>
+                </GridPane>
+            </center>
+        </BorderPane>
+    </Tab>
+    <Tab closable="false" text="Seller">
+        <BorderPane>
+            <center>
+                <GridPane hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
+                    <VBox>
+                        <Label text="Username:"/>
+                        <TextField fx:id="sellerUsername"/>
+                        <Label fx:id="sellerUsernameError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="1">
+                        <Label text="Password:"/>
+                        <PasswordField fx:id="sellerPassword"/>
+                        <Label fx:id="sellerPasswordError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.rowIndex="2">
+                        <Label text="First name:"/>
+                        <TextField fx:id="sellerFirstName"/>
+                        <Label fx:id="sellerFirstNameError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Last name:"/>
+                        <TextField fx:id="sellerLastName"/>
+                        <Label fx:id="sellerLastNameError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.rowIndex="3">
+                        <Label text="Phone number:"/>
+                        <TextField fx:id="sellerPhoneNumber" promptText="09123456789"/>
+                        <Label fx:id="sellerPhoneNumberError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label text="Email:"/>
+                        <TextField fx:id="sellerEmail" promptText="sample@atm.com"/>
+                        <Label fx:id="sellerEmailError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.rowIndex="4">
+                        <Label text="Balance:"/>
+                        <TextField fx:id="sellerBalance"/>
+                        <Label fx:id="sellerBalanceError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <Label text="Store name:"/>
+                        <TextField fx:id="sellerStoreName"/>
+                        <Label fx:id="sellerStoreNameError" textFill="RED"/>
+                    </VBox>
+                    <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
+                        <Label text="Profile Picture:"/>
+                        <HBox spacing="10.0">
+                            <TextField fx:id="sellerImageField" promptText="upload image..."/>
+                            <Button fx:id="sellerBrowseBTN" mnemonicParsing="false" text="Browse"/>
+                        </HBox>
+                        <Label fx:id="sellerImageError" textFill="RED"/>
+                    </VBox>
+                </GridPane>
+            </center>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <bottom>
+                <HBox alignment="BOTTOM_CENTER" BorderPane.alignment="CENTER">
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="sellerRegister" mnemonicParsing="false" text="Register"/>
+                    <Label text="already registered?">
+                        <padding>
+                            <Insets bottom="3.0" left="15.0"/>
+                        </padding>
+                    </Label>
+                    <Hyperlink fx:id="customerLoginHL" text="Login"/>
+                </HBox>
+            </bottom>
+        </BorderPane>
+    </Tab>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
 </TabPane>
