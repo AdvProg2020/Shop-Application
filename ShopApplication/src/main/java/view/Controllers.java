@@ -168,6 +168,7 @@ public class Controllers {
 
         private void initCustomerButtons() {
             //TODO: complete
+            buyLogBTN.setOnAction(e -> CustomerBuyLogMenuController.display() );
             initAdminButtons();
         }
 
@@ -1624,8 +1625,8 @@ public class Controllers {
         private void initVisibility() {
             boolean isDetail = category != null;
 
-            editHB.setVisible(isDetail && editable);
-            addBTN.setVisible(! isDetail && editable);
+            editHB.setVisible(isDetail);
+            addBTN.setVisible(! isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
             productsTAB.setDisable(! isDetail);
@@ -2143,6 +2144,10 @@ public class Controllers {
         @FXML
         private Label errorLBL;
 
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.customerBuyLogMenu);
+        }
+
         @Override
         public void initialize(URL location, ResourceBundle resources) {
             initTable();
@@ -2309,11 +2314,6 @@ public class Controllers {
         public static void display() {
             View.setMainPane(Constants.FXMLs.purchaseMenu);
         }
-    }
-
-    //TODO: can be added to CustomerMenu??
-    public static class CustomerOrderLogMenu {
-
     }
 
     public static class AdminManagingMenuController implements Initializable {
@@ -3600,7 +3600,7 @@ public class Controllers {
                 this.totalSale = totalSale;
 
                 details.getStyleClass().add("details-button");
-                details.setOnAction(e -> SellLogDetailsPopupController.display(this.id));
+                details.setOnAction(e -> SellerSellLogDetailsPopupController.display(this.id));
             }
 
             public String getId() {
@@ -3676,7 +3676,7 @@ public class Controllers {
         }
     }
 
-    public static class SellLogDetailsPopupController {
+    public static class SellerSellLogDetailsPopupController {
 
         @FXML
         private TableView<SellLogItemWrapper> logItems;
@@ -3771,8 +3771,8 @@ public class Controllers {
         }
 
         public static void display(String id) {
-            ((SellLogDetailsPopupController)
-                    View.popupWindow("Sell Log Details", Constants.FXMLs.sellLogDetailsPopup, 850, 500)).initialize(id);
+            ((SellerSellLogDetailsPopupController)
+                    View.popupWindow("Sell Log Details", Constants.FXMLs.sellerSellLogDetailsPopup, 850, 500)).initialize(id);
         }
 
         public void initialize(String id) {
