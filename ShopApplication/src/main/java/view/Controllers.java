@@ -22,9 +22,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -166,6 +168,7 @@ public class Controllers {
 
         private void initCustomerButtons() {
             //TODO: complete
+            buyLogBTN.setOnAction(e -> CustomerBuyLogMenuController.display() );
             initAdminButtons();
         }
 
@@ -737,10 +740,28 @@ public class Controllers {
         @FXML
         private Button sellerRegister;
 
+        @FXML
+        private TextField customerImageField;
+
+        @FXML
+        private Button customerBrowseBTN;
+
+        @FXML
+        private Label customerImageError;
+
+        @FXML
+        private TextField sellerImageField;
+
+        @FXML
+        private Button sellerBrowseBTN;
+
+        @FXML
+        private Label sellerImageError;
+
         public static void display(Stage stage) {
             PopupStage = stage;
             PopupStage.setWidth(500);
-            PopupStage.setHeight(600);
+            PopupStage.setHeight(700);
             try {
                 PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopup)));
             } catch (IOException e) {
@@ -758,7 +779,6 @@ public class Controllers {
         }
 
         private void initTexts() {
-            customerUsernameError.setText("Please enter a username");
             sellerUsernameError.setText("Please enter a username");
             customerPasswordError.setText("Please enter a password");
             sellerPasswordError.setText("Please enter a password");
@@ -768,7 +788,7 @@ public class Controllers {
             sellerLastNameError.setText("Invalid entry!");
             customerPhoneNumberError.setText("Please enter a phone number");
             sellerPhoneNumberError.setText("Please enter a phone number");
-            customerEmailError.setText("Please enter an email address");
+            customerEmailError.setText("Invalid entry! enter a valid email address");
             sellerEmailError.setText("Please enter an email address");
             customerBalanceError.setText("Please enter your initial balance");
             sellerBalanceError.setText("Please enter your initial balance");
@@ -798,6 +818,8 @@ public class Controllers {
             addListener(sellerPassword, "\\w");
             addListener(customerPhoneNumber, "[0-9]");
             addListener(sellerPhoneNumber, "[0-9]");
+            customerImageField.setEditable(false);
+            sellerImageField.setEditable(false);
         }
 
         private void addListener(TextField textField, String regex) {
@@ -814,7 +836,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.parseDouble(customerBalance.getText()), null, null);
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
@@ -829,7 +851,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.parseDouble(sellerBalance.getText()), null, null);
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null, customerImageField.getText());
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
@@ -841,6 +863,19 @@ public class Controllers {
             });
             sellerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
             customerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
+
+            customerBrowseBTN.setOnAction(e -> chooseFile(customerImageField));
+            sellerBrowseBTN.setOnAction(e -> chooseFile(sellerImageField));
+        }
+
+        private void chooseFile(TextField field) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
+            File chosenFile = fileChooser.showOpenDialog(new Stage());
+            if (chosenFile != null) {
+                field.setText(chosenFile.getPath());
+            }
         }
 
         private boolean areCustomerFieldsAvailable() {
@@ -1036,7 +1071,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(null));
+            addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(null, true));
         }
         private void initDiscounts() {
             allDiscountWrappers.clear();
@@ -1087,7 +1122,7 @@ public class Controllers {
                 this.startDate.set(startDate);
                 this.endDate.set(endDate);
                 perMax.bind(this.percentage.asString().concat("% (").concat(this.maximumAmount).concat("$)"));
-                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this));
+                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this, true));
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
@@ -1596,6 +1631,7 @@ public class Controllers {
             idValueLBL.setVisible(isDetail);
             productsTAB.setDisable(! isDetail);
             subCategoriesTAB.setDisable(! isDetail);
+
         }
 
         private void initValues() {
@@ -2108,6 +2144,10 @@ public class Controllers {
         @FXML
         private Label errorLBL;
 
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.customerBuyLogMenu);
+        }
+
         @Override
         public void initialize(URL location, ResourceBundle resources) {
             initTable();
@@ -2276,11 +2316,6 @@ public class Controllers {
         }
     }
 
-    //TODO: can be added to CustomerMenu??
-    public static class CustomerOrderLogMenu {
-
-    }
-
     public static class AdminManagingMenuController implements Initializable {
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminManagingMenu);
@@ -2318,20 +2353,23 @@ public class Controllers {
 
     public static class AdminAccountManagingMenuController implements Initializable {
 
-        public  ArrayList<AccountWrapper> customers;
-        public  ArrayList<AccountWrapper> sellers;
+        public static AdminAccountManagingMenuController current;
+        public  ArrayList<AccountWrapper> allAdmins;
+        public  ArrayList<AccountWrapper> allCustomers;
+        public  ArrayList<AccountWrapper> allSellers;
 
         public class AccountWrapper {
             String id, username, firstName, lastName, phone, email, fullName;
             SimpleStringProperty type;
             Button remove = new Button();
             Button details = new Button();
+            TableView holder;
 
-            public AccountWrapper(String[] pack) {
-                this(pack[0], pack[1], pack[2], pack[3], pack[4], pack[5], pack[6]);
+            public AccountWrapper(String[] pack, TableView holder) {
+                this(pack[0], pack[1], pack[2], pack[3], pack[4], pack[5], pack[6], holder);
             }
 
-            public AccountWrapper(String id, String username, String firstName, String lastName, String phone, String email, String type) {
+            public AccountWrapper(String id, String username, String firstName, String lastName, String phone, String email, String type, TableView holder) {
                 this.id = id;
                 this.username = username;
                 this.firstName = firstName;
@@ -2339,6 +2377,7 @@ public class Controllers {
                 this.phone = phone;
                 this.email = email;
                 this.type  = new SimpleStringProperty(type);
+                this.holder = holder;
                 fullName = firstName + " " + lastName;
 
                 this.remove.getStyleClass().add("remove-button");
@@ -2350,12 +2389,11 @@ public class Controllers {
                 remove.setOnAction(e -> {
                     try {
                         adminController.deleteUsername(username);
-                        //assumed its in customers.
-                        accounts.getItems().remove(this);
+                        holder.getItems().remove(this);
                     } catch (Exceptions.UsernameDoesntExistException ex) {
                         ex.printStackTrace();
                     } catch (Exceptions.ManagerDeleteException ex) {
-                        errorLBL.setText("You cannot remove omni-admin");
+                        ex.printStackTrace();
                     }
                 });
 
@@ -2406,84 +2444,307 @@ public class Controllers {
         }
 
         @FXML
-        private TableView<AccountWrapper> accounts;
+        private TableView<AccountWrapper> admins;
 
         @FXML
-        private TableColumn<AccountWrapper, String> idCOL;
+        private TableColumn<AccountWrapper, String> adminIdCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, String> usernameCOL;
+        private TableColumn<AccountWrapper, String> adminUsernameCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, String> fullNameCOL;
+        private TableColumn<AccountWrapper, String> adminFullNameCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, String> phoneCOL;
+        private TableColumn<AccountWrapper, String> adminPhoneCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, Button> detailsCOL;
+        private TableColumn<AccountWrapper, Button> adminDetailsCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, Button> removeCOL;
-
-        @FXML
-        private Label errorLBL;
+        private TableColumn<AccountWrapper, Button> adminRemoveCOL;
 
         @FXML
         private Button registerAdminBTN;
 
+        @FXML
+        private TableView<AccountWrapper> sellers;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerIdCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerUsernameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerFullNameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerPhoneCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> sellerDetailsCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> sellerRemoveCOL;
+
+        @FXML
+        private TableView<AccountWrapper> customers;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerIdCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerUsernameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerFullNameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerPhoneCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> customerDetailsCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> customerRemoveCOL;
+
         public static void display() {
-            View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
+             View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
+        }
+
+        public void addAdmin(String username) {
+            try {
+                String[] info = adminController.viewUsername(username);
+                admins.getItems().add(new AccountWrapper(info[1], username, info[2], info[3], info[5], info[4], Constants.adminUserType, admins));
+            } catch (Exceptions.UsernameDoesntExistException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            current = this;
             initActions();
             initTable();
-            initAccounts();
         }
 
         private void initActions() {
-            //TODO: registerAdminBTN.setOnAction(e -> AdminRegistrationPopup.display());
+            registerAdminBTN.setOnAction(e -> AdminRegistrationPopupController.display());
         }
 
         private void initTable() {
-            idCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
-            usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
-            fullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-            phoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
-            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
-            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            adminIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            sellerIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            customerIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            adminUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            sellerUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            customerUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            adminFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            sellerFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            customerFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            adminPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            sellerPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            customerPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            adminDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            sellerDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            customerDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            adminRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            sellerRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            customerRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+
+            initItems();
         }
 
-        private void initAccounts(){
+        private void initItems(){
             ArrayList<String[]> all = adminController.manageUsers();
-            sellers = new ArrayList<>();
-            customers = new ArrayList<>();
+            allSellers = new ArrayList<>();
+            allCustomers = new ArrayList<>();
+            allAdmins = new ArrayList<>();
 
             for (String[] strings : all) {
                 if (strings[6].equals("Seller")) {
-                    sellers.add(new AccountWrapper(strings));
+                    allSellers.add(new AccountWrapper(strings, sellers));
                 } else if (strings[6].equals("Customer")) {
-                    customers.add(new AccountWrapper(strings));
+                    allCustomers.add(new AccountWrapper(strings, customers));
                 } else {
-
+                    allAdmins.add(new AccountWrapper(strings, admins));
                 }
             }
 
-            accounts.getItems().addAll(sellers);
-            accounts.getItems().addAll(customers);
+            admins.getItems().addAll(allAdmins);
+            sellers.getItems().addAll(allSellers);
+            customers.getItems().addAll(allCustomers);
         }
     }
 
-    public static class AdminCategoryManagingPopup implements Initializable {
-        public static void display() {
+    public static class AdminRegistrationPopupController implements Initializable{
+        @FXML
+        private TextField usernameField;
 
+        @FXML
+        private Label usernameErrLBL;
+
+        @FXML
+        private PasswordField passwordField;
+
+        @FXML
+        private Label passwordErrLBL;
+
+        @FXML
+        private TextField firstNameField;
+
+        @FXML
+        private Label firstNameErrLBL;
+
+        @FXML
+        private TextField lastNameField;
+
+        @FXML
+        private Label lastNameErrLBL;
+
+        @FXML
+        private TextField phoneField;
+
+        @FXML
+        private Label phoneErrLBL;
+
+        @FXML
+        private TextField emailField;
+
+        @FXML
+        private Label emailErrLBL;
+
+        @FXML
+        private TextField imageField;
+
+        @FXML
+        private Button browseBTN;
+
+        @FXML
+        private Label imageErrLBL;
+
+        @FXML
+        private Button registerBTN;
+
+
+
+        public static void display() {
+            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 500, 700);
         }
+
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            imageField.setEditable(false);
+            initActions();
+            initLBLs();
+            initVisibilities();
+            initListeners();
+        }
 
+        private void initActions() {
+            browseBTN.setOnAction(e -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
+                File chosenFile = fileChooser.showOpenDialog(new Stage());
+                if (chosenFile != null) {
+                    imageField.setText(chosenFile.getPath());
+                }
+            });
+
+            registerBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        adminController.creatAdminProfile(usernameField.getText(), passwordField.getText(), firstNameField.getText(),
+                                lastNameField.getText(), emailField.getText(), phoneField.getText(), imageField.getText());
+                        AdminAccountManagingMenuController.current.addAdmin(usernameField.getText());
+                        usernameField.getScene().getWindow().hide();
+                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                        usernameErrLBL.setText("Sorry! this username is already taken.");
+                        usernameErrLBL.setVisible(true);
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        private boolean validateFields() {
+            boolean valid = true;
+            if (usernameField.getText().equals("")) {
+                usernameErrLBL.setText("You can only use alphabet, digits and \"_\"");
+                usernameErrLBL.setVisible(true);
+                valid = false;
+            } else usernameErrLBL.setVisible(false);
+
+            if (passwordField.getText().equals("")) {
+                passwordErrLBL.setVisible(true);
+                valid = false;
+            } else passwordErrLBL.setVisible(false);
+
+            if ( ! firstNameField.getText().matches(Constants.IRLNamePattern)) {
+                firstNameErrLBL.setVisible(true);
+                valid = false;
+            } else firstNameErrLBL.setVisible(false);
+
+            if ( ! lastNameField.getText().matches(Constants.IRLNamePattern)) {
+                lastNameErrLBL.setVisible(true);
+                valid = false;
+            } else lastNameErrLBL.setVisible(false);
+
+            if (phoneField.getText().equals("")) {
+                phoneErrLBL.setVisible(true);
+                valid = false;
+            } else phoneErrLBL.setVisible(false);
+
+            if ( ! emailField.getText().matches(Constants.emailPattern)) {
+                emailErrLBL.setVisible(true);
+                valid = false;
+            } else emailErrLBL.setVisible(false);
+
+            if (imageField.getText().equals("")) {
+                if ( ! imageErrLBL.isVisible()) {
+                    imageErrLBL.setVisible(true);
+                    valid = false;
+                }
+            } else imageErrLBL.setVisible(false);
+
+            return valid;
+        }
+
+        private void initLBLs() {
+            passwordErrLBL.setText("You can only use alphabet, digits and \"_\"");
+            firstNameErrLBL.setText("Invalid first name!");
+            lastNameErrLBL.setText("Invalid last name");
+            phoneErrLBL.setText("Enter a phone number!");
+            emailErrLBL.setText("Invalid email address!");
+            imageErrLBL.setTextFill(Color.YELLOW);
+            imageErrLBL.setText("warning: image is not chosen! click register again to continue.");
+        }
+
+        private void initVisibilities() {
+            usernameErrLBL.setVisible(false);
+            passwordErrLBL.setVisible(false);
+            firstNameErrLBL.setVisible(false);
+            lastNameErrLBL.setVisible(false);
+            phoneErrLBL.setVisible(false);
+            emailErrLBL.setVisible(false);
+            imageErrLBL.setVisible(false);
+        }
+
+        private void initListeners() {
+            addListener(usernameField, "\\w");
+            addListener(passwordField, "\\w");
+            addListener(phoneField, "[0-9]");
+        }
+
+        private void addListener(TextField textField, String regex) {
+            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
+            }));
         }
     }
 
@@ -2614,14 +2875,13 @@ public class Controllers {
             }
         }
 
-        public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount) {
+        public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             String discountId = discount == null ? null : discount.getId();
             ((AdminDiscountManagingPopupController)
-                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount);
+                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount, editable);
         }
 
-        private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount) {
-            //TODO: should be checked.
+        private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             ArrayList<String[]> customersWithCode = null;
 
             if (discountId != null) {
@@ -2634,7 +2894,7 @@ public class Controllers {
                 }
             }
 
-            initVisibility(discountId);
+            initVisibility(discountId, editable);
             initActions(discountId);
             initTable(discountId);
             initBindings(discountId);
@@ -2654,10 +2914,10 @@ public class Controllers {
             }
         }
 
-        private void initVisibility(String discountId) {
+        private void initVisibility(String discountId, boolean editable) {
             boolean isDetail = discountId != null;
-            saveDiscardHBox.setVisible(isDetail);
-            addBTN.setVisible( ! isDetail);
+            saveDiscardHBox.setVisible(isDetail && editable);
+            addBTN.setVisible( ! isDetail && editable);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
 
@@ -2672,6 +2932,10 @@ public class Controllers {
             editBTN.disableProperty().bind(editBTN.opacityProperty().isNotEqualTo(1));
 
             codeField.setEditable( ! isDetail);
+
+            maxField.setEditable(editable);
+            codeField.setEditable(editable);
+            percentageField.setEditable(editable);
         }
 
         private void initActions(String discountId) {
@@ -2895,7 +3159,7 @@ public class Controllers {
                 });
 
                 details.getStyleClass().add("details-button");
-                details.setOnAction(e -> SellerSaleManagingPopupController.display(id));
+                details.setOnAction(e -> SellerSaleManagingPopupController.display(id, true));
             }
 
             public String getId() {
@@ -2957,7 +3221,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            addSaleBTN.setOnAction(e -> SellerSaleManagingPopupController.display(null));
+            addSaleBTN.setOnAction(e -> SellerSaleManagingPopupController.display(null, true));
         }
     }
 
@@ -3011,10 +3275,10 @@ public class Controllers {
             }
         }
 
-        public static void display(String saleId) {
+        public static void display(String saleId, boolean editable) {
             String title = saleId == null ? "Add Sale" : "Sale Details";
             ((SellerSaleManagingPopupController)
-            View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId);
+            View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId, editable);
         }
 
         private void printError(String err) {
@@ -3022,7 +3286,7 @@ public class Controllers {
             errorLBL.setText(err);
         }
 
-        private void initialize(String saleId) {
+        private void initialize(String saleId, boolean editable) {
             if (saleId != null) {
                 try {
                     sale = sellerController.viewSaleWithId(saleId);
@@ -3034,7 +3298,7 @@ public class Controllers {
             initValues(saleId);
             initButtons(saleId);
             initBindings(saleId);
-            initVisibilities(saleId);
+            initVisibilities(saleId, editable);
         }
 
         private void initTable(String saleId) {
@@ -3175,12 +3439,16 @@ public class Controllers {
             }
         }
 
-        private void initVisibilities(String saleId) {
-            editHB.setVisible(saleId != null);
-            addBTN.setVisible( ! editHB.isVisible());
-            idKeyLBL.setVisible(editHB.isVisible());
-            idValueLBL.setVisible(editHB.isVisible());
+        private void initVisibilities(String saleId, boolean editable) {
+            editHB.setVisible((saleId != null) && editable);
+            addBTN.setVisible((! editHB.isVisible()) && editable);
+            idKeyLBL.setVisible(saleId != null);
+            idValueLBL.setVisible(saleId != null);
 
+            percentageField.setEditable(editable);
+            maxField.setEditable(editable);
+            startDate.setEditable(editable);
+            endDate.setEditable(editable);
         }
 
         @FXML
@@ -3332,7 +3600,7 @@ public class Controllers {
                 this.totalSale = totalSale;
 
                 details.getStyleClass().add("details-button");
-                details.setOnAction(e -> SellerSellLogDetailMenuController.display(this.id));
+                details.setOnAction(e -> SellerSellLogDetailsPopupController.display(this.id));
             }
 
             public String getId() {
@@ -3408,7 +3676,7 @@ public class Controllers {
         }
     }
 
-    public static class SellerSellLogDetailMenuController {
+    public static class SellerSellLogDetailsPopupController {
 
         @FXML
         private TableView<SellLogItemWrapper> logItems;
@@ -3503,7 +3771,7 @@ public class Controllers {
         }
 
         public static void display(String id) {
-            ((SellerSellLogDetailMenuController)
+            ((SellerSellLogDetailsPopupController)
                     View.popupWindow("Sell Log Details", Constants.FXMLs.sellerSellLogDetailsPopup, 850, 500)).initialize(id);
         }
 
