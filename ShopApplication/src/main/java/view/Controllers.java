@@ -22,9 +22,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -737,9 +739,28 @@ public class Controllers {
         @FXML
         private Button sellerRegister;
 
+        @FXML
+        private TextField customerImageField;
+
+        @FXML
+        private Button customerBrowseBTN;
+
+        @FXML
+        private Label customerImageError;
+
+        @FXML
+        private TextField sellerImageField;
+
+        @FXML
+        private Button sellerBrowseBTN;
+
+        @FXML
+        private Label sellerImageError;
+
         public static void display(Stage stage) {
             PopupStage = stage;
-            PopupStage.setHeight(390);
+            PopupStage.setWidth(500);
+            PopupStage.setHeight(700);
             try {
                 PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopup)));
             } catch (IOException e) {
@@ -796,6 +817,8 @@ public class Controllers {
             addListener(sellerPassword, "\\w");
             addListener(customerPhoneNumber, "[0-9]");
             addListener(sellerPhoneNumber, "[0-9]");
+            customerImageField.setEditable(false);
+            sellerImageField.setEditable(false);
         }
 
         private void addListener(TextField textField, String regex) {
@@ -812,7 +835,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, null);
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
@@ -827,7 +850,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null, null);
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null, customerImageField.getText());
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
@@ -839,6 +862,19 @@ public class Controllers {
             });
             sellerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
             customerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
+
+            customerBrowseBTN.setOnAction(e -> chooseFile(customerImageField));
+            sellerBrowseBTN.setOnAction(e -> chooseFile(sellerImageField));
+        }
+
+        private void chooseFile(TextField field) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
+            File chosenFile = fileChooser.showOpenDialog(new Stage());
+            if (chosenFile != null) {
+                field.setText(chosenFile.getPath());
+            }
         }
 
         private boolean areCustomerFieldsAvailable() {
