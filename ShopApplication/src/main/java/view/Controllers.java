@@ -2352,20 +2352,23 @@ public class Controllers {
 
     public static class AdminAccountManagingMenuController implements Initializable {
 
-        public  ArrayList<AccountWrapper> customers;
-        public  ArrayList<AccountWrapper> sellers;
+        public static AdminAccountManagingMenuController current;
+        public  ArrayList<AccountWrapper> allAdmins;
+        public  ArrayList<AccountWrapper> allCustomers;
+        public  ArrayList<AccountWrapper> allSellers;
 
         public class AccountWrapper {
             String id, username, firstName, lastName, phone, email, fullName;
             SimpleStringProperty type;
             Button remove = new Button();
             Button details = new Button();
+            TableView holder;
 
-            public AccountWrapper(String[] pack) {
-                this(pack[0], pack[1], pack[2], pack[3], pack[4], pack[5], pack[6]);
+            public AccountWrapper(String[] pack, TableView holder) {
+                this(pack[0], pack[1], pack[2], pack[3], pack[4], pack[5], pack[6], holder);
             }
 
-            public AccountWrapper(String id, String username, String firstName, String lastName, String phone, String email, String type) {
+            public AccountWrapper(String id, String username, String firstName, String lastName, String phone, String email, String type, TableView holder) {
                 this.id = id;
                 this.username = username;
                 this.firstName = firstName;
@@ -2373,6 +2376,7 @@ public class Controllers {
                 this.phone = phone;
                 this.email = email;
                 this.type  = new SimpleStringProperty(type);
+                this.holder = holder;
                 fullName = firstName + " " + lastName;
 
                 this.remove.getStyleClass().add("remove-button");
@@ -2384,12 +2388,11 @@ public class Controllers {
                 remove.setOnAction(e -> {
                     try {
                         adminController.deleteUsername(username);
-                        //assumed its in customers.
-                        accounts.getItems().remove(this);
+                        holder.getItems().remove(this);
                     } catch (Exceptions.UsernameDoesntExistException ex) {
                         ex.printStackTrace();
                     } catch (Exceptions.ManagerDeleteException ex) {
-                        errorLBL.setText("You cannot remove omni-admin");
+                        ex.printStackTrace();
                     }
                 });
 
@@ -2440,84 +2443,307 @@ public class Controllers {
         }
 
         @FXML
-        private TableView<AccountWrapper> accounts;
+        private TableView<AccountWrapper> admins;
 
         @FXML
-        private TableColumn<AccountWrapper, String> idCOL;
+        private TableColumn<AccountWrapper, String> adminIdCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, String> usernameCOL;
+        private TableColumn<AccountWrapper, String> adminUsernameCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, String> fullNameCOL;
+        private TableColumn<AccountWrapper, String> adminFullNameCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, String> phoneCOL;
+        private TableColumn<AccountWrapper, String> adminPhoneCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, Button> detailsCOL;
+        private TableColumn<AccountWrapper, Button> adminDetailsCOL;
 
         @FXML
-        private TableColumn<AccountWrapper, Button> removeCOL;
-
-        @FXML
-        private Label errorLBL;
+        private TableColumn<AccountWrapper, Button> adminRemoveCOL;
 
         @FXML
         private Button registerAdminBTN;
 
+        @FXML
+        private TableView<AccountWrapper> sellers;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerIdCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerUsernameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerFullNameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> sellerPhoneCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> sellerDetailsCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> sellerRemoveCOL;
+
+        @FXML
+        private TableView<AccountWrapper> customers;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerIdCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerUsernameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerFullNameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> customerPhoneCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> customerDetailsCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> customerRemoveCOL;
+
         public static void display() {
-            View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
+             View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
+        }
+
+        public void addAdmin(String username) {
+            try {
+                String[] info = adminController.viewUsername(username);
+                admins.getItems().add(new AccountWrapper(info[1], username, info[2], info[3], info[5], info[4], Constants.adminUserType, admins));
+            } catch (Exceptions.UsernameDoesntExistException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            current = this;
             initActions();
             initTable();
-            initAccounts();
         }
 
         private void initActions() {
-            //TODO: registerAdminBTN.setOnAction(e -> AdminRegistrationPopup.display());
+            registerAdminBTN.setOnAction(e -> AdminRegistrationPopupController.display());
         }
 
         private void initTable() {
-            idCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
-            usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
-            fullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-            phoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
-            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
-            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            adminIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            sellerIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            customerIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            adminUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            sellerUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            customerUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            adminFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            sellerFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            customerFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            adminPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            sellerPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            customerPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            adminDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            sellerDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            customerDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            adminRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            sellerRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            customerRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+
+            initItems();
         }
 
-        private void initAccounts(){
+        private void initItems(){
             ArrayList<String[]> all = adminController.manageUsers();
-            sellers = new ArrayList<>();
-            customers = new ArrayList<>();
+            allSellers = new ArrayList<>();
+            allCustomers = new ArrayList<>();
+            allAdmins = new ArrayList<>();
 
             for (String[] strings : all) {
                 if (strings[6].equals("Seller")) {
-                    sellers.add(new AccountWrapper(strings));
+                    allSellers.add(new AccountWrapper(strings, sellers));
                 } else if (strings[6].equals("Customer")) {
-                    customers.add(new AccountWrapper(strings));
+                    allCustomers.add(new AccountWrapper(strings, customers));
                 } else {
-
+                    allAdmins.add(new AccountWrapper(strings, admins));
                 }
             }
 
-            accounts.getItems().addAll(sellers);
-            accounts.getItems().addAll(customers);
+            admins.getItems().addAll(allAdmins);
+            sellers.getItems().addAll(allSellers);
+            customers.getItems().addAll(allCustomers);
         }
     }
 
-    public static class AdminCategoryManagingPopup implements Initializable {
-        public static void display() {
+    public static class AdminRegistrationPopupController implements Initializable{
+        @FXML
+        private TextField usernameField;
 
+        @FXML
+        private Label usernameErrLBL;
+
+        @FXML
+        private PasswordField passwordField;
+
+        @FXML
+        private Label passwordErrLBL;
+
+        @FXML
+        private TextField firstNameField;
+
+        @FXML
+        private Label firstNameErrLBL;
+
+        @FXML
+        private TextField lastNameField;
+
+        @FXML
+        private Label lastNameErrLBL;
+
+        @FXML
+        private TextField phoneField;
+
+        @FXML
+        private Label phoneErrLBL;
+
+        @FXML
+        private TextField emailField;
+
+        @FXML
+        private Label emailErrLBL;
+
+        @FXML
+        private TextField imageField;
+
+        @FXML
+        private Button browseBTN;
+
+        @FXML
+        private Label imageErrLBL;
+
+        @FXML
+        private Button registerBTN;
+
+
+
+        public static void display() {
+            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 500, 700);
         }
+
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            imageField.setEditable(false);
+            initActions();
+            initLBLs();
+            initVisibilities();
+            initListeners();
+        }
 
+        private void initActions() {
+            browseBTN.setOnAction(e -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
+                File chosenFile = fileChooser.showOpenDialog(new Stage());
+                if (chosenFile != null) {
+                    imageField.setText(chosenFile.getPath());
+                }
+            });
+
+            registerBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        adminController.creatAdminProfile(usernameField.getText(), passwordField.getText(), firstNameField.getText(),
+                                lastNameField.getText(), emailField.getText(), phoneField.getText(), imageField.getText());
+                        AdminAccountManagingMenuController.current.addAdmin(usernameField.getText());
+                        usernameField.getScene().getWindow().hide();
+                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                        usernameErrLBL.setText("Sorry! this username is already taken.");
+                        usernameErrLBL.setVisible(true);
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        private boolean validateFields() {
+            boolean valid = true;
+            if (usernameField.getText().equals("")) {
+                usernameErrLBL.setText("You can only use alphabet, digits and \"_\"");
+                usernameErrLBL.setVisible(true);
+                valid = false;
+            } else usernameErrLBL.setVisible(false);
+
+            if (passwordField.getText().equals("")) {
+                passwordErrLBL.setVisible(true);
+                valid = false;
+            } else passwordErrLBL.setVisible(false);
+
+            if ( ! firstNameField.getText().matches(Constants.IRLNamePattern)) {
+                firstNameErrLBL.setVisible(true);
+                valid = false;
+            } else firstNameErrLBL.setVisible(false);
+
+            if ( ! lastNameField.getText().matches(Constants.IRLNamePattern)) {
+                lastNameErrLBL.setVisible(true);
+                valid = false;
+            } else lastNameErrLBL.setVisible(false);
+
+            if (phoneField.getText().equals("")) {
+                phoneErrLBL.setVisible(true);
+                valid = false;
+            } else phoneErrLBL.setVisible(false);
+
+            if ( ! emailField.getText().matches(Constants.emailPattern)) {
+                emailErrLBL.setVisible(true);
+                valid = false;
+            } else emailErrLBL.setVisible(false);
+
+            if (imageField.getText().equals("")) {
+                if ( ! imageErrLBL.isVisible()) {
+                    imageErrLBL.setVisible(true);
+                    valid = false;
+                }
+            } else imageErrLBL.setVisible(false);
+
+            return valid;
+        }
+
+        private void initLBLs() {
+            passwordErrLBL.setText("You can only use alphabet, digits and \"_\"");
+            firstNameErrLBL.setText("Invalid first name!");
+            lastNameErrLBL.setText("Invalid last name");
+            phoneErrLBL.setText("Enter a phone number!");
+            emailErrLBL.setText("Invalid email address!");
+            imageErrLBL.setTextFill(Color.YELLOW);
+            imageErrLBL.setText("warning: image is not chosen! click register again to continue.");
+        }
+
+        private void initVisibilities() {
+            usernameErrLBL.setVisible(false);
+            passwordErrLBL.setVisible(false);
+            firstNameErrLBL.setVisible(false);
+            lastNameErrLBL.setVisible(false);
+            phoneErrLBL.setVisible(false);
+            emailErrLBL.setVisible(false);
+            imageErrLBL.setVisible(false);
+        }
+
+        private void initListeners() {
+            addListener(usernameField, "\\w");
+            addListener(passwordField, "\\w");
+            addListener(phoneField, "[0-9]");
+        }
+
+        private void addListener(TextField textField, String regex) {
+            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
+            }));
         }
     }
 

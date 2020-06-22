@@ -10,7 +10,7 @@ public final class Constants {
     public static final String percentagePattern = "%?" + doublePattern + "%?";
     public static final String datePattern = "\\d{2}[/-]\\d{2}[/-]\\d{2, 4}";
     public static final String IRLNamePattern = "[a-zA-Z]+( [a-zA-Z]+)*";
-    public static final String emailPattern = "^.+@.+\\.com$";
+    public static final String emailPattern = "^.+@.+\\..+$";
     public static final String phonePattern = "\\+?\\d{8,12}";
     public static final String anonymousUserType = "Anonymous";
     public static final String adminUserType = "Admin";
@@ -44,6 +44,7 @@ public final class Constants {
         public static final String adminDiscountManagingMenu = "AdminDiscountManagingMenu";
         public static final String adminDiscountManagingPopup = "AdminDiscountManagingPopup";
         public static final String adminAccountManagingMenu = "AdminAccountManagingMenu";
+        public static final String adminRegistrationPopup = "AdminRegistrationPopup";
         public static final String adminProductManagingMenu =  "AdminProductManagingMenu";
         public static final String adminRequestManagingMenu = "AdminRequestManagingMenu";
         public static final String adminManagingMenu = "AdminManagingMenu";
