@@ -1070,7 +1070,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(null));
+            addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(null, true));
         }
         private void initDiscounts() {
             allDiscountWrappers.clear();
@@ -1121,7 +1121,7 @@ public class Controllers {
                 this.startDate.set(startDate);
                 this.endDate.set(endDate);
                 perMax.bind(this.percentage.asString().concat("% (").concat(this.maximumAmount).concat("$)"));
-                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this));
+                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this, true));
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
@@ -1624,12 +1624,13 @@ public class Controllers {
         private void initVisibility() {
             boolean isDetail = category != null;
 
-            editHB.setVisible(isDetail);
-            addBTN.setVisible(! isDetail);
+            editHB.setVisible(isDetail && editable);
+            addBTN.setVisible(! isDetail && editable);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
             productsTAB.setDisable(! isDetail);
             subCategoriesTAB.setDisable(! isDetail);
+
         }
 
         private void initValues() {
@@ -2874,14 +2875,13 @@ public class Controllers {
             }
         }
 
-        public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount) {
+        public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             String discountId = discount == null ? null : discount.getId();
             ((AdminDiscountManagingPopupController)
-                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount);
+                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount, editable);
         }
 
-        private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount) {
-            //TODO: should be checked.
+        private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             ArrayList<String[]> customersWithCode = null;
 
             if (discountId != null) {
@@ -2894,7 +2894,7 @@ public class Controllers {
                 }
             }
 
-            initVisibility(discountId);
+            initVisibility(discountId, editable);
             initActions(discountId);
             initTable(discountId);
             initBindings(discountId);
@@ -2914,10 +2914,10 @@ public class Controllers {
             }
         }
 
-        private void initVisibility(String discountId) {
+        private void initVisibility(String discountId, boolean editable) {
             boolean isDetail = discountId != null;
-            saveDiscardHBox.setVisible(isDetail);
-            addBTN.setVisible( ! isDetail);
+            saveDiscardHBox.setVisible(isDetail && editable);
+            addBTN.setVisible( ! isDetail && editable);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
 
@@ -2932,6 +2932,10 @@ public class Controllers {
             editBTN.disableProperty().bind(editBTN.opacityProperty().isNotEqualTo(1));
 
             codeField.setEditable( ! isDetail);
+
+            maxField.setEditable(editable);
+            codeField.setEditable(editable);
+            percentageField.setEditable(editable);
         }
 
         private void initActions(String discountId) {
@@ -3155,7 +3159,7 @@ public class Controllers {
                 });
 
                 details.getStyleClass().add("details-button");
-                details.setOnAction(e -> SellerSaleManagingPopupController.display(id));
+                details.setOnAction(e -> SellerSaleManagingPopupController.display(id, true));
             }
 
             public String getId() {
@@ -3217,7 +3221,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            addSaleBTN.setOnAction(e -> SellerSaleManagingPopupController.display(null));
+            addSaleBTN.setOnAction(e -> SellerSaleManagingPopupController.display(null, true));
         }
     }
 
@@ -3271,10 +3275,10 @@ public class Controllers {
             }
         }
 
-        public static void display(String saleId) {
+        public static void display(String saleId, boolean editable) {
             String title = saleId == null ? "Add Sale" : "Sale Details";
             ((SellerSaleManagingPopupController)
-            View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId);
+            View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId, editable);
         }
 
         private void printError(String err) {
@@ -3282,7 +3286,7 @@ public class Controllers {
             errorLBL.setText(err);
         }
 
-        private void initialize(String saleId) {
+        private void initialize(String saleId, boolean editable) {
             if (saleId != null) {
                 try {
                     sale = sellerController.viewSaleWithId(saleId);
@@ -3294,7 +3298,7 @@ public class Controllers {
             initValues(saleId);
             initButtons(saleId);
             initBindings(saleId);
-            initVisibilities(saleId);
+            initVisibilities(saleId, editable);
         }
 
         private void initTable(String saleId) {
@@ -3435,12 +3439,16 @@ public class Controllers {
             }
         }
 
-        private void initVisibilities(String saleId) {
-            editHB.setVisible(saleId != null);
-            addBTN.setVisible( ! editHB.isVisible());
-            idKeyLBL.setVisible(editHB.isVisible());
-            idValueLBL.setVisible(editHB.isVisible());
+        private void initVisibilities(String saleId, boolean editable) {
+            editHB.setVisible((saleId != null) && editable);
+            addBTN.setVisible((! editHB.isVisible()) && editable);
+            idKeyLBL.setVisible(saleId != null);
+            idValueLBL.setVisible(saleId != null);
 
+            percentageField.setEditable(editable);
+            maxField.setEditable(editable);
+            startDate.setEditable(editable);
+            endDate.setEditable(editable);
         }
 
         @FXML
@@ -3592,7 +3600,7 @@ public class Controllers {
                 this.totalSale = totalSale;
 
                 details.getStyleClass().add("details-button");
-                details.setOnAction(e -> SellerSellLogDetailMenuController.display(this.id));
+                details.setOnAction(e -> SellLogDetailsPopupController.display(this.id));
             }
 
             public String getId() {
@@ -3668,7 +3676,7 @@ public class Controllers {
         }
     }
 
-    public static class SellerSellLogDetailMenuController {
+    public static class SellLogDetailsPopupController {
 
         @FXML
         private TableView<SellLogItemWrapper> logItems;
@@ -3763,8 +3771,8 @@ public class Controllers {
         }
 
         public static void display(String id) {
-            ((SellerSellLogDetailMenuController)
-                    View.popupWindow("Sell Log Details", Constants.FXMLs.sellerSellLogDetailsPopup, 850, 500)).initialize(id);
+            ((SellLogDetailsPopupController)
+                    View.popupWindow("Sell Log Details", Constants.FXMLs.sellLogDetailsPopup, 850, 500)).initialize(id);
         }
 
         public void initialize(String id) {
