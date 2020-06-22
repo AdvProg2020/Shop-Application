@@ -758,6 +758,7 @@ public class Controllers {
         }
 
         private void initTexts() {
+            customerUsernameError.setText("Please enter a username");
             sellerUsernameError.setText("Please enter a username");
             customerPasswordError.setText("Please enter a password");
             sellerPasswordError.setText("Please enter a password");
@@ -767,7 +768,7 @@ public class Controllers {
             sellerLastNameError.setText("Invalid entry!");
             customerPhoneNumberError.setText("Please enter a phone number");
             sellerPhoneNumberError.setText("Please enter a phone number");
-            customerEmailError.setText("Invalid entry! enter a valid email address");
+            customerEmailError.setText("Please enter an email address");
             sellerEmailError.setText("Please enter an email address");
             customerBalanceError.setText("Please enter your initial balance");
             sellerBalanceError.setText("Please enter your initial balance");
@@ -813,7 +814,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, null);
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.parseDouble(customerBalance.getText()), null, null);
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
@@ -828,7 +829,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null, null);
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.parseDouble(sellerBalance.getText()), null, null);
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
