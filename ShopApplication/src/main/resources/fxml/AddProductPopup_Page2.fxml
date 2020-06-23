@@ -6,15 +6,15 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
             fx:controller="view.Controllers$AdminRegistrationPopupController">
     <center>
-        <GridPane hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
+        <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
             <VBox>
                 <Label text="Name:"/>
-                <TextField fx:id="nameField" disable="true" text="kvvz"/>
+                <TextField fx:id="nameField"/>
                 <Label fx:id="usernameErrLBL" textFill="RED"/>
             </VBox>
             <VBox GridPane.columnIndex="1">
                 <Label text="Brand:"/>
-                <TextField fx:id="brandField" disable="true" text="vdmz;lvlmslz;dv"/>
+                <TextField fx:id="brandField"/>
                 <Label fx:id="passwordErrLBL" textFill="RED"/>
             </VBox>
             <VBox spacing="5.0" GridPane.rowIndex="1">
@@ -24,7 +24,7 @@
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <Label text="Profile Picture:"/>
                 <HBox spacing="10.0">
-                    <TextField fx:id="imageField" editable="false" promptText="upload image..."/>
+                    <TextField fx:id="imageField" editable="false" promptText="upload image..." HBox.hgrow="ALWAYS"/>
                     <Button fx:id="browseBTN" mnemonicParsing="false" text="Browse"/>
                 </HBox>
                 <Label fx:id="imageErrLBL" textFill="RED"/>
@@ -33,6 +33,18 @@
                 <Label text="Product Info:"/>
                 <TextArea fx:id="infoArea"/>
                 <Label fx:id="emailErrLBL" textFill="RED"/>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
+                <Label text="Price:"/>
+                <TextField fx:id="priceField"/>
+                <Label fx:id="priceError" textFill="RED"/>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="160.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <children>
+                    <Label text="Count:"/>
+                    <TextField fx:id="countField"/>
+                    <Label fx:id="countError" textFill="RED"/>
+                </children>
             </VBox>
             <columnConstraints>
                 <ColumnConstraints maxWidth="220.0" minWidth="200.0" prefWidth="220.0"/>
@@ -47,6 +59,8 @@
                                 prefHeight="31.999981689453108"/>
                 <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998"
                                 prefHeight="60.79999999999998"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998"
+                                prefHeight="60.79999999999998"/>
             </rowConstraints>
         </GridPane>
     </center>
@@ -54,10 +68,26 @@
         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
     </padding>
     <bottom>
-        <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
-            <Label fx:id="errorLBL" text="Possible error"/>
+        <HBox alignment="CENTER_RIGHT" spacing="20.0" BorderPane.alignment="CENTER">
+            <Button id="back-button" fx:id="backBTN" layoutX="760.0" layoutY="30.0" mnemonicParsing="false"
+                    text="Back"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="nextBTN" mnemonicParsing="false" text="next"/>
+            <Label fx:id="errorLBL" text="Possible error"/>
+            <Button fx:id="addProductBTN" mnemonicParsing="false" text="Add Product"/>
+            <padding>
+                <Insets left="10.0" right="10.0" top="20.0"/>
+            </padding>
         </HBox>
     </bottom>
+    <right>
+        <TableView fx:id="properties" stylesheets="@../css/TableView.css" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="propertyCOL" prefWidth="150.0" text="Property"/>
+                <TableColumn fx:id="valueCOL" prefWidth="150.0" text="Value"/>
+            </columns>
+            <BorderPane.margin>
+                <Insets left="20.0"/>
+            </BorderPane.margin>
+        </TableView>
+    </right>
 </BorderPane>
