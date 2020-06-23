@@ -11,6 +11,7 @@ import model.database.Database;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 //TODO: compare to products!
 public class Controller {
@@ -613,5 +614,32 @@ public class Controller {
             return values;
         }else
             throw new Exceptions.InvalidCategoryException(categoryName);
+    }
+
+    public ArrayList<String[]> getSubProductsForAdvertisements(){
+        ArrayList<Product> selectedProducts = new ArrayList<>(Product.getAllProducts());
+        int numberOfProducts = selectedProducts.size();
+        if( numberOfProducts > 20){
+            ArrayList<Product> allProducts = selectedProducts;
+            selectedProducts = new ArrayList<>();
+            for(int i = 0; i < 20; i++){
+                selectedProducts.add(allProducts.get(numberOfProducts - 1 - i));
+            }
+            numberOfProducts = 20;
+        }
+        ArrayList<String[]> productsToShow = new ArrayList<>();
+        SubProduct chosenSubProduct;
+        Random r = new Random();
+        int randomNumber;
+        for( int i = 0; i < 6; i++){
+            randomNumber = r.nextInt(numberOfProducts);
+            chosenSubProduct = selectedProducts.get(randomNumber).getDefaultSubProduct();
+            productsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
+            selectedProducts.remove(randomNumber);
+            numberOfProducts --;
+        }
+
+        return productsToShow;
+
     }
 }

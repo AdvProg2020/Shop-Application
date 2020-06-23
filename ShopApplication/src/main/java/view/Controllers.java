@@ -216,9 +216,12 @@ public class Controllers {
             View.stackSize.set(0);
             View.setMainPane(Constants.FXMLs.mainMenu);
         }
+
+
+
     }
 
-    public static class ProductsMenuController implements Initializable {
+    public static class ProductsMenuController {
 
         @FXML
         private Button update;
@@ -288,9 +291,6 @@ public class Controllers {
                 controller.initPropertyFilters();
             }
         }
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) { }
 
         private void initPropertyFilters(){
             try {
@@ -475,7 +475,6 @@ public class Controllers {
         private void setAction(Parent p) {
             p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0]));
         }
-
 
     }
 
