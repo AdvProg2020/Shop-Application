@@ -429,4 +429,7 @@ public class AdminController {
             }
         }
     }
+    public boolean existManager(){
+        return Admin.getManager() != null;
+    }
 }
