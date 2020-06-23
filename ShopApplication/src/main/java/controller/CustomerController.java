@@ -58,7 +58,14 @@ public class CustomerController {
             return false;
     }
 
-    //public void shoppingCart
+    public double getTotalPriceOfCartWithDiscount(String discountCode) throws Exceptions.InvalidDiscountException {
+        Discount discount = Discount.getDiscountByCode(discountCode);
+        if (discount == null || discount.hasCustomerWithId(currentAccount().getId())) {
+            throw new Exceptions.InvalidDiscountException(discountCode);
+        } else {
+            return discount.calculateDiscountAmount(currentCart().getTotalPrice());
+        }
+    }
 
     //Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
