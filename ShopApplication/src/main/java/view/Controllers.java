@@ -48,6 +48,275 @@ public class Controllers {
     }
 
 
+    public static class EditPersonalInfoPopupController implements Initializable{
+
+        @FXML
+        private TextField usernameField;
+
+        @FXML
+        private Label usernameError;
+
+        @FXML
+        private PasswordField passwordField;
+
+        @FXML
+        private Label passwordError;
+
+        @FXML
+        private TextField firstName;
+
+        @FXML
+        private Label firstNameError;
+
+        @FXML
+        private TextField lastName;
+
+        @FXML
+        private Label lastNameError;
+
+        @FXML
+        private TextField phoneNumber;
+
+        @FXML
+        private Label phoneNumberError;
+
+        @FXML
+        private TextField email;
+
+        @FXML
+        private Label emailError;
+
+        @FXML
+        private TextField balance;
+
+        @FXML
+        private Label balanceError;
+
+        @FXML
+        private TextField storeName;
+
+        @FXML
+        private Label storeNameError;
+
+        @FXML
+        private TextField imageField;
+
+        @FXML
+        private Button browseBTN;
+
+        @FXML
+        private Label ImageError;
+
+        @FXML
+        private Button saveBTN;
+
+        @FXML
+        private Button discardBTN;
+
+        private String[] info;
+        private SimpleBooleanProperty passwordChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty firstNameChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty lastNameChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty imageChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty phoneChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty emailChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty balanceChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty storeNameChanged = new SimpleBooleanProperty(false);
+
+        public static void display() {
+            View.popupWindow("Edit Personal Info", Constants.FXMLs.editPersonalInfoPopup, 400, 500);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            try {
+                info = mainController.viewPersonalInfo();
+            } catch (Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+                discardBTN.getScene().getWindow().hide();
+            }
+            initVisibility();
+            initButtons();
+            initLabels();
+            initValues();
+            initBindings();
+            initListeners();
+        }
+
+        private void initVisibility() {
+            passwordError.setVisible(false);
+            firstNameError.setVisible(false);
+            lastNameError.setVisible(false);
+            phoneNumberError.setVisible(false);
+            emailError.setVisible(false);
+            balanceError.setVisible(false);
+            storeNameError.setVisible(false);
+            imageField.setEditable(false);
+            if (View.type.get().equals(Constants.adminUserType)) balance.setVisible(false);
+            if ( ! View.type.get().equals(Constants.sellerUserType)) storeName.setVisible(false);
+        }
+
+        private void initButtons() {
+            discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
+
+            browseBTN.setOnAction(e -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image file", "*.png"),
+                        new FileChooser.ExtensionFilter("Image file", "*.jpg"));
+                File chosenFile =  fileChooser.showOpenDialog(new Stage());
+                if (fileChooser != null) {
+                    imageField.setText(chosenFile.getPath());
+                }
+            });
+
+            saveBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        if (passwordChanged.get()) mainController.editPersonalInfo("password",info[1] = passwordField.getText());
+                        if (imageChanged.get()) mainController.editPersonalInfo("image path", info[7] = imageField.getText());
+                        if (firstNameChanged.get()) mainController.editPersonalInfo("firstName", info[3] = firstName.getText());
+                        if (lastNameChanged.get()) mainController.editPersonalInfo("lastName", info[4] = lastName.getText());
+                        if (phoneChanged.get()) mainController.editPersonalInfo("phone", info[6] = phoneNumber.getText());
+                        if (emailChanged.get()) mainController.editPersonalInfo("email", info[5] = email.getText());
+                        if (balanceChanged.get()) {
+                            if (View.type.get().equals(Constants.customerUserType)) {
+                                customerController.editPersonalInfo("balance", info[8] = balance.getText());
+                            } else if (View.type.get().equals(Constants.sellerUserType)) {
+                                sellerController.editPersonalInfo("balance", info[8] = balance.getText());
+                            }
+                        }
+                        if (storeNameChanged.get()) {
+                            if (View.type.get().equals(Constants.sellerUserType)) {
+                                sellerController.editPersonalInfo("storeName", info[9] = storeName.getText());
+                            }
+                        }
+                        discardBTN.fire();
+                    } catch (Exceptions.SameAsPreviousValueException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidFieldException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        private boolean validateFields() {
+            boolean valid = true;
+            if (passwordField.getText().equals("")) {
+                valid = false;
+                passwordError.setVisible(true);
+            } else passwordError.setVisible(false);
+
+            if ( ! firstName.getText().matches(Constants.IRLNamePattern)) {
+                valid = false;
+                firstNameError.setVisible(true);
+            } else firstNameError.setVisible(false);
+
+            if ( ! lastName.getText().matches(Constants.IRLNamePattern)) {
+                valid = false;
+                lastNameError.setVisible(true);
+            } else lastNameError.setVisible(false);
+
+            if (phoneNumber.getText().equals("")) {
+                valid = false;
+                phoneNumberError.setVisible(true);
+            } else phoneNumberError.setVisible(false);
+
+            if ( ! email.getText().matches(Constants.emailPattern)) {
+                valid = false;
+                emailError.setVisible(true);
+            } else emailError.setVisible(false);
+
+            if ( ! View.type.get().equals(Constants.adminUserType)) {
+                if ( ! balance.getText().matches(Constants.doublePattern)) {
+                    valid = false;
+                    balanceError.setVisible(true);
+                } else balanceError.setVisible(false);
+            }
+
+            if (View.type.get().equals(Constants.sellerUserType)) {
+                if (storeName.getText().equals("")) {
+                    valid = false;
+                    storeNameError.setVisible(true);
+                } else storeNameError.setVisible(false);
+            }
+
+            return valid;
+         }
+
+        private void initLabels() {
+            passwordError.setText("Invalid password");
+            firstNameError.setText("Invalid first name");
+            lastNameError.setText("Invalid last name");
+            phoneNumberError.setText("Invalid phone number");
+            emailError.setText("Invalid email address");
+            balanceError.setText("Invalid balance number");
+            storeNameError.setText("Invalid store name");
+        }
+
+        private void initValues() {
+            passwordField.setText(info[1]);
+            imageField.setText(info[7]);
+            firstName.setText(info[3]);
+            lastName.setText(info[4]);
+            phoneNumber.setText(info[6]);
+            email.setText(info[5]);
+            if ( ! View.type.get().equals(Constants.adminUserType)) balance.setText(info[8]);
+            if ( View.type.get().equals(Constants.sellerUserType)) storeName.setText(info[9]);
+        }
+
+        private void initBindings() {
+            passwordChanged.bind(
+                    Bindings.when(passwordField.textProperty().isEqualTo(info[1])).then(false).otherwise(true)
+            );
+            imageChanged.bind(
+                    Bindings.when(imageField.textProperty().isEqualTo(info[7])).then(false).otherwise(true)
+            );
+            firstNameChanged.bind(
+                    Bindings.when(firstName.textProperty().isEqualTo(info[3])).then(false).otherwise(true)
+            );
+            lastNameChanged.bind(
+                    Bindings.when(lastName.textProperty().isEqualTo(info[4])).then(false).otherwise(true)
+            );
+            phoneChanged.bind(
+                    Bindings.when(phoneNumber.textProperty().isEqualTo(info[6])).then(false).otherwise(true)
+            );
+            emailChanged.bind(
+                    Bindings.when(email.textProperty().isEqualTo(info[5])).then(false).otherwise(true)
+            );
+            if ( ! View.type.get().equals(Constants.adminUserType))
+                balanceChanged.bind(
+                        Bindings.when(balance.textProperty().isEqualTo(info[8])).then(false).otherwise(true)
+                );
+            else balanceChanged.set(false);
+            if (View.type.get().equals(Constants.sellerUserType))
+                storeNameChanged.bind(
+                        Bindings.when(storeName.textProperty().isEqualTo(info[9])).then(false).otherwise(true)
+                );
+            else storeNameChanged.set(false);
+
+            saveBTN.disableProperty().bind(
+                    Bindings.createObjectBinding(() ->
+                        !passwordChanged.get() && !imageChanged.get() && !firstNameChanged.get() && !lastNameChanged.get() &&
+                                !phoneChanged.get() && !emailChanged.get() && !balanceChanged.get() && !storeNameChanged.get()
+                    , passwordChanged, firstNameChanged, lastNameChanged, imageChanged, phoneChanged, emailChanged, balanceChanged, storeNameChanged)
+            );
+        }
+
+        private void initListeners() {
+            addListener(passwordField, "\\w");
+            addListener(phoneNumber, "[0-9]");
+        }
+
+        private void addListener(TextField textField, String regex) {
+            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
+            }));
+        }
+
+    }
 
     public static class PersonalInfoMenuController {
 
@@ -2646,7 +2915,7 @@ public class Controllers {
         public void addAdmin(String username) {
             try {
                 String[] info = adminController.viewUsername(username);
-                admins.getItems().add(new AccountWrapper(info[1], username, info[2], info[3], info[5], info[4], Constants.adminUserType, admins));
+                admins.getItems().add(new AccountWrapper(info[2], username, info[3], info[4], info[6], info[5], Constants.adminUserType, admins));
             } catch (Exceptions.UsernameDoesntExistException e) {
                 e.printStackTrace();
             }

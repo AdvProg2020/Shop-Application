@@ -201,24 +201,26 @@ public class Utilities {
         public static String[] personalInfo(Account account) {
             String[] info;
             if (account instanceof Customer) {
-                info = new String[8];
-                info[6] = Double.toString(((Customer) account).getBalance());
-                info[7] = account.getClass().getSimpleName();
+                info = new String[10];
+                info[8] = Double.toString(((Customer) account).getBalance());
+                info[9] = account.getClass().getSimpleName();
             } else if (account instanceof Seller) {
-                info = new String[9];
-                info[6] = Double.toString(((Seller) account).getBalance());
-                info[7] = ((Seller) account).getStoreName();
-                info[8] = account.getClass().getSimpleName();
+                info = new String[11];
+                info[8] = Double.toString(((Seller) account).getBalance());
+                info[9] = ((Seller) account).getStoreName();
+                info[10] = account.getClass().getSimpleName();
             } else {
-                info = new String[7];
-                info[6] = account.getClass().getSimpleName();
+                info = new String[9];
+                info[8] = account.getClass().getSimpleName();
             }
             info[0] = account.getUsername();
-            info[1] = account.getId();
-            info[2] = account.getFirstName();
-            info[3] = account.getLastName();
-            info[4] = account.getEmail();
-            info[5] = account.getPhone();
+            info[1] = account.getPassword();
+            info[2] = account.getId();
+            info[3] = account.getFirstName();
+            info[4] = account.getLastName();
+            info[5] = account.getEmail();
+            info[6] = account.getPhone();
+            info[7] = account.getImagePath();
             return info;
         }
 
