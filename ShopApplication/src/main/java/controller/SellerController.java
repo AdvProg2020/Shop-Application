@@ -178,6 +178,12 @@ public class SellerController {
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
                     database().request();
                     break;
+                    //TODO: handle for field: "imagePath"
+//                case "imagePath":
+//                    if (targetedSubProduct.getProduct().getImagePath().equals(newInformation))
+//                        throw new Exceptions.SameAsPreviousValueException(field);
+//
+//                    new EditProductRequest(targetedSubProduct.getId(), "")
                 default:
                     throw new Exceptions.InvalidFieldException();
             }

@@ -48,7 +48,7 @@ public class Controllers {
     }
 
 
-    public static class EditPersonalInfoPopupController implements Initializable{
+    public static class EditPersonalInfoPopupController implements Initializable {
 
         @FXML
         private TextField usernameField;
@@ -153,7 +153,7 @@ public class Controllers {
             storeNameError.setVisible(false);
             imageField.setEditable(false);
             if (View.type.get().equals(Constants.adminUserType)) balance.setVisible(false);
-            if ( ! View.type.get().equals(Constants.sellerUserType)) storeName.setVisible(false);
+            if (!View.type.get().equals(Constants.sellerUserType)) storeName.setVisible(false);
         }
 
         private void initButtons() {
@@ -163,7 +163,7 @@ public class Controllers {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image file", "*.png"),
                         new FileChooser.ExtensionFilter("Image file", "*.jpg"));
-                File chosenFile =  fileChooser.showOpenDialog(new Stage());
+                File chosenFile = fileChooser.showOpenDialog(new Stage());
                 if (fileChooser != null) {
                     imageField.setText(chosenFile.getPath());
                 }
@@ -172,11 +172,16 @@ public class Controllers {
             saveBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        if (passwordChanged.get()) mainController.editPersonalInfo("password",info[1] = passwordField.getText());
-                        if (imageChanged.get()) mainController.editPersonalInfo("image path", info[7] = imageField.getText());
-                        if (firstNameChanged.get()) mainController.editPersonalInfo("firstName", info[3] = firstName.getText());
-                        if (lastNameChanged.get()) mainController.editPersonalInfo("lastName", info[4] = lastName.getText());
-                        if (phoneChanged.get()) mainController.editPersonalInfo("phone", info[6] = phoneNumber.getText());
+                        if (passwordChanged.get())
+                            mainController.editPersonalInfo("password", info[1] = passwordField.getText());
+                        if (imageChanged.get())
+                            mainController.editPersonalInfo("image path", info[7] = imageField.getText());
+                        if (firstNameChanged.get())
+                            mainController.editPersonalInfo("firstName", info[3] = firstName.getText());
+                        if (lastNameChanged.get())
+                            mainController.editPersonalInfo("lastName", info[4] = lastName.getText());
+                        if (phoneChanged.get())
+                            mainController.editPersonalInfo("phone", info[6] = phoneNumber.getText());
                         if (emailChanged.get()) mainController.editPersonalInfo("email", info[5] = email.getText());
                         if (balanceChanged.get()) {
                             if (View.type.get().equals(Constants.customerUserType)) {
@@ -207,12 +212,12 @@ public class Controllers {
                 passwordError.setVisible(true);
             } else passwordError.setVisible(false);
 
-            if ( ! firstName.getText().matches(Constants.IRLNamePattern)) {
+            if (!firstName.getText().matches(Constants.IRLNamePattern)) {
                 valid = false;
                 firstNameError.setVisible(true);
             } else firstNameError.setVisible(false);
 
-            if ( ! lastName.getText().matches(Constants.IRLNamePattern)) {
+            if (!lastName.getText().matches(Constants.IRLNamePattern)) {
                 valid = false;
                 lastNameError.setVisible(true);
             } else lastNameError.setVisible(false);
@@ -222,13 +227,13 @@ public class Controllers {
                 phoneNumberError.setVisible(true);
             } else phoneNumberError.setVisible(false);
 
-            if ( ! email.getText().matches(Constants.emailPattern)) {
+            if (!email.getText().matches(Constants.emailPattern)) {
                 valid = false;
                 emailError.setVisible(true);
             } else emailError.setVisible(false);
 
-            if ( ! View.type.get().equals(Constants.adminUserType)) {
-                if ( ! balance.getText().matches(Constants.doublePattern)) {
+            if (!View.type.get().equals(Constants.adminUserType)) {
+                if (!balance.getText().matches(Constants.doublePattern)) {
                     valid = false;
                     balanceError.setVisible(true);
                 } else balanceError.setVisible(false);
@@ -242,7 +247,7 @@ public class Controllers {
             }
 
             return valid;
-         }
+        }
 
         private void initLabels() {
             passwordError.setText("Invalid password");
@@ -261,8 +266,8 @@ public class Controllers {
             lastName.setText(info[4]);
             phoneNumber.setText(info[6]);
             email.setText(info[5]);
-            if ( ! View.type.get().equals(Constants.adminUserType)) balance.setText(info[8]);
-            if ( View.type.get().equals(Constants.sellerUserType)) storeName.setText(info[9]);
+            if (!View.type.get().equals(Constants.adminUserType)) balance.setText(info[8]);
+            if (View.type.get().equals(Constants.sellerUserType)) storeName.setText(info[9]);
         }
 
         private void initBindings() {
@@ -284,7 +289,7 @@ public class Controllers {
             emailChanged.bind(
                     Bindings.when(email.textProperty().isEqualTo(info[5])).then(false).otherwise(true)
             );
-            if ( ! View.type.get().equals(Constants.adminUserType))
+            if (!View.type.get().equals(Constants.adminUserType))
                 balanceChanged.bind(
                         Bindings.when(balance.textProperty().isEqualTo(info[8])).then(false).otherwise(true)
                 );
@@ -297,9 +302,9 @@ public class Controllers {
 
             saveBTN.disableProperty().bind(
                     Bindings.createObjectBinding(() ->
-                        !passwordChanged.get() && !imageChanged.get() && !firstNameChanged.get() && !lastNameChanged.get() &&
-                                !phoneChanged.get() && !emailChanged.get() && !balanceChanged.get() && !storeNameChanged.get()
-                    , passwordChanged, firstNameChanged, lastNameChanged, imageChanged, phoneChanged, emailChanged, balanceChanged, storeNameChanged)
+                                    !passwordChanged.get() && !imageChanged.get() && !firstNameChanged.get() && !lastNameChanged.get() &&
+                                            !phoneChanged.get() && !emailChanged.get() && !balanceChanged.get() && !storeNameChanged.get()
+                            , passwordChanged, firstNameChanged, lastNameChanged, imageChanged, phoneChanged, emailChanged, balanceChanged, storeNameChanged)
             );
         }
 
@@ -395,7 +400,7 @@ public class Controllers {
 
         public static void display(String username) {
             if (username == null) {
-                ((PersonalInfoMenuController)View.setMainPane(Constants.FXMLs.personalInfoMenu)).init(null, false);
+                ((PersonalInfoMenuController) View.setMainPane(Constants.FXMLs.personalInfoMenu)).init(null, false);
             } else {
                 ((PersonalInfoMenuController)
                         View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 632, 472)).init(username, true);
@@ -436,7 +441,7 @@ public class Controllers {
 
         private void initCustomerButtons() {
             //TODO: complete
-            buyLogBTN.setOnAction(e -> CustomerBuyLogMenuController.display() );
+            buyLogBTN.setOnAction(e -> CustomerBuyLogMenuController.display());
             initAdminButtons();
         }
 
@@ -478,7 +483,7 @@ public class Controllers {
         }
     }
 
-    public static class MainMenuController implements Initializable{
+    public static class MainMenuController implements Initializable {
 
         @FXML
         private Button allSales;
@@ -510,7 +515,7 @@ public class Controllers {
             allSales.setOnAction(e -> salesMenu());
         }
 
-        private void salesMenu(){
+        private void salesMenu() {
             ProductsMenuController.display("SuperCategory", true);
         }
     }
@@ -574,8 +579,8 @@ public class Controllers {
 
 
         public static void display(String categoryName, boolean inSale) {
-            ProductsMenuController controller =  View.setMainPane(Constants.FXMLs.productsMenu);
-            if( controller != null){
+            ProductsMenuController controller = View.setMainPane(Constants.FXMLs.productsMenu);
+            if (controller != null) {
                 controller.categoryName = categoryName;
                 controller.inSale = inSale;
                 controller.update();
@@ -586,12 +591,12 @@ public class Controllers {
             }
         }
 
-        private void initPropertyFilters(){
+        private void initPropertyFilters() {
             try {
                 ArrayList<String> propertyKeys = mainController.getPropertiesOfCategory(categoryName, false);
                 int numberOfProperties = propertyKeys.size();
                 int numberOfColumns = numberOfProperties / 3 + (numberOfProperties % 3 == 0 ? 0 : 1);
-                setFilterPropertiesPaneSize( numberOfColumns );
+                setFilterPropertiesPaneSize(numberOfColumns);
                 for (String propertyKey : propertyKeys) {
                     VBox propertyBox = creatPropertyChoiceBox(propertyKey);
                     int propertyIndex = propertyKeys.indexOf(propertyKey);
@@ -615,7 +620,7 @@ public class Controllers {
         }
 
         //TODO: set max price for sliders
-        private void initFilterBar(){
+        private void initFilterBar() {
             minPrice = new SimpleDoubleProperty();
             minPrice.bind(minPriceSlider.valueProperty());
 
@@ -647,23 +652,23 @@ public class Controllers {
             update.setOnAction(e -> update());
         }
 
-        private void update(){
+        private void update() {
             updateProducts();
             updatePane();
         }
 
-        private void updateProducts(){
+        private void updateProducts() {
             HashMap<String, String> propertyValues = new HashMap<>();
             for (String s : properties.keySet()) {
                 propertyValues.put(s, properties.get(s).getValue());
             }
             products = mainController.sortFilterProducts(categoryName, inSale, sortBy.getValue(), isIncreasing.getValue(), available.getValue(),
-            minPrice.getValue(), maxPrice.getValue(), name.getValue(), brand.getValue(), seller.getValue(), 0, propertyValues);
+                    minPrice.getValue(), maxPrice.getValue(), name.getValue(), brand.getValue(), seller.getValue(), 0, propertyValues);
         }
 
-        private void updatePane(){
+        private void updatePane() {
             int numberOfProducts = products.size();
-            int numberOfRows = numberOfProducts / numberOfColumns +1;
+            int numberOfRows = numberOfProducts / numberOfColumns + 1;
             setPaneSize(numberOfRows);
             int index;
             for (String[] subProductPack : products) {
@@ -674,33 +679,33 @@ public class Controllers {
         }
 
         //TODO: creat each row and column , with hGap and vGap, you can give ID to control them
-        private void setPaneSize(int numberOfRows){
+        private void setPaneSize(int numberOfRows) {
             productsPane = new GridPane();
             int currentRowsNumber = productsPane.getRowCount();
             int currentColumnsNumber = productsPane.getColumnCount();
-            if(numberOfRows > currentRowsNumber) {
+            if (numberOfRows > currentRowsNumber) {
                 productsPane.addRow(numberOfRows - currentRowsNumber);
             }
-            if(numberOfColumns > currentColumnsNumber){
+            if (numberOfColumns > currentColumnsNumber) {
                 productsPane.addColumn(numberOfColumns - currentColumnsNumber);
             }
 
         }
 
-        private void setFilterPropertiesPaneSize(int numberOfColumns){
+        private void setFilterPropertiesPaneSize(int numberOfColumns) {
             propertyFilters = new GridPane();
             int currentRowsNumber = propertyFilters.getRowCount();
             int currentColumnsNumber = propertyFilters.getColumnCount();
-            if(numberOfColumns > currentColumnsNumber){
+            if (numberOfColumns > currentColumnsNumber) {
                 propertyFilters.addColumn(numberOfColumns - currentColumnsNumber);
             }
 
-            if( currentRowsNumber < 3){
-                propertyFilters.addRow( 3 - currentRowsNumber);
+            if (currentRowsNumber < 3) {
+                propertyFilters.addRow(3 - currentRowsNumber);
             }
         }
 
-        private VBox creatPropertyChoiceBox(String property){
+        private VBox creatPropertyChoiceBox(String property) {
             VBox vBox = new VBox();
             vBox.getChildren().add(new Label(property));
             ChoiceBox<String> choiceBox = new ChoiceBox<>();
@@ -773,12 +778,266 @@ public class Controllers {
 
     }
 
+    public static class EditProductPopupController {
+        //TODO: fix textArea
+
+        @FXML
+        private TextField nameField;
+
+        @FXML
+        private Label usernameErrLBL;
+
+        @FXML
+        private TextField brandField;
+
+        @FXML
+        private Label passwordErrLBL;
+
+        @FXML
+        private TextField category;
+
+        @FXML
+        private TextField imageField;
+
+        @FXML
+        private Button browseBTN;
+
+        @FXML
+        private Label imageErrLBL;
+
+        @FXML
+        private TextArea infoArea;
+
+        @FXML
+        private Label emailErrLBL;
+
+        @FXML
+        private TextField priceField;
+
+        @FXML
+        private Label priceError;
+
+        @FXML
+        private TextField countField;
+
+        @FXML
+        private Label countError;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button saveBTN;
+
+        @FXML
+        private Button discardBTN;
+
+        @FXML
+        private Label priceLBL;
+
+        @FXML
+        private Label countLBL;
+
+        String productId;
+        String subProductId;
+        private String[] productInfo;
+        private String[] subProductInfo;
+        private ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
+        private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty brandFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty imageFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty priceFieldChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty countFieldChanged = new SimpleBooleanProperty(false);
+
+        public class PropertyWrapper {
+            String property;
+            String initialValue;
+            TextField value = new TextField();
+
+            public PropertyWrapper(String property) {
+                this.property = property;
+                value.setPromptText("Enter value...");
+                this.initialValue = "";
+            }
+
+            public PropertyWrapper(String property, String value) {
+                this(property);
+                this.value.setText(value);
+                this.initialValue = value;
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public TextField getValue() {
+                return value;
+            }
+
+            public boolean hasChanged() {
+                return !value.getText().equals(initialValue);
+            }
+        }
+
+
+        public static void display(String productId, String subProductId) {
+            ((EditProductPopupController) View.popupWindow("Edit Product Info", Constants.FXMLs.editProductPopup, 860, 505)).initialize(productId, subProductId);
+        }
+
+        private void initialize(String productId, String subProductId) {
+            try {
+                this.productId = productId;
+                this.subProductId = subProductId;
+                productInfo = mainController.digest(productId);
+                subProductInfo = mainController.getSubProductByID(subProductId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                discardBTN.getScene().getWindow().hide();
+                return;
+            }
+
+            initVisibility();
+            initValues();
+            initBindings();
+            initListeners();
+            initButtons();
+        }
+
+        private void initVisibility() {
+            if (View.type.get().equals(Constants.adminUserType)) {
+                priceLBL.setVisible(false);
+                countLBL.setVisible(false);
+                priceField.setVisible(false);
+                countField.setVisible(false);
+            }
+            imageField.setEditable(false);
+            category.setEditable(false);
+
+            usernameErrLBL.setVisible(false);
+            passwordErrLBL.setVisible(false);
+            emailErrLBL.setVisible(false);
+            imageErrLBL.setVisible(false);
+            priceError.setVisible(false);
+            countError.setVisible(false);
+        }
+
+        private void initValues() {
+            nameField.setText(productInfo[1]);
+            brandField.setText(productInfo[2]);
+            imageField.setText(productInfo[8]);
+            priceField.setText(subProductInfo[7]);
+            countField.setText(subProductInfo[5]);
+            infoArea.setText(productInfo[3]);
+
+            usernameErrLBL.setText("Invalid name!");
+            passwordErrLBL.setText("Invalid brand!");
+            emailErrLBL.setText("Invalid email!");
+            priceError.setText("Invalid price!");
+            countError.setText("Invalid count!");
+        }
+
+        private void initBindings() {
+            nameFieldChanged.bind(
+                    Bindings.when(nameField.textProperty().isEqualTo(productInfo[1])).then(false).otherwise(true)
+            );
+            brandFieldChanged.bind(
+                    Bindings.when(brandField.textProperty().isEqualTo(productInfo[2])).then(false).otherwise(true)
+            );
+            priceFieldChanged.bind(
+                    Bindings.when(priceField.textProperty().isEqualTo(subProductInfo[7])).then(false).otherwise(true)
+            );
+            countFieldChanged.bind(
+                    Bindings.when(countField.textProperty().isEqualTo(subProductInfo[5])).then(false).otherwise(true)
+            );
+            imageFieldChanged.bind(
+                    Bindings.when(imageField.textProperty().isEqualTo(productInfo[8])).then(false).otherwise(true)
+            );
+
+            saveBTN.disableProperty().bind(
+                    Bindings.createObjectBinding(() -> !nameFieldChanged.get() && !brandFieldChanged.get() &&
+                                                 !priceFieldChanged.get() && !countFieldChanged.get(),
+                            nameFieldChanged, brandFieldChanged, imageFieldChanged, priceFieldChanged, countFieldChanged)
+            );
+        }
+
+        private void initListeners() {
+            addListener(countField, "[0-9]");
+        }
+
+        private void addListener(TextField textField, String regex) {
+            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 0) return;
+                char lastInput = newValue.charAt(newValue.length() - 1);
+                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
+            }));
+        }
+
+        private void initButtons() {
+            browseBTN.setOnAction(e -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image File", "*.jpg"),
+                        new FileChooser.ExtensionFilter("Image File", "*.png"));
+                File choseFile = fileChooser.showOpenDialog(new Stage());
+                if (choseFile != null) imageField.setText(choseFile.getPath());
+            });
+
+            discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
+
+            saveBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        if (nameFieldChanged.get()) sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
+                        if (brandFieldChanged.get()) sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
+                        if (imageFieldChanged.get()) sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
+                        if (countFieldChanged.get()) sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
+                        if (priceFieldChanged.get()) sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
+                        discardBTN.fire();
+                    } catch (Exception ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+        private boolean validateFields() {
+            boolean valid = true;
+            if (nameField.getText().equals("")) {
+                valid = false;
+                usernameErrLBL.setVisible(true);
+            } else usernameErrLBL.setVisible(false);
+
+            if (brandField.getText().equals("")) {
+                valid = false;
+                passwordErrLBL.setVisible(true);
+            } else passwordErrLBL.setVisible(false);
+
+            if ( ! priceField.getText().matches(Constants.doublePattern)) {
+                valid = false;
+                priceError.setVisible(true);
+            } else priceError.setVisible(false);
+
+            if ( ! countField.getText().matches(Constants.unsignedIntPattern)) {
+                valid = false;
+                countError.setVisible(true);
+            } else countError.setVisible(false);
+
+            return valid;
+        }
+
+        private void printError(String err) {
+            errorLBL.setTextFill(Color.RED);
+            errorLBL.setText(err);
+        }
+    }
+
     public static class ProductDetailMenuController {
         public static void display(String productId) {
             String type = View.type.get();
             if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
                 ((ProductDetailMenuController)
-                View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600)).init(productId, type);
+                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600)).init(productId, type);
             } else {
                 ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu)).init(productId, Constants.customerUserType);
@@ -788,6 +1047,7 @@ public class Controllers {
         private void init(String productId, String type) {
 
         }
+
         @FXML
         private ImageView productIMG;
 
@@ -920,7 +1180,7 @@ public class Controllers {
                 try {
                     mainController.login(username, password);
                     View.type.set(mainController.getType());
-                    if( ! View.type.get().equals(Constants.customerUserType)) MainMenuController.display();
+                    if (!View.type.get().equals(Constants.customerUserType)) MainMenuController.display();
 
                     PopupStage.close();
                 } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
@@ -1246,7 +1506,7 @@ public class Controllers {
         }
     }
 
-    public static class AdminProductManagingMenu implements Initializable{
+    public static class AdminProductManagingMenu implements Initializable {
         @FXML
         private TableView<ProductWrapper> productsTable;
 
@@ -1306,7 +1566,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            allProducts =  new ArrayList<>();
+            allProducts = new ArrayList<>();
             for (String[] product : adminController.manageAllProducts()) {
                 allProducts.add(new ProductWrapper(product));
             }
@@ -1379,6 +1639,7 @@ public class Controllers {
         private void initActions() {
             addDiscountBTN.setOnAction(e -> AdminDiscountManagingPopupController.display(null, true));
         }
+
         private void initDiscounts() {
             allDiscountWrappers.clear();
 
@@ -1405,7 +1666,7 @@ public class Controllers {
             discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
         }
 
-        public  class DiscountWrapper {
+        public class DiscountWrapper {
             String id;
             String code;
             SimpleDoubleProperty percentage = new SimpleDoubleProperty();
@@ -1651,7 +1912,7 @@ public class Controllers {
         }
     }
 
-    public static class AdminCategoryManagingMenuController implements Initializable{
+    public static class AdminCategoryManagingMenuController implements Initializable {
 
         static AdminCategoryManagingMenuController currentController;
         ArrayList<CategoryWrapper> wrappers;
@@ -1709,7 +1970,8 @@ public class Controllers {
                         adminController.removeCategory(this.name.get());
                         ArrayList<CategoryWrapper> toBeRemoved = new ArrayList<>();
                         for (CategoryWrapper item : categories.getItems()) {
-                            if(item.parent.get().equals(this.name.get()) || item.name.get().equals(this.name.get())) toBeRemoved.add(item);
+                            if (item.parent.get().equals(this.name.get()) || item.name.get().equals(this.name.get()))
+                                toBeRemoved.add(item);
                         }
                         categories.getItems().removeAll(toBeRemoved);
                     } catch (Exceptions.InvalidCategoryException ex) {
@@ -1932,11 +2194,11 @@ public class Controllers {
             boolean isDetail = category != null;
 
             editHB.setVisible(isDetail);
-            addBTN.setVisible(! isDetail);
+            addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
-            productsTAB.setDisable(! isDetail);
-            subCategoriesTAB.setDisable(! isDetail);
+            productsTAB.setDisable(!isDetail);
+            subCategoriesTAB.setDisable(!isDetail);
 
         }
 
@@ -2052,10 +2314,10 @@ public class Controllers {
         }
 
         private boolean validateFields() {
-            if ( ! nameField.getText().matches("\\w+")) {
+            if (!nameField.getText().matches("\\w+")) {
                 printError("Invalid characters in category name!");
                 return false;
-            } else if ( ! parentField.getText().matches("\\w+")) {
+            } else if (!parentField.getText().matches("\\w+")) {
                 printError("Invalid characters in parent category name!");
                 return false;
             } else return true;
@@ -2063,8 +2325,7 @@ public class Controllers {
     }
 
 
-
-    public static class SellerAddProductPopupController implements Initializable{
+    public static class SellerAddProductPopupController implements Initializable {
         public static void display() {
 
         }
@@ -2247,7 +2508,7 @@ public class Controllers {
 
             public SubProductWrapper(String id, String productId, String nameBrandSeller, double unitPrice, int count) {
                 this.subProductId = id;
-                this.productId =productId;
+                this.productId = productId;
                 this.nameBrandSeller = new Button(nameBrandSeller);
                 this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId));
                 this.unitPrice = unitPrice;
@@ -2378,7 +2639,7 @@ public class Controllers {
         }
     }
 
-    public static class PurchaseMenuController implements Initializable{
+    public static class PurchaseMenuController implements Initializable {
         @FXML
         private TextField receiverName;
 
@@ -2441,17 +2702,17 @@ public class Controllers {
         }
 
         private void initBindings() {
-           discountCode.disableProperty().bind(
-                   Bindings.createObjectBinding(() -> !receiverName.getText().matches(Constants.IRLNamePattern) ||
-                           address.getText().equals("") || phoneNumber.getText().equals(""),
-                           receiverName.textProperty(), address.textProperty(), phoneNumber.textProperty())
-           );
-           discountCode.opacityProperty().bind(Bindings.when(discountCode.disableProperty()).then(0.5).otherwise(1));
+            discountCode.disableProperty().bind(
+                    Bindings.createObjectBinding(() -> !receiverName.getText().matches(Constants.IRLNamePattern) ||
+                                    address.getText().equals("") || phoneNumber.getText().equals(""),
+                            receiverName.textProperty(), address.textProperty(), phoneNumber.textProperty())
+            );
+            discountCode.opacityProperty().bind(Bindings.when(discountCode.disableProperty()).then(0.5).otherwise(1));
 
-           purchaseBTN.disableProperty().bind(
-                   Bindings.when(discountCode.disableProperty().not().and(discountCode.textProperty().isNotNull())).then(false).otherwise(true)
-           );
-           purchaseBTN.opacityProperty().bind(Bindings.when(purchaseBTN.disableProperty()).then(0.5).otherwise(1));
+            purchaseBTN.disableProperty().bind(
+                    Bindings.when(discountCode.disableProperty().not().and(discountCode.textProperty().isNotNull())).then(false).otherwise(true)
+            );
+            purchaseBTN.opacityProperty().bind(Bindings.when(purchaseBTN.disableProperty()).then(0.5).otherwise(1));
         }
 
         private void initListeners() {
@@ -2465,6 +2726,8 @@ public class Controllers {
                 char lastInput = newValue.charAt(newValue.length() - 1);
                 if (!String.valueOf(lastInput).matches("\\w")) discountCode.setText(oldValue);
             }));
+
+
         }
     }
 
@@ -2476,7 +2739,7 @@ public class Controllers {
             Button details = new Button();
 
             public BuyLogWrapper(String[] info) {
-                this(info[0], info[5], info[1], info[2], info[6],Double.parseDouble(info[7]), Double.parseDouble(info[8]));
+                this(info[0], info[5], info[1], info[2], info[6], Double.parseDouble(info[7]), Double.parseDouble(info[8]));
             }
 
             public BuyLogWrapper(String id, String date, String receiverUsername, String receiverName, String shippingStatus, double paidMoney, double totalDiscount) {
@@ -2574,7 +2837,7 @@ public class Controllers {
 
         public static void display(String logId) {
             ((CustomerBuyLogDetailsPopupController)
-            View.setMainPane(Constants.FXMLs.customerBuyLogDetailsPopup)).init(logId);
+                    View.setMainPane(Constants.FXMLs.customerBuyLogDetailsPopup)).init(logId);
         }
 
         private void init(String logId) {
@@ -2613,7 +2876,7 @@ public class Controllers {
             receiverPhoneLBL.setText(info[3]);
 
             StringBuilder address = new StringBuilder(info[4]);
-            int offset = 0 , size = address.length();
+            int offset = 0, size = address.length();
             while (offset + 19 < size) {
                 offset += 19;
                 address.insert(offset, "\n");
@@ -2753,9 +3016,9 @@ public class Controllers {
     public static class AdminAccountManagingMenuController implements Initializable {
 
         public static AdminAccountManagingMenuController current;
-        public  ArrayList<AccountWrapper> allAdmins;
-        public  ArrayList<AccountWrapper> allCustomers;
-        public  ArrayList<AccountWrapper> allSellers;
+        public ArrayList<AccountWrapper> allAdmins;
+        public ArrayList<AccountWrapper> allCustomers;
+        public ArrayList<AccountWrapper> allSellers;
 
         public class AccountWrapper {
             String id, username, firstName, lastName, phone, email, fullName;
@@ -2775,7 +3038,7 @@ public class Controllers {
                 this.lastName = lastName;
                 this.phone = phone;
                 this.email = email;
-                this.type  = new SimpleStringProperty(type);
+                this.type = new SimpleStringProperty(type);
                 this.holder = holder;
                 fullName = firstName + " " + lastName;
 
@@ -2798,7 +3061,7 @@ public class Controllers {
 
                 remove.disableProperty().bind(
                         Bindings.when(View.isManager.or(type.isEqualTo(Constants.sellerUserType)).or(type.isEqualTo(Constants.customerUserType)))
-                        .then(false).otherwise(true)
+                                .then(false).otherwise(true)
                 );
                 remove.opacityProperty().bind(Bindings.when(remove.disableProperty()).then(0.5).otherwise(1));
 
@@ -2909,7 +3172,7 @@ public class Controllers {
         private TableColumn<AccountWrapper, Button> customerRemoveCOL;
 
         public static void display() {
-             View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
+            View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
         }
 
         public void addAdmin(String username) {
@@ -2955,7 +3218,7 @@ public class Controllers {
             initItems();
         }
 
-        private void initItems(){
+        private void initItems() {
             ArrayList<String[]> all = adminController.manageUsers();
             allSellers = new ArrayList<>();
             allCustomers = new ArrayList<>();
@@ -2977,7 +3240,7 @@ public class Controllers {
         }
     }
 
-    public static class AdminRegistrationPopupController implements Initializable{
+    public static class AdminRegistrationPopupController implements Initializable {
         @FXML
         private TextField usernameField;
 
@@ -3025,7 +3288,6 @@ public class Controllers {
 
         @FXML
         private Button registerBTN;
-
 
 
         public static void display() {
@@ -3082,12 +3344,12 @@ public class Controllers {
                 valid = false;
             } else passwordErrLBL.setVisible(false);
 
-            if ( ! firstNameField.getText().matches(Constants.IRLNamePattern)) {
+            if (!firstNameField.getText().matches(Constants.IRLNamePattern)) {
                 firstNameErrLBL.setVisible(true);
                 valid = false;
             } else firstNameErrLBL.setVisible(false);
 
-            if ( ! lastNameField.getText().matches(Constants.IRLNamePattern)) {
+            if (!lastNameField.getText().matches(Constants.IRLNamePattern)) {
                 lastNameErrLBL.setVisible(true);
                 valid = false;
             } else lastNameErrLBL.setVisible(false);
@@ -3097,13 +3359,13 @@ public class Controllers {
                 valid = false;
             } else phoneErrLBL.setVisible(false);
 
-            if ( ! emailField.getText().matches(Constants.emailPattern)) {
+            if (!emailField.getText().matches(Constants.emailPattern)) {
                 emailErrLBL.setVisible(true);
                 valid = false;
             } else emailErrLBL.setVisible(false);
 
             if (imageField.getText().equals("")) {
-                if ( ! imageErrLBL.isVisible()) {
+                if (!imageErrLBL.isVisible()) {
                     imageErrLBL.setVisible(true);
                     valid = false;
                 }
@@ -3270,14 +3532,14 @@ public class Controllers {
 
             @Override
             public boolean equals(Object obj) {
-                return this.id.equals(((CustomerWrapper)obj).id);
+                return this.id.equals(((CustomerWrapper) obj).id);
             }
         }
 
         public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             String discountId = discount == null ? null : discount.getId();
             ((AdminDiscountManagingPopupController)
-                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount, editable);
+                    View.popupWindow((discountId == null) ? "Create Discount" : "Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount, editable);
         }
 
         private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
@@ -3316,21 +3578,21 @@ public class Controllers {
         private void initVisibility(String discountId, boolean editable) {
             boolean isDetail = discountId != null;
             saveDiscardHBox.setVisible(isDetail && editable);
-            addBTN.setVisible( ! isDetail && editable);
+            addBTN.setVisible(!isDetail && editable);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
 
             editBTN.opacityProperty().bind(
                     Bindings.createObjectBinding(() -> {
                         if (codeFieldChanged.get() || percentageFieldChanged.get() || maxFieldChanged.get()
-                        || endDateChanged.get() || startDateChanged.get()) return 1;
+                                || endDateChanged.get() || startDateChanged.get()) return 1;
                         else return 0.5;
                     }, codeFieldChanged, percentageFieldChanged, maxFieldChanged, endDateChanged, startDateChanged)
             );
 
             editBTN.disableProperty().bind(editBTN.opacityProperty().isNotEqualTo(1));
 
-            codeField.setEditable( ! isDetail);
+            codeField.setEditable(!isDetail);
 
             maxField.setEditable(editable);
             codeField.setEditable(editable);
@@ -3343,7 +3605,7 @@ public class Controllers {
                     try {
                         adminController.createDiscountCode(codeField.getText(), startDate.getValue().toString(), endDate.getValue().toString(),
                                 Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()),
-                                allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[] {c.id, String.valueOf(c.count)}).collect(Collectors.toCollection(ArrayList::new)));
+                                allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[]{c.id, String.valueOf(c.count)}).collect(Collectors.toCollection(ArrayList::new)));
                         AdminDiscountManagingMenuController.currentObject.addDiscount(adminController.viewDiscountCodeByCode(codeField.getText()));
                         customersTable.getScene().getWindow().hide();
                     } catch (Exceptions.InvalidAccountsForDiscount invalidAccountsForDiscount) {
@@ -3403,19 +3665,19 @@ public class Controllers {
         }
 
         private boolean fieldValidation() {
-            if ( ! codeField.getText().matches("^\\w+$")) {
+            if (!codeField.getText().matches("^\\w+$")) {
                 printError("Invalid discount code! use only characters, digits and _ .");
                 return false;
-            } else if ( ! percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) > 100) {
+            } else if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) > 100) {
                 printError("Invalid percentage! enter a floating between 0 and 100");
                 return false;
-            } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
+            } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! enter a floating point number (ex. 40.5)");
                 return false;
-            } else if ( startDate.getValue() == null) {
+            } else if (startDate.getValue() == null) {
                 printError("Please enter a valid starting date");
                 return false;
-            } else if ( endDate.getValue() == null || endDate.getValue().compareTo(startDate.getValue()) <= 0) {
+            } else if (endDate.getValue() == null || endDate.getValue().compareTo(startDate.getValue()) <= 0) {
                 printError("Please enter a valid ending date.");
                 return false;
             } else return true;
@@ -3451,7 +3713,7 @@ public class Controllers {
             for (String[] user : adminController.manageUsers()) {
                 if (user[6].equals(Constants.customerUserType)) {
                     CustomerWrapper cw = new CustomerWrapper(user[0], user[1], 0, false);
-                    if ( ! customersWithDiscount.contains(cw)) {
+                    if (!customersWithDiscount.contains(cw)) {
                         allCustomers.add(cw);
                     }
                 }
@@ -3680,7 +3942,7 @@ public class Controllers {
         public static void display(String saleId, boolean editable) {
             String title = saleId == null ? "Add Sale" : "Sale Details";
             ((SellerSaleManagingPopupController)
-            View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId, editable);
+                    View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId, editable);
         }
 
         private void printError(String err) {
@@ -3725,7 +3987,7 @@ public class Controllers {
 
                     for (String[] product : sellerController.manageProducts()) {
                         ProductInSaleWrapper p = new ProductInSaleWrapper(product[0], product[2], product[3], false);
-                        if ( ! inSales.contains(p)) allProducts.add(p);
+                        if (!inSales.contains(p)) allProducts.add(p);
                     }
                 } catch (Exceptions.InvalidSaleIdException e) {
                     e.printStackTrace();
@@ -3798,10 +4060,10 @@ public class Controllers {
         }
 
         private boolean validateFields() {
-            if( ! percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) > 100) {
+            if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) > 100) {
                 printError("Invalid percentage! enter a number between 0 and 100");
                 return false;
-            } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
+            } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! (ex. 25.75)");
                 return false;
             } else if (startDate.getValue() == null) {
@@ -3814,7 +4076,7 @@ public class Controllers {
         }
 
         private void initBindings(String saleId) {
-            if(saleId != null) {
+            if (saleId != null) {
                 percentageChanged.bind(
                         Bindings.when(percentageField.textProperty().isEqualTo(sale[2])).then(false).otherwise(true)
                 );
@@ -3833,7 +4095,7 @@ public class Controllers {
                             if (endDateChanged.get() || startDateChanged.get() || maxFieldChanged.get() || percentageChanged.get()) {
                                 return false;
                             } else return true;
-                        }, endDateChanged,  startDateChanged, maxFieldChanged, percentageChanged)
+                        }, endDateChanged, startDateChanged, maxFieldChanged, percentageChanged)
                 );
                 editBTN.opacityProperty().bind(
                         Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
@@ -3843,7 +4105,7 @@ public class Controllers {
 
         private void initVisibilities(String saleId, boolean editable) {
             editHB.setVisible((saleId != null) && editable);
-            addBTN.setVisible((! editHB.isVisible()) && editable);
+            addBTN.setVisible((!editHB.isVisible()) && editable);
             idKeyLBL.setVisible(saleId != null);
             idValueLBL.setVisible(saleId != null);
 
@@ -4203,7 +4465,7 @@ public class Controllers {
             shipStatusLBL.setText(sellLog.shippingStatus);
 
             StringBuilder address = new StringBuilder(sellLog.receiverAddress);
-            int offset = 0 , size = address.length();
+            int offset = 0, size = address.length();
             while (offset + 19 < size) {
                 offset += 19;
                 address.insert(offset, "\n");
@@ -4332,7 +4594,7 @@ public class Controllers {
             if (input != null) {
                 ArrayList<String[]> products = getCurrentProducts();
                 if (products != null) {
-                        ProductsMenuController.display("SuperCategory", false);
+                    ProductsMenuController.display("SuperCategory", false);
                 }
             }
         }
@@ -4340,7 +4602,7 @@ public class Controllers {
         //search utils.
         private ArrayList<String[]> getCurrentProducts() {
             try {
-                return new ArrayList<>( mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME));
+                return new ArrayList<>(mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME));
 
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
