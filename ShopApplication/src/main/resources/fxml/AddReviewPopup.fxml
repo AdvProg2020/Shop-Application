@@ -6,21 +6,15 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1">
-    <children>
-        <HBox>
-            <children>
-                <VBox>
-                    <children>
-                        <TextField promptText="title..."/>
-                    </children>
-                </VBox>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button mnemonicParsing="false" text="Send Review"/>
-            </children>
-        </HBox>
-        <TextArea fx:id="text" prefHeight="77.0" prefWidth="478.0" promptText="review text..."/>
-    </children>
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
     </padding>
+    <HBox>
+        <VBox>
+            <TextField promptText="title..."/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button mnemonicParsing="false" text="Send Review"/>
+    </HBox>
+    <TextArea fx:id="text" prefHeight="77.0" prefWidth="478.0" promptText="review text..."/>
 </VBox>

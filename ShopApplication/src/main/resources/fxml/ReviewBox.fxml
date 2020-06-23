@@ -5,20 +5,18 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1">
-   <children>
-      <Label fx:id="username" text="Username:">
-         <VBox.margin>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <Label fx:id="username" text="Username:">
+        <VBox.margin>
             <Insets bottom="10.0"/>
-         </VBox.margin>
-      </Label>
-      <Label fx:id="title" layoutX="10.0" layoutY="10.0" text="Title">
-         <VBox.margin>
+        </VBox.margin>
+    </Label>
+    <Label fx:id="title" layoutX="10.0" layoutY="10.0" text="Title">
+        <VBox.margin>
             <Insets top="5.0"/>
-         </VBox.margin>
-      </Label>
-      <TextArea fx:id="text" prefHeight="77.0" prefWidth="478.0"/>
-   </children>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-   </padding>
+        </VBox.margin>
+    </Label>
+    <TextArea fx:id="text" prefHeight="77.0" prefWidth="478.0"/>
 </VBox>
