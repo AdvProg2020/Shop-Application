@@ -344,7 +344,19 @@ public class Controllers {
             sellers.add(null);
             HashSet<String> s = new HashSet<>(sellers);
             filterSeller.setItems(FXCollections.observableArrayList(s));
-        }
+
+            ArrayList<String> sorts = new ArrayList<>();
+            sorts.add(null);
+            sorts.add("view count");
+            sorts.add("price");
+            sorts.add("name");
+            sorts.add("rating score");
+            sorts.add("category name");
+            sorts.add("remaining count");
+            HashSet<String> availableSorts = new HashSet<>(sorts);
+            sortByChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
+
+;        }
 
         //TODO: set max price for sliders
         private void initFilterBar(){
