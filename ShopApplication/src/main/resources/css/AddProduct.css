@@ -1,0 +1,59 @@
+.bg-pane {
+    -fx-background-color: #81c9e1;
+}
+
+#login-image {
+    -fx-background-image: url("../img/login-page.png");
+    -fx-background-size: 300;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-font-style: italic;
+    -fx-background-radius: 0 40 40 0;
+}
+
+.field-box {
+    -fx-font-size: 14;
+    -fx-background-radius: 40;
+    -fx-background-color: whitesmoke;
+}
+
+.label {
+    -fx-font-size: 12;
+}
+
+.hyperlink {
+    -fx-text-fill: green;
+}
+
+#header-label {
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+}
+
+#message-label {
+    -fx-text-fill: red;
+    -fx-font-size: 14;
+}
+
+#new-product-button {
+    -fx-background-color: green;
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 10 33 10 33;
+    -fx-background-radius: 40;
+}
+
+#existing-product-button {
+    -fx-background-color: green;
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 10 55 10 55;
+    -fx-background-radius: 40;
+}

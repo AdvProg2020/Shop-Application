@@ -3,72 +3,61 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$SellerAddProductPopupController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="view.Controllers$AdminRegistrationPopupController">
     <center>
-        <HBox>
-            <children>
-                <VBox alignment="CENTER" prefHeight="400.0" prefWidth="377.0" BorderPane.alignment="CENTER"
-                      HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label text="Add Product Menu"/>
-                        <GridPane prefHeight="576.0" prefWidth="576.0" vgap="20.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0"
-                                                   prefWidth="116.0"/>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.0" minWidth="10.0"
-                                                   prefWidth="284.0"/>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="321.0" minWidth="10.0"
-                                                   prefWidth="154.0"/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            </rowConstraints>
-                            <children>
-                                <TextField fx:id="name" GridPane.columnIndex="1"/>
-                                <TextField fx:id="brand" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                                <TextField fx:id="price" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                                <Label text="Brand:" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-                                <Label text="Picture URL:" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-                                <Label text="Price:" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
-                                <Label text="Count:" GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
-                                <Label text="Info Text:" GridPane.halignment="CENTER" GridPane.rowIndex="5"/>
-                                <Label text="Name:" GridPane.halignment="CENTER"/>
-                        <TextField fx:id="pictureURL" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="count" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <TextArea fx:id="infoText" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label fx:id="pictureURLError" text="Picture URL error" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <Label fx:id="countError" text="Count:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                        <Label fx:id="priceError" text="Price:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </VBox.margin>
-                  </GridPane>
-               </children>
+        <GridPane hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
+            <VBox>
+                <Label text="Name:"/>
+                <TextField fx:id="nameField" disable="true" text="kvvz"/>
+                <Label fx:id="usernameErrLBL" textFill="RED"/>
             </VBox>
-            <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="377.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Region VBox.vgrow="ALWAYS" />
-                  <HBox alignment="CENTER_LEFT" spacing="10.0">
-                     <children>
-                        <Label text="Categoy:" />
-                        <ChoiceBox fx:id="categories" prefWidth="150.0" />
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </HBox>
-                  <VBox fx:id="categoryPropertyFields" />
-                  <Region VBox.vgrow="ALWAYS" />
-               </children>
+            <VBox GridPane.columnIndex="1">
+                <Label text="Brand:"/>
+                <TextField fx:id="brandField" disable="true" text="vdmz;lvlmslz;dv"/>
+                <Label fx:id="passwordErrLBL" textFill="RED"/>
             </VBox>
-         </children>
-      </HBox>
-   </center>
+            <VBox spacing="5.0" GridPane.rowIndex="1">
+                <Label text="Category:"/>
+                <ChoiceBox fx:id="category" prefWidth="220.0"/>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="Profile Picture:"/>
+                <HBox spacing="10.0">
+                    <TextField fx:id="imageField" editable="false" promptText="upload image..."/>
+                    <Button fx:id="browseBTN" mnemonicParsing="false" text="Browse"/>
+                </HBox>
+                <Label fx:id="imageErrLBL" textFill="RED"/>
+            </VBox>
+            <VBox GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
+                <Label text="Product Info:"/>
+                <TextArea fx:id="infoArea"/>
+                <Label fx:id="emailErrLBL" textFill="RED"/>
+            </VBox>
+            <columnConstraints>
+                <ColumnConstraints maxWidth="220.0" minWidth="200.0" prefWidth="220.0"/>
+                <ColumnConstraints maxWidth="220.0" minWidth="220.0" prefWidth="220.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="99.19999389648437" minHeight="1.59998970031738"
+                                prefHeight="55.19999389648437"/>
+                <RowConstraints maxHeight="121.60001029968261" minHeight="24.000006103515616"
+                                prefHeight="68.00000610351562"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="31.999981689453108"
+                                prefHeight="31.999981689453108"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998"
+                                prefHeight="60.79999999999998"/>
+            </rowConstraints>
+        </GridPane>
+    </center>
+    <padding>
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+    </padding>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+            <Label fx:id="errorLBL" text="Possible error"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="nextBTN" mnemonicParsing="false" text="next"/>
+        </HBox>
+    </bottom>
 </BorderPane>
