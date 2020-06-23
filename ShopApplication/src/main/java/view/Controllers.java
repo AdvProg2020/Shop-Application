@@ -3111,8 +3111,8 @@ public class Controllers {
             if ( ! codeField.getText().matches("^\\w+$")) {
                 printError("Invalid discount code! use only characters, digits and _ .");
                 return false;
-            } else if ( ! percentageField.getText().matches(Constants.doublePattern)) {
-                printError("Invalid percentage! enter a floating point number (ex. 50.5)");
+            } else if ( ! percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) > 100) {
+                printError("Invalid percentage! enter a floating between 0 and 100");
                 return false;
             } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! enter a floating point number (ex. 40.5)");
@@ -3503,8 +3503,8 @@ public class Controllers {
         }
 
         private boolean validateFields() {
-            if( ! percentageField.getText().matches(Constants.doublePattern)) {
-                printError("Invalid percentage! (ex. 33.33)");
+            if( ! percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) > 100) {
+                printError("Invalid percentage! enter a number between 0 and 100");
                 return false;
             } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! (ex. 25.75)");
