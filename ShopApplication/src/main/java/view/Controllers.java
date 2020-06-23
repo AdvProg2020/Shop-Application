@@ -60,6 +60,12 @@ public class Controllers {
         private PasswordField passwordField;
 
         @FXML
+        private TextField showPasswordFIeld;
+
+        @FXML
+        private ToggleButton showPasswordBTN;
+
+        @FXML
         private Label passwordError;
 
         @FXML
@@ -141,6 +147,7 @@ public class Controllers {
             initValues();
             initBindings();
             initListeners();
+            initPasswordStuff();
         }
 
         private void initVisibility() {
@@ -321,6 +328,12 @@ public class Controllers {
             }));
         }
 
+        private void initPasswordStuff() {
+            showPasswordFIeld.textProperty().bind(passwordField.textProperty());
+            showPasswordFIeld.setEditable(false);
+            showPasswordFIeld.visibleProperty().bind(passwordField.visibleProperty().not());
+            passwordField.visibleProperty().bind(showPasswordBTN.selectedProperty().not());
+        }
     }
 
     public static class PersonalInfoMenuController {
@@ -1125,6 +1138,12 @@ public class Controllers {
         private PasswordField passwordField;
 
         @FXML
+        private TextField showPasswordField;
+
+        @FXML
+        private ToggleButton showPasswordBTN;
+
+        @FXML
         private Label errorLBL;
 
         @FXML
@@ -1156,6 +1175,7 @@ public class Controllers {
             errorLBL.setText("");
             initListeners();
             initActions();
+            initPasswordStuff();
         }
 
         private void initListeners() {
@@ -1191,46 +1211,17 @@ public class Controllers {
             });
             registerLink.setOnAction(e -> RegisterPopupController.display(PopupStage));
         }
+
+        private void initPasswordStuff() {
+            showPasswordField.textProperty().bind(passwordField.textProperty());
+            showPasswordField.setEditable(false);
+            showPasswordField.visibleProperty().bind(passwordField.visibleProperty().not());
+            passwordField.visibleProperty().bind(showPasswordBTN.selectedProperty().not());
+        }
     }
 
     public static class RegisterPopupController implements Initializable {
         private static Stage PopupStage;
-
-        @FXML
-        private Hyperlink customerLoginHL;
-
-        @FXML
-        private Hyperlink sellerLoginHL;
-
-        @FXML
-        private TextField customerFirstName;
-
-        @FXML
-        private Label customerFirstNameError;
-
-        @FXML
-        private TextField customerPhoneNumber;
-
-        @FXML
-        private Label customerPhoneNumberError;
-
-        @FXML
-        private TextField customerBalance;
-
-        @FXML
-        private Label customerBalanceError;
-
-        @FXML
-        private TextField customerLastName;
-
-        @FXML
-        private Label customerLastNameError;
-
-        @FXML
-        private TextField customerEmail;
-
-        @FXML
-        private Label customerEmailError;
 
         @FXML
         private TextField customerUsername;
@@ -1242,61 +1233,49 @@ public class Controllers {
         private PasswordField customerPassword;
 
         @FXML
+        private TextField customerShowPasswordField;
+
+        @FXML
+        private ToggleButton customerShowPasswordBTN;
+
+        @FXML
         private Label customerPasswordError;
 
         @FXML
-        private Button customerRegister;
+        private TextField customerFirstName;
 
         @FXML
-        private TextField sellerFirstName;
+        private Label customerFirstNameError;
 
         @FXML
-        private Label sellerFirstNameError;
+        private TextField customerLastName;
 
         @FXML
-        private TextField sellerPhoneNumber;
+        private Label customerLastNameError;
 
         @FXML
-        private Label sellerPhoneNumberError;
+        private TextField customerPhoneNumber;
 
         @FXML
-        private TextField sellerBalance;
+        private Label customerPhoneNumberError;
 
         @FXML
-        private Label sellerBalanceError;
+        private TextField customerEmail;
 
         @FXML
-        private TextField sellerLastName;
+        private Label customerEmailError;
 
         @FXML
-        private Label sellerLastNameError;
+        private TextField customerBalance;
 
         @FXML
-        private TextField sellerEmail;
+        private Label customerBalanceError;
 
         @FXML
-        private Label sellerEmailError;
+        private TextField customerStoreName;
 
         @FXML
-        private TextField sellerStoreName;
-
-        @FXML
-        private Label sellerStoreNameError;
-
-        @FXML
-        private TextField sellerUsername;
-
-        @FXML
-        private Label sellerUsernameError;
-
-        @FXML
-        private PasswordField sellerPassword;
-
-        @FXML
-        private Label sellerPasswordError;
-
-        @FXML
-        private Button sellerRegister;
+        private Label customerStoreNameError;
 
         @FXML
         private TextField customerImageField;
@@ -1308,6 +1287,66 @@ public class Controllers {
         private Label customerImageError;
 
         @FXML
+        private Button customerRegister;
+
+        @FXML
+        private Hyperlink customerLoginHL;
+
+        @FXML
+        private TextField sellerUsername;
+
+        @FXML
+        private Label sellerUsernameError;
+
+        @FXML
+        private PasswordField sellerPassword;
+
+        @FXML
+        private TextField sellerShowPasswordFIeld;
+
+        @FXML
+        private ToggleButton sellerShowPasswordBTN;
+
+        @FXML
+        private Label sellerPasswordError;
+
+        @FXML
+        private TextField sellerFirstName;
+
+        @FXML
+        private Label sellerFirstNameError;
+
+        @FXML
+        private TextField sellerLastName;
+
+        @FXML
+        private Label sellerLastNameError;
+
+        @FXML
+        private TextField sellerPhoneNumber;
+
+        @FXML
+        private Label sellerPhoneNumberError;
+
+        @FXML
+        private TextField sellerEmail;
+
+        @FXML
+        private Label sellerEmailError;
+
+        @FXML
+        private TextField sellerBalance;
+
+        @FXML
+        private Label sellerBalanceError;
+
+        @FXML
+        private TextField sellerStoreName;
+
+        @FXML
+        private Label sellerStoreNameError;
+
+        @FXML
         private TextField sellerImageField;
 
         @FXML
@@ -1315,6 +1354,12 @@ public class Controllers {
 
         @FXML
         private Label sellerImageError;
+
+        @FXML
+        private Button sellerRegister;
+
+        @FXML
+        private Hyperlink sellerLoginHL;
 
         public static void display(Stage stage) {
             PopupStage = stage;
@@ -1334,6 +1379,7 @@ public class Controllers {
             initVisibilities();
             initListeners();
             initActions();
+            initPasswordStuff();
         }
 
         private void initTexts() {
@@ -1503,6 +1549,18 @@ public class Controllers {
                 areAvailable = false;
             } else sellerBalanceError.setVisible(false);
             return areAvailable;
+        }
+
+        private void initPasswordStuff() {
+            customerShowPasswordField.textProperty().bind(customerPassword.textProperty());
+            customerShowPasswordField.setEditable(false);
+            customerShowPasswordField.visibleProperty().bind(customerPassword.visibleProperty().not());
+            customerPassword.visibleProperty().bind(customerShowPasswordBTN.selectedProperty().not());
+
+            sellerShowPasswordFIeld.textProperty().bind(sellerPassword.textProperty());
+            sellerShowPasswordFIeld.setEditable(false);
+            sellerShowPasswordFIeld.visibleProperty().bind(sellerPassword.visibleProperty().not());
+            sellerPassword.visibleProperty().bind(sellerShowPasswordBTN.selectedProperty().not());
         }
     }
 
@@ -3242,52 +3300,70 @@ public class Controllers {
 
     public static class AdminRegistrationPopupController implements Initializable {
         @FXML
-        private TextField usernameField;
+        private TextField adminUsername;
 
         @FXML
-        private Label usernameErrLBL;
+        private Label adminUsernameError;
 
         @FXML
-        private PasswordField passwordField;
+        private PasswordField adminPassword;
 
         @FXML
-        private Label passwordErrLBL;
+        private TextField showPasswordFIeld;
 
         @FXML
-        private TextField firstNameField;
+        private ToggleButton showPasswordBTN;
 
         @FXML
-        private Label firstNameErrLBL;
+        private Label adminPasswordError;
 
         @FXML
-        private TextField lastNameField;
+        private TextField adminFirstName;
 
         @FXML
-        private Label lastNameErrLBL;
+        private Label adminFirstNameError;
 
         @FXML
-        private TextField phoneField;
+        private TextField adminLastName;
 
         @FXML
-        private Label phoneErrLBL;
+        private Label adminLastNameError;
 
         @FXML
-        private TextField emailField;
+        private TextField adminPhoneNumber;
 
         @FXML
-        private Label emailErrLBL;
+        private Label adminPhoneNumberError;
 
         @FXML
-        private TextField imageField;
+        private TextField adminEmail;
 
         @FXML
-        private Button browseBTN;
+        private Label adminEmailError;
 
         @FXML
-        private Label imageErrLBL;
+        private TextField adminBalance;
 
         @FXML
-        private Button registerBTN;
+        private Label adminBalanceError;
+
+        @FXML
+        private TextField adminStoreName;
+
+        @FXML
+        private Label adminStoreNameError;
+
+        @FXML
+        private TextField adminImageField;
+
+        @FXML
+        private Button adminBrowseBTN;
+
+        @FXML
+        private Label adminImageError;
+
+        @FXML
+        private Button adminRegister;
 
 
         public static void display() {
@@ -3297,7 +3373,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            imageField.setEditable(false);
+            adminImageField.setEditable(false);
             initActions();
             initLBLs();
             initVisibilities();
@@ -3305,26 +3381,26 @@ public class Controllers {
         }
 
         private void initActions() {
-            browseBTN.setOnAction(e -> {
+            adminBrowseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
                 File chosenFile = fileChooser.showOpenDialog(new Stage());
                 if (chosenFile != null) {
-                    imageField.setText(chosenFile.getPath());
+                    adminImageField.setText(chosenFile.getPath());
                 }
             });
 
-            registerBTN.setOnAction(e -> {
+            adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        adminController.creatAdminProfile(usernameField.getText(), passwordField.getText(), firstNameField.getText(),
-                                lastNameField.getText(), emailField.getText(), phoneField.getText(), imageField.getText());
-                        AdminAccountManagingMenuController.current.addAdmin(usernameField.getText());
-                        usernameField.getScene().getWindow().hide();
+                        adminController.creatAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
+                                adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
+                        AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
+                        adminUsername.getScene().getWindow().hide();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
-                        usernameErrLBL.setText("Sorry! this username is already taken.");
-                        usernameErrLBL.setVisible(true);
+                        adminUsernameError.setText("Sorry! this username is already taken.");
+                        adminUsernameError.setVisible(true);
                         ex.printStackTrace();
                     }
                 }
@@ -3333,71 +3409,62 @@ public class Controllers {
 
         private boolean validateFields() {
             boolean valid = true;
-            if (usernameField.getText().equals("")) {
-                usernameErrLBL.setText("You can only use alphabet, digits and \"_\"");
-                usernameErrLBL.setVisible(true);
+            if (adminUsername.getText().equals("")) {
+                adminUsernameError.setText("You can only use alphabet, digits and \"_\"");
+                adminUsernameError.setVisible(true);
                 valid = false;
-            } else usernameErrLBL.setVisible(false);
+            } else adminUsernameError.setVisible(false);
 
-            if (passwordField.getText().equals("")) {
-                passwordErrLBL.setVisible(true);
+            if (adminPassword.getText().equals("")) {
+                adminPasswordError.setVisible(true);
                 valid = false;
-            } else passwordErrLBL.setVisible(false);
+            } else adminPasswordError.setVisible(false);
 
-            if (!firstNameField.getText().matches(Constants.IRLNamePattern)) {
-                firstNameErrLBL.setVisible(true);
+            if (!adminFirstName.getText().matches(Constants.IRLNamePattern)) {
+                adminFirstNameError.setVisible(true);
                 valid = false;
-            } else firstNameErrLBL.setVisible(false);
+            } else adminFirstNameError.setVisible(false);
 
-            if (!lastNameField.getText().matches(Constants.IRLNamePattern)) {
-                lastNameErrLBL.setVisible(true);
+            if (!adminLastName.getText().matches(Constants.IRLNamePattern)) {
+                adminLastNameError.setVisible(true);
                 valid = false;
-            } else lastNameErrLBL.setVisible(false);
+            } else adminLastNameError.setVisible(false);
 
-            if (phoneField.getText().equals("")) {
-                phoneErrLBL.setVisible(true);
+            if (adminPhoneNumber.getText().equals("")) {
+                adminPhoneNumberError.setVisible(true);
                 valid = false;
-            } else phoneErrLBL.setVisible(false);
+            } else adminPhoneNumberError.setVisible(false);
 
-            if (!emailField.getText().matches(Constants.emailPattern)) {
-                emailErrLBL.setVisible(true);
+            if (!adminEmail.getText().matches(Constants.emailPattern)) {
+                adminEmailError.setVisible(true);
                 valid = false;
-            } else emailErrLBL.setVisible(false);
-
-            if (imageField.getText().equals("")) {
-                if (!imageErrLBL.isVisible()) {
-                    imageErrLBL.setVisible(true);
-                    valid = false;
-                }
-            } else imageErrLBL.setVisible(false);
+            } else adminEmailError.setVisible(false);
 
             return valid;
         }
 
         private void initLBLs() {
-            passwordErrLBL.setText("You can only use alphabet, digits and \"_\"");
-            firstNameErrLBL.setText("Invalid first name!");
-            lastNameErrLBL.setText("Invalid last name");
-            phoneErrLBL.setText("Enter a phone number!");
-            emailErrLBL.setText("Invalid email address!");
-            imageErrLBL.setTextFill(Color.YELLOW);
-            imageErrLBL.setText("warning: image is not chosen! click register again to continue.");
+            adminPasswordError.setText("You can only use alphabet, digits and \"_\"");
+            adminFirstNameError.setText("Invalid first name!");
+            adminLastNameError.setText("Invalid last name");
+            adminPhoneNumberError.setText("Enter a phone number!");
+            adminEmailError.setText("Invalid email address!");
         }
 
         private void initVisibilities() {
-            usernameErrLBL.setVisible(false);
-            passwordErrLBL.setVisible(false);
-            firstNameErrLBL.setVisible(false);
-            lastNameErrLBL.setVisible(false);
-            phoneErrLBL.setVisible(false);
-            emailErrLBL.setVisible(false);
-            imageErrLBL.setVisible(false);
+            adminUsernameError.setVisible(false);
+            adminPasswordError.setVisible(false);
+            adminFirstNameError.setVisible(false);
+            adminLastNameError.setVisible(false);
+            adminPhoneNumberError.setVisible(false);
+            adminEmailError.setVisible(false);
+            adminImageError.setVisible(false);
         }
 
         private void initListeners() {
-            addListener(usernameField, "\\w");
-            addListener(passwordField, "\\w");
-            addListener(phoneField, "[0-9]");
+            addListener(adminUsername, "\\w");
+            addListener(adminPassword, "\\w");
+            addListener(adminPhoneNumber, "[0-9]");
         }
 
         private void addListener(TextField textField, String regex) {

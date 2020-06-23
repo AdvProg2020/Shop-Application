@@ -1,58 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
 <BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AdminRegistrationPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
             <VBox>
-                <Label text="Username:"/>
-                <TextField fx:id="adminUsername"/>
-                <Label id="error-label" fx:id="adminUsernameError"/>
+                <Label text="Username:" />
+                <TextField fx:id="adminUsername" />
+                <Label id="error-label" fx:id="adminUsernameError" />
             </VBox>
             <VBox GridPane.columnIndex="1">
-                <Label text="Password:"/>
-                <PasswordField fx:id="adminPassword"/>
-                <Label id="error-label" fx:id="adminPasswordError"/>
+                <Label text="Password:" />
+            <HBox>
+               <children>
+                  <StackPane>
+                     <children>
+                            <PasswordField fx:id="adminPassword" />
+                        <TextField fx:id="showPasswordFIeld" />
+                     </children>
+                  </StackPane>
+                  <ToggleButton fx:id="showPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" text="ToggleButton" />
+               </children>
+            </HBox>
+                <Label id="error-label" fx:id="adminPasswordError" />
             </VBox>
             <VBox GridPane.rowIndex="2">
-                <Label text="First name:"/>
-                <TextField fx:id="adminFirstName"/>
-                <Label id="error-label" fx:id="adminFirstNameError"/>
+                <Label text="First name:" />
+                <TextField fx:id="adminFirstName" />
+                <Label id="error-label" fx:id="adminFirstNameError" />
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <Label text="Last name:"/>
-                <TextField fx:id="adminLastName"/>
-                <Label id="error-label" fx:id="adminLastNameError"/>
+                <Label text="Last name:" />
+                <TextField fx:id="adminLastName" />
+                <Label id="error-label" fx:id="adminLastNameError" />
             </VBox>
             <VBox GridPane.rowIndex="3">
-                <Label text="Phone number:"/>
-                <TextField fx:id="adminPhoneNumber" promptText="09123456789"/>
-                <Label id="error-label" fx:id="adminPhoneNumberError"/>
+                <Label text="Phone number:" />
+                <TextField fx:id="adminPhoneNumber" promptText="09123456789" />
+                <Label id="error-label" fx:id="adminPhoneNumberError" />
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <Label text="Email:"/>
-                <TextField fx:id="adminEmail" promptText="sample@atm.com"/>
-                <Label id="error-label" fx:id="adminEmailError"/>
+                <Label text="Email:" />
+                <TextField fx:id="adminEmail" promptText="sample@atm.com" />
+                <Label id="error-label" fx:id="adminEmailError" />
             </VBox>
             <VBox GridPane.rowIndex="4">
-                <Label text="Balance:"/>
-                <TextField fx:id="adminBalance"/>
-                <Label id="error-label" fx:id="adminBalanceError"/>
+                <Label text="Balance:" />
+                <TextField fx:id="adminBalance" />
+                <Label id="error-label" fx:id="adminBalanceError" />
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Label text="Store name:"/>
-                <TextField fx:id="adminStoreName"/>
-                <Label id="error-label" fx:id="adminStoreNameError"/>
+                <Label text="Store name:" />
+                <TextField fx:id="adminStoreName" />
+                <Label id="error-label" fx:id="adminStoreNameError" />
             </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
-                <Label text="Profile Picture:"/>
+                <Label text="Profile Picture:" />
                 <HBox spacing="10.0">
-                    <TextField fx:id="adminImageField" promptText="upload image..."/>
-                    <Button fx:id="adminBrowseBTN" mnemonicParsing="false" text="Browse"/>
+                    <TextField fx:id="adminImageField" promptText="upload image..." />
+                    <Button fx:id="adminBrowseBTN" mnemonicParsing="false" text="Browse" />
                 </HBox>
-                <Label id="error-label" fx:id="adminImageError"/>
+                <Label id="error-label" fx:id="adminImageError" />
             </VBox>
             <columnConstraints>
                 <ColumnConstraints />
@@ -63,7 +84,7 @@
                 <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
-                <RowConstraints/>
+                <RowConstraints />
             </rowConstraints>
         </GridPane>
     </center>
@@ -72,7 +93,7 @@
     </padding>
     <bottom>
         <HBox alignment="BOTTOM_CENTER" BorderPane.alignment="CENTER">
-            <Button fx:id="adminRegister" mnemonicParsing="false" text="Register"/>
+            <Button fx:id="adminRegister" mnemonicParsing="false" text="Register" />
         </HBox>
     </bottom>
 </BorderPane>

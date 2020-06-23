@@ -5,11 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$EditPersonalInfoPopupController">
@@ -22,7 +24,17 @@
             </VBox>
             <VBox GridPane.columnIndex="1">
                 <Label text="Password:" />
-                <PasswordField fx:id="passwordField" />
+            <HBox>
+               <children>
+                  <StackPane>
+                     <children>
+                            <PasswordField fx:id="passwordField" />
+                        <TextField fx:id="showPasswordFIeld" prefHeight="25.0" prefWidth="116.0" />
+                     </children>
+                  </StackPane>
+                  <ToggleButton fx:id="showPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="14.0" text="ToggleButton" />
+               </children>
+            </HBox>
                 <Label id="error-label" fx:id="passwordError" textFill="RED" />
             </VBox>
             <VBox GridPane.rowIndex="2">
