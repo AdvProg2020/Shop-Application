@@ -50,13 +50,15 @@ public class CustomerController {
         database().editAccount();
     }
 
-    public boolean isDiscountCodeValid(String code) {
+    private boolean isDiscountCodeValid(String code) {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount != null)
             return discount.hasCustomerWithId(currentAccount().getId());
         else
             return false;
     }
+
+    //public void shoppingCart
 
     //Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
