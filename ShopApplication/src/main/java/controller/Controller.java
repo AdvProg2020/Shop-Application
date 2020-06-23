@@ -641,7 +641,7 @@ public class Controller {
         return productsToShow;
     }
 
-    public ArrayList<String[]> getSubProductsForSale(int number){
+    public ArrayList<String[]> getSubProductsInSale(int number){
         HashSet<Product> candidateProducts = new HashSet<>();
         choosingProduct:
         for (Sale sale : Sale.getAllSales()) {

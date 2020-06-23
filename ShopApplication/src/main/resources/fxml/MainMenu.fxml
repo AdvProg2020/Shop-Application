@@ -13,7 +13,7 @@
             <Label text="Advertisments" />
             <ScrollPane hbarPolicy="ALWAYS" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <HBox spacing="20.0" />
+                  <HBox fx:id="advertisingProducts" spacing="20.0" />
                </content>
             </ScrollPane>
          </children>
@@ -24,7 +24,7 @@
             <Label text="Sales" />
             <ScrollPane hbarPolicy="ALWAYS" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <HBox spacing="20.0" />
+                  <HBox fx:id="productsInSale" spacing="20.0" />
                </content>
             </ScrollPane>
             <Button fx:id="allSales" mnemonicParsing="false" text="Sales Menu" />
