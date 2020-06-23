@@ -67,11 +67,10 @@
     </padding>
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="20.0" BorderPane.alignment="CENTER">
-            <Button id="back-button" fx:id="backBTN" layoutX="760.0" layoutY="30.0" mnemonicParsing="false"
-                    text="Back"/>
-            <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="errorLBL" text="Possible error"/>
-            <Button fx:id="addProductBTN" mnemonicParsing="false" text="Add Product"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="saveBTN" mnemonicParsing="false" text="Save Changes"/>
+            <Button fx:id="discardBTN" layoutX="716.0" layoutY="30.0" mnemonicParsing="false" text="Discard"/>
             <padding>
                 <Insets left="10.0" right="10.0" top="20.0"/>
             </padding>
