@@ -55,12 +55,21 @@ public class CustomerController {
         database().editAccount();
     }
 
-    public boolean isDiscountCodeValid(String code) {
+    private boolean isDiscountCodeValid(String code) {
         Discount discount = Discount.getDiscountByCode(code);
         if (discount != null)
             return discount.hasCustomerWithId(currentAccount().getId());
         else
             return false;
+    }
+
+    public double getTotalPriceOfCartWithDiscount(String discountCode) throws Exceptions.InvalidDiscountException {
+        Discount discount = Discount.getDiscountByCode(discountCode);
+        if (discount == null || discount.hasCustomerWithId(currentAccount().getId())) {
+            throw new Exceptions.InvalidDiscountException(discountCode);
+        } else {
+            return discount.calculateDiscountAmount(currentCart().getTotalPrice());
+        }
     }
 
     //Todo: check please

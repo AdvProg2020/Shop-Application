@@ -679,4 +679,21 @@ public class Controller {
 
         return subProductsToShow;
     }
+
+    public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            Category superCategory = Category.getSuperCategory();
+            Category category = product.getCategory();
+            ArrayList<String> categoryTree = new ArrayList<>();
+            while ( !category.equals( superCategory )){
+                categoryTree.add(0, category.getName());
+                category.getParent();
+            }
+            return categoryTree;
+        }
+    }
+
 }
