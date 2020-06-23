@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/11.0.1"
-      fx:controller="view.Controllers$MainMenuController">
+
+<VBox alignment="CENTER" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$MainMenuController">
     <children>
-        <AnchorPane VBox.vgrow="ALWAYS">
-            <children>
-                <Label prefHeight="206.0" prefWidth="413.0" text="tablighat"/>
-            </children>
-        </AnchorPane>
-        <AnchorPane VBox.vgrow="ALWAYS">
-            <children>
-                <Label prefHeight="206.0" prefWidth="413.0" text="tablighat"/>
-            </children>
-        </AnchorPane>
+      <Region layoutX="10.0" layoutY="127.0" VBox.vgrow="ALWAYS" />
+      <VBox alignment="CENTER">
+         <children>
+            <Label text="Advertisments" />
+            <ScrollPane hbarPolicy="ALWAYS" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <HBox fx:id="advertisingProducts" spacing="20.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+      <Region VBox.vgrow="ALWAYS" />
+      <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0">
+         <children>
+            <Label text="Sales" />
+            <ScrollPane hbarPolicy="ALWAYS" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <HBox fx:id="productsInSale" spacing="20.0" />
+               </content>
+            </ScrollPane>
+            <Button fx:id="allSales" mnemonicParsing="false" text="Sales Menu" />
+         </children>
+      </VBox>
+      <Region layoutX="10.0" layoutY="127.0" VBox.vgrow="ALWAYS" />
     </children>
 </VBox>

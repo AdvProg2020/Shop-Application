@@ -8,9 +8,7 @@ import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 //TODO: compare to products!
 public class Controller {
@@ -613,5 +611,68 @@ public class Controller {
             return values;
         }else
             throw new Exceptions.InvalidCategoryException(categoryName);
+    }
+
+    public ArrayList<String[]> getSubProductsForAdvertisements(int number){
+        ArrayList<Product> selectedProducts = new ArrayList<>(Product.getAllProducts());
+        int rangeSize = number*3;
+        int numberOfProducts = selectedProducts.size();
+        if( numberOfProducts > rangeSize){
+            ArrayList<Product> allProducts = selectedProducts;
+            selectedProducts = new ArrayList<>();
+            for(int i = 0; i < rangeSize; i++){
+                selectedProducts.add(allProducts.get(numberOfProducts - 1 - i));
+            }
+            numberOfProducts = rangeSize;
+        }
+        ArrayList<String[]> productsToShow = new ArrayList<>();
+        SubProduct chosenSubProduct;
+        Random r = new Random();
+        int randomNumber;
+        number = Math.min(number, numberOfProducts);
+        for( int i = 0; i < number; i++){
+            randomNumber = r.nextInt(numberOfProducts);
+            chosenSubProduct = selectedProducts.get(randomNumber).getDefaultSubProduct();
+            productsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
+            selectedProducts.remove(randomNumber);
+            numberOfProducts --;
+        }
+
+        return productsToShow;
+    }
+
+    public ArrayList<String[]> getSubProductsInSale(int number){
+        HashSet<Product> candidateProducts = new HashSet<>();
+        choosingProduct:
+        for (Sale sale : Sale.getAllSales()) {
+            for (SubProduct subProduct : sale.getSubProducts()) {
+                candidateProducts.add(subProduct.getProduct());
+                if(candidateProducts.size() > number * 3){
+                    break choosingProduct;
+                }
+            }
+        }
+
+        int numberOfProducts = candidateProducts.size();
+        number = Math.min(numberOfProducts, number);
+        ArrayList<Product> orderedProducts = new ArrayList<>(candidateProducts);
+        ArrayList<String[]> subProductsToShow = new ArrayList<>();
+        Random r = new Random();
+        int randomNumber;
+        Product chosenProduct;
+        SubProduct chosenSubProduct;
+        ArrayList<SubProduct> inSaleSubProducts;
+        for( int i = 0; i < number; i++){
+            randomNumber = r.nextInt(numberOfProducts);
+            chosenProduct = orderedProducts.get(randomNumber);
+            orderedProducts.remove(randomNumber);
+            numberOfProducts --;
+
+            inSaleSubProducts = new ArrayList<>(chosenProduct.getSubProductsInSale());
+            chosenSubProduct = inSaleSubProducts.get(r.nextInt(inSaleSubProducts.size()));
+            subProductsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
+        }
+
+        return subProductsToShow;
     }
 }
