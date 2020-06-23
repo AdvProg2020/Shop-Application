@@ -616,22 +616,23 @@ public class Controller {
             throw new Exceptions.InvalidCategoryException(categoryName);
     }
 
-    public ArrayList<String[]> getSubProductsForAdvertisements(){
+    public ArrayList<String[]> getSubProductsForAdvertisements(int number){
         ArrayList<Product> selectedProducts = new ArrayList<>(Product.getAllProducts());
+        int rangeSize = number*3;
         int numberOfProducts = selectedProducts.size();
-        if( numberOfProducts > 20){
+        if( numberOfProducts > rangeSize){
             ArrayList<Product> allProducts = selectedProducts;
             selectedProducts = new ArrayList<>();
-            for(int i = 0; i < 20; i++){
+            for(int i = 0; i < rangeSize; i++){
                 selectedProducts.add(allProducts.get(numberOfProducts - 1 - i));
             }
-            numberOfProducts = 20;
+            numberOfProducts = rangeSize;
         }
         ArrayList<String[]> productsToShow = new ArrayList<>();
         SubProduct chosenSubProduct;
         Random r = new Random();
         int randomNumber;
-        for( int i = 0; i < 6; i++){
+        for( int i = 0; i < number; i++){
             randomNumber = r.nextInt(numberOfProducts);
             chosenSubProduct = selectedProducts.get(randomNumber).getDefaultSubProduct();
             productsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
@@ -640,6 +641,10 @@ public class Controller {
         }
 
         return productsToShow;
+
+    }
+
+    public ArrayList<String[]> getSubProductsForSale(){
 
     }
 }
