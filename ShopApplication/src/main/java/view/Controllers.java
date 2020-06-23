@@ -209,15 +209,44 @@ public class Controllers {
         }
     }
 
-    public static class MainMenuController {
+    public static class MainMenuController implements Initializable{
+
+        @FXML
+        private Button allSales;
+
+        @FXML
+        private HBox productsInSale;
+
+        @FXML
+        private HBox advertisingProducts;
+
         private static void display() {
             View.getStackTrace().clear();
             View.stackSize.set(0);
             View.setMainPane(Constants.FXMLs.mainMenu);
         }
+
+
+        @Override
+        public void initialize(URL url, ResourceBundle resourceBundle) {
+
+            for (String[] subProductPack : mainController.getSubProductsForAdvertisements(6)) {
+                advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack));
+            }
+
+            for (String[] subProduct : mainController.getSubProductsInSale(10)) {
+                productsInSale.getChildren().add(ProductBoxController.createBox(subProduct));
+            }
+
+            allSales.setOnAction(e -> salesMenu());
+        }
+
+        private void salesMenu(){
+            ProductsMenuController.display("SuperCategory", true);
+        }
     }
 
-    public static class ProductsMenuController implements Initializable {
+    public static class ProductsMenuController {
 
         @FXML
         private Button update;
@@ -288,9 +317,6 @@ public class Controllers {
             }
         }
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) { }
-
         private void initPropertyFilters(){
             try {
                 ArrayList<String> propertyKeys = mainController.getPropertiesOfCategory(categoryName, false);
@@ -319,6 +345,7 @@ public class Controllers {
             filterSeller.setItems(FXCollections.observableArrayList(s));
         }
 
+        //TODO: set max price for sliders
         private void initFilterBar(){
             minPrice = new SimpleDoubleProperty();
             minPrice.bind(minPriceSlider.valueProperty());
@@ -474,7 +501,6 @@ public class Controllers {
         private void setAction(Parent p) {
             p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0]));
         }
-
 
     }
 
