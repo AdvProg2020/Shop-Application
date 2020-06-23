@@ -33,7 +33,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO: purchase menu
 
 public class Controllers {
     private static Controller mainController;
@@ -492,12 +491,19 @@ public class Controllers {
         }
 
         private void init(String productId, String type) {
+
         }
         @FXML
         private ImageView productIMG;
 
         @FXML
+        private Button compareBTN;
+
+        @FXML
         private Label nameLBL;
+
+        @FXML
+        private Label ratingCountLBL;
 
         @FXML
         private Label brandLBL;
@@ -506,19 +512,19 @@ public class Controllers {
         private Label categoryLBL;
 
         @FXML
-        private Label defSellerLBL;
+        private Text productInfoTXT;
 
         @FXML
-        private Label priceBeforeAndPercentageLBL;
+        private Label sellerLBL;
+
+        @FXML
+        private Label priceBeforeLBL;
 
         @FXML
         private Label priceAfterLBL;
 
         @FXML
         private Button addToCartBTN;
-
-        @FXML
-        private Button compareBTN;
 
         @FXML
         private TableView<?> sellersTBL;
@@ -534,9 +540,6 @@ public class Controllers {
 
         @FXML
         private TableColumn<?, ?> sellersTBLNumberAvailableCOL;
-
-        @FXML
-        private Text productInfoTXT;
 
         @FXML
         private TableView<?> PropertiesTBL;
@@ -1027,6 +1030,7 @@ public class Controllers {
 
     public static class AdminDiscountManagingMenuController implements Initializable {
 
+        public static AdminDiscountManagingMenuController currentObject;
         private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
 
         @FXML
@@ -1059,12 +1063,19 @@ public class Controllers {
         @FXML
         private Button addDiscountBTN;
 
+        public void addDiscount(String[] info) {
+            DiscountWrapper newItem = new DiscountWrapper(info);
+            allDiscountWrappers.add(newItem);
+            discounts.getItems().add(newItem);
+        }
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminDiscountManagingMenu);
         }
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            currentObject = this;
             initActions();
             initDiscounts();
             initTable();
@@ -2077,6 +2088,9 @@ public class Controllers {
         private TextField receiverName;
 
         @FXML
+        private Label nameError;
+
+        @FXML
         private TextField phoneNumber;
 
         @FXML
@@ -2089,10 +2103,16 @@ public class Controllers {
         private TextField discountCode;
 
         @FXML
+        private Button validateBTN;
+
+        @FXML
         private Label discountError;
 
         @FXML
-        private Button purchase;
+        private Label totalPrice;
+
+        @FXML
+        private Button purchaseBTN;
 
         public static void display() {
             View.setMainPane(Constants.FXMLs.purchaseMenu);
@@ -2106,7 +2126,7 @@ public class Controllers {
         }
 
         private void initButtons() {
-            purchase.setOnAction(e -> {
+            purchaseBTN.setOnAction(e -> {
                 try {
                     discountError.setText("");
                     customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText());
@@ -2133,10 +2153,10 @@ public class Controllers {
            );
            discountCode.opacityProperty().bind(Bindings.when(discountCode.disableProperty()).then(0.5).otherwise(1));
 
-           purchase.disableProperty().bind(
+           purchaseBTN.disableProperty().bind(
                    Bindings.when(discountCode.disableProperty().not().and(discountCode.textProperty().isNotNull())).then(false).otherwise(true)
            );
-           purchase.opacityProperty().bind(Bindings.when(purchase.disableProperty()).then(0.5).otherwise(1));
+           purchaseBTN.opacityProperty().bind(Bindings.when(purchaseBTN.disableProperty()).then(0.5).otherwise(1));
         }
 
         private void initListeners() {
@@ -3029,6 +3049,7 @@ public class Controllers {
                         adminController.createDiscountCode(codeField.getText(), startDate.getValue().toString(), endDate.getValue().toString(),
                                 Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()),
                                 allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[] {c.id, String.valueOf(c.count)}).collect(Collectors.toCollection(ArrayList::new)));
+                        AdminDiscountManagingMenuController.currentObject.addDiscount(adminController.viewDiscountCodeByCode(codeField.getText()));
                         customersTable.getScene().getWindow().hide();
                     } catch (Exceptions.InvalidAccountsForDiscount invalidAccountsForDiscount) {
                         invalidAccountsForDiscount.printStackTrace();
@@ -3038,6 +3059,8 @@ public class Controllers {
                     } catch (Exceptions.ExistingDiscountCodeException ex) {
                         ex.printStackTrace();
                         printError("This code already exists!");
+                    } catch (Exceptions.DiscountCodeException ex) {
+                        ex.printStackTrace();
                     }
                 }
             });
