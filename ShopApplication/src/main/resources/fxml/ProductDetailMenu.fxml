@@ -9,14 +9,12 @@
 <VBox xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/ProductDetails.css"
       xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$ProductDetailMenuController">
     <HBox spacing="10.0">
-        <children>
-            <Button mnemonicParsing="false" text="category1&gt;"/>
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="category2&gt;"/>
-            <Button layoutX="62.0" layoutY="10.0" mnemonicParsing="false" text="Product1"/>
-        </children>
         <padding>
             <Insets bottom="10.0" left="60.0" right="10.0" top="20.0"/>
         </padding>
+        <Button mnemonicParsing="false" text="category1&gt;"/>
+        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="category2&gt;"/>
+        <Button layoutX="62.0" layoutY="10.0" mnemonicParsing="false" text="Product1"/>
     </HBox>
     <HBox alignment="CENTER_LEFT" spacing="20.0">
         <VBox alignment="CENTER" spacing="20.0">
