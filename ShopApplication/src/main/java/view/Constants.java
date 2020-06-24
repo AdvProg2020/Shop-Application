@@ -59,5 +59,6 @@ public final class Constants {
         public static final String customerBuyLogMenu = "CustomerBuyLogMenu";
         public static final String customerBuyLogDetailsPopup = "CustomerBuyLogDetailsPopup";
         public static final String productDetailMenu = "ProductDetailMenu";
+        public static final String categoriesBox = "CategoriesBox";
     }
 }

@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
@@ -247,7 +248,6 @@ public class Controllers {
 
     public static class ProductsMenuController {
 
-
         @FXML
         private Button update;
 
@@ -287,6 +287,10 @@ public class Controllers {
         @FXML
         private GridPane productsPane;
 
+        @FXML
+        private HBox categoryTreeBox;
+
+
 
         private static final int numberOfColumns = 3;
         public ArrayList<String[]> products;
@@ -315,6 +319,7 @@ public class Controllers {
                 controller.initActions();
                 controller.initFilterBar();
                 controller.initPropertyFilters();
+                //controller.
             }
         }
 
@@ -481,6 +486,15 @@ public class Controllers {
         public boolean isInSale() {
             return inSale;
         }
+
+
+
+        private Button createCategoryButton(String category){
+            Button button = new Button();
+            button.setText(category + " >");
+            button.setOnAction(e -> ProductsMenuController.display(category, inSale));
+            return button;
+        }
     }
 
     public static class ProductBoxController {
@@ -539,16 +553,24 @@ public class Controllers {
 
     }
 
-    public static class CategoryBoxController{
+    public static class CategoryBoxController implements Initializable{
         @FXML
         private Button allProductsBTN;
 
         @FXML
         private VBox subCategoryBox;
 
-        public Parent display(String categoryName){
+        public static Parent createBox(String categoryName) {
+
+            return null;
+        }
+
+        @Override
+        public void initialize(URL url, ResourceBundle resourceBundle) {
 
         }
+
+        private
     }
 
     public static class ProductDetailMenuController {
