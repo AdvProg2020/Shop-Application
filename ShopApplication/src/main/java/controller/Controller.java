@@ -305,6 +305,7 @@ public class Controller {
         }
     }
 
+
     /**
      * @param productId
      * @return String[5]: ID, name, brand, infoText, averageRatingScore.

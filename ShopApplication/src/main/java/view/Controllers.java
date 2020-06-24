@@ -5043,10 +5043,11 @@ public class Controllers {
         private void initButtons() {
             newProductBTN.setOnAction(e -> {
                 if (validateFields()) {
-                    if (sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText())) {
+                    String productId = sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText());
+                    if (productId != null) {
                         printError("This product already exits!");
                     } else {
-                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), false);
+                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), productId);
                         ameField.getScene().getWindow().hide();
                     }
                 }
@@ -5054,10 +5055,11 @@ public class Controllers {
 
             existingProductBTN.setOnAction(e -> {
                 if (validateFields()) {
-                    if ( ! sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText())) {
+                    String productId = sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText());
+                    if (productId == null) {
                         printError("There is no such product!");
                     } else {
-                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), true);
+                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), productId);
                         ameField.getScene().getWindow().hide();
                     }
                 }
@@ -5152,6 +5154,7 @@ public class Controllers {
             public PropertyWrapper(String property) {
                 this.property = property;
                 value.setPromptText("Enter value...");
+                value.setEditable( ! exists);
             }
 
             public String getProperty() {
@@ -5166,36 +5169,65 @@ public class Controllers {
 
         private String name;
         private String brand;
+        private String productId;
+        private String[] info;
         private boolean exists;
-        public static void display(String name, String brand, boolean exists) {
-            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage1, 860, 505)).initialize(name, brand, exists);
+        public static void display(String name, String brand, String productId) {
+            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage1, 860, 505)).initialize(name, brand, productId);
         }
 
-        private void initialize(String name, String brand, boolean exists) {
+        private void initialize(String name, String brand, String productId) {
             this.name = name;
             this.brand = brand;
-            this.exists = exists;
+            this.productId = productId;
+            this.exists = productId != null;
 
+            if (exists) {
+                try {
+                    info = mainController.digest(productId);
+                } catch (Exceptions.InvalidProductIdException e) {
+                    e.printStackTrace();
+                    printError(e.getMessage());
+                }
+            }
+
+            initAccessControls();
+            initListeners();
             initChoiceBox();
             initValues();
-            initListeners();
             initActions();
         }
 
+        private void initAccessControls() {
+            if (exists) {
+                category.setDisable(true);
+                browseBTN.setDisable(true);
+                infoArea.setEditable(false);
+            }
+        }
+
         private void initChoiceBox() {
+            category.getItems().addAll(sellerController.getAllCategories());
+            if (exists) {
+                category.getSelectionModel().select(productId);
+            }
         }
 
         private void initValues() {
             nameField.setText(name);
             brandField.setText(brand);
+            if (exists) infoArea.setText(info[3]);
         }
 
         private void initListeners() {
             category.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> updateProperties(newValue)));
+
             View.addListener(countField, "[0-9]");
 
             infoArea.textProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue.length() == 70 && newValue.length() > oldValue.length())
+                if (newValue.lastIndexOf("\n") - newValue.length() == 70 && newValue.length() > oldValue.length()) {
+                    ((TextArea) observable).setText(newValue + "\n");
+                }
             }));
         }
 
@@ -5217,13 +5249,38 @@ public class Controllers {
 
             addProductBTN.setOnAction(e -> {
                 if (validateFields()) {
-                    sellerController.addNewProduct(nameField.getText(), brandField.getText());
+                    HashMap propertyMap = new HashMap();
+                    for (PropertyWrapper item : properties.getItems()) {
+                        propertyMap.put(item.property, item.value);
+                    }
+                    try {
+                        if ( ! exists)
+                            sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
+                                propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
+                        else
+                            sellerController.addNewSubProductToAnExistingProduct(productId, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
+                    } catch (Exception ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    }
                 }
             });
         }
 
         private boolean validateFields() {
-
+            if (category.getValue() == null) {
+                printError("Please choose a category");
+                return false;
+            }
+            if (countField.equals("")) {
+                printError("Please enter the number of available items");
+                return false;
+            }
+            if ( ! priceField.getText().matches(Constants.doublePattern)) {
+                printError("Invalid price! Please enter a double number");
+                return false;
+            }
+            return true;
         }
 
         private void updateProperties(String categoryName) {
@@ -5236,6 +5293,11 @@ public class Controllers {
                 e.printStackTrace();
                 errorLBL.setText("error in method updateProperties(): " + e.getMessage());
             }
+        }
+
+        private void printError(String err) {
+            errorLBL.setTextFill(Color.RED);
+            errorLBL.setText(err);
         }
     }
 }
