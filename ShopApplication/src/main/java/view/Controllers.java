@@ -293,6 +293,7 @@ public class Controllers {
         public ArrayList<String[]> products;
         private String categoryName;
         private boolean inSale;
+        private double maximumAvailablePrice;
         private DoubleProperty minPrice;
         private DoubleProperty maxPrice;
         private BooleanProperty available;
@@ -384,6 +385,9 @@ public class Controllers {
             seller = new SimpleStringProperty();
             seller.bind(filterSeller.valueProperty());
 
+            setMaxPrice();
+            maxPriceSlider.setMax(maximumAvailablePrice);
+            minPriceSlider.setMax(maximumAvailablePrice);
             //properties
         }
 
@@ -458,6 +462,22 @@ public class Controllers {
             valueProperty.bind(choiceBox.valueProperty());
             properties.put(property, valueProperty);
             return vBox;
+        }
+
+        private void setMaxPrice(){
+            ArrayList<Double> prices = new ArrayList<>();
+            for (String[] product : products) {
+                prices.add(Double.parseDouble(product[8]));
+            }
+            if(prices.size() == 0)
+                maximumAvailablePrice = 0;
+            else {
+                maximumAvailablePrice = prices.get(0);
+                for (Double price : prices) {
+                    if( price > maximumAvailablePrice)
+                        maximumAvailablePrice = price;
+                }
+            }
         }
     }
 
