@@ -60,5 +60,7 @@ public final class Constants {
         public static final String customerBuyLogDetailsPopup = "CustomerBuyLogDetailsPopup";
         public static final String productDetailMenu = "ProductDetailMenu";
         public static final String categoriesBox = "CategoriesBox";
+        public static final String editPersonalInfoPopup = "EditPersonalInfoPopup";
+        public static final String editProductPopup = "EditProductPopup";
     }
 }

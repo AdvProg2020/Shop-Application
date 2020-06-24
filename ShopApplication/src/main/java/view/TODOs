@@ -1,23 +1,18 @@
 A: afa T: talaee M: mohammadi
 
 T: salesMenu and productsMenu compare  product box (PRIORITY)
-M: AdminRegistrationPopup (PRIORITY)
 T (notice from afa): man yedone mainController.viewPersonalInfo(String username) baraye detail menu ezafe kardam.
 A & T: addRating to product detail menu addReview button (popUp)
 A & T: booting add admin.
 
-M: styling of manage button and login button in base
 T: update product pack (specially product box methods) send view what it needs to wrap.
     has: productId, subProductId, imagePath, name, brand, rating, price before/after, percentage.
 T: fxml product box add css id.
 T: getAll categories method for view
-M & T & A: image for users
-    M: model support: image path and getter and setter
+T & A: image for users
     T: connecting model and view with image path. adding and editing support for image view.
-    fxml: have to get the image in register.
     A: connect the thing.
 T & M: null catching for default subProduct
-M: tab adding for requests
 A: handle opacity of non existing products
 A & T & M: compare! new box fxml and pass it to productsMenu and create a compare.
 A & T & M: video
@@ -30,7 +25,7 @@ T: update product detail menu fxml so that it can be used both in managing pages
 A: isPopUp for digestMenus
 T: mainController.clearCart();
 T: remove column for shopping cart menu
-A & T & M : add tabs to discount, sale, account managing menu
+A & T: add tabs to discount, sale, account managing menu
 
 
 
@@ -49,8 +44,5 @@ T:  SellerAddProduct
     mainMenu
     check purchase procedure
 
-M:  SellerAddProduct css
-    purchase css
-    personal info css
-
-
+M:  CSSs
+    rating (product menu & buy log menu)

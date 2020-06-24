@@ -31,17 +31,17 @@
                             </VBox>
                             <VBox GridPane.columnIndex="1">
                                 <Label text="Password:" />
-                        <HBox>
-                           <children>
-                              <StackPane>
-                                 <children>
-                                            <PasswordField fx:id="customerPassword" />
-                                    <TextField fx:id="customerShowPasswordField" />
-                                 </children>
-                              </StackPane>
-                              <ToggleButton id="show-password-button" fx:id="customerShowPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="34.0" text="ToggleButton" />
-                           </children>
-                        </HBox>
+                                <HBox>
+                                    <children>
+                                        <StackPane>
+                                            <children>
+                                                <PasswordField fx:id="customerPassword" />
+                                                <TextField fx:id="customerShowPasswordField" />
+                                            </children>
+                                        </StackPane>
+                                        <ToggleButton id="show-password-button" fx:id="customerShowPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="34.0" text="ToggleButton" />
+                                    </children>
+                                </HBox>
                                 <Label id="error-label" fx:id="customerPasswordError" />
                             </VBox>
                             <VBox GridPane.rowIndex="2">
@@ -122,17 +122,17 @@
                             </VBox>
                             <VBox GridPane.columnIndex="1">
                                 <Label text="Password:" />
-                        <HBox>
-                           <children>
-                              <StackPane>
-                                 <children>
-                                            <PasswordField fx:id="sellerPassword" />
-                                    <TextField fx:id="sellerShowPasswordFIeld" />
-                                 </children>
-                              </StackPane>
-                              <ToggleButton fx:id="sellerShowPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="32.0" text="ToggleButton" />
-                           </children>
-                        </HBox>
+                                <HBox>
+                                    <children>
+                                        <StackPane>
+                                            <children>
+                                                <PasswordField fx:id="sellerPassword" />
+                                                <TextField fx:id="sellerShowPasswordFIeld" />
+                                            </children>
+                                        </StackPane>
+                                        <ToggleButton fx:id="sellerShowPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="32.0" text="ToggleButton" />
+                                    </children>
+                                </HBox>
                                 <Label id="error-label" fx:id="sellerPasswordError" />
                             </VBox>
                             <VBox GridPane.rowIndex="2">
