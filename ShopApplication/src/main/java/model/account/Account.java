@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Account implements ModelBasic {
-    private static String DEFAULT_IMAGE_PATH = "/img/default-account-pic.png"; //TODO: set value
+    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/img/default-account-pic.png";
     protected static Map<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
     protected boolean suspended;
@@ -65,7 +65,6 @@ public abstract class Account implements ModelBasic {
     @Override
     public void initialize() {
         allAccounts.put(accountId, this);
-        fixImagePath();
     }
 
     public void suspend() {
@@ -127,16 +126,10 @@ public abstract class Account implements ModelBasic {
     }
 
     public String getImagePath() {
-        fixImagePath();
-        return imagePath;
+        return ModelUtilities.fixedPath(imagePath, DEFAULT_IMAGE_PATH);
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
-        fixImagePath();
-    }
-
-    private void fixImagePath() {
-        //TODO: implement
     }
 }

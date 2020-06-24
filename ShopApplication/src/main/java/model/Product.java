@@ -6,7 +6,7 @@ import model.request.AddProductRequest;
 import java.util.*;
 
 public class Product implements ModelBasic {
-    private static String DEFAULT_IMAGE_PATH = "/img/default-product-pic.png"; //TODO: set value
+    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/img/default-product-pic.png";
     private static Map<String, Product> allProducts = new HashMap<>();
     private static int lastNum = 1;
     private String productId;
@@ -67,7 +67,6 @@ public class Product implements ModelBasic {
             productId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allProducts.put(productId, this);
         lastNum++;
-        fixImagePath();
 
         if (!suspended) {
             subProductIds = new HashSet<>();
@@ -129,17 +128,11 @@ public class Product implements ModelBasic {
     }
 
     public String getImagePath() {
-        fixImagePath();
-        return imagePath;
+        return ModelUtilities.fixedPath(imagePath, DEFAULT_IMAGE_PATH);
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
-        fixImagePath();
-    }
-
-    private void fixImagePath() {
-        //TODO: implement
     }
 
     public int getViewCount() {
@@ -235,10 +228,12 @@ public class Product implements ModelBasic {
         propertyValues.replace(property, value);
     }
 
+    @ModelOnly
     public void addProperty(String property) {
         propertyValues.put(property, "");
     }
 
+    @ModelOnly
     public void removeProperty(String property) {
         propertyValues.remove(property);
     }
