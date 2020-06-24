@@ -13,7 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
@@ -624,7 +623,9 @@ public class Controllers {
                 dateCOL.setCellValueFactory(new PropertyValueFactory<>("date"));
                 typeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
                 requestDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
-                sellerController.getPendingRequests()
+                for (String[] request : sellerController.getPendingRequests()) {
+
+                }
             }
         }
 
@@ -1359,20 +1360,60 @@ public class Controllers {
     }
 
     public static class ProductDetailMenuController {
-        public static void display(String productId) {
+        public static void display(String productId, String subProductId, boolean editable) {
             String type = View.type.get();
             if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
                 ((ProductDetailMenuController)
-                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600)).init(productId, type);
+                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600)).initialize(productId, type, editable);
             } else {
                 ((ProductDetailMenuController)
-                        View.setMainPane(Constants.FXMLs.productDetailMenu)).init(productId, Constants.customerUserType);
+                        View.setMainPane(Constants.FXMLs.productDetailMenu)).initialize(productId, Constants.customerUserType);
             }
         }
 
-        private void init(String productId, String type) {
+        public class SellerWrapper {
+            Label name = new Label();
+            Double price;
+            int available;
 
+            public SellerWrapper(String name, double price, int available) {
+                this.name.setText(name);
+                this.price = price;
+                this.available = available;
+
+                this.name.setOnMouseClicked(e -> {
+
+                });
+            }
+
+            public Label getName() {
+                return name;
+            }
+
+            public Double getPrice() {
+                return price;
+            }
+
+            public int getAvailable() {
+                return available;
+            }
         }
+
+        private void initialize(String productId, String type, boolean editable) {
+            initTable();
+        }
+
+        private void initTable() {
+            sellersTBLSellerCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
+            sellersTBLPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
+            sellersTBLNumberAvailableCOL.setCellValueFactory(new PropertyValueFactory<>("available"));
+
+            initItems();
+        }
+
+        private void initItems() {
+        }
+
 
         @FXML
         private ImageView productIMG;
@@ -1406,6 +1447,9 @@ public class Controllers {
 
         @FXML
         private Button addToCartBTN;
+
+        @FXML
+        private Button editBTN;
 
         @FXML
         private TableView<?> sellersTBL;
