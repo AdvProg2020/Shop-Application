@@ -408,4 +408,13 @@ public class SellerController {
         }
         return requestPacks;
     }
+
+    public ArrayList<String> getAllCategories(){
+        ArrayList<Category> categories = new ArrayList<>(Category.getAllCategories());
+        ArrayList<String> categoryNames = new ArrayList<>();
+        for (Category category : categories) {
+            categoryNames.add(category.getName());
+        }
+        return categoryNames;
+    }
 }
