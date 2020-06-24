@@ -86,11 +86,16 @@
                 <Label id="price-before-label" fx:id="priceBeforeLBL" text="\$99.99"/>
                 <Label id="price-after-label" fx:id="priceAfterLBL" text="\$79.99"/>
             </VBox>
-            <Button id="add-to-cart-button" fx:id="addToCartBTN" mnemonicParsing="false" text="+Add to cart">
+            <StackPane>
                 <VBox.margin>
                     <Insets/>
                 </VBox.margin>
-            </Button>
+                <children>
+                    <Button id="add-to-cart-button" fx:id="addToCartBTN" mnemonicParsing="false" text="+Add to cart"/>
+                    <Button id="add-to-cart-button" fx:id="editBTN" layoutX="10.0" layoutY="10.0"
+                            mnemonicParsing="false" text="Edit"/>
+                </children>
+            </StackPane>
             <padding>
                 <Insets top="30.0"/>
             </padding>
