@@ -199,6 +199,7 @@ public class Controllers {
                                 sellerController.editPersonalInfo("storeName", info[9] = storeName.getText());
                             }
                         }
+                        PersonalInfoMenuController.current.update();
                         discardBTN.fire();
                     } catch (Exceptions.SameAsPreviousValueException ex) {
                         ex.printStackTrace();
@@ -313,17 +314,11 @@ public class Controllers {
         }
 
         private void initListeners() {
-            addListener(passwordField, "\\w");
-            addListener(phoneNumber, "[0-9]");
+            View.addListener(passwordField, "\\w");
+            View.addListener(phoneNumber, "[0-9]");
         }
 
-        private void addListener(TextField textField, String regex) {
-            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue.length() == 0) return;
-                char lastInput = newValue.charAt(newValue.length() - 1);
-                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
-            }));
-        }
+
 
         private void initPasswordStuff() {
             showPasswordFIeld.textProperty().bind(passwordField.textProperty());
@@ -334,6 +329,8 @@ public class Controllers {
     }
 
     public static class PersonalInfoMenuController {
+
+        public static PersonalInfoMenuController current;
 
         @FXML
         private ImageView accountIMG;
@@ -524,14 +521,15 @@ public class Controllers {
 
         public static void display(String username) {
             if (username == null) {
-                ((PersonalInfoMenuController) View.setMainPane(Constants.FXMLs.personalInfoMenu)).init(null, false);
+                ((PersonalInfoMenuController) View.setMainPane(Constants.FXMLs.personalInfoMenu)).initialize(null, false);
             } else {
                 ((PersonalInfoMenuController)
-                        View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 632, 472)).init(username, true);
+                        View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 632, 472)).initialize(username, true);
             }
         }
 
-        private void init(String username, boolean isPopup) {
+        private void initialize(String username, boolean isPopup) {
+            this.current = current;
             this.isPopup = isPopup;
             this.username = username;
             try {
@@ -624,7 +622,7 @@ public class Controllers {
                 typeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
                 requestDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
                 for (String[] request : sellerController.getPendingRequests()) {
-
+                    sellerRequests.getItems().add(new RequestWrapper(request));
                 }
             }
         }
@@ -1250,15 +1248,7 @@ public class Controllers {
         }
 
         private void initListeners() {
-            addListener(countField, "[0-9]");
-        }
-
-        private void addListener(TextField textField, String regex) {
-            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue.length() == 0) return;
-                char lastInput = newValue.charAt(newValue.length() - 1);
-                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
-            }));
+            View.addListener(countField, "[0-9]");
         }
 
         private void initButtons() {
@@ -1772,22 +1762,14 @@ public class Controllers {
         }
 
         private void initListeners() {
-            addListener(customerUsername, "\\w");
-            addListener(sellerUsername, "\\w");
-            addListener(customerPassword, "\\w");
-            addListener(sellerPassword, "\\w");
-            addListener(customerPhoneNumber, "[0-9]");
-            addListener(sellerPhoneNumber, "[0-9]");
+            View.addListener(customerUsername, "\\w");
+            View.addListener(sellerUsername, "\\w");
+            View.addListener(customerPassword, "\\w");
+            View.addListener(sellerPassword, "\\w");
+            View.addListener(customerPhoneNumber, "[0-9]");
+            View.addListener(sellerPhoneNumber, "[0-9]");
             customerImageField.setEditable(false);
             sellerImageField.setEditable(false);
-        }
-
-        private void addListener(TextField textField, String regex) {
-            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue.length() == 0) return;
-                char lastInput = newValue.charAt(newValue.length() - 1);
-                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
-            }));
         }
 
         private void initActions() {
@@ -3818,17 +3800,9 @@ public class Controllers {
         }
 
         private void initListeners() {
-            addListener(adminUsername, "\\w");
-            addListener(adminPassword, "\\w");
-            addListener(adminPhoneNumber, "[0-9]");
-        }
-
-        private void addListener(TextField textField, String regex) {
-            textField.textProperty().addListener(((observable, oldValue, newValue) -> {
-                if (newValue.length() == 0) return;
-                char lastInput = newValue.charAt(newValue.length() - 1);
-                if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
-            }));
+            View.addListener(adminUsername, "\\w");
+            View.addListener(adminPassword, "\\w");
+            View.addListener(adminPhoneNumber, "[0-9]");
         }
     }
 
@@ -3919,9 +3893,7 @@ public class Controllers {
                 this.count.opacityProperty().bind(
                         Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
                 );
-                this.count.textProperty().addListener((observable, oldValue, newValue) -> {
-
-                });
+                View.addListener(this.count, Constants.unsignedIntPattern);
                 this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
                         removedCustomers.remove(this);
@@ -5039,6 +5011,231 @@ public class Controllers {
                 productIDS.add(product[0]);
             }
             return productIDS;
+        }
+    }
+
+    public static class AddProductPopupController_Page1 implements Initializable {
+
+        @FXML
+        private TextField ameField;
+
+        @FXML
+        private PasswordField brandField;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button newProductBTN;
+
+        @FXML
+        private Button existingProductBTN;
+
+        public static void display() {
+            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addProductPage1, 600, 400);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initButtons();
+        }
+
+        private void initButtons() {
+            newProductBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    if (sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText())) {
+                        printError("This product already exits!");
+                    } else {
+                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), false);
+                        ameField.getScene().getWindow().hide();
+                    }
+                }
+            });
+
+            existingProductBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    if ( ! sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText())) {
+                        printError("There is no such product!");
+                    } else {
+                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), true);
+                        ameField.getScene().getWindow().hide();
+                    }
+                }
+            });
+        }
+
+        private boolean validateFields() {
+            if (ameField.getText().equals("")) {
+                printError("Enter a name");
+                return false;
+            }
+            if (brandField.getText().equals("")) {
+                printError("Enter a brand");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void printError(String err) {
+            errorLBL.setTextFill(Color.RED);
+            errorLBL.setText(err);
+        }
+    }
+
+    public static class AddProductPopupController_Page2 {
+
+        @FXML
+        private TextField nameField;
+
+        @FXML
+        private Label usernameErrLBL;
+
+        @FXML
+        private TextField brandField;
+
+        @FXML
+        private Label passwordErrLBL;
+
+        @FXML
+        private ChoiceBox<String> category;
+
+        @FXML
+        private TextField imageField;
+
+        @FXML
+        private Button browseBTN;
+
+        @FXML
+        private Label imageErrLBL;
+
+        @FXML
+        private TextArea infoArea;
+
+        @FXML
+        private Label emailErrLBL;
+
+        @FXML
+        private TextField priceField;
+
+        @FXML
+        private Label priceError;
+
+        @FXML
+        private TextField countField;
+
+        @FXML
+        private Label countError;
+
+        @FXML
+        private Button backBTN;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button addProductBTN;
+
+        @FXML
+        private TableView<PropertyWrapper> properties;
+
+        @FXML
+        private TableColumn<PropertyWrapper, String> propertyCOL;
+
+        @FXML
+        private TableColumn<PropertyWrapper, TextField> valueCOL;
+
+        public class PropertyWrapper {
+            String property;
+            TextField value = new TextField();
+
+            public PropertyWrapper(String property) {
+                this.property = property;
+                value.setPromptText("Enter value...");
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public TextField getValue() {
+                return value;
+            }
+        }
+
+
+        private String name;
+        private String brand;
+        private boolean exists;
+        public static void display(String name, String brand, boolean exists) {
+            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage1, 860, 505)).initialize(name, brand, exists);
+        }
+
+        private void initialize(String name, String brand, boolean exists) {
+            this.name = name;
+            this.brand = brand;
+            this.exists = exists;
+
+            initChoiceBox();
+            initValues();
+            initListeners();
+            initActions();
+        }
+
+        private void initChoiceBox() {
+        }
+
+        private void initValues() {
+            nameField.setText(name);
+            brandField.setText(brand);
+        }
+
+        private void initListeners() {
+            category.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> updateProperties(newValue)));
+            View.addListener(countField, "[0-9]");
+
+            infoArea.textProperty().addListener(((observable, oldValue, newValue) -> {
+                if (newValue.length() == 70 && newValue.length() > oldValue.length())
+            }));
+        }
+
+        private void initActions() {
+            browseBTN.setOnAction(e -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image File", "*.png"),
+                        new FileChooser.ExtensionFilter("Image File", "*.jpg"));
+                File chosenFile = fileChooser.showOpenDialog(new Stage());
+                if (chosenFile != null) {
+                    imageField.setText(chosenFile.getPath());
+                }
+            });
+
+            backBTN.setOnAction(e -> {
+                AddProductPopupController_Page1.display();
+                backBTN.getScene().getWindow().hide();
+            });
+
+            addProductBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    sellerController.addNewProduct(nameField.getText(), brandField.getText());
+                }
+            });
+        }
+
+        private boolean validateFields() {
+
+        }
+
+        private void updateProperties(String categoryName) {
+            try {
+                properties.getItems().clear();
+                for (String category : mainController.getPropertiesOfCategory(categoryName, true)) {
+                    properties.getItems().add(new PropertyWrapper(category));
+                }
+            } catch (Exceptions.InvalidCategoryException e) {
+                e.printStackTrace();
+                errorLBL.setText("error in method updateProperties(): " + e.getMessage());
+            }
         }
     }
 }
