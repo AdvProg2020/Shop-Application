@@ -220,6 +220,12 @@ public class Controllers {
         @FXML
         private HBox advertisingProducts;
 
+        @FXML
+        private BorderPane borderPane;
+
+        @FXML
+        private Button productsMenu;
+
         private static void display() {
             View.getStackTrace().clear();
             View.stackSize.set(0);
@@ -239,10 +245,17 @@ public class Controllers {
             }
 
             allSales.setOnAction(e -> salesMenu());
+
+            initCategoriesBox();
         }
 
         private void salesMenu(){
             ProductsMenuController.display("SuperCategory", true);
+        }
+
+
+        private void initCategoriesBox(){
+            borderPane.setLeft(CategoryBoxController.createBox("SuperCategory", false));
         }
     }
 
