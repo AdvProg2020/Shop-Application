@@ -621,7 +621,10 @@ public class Controllers {
                     customerDiscounts.getItems().add(new DiscountWrapper(discountCode[0], discountCode[2], discountCode[4], discountCode[3]));
                 }
             } else if (info[info.length - 1].equals(Constants.sellerUserType)) {
-
+                dateCOL.setCellValueFactory(new PropertyValueFactory<>("date"));
+                typeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
+                requestDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+                sellerController.getPendingRequests()
             }
         }
 
