@@ -245,6 +245,7 @@ public class Controllers {
             }
 
             allSales.setOnAction(e -> salesMenu());
+            productsMenu.setOnAction(e -> productsMenu());
 
             initCategoriesBox();
         }
@@ -253,6 +254,9 @@ public class Controllers {
             ProductsMenuController.display("SuperCategory", true);
         }
 
+        private void productsMenu(){
+            ProductsMenuController.display("SuperCategory", false);
+        }
 
         private void initCategoriesBox(){
             borderPane.setLeft(CategoryBoxController.createBox("SuperCategory", false));
