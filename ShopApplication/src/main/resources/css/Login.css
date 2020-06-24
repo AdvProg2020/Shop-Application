@@ -48,3 +48,12 @@
     -fx-padding: 10 80 10 80;
     -fx-background-radius: 40;
 }
+
+#show-password-button {
+    -fx-background-color: transparent;
+    -fx-graphic: url("../img/show-password-unselected.png");
+}
+
+#show-password-button:selected {
+    -fx-graphic: url("../img/show-password-selected.png");
+}
