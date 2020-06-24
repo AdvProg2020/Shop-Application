@@ -13,6 +13,7 @@ import model.log.LogItem;
 import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
+import model.request.Request;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -389,5 +390,12 @@ public class SellerController {
         }
     }
 
-
+    public ArrayList<String[]> getPendingRequests(){
+        ArrayList<Request> requests = new ArrayList<>(((Seller)currentAccount()).getPendingRequests());
+        ArrayList<String[]> requestPacks = new ArrayList<>();
+        for (Request request : requests) {
+            requestPacks.add(Utilities.Pack.request(request));
+        }
+        return requestPacks;
+    }
 }
