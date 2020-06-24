@@ -290,6 +290,9 @@ public class Controllers {
         @FXML
         private HBox categoryTreeBox;
 
+        @FXML
+        private BorderPane borderPane;
+
 
 
         private static final int numberOfColumns = 3;
@@ -319,7 +322,7 @@ public class Controllers {
                 controller.initActions();
                 controller.initFilterBar();
                 controller.initPropertyFilters();
-                //controller.
+                controller.initCategoryTree();
             }
         }
 
@@ -487,13 +490,22 @@ public class Controllers {
             return inSale;
         }
 
-
+        private void initCategoryTree(){
+            ArrayList<String> categoryNames = mainController.getCategoryTreeOfACategory(categoryName);
+            for (String s : categoryNames) {
+                categoryTreeBox.getChildren().add(createCategoryButton(s));
+            }
+        }
 
         private Button createCategoryButton(String category){
             Button button = new Button();
             button.setText(category + " >");
             button.setOnAction(e -> ProductsMenuController.display(category, inSale));
             return button;
+        }
+
+        private void initCategoryBox(){
+            borderPane.setLeft(CategoryBoxController.createBox(categoryName));
         }
     }
 
@@ -570,7 +582,7 @@ public class Controllers {
 
         }
 
-        private
+
     }
 
     public static class ProductDetailMenuController {

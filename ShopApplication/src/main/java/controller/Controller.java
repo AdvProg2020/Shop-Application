@@ -681,15 +681,21 @@ public class Controller {
         if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
         }else {
-            Category superCategory = Category.getSuperCategory();
-            Category category = product.getCategory();
-            ArrayList<String> categoryTree = new ArrayList<>();
+            return getCategoryTreeOfACategory(product.getCategory().getName());
+        }
+    }
+
+    public ArrayList<String> getCategoryTreeOfACategory(String categoryName){
+        Category superCategory = Category.getSuperCategory();
+        Category category = Category.getCategoryByName(categoryName);
+        ArrayList<String> categoryTree = new ArrayList<>();
+        if (category != null) {
             while ( !category.equals( superCategory )){
                 categoryTree.add(0, category.getName());
                 category.getParent();
             }
-            return categoryTree;
         }
+        return categoryTree;
     }
 
 }
