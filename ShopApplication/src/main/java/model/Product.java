@@ -22,13 +22,13 @@ public class Product implements ModelBasic {
     private transient Set<String> ratingIds;
     private boolean suspended;
 
-    public Product(String name, String brand, String infoText, String imagePath, String categoryId, List<String> values, SubProduct subProduct) {
+    public Product(String name, String brand, String infoText, String imagePath, String categoryId, Map<String, String> propertyValues, SubProduct subProduct) {
         this.name = name;
         this.brand = brand;
         this.infoText = infoText;
         this.imagePath = imagePath;
         this.categoryId = categoryId;
-        setPropertyValues(values);
+        setPropertyValues(propertyValues);
         viewCount = 0;
         suspended = false;
         new AddProductRequest(this, subProduct);
@@ -221,12 +221,26 @@ public class Product implements ModelBasic {
         return value;
     }
 
-    private void setPropertyValues(List<String> values) {
+    private void setPropertyValues(Map<String, String> values) {
         propertyValues = new HashMap<>();
-        List<String> properties = getCategory().getProperties(false);
-        for (int i = 0; i < values.size(); i++) {
-            propertyValues.put(properties.get(i), values.get(i));
+        List<String> properties = getCategory().getProperties(true);
+        for (String property : properties) {
+            propertyValues.put(property, values.getOrDefault(property, ""));
         }
+    }
+
+    public void setProperty(String property, String value) {
+        if (!propertyValues.containsKey(property)) return;
+
+        propertyValues.replace(property, value);
+    }
+
+    public void addProperty(String property) {
+        propertyValues.put(property, "");
+    }
+
+    public void removeProperty(String property) {
+        propertyValues.remove(property);
     }
 
     public List<Review> getReviews() {

@@ -114,6 +114,20 @@ public class Category implements ModelBasic {
         return deepProperties;
     }
 
+    public void addProperty(String property) {
+        properties.add(property);
+        for (Product product : getProducts(true)) {
+            product.addProperty(property);
+        }
+    }
+
+    public void removeProperty(String property) {
+        properties.remove(property);
+        for (Product product : getProducts(true)) {
+            product.removeProperty(property);
+        }
+    }
+
     public Category getParent() {
         if (parentId.equals(superCategory.getId())) return superCategory;
 

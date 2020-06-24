@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class SellerController {
@@ -205,7 +206,7 @@ public class SellerController {
     }
 
     //Todo: change it again!
-    public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, ArrayList<String> specialProperties,
+    public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
         Product product = Product.getProductByNameAndBrand(name, brand);
@@ -216,12 +217,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count);
-            int size = category.getProperties(true).size();
-            ArrayList<String> alaki = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                alaki.add(Integer.toString(i));
-            }
-            new Product(name, brand, infoText, imagePath, category.getId(), alaki, subProduct);
+            new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct);
             database().request();
         }
     }

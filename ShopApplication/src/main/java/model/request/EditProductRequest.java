@@ -38,6 +38,10 @@ public class EditProductRequest extends Request implements SellerRequest {
             case SUB_COUNT:
                 int changeAmount = Integer.parseInt(newValue) - subProduct.getRemainingCount();
                 subProduct.changeRemainingCount(changeAmount);
+                break;
+            case PROPERTY:
+                String[] data = newValue.split(",");
+                product.setProperty(data[0], data[1]);
         }
         super.accept();
     }
@@ -76,6 +80,7 @@ public class EditProductRequest extends Request implements SellerRequest {
         NAME,
         BRAND,
         INFO_TEXT,
+        PROPERTY,
         SUB_PRICE,
         SUB_COUNT
     }

@@ -199,10 +199,13 @@ public class CustomerController {
     public ArrayList<String[]> viewDiscountCodes() {
         Map<Discount, Integer> discounts = ((Customer) currentAccount()).getDiscounts();
         ArrayList<String[]> discountCodes = new ArrayList<>();
-        String[] discountInfo = new String[2];
+        String[] discountInfo = new String[5];
         for (Discount discount : discounts.keySet()) {
             discountInfo[0] = discount.getDiscountCode();
             discountInfo[1] = Integer.toString(discounts.get(discount));
+            discountInfo[2] = Utilities.getDateFormat().format(discount.getEndDate());
+            discountInfo[3] = Double.toString(discount.getMaximumAmount());
+            discountInfo[4] = Double.toString(discount.getPercentage());
             discountCodes.add(discountInfo);
         }
         return discountCodes;
