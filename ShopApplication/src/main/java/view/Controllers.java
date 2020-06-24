@@ -487,10 +487,6 @@ public class Controllers {
             }
         }
 
-        public boolean isInSale() {
-            return inSale;
-        }
-
         private void initCategoryTree(){
             ArrayList<String> categoryNames = mainController.getCategoryTreeOfACategory(categoryName);
             for (String s : categoryNames) {
@@ -583,7 +579,12 @@ public class Controllers {
 
         }
 
-
+        private  Button createCategoryButton(String categoryName, boolean inSale){
+            Button button = new Button();
+            button.setText(categoryName);
+            button.setOnAction(e -> ProductsMenuController.display(categoryName, inSale));
+            return button;
+        }
     }
 
     public static class ProductDetailMenuController {

@@ -187,6 +187,19 @@ public class Controller {
         }
     }
 
+    public ArrayList<String> getSubCategoriesOfACategory(String categoryName) throws Exceptions.InvalidCategoryException {
+        Category category = Category.getCategoryByName(categoryName);
+        if (category == null)
+            throw new Exceptions.InvalidCategoryException(categoryName);
+        else {
+            ArrayList<String> categoryNames = new ArrayList<>();
+            for (Category subCategory : category.getSubCategories()) {
+                categoryNames.add(subCategory.getName());
+            }
+            return categoryNames;
+        }
+    }
+
     /**
      * @param categoryName
      * @return String[2]: ID, name
