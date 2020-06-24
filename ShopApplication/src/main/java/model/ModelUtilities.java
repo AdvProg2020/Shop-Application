@@ -8,6 +8,7 @@ import model.log.LogItem;
 import model.log.SellLog;
 import model.request.Request;
 
+import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,6 +38,13 @@ public class ModelUtilities {
 
     private static String fixedLengthNumber(int number, int length) {
         return String.format("%0" + length + "d", number);
+    }
+
+    public static String fixedPath(String path, final String DEFAULT_PATH) {
+        if (path == null || !new File(path).exists())
+            path = DEFAULT_PATH;
+
+        return path;
     }
 
     public static String generateNewId(String className, int lastNum) {
