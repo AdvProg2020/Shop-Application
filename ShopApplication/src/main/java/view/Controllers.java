@@ -48,8 +48,6 @@ public class Controllers {
         customerController = View.customerController;
     }
 
-
-
     public static class PersonalInfoMenuController {
 
         @FXML
@@ -249,6 +247,7 @@ public class Controllers {
 
     public static class ProductsMenuController {
 
+
         @FXML
         private Button update;
 
@@ -292,7 +291,7 @@ public class Controllers {
         private static final int numberOfColumns = 3;
         public ArrayList<String[]> products;
         private String categoryName;
-        private boolean inSale;
+        private boolean inSale = false;
         private double maximumAvailablePrice;
         private DoubleProperty minPrice;
         private DoubleProperty maxPrice;
@@ -359,7 +358,6 @@ public class Controllers {
 
 ;        }
 
-        //TODO: set max price for sliders
         private void initFilterBar(){
             minPrice = new SimpleDoubleProperty();
             minPrice.bind(minPriceSlider.valueProperty());
@@ -479,6 +477,10 @@ public class Controllers {
                 }
             }
         }
+
+        public boolean isInSale() {
+            return inSale;
+        }
     }
 
     public static class ProductBoxController {
@@ -535,6 +537,18 @@ public class Controllers {
             p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0]));
         }
 
+    }
+
+    public static class CategoryBoxController{
+        @FXML
+        private Button allProductsBTN;
+
+        @FXML
+        private VBox subCategoryBox;
+
+        public Parent display(String categoryName){
+
+        }
     }
 
     public static class ProductDetailMenuController {
