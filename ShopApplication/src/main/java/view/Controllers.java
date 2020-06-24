@@ -323,6 +323,7 @@ public class Controllers {
                 controller.initFilterBar();
                 controller.initPropertyFilters();
                 controller.initCategoryTree();
+                controller.initCategoryBox();
             }
         }
 
