@@ -51,6 +51,10 @@ public class SellerController {
             if (((Seller) currentAccount()).getStoreName().equals(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(field);
             ((Seller) currentAccount()).setStoreName(newInformation);
+        } else if (field.equals("balance")) {
+            if (((Seller) currentAccount()).getBalance() == Double.parseDouble(newInformation))
+                throw new Exceptions.SameAsPreviousValueException(newInformation);
+            ((Seller) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getBalance());
         } else
             mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
@@ -175,6 +179,12 @@ public class SellerController {
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
                     database().request();
                     break;
+                    //TODO: handle for field: "imagePath"
+//                case "imagePath":
+//                    if (targetedSubProduct.getProduct().getImagePath().equals(newInformation))
+//                        throw new Exceptions.SameAsPreviousValueException(field);
+//
+//                    new EditProductRequest(targetedSubProduct.getId(), "")
                 default:
                     throw new Exceptions.InvalidFieldException();
             }

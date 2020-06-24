@@ -187,6 +187,19 @@ public class Controller {
         }
     }
 
+    public ArrayList<String> getSubCategoriesOfACategory(String categoryName) throws Exceptions.InvalidCategoryException {
+        Category category = Category.getCategoryByName(categoryName);
+        if (category == null)
+            throw new Exceptions.InvalidCategoryException(categoryName);
+        else {
+            ArrayList<String> categoryNames = new ArrayList<>();
+            for (Category subCategory : category.getSubCategories()) {
+                categoryNames.add(subCategory.getName());
+            }
+            return categoryNames;
+        }
+    }
+
     /**
      * @param categoryName
      * @return String[2]: ID, name
@@ -476,7 +489,7 @@ public class Controller {
         else return Utilities.Pack.personalInfo(account);
     }
 
-    void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
                 if (currentAccount.getFirstName().equals(newInformation))
@@ -503,6 +516,10 @@ public class Controller {
                     throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setPassword(newInformation);
                 break;
+            case "image path":
+                if (currentAccount.getImagePath().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+                currentAccount.setImagePath(newInformation);
             default:
                 throw new Exceptions.InvalidFieldException();
         }
@@ -681,15 +698,21 @@ public class Controller {
         if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
         }else {
-            Category superCategory = Category.getSuperCategory();
-            Category category = product.getCategory();
-            ArrayList<String> categoryTree = new ArrayList<>();
+            return getCategoryTreeOfACategory(product.getCategory().getName());
+        }
+    }
+
+    public ArrayList<String> getCategoryTreeOfACategory(String categoryName){
+        Category superCategory = Category.getSuperCategory();
+        Category category = Category.getCategoryByName(categoryName);
+        ArrayList<String> categoryTree = new ArrayList<>();
+        if (category != null) {
             while ( !category.equals( superCategory )){
                 categoryTree.add(0, category.getName());
                 category.getParent();
             }
-            return categoryTree;
         }
+        return categoryTree;
     }
 
 }

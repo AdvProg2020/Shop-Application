@@ -46,7 +46,12 @@ public class CustomerController {
 
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
-        mainController.editPersonalInfo(field, newInformation);
+        if (field.equals("balance")) {
+            if (((Seller) currentAccount()).getBalance() == Double.parseDouble(newInformation))
+                throw new Exceptions.SameAsPreviousValueException(newInformation);
+            ((Seller) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getBalance());
+        } else
+            mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
     }
 
@@ -194,10 +199,13 @@ public class CustomerController {
     public ArrayList<String[]> viewDiscountCodes() {
         Map<Discount, Integer> discounts = ((Customer) currentAccount()).getDiscounts();
         ArrayList<String[]> discountCodes = new ArrayList<>();
-        String[] discountInfo = new String[2];
+        String[] discountInfo = new String[5];
         for (Discount discount : discounts.keySet()) {
             discountInfo[0] = discount.getDiscountCode();
             discountInfo[1] = Integer.toString(discounts.get(discount));
+            discountInfo[2] = Utilities.getDateFormat().format(discount.getEndDate());
+            discountInfo[3] = Double.toString(discount.getMaximumAmount());
+            discountInfo[4] = Double.toString(discount.getPercentage());
             discountCodes.add(discountInfo);
         }
         return discountCodes;
