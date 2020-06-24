@@ -502,7 +502,7 @@ public class Controllers {
         }
 
         private void initCategoryBox(){
-            borderPane.setLeft(CategoryBoxController.createBox(categoryName));
+            borderPane.setLeft(CategoryBoxController.createBox(categoryName, inSale));
         }
     }
 
@@ -562,36 +562,32 @@ public class Controllers {
 
     }
 
-    public static class CategoryBoxController implements Initializable{
+    public static class CategoryBoxController{
 
         @FXML
         private VBox subCategoryBox;
 
-        public static Parent createBox(String categoryName) {
-            try {
-                ArrayList<String> subCategories = mainController.getSubCategoriesOfACategory(categoryName);
-                FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoriesBox + ".fxml"));
-                Parent p;
+        public static Parent createBox(String categoryName, boolean inSale) {
                 try {
+                    ArrayList<String> subCategories = mainController.getSubCategoriesOfACategory(categoryName);
+                    FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoriesBox + ".fxml"));
+                    Parent p;
                     p = loader.load();
-
-                } catch (IOException e) {
-                    System.out.println("Could not create category box for category: "+ categoryName);
+                    CategoryBoxController cbc = loader.getController();
+                    VBox subCategoryBox = cbc.subCategoryBox;
+                    for (String subCategory : subCategories) {
+                        subCategoryBox.getChildren().add(createCategoryButton(subCategory, inSale));
+                    }
+                    return p;
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-                ProductBoxController pbc = loader.getController();
-            } catch (Exceptions.InvalidCategoryException e) {
-                e.printStackTrace();
-            }
-
-            return null;
+                return null;
         }
 
-        @Override
-        public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        }
 
-        private  Button createCategoryButton(String categoryName, boolean inSale){
+        private static Button createCategoryButton(String categoryName, boolean inSale){
             Button button = new Button();
             button.setText(categoryName);
             button.setOnAction(e -> ProductsMenuController.display(categoryName, inSale));
