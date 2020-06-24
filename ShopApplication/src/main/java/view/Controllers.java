@@ -388,31 +388,31 @@ public class Controllers {
         private TabPane discountTABPANE;
 
         @FXML
-        private TableView<?> customerDiscounts;
+        private TableView<DiscountWrapper> customerDiscounts;
 
         @FXML
-        private TableColumn<?, ?> codeCOL;
+        private TableColumn<DiscountWrapper, String> codeCOL;
 
         @FXML
-        private TableColumn<?, ?> discountUntilCOL;
+        private TableColumn<DiscountWrapper, String> discountUntilCOL;
 
         @FXML
-        private TableColumn<?, ?> discountPercentageCOL;
+        private TableColumn<String, String> discountPercentageCOL;
 
         @FXML
         private TabPane requestTABPANE;
 
         @FXML
-        private TableView<?> sellerRequests;
+        private TableView<RequestWrapper> sellerRequests;
 
         @FXML
-        private TableColumn<?, ?> typeCOL;
+        private TableColumn<RequestWrapper, String> typeCOL;
 
         @FXML
-        private TableColumn<?, ?> dateCOL;
+        private TableColumn<RequestWrapper, String> dateCOL;
 
         @FXML
-        private TableColumn<?, ?> requestDetailsCOL;
+        private TableColumn<RequestWrapper, Button> requestDetailsCOL;
 
         /**
          * edit product
@@ -436,9 +436,9 @@ public class Controllers {
          */
         public class DiscountWrapper {
             String code, endDate;
-            Double percentage, maximumAmount;
+            String percentage, maximumAmount;
 
-            DiscountWrapper(String code, String endDate, double percentage, double maximumAmount) {
+            DiscountWrapper(String code, String endDate, String percentage, String maximumAmount) {
                 this.code = code;
                 this.percentage = percentage;
                 this.maximumAmount = maximumAmount;
@@ -618,10 +618,9 @@ public class Controllers {
                 discountUntilCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
                 discountPercentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentageMax"));
                 for (String[] discountCode : customerController.viewDiscountCodes()) {
-
+                    customerDiscounts.getItems().add(new DiscountWrapper(discountCode[0], discountCode[2], discountCode[4], discountCode[3]));
                 }
             } else if (info[info.length - 1].equals(Constants.sellerUserType)) {
-
             }
         }
 
