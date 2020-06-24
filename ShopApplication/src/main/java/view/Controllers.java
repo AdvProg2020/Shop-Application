@@ -563,13 +563,25 @@ public class Controllers {
     }
 
     public static class CategoryBoxController implements Initializable{
-        @FXML
-        private Button allProductsBTN;
 
         @FXML
         private VBox subCategoryBox;
 
         public static Parent createBox(String categoryName) {
+            try {
+                ArrayList<String> subCategories = mainController.getSubCategoriesOfACategory(categoryName);
+                FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoriesBox + ".fxml"));
+                Parent p;
+                try {
+                    p = loader.load();
+
+                } catch (IOException e) {
+                    System.out.println("Could not create category box for category: "+ categoryName);
+                }
+                ProductBoxController pbc = loader.getController();
+            } catch (Exceptions.InvalidCategoryException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }
