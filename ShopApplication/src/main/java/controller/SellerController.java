@@ -62,6 +62,10 @@ public class SellerController {
         return companyInformation;
     }
 
+    public boolean isProductWithNameAndBrand(String name, String brand){
+        return Product.getProductByNameAndBrand(name, brand) != null;
+    }
+
     public ArrayList<String[]> getAllSellLogs() {
         ArrayList<String[]> allSells = new ArrayList<>();
         for (SellLog sellLog : ((Seller) currentAccount()).getSellLogs()) {
