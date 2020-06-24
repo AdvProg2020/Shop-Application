@@ -16,10 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -339,77 +336,191 @@ public class Controllers {
     public static class PersonalInfoMenuController {
 
         @FXML
-        private ToggleButton imageEditBTN;
-
-        @FXML
-        private Button logoutBTN;
-
-        @FXML
-        private Button changePasswordBTN;
+        private ImageView accountIMG;
 
         @FXML
         private Button buyLogBTN;
 
         @FXML
-        private Button discountsBTN;
+        private Button sellLogBTN;
 
         @FXML
-        private TextField lastName;
+        private Button editBTN;
 
         @FXML
-        private TextField firstName;
+        private Button logoutBTN;
 
         @FXML
-        private Label firstNameLabel;
+        private Label nameLBL;
 
         @FXML
-        private Label lastNameLabel;
+        private Label usernameLBL;
 
         @FXML
-        private ToggleButton fullNameEditBTN;
+        private Label phoneProperty;
 
         @FXML
-        private Label typeLBL;
+        private Label phoneValue;
 
         @FXML
-        private TextField phoneNumberField;
+        private Label emailProperty;
 
         @FXML
-        private TextField emailField;
+        private Label emailValue;
 
         @FXML
-        private TextField balanceField;
+        private Label storeProperty;
 
         @FXML
-        private TextField storeNameField;
+        private Label balanceProperty;
 
         @FXML
-        private Label phoneNumberLBL;
+        private Label storeValue;
 
         @FXML
-        private Label emailLBL;
+        private Label balanceValue;
 
         @FXML
-        private Label balanceLBL;
+        private StackPane additionalInfoStackPane;
 
         @FXML
-        private Label storeNameLBL;
+        private TabPane discountTABPANE;
 
         @FXML
-        private ToggleButton PhoneNumberEditBTN;
+        private TableView<?> customerDiscounts;
 
         @FXML
-        private ToggleButton emailEditBTN;
+        private TableColumn<?, ?> codeCOL;
 
         @FXML
-        private ToggleButton balanceEditBTN;
+        private TableColumn<?, ?> discountUntilCOL;
 
         @FXML
-        private ToggleButton StoreNameEditBTN;
+        private TableColumn<?, ?> discountPercentageCOL;
 
-        private String[] personalInfo;
+        @FXML
+        private TabPane requestTABPANE;
+
+        @FXML
+        private TableView<?> sellerRequests;
+
+        @FXML
+        private TableColumn<?, ?> typeCOL;
+
+        @FXML
+        private TableColumn<?, ?> dateCOL;
+
+        @FXML
+        private TableColumn<?, ?> requestDetailsCOL;
+
+        /**
+         * edit product
+         * edit sale
+         * add product
+         * add sale
+         * add review
+         * add seller
+         *
+         * product detail :
+         * add to cart and edit
+         * price store name; default ya na.
+         *
+         * felan: admin edit nadarad.
+         *
+         * admin: popup if managing va main pane if products menu
+         * admin edit darad. price and count ra nemitavanad.
+         *
+         *
+         *
+         */
+        public class DiscountWrapper {
+            String code, endDate;
+            Double percentage, maximumAmount;
+
+            DiscountWrapper(String code, String endDate, double percentage, double maximumAmount) {
+                this.code = code;
+                this.percentage = percentage;
+                this.maximumAmount = maximumAmount;
+                this.endDate = endDate;
+            }
+
+            public String getCode() {
+                return code;
+            }
+
+           public String getPercentageMax() {
+                return percentage + " (" + maximumAmount + "$)";
+           }
+
+            public String getEndDate() {
+                return endDate;
+            }
+        }
+
+        public class RequestWrapper {
+            String id, type, date, status;
+            Button details = new Button();
+
+            public RequestWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3]);
+            }
+
+            public RequestWrapper(String id, String type, String date, String status) {
+                this.id = id;
+                this.type = type;
+                this.date = date;
+                this.status = status;
+
+                initButtons();
+            }
+
+            private void initButtons() {
+                details.getStyleClass().add("details-button");
+
+                details.setOnAction(e -> {
+                    switch (type) {
+                        case "AddProductRequest":
+                            AddProductRequestPopupController.display(id);
+                            break;
+                        case "EditProductRequest":
+                            EditProductRequestPopupController.display(id);
+                            break;
+                        case "EditSaleRequest":
+                            EditSaleRequestPopupController.display(id);
+                            break;
+                        case "AddSaleRequest":
+                            AddSaleRequestPopupController.display(id);
+                            break;
+                    }
+                });
+
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+        }
+
+
+        private String username;
+        private String[] info;
         private boolean isPopup;
-
 
         public static void display(String username) {
             if (username == null) {
@@ -421,77 +532,161 @@ public class Controllers {
         }
 
         private void init(String username, boolean isPopup) {
+            this.isPopup = isPopup;
+            this.username = username;
             try {
-                if (username == null) {
-                    personalInfo = mainController.viewPersonalInfo();
-                } else {
-                    personalInfo = mainController.viewPersonalInfo(username);
-                }
-            } catch (Exception e) {
+                if (username != null)
+                    info = mainController.viewPersonalInfo(username);
+                else
+                    info = mainController.viewPersonalInfo();
+            } catch (Exceptions.UsernameDoesntExistException e) {
+                e.printStackTrace();
+                return;
+            } catch (Exceptions.NotLoggedInException e) {
                 e.printStackTrace();
                 return;
             }
 
-            this.isPopup = isPopup;
+            initVisibilities();
+            initActions();
+            initTable();
+            update();
+        }
 
-            switch (personalInfo[personalInfo.length - 1]) {
-                case Constants.customerUserType:
-                    initCustomer();
-                    break;
-                case Constants.sellerUserType:
-                    initSeller();
-                    break;
-                case Constants.adminUserType:
-                    initAdmin();
-                    break;
+        private void initVisibilities() {
+            String type = info[info.length - 1];
+            if (isPopup) {
+                editBTN.setVisible(false);
+                sellLogBTN.setVisible(false);
+                logoutBTN.setVisible(false);
+                additionalInfoStackPane.setVisible(false);
+            } else {
+                if (type.equals(Constants.sellerUserType)) {
+                    customerDiscounts.setVisible(false);
+                    discountTABPANE.setVisible(false);
+                    sellerRequests.setVisible(true);
+                    requestTABPANE.setVisible(true);
+                } else if (type.equals(Constants.customerUserType)) {
+                    customerDiscounts.setVisible(true);
+                    sellerRequests.setVisible(false);
+                    discountTABPANE.setVisible(true);
+                    requestTABPANE.setVisible(false);
+                    sellLogBTN.setText("Buy Logs");
+                } else {
+                    sellLogBTN.setVisible(false);
+                    additionalInfoStackPane.setVisible(false);
+                }
+            }
+
+            if (type.equals(Constants.adminUserType)) {
+                balanceProperty.setVisible(false);
+                balanceValue.setVisible(false);
+                storeProperty.setVisible(false);
+                storeValue.setVisible(false);
+            } else if (type.equals(Constants.customerUserType)) {
+                storeProperty.setVisible(false);
+                storeValue.setVisible(false);
             }
         }
 
-        private void initCustomer() {
-            initCustomerButtons();
-            initValues();
-        }
+        private void initActions() {
+            sellLogBTN.setOnAction(e -> {
+                if (info[info.length - 1].equals(Constants.customerUserType)) {
+                    CustomerBuyLogMenuController.display();
+                } else {
+                    SellerSellLogsManagingMenuController.display();
+                }
+            });
 
-        private void initCustomerButtons() {
-            //TODO: complete
-            buyLogBTN.setOnAction(e -> CustomerBuyLogMenuController.display());
-            initAdminButtons();
-        }
-
-        private void initSeller() {
-            initSellerButtons();
-            initValues();
-        }
-
-        private void initSellerButtons() {
-            //TODO: complete
-            initAdminButtons();
-        }
-
-        private void initAdmin() {
-            initAdminButtons();
-            initValues();
-        }
-
-        private void initAdminButtons() {
-            //TODO: complete
             logoutBTN.setOnAction(e -> {
                 try {
                     mainController.logout();
                     View.type.set(Constants.anonymousUserType);
-
-                    MainMenuController.display();
-
-                    if (isPopup) balanceLBL.getScene().getWindow().hide();
-
                 } catch (Exceptions.NotLoggedInException ex) {
                     ex.printStackTrace();
-                    return;
                 }
             });
+
+            editBTN.setOnAction(e -> EditPersonalInfoPopupController.display());
         }
 
-        private void initValues() {
+        private void initTable() {
+            if (isPopup) return;
+            if (info[info.length - 1].equals(Constants.customerUserType)) {
+                codeCOL.setCellValueFactory(new PropertyValueFactory<>("code"));
+                discountUntilCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+                discountPercentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentageMax"));
+                for (String[] discountCode : customerController.viewDiscountCodes()) {
+
+                }
+            } else if (info[info.length - 1].equals(Constants.sellerUserType)) {
+
+            }
+        }
+
+        public void update() {
+            try {
+                if (username != null)
+                    info = mainController.viewPersonalInfo(username);
+                else
+                    info = mainController.viewPersonalInfo();
+            } catch (Exceptions.UsernameDoesntExistException e) {
+                e.printStackTrace();
+                return;
+            } catch (Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            usernameLBL.setText(info[0]);
+            nameLBL.setText(info[3] + " " + info[4]);
+            phoneValue.setText(info[6]);
+            emailValue.setText(info[5]);
+            if ( ! info[info.length - 1].equals(Constants.adminUserType)) {
+                balanceValue.setText(info[8] + "$");
+            }
+            if (info[info.length - 1].equals(Constants.sellerUserType)) {
+                storeValue.setText(info[9]);
+            }
+
+            accountIMG.setImage(new Image(info[7]));
+        }
+
+
+    }
+
+    public static class AddProductRequestPopupController {
+        public static void display(String requestId) {
+
+        }
+    }
+
+    public static class EditProductRequestPopupController {
+        public static void display(String requestId) {
+
+        }
+    }
+
+    public static class EditSaleRequestPopupController {
+        public static void display(String requestId) {
+
+        }
+    }
+
+    public static class AddSaleRequestPopupController {
+        public static void display(String requestId) {
+
+        }
+    }
+
+    public static class AddReviewRequestPopupController {
+        public static void display(String requestId) {
+
+        }
+    }
+
+    public static class AddSellerRequestPopupController {
+        public static void display(String requestId) {
 
         }
     }
@@ -968,7 +1163,7 @@ public class Controllers {
 
             saveBTN.disableProperty().bind(
                     Bindings.createObjectBinding(() -> !nameFieldChanged.get() && !brandFieldChanged.get() &&
-                                                 !priceFieldChanged.get() && !countFieldChanged.get(),
+                                    !priceFieldChanged.get() && !countFieldChanged.get(),
                             nameFieldChanged, brandFieldChanged, imageFieldChanged, priceFieldChanged, countFieldChanged)
             );
         }
@@ -999,11 +1194,16 @@ public class Controllers {
             saveBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        if (nameFieldChanged.get()) sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
-                        if (brandFieldChanged.get()) sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
-                        if (imageFieldChanged.get()) sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
-                        if (countFieldChanged.get()) sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
-                        if (priceFieldChanged.get()) sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
+                        if (nameFieldChanged.get())
+                            sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
+                        if (brandFieldChanged.get())
+                            sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
+                        if (imageFieldChanged.get())
+                            sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
+                        if (countFieldChanged.get())
+                            sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
+                        if (priceFieldChanged.get())
+                            sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
                         discardBTN.fire();
                     } catch (Exception ex) {
                         printError(ex.getMessage());
@@ -1026,12 +1226,12 @@ public class Controllers {
                 passwordErrLBL.setVisible(true);
             } else passwordErrLBL.setVisible(false);
 
-            if ( ! priceField.getText().matches(Constants.doublePattern)) {
+            if (!priceField.getText().matches(Constants.doublePattern)) {
                 valid = false;
                 priceError.setVisible(true);
             } else priceError.setVisible(false);
 
-            if ( ! countField.getText().matches(Constants.unsignedIntPattern)) {
+            if (!countField.getText().matches(Constants.unsignedIntPattern)) {
                 valid = false;
                 countError.setVisible(true);
             } else countError.setVisible(false);
@@ -1384,6 +1584,7 @@ public class Controllers {
 
         private void initTexts() {
             sellerUsernameError.setText("Please enter a username");
+            customerUsername.setText("Please enter a username");
             customerPasswordError.setText("Please enter a password");
             sellerPasswordError.setText("Please enter a password");
             customerFirstNameError.setText("Invalid entry!");
@@ -1392,8 +1593,8 @@ public class Controllers {
             sellerLastNameError.setText("Invalid entry!");
             customerPhoneNumberError.setText("Please enter a phone number");
             sellerPhoneNumberError.setText("Please enter a phone number");
-            customerEmailError.setText("Invalid entry! enter a valid email address");
-            sellerEmailError.setText("Please enter an email address");
+            customerEmailError.setText("Invalid email address");
+            sellerEmailError.setText("Invalid email address");
             customerBalanceError.setText("Please enter your initial balance");
             sellerBalanceError.setText("Please enter your initial balance");
         }
