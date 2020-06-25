@@ -1796,9 +1796,6 @@ public class Controllers {
         private Label nameLBL;
 
         @FXML
-        private Label ratingLBL;
-
-        @FXML
         private Label brandLBL;
 
         @FXML
@@ -2016,10 +2013,26 @@ public class Controllers {
             nameLBL.setText(productPack[1]);
             brandLBL.setText(productPack[2]);
             productInfoTXT.setText(productPack[3]);
-            ratingLBL.setText(productPack[4]);
+            ratingCountLBL.setText(productPack[5]);
             categoryLBL.setText(productPack[7]);
             productIMG.setImage(new Image("file:" + Constants.base + productPack[8]));
-            //productInfo[5] = Integer.toString(product.getRatingsCount());
+            initRatingStars();
+        }
+
+        private void initRatingStars(){
+            double rating = Double.parseDouble(productPack[4]);
+            fullStar1.setVisible(rating >= 1);
+            fullStar2.setVisible(rating >= 2);
+            fullStar3.setVisible(rating >= 3);
+            fullStar4.setVisible(rating >= 4);
+            fullStar5.setVisible(rating >= 5);
+
+            halfStar1.setVisible(rating >= 0.5);
+            halfStar2.setVisible(rating >= 1.5);
+            halfStar3.setVisible(rating >= 2.5);
+            halfStar4.setVisible(rating >= 3.5);
+            halfStar5.setVisible(rating >= 4.5);
+
         }
 
         private void setPacks(String productId, String subProductId) {
@@ -2069,6 +2082,7 @@ public class Controllers {
             }
         }
 
+        //TODO:
         private void initCategoryHBox(){
             try {
                 for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
