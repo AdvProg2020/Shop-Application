@@ -566,11 +566,12 @@ public class Controllers {
                 } else if (type.equals(Constants.customerUserType)) {
                     customerDiscounts.setVisible(true);
                     sellerRequests.setVisible(false);
+                    buyLogBTN.setVisible(true);
                     discountTABPANE.setVisible(true);
                     requestTABPANE.setVisible(false);
-                    sellLogBTN.setText("Buy Logs");
                 } else {
                     sellLogBTN.setVisible(false);
+                    buyLogBTN.setVisible(false);
                     additionalInfoStackPane.setVisible(false);
                 }
             }
@@ -941,9 +942,9 @@ public class Controllers {
         @FXML
         private TextField maxField;
         @FXML
-        private DatePicker startDate;
+        private TextField startDate;
         @FXML
-        private DatePicker endDate;
+        private TextField endDate;
 
         String[] primaryDetails;
         String[] secondaryDetails;
@@ -976,8 +977,8 @@ public class Controllers {
             idValueLBL.setText(secondaryDetails[0]);
             percentageField.setText(secondaryDetails[1]);
             maxField.setText(secondaryDetails[2]);
-            startDate.setValue(LocalDate.parse("20" + secondaryDetails[3]));
-            endDate.setValue(LocalDate.parse("20" + secondaryDetails[4]));
+            startDate.setText(secondaryDetails[3]);
+            endDate.setText(secondaryDetails[4]);
         }
 
         private void initTable() {
@@ -1656,8 +1657,7 @@ public class Controllers {
         private void initButtons() {
             browseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image File", "*.jpg"),
-                        new FileChooser.ExtensionFilter("Image File", "*.png"));
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image File", "*.jpg", "*.png"));
                 File choseFile = fileChooser.showOpenDialog(new Stage());
                 if (choseFile != null) imageField.setText(choseFile.getPath());
             });
@@ -4321,7 +4321,7 @@ public class Controllers {
         }
     }
 
-    public static class AdminRegistrationPopupController implements Initializable {
+    public static class AdminRegistrationPopupController implements Initializable{
         @FXML
         private TextField adminUsername;
 
@@ -4388,7 +4388,8 @@ public class Controllers {
         @FXML
         private Button adminRegister;
 
-
+        
+        
         public static void display() {
             View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 1000, 700);
         }
@@ -4425,9 +4426,12 @@ public class Controllers {
             adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
+                        boolean bootUp = !mainController.managerExists();
                         adminController.creatAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
                                 adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
-                        AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
+                        if ( ! bootUp ) {
+                            AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
+                        }
                         adminUsername.getScene().getWindow().hide();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         adminUsernameError.setText("Sorry! this username is already taken.");

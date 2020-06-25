@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Category;
 import model.database.Database;
 import model.database.DatabaseManager;
@@ -125,24 +127,48 @@ public class View extends Application {
 
 
     public static <T> T popupWindow(String title, String fxml, int width, int height) {
-        Stage popup = new Stage();
-        popup.setTitle(title);
+        if (fxml.equals(Constants.FXMLs.adminRegistrationPopup) && ! mainController.managerExists()) {
+                Stage popup = new Stage();
+                popup.setOnCloseRequest(e -> System.exit(-1));
+                popup.initModality(Modality.APPLICATION_MODAL);
+                popup.initStyle(StageStyle.UTILITY);
+                popup.setTitle("Admin boot-up menu");
+                popup.setResizable(false);
+                popup.setWidth(1000);
+                popup.setHeight(700);
+                popup.centerOnScreen();
+                FXMLLoader loader = new FXMLLoader(View.class.getResource(getLocation(Constants.FXMLs.adminRegistrationPopup)));
+                Parent parent = null;
+                try {
+                    parent = loader.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("could not load " + Constants.FXMLs.adminRegistrationPopup + ".fxml");
+                }
+                popup.setScene(new Scene(parent));
+                popup.show();
+                return null;
+        } else {
+            Stage popup = new Stage();
+            popup.setTitle(title);
 //        popup.setOnCloseRequest(close);
-        popup.setResizable(false);
-        popup.setWidth(width);
-        popup.setHeight(height);
-        popup.centerOnScreen();
-        FXMLLoader loader = new FXMLLoader(View.class.getResource(getLocation(fxml)));
-        Parent parent = null;
-        try {
-            parent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("could not load " + fxml + ".fxml");
+            popup.setResizable(false);
+            popup.setWidth(width);
+            popup.setHeight(height);
+            popup.centerOnScreen();
+            FXMLLoader loader = new FXMLLoader(View.class.getResource(getLocation(fxml)));
+            Parent parent = null;
+            try {
+                parent = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("could not load " + fxml + ".fxml");
+            }
+            popup.setScene(new Scene(parent));
+            popup.show();
+            return loader.getController();
         }
-        popup.setScene(new Scene(parent));
-        popup.show();
-        return loader.getController();
+
     }
 
     public static String getLocation(String fxml) {
@@ -166,6 +192,9 @@ public class View extends Application {
         stage.setHeight(700);
         stage.centerOnScreen();
 
+
+
+
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));
         setMainPane(Constants.FXMLs.mainMenu);
 
@@ -173,13 +202,9 @@ public class View extends Application {
                 Bindings.createBooleanBinding(() -> mainController.isManager(), type)
         );
 
-        //create an admin.
-        try {
-            mainController.creatAccount(Constants.adminUserType, "adana", "a", "a", "a", "1@1.com", "1",0, null, null);
-        } catch (Exceptions.UsernameAlreadyTakenException e) {
-            e.printStackTrace();
-        } catch (Exceptions.AdminRegisterException e) {
-            e.printStackTrace();
+
+        if ( ! mainController.managerExists()) {
+            Controllers.AdminRegistrationPopupController.display();
         }
 
     }

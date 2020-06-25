@@ -79,6 +79,10 @@ public class Controller {
         return (currentAccount != null) && currentAccount == Admin.getManager();
     }
 
+    public boolean managerExists() {
+        return Admin.getManager() != null;
+    }
+
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
         if (account == null)

@@ -36,7 +36,6 @@ T & A: adminCategoryManagingPopup remove property from a category
 A: edit product popup and addSale and AddProduct
 
 --------------------
-A: first admin boot-up.
 A: personal info image not loading.
 M & A: seller show categories.
 M & T: seller product show buyers.
@@ -55,3 +54,5 @@ M: show role in personal Info A: handle
 T: sold out
 T: digest change image based on available, sold out or in sale
 M & A: purchase confirmation popup
+A: discount and sale archive and active for admin.
+A: admin edit product popup
