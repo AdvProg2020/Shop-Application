@@ -1,5 +1,7 @@
 package view;
 
+import java.io.File;
+
 public final class Constants {
     public static final String caseInsensitiveMode = "(?i)";
     public static final String argumentPattern = "(\\S+)";
@@ -20,7 +22,7 @@ public final class Constants {
     public static final String REQUEST_ACCEPT = "ACCEPTED";
     public static final String REQUEST_DECLINE = "DECLINED";
     public static final String REQUEST_PENDING = "PENDING";
-    public static String base;
+    public static String base = new File("").getAbsolutePath();
 
 
     public static final String[] types = new String[]{anonymousUserType, customerUserType, sellerUserType, adminUserType};

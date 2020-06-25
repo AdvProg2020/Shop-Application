@@ -41,7 +41,9 @@ public class View extends Application {
         Category.setSuperCategory();
         databaseManager.createCategory();
         Controllers.init();
+
         launch(args);
+
     }
 
     public static void addListener(TextField textField, String regex) {

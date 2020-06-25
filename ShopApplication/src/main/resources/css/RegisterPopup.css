@@ -1,0 +1,89 @@
+.bg-pane {
+    -fx-background-color: #81c9e1;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0, 0, 0);
+}
+
+.button:pressed {
+    -fx-opacity: 80%;
+}
+
+#register-image {
+    -fx-background-image: url("../img/login-page.png");
+    -fx-background-size: 300;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-font-style: italic;
+    -fx-background-radius: 40 40 40 40;
+}
+
+.field-box {
+    -fx-font-size: 14;
+    -fx-background-radius: 40;
+    -fx-background-color: whitesmoke;
+}
+
+.label {
+    -fx-font-size: 12;
+}
+
+.hyperlink {
+    -fx-text-fill: green;
+}
+
+.label {
+    -fx-text-fill: red;
+    -fx-font-size: 10;
+}
+
+#message-label {
+    -fx-text-fill: black;
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+}
+
+#header-label {
+    -fx-font-size: 30;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+#register-button {
+    -fx-background-color: green;
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 10 80 10 80;
+    -fx-background-radius: 40;
+}
+
+.property-label {
+    -fx-text-fill: black;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+#show-password-button {
+    -fx-background-color: transparent;
+    -fx-graphic: url("../img/show-password-unselected.png");
+}
+
+#show-password-button:selected {
+    -fx-graphic: url("../img/show-password-selected.png");
+}
+
+#browse-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-focus-color: transparent;
+    -fx-graphic: url("../img/browse-button.png");
+}

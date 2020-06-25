@@ -1,99 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AdminRegistrationPopupController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/RegisterPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$AdminRegistrationPopupController">
     <center>
-        <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
-            <VBox>
-                <Label text="Username:" />
-                <TextField fx:id="adminUsername" />
-                <Label id="error-label" fx:id="adminUsernameError" />
-            </VBox>
-            <VBox GridPane.columnIndex="1">
-                <Label text="Password:" />
-            <HBox>
-               <children>
-                  <StackPane>
-                     <children>
-                            <PasswordField fx:id="adminPassword" />
-                        <TextField fx:id="showPasswordFIeld" />
-                     </children>
-                  </StackPane>
-                  <ToggleButton fx:id="showPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" text="ToggleButton" />
-               </children>
-            </HBox>
-                <Label id="error-label" fx:id="adminPasswordError" />
-            </VBox>
-            <VBox GridPane.rowIndex="2">
-                <Label text="First name:" />
-                <TextField fx:id="adminFirstName" />
-                <Label id="error-label" fx:id="adminFirstNameError" />
-            </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <Label text="Last name:" />
-                <TextField fx:id="adminLastName" />
-                <Label id="error-label" fx:id="adminLastNameError" />
-            </VBox>
-            <VBox GridPane.rowIndex="3">
-                <Label text="Phone number:" />
-                <TextField fx:id="adminPhoneNumber" promptText="09123456789" />
-                <Label id="error-label" fx:id="adminPhoneNumberError" />
-            </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <Label text="Email:" />
-                <TextField fx:id="adminEmail" promptText="sample@atm.com" />
-                <Label id="error-label" fx:id="adminEmailError" />
-            </VBox>
-            <VBox GridPane.rowIndex="4">
-                <Label text="Balance:" />
-                <TextField fx:id="adminBalance" />
-                <Label id="error-label" fx:id="adminBalanceError" />
-            </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Label text="Store name:" />
-                <TextField fx:id="adminStoreName" />
-                <Label id="error-label" fx:id="adminStoreNameError" />
-            </VBox>
-            <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
-                <Label text="Profile Picture:" />
-                <HBox spacing="10.0">
-                    <TextField fx:id="adminImageField" promptText="upload image..." />
-                    <Button fx:id="adminBrowseBTN" mnemonicParsing="false" text="Browse" />
-                </HBox>
-                <Label id="error-label" fx:id="adminImageError" />
-            </VBox>
-            <columnConstraints>
-                <ColumnConstraints />
-                <ColumnConstraints />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
-        </GridPane>
+        <BorderPane BorderPane.alignment="CENTER">
+            <center>
+                <GridPane alignment="CENTER" hgap="40.0" vgap="10.0">
+                    <VBox spacing="5.0">
+                        <Label styleClass="property-label" text="Username:"/>
+                        <TextField fx:id="adminUsername" styleClass="field-box"/>
+                        <Label fx:id="adminUsernameError" styleClass="error-label" text="error"/>
+                    </VBox>
+                    <VBox spacing="5.0" GridPane.columnIndex="1">
+                        <Label styleClass="property-label" text="Password:"/>
+                        <HBox styleClass="field-box">
+                            <StackPane>
+                                <PasswordField fx:id="adminPassword"/>
+                                <TextField fx:id="adminShowPasswordField"/>
+                            </StackPane>
+                            <ToggleButton id="show-password-button" fx:id="adminShowPasswordBTN" mnemonicParsing="false"
+                                          prefHeight="25.0" prefWidth="34.0"/>
+                        </HBox>
+                        <Label id="error-label" fx:id="adminPasswordError"/>
+                    </VBox>
+                    <VBox spacing="5.0" GridPane.rowIndex="2">
+                        <Label styleClass="property-label" text="First name:"/>
+                        <TextField fx:id="adminFirstName" styleClass="field-box"/>
+                        <Label id="error-label" fx:id="adminFirstNameError"/>
+                    </VBox>
+                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label styleClass="property-label" text="Last name:"/>
+                        <TextField fx:id="adminLastName" styleClass="field-box"/>
+                        <Label id="error-label" fx:id="adminLastNameError"/>
+                    </VBox>
+                    <VBox spacing="5.0" GridPane.rowIndex="3">
+                        <Label styleClass="property-label" text="Phone number:"/>
+                        <TextField fx:id="adminPhoneNumber" promptText="09123456789" styleClass="field-box"/>
+                        <Label id="error-label" fx:id="adminPhoneNumberError"/>
+                    </VBox>
+                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label styleClass="property-label" text="Email:"/>
+                        <TextField fx:id="adminEmail" promptText="sample@atm.com" styleClass="field-box"/>
+                        <Label id="error-label" fx:id="adminEmailError"/>
+                    </VBox>
+                    <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                        <Label styleClass="property-label" text="Profile Picture:"/>
+                        <HBox spacing="10.0" styleClass="field-box">
+                            <TextField fx:id="adminImageField" promptText="upload image..." HBox.hgrow="ALWAYS"/>
+                            <Button id="browse-button" fx:id="adminBrowseBTN" mnemonicParsing="false"/>
+                            <VBox.margin>
+                                <Insets/>
+                            </VBox.margin>
+                        </HBox>
+                        <Label id="error-label" fx:id="adminImageError"/>
+                    </VBox>
+                    <columnConstraints>
+                        <ColumnConstraints maxWidth="196.00003662109376" minWidth="180.00003662109376"
+                                           prefWidth="192.8000244140625"/>
+                        <ColumnConstraints maxWidth="208.79996337890628" minWidth="192.79996337890628"
+                                           prefWidth="195.99997558593753"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                    </rowConstraints>
+                    <padding>
+                        <Insets top="20.0"/>
+                    </padding>
+                </GridPane>
+            </center>
+            <bottom>
+                <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+                    <Button id="register-button" fx:id="adminRegister" mnemonicParsing="false" text="Register"/>
+                </VBox>
+            </bottom>
+        </BorderPane>
     </center>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
     </padding>
-    <bottom>
-        <HBox alignment="BOTTOM_CENTER" BorderPane.alignment="CENTER">
-            <Button fx:id="adminRegister" mnemonicParsing="false" text="Register" />
-        </HBox>
-    </bottom>
+    <left>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <Label id="header-label" text="Admin Registeration"/>
+            <Pane id="register-image" prefHeight="422.0" prefWidth="342.0"/>
+        </VBox>
+    </left>
 </BorderPane>

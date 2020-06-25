@@ -46,10 +46,8 @@
                 <HBox.margin>
                     <Insets left="5.0"/>
                 </HBox.margin>
-                <children>
-                    <PasswordField fx:id="passwordField" promptText="password"/>
-                    <TextField fx:id="showPasswordField" promptText="password"/>
-                </children>
+                <PasswordField fx:id="passwordField" promptText="password"/>
+                <TextField fx:id="showPasswordField" promptText="password"/>
             </StackPane>
             <ToggleButton id="show-password-button" fx:id="showPasswordBTN" mnemonicParsing="false"/>
         </HBox>
