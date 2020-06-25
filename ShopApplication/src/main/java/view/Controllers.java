@@ -1524,7 +1524,37 @@ public class Controllers {
 
     }
 
-    //public static class
+    public static class ReviewBoxController {
+        @FXML
+        private Label titleLBL;
+
+        @FXML
+        private Label nameLBL;
+
+        @FXML
+        private TextArea text;
+
+        private String[] review;
+
+        public static Parent createReviewBox(String[] reviewPack){
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.reviewBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                ReviewBoxController rbc = loader.getController();
+                rbc.setInfo();
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+
+        private void setInfo() {
+
+        }
+    }
 
     public static class LoginPopupController implements Initializable {
         private static Stage PopupStage;

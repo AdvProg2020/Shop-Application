@@ -64,5 +64,6 @@ public final class Constants {
         public static final String editProductPopup = "EditProductPopup";
         public static final String addProductPage1 = "AddProductPopup_Page1";
         public static final String addProductPage2 = "AddProductPopup_Page2";
+        public static final String reviewBox = "ReviewBox";
     }
 }
