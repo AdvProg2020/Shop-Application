@@ -982,8 +982,12 @@ public class Controllers {
 
         private void initTable() {
             nameBrandCOL.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue()));
-
-            //ObservableList<String> items = FXCollections.observableArrayList()
+            try {
+                ObservableList<String> items = FXCollections.observableArrayList(
+                        (Collection<? extends String>) adminController.getProductsInSaleRequest(primaryDetails[0]).stream().map(p -> p[1] + " - " + p[2]).collect(Collectors.toCollection(ArrayList::new)));
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+            }
         }
     }
 
