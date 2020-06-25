@@ -1415,7 +1415,7 @@ public class Controllers {
 
         private String[] productPack;
         private String[] subProductPack;
-
+        private ArrayList<PropertyWrapper> properties;
 
         public static void display(String productId, boolean editable){
             try {
@@ -1542,6 +1542,24 @@ public class Controllers {
             }
         }
 
+        private void initPropertyTableTabs(){
+            propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
+            propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
+
+            PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
+        }
+
+        private void initPropertiesTable(){
+            try {
+                HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(productPack[0]);
+                for (String s : propertyValues.keySet()) {
+                    properties.add(new PropertyWrapper(s, propertyValues.get(s)));
+                }
+                initPropertyTableTabs();
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
 
     }

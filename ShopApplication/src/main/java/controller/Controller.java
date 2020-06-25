@@ -318,7 +318,8 @@ public class Controller {
         return Utilities.Pack.digest(product);
     }
 
-    public ArrayList<String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+    //TODO: correting output
+    public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
@@ -327,7 +328,7 @@ public class Controller {
             for (String property : product.getCategory().getProperties(true)) {
                 properties.add(product.getPropertyValue(property));
             }
-            return properties;
+            return null;
         }
     }
 
