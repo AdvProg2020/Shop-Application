@@ -14,6 +14,8 @@
             <TableView fx:id="productsTable" fixedCellSize="30.0" focusTraversable="false" maxWidth="-Infinity"
                        styleClass="bg-pane" stylesheets="@../css/TableView.css" VBox.vgrow="ALWAYS">
                 <columns>
+                    <TableColumn fx:id="imageCOL" editable="false" prefWidth="100.0" resizable="false"
+                                 sortable="false"/>
                     <TableColumn fx:id="productName" editable="false" prefWidth="250.0" resizable="false"
                                  text="Name-Brand (Seller)"/>
                     <TableColumn fx:id="productUnitPrice" editable="false" prefWidth="150.0" resizable="false"

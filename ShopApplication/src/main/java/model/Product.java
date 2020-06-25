@@ -28,7 +28,7 @@ public class Product implements ModelBasic {
         this.infoText = infoText;
         this.imagePath = imagePath;
         this.categoryId = categoryId;
-        setPropertyValues(propertyValues);
+        this.propertyValues = propertyValues;
         viewCount = 0;
         suspended = false;
         new AddProductRequest(this, subProduct);
@@ -73,6 +73,7 @@ public class Product implements ModelBasic {
             reviewIds = new HashSet<>();
             ratingIds = new HashSet<>();
             getCategory().addProduct(productId);
+            setPropertyValues(propertyValues);
         }
     }
 
