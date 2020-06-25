@@ -2031,7 +2031,7 @@ public class Controllers {
                     case Constants.customerUserType:
                     case Constants.anonymousUserType:
                         tabPane.getTabs().remove(buyersTab);
-                        break;
+                        return;
                     case Constants.sellerUserType:
                         if (sellerController.doesSellSubProduct(subProductPack[1])) {
                             if (!tabPane.getTabs().contains(buyersTab))
@@ -2242,6 +2242,24 @@ public class Controllers {
             text.setText(review[2]);
             //reviewPack[3] = review.hasBought() ? "yes" : "no";
         }
+    }
+
+    public static class CategoryTreeBoxController{
+        @FXML
+        private HBox HBox;
+
+        public static Parent createBox() {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoryTreeBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
     }
 
     public static class LoginPopupController implements Initializable {
