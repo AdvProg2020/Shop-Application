@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Product;
 
 import java.io.File;
 import java.io.IOException;
@@ -1445,16 +1446,19 @@ public class Controllers {
             Label name = new Label();
             String price;
             String available;
-            String subProductId;
+            String[] subProductPack;
+            ProductDetailMenuController controller;
 
-            public SellerWrapper(String name, String price, String available, String subProductId) {
+            public SellerWrapper(String name, String price, String available, String[] subProductPack, ProductDetailMenuController controller) {
                 this.name.setText(name);
                 this.price = price;
                 this.available = available;
-                this.subProductId = subProductId;
+                this.subProductPack = subProductPack;
+                this.controller = controller;
 
                 this.name.setOnMouseClicked(e -> {
-
+                    controller.subProductPack = subProductPack;
+                    controller.updateSubProductBox();
                 });
             }
 
@@ -1470,8 +1474,8 @@ public class Controllers {
                 return available;
             }
 
-            public String getSubProductId(){
-                return subProductId;
+            public String[] getSubProductPack(){
+                return subProductPack;
             }
         }
 
@@ -1510,8 +1514,9 @@ public class Controllers {
             try {
                 subProductPacks = mainController.subProductsOfAProduct(productPack[0]);
                 for (String[] pack : subProductPacks) {
-                    sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack[1]));
+                    sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack, this));
                 }
+
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
