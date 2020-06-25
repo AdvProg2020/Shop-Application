@@ -1565,7 +1565,6 @@ public class Controllers {
                 }
                 propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
                 propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
-                initPropertyTableTabs();
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
