@@ -1,5 +1,8 @@
 package view;
 
+import java.io.File;
+import java.io.IOException;
+
 public final class Constants {
     public static final String caseInsensitiveMode = "(?i)";
     public static final String argumentPattern = "(\\S+)";
@@ -20,6 +23,9 @@ public final class Constants {
     public static final String REQUEST_ACCEPT = "ACCEPTED";
     public static final String REQUEST_DECLINE = "DECLINED";
     public static final String REQUEST_PENDING = "PENDING";
+    public static String base;
+
+
     public static final String[] types = new String[]{anonymousUserType, customerUserType, sellerUserType, adminUserType};
 
     public static int getTypeByIndex(String type) {

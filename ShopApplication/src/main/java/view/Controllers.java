@@ -28,6 +28,7 @@ import model.request.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -554,11 +555,13 @@ public class Controllers {
             if (isPopup) {
                 editBTN.setVisible(false);
                 sellLogBTN.setVisible(false);
+                buyLogBTN.setVisible(false);
                 logoutBTN.setVisible(false);
                 additionalInfoStackPane.setVisible(false);
             } else {
                 if (type.equals(Constants.sellerUserType)) {
                     customerDiscounts.setVisible(false);
+                    buyLogBTN.setVisible(false);
                     discountTABPANE.setVisible(false);
                     sellerRequests.setVisible(true);
                     requestTABPANE.setVisible(true);
@@ -567,8 +570,9 @@ public class Controllers {
                     sellerRequests.setVisible(false);
                     discountTABPANE.setVisible(true);
                     requestTABPANE.setVisible(false);
-                    sellLogBTN.setText("Buy Logs");
+                    sellLogBTN.setVisible(false);
                 } else {
+                    buyLogBTN.setVisible(false);
                     sellLogBTN.setVisible(false);
                     additionalInfoStackPane.setVisible(false);
                 }
@@ -586,18 +590,15 @@ public class Controllers {
         }
 
         private void initActions() {
-            sellLogBTN.setOnAction(e -> {
-                if (info[info.length - 1].equals(Constants.customerUserType)) {
-                    CustomerBuyLogMenuController.display();
-                } else {
-                    SellerSellLogsManagingMenuController.display();
-                }
-            });
+            sellLogBTN.setOnAction(e -> SellerSellLogsManagingMenuController.display());
+
+            buyLogBTN.setOnAction(e -> CustomerBuyLogMenuController.display());
 
             logoutBTN.setOnAction(e -> {
                 try {
                     mainController.logout();
                     View.type.set(Constants.anonymousUserType);
+                    MainMenuController.display();
                 } catch (Exceptions.NotLoggedInException ex) {
                     ex.printStackTrace();
                 }
@@ -782,6 +783,8 @@ public class Controllers {
                 return;
             }
 
+            oldValue.setEditable(false);
+            newValue.setEditable(false);
             initValues();
         }
 
@@ -858,6 +861,8 @@ public class Controllers {
                 return;
             }
 
+            oldValue.setEditable(false);
+            newValue.setEditable(false);
             initValues();
         }
 
@@ -1060,6 +1065,8 @@ public class Controllers {
 
         @Override
         public void initialize(URL url, ResourceBundle resourceBundle) {
+
+            System.out.println("in the initialize");
 
             for (String[] subProductPack : mainController.getSubProductsForAdvertisements(6)) {
                 advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack));
@@ -1391,7 +1398,7 @@ public class Controllers {
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
-            image.setImage(new Image(subProductInfo[6]));
+            image.setImage(new Image("./src/main/resources/img/default-product-pic.png"));
             priceBefore.setText(subProductInfo[7]);
             priceAfter.setText(subProductInfo[8]);
             sale.setText(subProductInfo[11] != null ? subProductInfo[11] : "");
@@ -1593,8 +1600,7 @@ public class Controllers {
         private void initButtons() {
             browseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image File", "*.jpg"),
-                        new FileChooser.ExtensionFilter("Image File", "*.png"));
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image File", "*.png", "jpg"));
                 File choseFile = fileChooser.showOpenDialog(new Stage());
                 if (choseFile != null) imageField.setText(choseFile.getPath());
             });
@@ -2196,8 +2202,7 @@ public class Controllers {
 
         private void chooseFile(TextField field) {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
             File chosenFile = fileChooser.showOpenDialog(new Stage());
             if (chosenFile != null) {
                 field.setText(chosenFile.getPath());
@@ -2350,6 +2355,7 @@ public class Controllers {
             for (String[] product : adminController.manageAllProducts()) {
                 allProducts.add(new ProductWrapper(product));
             }
+            productsTable.getItems().setAll(allProducts);
 
             initTable();
         }
@@ -2360,7 +2366,9 @@ public class Controllers {
             categoryCOL.setCellValueFactory(new PropertyValueFactory<>("category"));
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailBTN"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
+
         }
+
     }
 
     public static class AdminDiscountManagingMenuController implements Initializable {
@@ -4114,8 +4122,7 @@ public class Controllers {
         private void initActions() {
             adminBrowseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
                 File chosenFile = fileChooser.showOpenDialog(new Stage());
                 if (chosenFile != null) {
                     adminImageField.setText(chosenFile.getPath());
@@ -5415,7 +5422,7 @@ public class Controllers {
         private TextField ameField;
 
         @FXML
-        private PasswordField brandField;
+        private TextField brandField;
 
         @FXML
         private Label errorLBL;
@@ -5442,7 +5449,7 @@ public class Controllers {
                     if (productId != null) {
                         printError("This product already exits!");
                     } else {
-                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), productId);
+                        AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), null);
                         ameField.getScene().getWindow().hide();
                     }
                 }
@@ -5569,7 +5576,7 @@ public class Controllers {
         private boolean exists;
 
         public static void display(String name, String brand, String productId) {
-            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage1, 860, 505)).initialize(name, brand, productId);
+            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 860, 505)).initialize(name, brand, productId);
         }
 
         private void initialize(String name, String brand, String productId) {
@@ -5655,6 +5662,7 @@ public class Controllers {
                                     propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
                         else
                             sellerController.addNewSubProductToAnExistingProduct(productId, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
+                        addProductBTN.getScene().getWindow().hide();
                     } catch (Exception ex) {
                         printError(ex.getMessage());
                         ex.printStackTrace();
@@ -5668,7 +5676,7 @@ public class Controllers {
                 printError("Please choose a category");
                 return false;
             }
-            if (countField.equals("")) {
+            if (countField.getText().equals("")) {
                 printError("Please enter the number of available items");
                 return false;
             }

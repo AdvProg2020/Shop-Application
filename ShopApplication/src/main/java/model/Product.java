@@ -6,7 +6,7 @@ import model.request.AddProductRequest;
 import java.util.*;
 
 public class Product implements ModelBasic {
-    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/img/default-product-pic.png";
+    private static final String DEFAULT_IMAGE_PATH = "/src/main/resources/img/default-product-pic.png";
     private static Map<String, Product> allProducts = new HashMap<>();
     private static int lastNum = 1;
     private String productId;
