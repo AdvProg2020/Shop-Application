@@ -424,4 +424,13 @@ public class SellerController {
         }
         return categoryNames;
     }
+
+    public boolean doesSellSubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if( subProduct == null ){
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
+        }else {
+            return ((Seller)currentAccount()) == subProduct.getSeller();
+        }
+    }
 }
