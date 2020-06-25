@@ -1,0 +1,47 @@
+#bg-pane {
+    -fx-background-color: white;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0, 0, 0);
+}
+
+.button:pressed {
+    -fx-opacity: 80%;
+}
+
+.text-field {
+    -fx-font-size: 14;
+    -fx-font-style: italic;
+    -fx-background-color: #e9e9e9;
+}
+
+.property-label {
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+#browse-button {
+    -fx-background-color: #efefef;
+    -fx-border-color: darkgrey;
+    -fx-border-radius: 3;
+    -fx-focus-color: transparent;
+    -fx-graphic: url("../img/browse-button.png");
+}
+
+#back-button {
+    -fx-background-color: #29292D;
+    -fx-text-fill: lightgrey;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10 5 10;
+}
+
+#add-product-button {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+}
+
