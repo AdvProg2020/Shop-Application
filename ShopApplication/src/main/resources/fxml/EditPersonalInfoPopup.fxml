@@ -1,83 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$EditPersonalInfoPopupController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$EditPersonalInfoPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
             <VBox>
-                <Label text="Username:" />
-                <TextField fx:id="usernameField" disable="true" />
-                <Label id="error-label" fx:id="usernameError" />
+                <Label styleClass="property-label" text="Username:"/>
+                <TextField fx:id="usernameField" disable="true" styleClass="property-box"/>
+                <Label fx:id="usernameError" styleClass="message-label" text="andcoklwneocd"/>
             </VBox>
             <VBox GridPane.columnIndex="1">
-                <Label text="Password:" />
-            <HBox>
-               <children>
-                  <StackPane>
-                     <children>
-                            <PasswordField fx:id="passwordField" />
-                        <TextField fx:id="showPasswordFIeld" prefHeight="25.0" prefWidth="116.0" />
-                     </children>
-                  </StackPane>
-                  <ToggleButton fx:id="showPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="14.0" text="ToggleButton" />
-               </children>
-            </HBox>
-                <Label id="error-label" fx:id="passwordError" textFill="RED" />
-            </VBox>
-            <VBox GridPane.rowIndex="2">
-                <Label text="First name:" />
-                <TextField fx:id="firstName" />
-                <Label id="error-label" fx:id="firstNameError" textFill="RED" />
-            </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <Label text="Last name:" />
-                <TextField fx:id="lastName" />
-                <Label id="error-label" fx:id="lastNameError" textFill="RED" />
-            </VBox>
-            <VBox GridPane.rowIndex="3">
-                <Label text="Phone number:" />
-                <TextField fx:id="phoneNumber" promptText="09123456789" />
-                <Label id="error-label" fx:id="phoneNumberError" textFill="RED" />
-            </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <Label text="Email:" />
-                <TextField fx:id="email" promptText="sample@atm.com" />
-                <Label id="error-label" fx:id="emailError" textFill="RED" />
-            </VBox>
-            <VBox GridPane.rowIndex="4">
-                <Label text="Balance:" />
-                <TextField fx:id="balance" />
-                <Label id="error-label" fx:id="balanceError" textFill="RED" />
-            </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Label text="Store name:" />
-                <TextField fx:id="storeName" />
-                <Label id="error-label" fx:id="storeNameError" textFill="RED" />
+                <Label styleClass="property-label" text="Password:"/>
+                <HBox alignment="CENTER" styleClass="property-box">
+                    <children>
+                        <StackPane>
+                            <children>
+                                <PasswordField fx:id="passwordField"/>
+                                <TextField fx:id="showPasswordFIeld" prefHeight="25.0" prefWidth="116.0"/>
+                            </children>
+                        </StackPane>
+                        <ToggleButton id="show-password-button" fx:id="showPasswordBTN" mnemonicParsing="false"
+                                      prefHeight="25.0" prefWidth="14.0"/>
+                    </children>
+                </HBox>
+                <Label fx:id="passwordError" styleClass="message-label" textFill="RED"/>
             </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
-                <Label text="Profile Picture:" />
-                <HBox spacing="10.0">
-                    <TextField fx:id="imageField" promptText="upload image..." />
-                    <Button fx:id="browseBTN" mnemonicParsing="false" text="Browse" />
+                <Label styleClass="property-label" text="Profile Picture:"/>
+                <HBox spacing="10.0" styleClass="property-box">
+                    <TextField fx:id="imageField" promptText="upload image..." HBox.hgrow="ALWAYS"/>
+                    <Button id="browse-button" fx:id="browseBTN" mnemonicParsing="false"/>
+                    <VBox.margin>
+                        <Insets right="9.0"/>
+                    </VBox.margin>
                 </HBox>
-                <Label id="error-label" fx:id="ImageError" textFill="RED" />
+                <Label fx:id="ImageError" styleClass="message-label" textFill="RED"/>
+            </VBox>
+            <VBox GridPane.rowIndex="2">
+                <Label styleClass="property-label" text="First name:"/>
+                <TextField fx:id="firstName" styleClass="property-box"/>
+                <Label fx:id="firstNameError" styleClass="message-label" textFill="RED"/>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label styleClass="property-label" text="Last name:"/>
+                <TextField fx:id="lastName" styleClass="property-box"/>
+                <Label fx:id="lastNameError" styleClass="message-label" textFill="RED"/>
+            </VBox>
+            <VBox GridPane.rowIndex="3">
+                <Label styleClass="property-label" text="Phone number:"/>
+                <TextField fx:id="phoneNumber" promptText="09123456789" styleClass="property-box"/>
+                <Label fx:id="phoneNumberError" styleClass="message-label" textFill="RED"/>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Label styleClass="property-label" text="Email:"/>
+                <TextField fx:id="email" promptText="sample@atm.com" styleClass="property-box"/>
+                <Label fx:id="emailError" styleClass="message-label" textFill="RED"/>
+            </VBox>
+            <VBox GridPane.rowIndex="4">
+                <Label styleClass="property-label" text="Balance:"/>
+                <TextField fx:id="balance" styleClass="property-box"/>
+                <Label fx:id="balanceError" styleClass="message-label" textFill="RED"/>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <Label styleClass="property-label" text="Store name:"/>
+                <TextField fx:id="storeName" styleClass="property-box"/>
+                <Label fx:id="storeNameError" styleClass="message-label" textFill="RED"/>
             </VBox>
             <columnConstraints>
-                <ColumnConstraints />
-                <ColumnConstraints />
+                <ColumnConstraints maxWidth="190.4" minWidth="179.19998779296876" prefWidth="190.4"/>
+                <ColumnConstraints maxWidth="205.60001220703126" minWidth="194.4" prefWidth="194.4"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints />
@@ -89,12 +83,13 @@
         </GridPane>
     </center>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
     <bottom>
         <HBox alignment="BOTTOM_CENTER" spacing="20.0" BorderPane.alignment="CENTER">
-            <Button fx:id="saveBTN" mnemonicParsing="false" text="Save Changes" />
-            <Button fx:id="discardBTN" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" text="Discard" />
+            <Button id="save-button" fx:id="saveBTN" mnemonicParsing="false" text="Save Changes"/>
+            <Button id="discard-button" fx:id="discardBTN" layoutX="134.0" layoutY="10.0" mnemonicParsing="false"
+                    text="Discard"/>
         </HBox>
     </bottom>
 </BorderPane>

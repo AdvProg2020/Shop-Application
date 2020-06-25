@@ -1,5 +1,5 @@
 .bg-pane {
-
+    -fx-background-color: white;
 }
 
 .button {
@@ -21,9 +21,9 @@
     -fx-font-size: 14;
 }
 
-#message-label {
+.message-label {
     -fx-text-fill: red;
-    -fx-font-size: 14;
+    -fx-font-size: 12;
 }
 
 .text-field {
@@ -59,6 +59,15 @@
     -fx-max-width: 120px;
 }
 
+#browse-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-focus-color: transparent;
+    -fx-graphic: url("../img/browse-button.png");
+}
+
 #add-button {
     -fx-background-color: green;
     -fx-text-fill: white;
@@ -77,4 +86,14 @@
 #cancel-button {
     -fx-graphic: url("../img/decline-button.png");
 }
+
+#show-password-button {
+    -fx-background-color: transparent;
+    -fx-graphic: url("../img/show-password-unselected.png");
+}
+
+#show-password-button:selected {
+    -fx-graphic: url("../img/show-password-selected.png");
+}
+
 
