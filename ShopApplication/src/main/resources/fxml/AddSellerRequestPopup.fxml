@@ -12,11 +12,6 @@
                 <TextField fx:id="usernameField" disable="true" styleClass="property-box"/>
                 <Label fx:id="usernameError" styleClass="message-label"/>
             </VBox>
-            <VBox GridPane.columnIndex="1">
-                <Label styleClass="property-label" text="Password:"/>
-                <TextField fx:id="showPasswordFIeld" styleClass="property-box"/>
-                <Label fx:id="passwordError" styleClass="message-label" textFill="RED"/>
-            </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
                 <Label styleClass="property-label" text="Profile Picture:"/>
                 <TextField fx:id="imageField" promptText="upload image..." styleClass="property-box"/>
