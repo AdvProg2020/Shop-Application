@@ -1370,7 +1370,7 @@ public class Controllers {
         private Label nameLBL;
 
         @FXML
-        private Label ratingCountLBL;
+        private Label ratingLBL;
 
         @FXML
         private Label brandLBL;
@@ -1492,8 +1492,15 @@ public class Controllers {
         private void initItems() {
         }
 
+        //TODO: rating count
         private void initMainObjects(){
-
+            nameLBL.setText(productPack[1]);
+            brandLBL.setText(productPack[2]);
+            productInfoTXT.setText(productPack[3]);
+            ratingLBL.setText(productPack[4]);
+            categoryLBL.setText(productPack[7]);
+            productIMG.setImage(new Image(productPack[8]));
+            //productInfo[5] = Integer.toString(product.getRatingsCount());
         }
 
         private void setPacks(String productId, String subProductId){
@@ -1504,6 +1511,7 @@ public class Controllers {
                 System.out.println(e.getMessage());
             }
         }
+
 
     }
 
