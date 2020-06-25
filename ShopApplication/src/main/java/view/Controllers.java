@@ -1416,6 +1416,8 @@ public class Controllers {
         private String[] productPack;
         private String[] subProductPack;
         private ArrayList<PropertyWrapper> properties;
+        private ArrayList<SellerWrapper> sellers;
+        private ArrayList<String[]> subProductPacks;
 
         public static void display(String productId, boolean editable){
             try {
@@ -1441,13 +1443,15 @@ public class Controllers {
 
         public static class SellerWrapper {
             Label name = new Label();
-            Double price;
-            int available;
+            String price;
+            String available;
+            String subProductId;
 
-            public SellerWrapper(String name, double price, int available) {
+            public SellerWrapper(String name, String price, String available, String subProductId) {
                 this.name.setText(name);
                 this.price = price;
                 this.available = available;
+                this.subProductId = subProductId;
 
                 this.name.setOnMouseClicked(e -> {
 
@@ -1458,12 +1462,16 @@ public class Controllers {
                 return name;
             }
 
-            public Double getPrice() {
+            public String getPrice() {
                 return price;
             }
 
-            public int getAvailable() {
+            public String getAvailable() {
                 return available;
+            }
+
+            public String getSubProductId(){
+                return subProductId;
             }
         }
 
@@ -1498,6 +1506,16 @@ public class Controllers {
         }
 
         private void initSellerItems() {
+
+            try {
+                subProductPacks = mainController.subProductsOfAProduct(productPack[0]);
+                for (String[] pack : subProductPacks) {
+                    sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack[1]));
+                }
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
         }
 
         //TODO: rating count
