@@ -12,31 +12,9 @@
                 <TextField fx:id="usernameField" disable="true" styleClass="property-box"/>
                 <Label fx:id="usernameError" styleClass="message-label"/>
             </VBox>
-            <VBox GridPane.columnIndex="1">
-                <Label styleClass="property-label" text="Password:"/>
-                <HBox alignment="CENTER" styleClass="property-box">
-                    <children>
-                        <StackPane>
-                            <children>
-                                <PasswordField fx:id="passwordField"/>
-                                <TextField fx:id="showPasswordFIeld" prefHeight="25.0" prefWidth="116.0"/>
-                            </children>
-                        </StackPane>
-                        <ToggleButton id="show-password-button" fx:id="showPasswordBTN" mnemonicParsing="false"
-                                      prefHeight="25.0" prefWidth="14.0"/>
-                    </children>
-                </HBox>
-                <Label fx:id="passwordError" styleClass="message-label" textFill="RED"/>
-            </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
                 <Label styleClass="property-label" text="Profile Picture:"/>
-                <HBox spacing="10.0" styleClass="property-box">
-                    <TextField fx:id="imageField" promptText="upload image..." HBox.hgrow="ALWAYS"/>
-                    <Button id="browse-button" fx:id="browseBTN" mnemonicParsing="false"/>
-                    <VBox.margin>
-                        <Insets right="9.0"/>
-                    </VBox.margin>
-                </HBox>
+                <TextField fx:id="imageField" promptText="upload image..." styleClass="property-box"/>
                 <Label fx:id="ImageError" styleClass="message-label" textFill="RED"/>
             </VBox>
             <VBox GridPane.rowIndex="2">

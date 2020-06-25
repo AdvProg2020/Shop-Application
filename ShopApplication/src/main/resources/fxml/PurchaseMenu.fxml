@@ -43,7 +43,7 @@
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
                <Label styleClass="property-label" text="Address"/>
                <TextArea fx:id="address" promptText="enter your accurate shipping address..." scrollTop="1.0"
-                         text="wdcnslncwp;dscm;o;wldcmwe;ldjmc;wldmc;wsdnclkwkdnswk;ncwk;cnw;ekfncw;efknc;fw&#10;"
+                         text="wdcnslncwp;dscm;ldjmc;wldmc;wsdnclkwkdnswk;ncwk;cnw;ekfncw;efknc;fw&#10;"
                          VBox.vgrow="ALWAYS"/>
             </VBox>
             <columnConstraints>
