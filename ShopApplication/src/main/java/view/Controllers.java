@@ -1557,25 +1557,20 @@ public class Controllers {
             }
         }
 
-        private void initPropertyTableTabs() {
-            propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
-            propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
-        }
-
         private void initPropertiesTable() {
             try {
                 HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(productPack[0]);
                 for (String s : propertyValues.keySet()) {
                     properties.add(new PropertyWrapper(s, propertyValues.get(s)));
                 }
+                propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
+                propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
                 initPropertyTableTabs();
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
         }
-
-
     }
 
     public static class ReviewBoxController {
