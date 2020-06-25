@@ -1427,6 +1427,7 @@ public class Controllers {
         private ArrayList<SellerWrapper> sellers;
         private ArrayList<String[]> subProductPacks;
         private boolean editable;
+        private String type;
 
         public static void display(String productId, boolean editable) {
             try {
@@ -1442,13 +1443,18 @@ public class Controllers {
             if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
                 controller = ((ProductDetailMenuController)
                         View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600));
-                controller.initialize(productId, type, editable);
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
                 //controller.initialize(productId, Constants.customerUserType);
             }
-            controller.editable = editable;
+            if (controller != null) {
+                controller.editable = editable;
+                controller.type = View.type.get();
+                controller.initialize(productId, subProductId);
+            }else
+                System.out.println("There is an error with loading the controller...");
+
         }
 
         public static class SellerWrapper {
@@ -1506,7 +1512,15 @@ public class Controllers {
             }
         }
 
-        private void initialize(String productId, String type, boolean editable) {
+        private void initialize(String productId, String subProductId) {
+            setPacks(productId, subProductId);
+            initMainObjects();
+            initCategoryHBox();
+            initReviewsVB();
+            initPropertiesTable();
+            initButtons();
+
+            initSellersTable();
 
         }
 
@@ -1550,6 +1564,7 @@ public class Controllers {
             else
                 priceAfterLBL.setText("");
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
+            updateShowOfButtons();
         }
 
         private void initReviewsVB() {
@@ -1599,19 +1614,22 @@ public class Controllers {
             }
         }
 
-        private void edit(){}
+        private void edit(){
+            //EditProductPopupController.display(productPack[0], subProductPack[1]);
+        }
 
-        private void compare(){ }
+        private void compare(){
+        }
 
-        private void initButtons(String type){
+        private void initButtons(){
             addToCartBTN.setOnAction(e -> addToCart());
             editBTN.setOnAction(e -> edit());
             compareBTN.setOnAction(e -> compare());
 
-            updateShowOfButtons(type);
+            updateShowOfButtons();
         }
 
-        private void updateShowOfButtons(String type){
+        private void updateShowOfButtons(){
             if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
                 if(Integer.parseInt(subProductPack[9]) != 0){
                     addToCartBTN.setVisible(true);
