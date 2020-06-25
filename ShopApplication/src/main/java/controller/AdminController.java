@@ -3,6 +3,7 @@ package controller;
 import model.Category;
 import model.Discount;
 import model.Product;
+import model.SubProduct;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
@@ -439,6 +440,20 @@ public class AdminController {
             throw new Exceptions.InvalidRequestIdException(requestId);
         }else {
             return new HashMap<>(((AddProductRequest)request).getProduct().getPropertyValues());
+        }
+    }
+
+    public ArrayList<String[]> getProductsInSaleRequest(String requestId) throws Exceptions.InvalidRequestIdException {
+        Request request = Request.getRequestById(requestId);
+        if( request == null || !request.getClass().getSimpleName().equals("AddSaleRequest")){
+            throw new Exceptions.InvalidRequestIdException(requestId);
+        }else {
+            ArrayList<SubProduct> subProducts = new ArrayList<>(((AddSaleRequest)request).getSale().getSubProducts());
+            ArrayList<String[]> productPacks = new ArrayList<>();
+            for (SubProduct subProduct : subProducts) {
+                productPacks.add(Utilities.Pack.product(subProduct.getProduct()));
+            }
+            return productPacks;
         }
     }
 }
