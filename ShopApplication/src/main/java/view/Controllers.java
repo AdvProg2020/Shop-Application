@@ -4780,7 +4780,7 @@ public class Controllers {
         private TableColumn<CustomerWrapper, String> usernameCOL;
 
         @FXML
-        private TableColumn<CustomerWrapper, TextField> countCOL;
+        private TableColumn<CustomerWrapper, HBox> countCOL;
 
         @FXML
         private TableColumn<CustomerWrapper, CheckBox> removeCOL;
@@ -4835,6 +4835,9 @@ public class Controllers {
             String id;
             String username;
             TextField count = new TextField();
+            Button increaseBTN = new Button();
+            Button decreaseBTN = new Button();
+            HBox countGroup = new HBox();
             int initCount;
 
             public CustomerWrapper(String[] customerPack, boolean hasCode) {
@@ -4853,6 +4856,9 @@ public class Controllers {
                         Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
                 );
                 View.addListener(this.count, Constants.unsignedIntPattern);
+                this.count.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if(Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
+                });
                 this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
                         removedCustomers.remove(this);
@@ -4862,6 +4868,22 @@ public class Controllers {
                         this.count.setText("");
                     }
                 });
+
+                increaseBTN.getStyleClass().add("increase-button");
+                decreaseBTN.getStyleClass().add("decrease-button");
+
+                increaseBTN.setOnAction(e -> {
+                    this.count.setText((Integer.parseInt(this.count.getText()) + 1) + "");
+                });
+                decreaseBTN.setOnAction(e -> {
+                    this.count.setText((Integer.parseInt(this.count.getText()) - 1) + "");
+                });
+
+                countGroup.getChildren().addAll(this.count, increaseBTN, decreaseBTN);
+            }
+
+            public HBox getCountGroup() {
+                return countGroup;
             }
 
             public Property hasCodeProperty() {
@@ -5042,7 +5064,7 @@ public class Controllers {
             //            String id;
             //            String username;
             //            TextField count;
-            countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
+            countCOL.setCellValueFactory(new PropertyValueFactory<>("countGroup"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("hasCode"));
             usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
 

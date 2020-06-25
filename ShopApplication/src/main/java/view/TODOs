@@ -35,9 +35,7 @@ A: edit product popup and addSale and AddProduct
 --------------------
 A: personal info image not loading.
 T: seller product show buyers.
-A: cart increase decrease. admin discount popup increase decrease.
-A: image in shopping cart
-A: shopping cart unit price total price binding
+A: admin discount popup increase decrease.
 A: purchase discount handle -> customerController.
 T: rating in buy log
 T: rate product in digest
