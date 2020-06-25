@@ -436,7 +436,7 @@ public class Utilities {
             ArrayList<Product> products = new ArrayList<>(category.getProducts(false));
             ArrayList<String> values = new ArrayList<>();
             for (Product product : products) {
-                values.add(product.getPropertyValue(property));
+                values.add(product.getValue(property));
             }
             Set<String> valuesSet = new HashSet<>(values);
             values.clear();
@@ -449,7 +449,7 @@ public class Utilities {
             if(!categoryProperties.contains(property))
                 return true;
             else {
-                return !value.equals(product.getPropertyValue(property));
+                return !value.equals(product.getValue(property));
             }
         }
 
