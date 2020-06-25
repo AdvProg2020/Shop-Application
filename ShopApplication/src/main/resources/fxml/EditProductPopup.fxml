@@ -49,19 +49,35 @@
                 <ColumnConstraints maxWidth="220.0" minWidth="220.0" prefWidth="220.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints maxHeight="99.19999389648437" minHeight="1.59998970031738" prefHeight="55.19999389648437" />
-                <RowConstraints maxHeight="121.60001029968261" minHeight="24.000006103515616" prefHeight="68.00000610351562" />
-                <RowConstraints maxHeight="60.79999999999998" minHeight="31.999981689453108" prefHeight="31.999981689453108" />
-                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998" prefHeight="60.79999999999998" />
-                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998" prefHeight="60.79999999999998" />
+                <RowConstraints maxHeight="99.19999389648437" minHeight="1.59998970031738"
+                                prefHeight="55.19999389648437"/>
+                <RowConstraints maxHeight="121.60001029968261" minHeight="24.000006103515616"
+                                prefHeight="68.00000610351562"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="31.999981689453108"
+                                prefHeight="31.999981689453108"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998"
+                                prefHeight="60.79999999999998"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998"
+                                prefHeight="60.79999999999998"/>
             </rowConstraints>
         </GridPane>
     </center>
+    <right>
+        <TableView fx:id="properties" stylesheets="@../css/TableView.css" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="propertyCOL" prefWidth="150.0" text="Property"/>
+                <TableColumn fx:id="valueCOL" prefWidth="150.0" text="Value"/>
+            </columns>
+            <BorderPane.margin>
+                <Insets left="20.0"/>
+            </BorderPane.margin>
+        </TableView>
+    </right>
     <padding>
-        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
     </padding>
     <bottom>
-        <HBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
             <Button id="save-button" fx:id="saveBTN" mnemonicParsing="false" text="Save Changes"/>
             <Button id="discard-button" fx:id="discardBTN" layoutX="716.0" layoutY="30.0" mnemonicParsing="false"
                     text="Discard"/>
