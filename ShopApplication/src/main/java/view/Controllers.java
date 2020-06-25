@@ -23,6 +23,9 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
+import model.SubProduct;
 
 import java.io.File;
 import java.io.IOException;
@@ -3641,14 +3644,15 @@ public class Controllers {
 
     //add product detail menu
     public static class ShoppingCartMenuController implements Initializable {
-        //TODO decrease/increase buttons.
 
         private static ArrayList<String[]> cartProducts = new ArrayList<>();
         private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
         private SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
-        private class SubProductWrapper {
+        public class SubProductWrapper {
+            ImageView img;
+            String imagePath;
             String subProductId;
             String productId;
             Button nameBrandSeller;
@@ -3656,24 +3660,54 @@ public class Controllers {
             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
             TextField countField;
             HBox countGroup = new HBox();
+            Button increaseBTN = new Button();
+            Button decreaseBTN = new Button();
             SimpleDoubleProperty totalPrice;
-            Button remove;
+            Button remove = new Button();
 
             public SubProductWrapper(String[] productInCartPack) {
                 this(productInCartPack[0], productInCartPack[1],
-                        productInCartPack[2] + " " + productInCartPack[3] + " (" + productInCartPack[4] + ")",
-                        Double.parseDouble(productInCartPack[7]), Integer.parseInt(productInCartPack[6]));
+                        productInCartPack[2] + " - " + productInCartPack[3] + " (" + productInCartPack[4] + ")",
+                        Double.parseDouble(productInCartPack[7]), Integer.parseInt(productInCartPack[6]), productInCartPack[8]);
             }
 
-            public SubProductWrapper(String id, String productId, String nameBrandSeller, double unitPrice, int count) {
+            public SubProductWrapper(String id, String productId, String nameBrandSeller, double unitPrice, int count, String imagePath) {
                 this.subProductId = id;
                 this.productId = productId;
                 this.nameBrandSeller = new Button(nameBrandSeller);
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId, subProductId, false));
                 this.unitPrice = unitPrice;
                 this.countProperty.set(count);
-                this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
-                remove = new Button();
+                this.imagePath = imagePath;
+                this.totalPrice.bind(countProperty.multiply(unitPrice));
+
+                countField.textProperty().bindBidirectional(countProperty, new NumberStringConverter());
+                View.addListener(countField, "[0-9]");
+                countProperty.addListener(((observable, oldValue, newValue) -> {
+                    if (newValue.intValue() > oldValue.intValue()) {
+                        try {
+                            mainController.increaseProductInCart(this.subProductId, newValue.intValue() - oldValue.intValue());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        int n = newValue.intValue() == 0 ? 1: newValue.intValue();
+                        try {
+                            mainController.decreaseProductInCart(this.subProductId, n - oldValue.intValue());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }));
+
+                img.setFitHeight(60);
+                img.setPreserveRatio(true);
+                img.setImage(new Image("file:" + Constants.base + imagePath));
+
+
+                initButtons();
+            }
+
+            private void initButtons() {
                 remove.getStyleClass().add("remove-button");
                 remove.setOnAction(e -> {
                     try {
@@ -3683,6 +3717,65 @@ public class Controllers {
                         ex.printStackTrace();
                     }
                 });
+
+                this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId, subProductId, false));
+
+                increaseBTN.getStyleClass().add("increase-button");
+                decreaseBTN.getStyleClass().add("decrease-button");
+
+                increaseBTN.setOnAction(e -> countProperty.set(countProperty.get() + 1));
+                decreaseBTN.setOnAction(e -> countProperty.set(countProperty.get() - 1));
+
+                countGroup.getChildren().addAll(countField, increaseBTN, decreaseBTN);
+
+            }
+
+            public ImageView getImg() {
+                return img;
+            }
+
+            public String getSubProductId() {
+                return subProductId;
+            }
+
+            public String getProductId() {
+                return productId;
+            }
+
+            public Button getNameBrandSeller() {
+                return nameBrandSeller;
+            }
+
+            public double getUnitPrice() {
+                return unitPrice;
+            }
+
+            public int getCountProperty() {
+                return countProperty.get();
+            }
+
+            public SimpleIntegerProperty countPropertyProperty() {
+                return countProperty;
+            }
+
+            public TextField getCountField() {
+                return countField;
+            }
+
+            public HBox getCountGroup() {
+                return countGroup;
+            }
+
+            public double getTotalPrice() {
+                return totalPrice.get();
+            }
+
+            public SimpleDoubleProperty totalPriceProperty() {
+                return totalPrice;
+            }
+
+            public Button getRemove() {
+                return remove;
             }
 
             public SimpleDoubleProperty getTotalPriceProperty() {
@@ -3691,10 +3784,10 @@ public class Controllers {
         }
 
         @FXML
-        private TableColumn<SubProductWrapper, Button> removeCOL;
+        private TableView<SubProductWrapper> productsTable;
 
         @FXML
-        private TableView<SubProductWrapper> productsTable;
+        private TableColumn<SubProductWrapper, ImageView> imageCOL;
 
         @FXML
         private TableColumn<SubProductWrapper, String> productName;
@@ -3703,10 +3796,13 @@ public class Controllers {
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
 
         @FXML
-        private TableColumn<SubProductWrapper, Integer> count;
+        private TableColumn<SubProductWrapper, SimpleIntegerProperty> count;
 
         @FXML
-        private TableColumn<SubProductWrapper, Double> totalPrice;
+        private TableColumn<SubProductWrapper, SimpleDoubleProperty> totalPrice;
+
+        @FXML
+        private TableColumn<SubProductWrapper, Button> removeCOL;
 
         @FXML
         private Button clearCartBTN;
@@ -3781,15 +3877,15 @@ public class Controllers {
         private void iniTable() {
             initCols();
 
-            //TODO: name-brand(storeName)
             for (String[] cartProduct : cartProducts) {
                 subProducts.add(new SubProductWrapper(cartProduct));
             }
 
-            productsTable.setItems(FXCollections.observableArrayList(subProducts));
+            productsTable.getItems().setAll(subProducts);
         }
 
         private void initCols() {
+            imageCOL.setCellValueFactory(new PropertyValueFactory<>("img"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
             count.setCellValueFactory(new PropertyValueFactory<>("count"));
@@ -3797,6 +3893,8 @@ public class Controllers {
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
     }
+
+
 
     public static class PurchaseMenuController implements Initializable {
         @FXML
