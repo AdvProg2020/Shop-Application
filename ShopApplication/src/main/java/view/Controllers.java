@@ -1062,7 +1062,7 @@ public class Controllers {
         }
 
         private void setAction(Parent p) {
-            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0]));
+            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0],subProduct[1],false));
         }
 
     }
@@ -1360,6 +1360,15 @@ public class Controllers {
     }
 
     public static class ProductDetailMenuController {
+
+        public static void display(String productId, boolean editable){
+            try {
+                display( productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
         public static void display(String productId, String subProductId, boolean editable) {
             String type = View.type.get();
             if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
