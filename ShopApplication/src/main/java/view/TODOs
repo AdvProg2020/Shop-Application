@@ -31,4 +31,4 @@ M:  CSSs
     rating (product menu & buy log menu)
 
 
-T & A: AddSaleRequestPopup and AddProductReqeustPopup table support.
+T & A: AddSaleRequestPopup and AddProductReqeustPopup table support. adminCategoryManagingPopup remove property from a category

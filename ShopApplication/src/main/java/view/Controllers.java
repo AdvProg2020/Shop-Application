@@ -26,8 +26,10 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.BatchUpdateException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -2959,6 +2961,19 @@ public class Controllers {
             categories.getItems().add(new CategoryWrapper(info));
         }
 
+        void removeItem(String name) {
+            try {
+                adminController.removeCategory(name);
+                ArrayList<CategoryWrapper> toBeRemoved = new ArrayList<>();
+                for (CategoryWrapper item : categories.getItems()) {
+                    if(item.parent.get().equals(name) || item.name.get().equals(name)) toBeRemoved.add(item);
+                }
+                categories.getItems().removeAll(toBeRemoved);
+            } catch (Exceptions.InvalidCategoryException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         public class CategoryWrapper {
             String id;
             Button remove, details;
@@ -2979,18 +2994,7 @@ public class Controllers {
                 remove.getStyleClass().add("remove-button");
                 details.getStyleClass().add("details-button");
 
-                remove.setOnAction(e -> {
-                    try {
-                        adminController.removeCategory(this.name.get());
-                        ArrayList<CategoryWrapper> toBeRemoved = new ArrayList<>();
-                        for (CategoryWrapper item : categories.getItems()) {
-                            if(item.parent.get().equals(this.name.get()) || item.name.get().equals(this.name.get())) toBeRemoved.add(item);
-                        }
-                        categories.getItems().removeAll(toBeRemoved);
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        ex.printStackTrace();
-                    }
-                });
+                remove.setOnAction(e -> removeItem(name));
 
                 details.setOnAction(e -> AdminCategoryManagingPopupController.display(this));
             }
@@ -3061,13 +3065,26 @@ public class Controllers {
     }
 
     public static class AdminCategoryManagingPopupController {
-
+        @FXML
+        private TableView<PropertyWrapper> properties;
 
         @FXML
-        private TableView<String> properties;
+        private TableColumn<PropertyWrapper, String> propertyCOL;
 
         @FXML
-        private TableColumn<String, String> propertyCOL;
+        private TableColumn<PropertyWrapper, Button> propertyRemoveCOL;
+
+        @FXML
+        private Label propertyErrorLBL;
+
+        @FXML
+        private TextField newPropertyField;
+
+        @FXML
+        private Button confirmBTN;
+
+        @FXML
+        private Button cancelBTN;
 
         @FXML
         private TableView<MiniProductWrapper> products;
@@ -3079,6 +3096,9 @@ public class Controllers {
         private TableColumn<MiniProductWrapper, Button> productRemoveCOL;
 
         @FXML
+        private Label productErrorLBL;
+
+        @FXML
         private TableView<SubCategoryWrapper> subCategories;
 
         @FXML
@@ -3088,7 +3108,7 @@ public class Controllers {
         private TableColumn<SubCategoryWrapper, Button> subCategoryRemoveCOL;
 
         @FXML
-        private Label errorLBL;
+        private Label subCategoryErrorLBL;
 
         @FXML
         private Label idKeyLBL;
@@ -3106,27 +3126,56 @@ public class Controllers {
         private Button addBTN;
 
         @FXML
+        private HBox editHB;
+
+        @FXML
         private Button editBTN;
 
         @FXML
         private Button discardBTN;
 
         @FXML
-        private HBox editHB;
+        private Tab subCategoriesTAB;
 
         @FXML
         private Tab productsTAB;
 
         @FXML
-        private Tab subCategoriesTAB;
+        private TabPane tableTabPane;
+
+        @FXML
+        private Label errorLBL;
 
         private AdminCategoryManagingMenuController.CategoryWrapper category;
-        private ArrayList<String> categoryProperties = new ArrayList<>();
+        private ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
         private ArrayList<MiniProductWrapper> categoryProducts = new ArrayList<>();
         private ArrayList<SubCategoryWrapper> categorySubCategories = new ArrayList<>();
 
         private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
         private SimpleBooleanProperty parentFieldChanged = new SimpleBooleanProperty(false);
+
+        //TODO
+        public class PropertyWrapper {
+            String property;
+            Button removeBTN = new Button();
+
+            public PropertyWrapper (String property) {
+                this.property = property;
+                removeBTN.getStyleClass().add("remove-button");
+
+                removeBTN.setOnAction(e -> {
+                   //TODO: remove
+                });
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public Button getRemoveBTN() {
+                return removeBTN;
+            }
+        }
 
         public class MiniProductWrapper {
             String id, name, brand, category;
@@ -3169,14 +3218,7 @@ public class Controllers {
             public SubCategoryWrapper(String id, String name) {
                 this.name = name;
                 remove.getStyleClass().add("remove-button");
-
-                remove.setOnAction(e -> {
-                    try {
-                        adminController.removeCategory(name);
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        ex.printStackTrace();
-                    }
-                });
+                remove.setOnAction(e ->AdminCategoryManagingMenuController.currentController.removeItem(name));
             }
 
             public String getName() {
@@ -3210,9 +3252,9 @@ public class Controllers {
             addBTN.setVisible(! isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
-            productsTAB.setDisable(! isDetail);
-            subCategoriesTAB.setDisable(! isDetail);
-
+            if ( ! isDetail) {
+                tableTabPane.getTabs().removeAll(subCategoriesTAB, productsTAB);
+            }
         }
 
         private void initValues() {
@@ -3237,9 +3279,6 @@ public class Controllers {
                             else return true;
                         }, nameFieldChanged, parentFieldChanged)
                 );
-                editBTN.opacityProperty().bind(
-                        Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
-                );
             }
         }
 
@@ -3248,31 +3287,40 @@ public class Controllers {
             productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
             subCategoryCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
             subCategoryRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
+            productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+
             initTableItems();
         }
 
         private void initTableItems() {
             if (category != null) {
                 try {
-                    categoryProperties = mainController.getPropertiesOfCategory(category.name.get(), false);
                     for (String[] subCategory : mainController.getSubCategoriesOfThisCategory(category.name.get())) {
                         categorySubCategories.add(new SubCategoryWrapper(subCategory[0], subCategory[1]));
                     }
                     for (String[] product : mainController.getProductsOfThisCategory(category.name.get())) {
                         categoryProducts.add(new MiniProductWrapper(product));
                     }
+                    for (String property : mainController.getPropertiesOfCategory(category.name.get(), false)) {
+                        categoryProperties.add(new PropertyWrapper(property));
+                    }
+
+                    subCategories.getItems().setAll(categorySubCategories);
+                    products.getItems().setAll(categoryProducts);
+                    properties.getItems().setAll(categoryProperties);
                 } catch (Exceptions.InvalidCategoryException e) {
                     e.printStackTrace();
                 }
             }
-            //TODO: when property is done
         }
 
         private void initActions() {
             addBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        adminController.addCategory(nameField.getText(), parentField.getText(), categoryProperties);
+                        adminController.addCategory(nameField.getText(), parentField.getText(),
+                                properties.getItems().stream().map(PropertyWrapper::getProperty).collect(Collectors.toCollection(ArrayList::new)));
                         String[] newCategory = adminController.getCategory(nameField.getText());
                         AdminCategoryManagingMenuController.currentController.addItem(newCategory);
                         properties.getScene().getWindow().hide();
@@ -3319,6 +3367,11 @@ public class Controllers {
             });
 
             discardBTN.setOnAction(e -> properties.getScene().getWindow().hide());
+            cancelBTN.setOnAction(e -> newPropertyField.setText(""));
+
+            confirmBTN.setOnAction(e -> {
+                //TODO
+            });
         }
 
         private void printError(String err) {
