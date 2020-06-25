@@ -1512,6 +1512,16 @@ public class Controllers {
             }
         }
 
+        //TODO: available count in sub product box
+        private void updateSubProductBox(){
+            sellerLBL.setText(subProductPack[12]);
+            priceBeforeLBL.setText(subProductPack[7]);
+            if( !subProductPack[7].equals(subProductPack[8]))
+                priceAfterLBL.setText(subProductPack[8]);
+            else
+                priceAfterLBL.setText("");
+            //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
+        }
 
     }
 
