@@ -23,9 +23,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
-import model.SubProduct;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +59,7 @@ public class Controllers {
         private PasswordField passwordField;
 
         @FXML
-        private TextField showPasswordFIeld;
+        private TextField showPasswordField;
 
         @FXML
         private ToggleButton showPasswordBTN;
@@ -324,8 +322,8 @@ public class Controllers {
 
 
         private void initPasswordStuff() {
-            showPasswordFIeld.textProperty().bindBidirectional(passwordField.textProperty());
-            showPasswordFIeld.visibleProperty().bind(passwordField.visibleProperty().not());
+            showPasswordField.textProperty().bindBidirectional(passwordField.textProperty());
+            showPasswordField.visibleProperty().bind(passwordField.visibleProperty().not());
             passwordField.visibleProperty().bind(showPasswordBTN.selectedProperty().not());
         }
     }
@@ -6315,6 +6313,90 @@ public class Controllers {
         private void printError(String err) {
             errorLBL.setTextFill(Color.RED);
             errorLBL.setText(err);
+        }
+    }
+
+    public static class RatingBoxController {
+
+        @FXML
+        private HBox ratingBox;
+        @FXML
+        private StackPane star1;
+        @FXML
+        private ImageView fullStar1;
+        @FXML
+        private StackPane star2;
+        @FXML
+        private ImageView fullStar2;
+        @FXML
+        private StackPane star3;
+        @FXML
+        private ImageView fullStar3;
+        @FXML
+        private StackPane star4;
+        @FXML
+        private ImageView fullStar4;
+        @FXML
+        private StackPane star5;
+        @FXML
+        private ImageView fullStar5;
+
+        private String productId;
+
+        public static Parent createBox(String productId) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.ratingBox + ".fxml"));
+            try {
+                Parent p = loader.load();
+                RatingBoxController controller = loader.getController();
+                controller.initialize(productId);
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private void initialize(String productId) {
+            this.productId = productId;
+            initActions();
+        }
+
+        private void initActions() {
+            fullStar1.setOnMouseClicked(e -> {
+                try {
+                    customerController.rateProduct(productId, 1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+            fullStar2.setOnMouseClicked(e -> {
+                try {
+                    customerController.rateProduct(productId, 2);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+            fullStar3.setOnMouseClicked(e -> {
+                try {
+                    customerController.rateProduct(productId, 3);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+            fullStar4.setOnMouseClicked(e -> {
+                try {
+                    customerController.rateProduct(productId, 4);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+            fullStar5.setOnMouseClicked(e -> {
+                try {
+                    customerController.rateProduct(productId, 5);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
         }
     }
 }
