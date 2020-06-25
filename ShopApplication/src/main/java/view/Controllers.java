@@ -165,8 +165,7 @@ public class Controllers {
 
             browseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image file", "*.png"),
-                        new FileChooser.ExtensionFilter("Image file", "*.jpg"));
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image file", "*.png", "*.jpg"));
                 File chosenFile = fileChooser.showOpenDialog(new Stage());
                 if (fileChooser != null) {
                     imageField.setText(chosenFile.getPath());
@@ -321,8 +320,7 @@ public class Controllers {
 
 
         private void initPasswordStuff() {
-            showPasswordFIeld.textProperty().bind(passwordField.textProperty());
-            showPasswordFIeld.setEditable(false);
+            showPasswordFIeld.textProperty().bindBidirectional(passwordField.textProperty());
             showPasswordFIeld.visibleProperty().bind(passwordField.visibleProperty().not());
             passwordField.visibleProperty().bind(showPasswordBTN.selectedProperty().not());
         }
@@ -726,6 +724,15 @@ public class Controllers {
                 return;
             }
 
+            nameField.setDisable(true);
+            brandField.setDisable(true);
+            categoryField.setDisable(true);
+            imageField.setDisable(true);
+            infoArea.setDisable(true);
+            countField.setDisable(true);
+            priceField.setDisable(true);
+            countField.setDisable(true);
+
             initValues();
             initTable();
         }
@@ -782,6 +789,9 @@ public class Controllers {
                 e.printStackTrace();
                 return;
             }
+
+            oldValue.setEditable(false);
+            newValue.setEditable(false);
 
             initValues();
         }
@@ -943,6 +953,11 @@ public class Controllers {
                 return;
             }
 
+            percentageField.setDisable(true);
+            maxField.setDisable(true);
+            startDate.setDisable(true);
+            endDate.setDisable(true);
+
             initValues();
             initTable();
         }
@@ -990,6 +1005,9 @@ public class Controllers {
                 return;
             }
 
+            titleField.setDisable(true);
+            textArea.setDisable(true);
+
             initValues();
         }
 
@@ -1002,23 +1020,22 @@ public class Controllers {
     }
 
     public static class AddSellerRequestPopupController {
-
         @FXML
-        private TextField sellerUsername;
+        private TextField usernameField;
         @FXML
-        private TextField sellerImageField;
+        private TextField imageField;
         @FXML
-        private TextField sellerFirstName;
+        private TextField firstName;
         @FXML
-        private TextField sellerLastName;
+        private TextField lastName;
         @FXML
-        private TextField sellerPhoneNumber;
+        private TextField phoneNumber;
         @FXML
-        private TextField sellerEmail;
+        private TextField email;
         @FXML
-        private TextField sellerBalance;
+        private TextField balance;
         @FXML
-        private TextField sellerStoreName;
+        private TextField storeName;
 
         private String[] primaryDetails;
         private String[] secondaryDetails;
@@ -1038,17 +1055,28 @@ public class Controllers {
                 return;
             }
 
+            initDisable();
             initValues();
         }
 
+        private void initDisable() {
+            usernameField.setDisable(true);
+            firstName.setDisable(true);
+            lastName.setDisable(true);
+            email.setDisable(true);
+            phoneNumber.setDisable(true);
+            balance.setDisable(true);
+            storeName.setDisable(true);
+        }
+
         private void initValues() {
-            sellerUsername.setText(secondaryDetails[0]);
-            sellerFirstName.setText(secondaryDetails[1]);
-            sellerLastName.setText(secondaryDetails[2]);
-            sellerEmail.setText(secondaryDetails[3]);
-            sellerPhoneNumber.setText(secondaryDetails[4]);
-            sellerBalance.setText(secondaryDetails[5]);
-            sellerStoreName.setText(secondaryDetails[6]);
+            usernameField.setText(secondaryDetails[0]);
+            firstName.setText(secondaryDetails[1]);
+            lastName.setText(secondaryDetails[2]);
+            email.setText(secondaryDetails[3]);
+            phoneNumber.setText(secondaryDetails[4]);
+            balance.setText(secondaryDetails[5]);
+            storeName.setText(secondaryDetails[6]);
         }
     }
 
@@ -1771,11 +1799,17 @@ public class Controllers {
         @FXML
         private VBox reviewsVB;
 
+        @FXML
+        private HBox categoryHBox;
+
+
         private String[] productPack;
         private String[] subProductPack;
         private ArrayList<PropertyWrapper> properties;
         private ArrayList<SellerWrapper> sellers;
         private ArrayList<String[]> subProductPacks;
+        private boolean editable;
+        private String type;
 
         public static void display(String productId, boolean editable) {
             try {
@@ -1791,12 +1825,18 @@ public class Controllers {
             if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
                 controller = ((ProductDetailMenuController)
                         View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600));
-                controller.initialize(productId, type, editable);
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
                 //controller.initialize(productId, Constants.customerUserType);
             }
+            if (controller != null) {
+                controller.editable = editable;
+                controller.type = View.type.get();
+                controller.initialize(productId, subProductId);
+            }else
+                System.out.println("There is an error with loading the controller...");
+
         }
 
         public static class SellerWrapper {
@@ -1854,7 +1894,15 @@ public class Controllers {
             }
         }
 
-        private void initialize(String productId, String type, boolean editable) {
+        private void initialize(String productId, String subProductId) {
+            setPacks(productId, subProductId);
+            initMainObjects();
+            initCategoryHBox();
+            initReviewsVB();
+            initPropertiesTable();
+            initButtons();
+
+            initSellersTable();
 
         }
 
@@ -1898,6 +1946,7 @@ public class Controllers {
             else
                 priceAfterLBL.setText("");
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
+            updateShowOfButtons();
         }
 
         private void initReviewsVB() {
@@ -1911,25 +1960,80 @@ public class Controllers {
             }
         }
 
-        private void initPropertyTableTabs() {
-            propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
-            propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
-        }
-
         private void initPropertiesTable() {
             try {
                 HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(productPack[0]);
                 for (String s : propertyValues.keySet()) {
                     properties.add(new PropertyWrapper(s, propertyValues.get(s)));
                 }
-                initPropertyTableTabs();
+                propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
+                propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
         }
 
+        private void initCategoryHBox(){
+            try {
+                for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
+                    categoryHBox.getChildren().add(new Label(s + " >> "));
+                }
+                categoryHBox.getChildren().add(new Label(productPack[1]));
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
+        }
 
+        private void addToCart(){
+            try {
+                mainController.addToCart(subProductPack[1], 1);
+            } catch (Exceptions.UnavailableProductException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnAuthorizedAccountException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void edit(){
+            EditProductPopupController.display(productPack[0], subProductPack[1]);
+        }
+
+        private void compare(){
+        }
+
+        private void initButtons(){
+            addToCartBTN.setOnAction(e -> addToCart());
+            editBTN.setOnAction(e -> edit());
+            compareBTN.setOnAction(e -> compare());
+
+            updateShowOfButtons();
+        }
+
+        private void updateShowOfButtons(){
+            if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
+                if(Integer.parseInt(subProductPack[9]) != 0){
+                    addToCartBTN.setVisible(true);
+                    addToCartBTN.setDisable(true);
+                }else {
+                    addToCartBTN.setVisible(true);
+                    addToCartBTN.setDisable(false);
+                }
+            }else{
+                addToCartBTN.setVisible(false);
+            }
+
+            if( (type.equals(Constants.adminUserType)) && editable){
+                editBTN.setVisible(true);
+            }else if(type.equals(Constants.sellerUserType) && editable){
+                editBTN.setVisible(true);
+            }else {
+                editBTN.setVisible(false);
+            }
+
+            compareBTN.setVisible(true);
+        }
     }
 
     public static class ReviewBoxController {
@@ -2058,8 +2162,7 @@ public class Controllers {
         }
 
         private void initPasswordStuff() {
-            showPasswordField.textProperty().bind(passwordField.textProperty());
-            showPasswordField.setEditable(false);
+            showPasswordField.textProperty().bindBidirectional(passwordField.textProperty());
             showPasswordField.visibleProperty().bind(passwordField.visibleProperty().not());
             passwordField.visibleProperty().bind(showPasswordBTN.selectedProperty().not());
         }
@@ -2388,13 +2491,11 @@ public class Controllers {
         }
 
         private void initPasswordStuff() {
-            customerShowPasswordField.textProperty().bind(customerPassword.textProperty());
-            customerShowPasswordField.setEditable(false);
+            customerShowPasswordField.textProperty().bindBidirectional(customerPassword.textProperty());
             customerShowPasswordField.visibleProperty().bind(customerPassword.visibleProperty().not());
             customerPassword.visibleProperty().bind(customerShowPasswordBTN.selectedProperty().not());
 
-            sellerShowPasswordFIeld.textProperty().bind(sellerPassword.textProperty());
-            sellerShowPasswordFIeld.setEditable(false);
+            sellerShowPasswordFIeld.textProperty().bindBidirectional(sellerPassword.textProperty());
             sellerShowPasswordFIeld.visibleProperty().bind(sellerPassword.visibleProperty().not());
             sellerPassword.visibleProperty().bind(sellerShowPasswordBTN.selectedProperty().not());
         }
@@ -4164,10 +4265,10 @@ public class Controllers {
         private PasswordField adminPassword;
 
         @FXML
-        private TextField showPasswordFIeld;
+        private TextField adminShowPasswordField;
 
         @FXML
-        private ToggleButton showPasswordBTN;
+        private ToggleButton adminShowPasswordBTN;
 
         @FXML
         private Label adminPasswordError;
@@ -4222,18 +4323,26 @@ public class Controllers {
 
 
         public static void display() {
-            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 500, 700);
+            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 1000, 700);
         }
 
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
             adminImageField.setEditable(false);
+            initBindings();
             initActions();
             initLBLs();
             initVisibilities();
             initListeners();
         }
+
+        private void initBindings() {
+            adminShowPasswordField.textProperty().bindBidirectional(adminPassword.textProperty());
+            adminShowPasswordField.visibleProperty().bind(adminPassword.visibleProperty().not());
+            adminPassword.visibleProperty().bind(adminShowPasswordBTN.selectedProperty().not());
+        }
+
 
         private void initActions() {
             adminBrowseBTN.setOnAction(e -> {
