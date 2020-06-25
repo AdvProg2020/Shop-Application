@@ -1391,39 +1391,41 @@ public class Controllers {
         private Button editBTN;
 
         @FXML
-        private TableView<?> sellersTBL;
+        private TableView<SellerWrapper> sellersTBL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLNumberCOL;
+        private TableColumn<SellerWrapper, Label> sellersTBLNumberCOL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLSellerCOL;
+        private TableColumn<SellerWrapper, String> sellersTBLSellerCOL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLPriceCOL;
+        private TableColumn<SellerWrapper, String> sellersTBLPriceCOL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLNumberAvailableCOL;
+        private TableColumn<SellerWrapper, String> sellersTBLNumberAvailableCOL;
 
         @FXML
-        private TableView<?> PropertiesTBL;
+        private TableView<PropertyWrapper> PropertiesTBL;
 
         @FXML
-        private TableColumn<?, ?> propertyTab;
+        private TableColumn<PropertyWrapper, String> propertyTab;
 
         @FXML
-        private TableColumn<?, ?> valueTab;
+        private TableColumn<PropertyWrapper, String> valueTab;
 
         @FXML
         private VBox reviewsVB;
 
         private String[] productPack;
         private String[] subProductPack;
+        private ArrayList<PropertyWrapper> properties;
+        private ArrayList<SellerWrapper> sellers;
+        private ArrayList<String[]> subProductPacks;
 
-
-        public static void display(String productId, boolean editable){
+        public static void display(String productId, boolean editable) {
             try {
-                display( productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
+                display(productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1443,18 +1445,23 @@ public class Controllers {
             }
         }
 
-        public class SellerWrapper {
+        public static class SellerWrapper {
             Label name = new Label();
-            Double price;
-            int available;
+            String price;
+            String available;
+            String[] subProductPack;
+            ProductDetailMenuController controller;
 
-            public SellerWrapper(String name, double price, int available) {
+            public SellerWrapper(String name, String price, String available, String[] subProductPack, ProductDetailMenuController controller) {
                 this.name.setText(name);
                 this.price = price;
                 this.available = available;
+                this.subProductPack = subProductPack;
+                this.controller = controller;
 
                 this.name.setOnMouseClicked(e -> {
-
+                    controller.subProductPack = subProductPack;
+                    controller.updateSubProductBox();
                 });
             }
 
@@ -1462,32 +1469,53 @@ public class Controllers {
                 return name;
             }
 
-            public Double getPrice() {
+            public String getPrice() {
                 return price;
             }
 
-            public int getAvailable() {
+            public String getAvailable() {
                 return available;
+            }
+
+            public String[] getSubProductPack() {
+                return subProductPack;
+            }
+        }
+
+        public static class PropertyWrapper {
+            Label propertyLBL = new Label();
+            Label valueLBL = new Label();
+
+            public PropertyWrapper(String property, String value) {
+                propertyLBL.setText(property);
+                valueLBL.setText(value);
+            }
+
+            public Label getPropertyLBL() {
+                return propertyLBL;
+            }
+
+            public Label getValueLBL() {
+                return valueLBL;
             }
         }
 
         private void initialize(String productId, String type, boolean editable) {
-            initTable();
+
         }
 
-        private void initTable() {
+        private void initSellersTable() {
             sellersTBLSellerCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
             sellersTBLPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
             sellersTBLNumberAvailableCOL.setCellValueFactory(new PropertyValueFactory<>("available"));
-
-            initItems();
-        }
-
-        private void initItems() {
+            for (String[] pack : subProductPacks) {
+                sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack, this));
+            }
+            sellersTBL.setItems(FXCollections.observableArrayList(sellers));
         }
 
         //TODO: rating count
-        private void initMainObjects(){
+        private void initMainObjects() {
             nameLBL.setText(productPack[1]);
             brandLBL.setText(productPack[2]);
             productInfoTXT.setText(productPack[3]);
@@ -1497,26 +1525,92 @@ public class Controllers {
             //productInfo[5] = Integer.toString(product.getRatingsCount());
         }
 
-        private void setPacks(String productId, String subProductId){
+        private void setPacks(String productId, String subProductId) {
             try {
                 productPack = mainController.digest(productId);
                 subProductPack = mainController.getSubProductByID(subProductId);
+                subProductPacks = mainController.subProductsOfAProduct(productPack[0]);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
         //TODO: available count in sub product box
-        private void updateSubProductBox(){
+        private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
             priceBeforeLBL.setText(subProductPack[7]);
-            if( !subProductPack[7].equals(subProductPack[8]))
+            if (!subProductPack[7].equals(subProductPack[8]))
                 priceAfterLBL.setText(subProductPack[8]);
             else
                 priceAfterLBL.setText("");
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
         }
 
+        private void initReviewsVB() {
+            try {
+                ArrayList<String[]> reviews = mainController.reviewsOfProductWithId(productPack[0]);
+                for (String[] review : reviews) {
+                    reviewsVB.getChildren().add(ReviewBoxController.createReviewBox(review));
+                }
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        private void initPropertyTableTabs() {
+            propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
+            propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
+        }
+
+        private void initPropertiesTable() {
+            try {
+                HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(productPack[0]);
+                for (String s : propertyValues.keySet()) {
+                    properties.add(new PropertyWrapper(s, propertyValues.get(s)));
+                }
+                initPropertyTableTabs();
+                PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+    }
+
+    public static class ReviewBoxController {
+        @FXML
+        private Label titleLBL;
+
+        @FXML
+        private Label nameLBL;
+
+        @FXML
+        private TextArea text;
+
+        private String[] review;
+
+        public static Parent createReviewBox(String[] reviewPack) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.reviewBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                ReviewBoxController rbc = loader.getController();
+                rbc.setInfo();
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        //TODO: add hasBoughtField to reviewBox
+        private void setInfo() {
+            nameLBL.setText(review[0]);
+            titleLBL.setText(review[1]);
+            text.setText(review[2]);
+            //reviewPack[3] = review.hasBought() ? "yes" : "no";
+        }
     }
 
     public static class LoginPopupController implements Initializable {
