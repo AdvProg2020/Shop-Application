@@ -1889,10 +1889,10 @@ public class Controllers {
         private Tab buyersTab;
 
         @FXML
-        private TableView<?> BuyersTBL;
+        private TableView<BuyerWrapper> BuyersTBL;
 
         @FXML
-        private TableColumn<?, ?> buyerCOL;
+        private TableColumn<BuyerWrapper, String> buyerCOL;
 
         @FXML
         private Button addReviewBTN;
@@ -1988,6 +1988,18 @@ public class Controllers {
             }
         }
 
+        public static class BuyerWrapper{
+            String username;
+
+            public BuyerWrapper(String username){
+                this.username = username;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+        }
+
         private void initialize(String productId, String subProductId) {
             setPacks(productId, subProductId);
             initMainObjects();
@@ -2010,7 +2022,6 @@ public class Controllers {
             sellersTBL.setItems(FXCollections.observableArrayList(sellers));
         }
 
-        //TODO: rating count
         private void initMainObjects() {
             nameLBL.setText(productPack[1]);
             brandLBL.setText(productPack[2]);
