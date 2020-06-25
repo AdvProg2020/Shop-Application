@@ -1445,7 +1445,7 @@ public class Controllers {
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
-                controller.initialize(productId, Constants.customerUserType);
+                //controller.initialize(productId, Constants.customerUserType);
             }
         }
 
@@ -2010,7 +2010,7 @@ public class Controllers {
                 this.nameBrand = nameBrand;
                 this.category = category;
 
-                detailBTN.setOnAction(e -> ProductDetailMenuController.display(id));
+                detailBTN.setOnAction(e -> ProductDetailMenuController.display(id, true));
                 detailBTN.getStyleClass().add("details-button");
 
                 removeBTN.setOnAction(e -> {
@@ -2853,7 +2853,7 @@ public class Controllers {
                 details.getStyleClass().add("details-button");
                 remove.getStyleClass().add("remove-button");
 
-                details.setOnAction(e -> ProductDetailMenuController.display(productId));
+                details.setOnAction(e -> ProductDetailMenuController.display(productId, id, true));
 
                 remove.setOnAction(e -> {
                     try {
@@ -2970,7 +2970,7 @@ public class Controllers {
                 this.subProductId = id;
                 this.productId = productId;
                 this.nameBrandSeller = new Button(nameBrandSeller);
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId));
+                this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId, subProductId, false));
                 this.unitPrice = unitPrice;
                 this.countProperty.set(count);
                 this.totalPrice.bind(new SimpleDoubleProperty(unitPrice).multiply(countProperty));
