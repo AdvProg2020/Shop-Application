@@ -1585,6 +1585,17 @@ public class Controllers {
                 e.printStackTrace();
             }
         }
+
+        private void addToCart(){
+            try {
+                mainController.addToCart(subProductPack[1], 1);
+            } catch (Exceptions.UnavailableProductException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnAuthorizedAccountException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static class ReviewBoxController {
