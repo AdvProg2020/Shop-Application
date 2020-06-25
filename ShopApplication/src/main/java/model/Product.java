@@ -206,12 +206,16 @@ public class Product implements ModelBasic {
         return defaultSP;
     }
 
-    public String getPropertyValue(String property) {
+    public String getValue(String property) {
         String value = propertyValues.get(property);
         if (value == null)
             value = "";
 
         return value;
+    }
+
+    public Map<String, String> getPropertyValues() {
+        return new HashMap<>(propertyValues);
     }
 
     private void setPropertyValues(Map<String, String> values) {
