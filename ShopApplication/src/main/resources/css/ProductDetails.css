@@ -1,5 +1,13 @@
+#bg-pane {
+    -fx-background-color: white;
+}
+
 .button:hover {
     -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+.button:pressed {
+    -fx-opacity: 80%;
 }
 
 #add-to-cart-button {
@@ -11,13 +19,43 @@
     -fx-padding: 10 30 10 30;
 }
 
+#edit-button {
+    -fx-graphic: url("../img/edit-button.png");
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: #009000;
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-padding: 10 50 10 50;
+}
+
 #compare-button {
     -fx-graphic: url("../img/compare-button.png");
     -fx-text-fill: lightgrey;
     -fx-background-color: #29292D;
     -fx-font-weight: bold;
     -fx-font-size: 14;
-    -fx-padding: 5 20 5 20;
+    -fx-padding: 7 20 7 20;
+}
+
+#review-button {
+    -fx-graphic: url("../img/review-button.png");
+    -fx-text-fill: lightgrey;
+    -fx-background-color: #29292D;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-padding: 4 24 4 24;
+}
+
+#rate-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-underline: true;
+    -fx-text-fill: green;
+}
+
+#rate-button:hover {
+    -fx-text-fill: #29292D;
+    -fx-effect: none;
 }
 
 #name-label {

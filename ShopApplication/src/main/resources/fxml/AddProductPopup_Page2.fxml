@@ -69,20 +69,8 @@
                 </GridPane>
             </center>
             <padding>
-                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+                <Insets bottom="20.0" right="30.0" top="20.0"/>
             </padding>
-            <bottom>
-                <HBox alignment="CENTER_RIGHT" spacing="20.0" BorderPane.alignment="CENTER">
-                    <Button id="back-button" fx:id="backBTN" layoutX="760.0" layoutY="30.0" mnemonicParsing="false"
-                            text="&lt;Back"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="errorLBL" textFill="RED"/>
-                    <Button id="add-product-button" fx:id="addProductBTN" mnemonicParsing="false" text="Add Product"/>
-                    <padding>
-                        <Insets left="10.0" right="10.0" top="20.0"/>
-                    </padding>
-                </HBox>
-            </bottom>
             <right>
                 <TableView fx:id="properties" stylesheets="@../css/TableView.css" BorderPane.alignment="CENTER">
                     <columns>
@@ -102,7 +90,19 @@
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
             <Label id="header-label" text="Add Product"/>
-            <Pane id="add-product-image" prefHeight="472.0" prefWidth="342.0"/>
+            <Pane id="add-product-image" prefHeight="374.0" prefWidth="342.0"/>
         </VBox>
     </left>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="20.0" BorderPane.alignment="CENTER">
+            <Button id="back-button" fx:id="backBTN" layoutX="760.0" layoutY="30.0" mnemonicParsing="false"
+                    text="&lt;Back"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="errorLBL" textFill="RED"/>
+            <Button id="add-product-button" fx:id="addProductBTN" mnemonicParsing="false" text="Add Product"/>
+            <padding>
+                <Insets bottom="20.0" left="30.0" right="30.0"/>
+            </padding>
+        </HBox>
+    </bottom>
 </BorderPane>
