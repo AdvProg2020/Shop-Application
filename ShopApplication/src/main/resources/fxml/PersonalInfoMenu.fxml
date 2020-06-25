@@ -113,9 +113,9 @@
                     </TableView>
                 </Tab>
             </TabPane>
-            <TabPane fx:id="requestTABPANE" stylesheets="@../css/TabPane.css" visible="false">
+            <TabPane fx:id="requestTABPANE" stylesheets="@../css/TabPane.css">
                 <Tab closable="false" text="Pending Requests">
-                    <TableView fx:id="sellerRequests" stylesheets="@../css/TableView.css" visible="false">
+                    <TableView fx:id="sellerRequests" stylesheets="@../css/TableView.css">
                         <columns>
                             <TableColumn fx:id="typeCOL" prefWidth="150.0" text="Request Type" />
                             <TableColumn fx:id="dateCOL" prefWidth="150.0" text="Date" />
