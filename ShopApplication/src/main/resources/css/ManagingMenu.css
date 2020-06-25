@@ -30,15 +30,6 @@
     -fx-graphic: url("../img/clear-cart-button.png");
 }
 
-#confirm-button {
-    -fx-graphic: url("../img/confirm-button.png");
-}
-
-#confirm-button {
-    -fx-graphic: url("../img/cancel-button.png");
-}
-
-
 .text-field {
     -fx-font-style: italic;
     -fx-font-size: 14;
