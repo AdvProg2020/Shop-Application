@@ -5,6 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -598,6 +599,7 @@ public class Controllers {
                 try {
                     mainController.logout();
                     View.type.set(Constants.anonymousUserType);
+                    MainMenuController.display();
                 } catch (Exceptions.NotLoggedInException ex) {
                     ex.printStackTrace();
                 }
@@ -660,34 +662,31 @@ public class Controllers {
     public static class AddProductRequestPopupController {
         @FXML
         private TextField nameField;
-        @FXML
-        private Label usernameErrLBL;
+
         @FXML
         private TextField brandField;
+
         @FXML
         private TextField categoryField;
-        @FXML
-        private Label passwordErrLBL;
+
         @FXML
         private TextField imageField;
-        @FXML
-        private Label imageErrLBL;
+
         @FXML
         private TextArea infoArea;
-        @FXML
-        private Label emailErrLBL;
+
         @FXML
         private TextField priceField;
-        @FXML
-        private Label priceError;
+
         @FXML
         private TextField countField;
-        @FXML
-        private Label countError;
+
         @FXML
         private TableView<PropertyWrapper> properties;
+
         @FXML
         private TableColumn<PropertyWrapper, String> propertyCOL;
+
         @FXML
         private TableColumn<PropertyWrapper, String> valueCOL;
 
@@ -750,7 +749,16 @@ public class Controllers {
         }
 
         private void initTable() {
-            //TODO: see if its possible
+            propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
+            valueCOL.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+            try {
+                adminController.getPropertyValuesOfAProductInARequest(primaryDetails[0]).forEach((key, value) -> {
+                    properties.getItems().add(new PropertyWrapper(key, value));
+                });
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -919,9 +927,9 @@ public class Controllers {
 
     public static class AddSaleRequestPopupController {
         @FXML
-        private TableView<?> products;
+        private TableView<String> products;
         @FXML
-        private TableColumn<?, ?> nameBrandCOL;
+        private TableColumn<String, String> nameBrandCOL;
         @FXML
         private Label errorLBL;
         @FXML
@@ -973,7 +981,9 @@ public class Controllers {
         }
 
         private void initTable() {
-            //TODO
+            nameBrandCOL.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue()));
+
+            //ObservableList<String> items = FXCollections.observableArrayList()
         }
     }
 

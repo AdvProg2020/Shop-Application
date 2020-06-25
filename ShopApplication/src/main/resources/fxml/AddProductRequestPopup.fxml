@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" stylesheets="@../css/ManagingPopup.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$AddProductRequestPopupController">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane id="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AddProductRequestPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
             <VBox>
-                <Label styleClass="property-label" text="Name:"/>
-                <TextField fx:id="nameField" editable="false" styleClass="property-box"/>
-                <Label fx:id="usernameErrLBL" textFill="RED"/>
+                <Label styleClass="property-label" text="Name:" />
+                <TextField fx:id="nameField" editable="false" styleClass="property-box" />
             </VBox>
             <VBox GridPane.columnIndex="1">
-                <Label styleClass="property-label" text="Brand:"/>
-                <TextField fx:id="brandField" editable="false" styleClass="property-box"/>
-                <Label fx:id="passwordErrLBL" textFill="RED"/>
+                <Label styleClass="property-label" text="Brand:" />
+                <TextField fx:id="brandField" editable="false" styleClass="property-box" />
             </VBox>
             <VBox spacing="5.0" GridPane.rowIndex="1">
-                <Label styleClass="property-label" text="Category:"/>
-                <TextField fx:id="categoryField" editable="false" styleClass="property-box"/>
+                <Label styleClass="property-label" text="Category:" />
+                <TextField fx:id="categoryField" editable="false" styleClass="property-box" />
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Label styleClass="property-label" text="Profile Picture:"/>
+                <Label styleClass="property-label" text="Profile Picture:" />
                 <HBox spacing="10.0">
-                    <TextField fx:id="imageField" editable="false" promptText="upload image..."
-                               styleClass="property-box" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="imageField" editable="false" promptText="upload image..." styleClass="property-box" HBox.hgrow="ALWAYS" />
                 </HBox>
-                <Label fx:id="imageErrLBL" textFill="RED" />
             </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
-                <Label styleClass="property-label" text="Product Info:"/>
-                <TextArea fx:id="infoArea" editable="false" styleClass="white-area" stylesheets="@../css/TextArea.css"/>
-                <Label fx:id="emailErrLBL" textFill="RED"/>
+                <Label styleClass="property-label" text="Product Info:" />
+                <TextArea fx:id="infoArea" editable="false" styleClass="white-area" stylesheets="@../css/TextArea.css" />
             </VBox>
             <VBox alignment="CENTER_LEFT" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
-                <Label styleClass="property-label" text="Price:"/>
-                <TextField fx:id="priceField" editable="false" styleClass="property-box"/>
-                <Label fx:id="priceError" textFill="RED"/>
+                <Label styleClass="property-label" text="Price:" />
+                <TextField fx:id="priceField" editable="false" styleClass="property-box" />
             </VBox>
             <VBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="160.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Label styleClass="property-label" text="Count:"/>
-                <TextField fx:id="countField" editable="false" styleClass="property-box"/>
-                <Label fx:id="countError" textFill="RED"/>
+                <Label styleClass="property-label" text="Count:" />
+                <TextField fx:id="countField" editable="false" styleClass="property-box" />
             </VBox>
             <columnConstraints>
                 <ColumnConstraints maxWidth="220.0" minWidth="200.0" prefWidth="220.0" />
