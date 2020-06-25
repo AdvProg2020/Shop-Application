@@ -23,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Product;
+import model.account.Seller;
 
 import java.io.File;
 import java.io.IOException;
@@ -320,7 +321,6 @@ public class Controllers {
         }
 
 
-
         private void initPasswordStuff() {
             showPasswordFIeld.textProperty().bind(passwordField.textProperty());
             showPasswordFIeld.setEditable(false);
@@ -418,18 +418,15 @@ public class Controllers {
          * add sale
          * add review
          * add seller
-         *
+         * <p>
          * product detail :
          * add to cart and edit
          * price store name; default ya na.
-         *
+         * <p>
          * felan: admin edit nadarad.
-         *
+         * <p>
          * admin: popup if managing va main pane if products menu
          * admin edit darad. price and count ra nemitavanad.
-         *
-         *
-         *
          */
         public class DiscountWrapper {
             String code, endDate;
@@ -446,9 +443,9 @@ public class Controllers {
                 return code;
             }
 
-           public String getPercentageMax() {
+            public String getPercentageMax() {
                 return percentage + " (" + maximumAmount + "$)";
-           }
+            }
 
             public String getEndDate() {
                 return endDate;
@@ -646,7 +643,7 @@ public class Controllers {
             nameLBL.setText(info[3] + " " + info[4]);
             phoneValue.setText(info[6]);
             emailValue.setText(info[5]);
-            if ( ! info[info.length - 1].equals(Constants.adminUserType)) {
+            if (!info[info.length - 1].equals(Constants.adminUserType)) {
                 balanceValue.setText(info[8] + "$");
             }
             if (info[info.length - 1].equals(Constants.sellerUserType)) {
@@ -736,15 +733,15 @@ public class Controllers {
             initCategoriesBox();
         }
 
-        private void salesMenu(){
+        private void salesMenu() {
             ProductsMenuController.display("SuperCategory", true);
         }
 
-        private void productsMenu(){
+        private void productsMenu() {
             ProductsMenuController.display("SuperCategory", false);
         }
 
-        private void initCategoriesBox(){
+        private void initCategoriesBox() {
             borderPane.setLeft(CategoryBoxController.createBox("SuperCategory", false));
         }
     }
@@ -797,7 +794,6 @@ public class Controllers {
         private BorderPane borderPane;
 
 
-
         private static final int numberOfColumns = 3;
         public ArrayList<String[]> products;
         private String categoryName;
@@ -816,8 +812,8 @@ public class Controllers {
 
 
         public static void display(String categoryName, boolean inSale) {
-            ProductsMenuController controller =  View.setMainPane(Constants.FXMLs.productsMenu);
-            if( controller != null){
+            ProductsMenuController controller = View.setMainPane(Constants.FXMLs.productsMenu);
+            if (controller != null) {
                 controller.categoryName = categoryName;
                 controller.inSale = inSale;
                 controller.update();
@@ -830,12 +826,12 @@ public class Controllers {
             }
         }
 
-        private void initPropertyFilters(){
+        private void initPropertyFilters() {
             try {
                 ArrayList<String> propertyKeys = mainController.getPropertiesOfCategory(categoryName, false);
                 int numberOfProperties = propertyKeys.size();
                 int numberOfColumns = numberOfProperties / 3 + (numberOfProperties % 3 == 0 ? 0 : 1);
-                setFilterPropertiesPaneSize( numberOfColumns );
+                setFilterPropertiesPaneSize(numberOfColumns);
                 for (String propertyKey : propertyKeys) {
                     VBox propertyBox = creatPropertyChoiceBox(propertyKey);
                     int propertyIndex = propertyKeys.indexOf(propertyKey);
@@ -868,7 +864,7 @@ public class Controllers {
             HashSet<String> availableSorts = new HashSet<>(sorts);
             sortByChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
 
-            }
+        }
 
         //TODO: set max price for sliders
         private void initFilterBar() {
@@ -906,23 +902,23 @@ public class Controllers {
             update.setOnAction(e -> update());
         }
 
-        private void update(){
+        private void update() {
             updateProducts();
             updatePane();
         }
 
-        private void updateProducts(){
+        private void updateProducts() {
             HashMap<String, String> propertyValues = new HashMap<>();
             for (String s : properties.keySet()) {
                 propertyValues.put(s, properties.get(s).getValue());
             }
             products = mainController.sortFilterProducts(categoryName, inSale, sortBy.getValue(), isIncreasing.getValue(), available.getValue(),
-            minPrice.getValue(), maxPrice.getValue(), name.getValue(), brand.getValue(), seller.getValue(), 0, propertyValues);
+                    minPrice.getValue(), maxPrice.getValue(), name.getValue(), brand.getValue(), seller.getValue(), 0, propertyValues);
         }
 
-        private void updatePane(){
+        private void updatePane() {
             int numberOfProducts = products.size();
-            int numberOfRows = numberOfProducts / numberOfColumns +1;
+            int numberOfRows = numberOfProducts / numberOfColumns + 1;
             setPaneSize(numberOfRows);
             int index;
             for (String[] subProductPack : products) {
@@ -933,33 +929,33 @@ public class Controllers {
         }
 
         //TODO: creat each row and column , with hGap and vGap, you can give ID to control them
-        private void setPaneSize(int numberOfRows){
+        private void setPaneSize(int numberOfRows) {
             productsPane = new GridPane();
             int currentRowsNumber = productsPane.getRowCount();
             int currentColumnsNumber = productsPane.getColumnCount();
-            if(numberOfRows > currentRowsNumber) {
+            if (numberOfRows > currentRowsNumber) {
                 productsPane.addRow(numberOfRows - currentRowsNumber);
             }
-            if(numberOfColumns > currentColumnsNumber){
+            if (numberOfColumns > currentColumnsNumber) {
                 productsPane.addColumn(numberOfColumns - currentColumnsNumber);
             }
 
         }
 
-        private void setFilterPropertiesPaneSize(int numberOfColumns){
+        private void setFilterPropertiesPaneSize(int numberOfColumns) {
             propertyFilters = new GridPane();
             int currentRowsNumber = propertyFilters.getRowCount();
             int currentColumnsNumber = propertyFilters.getColumnCount();
-            if(numberOfColumns > currentColumnsNumber){
+            if (numberOfColumns > currentColumnsNumber) {
                 propertyFilters.addColumn(numberOfColumns - currentColumnsNumber);
             }
 
-            if( currentRowsNumber < 3){
-                propertyFilters.addRow( 3 - currentRowsNumber);
+            if (currentRowsNumber < 3) {
+                propertyFilters.addRow(3 - currentRowsNumber);
             }
         }
 
-        private VBox creatPropertyChoiceBox(String property){
+        private VBox creatPropertyChoiceBox(String property) {
             VBox vBox = new VBox();
             vBox.getChildren().add(new Label(property));
             ChoiceBox<String> choiceBox = new ChoiceBox<>();
@@ -975,37 +971,37 @@ public class Controllers {
             return vBox;
         }
 
-        private void setMaxPrice(){
+        private void setMaxPrice() {
             ArrayList<Double> prices = new ArrayList<>();
             for (String[] product : products) {
                 prices.add(Double.parseDouble(product[8]));
             }
-            if(prices.size() == 0)
+            if (prices.size() == 0)
                 maximumAvailablePrice = 0;
             else {
                 maximumAvailablePrice = prices.get(0);
                 for (Double price : prices) {
-                    if( price > maximumAvailablePrice)
+                    if (price > maximumAvailablePrice)
                         maximumAvailablePrice = price;
                 }
             }
         }
 
-        private void initCategoryTree(){
+        private void initCategoryTree() {
             ArrayList<String> categoryNames = mainController.getCategoryTreeOfACategory(categoryName);
             for (String s : categoryNames) {
                 categoryTreeBox.getChildren().add(createCategoryButton(s));
             }
         }
 
-        private Button createCategoryButton(String category){
+        private Button createCategoryButton(String category) {
             Button button = new Button();
             button.setText(category + " >");
             button.setOnAction(e -> ProductsMenuController.display(category, inSale));
             return button;
         }
 
-        private void initCategoryBox(){
+        private void initCategoryBox() {
             borderPane.setLeft(CategoryBoxController.createBox(categoryName, inSale));
         }
     }
@@ -1061,7 +1057,7 @@ public class Controllers {
         }
 
         private void setAction(Parent p) {
-            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0],subProduct[1],false));
+            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
         }
 
     }
@@ -1317,32 +1313,31 @@ public class Controllers {
         }
     }
 
-    public static class CategoryBoxController{
+    public static class CategoryBoxController {
 
         @FXML
         private VBox subCategoryBox;
 
         public static Parent createBox(String categoryName, boolean inSale) {
-                try {
-                    ArrayList<String> subCategories = mainController.getSubCategoriesOfACategory(categoryName);
-                    FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoriesBox + ".fxml"));
-                    Parent p;
-                    p = loader.load();
-                    CategoryBoxController cbc = loader.getController();
-                    VBox subCategoryBox = cbc.subCategoryBox;
-                    for (String subCategory : subCategories) {
-                        subCategoryBox.getChildren().add(createCategoryButton(subCategory, inSale));
-                    }
-                    return p;
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+            try {
+                ArrayList<String> subCategories = mainController.getSubCategoriesOfACategory(categoryName);
+                FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoriesBox + ".fxml"));
+                Parent p;
+                p = loader.load();
+                CategoryBoxController cbc = loader.getController();
+                VBox subCategoryBox = cbc.subCategoryBox;
+                for (String subCategory : subCategories) {
+                    subCategoryBox.getChildren().add(createCategoryButton(subCategory, inSale));
                 }
-                return null;
+                return p;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
         }
 
 
-
-        private static Button createCategoryButton(String categoryName, boolean inSale){
+        private static Button createCategoryButton(String categoryName, boolean inSale) {
             Button button = new Button();
             button.setText(categoryName);
             button.setOnAction(e -> ProductsMenuController.display(categoryName, inSale));
@@ -1388,19 +1383,19 @@ public class Controllers {
         private Button editBTN;
 
         @FXML
-        private TableView<?> sellersTBL;
+        private TableView<SellerWrapper> sellersTBL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLNumberCOL;
+        private TableColumn<SellerWrapper, Label> sellersTBLNumberCOL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLSellerCOL;
+        private TableColumn<SellerWrapper, String> sellersTBLSellerCOL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLPriceCOL;
+        private TableColumn<SellerWrapper, String> sellersTBLPriceCOL;
 
         @FXML
-        private TableColumn<?, ?> sellersTBLNumberAvailableCOL;
+        private TableColumn<SellerWrapper, String> sellersTBLNumberAvailableCOL;
 
         @FXML
         private TableView<PropertyWrapper> PropertiesTBL;
@@ -1420,9 +1415,9 @@ public class Controllers {
         private ArrayList<SellerWrapper> sellers;
         private ArrayList<String[]> subProductPacks;
 
-        public static void display(String productId, boolean editable){
+        public static void display(String productId, boolean editable) {
             try {
-                display( productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
+                display(productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1474,16 +1469,16 @@ public class Controllers {
                 return available;
             }
 
-            public String[] getSubProductPack(){
+            public String[] getSubProductPack() {
                 return subProductPack;
             }
         }
 
-        public static class PropertyWrapper{
+        public static class PropertyWrapper {
             Label propertyLBL = new Label();
             Label valueLBL = new Label();
 
-            public PropertyWrapper(String property, String value){
+            public PropertyWrapper(String property, String value) {
                 propertyLBL.setText(property);
                 valueLBL.setText(value);
             }
@@ -1505,26 +1500,14 @@ public class Controllers {
             sellersTBLSellerCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
             sellersTBLPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
             sellersTBLNumberAvailableCOL.setCellValueFactory(new PropertyValueFactory<>("available"));
-
-            initSellerItems();
-        }
-
-        private void initSellerItems() {
-
-            try {
-                subProductPacks = mainController.subProductsOfAProduct(productPack[0]);
-                for (String[] pack : subProductPacks) {
-                    sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack, this));
-                }
-
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
+            for (String[] pack : subProductPacks) {
+                sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack, this));
             }
+            sellersTBL.setItems(FXCollections.observableArrayList(sellers));
         }
 
         //TODO: rating count
-        private void initMainObjects(){
+        private void initMainObjects() {
             nameLBL.setText(productPack[1]);
             brandLBL.setText(productPack[2]);
             productInfoTXT.setText(productPack[3]);
@@ -1534,27 +1517,28 @@ public class Controllers {
             //productInfo[5] = Integer.toString(product.getRatingsCount());
         }
 
-        private void setPacks(String productId, String subProductId){
+        private void setPacks(String productId, String subProductId) {
             try {
                 productPack = mainController.digest(productId);
                 subProductPack = mainController.getSubProductByID(subProductId);
+                subProductPacks = mainController.subProductsOfAProduct(productPack[0]);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
         //TODO: available count in sub product box
-        private void updateSubProductBox(){
+        private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
             priceBeforeLBL.setText(subProductPack[7]);
-            if( !subProductPack[7].equals(subProductPack[8]))
+            if (!subProductPack[7].equals(subProductPack[8]))
                 priceAfterLBL.setText(subProductPack[8]);
             else
                 priceAfterLBL.setText("");
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
         }
 
-        private void initReviewsVB(){
+        private void initReviewsVB() {
             try {
                 ArrayList<String[]> reviews = mainController.reviewsOfProductWithId(productPack[0]);
                 for (String[] review : reviews) {
@@ -1565,20 +1549,19 @@ public class Controllers {
             }
         }
 
-        private void initPropertyTableTabs(){
+        private void initPropertyTableTabs() {
             propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
             propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
-
-            PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
         }
 
-        private void initPropertiesTable(){
+        private void initPropertiesTable() {
             try {
                 HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(productPack[0]);
                 for (String s : propertyValues.keySet()) {
                     properties.add(new PropertyWrapper(s, propertyValues.get(s)));
                 }
                 initPropertyTableTabs();
+                PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
@@ -1599,7 +1582,7 @@ public class Controllers {
 
         private String[] review;
 
-        public static Parent createReviewBox(String[] reviewPack){
+        public static Parent createReviewBox(String[] reviewPack) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.reviewBox + ".fxml"));
             Parent p;
             try {
@@ -2055,7 +2038,7 @@ public class Controllers {
         }
     }
 
-    public static class AdminProductManagingMenu implements Initializable{
+    public static class AdminProductManagingMenu implements Initializable {
         @FXML
         private TableView<ProductWrapper> productsTable;
 
@@ -2115,7 +2098,7 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            allProducts =  new ArrayList<>();
+            allProducts = new ArrayList<>();
             for (String[] product : adminController.manageAllProducts()) {
                 allProducts.add(new ProductWrapper(product));
             }
@@ -2215,7 +2198,7 @@ public class Controllers {
             discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
         }
 
-        public  class DiscountWrapper {
+        public class DiscountWrapper {
             String id;
             String code;
             SimpleDoubleProperty percentage = new SimpleDoubleProperty();
@@ -2461,7 +2444,7 @@ public class Controllers {
         }
     }
 
-    public static class AdminCategoryManagingMenuController implements Initializable{
+    public static class AdminCategoryManagingMenuController implements Initializable {
 
         static AdminCategoryManagingMenuController currentController;
         ArrayList<CategoryWrapper> wrappers;
@@ -2519,7 +2502,8 @@ public class Controllers {
                         adminController.removeCategory(this.name.get());
                         ArrayList<CategoryWrapper> toBeRemoved = new ArrayList<>();
                         for (CategoryWrapper item : categories.getItems()) {
-                            if(item.parent.get().equals(this.name.get()) || item.name.get().equals(this.name.get())) toBeRemoved.add(item);
+                            if (item.parent.get().equals(this.name.get()) || item.name.get().equals(this.name.get()))
+                                toBeRemoved.add(item);
                         }
                         categories.getItems().removeAll(toBeRemoved);
                     } catch (Exceptions.InvalidCategoryException ex) {
@@ -2742,11 +2726,11 @@ public class Controllers {
             boolean isDetail = category != null;
 
             editHB.setVisible(isDetail);
-            addBTN.setVisible(! isDetail);
+            addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
-            productsTAB.setDisable(! isDetail);
-            subCategoriesTAB.setDisable(! isDetail);
+            productsTAB.setDisable(!isDetail);
+            subCategoriesTAB.setDisable(!isDetail);
 
         }
 
@@ -2862,10 +2846,10 @@ public class Controllers {
         }
 
         private boolean validateFields() {
-            if ( ! nameField.getText().matches("\\w+")) {
+            if (!nameField.getText().matches("\\w+")) {
                 printError("Invalid characters in category name!");
                 return false;
-            } else if ( ! parentField.getText().matches("\\w+")) {
+            } else if (!parentField.getText().matches("\\w+")) {
                 printError("Invalid characters in parent category name!");
                 return false;
             } else return true;
@@ -2873,8 +2857,7 @@ public class Controllers {
     }
 
 
-
-    public static class SellerAddProductPopupController implements Initializable{
+    public static class SellerAddProductPopupController implements Initializable {
         public static void display() {
 
         }
@@ -3386,7 +3369,7 @@ public class Controllers {
 
         public static void display(String logId) {
             ((CustomerBuyLogDetailsPopupController)
-            View.setMainPane(Constants.FXMLs.customerBuyLogDetailsPopup)).init(logId);
+                    View.setMainPane(Constants.FXMLs.customerBuyLogDetailsPopup)).init(logId);
         }
 
         private void init(String logId) {
@@ -3425,7 +3408,7 @@ public class Controllers {
             receiverPhoneLBL.setText(info[3]);
 
             StringBuilder address = new StringBuilder(info[4]);
-            int offset = 0 , size = address.length();
+            int offset = 0, size = address.length();
             while (offset + 19 < size) {
                 offset += 19;
                 address.insert(offset, "\n");
@@ -4080,14 +4063,14 @@ public class Controllers {
 
             @Override
             public boolean equals(Object obj) {
-                return this.id.equals(((CustomerWrapper)obj).id);
+                return this.id.equals(((CustomerWrapper) obj).id);
             }
         }
 
         public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             String discountId = discount == null ? null : discount.getId();
             ((AdminDiscountManagingPopupController)
-                    View.popupWindow((discountId == null) ? "Create Discount":"Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount, editable);
+                    View.popupWindow((discountId == null) ? "Create Discount" : "Discount Details", Constants.FXMLs.adminDiscountManagingPopup, 800, 500)).initialize(discountId, discount, editable);
         }
 
         private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
@@ -4126,21 +4109,21 @@ public class Controllers {
         private void initVisibility(String discountId, boolean editable) {
             boolean isDetail = discountId != null;
             saveDiscardHBox.setVisible(isDetail && editable);
-            addBTN.setVisible( ! isDetail && editable);
+            addBTN.setVisible(!isDetail && editable);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
 
             editBTN.opacityProperty().bind(
                     Bindings.createObjectBinding(() -> {
                         if (codeFieldChanged.get() || percentageFieldChanged.get() || maxFieldChanged.get()
-                        || endDateChanged.get() || startDateChanged.get()) return 1;
+                                || endDateChanged.get() || startDateChanged.get()) return 1;
                         else return 0.5;
                     }, codeFieldChanged, percentageFieldChanged, maxFieldChanged, endDateChanged, startDateChanged)
             );
 
             editBTN.disableProperty().bind(editBTN.opacityProperty().isNotEqualTo(1));
 
-            codeField.setEditable( ! isDetail);
+            codeField.setEditable(!isDetail);
 
             maxField.setEditable(editable);
             codeField.setEditable(editable);
@@ -4213,19 +4196,19 @@ public class Controllers {
         }
 
         private boolean fieldValidation() {
-            if ( ! codeField.getText().matches("^\\w+$")) {
+            if (!codeField.getText().matches("^\\w+$")) {
                 printError("Invalid discount code! use only characters, digits and _ .");
                 return false;
-            } else if ( ! percentageField.getText().matches(Constants.doublePattern)) {
+            } else if (!percentageField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid percentage! enter a floating point number (ex. 50.5)");
                 return false;
-            } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
+            } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! enter a floating point number (ex. 40.5)");
                 return false;
-            } else if ( startDate.getValue() == null) {
+            } else if (startDate.getValue() == null) {
                 printError("Please enter a valid starting date");
                 return false;
-            } else if ( endDate.getValue() == null || endDate.getValue().compareTo(startDate.getValue()) <= 0) {
+            } else if (endDate.getValue() == null || endDate.getValue().compareTo(startDate.getValue()) <= 0) {
                 printError("Please enter a valid ending date.");
                 return false;
             } else return true;
@@ -4261,7 +4244,7 @@ public class Controllers {
             for (String[] user : adminController.manageUsers()) {
                 if (user[6].equals(Constants.customerUserType)) {
                     CustomerWrapper cw = new CustomerWrapper(user[0], user[1], 0, false);
-                    if ( ! customersWithDiscount.contains(cw)) {
+                    if (!customersWithDiscount.contains(cw)) {
                         allCustomers.add(cw);
                     }
                 }
@@ -4490,7 +4473,7 @@ public class Controllers {
         public static void display(String saleId, boolean editable) {
             String title = saleId == null ? "Add Sale" : "Sale Details";
             ((SellerSaleManagingPopupController)
-            View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId, editable);
+                    View.popupWindow(title, Constants.FXMLs.sellerSaleManagingPopup, 650, 500)).initialize(saleId, editable);
         }
 
         private void printError(String err) {
@@ -4535,7 +4518,7 @@ public class Controllers {
 
                     for (String[] product : sellerController.manageProducts()) {
                         ProductInSaleWrapper p = new ProductInSaleWrapper(product[0], product[2], product[3], false);
-                        if ( ! inSales.contains(p)) allProducts.add(p);
+                        if (!inSales.contains(p)) allProducts.add(p);
                     }
                 } catch (Exceptions.InvalidSaleIdException e) {
                     e.printStackTrace();
@@ -4608,10 +4591,10 @@ public class Controllers {
         }
 
         private boolean validateFields() {
-            if( ! percentageField.getText().matches(Constants.doublePattern)) {
+            if (!percentageField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid percentage! (ex. 33.33)");
                 return false;
-            } else if ( ! maxField.getText().matches(Constants.doublePattern)) {
+            } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! (ex. 25.75)");
                 return false;
             } else if (startDate.getValue() == null) {
@@ -4624,7 +4607,7 @@ public class Controllers {
         }
 
         private void initBindings(String saleId) {
-            if(saleId != null) {
+            if (saleId != null) {
                 percentageChanged.bind(
                         Bindings.when(percentageField.textProperty().isEqualTo(sale[2])).then(false).otherwise(true)
                 );
@@ -4643,7 +4626,7 @@ public class Controllers {
                             if (endDateChanged.get() || startDateChanged.get() || maxFieldChanged.get() || percentageChanged.get()) {
                                 return false;
                             } else return true;
-                        }, endDateChanged,  startDateChanged, maxFieldChanged, percentageChanged)
+                        }, endDateChanged, startDateChanged, maxFieldChanged, percentageChanged)
                 );
                 editBTN.opacityProperty().bind(
                         Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
@@ -4653,7 +4636,7 @@ public class Controllers {
 
         private void initVisibilities(String saleId, boolean editable) {
             editHB.setVisible((saleId != null) && editable);
-            addBTN.setVisible((! editHB.isVisible()) && editable);
+            addBTN.setVisible((!editHB.isVisible()) && editable);
             idKeyLBL.setVisible(saleId != null);
             idValueLBL.setVisible(saleId != null);
 
@@ -5013,7 +4996,7 @@ public class Controllers {
             shipStatusLBL.setText(sellLog.shippingStatus);
 
             StringBuilder address = new StringBuilder(sellLog.receiverAddress);
-            int offset = 0 , size = address.length();
+            int offset = 0, size = address.length();
             while (offset + 19 < size) {
                 offset += 19;
                 address.insert(offset, "\n");
@@ -5142,7 +5125,7 @@ public class Controllers {
             if (input != null) {
                 ArrayList<String[]> products = getCurrentProducts();
                 if (products != null) {
-                        ProductsMenuController.display("SuperCategory", false);
+                    ProductsMenuController.display("SuperCategory", false);
                 }
             }
         }
@@ -5150,7 +5133,7 @@ public class Controllers {
         //search utils.
         private ArrayList<String[]> getCurrentProducts() {
             try {
-                return new ArrayList<>( mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME));
+                return new ArrayList<>(mainController.getProductsOfThisCategory(Constants.SUPER_CATEGORY_NAME));
 
             } catch (Exceptions.InvalidCategoryException e) {
                 System.out.println(e.getMessage());
@@ -5307,7 +5290,7 @@ public class Controllers {
             public PropertyWrapper(String property) {
                 this.property = property;
                 value.setPromptText("Enter value...");
-                value.setEditable( ! exists);
+                value.setEditable(!exists);
             }
 
             public String getProperty() {
@@ -5325,6 +5308,7 @@ public class Controllers {
         private String productId;
         private String[] info;
         private boolean exists;
+
         public static void display(String name, String brand, String productId) {
             ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage1, 860, 505)).initialize(name, brand, productId);
         }
@@ -5407,9 +5391,9 @@ public class Controllers {
                         propertyMap.put(item.property, item.value);
                     }
                     try {
-                        if ( ! exists)
+                        if (!exists)
                             sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
-                                propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
+                                    propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
                         else
                             sellerController.addNewSubProductToAnExistingProduct(productId, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
                     } catch (Exception ex) {
@@ -5429,7 +5413,7 @@ public class Controllers {
                 printError("Please enter the number of available items");
                 return false;
             }
-            if ( ! priceField.getText().matches(Constants.doublePattern)) {
+            if (!priceField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid price! Please enter a double number");
                 return false;
             }
