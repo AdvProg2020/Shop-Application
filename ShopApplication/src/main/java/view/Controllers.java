@@ -22,14 +22,10 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Product;
-import model.account.Seller;
-import model.request.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -484,7 +480,7 @@ public class Controllers {
                             AddProductRequestPopupController.display(id);
                             break;
                         case "EditProductRequest":
-                            EditProductRequestPopupController.display(id);
+                            EditRequestPopupController.display(id);
                             break;
                         case "EditSaleRequest":
                             EditSaleRequestPopupController.display(id);
@@ -763,7 +759,7 @@ public class Controllers {
      * }
      */
 
-    public static class EditProductRequestPopupController {
+    public static class EditRequestPopupController {
         @FXML private Label idProperty;
         @FXML private Label idValue;
         @FXML private Label fieldLBL;
@@ -775,7 +771,7 @@ public class Controllers {
         private String[] tertiaryDetails;
 
         public static void display(String requestId) {
-            ((EditProductRequestPopupController)
+            ((EditRequestPopupController)
                     View.popupWindow("Edit product request details", Constants.FXMLs.editRequestDetailsPopup, 500, 300)).initialize(requestId);
         }
 
@@ -819,6 +815,23 @@ public class Controllers {
                     oldValue.setText(secondaryDetails[9]);
                     break;
 
+                case "START_DATE":
+                    fieldLBL.setText("Start date");
+                    oldValue.setText(secondaryDetails[3]);
+                    break;
+                case "END_DATE":
+                    fieldLBL.setText("End date");
+                    oldValue.setText(secondaryDetails[4]);
+                    break;
+                case "PERCENTAGE":
+                    fieldLBL.setText("Percentage");
+                    oldValue.setText(secondaryDetails[2]);
+                    break;
+                case "MAXIMUM":
+                    fieldLBL.setText("Maximum sale amount");
+                    oldValue.setText(secondaryDetails[6]);
+                    break;
+
             }
 
             idValue.setText(secondaryDetails[0]);
@@ -838,61 +851,61 @@ public class Controllers {
      * }
      */
 
-    public static class EditSaleRequestPopupController {
-        @FXML private Label idProperty;
-        @FXML private Label idValue;
-        @FXML private Label fieldLBL;
-        @FXML private TextArea newValue;
-        @FXML private TextArea oldValue;
-
-        private String[] primaryDetails;
-        private String[] secondaryDetails;
-        private String[] tertiaryDetails;
-
-        public static void display(String requestId) {
-            ((EditSaleRequestPopupController)
-                    View.popupWindow("Edit sale request details", Constants.FXMLs.editRequestDetailsPopup, 500, 300)).initialize(requestId);
-        }
-
-        private void initialize(String requestId) {
-            try {
-                var detailsOfRequest = adminController.detailsOfRequest(requestId);
-                primaryDetails = detailsOfRequest.get(0);
-                secondaryDetails = detailsOfRequest.get(1);
-                tertiaryDetails = detailsOfRequest.get(2);
-            } catch (Exceptions.InvalidRequestIdException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            initValues();
-        }
-
-        private void initValues() {
-            switch (tertiaryDetails[0]) {
-                case "START_DATE":
-                    fieldLBL.setText("Start date");
-                    oldValue.setText(secondaryDetails[3]);
-                    break;
-                case "END_DATE":
-                    fieldLBL.setText("End date");
-                    oldValue.setText(secondaryDetails[4]);
-                    break;
-                case "PERCENTAGE":
-                    fieldLBL.setText("Percentage");
-                    oldValue.setText(secondaryDetails[2]);
-                    break;
-                case "MAXIMUM":
-                    fieldLBL.setText("Maximum sale amount");
-                    oldValue.setText(secondaryDetails[6]);
-                    break;
-            }
-
-            idValue.setText(secondaryDetails[0]);
-
-            newValue.setText(tertiaryDetails[1]);
-        }
-    }
+//    public static class EditSaleRequestPopupController {
+//        @FXML private Label idProperty;
+//        @FXML private Label idValue;
+//        @FXML private Label fieldLBL;
+//        @FXML private TextArea newValue;
+//        @FXML private TextArea oldValue;
+//
+//        private String[] primaryDetails;
+//        private String[] secondaryDetails;
+//        private String[] tertiaryDetails;
+//
+//        public static void display(String requestId) {
+//            ((EditSaleRequestPopupController)
+//                    View.popupWindow("Edit sale request details", Constants.FXMLs.editRequestDetailsPopup, 500, 300)).initialize(requestId);
+//        }
+//
+//        private void initialize(String requestId) {
+//            try {
+//                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+//                primaryDetails = detailsOfRequest.get(0);
+//                secondaryDetails = detailsOfRequest.get(1);
+//                tertiaryDetails = detailsOfRequest.get(2);
+//            } catch (Exceptions.InvalidRequestIdException e) {
+//                e.printStackTrace();
+//                return;
+//            }
+//
+//            initValues();
+//        }
+//
+//        private void initValues() {
+//            switch (tertiaryDetails[0]) {
+//                case "START_DATE":
+//                    fieldLBL.setText("Start date");
+//                    oldValue.setText(secondaryDetails[3]);
+//                    break;
+//                case "END_DATE":
+//                    fieldLBL.setText("End date");
+//                    oldValue.setText(secondaryDetails[4]);
+//                    break;
+//                case "PERCENTAGE":
+//                    fieldLBL.setText("Percentage");
+//                    oldValue.setText(secondaryDetails[2]);
+//                    break;
+//                case "MAXIMUM":
+//                    fieldLBL.setText("Maximum sale amount");
+//                    oldValue.setText(secondaryDetails[6]);
+//                    break;
+//            }
+//
+//            idValue.setText(secondaryDetails[0]);
+//
+//            newValue.setText(tertiaryDetails[1]);
+//        }
+//    }
 
     public static class AddSaleRequestPopupController {
         @FXML
@@ -2722,7 +2735,7 @@ public class Controllers {
                             AddSellerRequestPopupController.display(id);
                             break;
                         case "EditProductRequest":
-                            EditProductRequestPopupController.display(id);
+                            EditRequestPopupController.display(id);
                             break;
                         case "EditSaleRequest":
                             EditSaleRequestPopupController.display(id);
