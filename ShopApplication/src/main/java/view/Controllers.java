@@ -1513,7 +1513,18 @@ public class Controllers {
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
         }
 
+        private void initReviewsVB(){
+            try {
+                ArrayList<String[]> reviews = mainController.reviewsOfProductWithId(productPack[0]);
+
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
+
+    //public static class
 
     public static class LoginPopupController implements Initializable {
         private static Stage PopupStage;
