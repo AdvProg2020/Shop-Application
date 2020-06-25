@@ -1402,13 +1402,13 @@ public class Controllers {
         private TableColumn<?, ?> sellersTBLNumberAvailableCOL;
 
         @FXML
-        private TableView<?> PropertiesTBL;
+        private TableView<PropertyWrapper> PropertiesTBL;
 
         @FXML
-        private TableColumn<?, ?> propertyTab;
+        private TableColumn<PropertyWrapper, String> propertyTab;
 
         @FXML
-        private TableColumn<?, ?> valueTab;
+        private TableColumn<PropertyWrapper, String> valueTab;
 
         @FXML
         private VBox reviewsVB;
@@ -1439,7 +1439,7 @@ public class Controllers {
             }
         }
 
-        public class SellerWrapper {
+        public static class SellerWrapper {
             Label name = new Label();
             Double price;
             int available;
@@ -1467,19 +1467,37 @@ public class Controllers {
             }
         }
 
-        private void initialize(String productId, String type, boolean editable) {
-            initTable();
+        public static class PropertyWrapper{
+            Label propertyLBL = new Label();
+            Label valueLBL = new Label();
+
+            public PropertyWrapper(String property, String value){
+                propertyLBL.setText(property);
+                valueLBL.setText(value);
+            }
+
+            public Label getPropertyLBL() {
+                return propertyLBL;
+            }
+
+            public Label getValueLBL() {
+                return valueLBL;
+            }
         }
 
-        private void initTable() {
+        private void initialize(String productId, String type, boolean editable) {
+
+        }
+
+        private void initSellersTable() {
             sellersTBLSellerCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
             sellersTBLPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
             sellersTBLNumberAvailableCOL.setCellValueFactory(new PropertyValueFactory<>("available"));
 
-            initItems();
+            initSellerItems();
         }
 
-        private void initItems() {
+        private void initSellerItems() {
         }
 
         //TODO: rating count
@@ -1523,6 +1541,8 @@ public class Controllers {
                 System.out.println(e.getMessage());
             }
         }
+
+
 
     }
 
