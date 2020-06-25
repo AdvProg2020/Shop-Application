@@ -321,8 +321,7 @@ public class Controllers {
 
 
         private void initPasswordStuff() {
-            showPasswordFIeld.textProperty().bind(passwordField.textProperty());
-            showPasswordFIeld.setEditable(false);
+            showPasswordFIeld.textProperty().bindBidirectional(passwordField.textProperty());
             showPasswordFIeld.visibleProperty().bind(passwordField.visibleProperty().not());
             passwordField.visibleProperty().bind(showPasswordBTN.selectedProperty().not());
         }
@@ -2058,8 +2057,7 @@ public class Controllers {
         }
 
         private void initPasswordStuff() {
-            showPasswordField.textProperty().bind(passwordField.textProperty());
-            showPasswordField.setEditable(false);
+            showPasswordField.textProperty().bindBidirectional(passwordField.textProperty());
             showPasswordField.visibleProperty().bind(passwordField.visibleProperty().not());
             passwordField.visibleProperty().bind(showPasswordBTN.selectedProperty().not());
         }
@@ -2388,13 +2386,11 @@ public class Controllers {
         }
 
         private void initPasswordStuff() {
-            customerShowPasswordField.textProperty().bind(customerPassword.textProperty());
-            customerShowPasswordField.setEditable(false);
+            customerShowPasswordField.textProperty().bindBidirectional(customerPassword.textProperty());
             customerShowPasswordField.visibleProperty().bind(customerPassword.visibleProperty().not());
             customerPassword.visibleProperty().bind(customerShowPasswordBTN.selectedProperty().not());
 
-            sellerShowPasswordFIeld.textProperty().bind(sellerPassword.textProperty());
-            sellerShowPasswordFIeld.setEditable(false);
+            sellerShowPasswordFIeld.textProperty().bindBidirectional(sellerPassword.textProperty());
             sellerShowPasswordFIeld.visibleProperty().bind(sellerPassword.visibleProperty().not());
             sellerPassword.visibleProperty().bind(sellerShowPasswordBTN.selectedProperty().not());
         }
@@ -4164,10 +4160,10 @@ public class Controllers {
         private PasswordField adminPassword;
 
         @FXML
-        private TextField showPasswordFIeld;
+        private TextField adminShowPasswordField;
 
         @FXML
-        private ToggleButton showPasswordBTN;
+        private ToggleButton adminShowPasswordBTN;
 
         @FXML
         private Label adminPasswordError;
@@ -4222,18 +4218,26 @@ public class Controllers {
 
 
         public static void display() {
-            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 500, 700);
+            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 1000, 700);
         }
 
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
             adminImageField.setEditable(false);
+            initBindings();
             initActions();
             initLBLs();
             initVisibilities();
             initListeners();
         }
+
+        private void initBindings() {
+            adminShowPasswordField.textProperty().bindBidirectional(adminPassword.textProperty());
+            adminShowPasswordField.visibleProperty().bind(adminPassword.visibleProperty().not());
+            adminPassword.visibleProperty().bind(adminShowPasswordBTN.selectedProperty().not());
+        }
+
 
         private void initActions() {
             adminBrowseBTN.setOnAction(e -> {
