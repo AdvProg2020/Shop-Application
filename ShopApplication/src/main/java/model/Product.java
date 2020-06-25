@@ -185,6 +185,14 @@ public class Product implements ModelBasic {
         return false;
     }
 
+    public boolean hasBought(String customerId) {
+        for (SubProduct subProduct : getSubProducts()) {
+            if (subProduct.hasCustomerWithId(customerId))
+                return true;
+        }
+        return false;
+    }
+
     @ModelOnly
     public void addSubProduct(String subProductId) {
         subProductIds.add(subProductId);
