@@ -3,7 +3,7 @@
 }
 
 #login-image {
-    -fx-background-image: url("../img/login-page.png");
+    -fx-background-image: url("../img/add-product-page.png");
     -fx-background-size: 300;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
