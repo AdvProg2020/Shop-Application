@@ -1886,6 +1886,9 @@ public class Controllers {
         private ImageView fullStar5;
 
         @FXML
+        private TabPane tabPane;
+
+        @FXML
         private Tab buyersTab;
 
         @FXML
@@ -2020,6 +2023,14 @@ public class Controllers {
                 sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack, this));
             }
             sellersTBL.setItems(FXCollections.observableArrayList(sellers));
+        }
+
+        private void initBuyerTable(){
+            if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
+                tabPane.getTabs().remove(buyersTab);
+            }else if(type.equals(Constants.sellerUserType)){
+                if()
+            }
         }
 
         private void initMainObjects() {

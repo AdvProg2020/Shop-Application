@@ -218,7 +218,7 @@
                       </VBox>
                   </children>
                </HBox>
-               <TabPane stylesheets="@../css/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+               <TabPane fx:id="tabPane" stylesheets="@../css/TabPane.css" tabClosingPolicy="UNAVAILABLE">
                    <padding>
                        <Insets bottom="20.0" left="200.0" right="200.0" top="40.0" />
                    </padding>
