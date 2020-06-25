@@ -656,7 +656,7 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            accountIMG.setImage(new Image(info[7]));
+            accountIMG.setImage(new Image("file:" + Constants.base + info[7]));
         }
 
 
@@ -1056,7 +1056,7 @@ public class Controllers {
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
-            image.setImage(new Image(subProductInfo[6]));
+            image.setImage(new Image("file:" + Constants.base + subProductInfo[6]));
             priceBefore.setText(subProductInfo[7]);
             priceAfter.setText(subProductInfo[8]);
             sale.setText(subProductInfo[11] != null ? subProductInfo[11] : "");
@@ -1521,7 +1521,7 @@ public class Controllers {
             productInfoTXT.setText(productPack[3]);
             ratingLBL.setText(productPack[4]);
             categoryLBL.setText(productPack[7]);
-            productIMG.setImage(new Image(productPack[8]));
+            productIMG.setImage(new Image("file:" + Constants.base + productPack[8]));
             //productInfo[5] = Integer.toString(product.getRatingsCount());
         }
 
@@ -2909,7 +2909,7 @@ public class Controllers {
         }
 
         private void initButtons() {
-            addProductBTN.setOnAction(e -> SellerAddProductPopupController.display());
+            addProductBTN.setOnAction(e -> AddProductPopupController_Page1.display());
         }
 
         public class SellerSubProductWrapper {
@@ -5164,7 +5164,7 @@ public class Controllers {
         private TextField ameField;
 
         @FXML
-        private PasswordField brandField;
+        private TextField brandField;
 
         @FXML
         private Label errorLBL;
@@ -5317,7 +5317,7 @@ public class Controllers {
         private String[] info;
         private boolean exists;
         public static void display(String name, String brand, String productId) {
-            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage1, 860, 505)).initialize(name, brand, productId);
+            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 860, 505)).initialize(name, brand, productId);
         }
 
         private void initialize(String name, String brand, String productId) {
