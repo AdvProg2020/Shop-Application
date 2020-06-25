@@ -1615,7 +1615,7 @@ public class Controllers {
         }
 
         private void edit(){
-            //EditProductPopupController.display(productPack[0], subProductPack[1]);
+            EditProductPopupController.display(productPack[0], subProductPack[1]);
         }
 
         private void compare(){
