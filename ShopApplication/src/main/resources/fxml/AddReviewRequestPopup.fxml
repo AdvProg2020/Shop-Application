@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="5.0" stylesheets="@../css/Review.css"
-      xmlns="http://javafx.com/javafx/11.0.1">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="5.0" stylesheets="@../css/Review.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
     <HBox spacing="10.0">
         <padding>
-            <Insets left="10.0" right="20.0" top="10.0"/>
+            <Insets left="10.0" right="20.0" top="10.0" />
         </padding>
         <VBox spacing="20.0">
             <HBox spacing="10.0">
-                <Label styleClass="property-label" text="Reviewer:"/>
-                <Label fx:id="nameLBL" layoutX="10.0" layoutY="10.0" styleClass="value-label"
-                       text="firstName lastName"/>
+                <Label styleClass="property-label" text="Reviewer:" />
+                <Label fx:id="nameLBL" layoutX="10.0" layoutY="10.0" styleClass="value-label" text="firstName lastName" />
             </HBox>
-            <Label id="title-label" fx:id="titleLBL" text="Title"/>
+         <HBox>
+            <children>
+                  <Label id="title-label" fx:id="titleLBL" prefHeight="29.0" prefWidth="35.0" text="Title: " />
+               <TextField fx:id="titleField" editable="false" prefHeight="30.0" prefWidth="199.0" />
+            </children>
+         </HBox>
         </VBox>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label styleClass="property-label" text="Product:"/>
-        <Label fx:id="nameBrandLBL" styleClass="value-label" text="name-brand"/>
+        <Label styleClass="property-label" text="Product:" />
+        <Label fx:id="nameBrandLBL" prefHeight="17.0" prefWidth="149.0" styleClass="value-label" text="A70 - samsung" />
     </HBox>
-    <TextArea id="review-text" fx:id="textArea" prefHeight="77.0" prefWidth="478.0"/>
+    <TextArea id="review-text" fx:id="textArea" editable="false" prefHeight="77.0" prefWidth="478.0" />
 </VBox>

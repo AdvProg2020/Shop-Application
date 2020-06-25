@@ -19,23 +19,6 @@ A & T & M: video
 A: button.setGraphic for table show of products and for user managing of admin
 A & T & M: sale details in product box
 M & A: add commercial request and reduce balance. (Slide show)
-T & A: commercial box
-A: login button in register and back bug and main menu clear stack trace.
-T: update product detail menu fxml so that it can be used both in managing pages and customer page
-A: isPopUp for digestMenus
-T: mainController.clearCart();
-T: remove column for shopping cart menu
-A & T: add tabs to discount, sale, account managing menu
-
-
-
-A:   popup
-    productDetailMenu
-    add product
-    managing
-    CustomerBuyLogMenu
-    personalInfo (After css)
-    compare
 
 
 T:  SellerAddProduct
@@ -46,3 +29,6 @@ T:  SellerAddProduct
 
 M:  CSSs
     rating (product menu & buy log menu)
+
+
+T & A: AddSaleRequestPopup and AddProductReqeustPopup table support.

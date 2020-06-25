@@ -42,9 +42,10 @@ public class Utilities {
             String[] salePack = new String[5];
             salePack[0] = sale.getSeller().getUsername();
             salePack[1] = Double.toString(sale.getPercentage());
-            salePack[2] = dateFormat.format(sale.getStartDate());
-            salePack[3] = dateFormat.format(sale.getEndDate());
-            salePack[4] = Integer.toString(sale.getSubProducts().size());
+            salePack[2] = Double.toString(sale.getMaximumAmount());
+            salePack[3] = dateFormat.format(sale.getStartDate());
+            salePack[4] = dateFormat.format(sale.getEndDate());
+
             return salePack;
         }
 
@@ -58,7 +59,7 @@ public class Utilities {
         }
 
         public static String[] subProduct(SubProduct subProduct){
-            String[] subProductBoxPack = new String[13];
+            String[] subProductBoxPack = new String[14];
             Product product = subProduct.getProduct();
             Sale sale = subProduct.getSale();
             subProductBoxPack[0] = product.getId();
@@ -74,6 +75,7 @@ public class Utilities {
             subProductBoxPack[10] = sale != null ? dateFormat.format(sale.getEndDate()) : null;
             subProductBoxPack[11] = sale != null ? Double.toString(sale.getPercentage()) : null;
             subProductBoxPack[12] = subProduct.getSeller().getStoreName();
+            subProductBoxPack[13] = subProduct.getProduct().getInfoText();
             return subProductBoxPack;
         }
 
