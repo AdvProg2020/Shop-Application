@@ -3,20 +3,26 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1">
+<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="5.0" stylesheets="@../css/Review.css"
+      xmlns="http://javafx.com/javafx/11.0.1">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="20.0"/>
     </padding>
-    <Label fx:id="username" text="Username:">
+    <HBox spacing="10.0">
         <VBox.margin>
             <Insets bottom="10.0"/>
         </VBox.margin>
-    </Label>
-    <Label fx:id="title" layoutX="10.0" layoutY="10.0" text="Title">
+        <children>
+            <Label styleClass="property-label" text="Name:"/>
+            <Label fx:id="nameLBL" layoutX="10.0" layoutY="10.0" styleClass="value-label" text="firstName lastName"/>
+        </children>
+    </HBox>
+    <Label id="title-label" fx:id="titleLBL" layoutX="10.0" layoutY="10.0" text="Title">
         <VBox.margin>
             <Insets top="5.0"/>
         </VBox.margin>
     </Label>
-    <TextArea fx:id="text" prefHeight="77.0" prefWidth="478.0"/>
+    <TextArea id="review-text" fx:id="text" prefHeight="77.0" prefWidth="478.0"/>
 </VBox>

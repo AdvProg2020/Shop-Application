@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Category;
 import model.database.Database;
@@ -41,6 +42,14 @@ public class View extends Application {
         databaseManager.createCategory();
         Controllers.init();
         launch(args);
+    }
+
+    public static void addListener(TextField textField, String regex) {
+        textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue.length() == 0) return;
+            char lastInput = newValue.charAt(newValue.length() - 1);
+            if (!String.valueOf(lastInput).matches(regex)) textField.setText(oldValue);
+        }));
     }
 
     public static Scene getScene() {
