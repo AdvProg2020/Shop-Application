@@ -480,10 +480,8 @@ public class Controllers {
                             AddProductRequestPopupController.display(id);
                             break;
                         case "EditProductRequest":
-                            EditRequestPopupController.display(id);
-                            break;
                         case "EditSaleRequest":
-                            EditSaleRequestPopupController.display(id);
+                            EditRequestPopupController.display(id);
                             break;
                         case "AddSaleRequest":
                             AddSaleRequestPopupController.display(id);
@@ -2735,10 +2733,8 @@ public class Controllers {
                             AddSellerRequestPopupController.display(id);
                             break;
                         case "EditProductRequest":
-                            EditRequestPopupController.display(id);
-                            break;
                         case "EditSaleRequest":
-                            EditSaleRequestPopupController.display(id);
+                            EditRequestPopupController.display(id);
                             break;
                     }
                 });

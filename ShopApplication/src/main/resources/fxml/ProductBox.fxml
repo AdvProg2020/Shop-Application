@@ -11,14 +11,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="250.0" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="250.0" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductBoxController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <HBox alignment="TOP_CENTER">
         <Region layoutX="108.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
         <StackPane alignment="TOP_LEFT" prefHeight="175.0" prefWidth="135.0">
-            <Label id="sale-percentage-label" fx:id="sales" text="50%" />
+            <Label id="sale-percentage-label" fx:id="sale" text="50%" />
             <VBox alignment="CENTER">
                 <ImageView id="product-image" fx:id="image" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
                 </ImageView>
