@@ -1,7 +1,5 @@
 .choice-box {
     -fx-background-color: #e9e9e9;
-    -fx-border-color: darkgrey;
-    -fx-border-radius: 3;
     -fx-mark-color: #29292D;
 }
 
@@ -11,7 +9,7 @@
 
 .choice-box .context-menu {
     -fx-background-color: #29292D;
-    -fx-background-radius: 3;
+    -fx-background-radius: 5;
 }
 
 .choice-box .menu-item:focused {
