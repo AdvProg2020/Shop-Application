@@ -12,6 +12,10 @@
     -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
 }
 
+.button:pressed {
+    -fx-opacity: 80%;
+}
+
 .property-label {
     -fx-font-size: 14;
     -fx-font-weight: bold;
