@@ -1426,6 +1426,7 @@ public class Controllers {
         private ArrayList<PropertyWrapper> properties;
         private ArrayList<SellerWrapper> sellers;
         private ArrayList<String[]> subProductPacks;
+        private boolean editable;
 
         public static void display(String productId, boolean editable) {
             try {
@@ -1447,6 +1448,7 @@ public class Controllers {
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
                 //controller.initialize(productId, Constants.customerUserType);
             }
+            controller.editable = editable;
         }
 
         public static class SellerWrapper {
@@ -1595,6 +1597,42 @@ public class Controllers {
             } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnAuthorizedAccountException e) {
                 e.printStackTrace();
             }
+        }
+
+        private void edit(){}
+
+        private void compare(){ }
+
+        private void initButtons(String type){
+            addToCartBTN.setOnAction(e -> addToCart());
+            editBTN.setOnAction(e -> edit());
+            compareBTN.setOnAction(e -> compare());
+
+            updateShowOfButtons(type);
+        }
+
+        private void updateShowOfButtons(String type){
+            if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
+                if(Integer.parseInt(subProductPack[9]) != 0){
+                    addToCartBTN.setVisible(true);
+                    addToCartBTN.setDisable(true);
+                }else {
+                    addToCartBTN.setVisible(true);
+                    addToCartBTN.setDisable(false);
+                }
+            }else{
+                addToCartBTN.setVisible(false);
+            }
+
+            if( (type.equals(Constants.adminUserType)) && editable){
+                editBTN.setVisible(true);
+            }else if(type.equals(Constants.sellerUserType) && editable){
+                editBTN.setVisible(true);
+            }else {
+                editBTN.setVisible(false);
+            }
+
+            compareBTN.setVisible(true);
         }
     }
 
