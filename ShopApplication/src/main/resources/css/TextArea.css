@@ -1,11 +1,98 @@
-.text-area {
+* {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-style: none;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
 
+.text-area {
+    -fx-font-size: 12;
+    -fx-font-style: italic;
 }
 
 .text-area .content {
-
+    -fx-border-style: none;
 }
 
 .text-area .scroll-pane {
+    -fx-border-style: none;
+}
 
+.text-area .increment-button, .decrement-button {
+    -fx-background-radius: 2em;
+}
+
+.text-area .scroll-bar:vertical {
+    -fx-padding: 2 3 0 5;
+}
+
+.text-area .scroll-bar:vertical .track {
+    -fx-background-radius: 2em;
+    -fx-border-radius: 2em;
+}
+
+.text-area .scroll-bar:vertical .thumb {
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
+}
+
+.text-area .scroll-bar:horizontal { /* hide */
+    -fx-opacity: 0;
+
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
+
+.black-area {
+    -fx-text-fill: lightgrey;
+}
+
+.black-area .content {
+    -fx-background-color: #29292D;
+}
+
+.black-area .scroll-pane {
+    -fx-background-color: #29292D;
+}
+
+.black-area .increment-button, .decrement-button {
+    -fx-background-color: #29292D;
+}
+
+.black-area .scroll-bar:vertical {
+    -fx-background-color: #29292D;
+}
+
+.black-area .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(darkgrey, 60%);
+}
+
+.white-area {
+    -fx-text-fill: black;
+}
+
+.white-area .content {
+    -fx-background-color: #e9e9e9;
+}
+
+.white-area .scroll-pane {
+    -fx-background-color: #e9e9e9;
+}
+
+.white-area .increment-button, .decrement-button {
+    -fx-background-color: #e9e9e9;
+}
+
+.white-area .scroll-bar:vertical {
+    -fx-background-color: #e9e9e9;
+}
+
+.white-area .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(darkgrey, 60%);
 }

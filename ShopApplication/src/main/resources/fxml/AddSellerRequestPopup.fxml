@@ -2,15 +2,12 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane stylesheets="@../css/RegisterPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$RegisterPopupController">
@@ -20,68 +17,44 @@
                   <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
                       <VBox>
                           <Label text="Username:" />
-                          <TextField fx:id="sellerUsername" />
-                          <Label id="error-label" fx:id="sellerUsernameError" />
+                          <TextField fx:id="sellerUsername" editable="false" />
                       </VBox>
                       <VBox GridPane.columnIndex="1">
-                          <Label text="Password:" />
-                          <HBox>
-                              <children>
-                                  <StackPane>
-                                      <children>
-                                          <PasswordField fx:id="sellerPassword" />
-                                          <TextField fx:id="sellerShowPasswordFIeld" />
-                                      </children>
-                                  </StackPane>
-                                  <ToggleButton fx:id="sellerShowPasswordBTN" mnemonicParsing="false" prefHeight="25.0" prefWidth="32.0" text="ToggleButton" />
-                              </children>
-                          </HBox>
-                          <Label id="error-label" fx:id="sellerPasswordError" />
+                          <HBox />
+                          <Label text="Profile Picture:" />
+                           <TextField fx:id="sellerImageField" editable="false" promptText="upload image..." />
                       </VBox>
                       <VBox GridPane.rowIndex="2">
                           <Label text="First name:" />
-                          <TextField fx:id="sellerFirstName" />
-                          <Label id="error-label" fx:id="sellerFirstNameError" />
+                          <TextField fx:id="sellerFirstName" editable="false" />
                       </VBox>
                       <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
                           <Label text="Last name:" />
-                          <TextField fx:id="sellerLastName" />
-                          <Label id="error-label" fx:id="sellerLastNameError" />
+                          <TextField fx:id="sellerLastName" editable="false" />
                       </VBox>
                       <VBox GridPane.rowIndex="3">
                           <Label text="Phone number:" />
-                          <TextField fx:id="sellerPhoneNumber" promptText="09123456789" />
-                          <Label id="error-label" fx:id="sellerPhoneNumberError" />
+                          <TextField fx:id="sellerPhoneNumber" editable="false" promptText="09123456789" />
                       </VBox>
                       <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
                           <Label text="Email:" />
-                          <TextField fx:id="sellerEmail" promptText="sample@atm.com" />
-                          <Label id="error-label" fx:id="sellerEmailError" />
+                          <TextField fx:id="sellerEmail" editable="false" promptText="sample@atm.com" />
                       </VBox>
                       <VBox GridPane.rowIndex="4">
                           <Label text="Balance:" />
-                          <TextField fx:id="sellerBalance" />
-                          <Label id="error-label" fx:id="sellerBalanceError" />
+                          <TextField fx:id="sellerBalance" editable="false" />
                       </VBox>
                       <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
                           <Label text="Store name:" />
-                          <TextField fx:id="sellerStoreName" />
-                          <Label id="error-label" fx:id="sellerStoreNameError" />
-                      </VBox>
-                      <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
-                          <Label text="Profile Picture:" />
-                          <HBox spacing="10.0">
-                              <TextField fx:id="sellerImageField" promptText="upload image..." />
-                          </HBox>
-                          <Label id="error-label" fx:id="sellerImageError" />
+                          <TextField fx:id="sellerStoreName" editable="false" />
                       </VBox>
                       <columnConstraints>
                           <ColumnConstraints />
                           <ColumnConstraints />
                       </columnConstraints>
                       <rowConstraints>
-                          <RowConstraints />
-                          <RowConstraints />
+                          <RowConstraints maxHeight="59.0" minHeight="49.0" prefHeight="59.0" />
+                          <RowConstraints maxHeight="10.0" minHeight="0.0" prefHeight="0.0" />
                           <RowConstraints />
                           <RowConstraints />
                           <RowConstraints />

@@ -326,7 +326,7 @@ public class Controller {
         else {
             ArrayList<String> properties = new ArrayList<>();
             for (String property : product.getCategory().getProperties(true)) {
-                properties.add(product.getPropertyValue(property));
+                properties.add(product.getValue(property));
             }
             return null;
         }
@@ -625,7 +625,7 @@ public class Controller {
             ArrayList<String> values = new ArrayList<>();
             values.add(null);
             for (Product product : category.getProducts(true)) {
-                values.add(product.getPropertyValue(property));
+                values.add(product.getValue(property));
             }
             return values;
         }else
