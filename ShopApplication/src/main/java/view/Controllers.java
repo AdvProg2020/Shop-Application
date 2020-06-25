@@ -1360,70 +1360,6 @@ public class Controllers {
     }
 
     public static class ProductDetailMenuController {
-
-        public static void display(String productId, boolean editable){
-            try {
-                display( productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
-            } catch (Exceptions.InvalidProductIdException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-        public static void display(String productId, String subProductId, boolean editable) {
-            String type = View.type.get();
-            if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
-                ((ProductDetailMenuController)
-                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600)).initialize(productId, type, editable);
-            } else {
-                ((ProductDetailMenuController)
-                        View.setMainPane(Constants.FXMLs.productDetailMenu)).initialize(productId, Constants.customerUserType);
-            }
-        }
-
-        public class SellerWrapper {
-            Label name = new Label();
-            Double price;
-            int available;
-
-            public SellerWrapper(String name, double price, int available) {
-                this.name.setText(name);
-                this.price = price;
-                this.available = available;
-
-                this.name.setOnMouseClicked(e -> {
-
-                });
-            }
-
-            public Label getName() {
-                return name;
-            }
-
-            public Double getPrice() {
-                return price;
-            }
-
-            public int getAvailable() {
-                return available;
-            }
-        }
-
-        private void initialize(String productId, String type, boolean editable) {
-            initTable();
-        }
-
-        private void initTable() {
-            sellersTBLSellerCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
-            sellersTBLPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
-            sellersTBLNumberAvailableCOL.setCellValueFactory(new PropertyValueFactory<>("available"));
-
-            initItems();
-        }
-
-        private void initItems() {
-        }
-
-
         @FXML
         private ImageView productIMG;
 
@@ -1486,6 +1422,89 @@ public class Controllers {
 
         @FXML
         private VBox reviewsVB;
+
+        private String[] productPack;
+        private String[] subProductPack;
+
+
+        public static void display(String productId, boolean editable){
+            try {
+                display( productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
+            } catch (Exceptions.InvalidProductIdException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        public static void display(String productId, String subProductId, boolean editable) {
+            String type = View.type.get();
+            ProductDetailMenuController controller;
+            if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
+                controller = ((ProductDetailMenuController)
+                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600));
+                controller.initialize(productId, type, editable);
+            } else {
+                controller = ((ProductDetailMenuController)
+                        View.setMainPane(Constants.FXMLs.productDetailMenu));
+                controller.initialize(productId, Constants.customerUserType);
+            }
+        }
+
+        public class SellerWrapper {
+            Label name = new Label();
+            Double price;
+            int available;
+
+            public SellerWrapper(String name, double price, int available) {
+                this.name.setText(name);
+                this.price = price;
+                this.available = available;
+
+                this.name.setOnMouseClicked(e -> {
+
+                });
+            }
+
+            public Label getName() {
+                return name;
+            }
+
+            public Double getPrice() {
+                return price;
+            }
+
+            public int getAvailable() {
+                return available;
+            }
+        }
+
+        private void initialize(String productId, String type, boolean editable) {
+            initTable();
+        }
+
+        private void initTable() {
+            sellersTBLSellerCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
+            sellersTBLPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
+            sellersTBLNumberAvailableCOL.setCellValueFactory(new PropertyValueFactory<>("available"));
+
+            initItems();
+        }
+
+        private void initItems() {
+        }
+
+        private void initMainObjects(){
+
+        }
+
+        private void setPacks(String productId, String subProductId){
+            try {
+                productPack = mainController.digest(productId);
+                subProductPack = mainController.getSubProductByID(subProductId);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
 
     public static class LoginPopupController implements Initializable {
