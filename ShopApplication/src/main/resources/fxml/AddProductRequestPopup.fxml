@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" stylesheets="@../css/ManagingPopup.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$AddProductRequestPopup">
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$AddProductRequestPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
             <VBox>
