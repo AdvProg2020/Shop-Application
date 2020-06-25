@@ -27,10 +27,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.BatchUpdateException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -2156,7 +2154,7 @@ public class Controllers {
         public static void display(Stage stage) {
             PopupStage = stage;
             PopupStage.setWidth(600);
-            PopupStage.setHeight(400);
+            PopupStage.setHeight(450);
             PopupStage.setResizable(false);
             try {
                 PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.loginPopup)));
@@ -2167,6 +2165,7 @@ public class Controllers {
             try {
                 PopupStage.initModality(Modality.APPLICATION_MODAL);
             } catch (Exception ignored) {
+
             }
             PopupStage.show();
         }
@@ -2363,7 +2362,7 @@ public class Controllers {
 
         public static void display(Stage stage) {
             PopupStage = stage;
-            PopupStage.setWidth(500);
+            PopupStage.setWidth(1000);
             PopupStage.setHeight(700);
             try {
                 PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopup)));
@@ -2633,7 +2632,8 @@ public class Controllers {
     public static class AdminDiscountManagingMenuController implements Initializable {
 
         public static AdminDiscountManagingMenuController currentObject;
-        private static ArrayList<DiscountWrapper> allDiscountWrappers = new ArrayList<>();
+        private static ArrayList<DiscountWrapper> activeDiscountWrappers;
+        private static ArrayList<DiscountWrapper> archiveDiscountWrappers;
 
         @FXML
         private TableView<DiscountWrapper> discounts;
@@ -2645,19 +2645,40 @@ public class Controllers {
         private TableColumn<DiscountWrapper, String> codeCOL;
 
         @FXML
-        private TableColumn<DiscountWrapper, SimpleStringProperty> percentageCOL;
+        private TableColumn<DiscountWrapper, String> percentageCOL;
 
         @FXML
-        private TableColumn<DiscountWrapper, SimpleStringProperty> startDateCOL;
+        private TableColumn<DiscountWrapper, String> startDateCOL;
 
         @FXML
-        private TableColumn<DiscountWrapper, SimpleStringProperty> endDateCOL;
+        private TableColumn<DiscountWrapper, String> endDateCOL;
 
         @FXML
         private TableColumn<DiscountWrapper, Button> detailsCOL;
 
         @FXML
         private TableColumn<DiscountWrapper, Button> removeCOL;
+
+        @FXML
+        private TableView<DiscountWrapper> archive;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> archiveIdCol;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> archiveCodeCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> archivePercentageCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> archiveStartDateCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, String> archiveEndDateCOL;
+
+        @FXML
+        private TableColumn<DiscountWrapper, Button> archiveDetailsCOL;
 
         @FXML
         private Label errorLBL;
@@ -2667,7 +2688,7 @@ public class Controllers {
 
         public void addDiscount(String[] info) {
             DiscountWrapper newItem = new DiscountWrapper(info);
-            allDiscountWrappers.add(newItem);
+            activeDiscountWrappers.add(newItem);
             discounts.getItems().add(newItem);
         }
 
@@ -2688,13 +2709,24 @@ public class Controllers {
         }
 
         private void initDiscounts() {
-            allDiscountWrappers.clear();
+            activeDiscountWrappers = new ArrayList<>();
+            archiveDiscountWrappers = new ArrayList<>();
 
-            for (String discount : adminController.viewDiscountCodes()) {
+            for (String discount : adminController.viewActiveDiscountCodes()) {
                 String[] details;
                 try {
                     details = adminController.viewDiscountCodeByCode(discount);
-                    allDiscountWrappers.add(new DiscountWrapper(details));
+                    activeDiscountWrappers.add(new DiscountWrapper(details));
+                } catch (Exceptions.DiscountCodeException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for (String discountCode : adminController.viewArchiveDiscountCodes()) {
+                String[] details;
+                try {
+                    details = adminController.viewDiscountCodeByCode(discountCode);
+                    archiveDiscountWrappers.add(new DiscountWrapper(details));
                 } catch (Exceptions.DiscountCodeException e) {
                     e.printStackTrace();
                 }
@@ -2710,7 +2742,15 @@ public class Controllers {
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detail"));
 
-            discounts.setItems(FXCollections.observableArrayList(allDiscountWrappers));
+            archiveIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            archiveCodeCOL.setCellValueFactory(new PropertyValueFactory<>("code"));
+            archivePercentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+            archiveStartDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+            archiveEndDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+            archiveDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("detail"));
+
+            discounts.getItems().setAll(activeDiscountWrappers);
+            archive.getItems().setAll(archiveDiscountWrappers);
         }
 
         public  class DiscountWrapper {
