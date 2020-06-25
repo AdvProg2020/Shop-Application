@@ -250,12 +250,16 @@ public class SellerController {
         throw new Exceptions.InvalidProductIdException(productID);
     }
 
-    public ArrayList<String[]> viewSales() {
+    public ArrayList<String[]> viewActiveSales() {
         ArrayList<String[]> saleInfos = new ArrayList<>();
         for (Sale sale : ((Seller) currentAccount()).getActiveSales()) {
             saleInfos.add(Utilities.Pack.saleInfo(sale));
         }
         return saleInfos;
+    }
+
+    public ArrayList<String[]> viewArchiveSales() {
+        return ((Seller) currentAccount()).getSaleArchive().stream().map(Utilities.Pack::saleInfo).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
@@ -388,7 +392,7 @@ public class SellerController {
         return ((Seller) currentAccount()).getBalance();
     }
 
-    private void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {
+    public void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if( sale != null ){
             sale.suspend();
@@ -397,11 +401,11 @@ public class SellerController {
         }
     }
 
-    public void removeSale(ArrayList<String> saleIds) throws Exceptions.InvalidSaleIdException {
-        for (String saleId : saleIds) {
-            removeSale(saleId);
-        }
-    }
+//    public void removeSale(ArrayList<String> saleIds) throws Exceptions.InvalidSaleIdException {
+//        for (String saleId : saleIds) {
+//            removeSale(saleId);
+//        }
+//    }
 
     public ArrayList<String[]> getPendingRequests(){
         ArrayList<Request> requests = new ArrayList<>(((Seller)currentAccount()).getPendingRequests());

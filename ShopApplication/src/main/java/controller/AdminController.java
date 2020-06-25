@@ -15,6 +15,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class AdminController {
@@ -158,12 +160,16 @@ public class AdminController {
     }
 
 
-    public ArrayList<String> viewDiscountCodes() {
+    public ArrayList<String> viewActiveDiscountCodes() {
         ArrayList<String> discountCodes = new ArrayList<>();
         for (Discount discount : Discount.getActiveDiscounts()) {
             discountCodes.add(discount.getDiscountCode());
         }
         return discountCodes;
+    }
+
+    public ArrayList<String> viewArchiveDiscountCodes() {
+        return Discount.getDiscountArchive().stream().map(Discount::getDiscountCode).collect(Collectors.toCollection(ArrayList::new));
     }
 
 

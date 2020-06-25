@@ -57,3 +57,4 @@ T: AddReviewPopup
 hasBought in reviewBox
 A: discount and sale archive and active for admin.
 A: admin edit product popup
+A: text area listener
