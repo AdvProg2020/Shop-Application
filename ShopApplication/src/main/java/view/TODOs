@@ -35,9 +35,7 @@ A: edit product popup and addSale and AddProduct
 --------------------
 A: personal info image not loading.
 T: seller product show buyers.
-A: cart increase decrease. admin discount popup increase decrease.
-A: image in shopping cart
-A: shopping cart unit price total price binding
+A: admin discount popup increase decrease.
 A: purchase discount handle -> customerController.
 T: rating in buy log
 T: rate product in digest
@@ -46,13 +44,13 @@ T: add review controller
 M: unit test (login procedure)
 M: add font
 T: sold out
+A & M: Compare is back baby!
 T: digest change image based on available, sold out or in sale
 M & A: purchase confirmation popup
 
 T: AddReviewPopup
 
 hasBought in reviewBox
-A: discount and sale archive and active for admin.
 A: admin edit product popup
 A: text area listener
 

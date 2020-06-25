@@ -716,4 +716,17 @@ public class Controller {
         return categoryTree;
     }
 
+    public ArrayList<String> getBuyersOfASubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if(subProduct == null){
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
+        }else {
+            ArrayList<String> buyerUserNames = new ArrayList<>();
+            for (Customer customer : subProduct.getCustomers()) {
+                buyerUserNames.add(customer.getUsername());
+            }
+            return buyerUserNames;
+        }
+    }
+
 }
