@@ -2706,8 +2706,29 @@ public class Controllers {
                     pending.getItems().remove(this);
                     pendingRequests.remove(this);
                 });
-//                TODO: wtf.
-//                details.setOnAction(e -> );
+
+                details.setOnAction(e -> {
+                    switch (type) {
+                        case "AddProductRequest":
+                            AddProductRequestPopupController.display(id);
+                            break;
+                        case "AddReviewRequest":
+                            AddReviewRequestPopupController.display(id);
+                            break;
+                        case "AddSaleRequest":
+                            AddSaleRequestPopupController.display(id);
+                            break;
+                        case "AddSellerRequest":
+                            AddSellerRequestPopupController.display(id);
+                            break;
+                        case "EditProductRequest":
+                            EditProductRequestPopupController.display(id);
+                            break;
+                        case "EditSaleRequest":
+                            EditSaleRequestPopupController.display(id);
+                            break;
+                    }
+                });
 
                 accept.setOnAction(e -> {
                     try {
