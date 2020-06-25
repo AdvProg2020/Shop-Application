@@ -95,3 +95,21 @@
 .value-label {
     -fx-font-size: 14;
 }
+
+#sale-percentage-label {
+    -fx-background-color: #ff2c42;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10 5 10;
+}
+
+#available-label {
+    -fx-background-color: #ff2c42;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0 0 5 5;
+    -fx-padding: 0 90 0 87;
+}

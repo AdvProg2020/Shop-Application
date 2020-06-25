@@ -141,7 +141,7 @@ public class Utilities {
         }
 
         public static String[] productInCart(SubProduct subProduct, int count) {
-            String[] productPack = new String[8];
+            String[] productPack = new String[9];
             productPack[0] = subProduct.getId();
             productPack[1] = subProduct.getProduct().getId();
             productPack[2] = subProduct.getProduct().getName();
@@ -150,6 +150,7 @@ public class Utilities {
             productPack[5] = subProduct.getSeller().getStoreName();
             productPack[6] = Integer.toString(count);
             productPack[7] = Double.toString(subProduct.getPriceWithSale());
+            productPack[8] = subProduct.getProduct().getImagePath();
             return productPack;
         }
 
