@@ -1847,9 +1847,6 @@ public class Controllers {
         private VBox reviewsVB;
 
         @FXML
-        private HBox categoryHBox;
-
-        @FXML
         private Label ratingCountLBL;
 
         @FXML
@@ -1899,6 +1896,9 @@ public class Controllers {
 
         @FXML
         private Button addReviewBTN;
+
+        @FXML
+        private BorderPane borderPane;
 
         private String[] productPack;
         private String[] subProductPack;
@@ -2130,13 +2130,16 @@ public class Controllers {
             }
         }
 
-        //TODO:
         private void initCategoryHBox() {
             try {
-                for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
-                    categoryHBox.getChildren().add(new Label(s + " >> "));
+                HBox categoryHBox = (HBox) CategoryTreeBoxController.createBox();
+                if(categoryHBox != null){
+                    for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
+                        categoryHBox.getChildren().add(new Label(s + " >> "));
+                    }
+                    categoryHBox.getChildren().add(new Label(productPack[1]));
+                    borderPane.setTop(categoryHBox);
                 }
-                categoryHBox.getChildren().add(new Label(productPack[1]));
             } catch (Exceptions.InvalidProductIdException e) {
                 e.printStackTrace();
             }
