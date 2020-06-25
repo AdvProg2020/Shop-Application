@@ -1,6 +1,7 @@
 package view;
 
 import controller.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
@@ -659,8 +660,74 @@ public class Controllers {
     }
 
     public static class AddProductRequestPopupController {
-        public static void display(String requestId) {
+        @FXML private TextField nameField;
+        @FXML private Label usernameErrLBL;
+        @FXML private TextField brandField;
+        @FXML private TextField categoryField;
+        @FXML private Label passwordErrLBL;
+        @FXML private TextField imageField;
+        @FXML private Label imageErrLBL;
+        @FXML private TextArea infoArea;
+        @FXML private Label emailErrLBL;
+        @FXML private TextField priceField;
+        @FXML private Label priceError;
+        @FXML private TextField countField;
+        @FXML private Label countError;
+        @FXML private TableView<PropertyWrapper> properties;
+        @FXML private TableColumn<PropertyWrapper, String> propertyCOL;
+        @FXML private TableColumn<PropertyWrapper, String> valueCOL;
 
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public class PropertyWrapper {
+            String property;
+            String value;
+
+            public PropertyWrapper(String property, String value) {
+                this.property = property;
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public String getValue() {
+                return value;
+            }
+        }
+
+        public static void display(String requestId) {
+            ((AddProductRequestPopupController)
+                    View.popupWindow("Add product request details", Constants.FXMLs.addProductRequestPopup, 860, 480)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            initValues();
+            initTable();
+        }
+
+        private void initValues() {
+            nameField.setText(secondaryDetails[0]);
+            brandField.setText(secondaryDetails[1]);
+            categoryField.setText(secondaryDetails[3]);
+            imageField.setText(secondaryDetails[2]);
+            infoArea.setText(secondaryDetails[4]);
+            countField.setText(secondaryDetails[5]);
+            priceField.setText(secondaryDetails[6]);
+        }
+
+        private void initTable() {
+            //TODO: see if its possible
         }
     }
 
@@ -2719,19 +2786,6 @@ public class Controllers {
         }
     }
 
-
-
-    public static class SellerAddProductPopupController implements Initializable{
-        public static void display() {
-
-        }
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-
-        }
-    }
-
     public static class SellerProductManagingMenuController implements Initializable {
 
         public static void display() {
@@ -2765,7 +2819,7 @@ public class Controllers {
         }
 
         private void initButtons() {
-            addProductBTN.setOnAction(e -> SellerAddProductPopupController.display());
+            addProductBTN.setOnAction(e -> AddProductPopupController_Page1.display());
         }
 
         public class SellerSubProductWrapper {
@@ -4919,6 +4973,8 @@ public class Controllers {
 
         public static void setMainPane(Parent parent) {
             currentBase.mainPane.setCenter(parent);
+            currentBase.mainPane.requestFocus();
+            Platform.runLater(() -> currentBase.mainPane.requestFocus());
         }
 
         @Override
