@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
-<BorderPane id="bg-pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductDetailMenuController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="view.Controllers$ProductDetailMenuController">
     <center>
         <VBox stylesheets="@../css/ProductDetails.css">
-           <children>
-               <HBox alignment="CENTER_LEFT" spacing="20.0">
-                   <padding>
-                       <Insets bottom="30.0" left="60.0" right="60.0" top="30.0" />
-                   </padding>
-                  <children>
-                      <VBox alignment="CENTER" spacing="20.0">
-                         <children>
-                             <ImageView fx:id="productIMG" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
-                                <image>
-                                    <Image url="@../img/default-product-pic.png" />
-                                </image>
-                             </ImageView>
-                             <Button id="compare-button" fx:id="compareBTN" mnemonicParsing="false" text="Compare" />
-                             <Button id="review-button" fx:id="addReviewBTN" layoutX="71.0" layoutY="282.0" mnemonicParsing="false" text="Review" />
-                         </children>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <padding>
+                        <Insets bottom="30.0" left="60.0" right="60.0" top="30.0"/>
+                    </padding>
+                    <children>
+                        <VBox alignment="CENTER" spacing="20.0">
+                            <children>
+                                <VBox alignment="CENTER">
+                                    <children>
+                                        <StackPane alignment="TOP_LEFT">
+                                            <children>
+                                                <ImageView fx:id="productIMG" fitHeight="250.0" fitWidth="250.0"
+                                                           pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../img/default-product-pic.png"/>
+                                                    </image>
+                                                </ImageView>
+                                                <Label id="sale-percentage-label" text="50%">
+                                                    <StackPane.margin>
+                                                        <Insets left="10.0" top="10.0"/>
+                                                    </StackPane.margin>
+                                                </Label>
+                                            </children>
+                                        </StackPane>
+                                        <Label id="available-label" text="SOLD OUT!"/>
+                                    </children>
+                                </VBox>
+                                <Button id="compare-button" fx:id="compareBTN" mnemonicParsing="false" text="Compare"/>
+                                <Button id="review-button" fx:id="addReviewBTN" layoutX="71.0" layoutY="282.0"
+                                        mnemonicParsing="false" text="Review"/>
+                            </children>
                       </VBox>
                       <VBox alignment="CENTER_LEFT" spacing="20.0">
                          <children>
@@ -230,7 +244,8 @@
                                      <TableColumn fx:id="sellersTBLNumberCOL" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
                                      <TableColumn fx:id="sellersTBLSellerCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0" text="Seller" />
                                      <TableColumn fx:id="sellersTBLPriceCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0" text="Price" />
-                                     <TableColumn fx:id="sellersTBLNumberAvailableCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0" text="Number Available" />
+                                     <TableColumn fx:id="sellersTBLNumberAvailableCOL" maxWidth="1000.0"
+                                                  minWidth="200.0" prefWidth="200.0" text="Remaining Count"/>
                                  </columns>
                                  <VBox.margin>
                                      <Insets left="100.0" right="100.0" top="10.0" />
