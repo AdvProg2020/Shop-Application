@@ -1852,6 +1852,51 @@ public class Controllers {
         @FXML
         private HBox categoryHBox;
 
+        @FXML
+        private Label ratingCountLBL;
+
+        @FXML
+        private Button rateBTN;
+
+        @FXML
+        private ImageView halfStar1;
+
+        @FXML
+        private ImageView fullStar1;
+
+        @FXML
+        private ImageView halfStar2;
+
+        @FXML
+        private ImageView fullStar2;
+
+        @FXML
+        private ImageView halfStar3;
+
+        @FXML
+        private ImageView fullStar3;
+
+        @FXML
+        private ImageView halfStar4;
+
+        @FXML
+        private ImageView fullStar4;
+
+        @FXML
+        private ImageView halfStar5;
+
+        @FXML
+        private ImageView fullStar5;
+
+        @FXML
+        private Tab buyersTab;
+
+        @FXML
+        private TableView<?> BuyersTBL;
+
+        @FXML
+        private TableColumn<?, ?> buyerCOL;
+
 
         private String[] productPack;
         private String[] subProductPack;
