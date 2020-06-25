@@ -1516,7 +1516,9 @@ public class Controllers {
         private void initReviewsVB(){
             try {
                 ArrayList<String[]> reviews = mainController.reviewsOfProductWithId(productPack[0]);
-
+                for (String[] review : reviews) {
+                    reviewsVB.getChildren().add(ReviewBoxController.createReviewBox(review));
+                }
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
