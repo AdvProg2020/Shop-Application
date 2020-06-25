@@ -1894,6 +1894,8 @@ public class Controllers {
         @FXML
         private TableColumn<?, ?> buyerCOL;
 
+        @FXML
+        private Button addReviewBTN;
 
         private String[] productPack;
         private String[] subProductPack;
@@ -2112,10 +2114,16 @@ public class Controllers {
         private void compare(){
         }
 
+        private void addReview(){}
+
+        private void rate(){}
+
         private void initButtons(){
             addToCartBTN.setOnAction(e -> addToCart());
             editBTN.setOnAction(e -> edit());
             compareBTN.setOnAction(e -> compare());
+            addReviewBTN.setOnAction(e -> addReview());
+            rateBTN.setOnAction(e -> rate());
 
             updateShowOfButtons();
         }
@@ -2140,6 +2148,14 @@ public class Controllers {
             }else {
                 editBTN.setVisible(false);
             }
+
+            if( (type.equals(Constants.customerUserType))){
+                rateBTN.setVisible(true);
+            }else rateBTN.setVisible(false);
+
+            if( (type.equals(Constants.customerUserType))){
+                addReviewBTN.setVisible(true);
+            }else addReviewBTN.setVisible(false);
 
             compareBTN.setVisible(true);
         }
