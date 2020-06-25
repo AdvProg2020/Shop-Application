@@ -2780,6 +2780,8 @@ public class Controllers {
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
+                        archive.getItems().add(this);
+                        discounts.getItems().remove(this);
                     } catch (Exceptions.DiscountCodeException ex) {
                         ex.printStackTrace();
                     }
@@ -4935,7 +4937,8 @@ public class Controllers {
     }
 
     public static class SellerSaleManagingMenuController implements Initializable {
-        private ArrayList<SaleWrapper> sellerSales = new ArrayList<>();
+        private ArrayList<SaleWrapper> activeSales;
+        private ArrayList<SaleWrapper> archiveSales;
 
         @FXML
         private TableView<SaleWrapper> sales;
@@ -4957,6 +4960,24 @@ public class Controllers {
 
         @FXML
         private TableColumn<SaleWrapper, Button> removeCOL;
+
+        @FXML
+        private TableView<SaleWrapper> archive;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> archiveIdCol;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> archivePercentageCOL;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> archiveStartDateCOL;
+
+        @FXML
+        private TableColumn<SaleWrapper, String> archiveEndDateCOL;
+
+        @FXML
+        private TableColumn<SaleWrapper, Button> archiveDetailsCOL;
 
         @FXML
         private Label errorLBL;
@@ -4985,8 +5006,13 @@ public class Controllers {
 
                 remove.getStyleClass().add("remove-button");
                 remove.setOnAction(e -> {
-                    //TODO:
-                    //sellerController.sale
+                    try {
+                        sellerController.removeSale(this.id);
+                        archive.getItems().add(this);
+                        sales.getItems().remove(this);
+                    } catch (Exceptions.InvalidSaleIdException ex) {
+                        ex.printStackTrace();
+                    }
                     sales.getItems().remove(this);
                 });
 
@@ -5033,8 +5059,13 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            for (String[] sale : sellerController.viewSales()) {
-                sellerSales.add(new SaleWrapper(sale));
+            activeSales = new ArrayList<>();
+            archiveSales = new ArrayList<>();
+            for (String[] sale : sellerController.viewActiveSales()) {
+                activeSales.add(new SaleWrapper(sale));
+            }
+            for (String[] sale : sellerController.viewArchiveSales()) {
+                archiveSales.add(new SaleWrapper(sale));
             }
 
             initTable();
@@ -5049,7 +5080,14 @@ public class Controllers {
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
 
-            sales.getItems().setAll(sellerSales);
+            archiveIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            archivePercentageCOL.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+            archiveStartDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+            archiveEndDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+            archiveDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+
+            sales.getItems().setAll(activeSales);
+            archive.getItems().setAll(archiveSales);
         }
 
         private void initActions() {
