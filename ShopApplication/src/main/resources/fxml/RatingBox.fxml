@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<HBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/11.0.1">
+    <StackPane fx:id="star1" layoutX="10.0" layoutY="10.0">
+        <ImageView fx:id="halfStar1" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/half-star.png"/>
+        </ImageView>
+        <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/full-star.png"/>
+        </ImageView>
+        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/empty-star.png"/>
+        </ImageView>
+    </StackPane>
+    <StackPane fx:id="star2" layoutX="55.0" layoutY="10.0">
+        <ImageView fx:id="halfStar11" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/half-star.png"/>
+        </ImageView>
+        <ImageView fx:id="fullStar11" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/full-star.png"/>
+        </ImageView>
+        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/empty-star.png"/>
+        </ImageView>
+    </StackPane>
+    <StackPane fx:id="star3" layoutX="70.0" layoutY="10.0">
+        <ImageView fx:id="halfStar111" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/half-star.png"/>
+        </ImageView>
+        <ImageView fx:id="fullStar111" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/full-star.png"/>
+        </ImageView>
+        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/empty-star.png"/>
+        </ImageView>
+    </StackPane>
+    <StackPane fx:id="star4" layoutX="85.0" layoutY="10.0">
+        <ImageView fx:id="halfStar1111" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/half-star.png"/>
+        </ImageView>
+        <ImageView fx:id="fullStar1111" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true"
+                   visible="false">
+            <Image url="@../img/full-star.png"/>
+        </ImageView>
+        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/empty-star.png"/>
+        </ImageView>
+    </StackPane>
+    <StackPane fx:id="star5">
+        <ImageView fx:id="halfStar5" pickOnBounds="true" preserveRatio="true" visible="false">
+            <Image url="@../img/half-star.png"/>
+        </ImageView>
+        <ImageView fx:id="fullStar5" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true"
+                   visible="false">
+            <Image url="@../img/full-star.png"/>
+        </ImageView>
+        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../img/empty-star.png"/>
+        </ImageView>
+    </StackPane>
+</HBox>
