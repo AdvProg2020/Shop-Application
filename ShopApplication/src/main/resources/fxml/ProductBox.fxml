@@ -1,64 +1,175 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="250.0" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductBoxController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-    <HBox alignment="TOP_CENTER">
-        <Region layoutX="108.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
-        <StackPane alignment="TOP_LEFT" prefHeight="175.0" prefWidth="135.0">
-            <Label id="sale-percentage-label" fx:id="sale" text="50%" />
-            <VBox alignment="CENTER">
-                <ImageView id="product-image" fx:id="image" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
-                </ImageView>
-                <Label fx:id="available" text="available?" />
-            </VBox>
-        </StackPane>
-        <Region prefHeight="90.0" prefWidth="18.0" HBox.hgrow="ALWAYS" />
-    </HBox>
-    <Label fx:id="name" text="name" />
-    <HBox alignment="CENTER_LEFT">
-        <Label fx:id="rating" text="rating">
-            <HBox.margin>
-                <Insets />
-            </HBox.margin>
-        </Label>
-    </HBox>
-    <Region VBox.vgrow="ALWAYS" />
-    <VBox>
-        <HBox alignment="CENTER_LEFT" />
-        <GridPane>
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Label fx:id="priceBefore" text="price before" />
-                <Label fx:id="priceAfter" text="price after" GridPane.rowIndex="1" />
-                <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/ProductBox.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$ProductBoxController">
+    <center>
+        <VBox id="box" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+              prefHeight="350.0" prefWidth="250.0" spacing="10.0">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <HBox alignment="TOP_CENTER">
+                <StackPane alignment="TOP_LEFT" prefHeight="175.0" prefWidth="135.0">
+                    <VBox alignment="TOP_CENTER">
+                        <ImageView id="product-image" fx:id="image" fitHeight="170.0" fitWidth="170.0"
+                                   pickOnBounds="true">
+                            <image>
+                                <Image url="@../img/default-product-pic.png"/>
+                            </image>
+                        </ImageView>
+                        <Label id="available-label" fx:id="available" text="SOLD OUT"/>
+                    </VBox>
+                    <Label id="sale-percentage-label" fx:id="sale" text="50%">
+                        <StackPane.margin>
+                            <Insets left="5.0" top="5.0"/>
+                        </StackPane.margin>
+                    </Label>
+                </StackPane>
+            </HBox>
+            <Label id="name-label" fx:id="name" text="Name-Brand"/>
+            <HBox alignment="CENTER_LEFT">
+                <StackPane layoutX="10.0" layoutY="10.0">
                     <children>
-                        <ImageView pickOnBounds="true" preserveRatio="true" />
-                        <Label fx:id="remainingTime" alignment="CENTER" text="R date" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <ImageView fx:id="halfStar1" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/half-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../img/full-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/empty-star.png"/>
+                            </image>
+                        </ImageView>
                     </children>
-                </HBox>
-            </children>
-        </GridPane>
-        <Region HBox.hgrow="ALWAYS" />
-    </VBox>
-</VBox>
+                </StackPane>
+                <StackPane layoutX="55.0" layoutY="10.0">
+                    <children>
+                        <ImageView fx:id="halfStar11" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/half-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="fullStar11" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../img/full-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/empty-star.png"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
+                <StackPane layoutX="70.0" layoutY="10.0">
+                    <children>
+                        <ImageView fx:id="halfStar111" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/half-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="fullStar111" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../img/full-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/empty-star.png"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
+                <StackPane layoutX="85.0" layoutY="10.0">
+                    <children>
+                        <ImageView fx:id="halfStar1111" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/half-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="fullStar1111" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                   preserveRatio="true" visible="false">
+                            <image>
+                                <Image url="@../img/full-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/empty-star.png"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
+                <StackPane>
+                    <children>
+                        <ImageView fx:id="halfStar5" pickOnBounds="true" preserveRatio="true" visible="false">
+                            <image>
+                                <Image url="@../img/half-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="fullStar5" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                   preserveRatio="true" visible="false">
+                            <image>
+                                <Image url="@../img/full-star.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/empty-star.png"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
+                <Label id="rating-count" fx:id="rating" text="(173)">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Label>
+            </HBox>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox>
+                <HBox alignment="CENTER_LEFT"/>
+                <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <Label id="price-before-label" fx:id="priceBefore" text="\$99"/>
+                        <Label id="price-after-label" fx:id="priceAfter" text="\$59" GridPane.rowIndex="1"/>
+                        <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                              GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                            <children>
+                                <ImageView pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../img/clock-icon.png"/>
+                                    </image>
+                                </ImageView>
+                                <Label id="remaining-date-label" fx:id="remainingTime" alignment="CENTER" text="R date"
+                                       GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </GridPane>
+                <Region HBox.hgrow="ALWAYS"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
