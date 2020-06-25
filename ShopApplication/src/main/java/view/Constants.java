@@ -1,8 +1,5 @@
 package view;
 
-import java.io.File;
-import java.io.IOException;
-
 public final class Constants {
     public static final String caseInsensitiveMode = "(?i)";
     public static final String argumentPattern = "(\\S+)";
@@ -75,5 +72,6 @@ public final class Constants {
         public static final String addReviewRequestPopup = "AddReviewRequestPopup";
         public static final String addSellerRequestPopup = "AddSellerRequestPopup";
         public static final String editRequestDetailsPopup = "EditRequestDetailsPopup";
+        public static final String reviewBox = "ReviewBox";
     }
 }
