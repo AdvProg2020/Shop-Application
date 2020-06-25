@@ -324,11 +324,7 @@ public class Controller {
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
-            ArrayList<String> properties = new ArrayList<>();
-            for (String property : product.getCategory().getProperties(true)) {
-                properties.add(product.getValue(property));
-            }
-            return null;
+            return new HashMap<>(product.getPropertyValues());
         }
     }
 
