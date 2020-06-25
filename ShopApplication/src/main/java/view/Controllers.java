@@ -662,39 +662,382 @@ public class Controllers {
 
     }
 
-    public static class AddProductRequestPopupController {
-        public static void display(String requestId) {
 
+    public static class AddProductRequestPopupController {
+        @FXML
+        private TextField nameField;
+        @FXML
+        private Label usernameErrLBL;
+        @FXML
+        private TextField brandField;
+        @FXML
+        private TextField categoryField;
+        @FXML
+        private Label passwordErrLBL;
+        @FXML
+        private TextField imageField;
+        @FXML
+        private Label imageErrLBL;
+        @FXML
+        private TextArea infoArea;
+        @FXML
+        private Label emailErrLBL;
+        @FXML
+        private TextField priceField;
+        @FXML
+        private Label priceError;
+        @FXML
+        private TextField countField;
+        @FXML
+        private Label countError;
+        @FXML
+        private TableView<PropertyWrapper> properties;
+        @FXML
+        private TableColumn<PropertyWrapper, String> propertyCOL;
+        @FXML
+        private TableColumn<PropertyWrapper, String> valueCOL;
+
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public class PropertyWrapper {
+            String property;
+            String value;
+
+            public PropertyWrapper(String property, String value) {
+                this.property = property;
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public String getValue() {
+                return value;
+            }
+        }
+
+        public static void display(String requestId) {
+            ((AddProductRequestPopupController)
+                    View.popupWindow("Add product request details", Constants.FXMLs.addProductRequestPopup, 860, 480)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            initValues();
+            initTable();
+        }
+
+        private void initValues() {
+            nameField.setText(secondaryDetails[0]);
+            brandField.setText(secondaryDetails[1]);
+            categoryField.setText(secondaryDetails[3]);
+            imageField.setText(secondaryDetails[2]);
+            infoArea.setText(secondaryDetails[4]);
+            countField.setText(secondaryDetails[5]);
+            priceField.setText(secondaryDetails[6]);
+        }
+
+        private void initTable() {
+            //TODO: see if its possible
         }
     }
+
+    /**
+     * public static String[] productEditableFields() {
+     * String[] editableFields = new String[5];
+     * editableFields[0] = "name";
+     * editableFields[1] = "brand";
+     * editableFields[2] = "info text";
+     * editableFields[3] = "price";
+     * editableFields[4] = "count";
+     * return editableFields;
+     * }
+     */
 
     public static class EditProductRequestPopupController {
-        public static void display(String requestId) {
+        @FXML private Label idProperty;
+        @FXML private Label idValue;
+        @FXML private Label fieldLBL;
+        @FXML private TextArea newValue;
+        @FXML private TextArea oldValue;
 
+        private String[] primaryDetails;
+        private String[] secondaryDetails;
+        private String[] tertiaryDetails;
+
+        public static void display(String requestId) {
+            ((EditProductRequestPopupController)
+                    View.popupWindow("Edit product request details", Constants.FXMLs.editRequestDetailsPopup, 500, 300)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            initValues();
+        }
+
+        private void initValues() {
+            switch (tertiaryDetails[0]) {
+                case "NAME":
+                    fieldLBL.setText("Name");
+                    oldValue.setText(secondaryDetails[2]);
+                    break;
+                case "BRAND":
+                    fieldLBL.setText("Brand");
+                    oldValue.setText(secondaryDetails[3]);
+                    break;
+                case "INFO_TEXT":
+                    fieldLBL.setText("Info text");
+                    oldValue.setText(secondaryDetails[13]);
+                    break;
+                case "PROPERTY":
+                    fieldLBL.setText("Property");
+                    //TODO
+                    break;
+                case "SUB_PRICE":
+                    fieldLBL.setText("Sub product price");
+                    oldValue.setText(secondaryDetails[7]);
+                    break;
+                case "SUB_COUNT":
+                    fieldLBL.setText("Sub product count");
+                    oldValue.setText(secondaryDetails[9]);
+                    break;
+
+            }
+
+            idValue.setText(secondaryDetails[0]);
+
+            newValue.setText(tertiaryDetails[1]);
         }
     }
 
-    public static class EditSaleRequestPopupController {
-        public static void display(String requestId) {
+    /**
+     * public static String[] saleEditableFields() {
+     * String[] saleEditableFields = new String[4];
+     * saleEditableFields[0] = "start date";
+     * saleEditableFields[1] = "end date";
+     * saleEditableFields[2] = "percentage";
+     * saleEditableFields[3] = "maximum";
+     * return saleEditableFields;
+     * }
+     */
 
+    public static class EditSaleRequestPopupController {
+        @FXML private Label idProperty;
+        @FXML private Label idValue;
+        @FXML private Label fieldLBL;
+        @FXML private TextArea newValue;
+        @FXML private TextArea oldValue;
+
+        private String[] primaryDetails;
+        private String[] secondaryDetails;
+        private String[] tertiaryDetails;
+
+        public static void display(String requestId) {
+            ((EditSaleRequestPopupController)
+                    View.popupWindow("Edit sale request details", Constants.FXMLs.editRequestDetailsPopup, 500, 300)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+                tertiaryDetails = detailsOfRequest.get(2);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            initValues();
+        }
+
+        private void initValues() {
+            switch (tertiaryDetails[0]) {
+                case "START_DATE":
+                    fieldLBL.setText("Start date");
+                    oldValue.setText(secondaryDetails[3]);
+                    break;
+                case "END_DATE":
+                    fieldLBL.setText("End date");
+                    oldValue.setText(secondaryDetails[4]);
+                    break;
+                case "PERCENTAGE":
+                    fieldLBL.setText("Percentage");
+                    oldValue.setText(secondaryDetails[2]);
+                    break;
+                case "MAXIMUM":
+                    fieldLBL.setText("Maximum sale amount");
+                    oldValue.setText(secondaryDetails[6]);
+                    break;
+            }
+
+            idValue.setText(secondaryDetails[0]);
+
+            newValue.setText(tertiaryDetails[1]);
         }
     }
 
     public static class AddSaleRequestPopupController {
-        public static void display(String requestId) {
+        @FXML
+        private TableView<?> products;
+        @FXML
+        private TableColumn<?, ?> nameBrandCOL;
+        @FXML
+        private Label errorLBL;
+        @FXML
+        private Label idKeyLBL;
+        @FXML
+        private Label idValueLBL;
+        @FXML
+        private TextField percentageField;
+        @FXML
+        private TextField maxField;
+        @FXML
+        private DatePicker startDate;
+        @FXML
+        private DatePicker endDate;
 
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public static void display(String requestId) {
+            ((AddSaleRequestPopupController)
+                    View.popupWindow("Add sale request details", Constants.FXMLs.addSaleRequestPopup, 650, 500)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            initValues();
+            initTable();
+        }
+
+        private void initValues() {
+            idValueLBL.setText(secondaryDetails[0]);
+            percentageField.setText(secondaryDetails[1]);
+            maxField.setText(secondaryDetails[2]);
+            startDate.setValue(LocalDate.parse("20" + secondaryDetails[3]));
+            endDate.setValue(LocalDate.parse("20" + secondaryDetails[4]));
+        }
+
+        private void initTable() {
+            //TODO
         }
     }
 
     public static class AddReviewRequestPopupController {
-        public static void display(String requestId) {
+        @FXML
+        private Label nameLBL;
+        @FXML
+        private Label titleLBL;
+        @FXML
+        private TextField titleField;
+        @FXML
+        private Label nameBrandLBL;
+        @FXML
+        private TextArea textArea;
 
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public static void display(String requestId) {
+            ((AddReviewRequestPopupController)
+                    View.popupWindow("Add review request details", Constants.FXMLs.addReviewRequestPopup, 500, 180)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            initValues();
+        }
+
+        private void initValues() {
+            nameLBL.setText(secondaryDetails[0]);
+            nameBrandLBL.setText(secondaryDetails[2] + " - " + secondaryDetails[3]);
+            titleField.setText(secondaryDetails[4]);
+            textArea.setText(secondaryDetails[5]);
         }
     }
 
     public static class AddSellerRequestPopupController {
-        public static void display(String requestId) {
 
+        @FXML
+        private TextField sellerUsername;
+        @FXML
+        private TextField sellerImageField;
+        @FXML
+        private TextField sellerFirstName;
+        @FXML
+        private TextField sellerLastName;
+        @FXML
+        private TextField sellerPhoneNumber;
+        @FXML
+        private TextField sellerEmail;
+        @FXML
+        private TextField sellerBalance;
+        @FXML
+        private TextField sellerStoreName;
+
+        private String[] primaryDetails;
+        private String[] secondaryDetails;
+
+        public static void display(String requestId) {
+            ((AddSellerRequestPopupController)
+                    View.popupWindow("Add seller request details", Constants.FXMLs.addSellerRequestPopup, 360, 250)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            initValues();
+        }
+
+        private void initValues() {
+            sellerUsername.setText(secondaryDetails[0]);
+            sellerFirstName.setText(secondaryDetails[1]);
+            sellerLastName.setText(secondaryDetails[2]);
+            sellerEmail.setText(secondaryDetails[3]);
+            sellerPhoneNumber.setText(secondaryDetails[4]);
+            sellerBalance.setText(secondaryDetails[5]);
+            sellerStoreName.setText(secondaryDetails[6]);
         }
     }
 
