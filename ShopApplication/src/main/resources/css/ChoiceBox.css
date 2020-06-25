@@ -1,0 +1,28 @@
+.choice-box {
+    -fx-background-color: #e9e9e9;
+    -fx-border-color: darkgrey;
+    -fx-border-radius: 3;
+    -fx-mark-color: #29292D;
+}
+
+.choice-box > .label {
+    -fx-text-fill: #29292D;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: #29292D;
+    -fx-background-radius: 3;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: green;
+}
+
+.choice-box .menu-item > .label {
+    -fx-text-fill: #e9e9e9;
+}
+
+.choice-box .menu-item:focused > .label {
+    -fx-text-fill: #e9e9e9;
+}
+
