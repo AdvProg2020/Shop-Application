@@ -37,7 +37,6 @@ A: edit product popup and addSale and AddProduct
 
 --------------------
 A: personal info image not loading.
-A: seller show categories.
 T: seller product show buyers.
 A: cart increase decrease. admin discount popup increase decrease.
 A: image in shopping cart
@@ -49,7 +48,6 @@ T: product menu debug
 T: add review controller
 M: unit test (login procedure)
 M: add font
-A: show role in personal Info A: handle
 T: sold out
 T: digest change image based on available, sold out or in sale
 M & A: purchase confirmation popup

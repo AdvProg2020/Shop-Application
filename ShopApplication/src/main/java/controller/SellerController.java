@@ -412,11 +412,11 @@ public class SellerController {
         return requestPacks;
     }
 
-    public ArrayList<String> getAllCategories(){
+    public ArrayList<String[]> getAllCategories(){
         ArrayList<Category> categories = new ArrayList<>(Category.getAllCategories());
-        ArrayList<String> categoryNames = new ArrayList<>();
+        ArrayList<String[]> categoryNames = new ArrayList<>();
         for (Category category : categories) {
-            categoryNames.add(category.getName());
+            categoryNames.add(new String[]{category.getName(), category.getParent().getName()});
         }
         return categoryNames;
     }
