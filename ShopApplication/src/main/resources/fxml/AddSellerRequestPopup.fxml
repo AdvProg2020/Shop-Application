@@ -1,66 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$EditPersonalInfoPopupController">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AddSellerRequestPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
             <VBox>
-                <Label styleClass="property-label" text="Username:"/>
-                <TextField fx:id="usernameField" disable="true" styleClass="property-box"/>
-                <Label fx:id="usernameError" styleClass="message-label"/>
+                <Label styleClass="property-label" text="Username:" />
+                <TextField fx:id="usernameField" disable="true" styleClass="property-box" />
             </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
-                <Label styleClass="property-label" text="Profile Picture:"/>
-                <TextField fx:id="imageField" promptText="upload image..." styleClass="property-box"/>
-                <Label fx:id="ImageError" styleClass="message-label" textFill="RED"/>
+                <Label styleClass="property-label" text="Profile Picture:" />
+                <TextField fx:id="imageField" promptText="upload image..." styleClass="property-box" />
             </VBox>
             <VBox GridPane.rowIndex="2">
-                <Label styleClass="property-label" text="First name:"/>
-                <TextField fx:id="firstName" styleClass="property-box"/>
-                <Label fx:id="firstNameError" styleClass="message-label" textFill="RED"/>
+                <Label styleClass="property-label" text="First name:" />
+                <TextField fx:id="firstName" styleClass="property-box" />
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <Label styleClass="property-label" text="Last name:"/>
-                <TextField fx:id="lastName" styleClass="property-box"/>
-                <Label fx:id="lastNameError" styleClass="message-label" textFill="RED"/>
+                <Label styleClass="property-label" text="Last name:" />
+                <TextField fx:id="lastName" styleClass="property-box" />
             </VBox>
             <VBox GridPane.rowIndex="3">
-                <Label styleClass="property-label" text="Phone number:"/>
-                <TextField fx:id="phoneNumber" promptText="09123456789" styleClass="property-box"/>
-                <Label fx:id="phoneNumberError" styleClass="message-label" textFill="RED"/>
+                <Label styleClass="property-label" text="Phone number:" />
+                <TextField fx:id="phoneNumber" promptText="09123456789" styleClass="property-box" />
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <Label styleClass="property-label" text="Email:"/>
-                <TextField fx:id="email" promptText="sample@atm.com" styleClass="property-box"/>
-                <Label fx:id="emailError" styleClass="message-label" textFill="RED"/>
+                <Label styleClass="property-label" text="Email:" />
+                <TextField fx:id="email" promptText="sample@atm.com" styleClass="property-box" />
             </VBox>
             <VBox GridPane.rowIndex="4">
-                <Label styleClass="property-label" text="Balance:"/>
-                <TextField fx:id="balance" styleClass="property-box"/>
-                <Label fx:id="balanceError" styleClass="message-label" textFill="RED"/>
+                <Label styleClass="property-label" text="Balance:" />
+                <TextField fx:id="balance" styleClass="property-box" />
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Label styleClass="property-label" text="Store name:"/>
-                <TextField fx:id="storeName" styleClass="property-box"/>
-                <Label fx:id="storeNameError" styleClass="message-label" textFill="RED"/>
+                <Label styleClass="property-label" text="Store name:" />
+                <TextField fx:id="storeName" styleClass="property-box" />
             </VBox>
             <columnConstraints>
-                <ColumnConstraints maxWidth="190.4" minWidth="179.19998779296876" prefWidth="190.4"/>
-                <ColumnConstraints maxWidth="205.60001220703126" minWidth="194.4" prefWidth="194.4"/>
+                <ColumnConstraints maxWidth="190.4" minWidth="179.19998779296876" prefWidth="190.4" />
+                <ColumnConstraints maxWidth="205.60001220703126" minWidth="194.4" prefWidth="194.4" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
             </rowConstraints>
         </GridPane>
     </center>
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 </BorderPane>

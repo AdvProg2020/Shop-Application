@@ -1,0 +1,59 @@
+
+#sale-percentage-label {
+    -fx-background-color: #ff2c42;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10 5 10;
+}
+
+#name-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+#rating-count {
+    -fx-font-size: 12;
+    -fx-text-fill: darkgrey;
+    -fx-font-weight: bold;
+}
+
+#price-before-label {
+    -fx-font-size: 18;
+    -fx-text-fill: #ff2c42;
+}
+
+#price-before-label .text {
+    -fx-strikethrough: true;
+}
+
+#price-after-label {
+    -fx-font-size: 20;
+}
+
+#remaining-date-label {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+}
+
+#available-label {
+    -fx-background-color: #ff2c42;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 0 10 0 10;
+}
+
+#box {
+    -fx-background-color: white;
+}
+
+#box:hover {
+    -fx-effect: dropshadow(gaussian, black, 6, 0.0, 0, 0);
+}
+
+#box:pressed {
+    -fx-opacity: 95%;
+}

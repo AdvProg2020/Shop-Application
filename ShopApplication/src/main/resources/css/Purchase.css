@@ -1,0 +1,64 @@
+.bg-pane {
+    -fx-background-color: #81c9e1;
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+.button:pressed {
+    -fx-opacity: 80%;
+}
+
+.property-label {
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+.value-label {
+    -fx-font-size: 14;
+}
+
+.message-label {
+    -fx-text-fill: red;
+    -fx-font-size: 12;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-font-style: italic;
+    -fx-background-radius: 0 40 40 0;
+}
+
+.property-box {
+    -fx-font-size: 14;
+    -fx-background-radius: 40;
+    -fx-background-color: whitesmoke;
+}
+
+#purchase-button {
+    -fx-background-color: green;
+    -fx-graphic: url("../img/purchase-button-2.png");
+    -fx-graphic-text-gap: 20;
+    -fx-text-fill: whitesmoke;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-background-radius: 5;
+    -fx-padding: 5 40 5 20;
+}
+
+#validate-button {
+    -fx-background-color: #29292D;
+    -fx-text-fill: lightgrey;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+    -fx-background-radius: 0 40 40 0;
+    -fx-padding: 6 10 6 10;
+}
