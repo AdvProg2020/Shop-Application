@@ -1799,11 +1799,17 @@ public class Controllers {
         @FXML
         private VBox reviewsVB;
 
+        @FXML
+        private HBox categoryHBox;
+
+
         private String[] productPack;
         private String[] subProductPack;
         private ArrayList<PropertyWrapper> properties;
         private ArrayList<SellerWrapper> sellers;
         private ArrayList<String[]> subProductPacks;
+        private boolean editable;
+        private String type;
 
         public static void display(String productId, boolean editable) {
             try {
@@ -1819,12 +1825,18 @@ public class Controllers {
             if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
                 controller = ((ProductDetailMenuController)
                         View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600));
-                controller.initialize(productId, type, editable);
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
                 //controller.initialize(productId, Constants.customerUserType);
             }
+            if (controller != null) {
+                controller.editable = editable;
+                controller.type = View.type.get();
+                controller.initialize(productId, subProductId);
+            }else
+                System.out.println("There is an error with loading the controller...");
+
         }
 
         public static class SellerWrapper {
@@ -1882,7 +1894,15 @@ public class Controllers {
             }
         }
 
-        private void initialize(String productId, String type, boolean editable) {
+        private void initialize(String productId, String subProductId) {
+            setPacks(productId, subProductId);
+            initMainObjects();
+            initCategoryHBox();
+            initReviewsVB();
+            initPropertiesTable();
+            initButtons();
+
+            initSellersTable();
 
         }
 
@@ -1926,6 +1946,7 @@ public class Controllers {
             else
                 priceAfterLBL.setText("");
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
+            updateShowOfButtons();
         }
 
         private void initReviewsVB() {
@@ -1939,25 +1960,80 @@ public class Controllers {
             }
         }
 
-        private void initPropertyTableTabs() {
-            propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
-            propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
-        }
-
         private void initPropertiesTable() {
             try {
                 HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(productPack[0]);
                 for (String s : propertyValues.keySet()) {
                     properties.add(new PropertyWrapper(s, propertyValues.get(s)));
                 }
-                initPropertyTableTabs();
+                propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
+                propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
             }
         }
 
+        private void initCategoryHBox(){
+            try {
+                for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
+                    categoryHBox.getChildren().add(new Label(s + " >> "));
+                }
+                categoryHBox.getChildren().add(new Label(productPack[1]));
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
+        }
 
+        private void addToCart(){
+            try {
+                mainController.addToCart(subProductPack[1], 1);
+            } catch (Exceptions.UnavailableProductException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            } catch (Exceptions.InvalidSubProductIdException | Exceptions.UnAuthorizedAccountException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void edit(){
+            EditProductPopupController.display(productPack[0], subProductPack[1]);
+        }
+
+        private void compare(){
+        }
+
+        private void initButtons(){
+            addToCartBTN.setOnAction(e -> addToCart());
+            editBTN.setOnAction(e -> edit());
+            compareBTN.setOnAction(e -> compare());
+
+            updateShowOfButtons();
+        }
+
+        private void updateShowOfButtons(){
+            if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
+                if(Integer.parseInt(subProductPack[9]) != 0){
+                    addToCartBTN.setVisible(true);
+                    addToCartBTN.setDisable(true);
+                }else {
+                    addToCartBTN.setVisible(true);
+                    addToCartBTN.setDisable(false);
+                }
+            }else{
+                addToCartBTN.setVisible(false);
+            }
+
+            if( (type.equals(Constants.adminUserType)) && editable){
+                editBTN.setVisible(true);
+            }else if(type.equals(Constants.sellerUserType) && editable){
+                editBTN.setVisible(true);
+            }else {
+                editBTN.setVisible(false);
+            }
+
+            compareBTN.setVisible(true);
+        }
     }
 
     public static class ReviewBoxController {
