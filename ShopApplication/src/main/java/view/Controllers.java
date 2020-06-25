@@ -165,8 +165,7 @@ public class Controllers {
 
             browseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image file", "*.png"),
-                        new FileChooser.ExtensionFilter("Image file", "*.jpg"));
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image file", "*.png", "*.jpg"));
                 File chosenFile = fileChooser.showOpenDialog(new Stage());
                 if (fileChooser != null) {
                     imageField.setText(chosenFile.getPath());
@@ -725,6 +724,15 @@ public class Controllers {
                 return;
             }
 
+            nameField.setDisable(true);
+            brandField.setDisable(true);
+            categoryField.setDisable(true);
+            imageField.setDisable(true);
+            infoArea.setDisable(true);
+            countField.setDisable(true);
+            priceField.setDisable(true);
+            countField.setDisable(true);
+
             initValues();
             initTable();
         }
@@ -781,6 +789,9 @@ public class Controllers {
                 e.printStackTrace();
                 return;
             }
+
+            oldValue.setEditable(false);
+            newValue.setEditable(false);
 
             initValues();
         }
@@ -942,6 +953,11 @@ public class Controllers {
                 return;
             }
 
+            percentageField.setDisable(true);
+            maxField.setDisable(true);
+            startDate.setDisable(true);
+            endDate.setDisable(true);
+
             initValues();
             initTable();
         }
@@ -989,6 +1005,9 @@ public class Controllers {
                 return;
             }
 
+            titleField.setDisable(true);
+            textArea.setDisable(true);
+
             initValues();
         }
 
@@ -1001,23 +1020,22 @@ public class Controllers {
     }
 
     public static class AddSellerRequestPopupController {
-
         @FXML
-        private TextField sellerUsername;
+        private TextField usernameField;
         @FXML
-        private TextField sellerImageField;
+        private TextField imageField;
         @FXML
-        private TextField sellerFirstName;
+        private TextField firstName;
         @FXML
-        private TextField sellerLastName;
+        private TextField lastName;
         @FXML
-        private TextField sellerPhoneNumber;
+        private TextField phoneNumber;
         @FXML
-        private TextField sellerEmail;
+        private TextField email;
         @FXML
-        private TextField sellerBalance;
+        private TextField balance;
         @FXML
-        private TextField sellerStoreName;
+        private TextField storeName;
 
         private String[] primaryDetails;
         private String[] secondaryDetails;
@@ -1037,17 +1055,28 @@ public class Controllers {
                 return;
             }
 
+            initDisable();
             initValues();
         }
 
+        private void initDisable() {
+            usernameField.setDisable(true);
+            firstName.setDisable(true);
+            lastName.setDisable(true);
+            email.setDisable(true);
+            phoneNumber.setDisable(true);
+            balance.setDisable(true);
+            storeName.setDisable(true);
+        }
+
         private void initValues() {
-            sellerUsername.setText(secondaryDetails[0]);
-            sellerFirstName.setText(secondaryDetails[1]);
-            sellerLastName.setText(secondaryDetails[2]);
-            sellerEmail.setText(secondaryDetails[3]);
-            sellerPhoneNumber.setText(secondaryDetails[4]);
-            sellerBalance.setText(secondaryDetails[5]);
-            sellerStoreName.setText(secondaryDetails[6]);
+            usernameField.setText(secondaryDetails[0]);
+            firstName.setText(secondaryDetails[1]);
+            lastName.setText(secondaryDetails[2]);
+            email.setText(secondaryDetails[3]);
+            phoneNumber.setText(secondaryDetails[4]);
+            balance.setText(secondaryDetails[5]);
+            storeName.setText(secondaryDetails[6]);
         }
     }
 
