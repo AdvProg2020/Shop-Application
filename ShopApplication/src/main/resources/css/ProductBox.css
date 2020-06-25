@@ -42,8 +42,8 @@
     -fx-text-fill: white;
     -fx-font-size: 12;
     -fx-font-weight: bold;
-    -fx-background-radius: 5;
-    -fx-padding: 0 10 0 10;
+    -fx-background-radius: 0 0 5 5;
+    -fx-padding: 0 56 0 55;
 }
 
 #box {

@@ -15,7 +15,7 @@
             <HBox alignment="TOP_CENTER">
                 <StackPane alignment="TOP_LEFT" prefHeight="175.0" prefWidth="135.0">
                     <VBox alignment="TOP_CENTER">
-                        <ImageView id="product-image" fx:id="image" fitHeight="169.0" fitWidth="168.0"
+                        <ImageView id="product-image" fx:id="image" fitHeight="170.0" fitWidth="170.0"
                                    pickOnBounds="true">
                             <image>
                                 <Image url="@../img/default-product-pic.png"/>
