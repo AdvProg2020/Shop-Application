@@ -1417,6 +1417,10 @@ public class Controllers {
         @FXML
         private VBox reviewsVB;
 
+        @FXML
+        private HBox categoryHBox;
+
+
         private String[] productPack;
         private String[] subProductPack;
         private ArrayList<PropertyWrapper> properties;
@@ -1568,6 +1572,17 @@ public class Controllers {
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
+            }
+        }
+
+        private void initCategoryHBox(){
+            try {
+                for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
+                    categoryHBox.getChildren().add(new Label(s + " >> "));
+                }
+                categoryHBox.getChildren().add(new Label(productPack[1]));
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
             }
         }
     }
