@@ -318,7 +318,6 @@ public class Controller {
         return Utilities.Pack.digest(product);
     }
 
-    //TODO: correting output
     public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)

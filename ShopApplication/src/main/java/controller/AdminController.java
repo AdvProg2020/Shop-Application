@@ -432,4 +432,13 @@ public class AdminController {
     public boolean existManager(){
         return Admin.getManager() != null;
     }
+
+    public HashMap<String,String> getPropertyValuesOfAProductInARequest(String requestId) throws Exceptions.InvalidRequestIdException {
+        Request request = Request.getRequestById(requestId);
+        if( request == null || !request.getClass().getSimpleName().equals("AddProductRequest")){
+            throw new Exceptions.InvalidRequestIdException(requestId);
+        }else {
+            return new HashMap<>(((AddProductRequest)request).getProduct().getPropertyValues());
+        }
+    }
 }
