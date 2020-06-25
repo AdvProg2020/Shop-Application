@@ -1,0 +1,74 @@
+#bg-pane {
+    -fx-background-color: #a8e5f6;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+.button:pressed {
+    -fx-opacity: 80%;
+}
+
+#admin-extra-image {
+    -fx-background-image: url("../img/admin-extra.jpg");
+    -fx-background-size: 500;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.log-button {
+    -fx-graphic: url("../img/log-button.png");
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: #009000;
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+    -fx-padding: 10 50 10 50;
+}
+
+#edit-button {
+    -fx-graphic: url("../img/edit-button.png");
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: #009000;
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+    -fx-padding: 10 65 10 65;
+}
+
+#logout-button {
+    -fx-graphic: url("../img/logout-button.png");
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: #009000;
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+    -fx-padding: 10 53 10 53;
+}
+
+.property-label {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+.value-label {
+    -fx-font-size: 14;
+}
+
+#name-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 26;
+}
+
+#username-label {
+    -fx-font-style: italic;
+    -fx-font-size: 16;
+}
+
+#type-label {
+    -fx-background-color: #29292D;
+    -fx-background-radius: 5;
+    -fx-text-fill: lightgrey;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-padding: 2 10 2 10;
+    -fx-opacity: 90%;
+}
