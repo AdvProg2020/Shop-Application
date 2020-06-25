@@ -1550,9 +1550,12 @@ public class Controllers {
             }
         }
 
-
+        //TODO: add hasBoughtField to reviewBox
         private void setInfo() {
-
+            nameLBL.setText(review[0]);
+            titleLBL.setText(review[1]);
+            text.setText(review[2]);
+            //reviewPack[3] = review.hasBought() ? "yes" : "no";
         }
     }
 
