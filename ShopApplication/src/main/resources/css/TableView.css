@@ -123,9 +123,39 @@
 }
 
 .text-field {
-
+    -fx-font-size: 14;
+    -fx-font-style: italic;
+    -fx-background-color: #e9e9e9;
 }
 
-.check-box {
-
+.check-box > .box {
+    -fx-background-color: transparent;
+    -fx-border-color: table-color-2;
+    -fx-border-width: 3;
+    -fx-border-radius: 3;
 }
+
+.check-box:selected > .box > .mark,
+.check-box:indeterminate > .box > .mark {
+    -fx-background-color: table-color-2;
+}
+
+.check-box > .box:hover,
+.check-box:selected > .box:hover > .mark,
+.check-box:indeterminate > .box:hover > .mark {
+    -fx-effect: dropshadow(one-pass-box, whitesmoke, 6, 0.0, 0, 0);
+}
+
+#main-check-box .box,
+#main-check-box:selected .box .mark,
+#main-check-box:indeterminate .box {
+    -fx-background-color: table-color-1;
+}
+
+#main-check-box > .box:hover,
+#main-check-box:selected > .box:hover > .mark,
+#main-check-box:indeterminate > .box:hover > .mark {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+

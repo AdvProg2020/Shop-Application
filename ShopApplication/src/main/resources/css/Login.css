@@ -2,6 +2,14 @@
     -fx-background-color: #81c9e1;
 }
 
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+.button:pressed {
+    -fx-opacity: 80%;
+}
+
 #login-image {
     -fx-background-image: url("../img/login-page.png");
     -fx-background-size: 300;

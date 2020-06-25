@@ -1799,9 +1799,6 @@ public class Controllers {
         private Label nameLBL;
 
         @FXML
-        private Label ratingLBL;
-
-        @FXML
         private Label brandLBL;
 
         @FXML
@@ -1855,6 +1852,53 @@ public class Controllers {
         @FXML
         private HBox categoryHBox;
 
+        @FXML
+        private Label ratingCountLBL;
+
+        @FXML
+        private Button rateBTN;
+
+        @FXML
+        private ImageView halfStar1;
+
+        @FXML
+        private ImageView fullStar1;
+
+        @FXML
+        private ImageView halfStar2;
+
+        @FXML
+        private ImageView fullStar2;
+
+        @FXML
+        private ImageView halfStar3;
+
+        @FXML
+        private ImageView fullStar3;
+
+        @FXML
+        private ImageView halfStar4;
+
+        @FXML
+        private ImageView fullStar4;
+
+        @FXML
+        private ImageView halfStar5;
+
+        @FXML
+        private ImageView fullStar5;
+
+        @FXML
+        private Tab buyersTab;
+
+        @FXML
+        private TableView<BuyerWrapper> BuyersTBL;
+
+        @FXML
+        private TableColumn<BuyerWrapper, String> buyerCOL;
+
+        @FXML
+        private Button addReviewBTN;
 
         private String[] productPack;
         private String[] subProductPack;
@@ -1947,6 +1991,18 @@ public class Controllers {
             }
         }
 
+        public static class BuyerWrapper{
+            String username;
+
+            public BuyerWrapper(String username){
+                this.username = username;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+        }
+
         private void initialize(String productId, String subProductId) {
             setPacks(productId, subProductId);
             initMainObjects();
@@ -1969,15 +2025,30 @@ public class Controllers {
             sellersTBL.setItems(FXCollections.observableArrayList(sellers));
         }
 
-        //TODO: rating count
         private void initMainObjects() {
             nameLBL.setText(productPack[1]);
             brandLBL.setText(productPack[2]);
             productInfoTXT.setText(productPack[3]);
-            ratingLBL.setText(productPack[4]);
+            ratingCountLBL.setText(productPack[5]);
             categoryLBL.setText(productPack[7]);
             productIMG.setImage(new Image("file:" + Constants.base + productPack[8]));
-            //productInfo[5] = Integer.toString(product.getRatingsCount());
+            initRatingStars();
+        }
+
+        private void initRatingStars(){
+            double rating = Double.parseDouble(productPack[4]);
+            fullStar1.setVisible(rating >= 1);
+            fullStar2.setVisible(rating >= 2);
+            fullStar3.setVisible(rating >= 3);
+            fullStar4.setVisible(rating >= 4);
+            fullStar5.setVisible(rating >= 5);
+
+            halfStar1.setVisible(rating >= 0.5);
+            halfStar2.setVisible(rating >= 1.5);
+            halfStar3.setVisible(rating >= 2.5);
+            halfStar4.setVisible(rating >= 3.5);
+            halfStar5.setVisible(rating >= 4.5);
+
         }
 
         private void setPacks(String productId, String subProductId) {
@@ -2027,6 +2098,7 @@ public class Controllers {
             }
         }
 
+        //TODO:
         private void initCategoryHBox(){
             try {
                 for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
@@ -2056,10 +2128,16 @@ public class Controllers {
         private void compare(){
         }
 
+        private void addReview(){}
+
+        private void rate(){}
+
         private void initButtons(){
             addToCartBTN.setOnAction(e -> addToCart());
             editBTN.setOnAction(e -> edit());
             compareBTN.setOnAction(e -> compare());
+            addReviewBTN.setOnAction(e -> addReview());
+            rateBTN.setOnAction(e -> rate());
 
             updateShowOfButtons();
         }
@@ -2084,6 +2162,14 @@ public class Controllers {
             }else {
                 editBTN.setVisible(false);
             }
+
+            if( (type.equals(Constants.customerUserType))){
+                rateBTN.setVisible(true);
+            }else rateBTN.setVisible(false);
+
+            if( (type.equals(Constants.customerUserType))){
+                addReviewBTN.setVisible(true);
+            }else addReviewBTN.setVisible(false);
 
             compareBTN.setVisible(true);
         }

@@ -27,9 +27,6 @@ T:  SellerAddProduct
     mainMenu
     check purchase procedure
 
-M:  CSSs
-    rating (product menu & buy log menu)
-
 
 T & A: adminCategoryManagingPopup remove property from a category
 
@@ -58,3 +55,5 @@ T: AddReviewPopup
 hasBought in reviewBox
 A: admin edit product popup
 A: text area listener
+
+T: live filter update
