@@ -81,10 +81,6 @@ public class Review implements ModelBasic {
     }
 
     private void setBought() {
-        bought = false;
-        for (SubProduct subProduct : getProduct().getSubProducts()) {
-            if (subProduct.hasCustomerWithId(reviewerId))
-                bought = true;
-        }
+        bought = getProduct().hasBought(reviewerId);
     }
 }
