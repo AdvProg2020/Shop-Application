@@ -318,17 +318,12 @@ public class Controller {
         return Utilities.Pack.digest(product);
     }
 
-    //TODO: correting output
     public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
-            ArrayList<String> properties = new ArrayList<>();
-            for (String property : product.getCategory().getProperties(true)) {
-                properties.add(product.getValue(property));
-            }
-            return null;
+            return new HashMap<>(product.getPropertyValues());
         }
     }
 
