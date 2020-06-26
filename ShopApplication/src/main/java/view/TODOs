@@ -42,3 +42,4 @@ hasBought in reviewBox
 A: admin edit product popup
 A: text area listener
 T: live filter update
+M: style register tabPane
