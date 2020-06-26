@@ -27,12 +27,9 @@ T:
 
 
 --------------------
-M: add font
 T: product menu debug
-hasBought in reviewBox
 A: text area listener
 T: live filter update
-M: style register tabPane
 M: add background to some pages
 M: scroll and gird pane todo
 M: unit test (login procedure)
