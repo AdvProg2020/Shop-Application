@@ -2,6 +2,7 @@ package model;
 
 import model.ModelUtilities.ModelOnly;
 import model.account.Account;
+import model.database.Database;
 import model.request.AddReviewRequest;
 
 import java.util.HashMap;
@@ -18,13 +19,13 @@ public class Review implements ModelBasic {
     private String text;
     private boolean bought;
 
-    public Review(String reviewerId, String productId, String title, String text) {
+    public Review(String reviewerId, String productId, String title, String text, Database database) {
         this.reviewerId = reviewerId;
         this.productId = productId;
         this.title = title;
         this.text = text;
         setBought();
-        new AddReviewRequest(this);
+        new AddReviewRequest(this).updateDatabase(database);
     }
 
     public static List<Review> getAllReviews() {

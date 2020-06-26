@@ -69,8 +69,7 @@ public class Controller {
                 database.createAdmin();
                 break;
             case "Seller":
-                new Seller(username, password, firstName, lastName, email, phone, imagePath, storeName, balance);
-                database.request();
+                new Seller(username, password, firstName, lastName, email, phone, imagePath, storeName, balance, database);
                 break;
         }
     }
@@ -455,8 +454,7 @@ public class Controller {
             if (Product.getProductById(productId) == null)
                 throw new Exceptions.InvalidProductIdException(productId);
             else {
-                new Review(currentAccount.getId(), productId, title, text);
-                database.request();
+                new Review(currentAccount.getId(), productId, title, text, database);
             }
         }
     }
