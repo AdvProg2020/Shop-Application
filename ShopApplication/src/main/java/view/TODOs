@@ -37,16 +37,14 @@ A: personal info image not loading.
 A: purchase discount handle -> customerController.
 T: rating in buy log
 T: rate product in digest
-T: product menu debug
 T: add review controller
 M: unit test (login procedure)
 M: add font
-T: sold out
+T: sold out -> product box
 A & M: Compare is back baby!
-T: digest change image based on available, sold out or in sale
 M & A: purchase confirmation popup
-
 T: AddReviewPopup
+T: product menu debug
 
 hasBought in reviewBox
 A: admin edit product popup

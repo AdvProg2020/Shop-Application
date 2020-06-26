@@ -1427,7 +1427,7 @@ public class Controllers {
 
         private void initCategoryTree() {
             HBox categoryTreeBox = CategoryTreeBoxController.createBox();
-            if( categoryTreeBox != null){
+            if (categoryTreeBox != null) {
                 ArrayList<String> categoryNames = mainController.getCategoryTreeOfACategory(categoryName);
                 for (String s : categoryNames) {
                     categoryTreeBox.getChildren().add(createCategoryButton(s));
@@ -1908,7 +1908,6 @@ public class Controllers {
         private Label salePercentageLBL;
 
 
-
         private String[] productPack;
         private String[] subProductPack;
         private ArrayList<PropertyWrapper> properties;
@@ -1928,7 +1927,7 @@ public class Controllers {
         public static void display(String productId, String subProductId, boolean editable) {
             String type = View.type.get();
             ProductDetailMenuController controller;
-            if (type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) {
+            if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
                 controller = ((ProductDetailMenuController)
                         View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600));
             } else {
@@ -2104,20 +2103,20 @@ public class Controllers {
         private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
             priceBeforeLBL.setText(subProductPack[7]);
-            if (!subProductPack[7].equals(subProductPack[8])){
+            if (!subProductPack[7].equals(subProductPack[8])) {
                 priceAfterLBL.setText(subProductPack[8]);
-            } else{
+            } else {
                 priceAfterLBL.setText("");
             }
-            if( subProductPack[11] != null){
+            if (subProductPack[11] != null) {
                 salePercentageLBL.setVisible(true);
                 salePercentageLBL.setText(subProductPack[11] + "%");
-            }else {
+            } else {
                 salePercentageLBL.setVisible(false);
             }
-            if( Integer.parseInt(subProductPack[9]) == 0){
+            if (Integer.parseInt(subProductPack[9]) == 0) {
                 soldOutLBL.setVisible(false);
-            }else
+            } else
                 soldOutLBL.setVisible(true);
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
             updateShowOfButtons();
@@ -2266,6 +2265,43 @@ public class Controllers {
         }
     }
 
+    public static class AddReviewPopupController implements Initializable{
+        private static Stage PopupStage;
+        @FXML
+        private Button sendReviewBTN;
+
+        @FXML
+        private TextArea text;
+
+        @FXML
+        private TextField title;
+
+        private String productId;
+
+        public static void display(String productId) {
+            AddReviewPopupController controller = (AddReviewPopupController) View.popupWindow("Add Review", Constants.FXMLs.addReviewPopup, 550, 200);
+            if (controller != null) {
+                controller.productId = productId;
+            }
+
+        }
+
+        private void addReview() {
+            if (title.getText() != null && text.getText() != null) {
+                try {
+                    mainController.addReview(productId, title.getText(), text.getText());
+                } catch (Exceptions.InvalidProductIdException | Exceptions.NotLoggedInException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void initialize(URL url, ResourceBundle resourceBundle) {
+            sendReviewBTN.setOnAction(e -> addReview());
+        }
+    }
+
     public static class CategoryTreeBoxController {
         @FXML
         private HBox HBox;
@@ -2275,7 +2311,7 @@ public class Controllers {
             Parent p;
             try {
                 p = loader.load();
-                return (HBox)p;
+                return (HBox) p;
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
