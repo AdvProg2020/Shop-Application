@@ -4050,6 +4050,7 @@ public class Controllers {
     //add product detail menu
     public static class ShoppingCartMenuController implements Initializable {
 
+        public static ShoppingCartMenuController current;
         private static ArrayList<String[]> cartProducts = new ArrayList<>();
         private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
         private SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
@@ -4134,7 +4135,9 @@ public class Controllers {
                 increaseBTN.setOnAction(e -> countProperty.set(countProperty.get() + 1));
                 decreaseBTN.setOnAction(e -> countProperty.set(countProperty.get() - 1));
 
-                countGroup.getChildren().addAll(countField, increaseBTN, decreaseBTN);
+                countGroup.getChildren().addAll( decreaseBTN, countField,increaseBTN );
+                countGroup.setPadding(new Insets(5, 5 ,5 ,5));
+                countGroup.setAlignment(Pos.CENTER);
 
             }
 
@@ -4226,17 +4229,13 @@ public class Controllers {
         private Button purchaseBTN;
 
         public static void display() {
-            try {
-                cartProducts = mainController.getProductsInCart();
-            } catch (Exceptions.UnAuthorizedAccountException e) {
-                e.printStackTrace();
-                return;
-            }
+
             View.setMainPane(Constants.FXMLs.shoppingCartMenu);
         }
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            current = this;
             productsTable.addEventFilter(ScrollEvent.ANY, event -> {
                 if (event.getDeltaX() != 0)
                     event.consume();
@@ -4264,6 +4263,7 @@ public class Controllers {
                     errorLBL.setText("The cart is already empty!");
                 } else {
                     mainController.clearCart();
+                    productsTable.getItems().clear();
                 }
             });
         }
@@ -4283,10 +4283,16 @@ public class Controllers {
             totalPriceLBL.textProperty().bind(totalPriceBinding.asString().concat("$"));
         }
 
-        private void iniTable() {
+        public void iniTable() {
             initCols();
+            try {
+                cartProducts = mainController.getProductsInCart();
+            } catch (Exceptions.UnAuthorizedAccountException e) {
+                e.printStackTrace();
+                return;
+            }
 
-            subProducts.clear();
+            subProducts = new ArrayList<>();
             for (String[] cartProduct : cartProducts) {
                 subProducts.add(new SubProductWrapper(cartProduct));
             }
@@ -4334,12 +4340,17 @@ public class Controllers {
 
         private void initialize(String totalPrice) {
             priceLBL.setText(totalPrice);
-            dismissBTN.setOnAction(e -> dismissBTN.getScene().getWindow().hide());
+            dismissBTN.setOnAction(e -> {
+                ShoppingCartMenuController.current.iniTable();
+                View.goBack();
+                dismissBTN.getScene().getWindow().hide();
+            });
         }
     }
 
 
-    public static class PurchaseMenuController implements Initializable {
+    public static class PurchaseMenuController implements Initializable{
+
         @FXML
         private TextField receiverName;
 
@@ -4374,7 +4385,7 @@ public class Controllers {
         private Label addressError;
 
         public static void display() {
-            View.setMainPane(Constants.FXMLs.purchaseMenu);
+             View.setMainPane(Constants.FXMLs.purchaseMenu);
         }
 
         @Override
@@ -4384,21 +4395,20 @@ public class Controllers {
             initListeners();
 
             try {
-                purchaseBTN.setText("$" + customerController.getTotalPriceOfCart());
+                totalPrice.setText("$" + customerController.getTotalPriceOfCart());
             } catch (Exceptions.UnAuthorizedAccountException e) {
                 e.printStackTrace();
             }
-
         }
 
         private void initButtons() {
             purchaseBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText());
+                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText().equals("") ? null : discountCode.getText());
                         PurchaseConfirmationController.display(totalPrice.getText());
-                        View.goBack();
                     } catch (Exceptions.InsufficientCreditException ex) {
+                        discountError.setText("You dont have enough money!");
                         ex.printStackTrace();
                     } catch (Exceptions.NotAvailableSubProductsInCart notAvailableSubProductsInCart) {
                         notAvailableSubProductsInCart.printStackTrace();
@@ -4467,7 +4477,7 @@ public class Controllers {
         private boolean validateDiscount() {
             if (discountCode.getText().equals("")) {
 
-                return false;
+                return true;
             } else {
                 try {
                     double newPrice = customerController.getTotalPriceOfCartWithDiscount(discountCode.getText());
@@ -4579,6 +4589,14 @@ public class Controllers {
             discountAmountCOL.setCellValueFactory(new PropertyValueFactory<>("totalDiscount"));
             shippingStatusCOL.setCellValueFactory(new PropertyValueFactory<>("shippingStatus"));
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+
+            try {
+                for (String[] order : customerController.getOrders()) {
+                    products.getItems().add(new BuyLogWrapper(order));
+                }
+            } catch (Exceptions.CustomerLoginException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -4588,7 +4606,7 @@ public class Controllers {
 
         public static void display(String logId) {
             ((CustomerBuyLogDetailsPopupController)
-                    View.setMainPane(Constants.FXMLs.customerBuyLogDetailsPopup)).init(logId);
+                    View.popupWindow("Buy Log detail",Constants.FXMLs.customerBuyLogDetailsPopup, 910, 470)).init(logId);
         }
 
         private void init(String logId) {
@@ -4623,7 +4641,7 @@ public class Controllers {
             priceLBL.setText(info[7] + "$");
             discountLBL.setText(info[8]);
             shipStatusLBL.setText(info[6]);
-            receiverNameLBL.setText(info[6]);
+            receiverNameLBL.setText(info[2]);
             receiverPhoneLBL.setText(info[3]);
 
             StringBuilder address = new StringBuilder(info[4]);
@@ -5294,7 +5312,8 @@ public class Controllers {
                     this.count.setText((Integer.parseInt(this.count.getText()) - 1) + "");
                 });
 
-                countGroup.getChildren().addAll(this.count, increaseBTN, decreaseBTN);
+                countGroup.getChildren().addAll(decreaseBTN, this.count, increaseBTN);
+                countGroup.setPadding(new Insets(5, 5, 5, 5));
             }
 
             public HBox getCountGroup() {
@@ -6768,6 +6787,7 @@ public class Controllers {
                 Parent p = loader.load();
                 RatingBoxController controller = loader.getController();
                 controller.initialize(productId);
+                ((HBox) p).setAlignment(Pos.CENTER);
                 return p;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -6784,6 +6804,7 @@ public class Controllers {
             fullStar1.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 1);
+                    colorStars(1);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6791,6 +6812,7 @@ public class Controllers {
             fullStar2.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 2);
+                    colorStars(2);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6798,6 +6820,7 @@ public class Controllers {
             fullStar3.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 3);
+                    colorStars(3);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6805,6 +6828,7 @@ public class Controllers {
             fullStar4.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 4);
+                    colorStars(4);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6812,10 +6836,26 @@ public class Controllers {
             fullStar5.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 5);
+                    colorStars(5);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             });
+        }
+
+        private void colorStars(int num) {
+            switch (num) {
+                case 5:
+                    fullStar5.setVisible(true);
+                case 4:
+                    fullStar4.setVisible(true);
+                case 3:
+                    fullStar3.setVisible(true);
+                case 2:
+                    fullStar2.setVisible(true);
+                case 1:
+                    fullStar1.setVisible(true);
+            }
         }
     }
 
