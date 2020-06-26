@@ -2119,12 +2119,9 @@ public class Controllers {
             ratingCountLBL.setText(productPack[5]);
             categoryLBL.setText(productPack[7]);
 
-            productPack[8] = productPack[7].replaceAll("\\\\", "/");
-            if(productPack[8].startsWith("src")) {
-                productIMG.setImage(new Image("file:" + Constants.base + "/" + productPack[8]));
-            } else {
-                productIMG.setImage(new Image("file:" + productPack[8]));
-            }
+            productPack[8] = productPack[8].replaceAll("\\\\", "/");
+            productIMG.setImage(new Image("file:" + (productPack[8].startsWith("src") ? Constants.base + "/": "")  + productPack[8]));
+
             initRatingStars();
         }
 
