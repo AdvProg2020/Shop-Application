@@ -6562,7 +6562,7 @@ public class Controllers {
             public PropertyWrapper(String property) {
                 this.property = property;
                 value.setPromptText("Enter value...");
-                value.setEditable(!exists);
+                value.setEditable(true);
             }
 
             public String getProperty() {
