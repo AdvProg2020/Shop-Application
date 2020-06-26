@@ -592,12 +592,15 @@ public class Controllers {
                 if (type.equals(Constants.sellerUserType)) {
                     customerDiscounts.setVisible(false);
                     discountTABPANE.setVisible(false);
+                    buyLogBTN.setVisible(false);
+                    sellLogBTN.setVisible(true);
                     sellerRequests.setVisible(true);
                     requestTABPANE.setVisible(true);
                 } else if (type.equals(Constants.customerUserType)) {
                     customerDiscounts.setVisible(true);
                     sellerRequests.setVisible(false);
                     buyLogBTN.setVisible(true);
+                    sellLogBTN.setVisible(false);
                     discountTABPANE.setVisible(true);
                     requestTABPANE.setVisible(false);
                 } else {
@@ -690,7 +693,13 @@ public class Controllers {
             }
 
             if (info[7].contains(Constants.base)) {
-                info[7] = info[7].replace(Constants.base, "");
+                info[7] = info[7].replace(Constants.base + "\\" , "");
+            }
+            if (info[7].contains( "src/main/resources")) {
+                info[7] = info[7].replace("src/main/resources", "");
+            }
+            if (info[7].contains( "src\\main\\resources")) {
+                info[7] = info[7].replace("src\\main\\resources", "");
             }
 
             accountIMG.setImage(new Image(info[7]));
@@ -1149,6 +1158,7 @@ public class Controllers {
             phoneNumber.setText(secondaryDetails[4]);
             balance.setText(secondaryDetails[5]);
             storeName.setText(secondaryDetails[6]);
+            imageField.setText(secondaryDetails[7]);
         }
     }
 
@@ -2714,6 +2724,7 @@ public class Controllers {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
                                 customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
+                        sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
@@ -3452,6 +3463,9 @@ public class Controllers {
 
     public static class AdminCategoryManagingPopupController {
         @FXML
+        private TabPane tableTabPane;
+
+        @FXML
         private TableView<PropertyWrapper> properties;
 
         @FXML
@@ -3473,6 +3487,9 @@ public class Controllers {
         private Button cancelBTN;
 
         @FXML
+        private Tab productsTAB;
+
+        @FXML
         private TableView<MiniProductWrapper> products;
 
         @FXML
@@ -3483,6 +3500,9 @@ public class Controllers {
 
         @FXML
         private Label productErrorLBL;
+
+        @FXML
+        private Tab subCategoriesTAB;
 
         @FXML
         private TableView<SubCategoryWrapper> subCategories;
@@ -3509,6 +3529,9 @@ public class Controllers {
         private TextField parentField;
 
         @FXML
+        private Label errorLBL;
+
+        @FXML
         private Button addBTN;
 
         @FXML
@@ -3521,16 +3544,7 @@ public class Controllers {
         private Button discardBTN;
 
         @FXML
-        private Tab subCategoriesTAB;
-
-        @FXML
-        private Tab productsTAB;
-
-        @FXML
-        private TabPane tableTabPane;
-
-        @FXML
-        private Label errorLBL;
+        private HBox addPropertyHB;
 
         private AdminCategoryManagingMenuController.CategoryWrapper category;
         private ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
@@ -3540,7 +3554,6 @@ public class Controllers {
         private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
         private SimpleBooleanProperty parentFieldChanged = new SimpleBooleanProperty(false);
 
-        //TODO
         public class PropertyWrapper {
             String property;
             Button removeBTN = new Button();
@@ -3550,7 +3563,12 @@ public class Controllers {
                 removeBTN.getStyleClass().add("remove-button");
 
                 removeBTN.setOnAction(e -> {
-                    //TODO: remove
+                    try {
+                        adminController.removePropertyFromACategory(category.name.get(), this.property);
+                        properties.getItems().remove(this);
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    }
                 });
             }
 
@@ -3624,6 +3642,8 @@ public class Controllers {
         private void initialize(AdminCategoryManagingMenuController.CategoryWrapper category) {
             this.category = category;
 
+            parentField.setPromptText("Leave blank to have no parent.");
+
             initVisibility();
             initValues();
             initBindings();
@@ -3638,6 +3658,7 @@ public class Controllers {
             addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
+            addPropertyHB.setVisible( ! isDetail);
             if (!isDetail) {
                 tableTabPane.getTabs().removeAll(subCategoriesTAB, productsTAB);
             }
@@ -3705,7 +3726,7 @@ public class Controllers {
             addBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        adminController.addCategory(nameField.getText(), parentField.getText(),
+                        adminController.addCategory(nameField.getText(), parentField.getText().equals("") ? "SuperCategory" : parentField.getText(),
                                 properties.getItems().stream().map(PropertyWrapper::getProperty).collect(Collectors.toCollection(ArrayList::new)));
                         String[] newCategory = adminController.getCategory(nameField.getText());
                         AdminCategoryManagingMenuController.currentController.addItem(newCategory);
@@ -3756,7 +3777,27 @@ public class Controllers {
             cancelBTN.setOnAction(e -> newPropertyField.setText(""));
 
             confirmBTN.setOnAction(e -> {
-                //TODO
+                if (newPropertyField.getText().equals("")) {
+                    printError("Field is empty");
+                    return;
+                }
+
+                if (category == null) {
+                    properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
+                    newPropertyField.setText("");
+                } else {
+                    try {
+                        adminController.addPropertyToACategory(category.name.get(), newPropertyField.getText());
+                        properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
+                        newPropertyField.setText("");
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Property added successfully");
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.ExistingPropertyException ex) {
+                        printError("This property already exists!");
+                    }
+                }
             });
         }
 
@@ -3768,9 +3809,6 @@ public class Controllers {
         private boolean validateFields() {
             if (!nameField.getText().matches("\\w+")) {
                 printError("Invalid characters in category name!");
-                return false;
-            } else if (!parentField.getText().matches("\\w+")) {
-                printError("Invalid characters in parent category name!");
                 return false;
             } else return true;
         }

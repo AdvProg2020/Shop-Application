@@ -229,7 +229,7 @@ public class Utilities {
         }
 
         public static String[] sellerInRequest(Seller seller){
-            String[] info = new String[7];
+            String[] info = new String[8];
             info[0] = seller.getUsername();
             info[1] = seller.getFirstName();
             info[2] = seller.getLastName();
@@ -237,6 +237,7 @@ public class Utilities {
             info[4] = seller.getPhone();
             info[5] = Double.toString(seller.getBalance());
             info[6] = seller.getStoreName();
+            info[7] = seller.getImagePath();
             return info;
         }
 
