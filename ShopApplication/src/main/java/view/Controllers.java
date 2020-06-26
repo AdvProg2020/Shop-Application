@@ -1715,6 +1715,11 @@ public class Controllers {
             initBindings();
             initListeners();
             initButtons();
+            initTable();
+        }
+
+        private void initTable() {
+
         }
 
         private void initVisibility() {
@@ -1803,7 +1808,7 @@ public class Controllers {
                             sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
                         if (priceFieldChanged.get())
                             sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
-                        discardBTN.fire();
+                        discardBTN.getScene().getWindow().hide();
                     } catch (Exception ex) {
                         printError(ex.getMessage());
                         ex.printStackTrace();
