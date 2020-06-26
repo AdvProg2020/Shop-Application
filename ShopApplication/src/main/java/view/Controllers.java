@@ -3548,7 +3548,6 @@ public class Controllers {
         private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
         private SimpleBooleanProperty parentFieldChanged = new SimpleBooleanProperty(false);
 
-        //TODO
         public class PropertyWrapper {
             String property;
             Button removeBTN = new Button();
@@ -3558,7 +3557,12 @@ public class Controllers {
                 removeBTN.getStyleClass().add("remove-button");
 
                 removeBTN.setOnAction(e -> {
-                    //TODO: remove
+                    try {
+                        adminController.removePropertyFromACategory(category.name.get(), this.property);
+                        properties.getItems().remove(this);
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    }
                 });
             }
 
@@ -3631,6 +3635,8 @@ public class Controllers {
 
         private void initialize(AdminCategoryManagingMenuController.CategoryWrapper category) {
             this.category = category;
+
+            parentField.setPromptText("Leave blank to have no parent.");
 
             initVisibility();
             initValues();
@@ -3713,7 +3719,7 @@ public class Controllers {
             addBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        adminController.addCategory(nameField.getText(), parentField.getText(),
+                        adminController.addCategory(nameField.getText(), parentField.getText().equals("") ? "SuperCategory" : parentField.getText(),
                                 properties.getItems().stream().map(PropertyWrapper::getProperty).collect(Collectors.toCollection(ArrayList::new)));
                         String[] newCategory = adminController.getCategory(nameField.getText());
                         AdminCategoryManagingMenuController.currentController.addItem(newCategory);
@@ -3764,7 +3770,26 @@ public class Controllers {
             cancelBTN.setOnAction(e -> newPropertyField.setText(""));
 
             confirmBTN.setOnAction(e -> {
-                //TODO
+                if (newPropertyField.getText().equals("")) {
+                    printError("Field is empty");
+                    return;
+                }
+
+                if (category == null) {
+                    properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
+                } else {
+                    try {
+                        adminController.addPropertyToACategory(category.name.get(), newPropertyField.getText());
+                        properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
+                        newPropertyField.setText("");
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Property added successfully");
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.ExistingPropertyException ex) {
+                        printError("This property already exists!");
+                    }
+                }
             });
         }
 
@@ -3776,9 +3801,6 @@ public class Controllers {
         private boolean validateFields() {
             if (!nameField.getText().matches("\\w+")) {
                 printError("Invalid characters in category name!");
-                return false;
-            } else if (!parentField.getText().matches("\\w+")) {
-                printError("Invalid characters in parent category name!");
                 return false;
             } else return true;
         }
