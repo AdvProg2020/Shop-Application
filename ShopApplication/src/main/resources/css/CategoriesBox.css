@@ -1,11 +1,26 @@
 #bg-pane {
-
+    -fx-background-color: transparent;
 }
 
-#category-button {
-
+.button {
+    -fx-background-image: url("../img/category-tree.png");
+    -fx-text-fill: #29292D;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: right;
+    -fx-background-size: 20;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-padding: 0 20 0 0;
+    -fx-alignment: center;
 }
 
-.subcategory-button {
+.button:hover {
+    -fx-underline: true;
+    -fx-background-image: url("../img/category-tree-hover.png");
+    -fx-effect: dropshadow(one-pass-box, darkgray, 1, 0.0, 0, 0);
+}
 
+.button:pressed {
+    -fx-opacity: 80%;
 }

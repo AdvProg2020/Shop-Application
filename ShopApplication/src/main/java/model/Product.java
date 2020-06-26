@@ -1,6 +1,7 @@
 package model;
 
 import model.ModelUtilities.ModelOnly;
+import model.database.Database;
 import model.request.AddProductRequest;
 
 import java.util.*;
@@ -22,7 +23,7 @@ public class Product implements ModelBasic {
     private transient Set<String> ratingIds;
     private boolean suspended;
 
-    public Product(String name, String brand, String infoText, String imagePath, String categoryId, Map<String, String> propertyValues, SubProduct subProduct) {
+    public Product(String name, String brand, String infoText, String imagePath, String categoryId, Map<String, String> propertyValues, SubProduct subProduct, Database database) {
         this.name = name;
         this.brand = brand;
         this.infoText = infoText;
@@ -31,7 +32,7 @@ public class Product implements ModelBasic {
         this.propertyValues = propertyValues;
         viewCount = 0;
         suspended = false;
-        new AddProductRequest(this, subProduct);
+        new AddProductRequest(this, subProduct).updateDatabase(database);
     }
 
     public static List<Product> getAllProducts(boolean... suspense) {

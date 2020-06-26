@@ -3,6 +3,7 @@ package model;
 import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 import model.account.Seller;
+import model.database.Database;
 import model.request.AddProductRequest;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public class SubProduct implements ModelBasic {
     private transient Set<String> customerIds;
     private boolean suspended;
 
-    public SubProduct(String productId, String sellerId, double price, int count) {
+    public SubProduct(String productId, String sellerId, double price, int count, Database database) {
         this.productId = productId;
         this.sellerId = sellerId;
         this.price = price;
@@ -27,7 +28,7 @@ public class SubProduct implements ModelBasic {
         saleId = null;
         suspended = false;
         if (productId != null)
-            new AddProductRequest(null, this);
+            new AddProductRequest(null, this).updateDatabase(database);
     }
 
     public static List<SubProduct> getAllSubProducts(boolean... suspense) {

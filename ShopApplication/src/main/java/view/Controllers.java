@@ -690,17 +690,9 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            if (info[7].contains(Constants.base)) {
-                info[7] = info[7].replace(Constants.base + "\\" , "");
-            }
-            if (info[7].contains( "src/main/resources")) {
-                info[7] = info[7].replace("src/main/resources", "");
-            }
-            if (info[7].contains( "src\\main\\resources")) {
-                info[7] = info[7].replace("src\\main\\resources", "");
-            }
+            info[7] = info[7].replaceAll("\\\\", "/");
 
-            accountIMG.setImage(new Image(info[7]));
+            accountIMG.setImage(new Image("file:" + info[7]));
         }
 
 
@@ -3727,8 +3719,9 @@ public class Controllers {
                             adminController.editCategory(category.name.get(), "name", nameField.getText());
                             category.name.set(nameField.getText());
                         }
-                        errorLBL.setTextFill(Color.GREEN);
-                        errorLBL.setText("Changes saved successfully");
+                        discardBTN.getScene().getWindow().hide();
+//                        errorLBL.setTextFill(Color.GREEN);
+//                        errorLBL.setText("Changes saved successfully");
                     } catch (Exceptions.SubCategoryException ex) {
                         printError(ex.getMessage());
                         ex.printStackTrace();
@@ -5116,7 +5109,7 @@ public class Controllers {
         private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
 
         public class CustomerWrapper {
-            CheckBox hasCode;
+            CheckBox hasCode = new CheckBox();
             String id;
             String username;
             TextField count = new TextField();
@@ -5137,7 +5130,7 @@ public class Controllers {
                 this.hasCode.setSelected(hasCode);
                 this.initCount = count;
                 this.count.editableProperty().bind(this.hasCode.selectedProperty());
-                this.count.opacityProperty().bind(
+                this.countGroup.opacityProperty().bind(
                         Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
                 );
                 View.addListener(this.count, Constants.unsignedIntPattern);
@@ -5169,10 +5162,6 @@ public class Controllers {
 
             public HBox getCountGroup() {
                 return countGroup;
-            }
-
-            public Property hasCodeProperty() {
-                return hasCode.selectedProperty();
             }
 
             public CheckBox getHasCode() {
@@ -5266,7 +5255,7 @@ public class Controllers {
                     try {
                         adminController.createDiscountCode(codeField.getText(), startDate.getValue().toString(), endDate.getValue().toString(),
                                 Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()),
-                                allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[]{c.id, String.valueOf(c.count)}).collect(Collectors.toCollection(ArrayList::new)));
+                                allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[]{c.id, String.valueOf(c.count.getText())}).collect(Collectors.toCollection(ArrayList::new)));
                         AdminDiscountManagingMenuController.currentObject.addDiscount(adminController.viewDiscountCodeByCode(codeField.getText()));
                         customersTable.getScene().getWindow().hide();
                     } catch (Exceptions.InvalidAccountsForDiscount invalidAccountsForDiscount) {
@@ -5329,8 +5318,8 @@ public class Controllers {
             if (!codeField.getText().matches("^\\w+$")) {
                 printError("Invalid discount code! use only characters, digits and _ .");
                 return false;
-            } else if (!percentageField.getText().matches(Constants.doublePattern)) {
-                printError("Invalid percentage! enter a floating point number (ex. 50.5)");
+            } else if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) >= 100) {
+                printError("Invalid percentage! enter a floating point number less than 100!");
                 return false;
             } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! enter a floating point number (ex. 40.5)");
@@ -5757,8 +5746,8 @@ public class Controllers {
         }
 
         private boolean validateFields() {
-            if (!percentageField.getText().matches(Constants.doublePattern)) {
-                printError("Invalid percentage! (ex. 33.33)");
+            if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) >= 100) {
+                printError("Invalid percentage! enter a floating point number less than 100!");
                 return false;
             } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! (ex. 25.75)");
@@ -6555,9 +6544,9 @@ public class Controllers {
 
             addProductBTN.setOnAction(e -> {
                 if (validateFields()) {
-                    HashMap propertyMap = new HashMap();
+                    HashMap<String, String> propertyMap = new HashMap<>();
                     for (PropertyWrapper item : properties.getItems()) {
-                        propertyMap.put(item.property, item.value);
+                        propertyMap.put(item.property, item.value.getText());
                     }
                     try {
                         if (!exists)

@@ -4,6 +4,7 @@ import model.ModelUtilities;
 import model.ModelUtilities.ModelOnly;
 import model.Sale;
 import model.SubProduct;
+import model.database.Database;
 import model.log.SellLog;
 import model.request.AddSellerRequest;
 import model.request.Request;
@@ -20,11 +21,11 @@ public class Seller extends Account {
     private transient Set<String> sellLogIds;
     private transient Set<String> pendingRequestIds;
 
-    public Seller(String username, String password, String firstName, String lastName, String email, String phone, String image, String storeName, double balance) {
+    public Seller(String username, String password, String firstName, String lastName, String email, String phone, String image, String storeName, double balance, Database database) {
         super(username, password, firstName, lastName, email, phone, image);
         this.storeName = storeName;
         this.balance = balance;
-        new AddSellerRequest(this);
+        new AddSellerRequest(this).updateDatabase(database);
     }
 
     public static List<Seller> getAllSellers(boolean... suspense) {

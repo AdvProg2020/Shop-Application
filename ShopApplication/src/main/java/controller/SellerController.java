@@ -223,9 +223,8 @@ public class SellerController {
             Category category = Category.getCategoryByName(categoryName);
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
-            SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count);
-            new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct);
-            database().request();
+            SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
+            new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
     }
 
@@ -234,8 +233,7 @@ public class SellerController {
         if (Product.getProductById(productId) == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
-            new SubProduct(productId, currentAccount().getId(), price, count);
-            database().request();
+            new SubProduct(productId, currentAccount().getId(), price, count, database());
         }
     }
 
@@ -352,7 +350,7 @@ public class SellerController {
         }
 
         if (startDate.before(endDate)) {
-            Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum);
+            Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum, database());
             Product product;
             SubProduct subProduct;
             ArrayList<String> invalidSubProductIds = new ArrayList<>();
@@ -367,7 +365,6 @@ public class SellerController {
                 } else
                     invalidSubProductIds.add(productId);
             }
-            database().request();
             if (invalidSubProductIds.size() > 0)
                 throw new Exceptions.InvalidProductIdsForASeller(Utilities.Pack.invalidProductIds(invalidSubProductIds));
         } else

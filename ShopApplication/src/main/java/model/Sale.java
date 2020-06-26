@@ -1,6 +1,7 @@
 package model;
 
 import model.account.Seller;
+import model.database.Database;
 import model.request.AddSaleRequest;
 
 import java.util.*;
@@ -17,7 +18,7 @@ public class Sale implements ModelBasic {
     private Set<String> subProductIds;
     private boolean suspended;
 
-    public Sale(String sellerId, Date startDate, Date endDate, double percentage, double maximumAmount) {
+    public Sale(String sellerId, Date startDate, Date endDate, double percentage, double maximumAmount, Database database) {
         this.sellerId = sellerId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -25,7 +26,7 @@ public class Sale implements ModelBasic {
         this.maximumAmount = maximumAmount;
         subProductIds = new HashSet<>();
         suspended = false;
-        new AddSaleRequest(this);
+        new AddSaleRequest(this).updateDatabase(database);
     }
 
     public static List<Sale> getAllSales(boolean... suspense) {

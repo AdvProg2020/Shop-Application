@@ -1,0 +1,75 @@
+* {
+    color-1: derive(#29292D, 5%);
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+}
+
+.button:pressed {
+    -fx-opacity: 80%;
+}
+
+#all-products-button {
+    -fx-background-color: color-1;
+    -fx-graphic: url("../img/purchase-button-2.png");
+    -fx-graphic-text-gap: 20;
+    -fx-text-fill: whitesmoke;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-background-radius: 5;
+    -fx-padding: 5 0 5 0;
+    -fx-min-width: 250;
+}
+
+#all-sales-button {
+    -fx-background-color: color-1;
+    -fx-graphic: url("../img/purchase-button-2.png");
+    -fx-graphic-text-gap: 20;
+    -fx-text-fill: whitesmoke;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-background-radius: 5;
+    -fx-padding: 5 0 5 0;
+    -fx-min-width: 250;
+}
+
+#sales-box {
+    -fx-background-color: rgba(249, 65, 78, 0.93);
+}
+
+#advertisement-box {
+    -fx-background-color: rgba(249, 202, 75, 0.93);
+}
+
+.scroll-pane .increment-button, .scroll-pane .decrement-button {
+    -fx-background-radius: 2em;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-padding: 2 0 0 0;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-radius: 2em;
+    -fx-border-radius: 2em;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(color-1, 90%);
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
+}
+
+.scroll-pane .scroll-bar:horizontal { /* hide */
+    -fx-opacity: 0;
+
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
