@@ -1188,6 +1188,7 @@ public class Controllers {
         }
     }
 
+    //TODO: category tree HBox
     public static class ProductsMenuController {
 
         @FXML
@@ -1308,7 +1309,6 @@ public class Controllers {
 
         }
 
-        //TODO: set max price for sliders
         private void initFilterBar() {
             minPrice = new SimpleDoubleProperty();
             minPrice.bind(minPriceSlider.valueProperty());
@@ -1430,6 +1430,7 @@ public class Controllers {
         }
 
         private void initCategoryTree() {
+            categoryTreeBox = CategoryTreeBoxController.createBox();
             ArrayList<String> categoryNames = mainController.getCategoryTreeOfACategory(categoryName);
             for (String s : categoryNames) {
                 categoryTreeBox.getChildren().add(createCategoryButton(s));
@@ -1926,7 +1927,6 @@ public class Controllers {
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
-                //controller.initialize(productId, Constants.customerUserType);
             }
             if (controller != null) {
                 controller.editable = editable;
@@ -2133,8 +2133,8 @@ public class Controllers {
 
         private void initCategoryHBox() {
             try {
-                HBox categoryHBox = (HBox) CategoryTreeBoxController.createBox();
-                if(categoryHBox != null){
+                HBox categoryHBox = CategoryTreeBoxController.createBox();
+                if (categoryHBox != null) {
                     for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
                         categoryHBox.getChildren().add(new Label(s + " >> "));
                     }
@@ -2248,16 +2248,16 @@ public class Controllers {
         }
     }
 
-    public static class CategoryTreeBoxController{
+    public static class CategoryTreeBoxController {
         @FXML
         private HBox HBox;
 
-        public static Parent createBox() {
+        public static HBox createBox() {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoryTreeBox + ".fxml"));
             Parent p;
             try {
                 p = loader.load();
-                return p;
+                return (HBox)p;
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -3831,7 +3831,7 @@ public class Controllers {
                             e.printStackTrace();
                         }
                     } else {
-                        int n = newValue.intValue() == 0 ? 1: newValue.intValue();
+                        int n = newValue.intValue() == 0 ? 1 : newValue.intValue();
                         try {
                             mainController.decreaseProductInCart(this.subProductId, n - oldValue.intValue());
                         } catch (Exception e) {
@@ -4034,7 +4034,6 @@ public class Controllers {
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
     }
-
 
 
     public static class PurchaseMenuController implements Initializable {
@@ -4911,7 +4910,7 @@ public class Controllers {
                 );
                 View.addListener(this.count, Constants.unsignedIntPattern);
                 this.count.textProperty().addListener((observable, oldValue, newValue) -> {
-                    if(Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
+                    if (Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
                 });
                 this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
