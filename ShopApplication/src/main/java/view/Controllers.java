@@ -1245,7 +1245,7 @@ public class Controllers {
         private GridPane propertyFilters;
 
         @FXML
-        private GridPane productsPane;
+        private ScrollPane scrollPane;
 
         @FXML
         private BorderPane borderPane;
@@ -1355,26 +1355,26 @@ public class Controllers {
         private void updatePane() {
             int numberOfProducts = products.size();
             int numberOfRows = numberOfProducts / numberOfColumns + 1;
-            setPaneSize(numberOfRows);
-            int index;
+            var productsPane = new GridPane();
+            scrollPane.setContent(productsPane);
+            int index = 0;
             for (String[] subProductPack : products) {
-                index = products.indexOf(subProductPack);
                 Parent productBox = ProductBoxController.createBox(subProductPack);
-                productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns, 1, 1);
+                productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
+                index++;
             }
         }
 
         //TODO: creat each row and column , with hGap and vGap, you can give ID to control them
         private void setPaneSize(int numberOfRows) {
-            productsPane = new GridPane();
-            int currentRowsNumber = productsPane.getRowCount();
-            int currentColumnsNumber = productsPane.getColumnCount();
-            if (numberOfRows > currentRowsNumber) {
-                productsPane.addRow(numberOfRows - currentRowsNumber);
-            }
-            if (numberOfColumns > currentColumnsNumber) {
-                productsPane.addColumn(numberOfColumns - currentColumnsNumber);
-            }
+
+//            if (numberOfRows > currentRowsNumber) {
+//                productsPane.addRow(numberOfRows - currentRowsNumber);
+//            }
+//            new GridPane(12, 12)
+//            if (numberOfColumns > currentColumnsNumber) {
+//                productsPane.addColumn(numberOfColumns - currentColumnsNumber);
+//            }
 
         }
 
