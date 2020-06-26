@@ -30,16 +30,19 @@ T:  SellerAddProduct
 
 
 --------------------
-T: rating in buy log
 A: personal info image not loading.
 A: rating in buy log
-M: unit test (login procedure)
 M: add font
-A & M: Compare is back baby!
+A: Compare is back baby!
 T: product menu debug
 hasBought in reviewBox
-A: admin edit product popup
 A: text area listener
 T: live filter update
 M: style register tabPane
-A: percentage check
+M: add background to some pages
+M: scroll and gird pane todo
+M: make sort choice box bigger
+M & T: product info text area.
+M: unit test (login procedure)
+A: admin product managing menu
+M: change colors to blue

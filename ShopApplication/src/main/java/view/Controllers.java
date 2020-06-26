@@ -1245,7 +1245,7 @@ public class Controllers {
         private GridPane propertyFilters;
 
         @FXML
-        private GridPane productsPane;
+        private ScrollPane scrollPane;
 
         @FXML
         private BorderPane borderPane;
@@ -1271,7 +1271,7 @@ public class Controllers {
             }
         }
 
-        private void initPageObjects(){
+        private void initPageObjects() {
             initActions();
             initPropertyFilters();
             initCategoryTree();
@@ -1279,7 +1279,7 @@ public class Controllers {
             initChoiceBoxes();
         }
 
-        private void setValuesOfPageObjects(){
+        private void setValuesOfPageObjects() {
             update();
             setChoiceBoxesValues();
             setSliderBounds();
@@ -1301,10 +1301,13 @@ public class Controllers {
             }
         }
 
-        private void initChoiceBoxes(){
+        private void initChoiceBoxes() {
             filterSeller.getItems().add("");
+            filterSeller.getSelectionModel().select(0);
             filterBrand.getItems().add("");
+            filterBrand.getSelectionModel().select(0);
             sortByChoiceBox.getItems().add("");
+            sortByChoiceBox.getSelectionModel().select(0);
         }
 
         private void setChoiceBoxesValues() {
@@ -1325,7 +1328,7 @@ public class Controllers {
 
         }
 
-        private void setSliderBounds(){
+        private void setSliderBounds() {
             setMaxPrice();
             maxPriceSlider.setMax(maximumAvailablePrice);
             minPriceSlider.setMax(maximumAvailablePrice);
@@ -1352,27 +1355,14 @@ public class Controllers {
         private void updatePane() {
             int numberOfProducts = products.size();
             int numberOfRows = numberOfProducts / numberOfColumns + 1;
-            setPaneSize(numberOfRows);
-            int index;
+            var productsPane = new GridPane();
+            scrollPane.setContent(productsPane);
+            int index = 0;
             for (String[] subProductPack : products) {
-                index = products.indexOf(subProductPack);
                 Parent productBox = ProductBoxController.createBox(subProductPack);
-                productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns, 1, 1);
+                productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
+                index++;
             }
-        }
-
-        //TODO: creat each row and column , with hGap and vGap, you can give ID to control them
-        private void setPaneSize(int numberOfRows) {
-            productsPane = new GridPane();
-            int currentRowsNumber = productsPane.getRowCount();
-            int currentColumnsNumber = productsPane.getColumnCount();
-            if (numberOfRows > currentRowsNumber) {
-                productsPane.addRow(numberOfRows - currentRowsNumber);
-            }
-            if (numberOfColumns > currentColumnsNumber) {
-                productsPane.addColumn(numberOfColumns - currentColumnsNumber);
-            }
-
         }
 
         private void setFilterPropertiesPaneSize(int numberOfColumns) {
@@ -1518,11 +1508,11 @@ public class Controllers {
             image.setImage(new Image("file:" + Constants.base + subProductInfo[6]));
             priceBefore.setText(subProductInfo[7]);
             priceAfter.setText(subProductInfo[8]);
-            if(subProductInfo[11] != null){
-                sale.setText(subProductInfo[11] +"%");
-            }else
+            if (subProductInfo[11] != null) {
+                sale.setText(subProductInfo[11] + "%");
+            } else
                 sale.setVisible(false);
-            if(subProductInfo[10] != null){
+            if (subProductInfo[10] != null) {
                 try {
                     Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
                     LocalDate now = LocalDate.now();
@@ -1535,7 +1525,7 @@ public class Controllers {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 remainingDateBox.setVisible(false);
             }
             available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
@@ -1547,7 +1537,7 @@ public class Controllers {
             p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
         }
 
-        private void initRatingStars(double rating){
+        private void initRatingStars(double rating) {
             fullStar1.setVisible(rating >= 1);
             fullStar2.setVisible(rating >= 2);
             fullStar3.setVisible(rating >= 3);
@@ -1883,9 +1873,6 @@ public class Controllers {
         private TableView<SellerWrapper> sellersTBL;
 
         @FXML
-        private TableColumn<SellerWrapper, Label> sellersTBLNumberCOL;
-
-        @FXML
         private TableColumn<SellerWrapper, String> sellersTBLSellerCOL;
 
         @FXML
@@ -1972,12 +1959,18 @@ public class Controllers {
         @FXML
         private StackPane ratingsStackPane;
 
+        @FXML
+        private TableColumn<PropertyWrapper, Label> propertyCOL;
+
+        @FXML
+        private TableColumn<PropertyWrapper, Label> valueCOL;
+
 
         private String[] productPack;
         private String[] subProductPack;
-        private ArrayList<PropertyWrapper> properties;
-        private ArrayList<SellerWrapper> sellers;
-        private ArrayList<String[]> subProductPacks;
+        private ArrayList<PropertyWrapper> properties = new ArrayList<>();
+        private ArrayList<SellerWrapper> sellers = new ArrayList<>();
+        private ArrayList<String[]> subProductPacks = new ArrayList<>();
         private boolean editable;
         private String type;
 
@@ -2082,7 +2075,7 @@ public class Controllers {
             initReviewsVB();
             initPropertiesTable();
             initButtons();
-
+            updateSubProductBox();
             initSellersTable();
 
         }
@@ -2167,11 +2160,13 @@ public class Controllers {
         //TODO: available count in sub product box
         private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
-            priceBeforeLBL.setText(subProductPack[7]);
             if (!subProductPack[7].equals(subProductPack[8])) {
+                priceBeforeLBL.setText(subProductPack[7]);
                 priceAfterLBL.setText(subProductPack[8]);
+                priceBeforeLBL.setVisible(true);
             } else {
-                priceAfterLBL.setText("");
+                priceBeforeLBL.setVisible(false);
+                priceAfterLBL.setText(subProductPack[7]);
             }
             if (subProductPack[11] != null) {
                 salePercentageLBL.setVisible(true);
@@ -2180,9 +2175,9 @@ public class Controllers {
                 salePercentageLBL.setVisible(false);
             }
             if (Integer.parseInt(subProductPack[9]) == 0) {
-                soldOutLBL.setVisible(false);
-            } else
                 soldOutLBL.setVisible(true);
+            } else
+                soldOutLBL.setVisible(false);
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
             updateShowOfButtons();
             updateBuyersTable();
@@ -2205,8 +2200,8 @@ public class Controllers {
                 for (String s : propertyValues.keySet()) {
                     properties.add(new PropertyWrapper(s, propertyValues.get(s)));
                 }
-                propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
-                propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
+                propertyCOL.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
+                valueCOL.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
@@ -2270,10 +2265,10 @@ public class Controllers {
             if (type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)) {
                 if (Integer.parseInt(subProductPack[9]) != 0) {
                     addToCartBTN.setVisible(true);
-                    addToCartBTN.setDisable(true);
+                    addToCartBTN.setDisable(false);
                 } else {
                     addToCartBTN.setVisible(true);
-                    addToCartBTN.setDisable(false);
+                    addToCartBTN.setDisable(true);
                 }
             } else {
                 addToCartBTN.setVisible(false);
@@ -2345,7 +2340,7 @@ public class Controllers {
         }
     }
 
-    public static class AddReviewPopupController implements Initializable{
+    public static class AddReviewPopupController implements Initializable {
         @FXML
         private Button sendReviewBTN;
 
@@ -3625,7 +3620,7 @@ public class Controllers {
             addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
-            addPropertyHB.setVisible( ! isDetail);
+            addPropertyHB.setVisible(!isDetail);
             if (!isDetail) {
                 tableTabPane.getTabs().removeAll(subCategoriesTAB, productsTAB);
             }
@@ -3951,7 +3946,7 @@ public class Controllers {
             String imagePath;
             String subProductId;
             String productId;
-            Button nameBrandSeller;
+            Label nameBrandSeller;
             double unitPrice;
             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
             TextField countField;
@@ -3970,7 +3965,7 @@ public class Controllers {
             public SubProductWrapper(String id, String productId, String nameBrandSeller, double unitPrice, int count, String imagePath) {
                 this.subProductId = id;
                 this.productId = productId;
-                this.nameBrandSeller = new Button(nameBrandSeller);
+                this.nameBrandSeller = new Label(nameBrandSeller);
                 this.unitPrice = unitPrice;
                 this.countProperty.set(count);
                 this.imagePath = imagePath;
@@ -4014,7 +4009,7 @@ public class Controllers {
                     }
                 });
 
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId, subProductId, false));
+                this.nameBrandSeller.setOnMouseClicked(e -> ProductDetailMenuController.display(productId, subProductId, false));
 
                 increaseBTN.getStyleClass().add("increase-button");
                 decreaseBTN.getStyleClass().add("decrease-button");
@@ -4025,6 +4020,7 @@ public class Controllers {
                 countGroup.getChildren().addAll(countField, increaseBTN, decreaseBTN);
 
             }
+
 
             public ImageView getImg() {
                 return img;
@@ -4038,7 +4034,7 @@ public class Controllers {
                 return productId;
             }
 
-            public Button getNameBrandSeller() {
+            public Label getNameBrandSeller() {
                 return nameBrandSeller;
             }
 
@@ -4086,7 +4082,7 @@ public class Controllers {
         private TableColumn<SubProductWrapper, ImageView> imageCOL;
 
         @FXML
-        private TableColumn<SubProductWrapper, String> productName;
+        private TableColumn<SubProductWrapper, Label> productName;
 
         @FXML
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
@@ -4181,10 +4177,25 @@ public class Controllers {
         }
 
         private void initCols() {
+            /**
+             * ImageView img;
+             *             String imagePath;
+             *             String subProductId;
+             *             String productId;
+             *             Button nameBrandSeller;
+             *             double unitPrice;
+             *             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
+             *             TextField countField;
+             *             HBox countGroup = new HBox();
+             *             Button increaseBTN = new Button();
+             *             Button decreaseBTN = new Button();
+             *             SimpleDoubleProperty totalPrice;
+             *             Button remove = new Button();
+             */
             imageCOL.setCellValueFactory(new PropertyValueFactory<>("img"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-            count.setCellValueFactory(new PropertyValueFactory<>("count"));
+            count.setCellValueFactory(new PropertyValueFactory<>("countField"));
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
@@ -4309,7 +4320,7 @@ public class Controllers {
 
         private boolean validateFields() {
             boolean valid = true;
-            if ( ! receiverName.getText().matches(Constants.IRLNamePattern)) {
+            if (!receiverName.getText().matches(Constants.IRLNamePattern)) {
                 nameError.setText("Invalid name!");
                 valid = false;
             } else nameError.setText("");
@@ -4324,7 +4335,7 @@ public class Controllers {
                 valid = false;
             } else addressError.setText("");
 
-            if ( ! validateDiscount()) valid = false;
+            if (!validateDiscount()) valid = false;
 
             return valid;
         }
@@ -6558,6 +6569,7 @@ public class Controllers {
                         printError(ex.getMessage());
                         ex.printStackTrace();
                     }
+                    addProductBTN.getScene().getWindow().hide();
                 }
             });
         }

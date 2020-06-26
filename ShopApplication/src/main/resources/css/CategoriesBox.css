@@ -1,5 +1,11 @@
 #bg-pane {
-    -fx-background-color: transparent;
+    -fx-background-color: rgba(211, 211, 211, 0.33);
+
+}
+
+#categories-box {
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #29292D;
 }
 
 .button {
@@ -9,7 +15,7 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: right;
     -fx-background-size: 20;
-    -fx-font-size: 16;
+    -fx-font-size: 20;
     -fx-font-weight: bold;
     -fx-padding: 0 20 0 0;
     -fx-alignment: center;
@@ -23,4 +29,17 @@
 
 .button:pressed {
     -fx-opacity: 80%;
+}
+
+#heading-box {
+    -fx-background-color: #29292D;
+    -fx-background-radius: 5 5 5 5;
+    -fx-min-width: 200;
+}
+
+#heading-label {
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-text-fill: lightgrey;
+    -fx-background-color: #29292D;
 }
