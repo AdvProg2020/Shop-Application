@@ -28,12 +28,10 @@ T:  SellerAddProduct
     check purchase procedure
 
 
-T & A: adminCategoryManagingPopup remove property from a category
-
 
 --------------------
 A: personal info image not loading.
-T: rating in buy log
+A: rating in buy log
 M: unit test (login procedure)
 M: add font
 A & M: Compare is back baby!
