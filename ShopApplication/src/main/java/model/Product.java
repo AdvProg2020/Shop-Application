@@ -277,6 +277,21 @@ public class Product implements ModelBasic {
         ratingIds.add(ratingId);
     }
 
+    @ModelOnly
+    public void removeRating(String ratingId) {
+        ratingIds.remove(ratingId);
+        Rating.getRatingById(ratingId).terminate();
+    }
+
+    public Rating getRatingByCustomerId(String customerId) {
+        for (Rating rating : getRatings()) {
+            if (rating.getCustomer().getId().equals(customerId))
+                return rating;
+        }
+
+        return null;
+    }
+
     public double getAverageRatingScore() {
         if (ratingIds.size() == 0) {
             return 0;
