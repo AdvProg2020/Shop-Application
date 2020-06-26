@@ -28,8 +28,13 @@ import javafx.util.converter.NumberStringConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -1480,6 +1485,35 @@ public class Controllers {
         @FXML
         private Label remainingTime;
 
+        @FXML
+        private Label available;
+
+        @FXML
+        private ImageView fullStar1;
+        @FXML
+        private ImageView fullStar2;
+        @FXML
+        private ImageView fullStar3;
+        @FXML
+        private ImageView fullStar4;
+        @FXML
+        private ImageView fullStar5;
+
+        @FXML
+        private ImageView halfStar1;
+        @FXML
+        private ImageView halfStar2;
+        @FXML
+        private ImageView halfStar3;
+        @FXML
+        private ImageView halfStar4;
+        @FXML
+        private ImageView halfStar5;
+
+        @FXML
+        private HBox remainingDateBox;
+
+
         private String[] subProduct;
 
         public static Parent createBox(String[] subProduct) {
@@ -1503,12 +1537,47 @@ public class Controllers {
             image.setImage(new Image("file:" + Constants.base + subProductInfo[6]));
             priceBefore.setText(subProductInfo[7]);
             priceAfter.setText(subProductInfo[8]);
-            sale.setText(subProductInfo[11] != null ? subProductInfo[11] : "");
-            remainingTime.setText(subProductInfo[10] != null ? subProductInfo[10] : "");
+            if(subProductInfo[11] != null){
+                sale.setText(subProductInfo[11] +"%");
+            }else
+                sale.setVisible(false);
+            if(subProductInfo[10] != null){
+                try {
+                    Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
+                    LocalDate now = LocalDate.now();
+                    ZoneId defaultZoneId = ZoneId.systemDefault();
+                    Instant instant = endDate.toInstant();
+                    LocalDate localDate = instant.atZone(defaultZoneId).toLocalDate();
+                    Period period = Period.between(now, localDate);
+                    int daysLeft = period.getDays();
+                    remainingTime.setText(daysLeft + " days");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                remainingDateBox.setVisible(false);
+            }
+            available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
+            rating.setText(subProductInfo[5]);
+            initRatingStars(Double.parseDouble(subProductInfo[4]));
         }
 
         private void setAction(Parent p) {
             p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
+        }
+
+        private void initRatingStars(double rating){
+            fullStar1.setVisible(rating >= 1);
+            fullStar2.setVisible(rating >= 2);
+            fullStar3.setVisible(rating >= 3);
+            fullStar4.setVisible(rating >= 4);
+            fullStar5.setVisible(rating >= 5);
+
+            halfStar1.setVisible(rating >= 0.5);
+            halfStar2.setVisible(rating >= 1.5);
+            halfStar3.setVisible(rating >= 2.5);
+            halfStar4.setVisible(rating >= 3.5);
+            halfStar5.setVisible(rating >= 4.5);
         }
 
     }
