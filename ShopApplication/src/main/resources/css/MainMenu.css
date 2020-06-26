@@ -13,34 +13,36 @@
 
 #all-products-button {
     -fx-background-color: color-1;
-    -fx-graphic: url("../img/purchase-button-2.png");
+    -fx-graphic: url("../img/product.png");
     -fx-graphic-text-gap: 20;
     -fx-text-fill: whitesmoke;
     -fx-font-weight: bold;
     -fx-font-size: 16;
     -fx-background-radius: 5;
-    -fx-padding: 5 0 5 0;
+    -fx-padding: 5 20 5 0;
     -fx-min-width: 250;
 }
 
 #all-sales-button {
     -fx-background-color: color-1;
-    -fx-graphic: url("../img/purchase-button-2.png");
+    -fx-graphic: url("../img/sale-tag.png");
     -fx-graphic-text-gap: 20;
     -fx-text-fill: whitesmoke;
     -fx-font-weight: bold;
     -fx-font-size: 16;
     -fx-background-radius: 5;
-    -fx-padding: 5 0 5 0;
+    -fx-padding: 5 20 5 0;
     -fx-min-width: 250;
 }
 
 #sales-box {
     -fx-background-color: rgba(249, 65, 78, 0.93);
+    -fx-background-radius: 10;
 }
 
 #advertisement-box {
-    -fx-background-color: rgba(249, 202, 75, 0.93);
+    -fx-background-color: rgba(64, 126, 249, 0.93);
+    -fx-background-radius: 10;
 }
 
 .scroll-pane .increment-button, .scroll-pane .decrement-button {

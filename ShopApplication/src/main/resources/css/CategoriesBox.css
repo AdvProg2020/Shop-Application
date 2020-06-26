@@ -1,10 +1,10 @@
 #bg-pane {
-    -fx-background-color: rgba(211, 211, 211, 0.33);
+    -fx-background-color: rgba(211, 211, 211, 0.2);
 
 }
 
 #categories-box {
-    -fx-border-width: 0 1 0 0;
+    -fx-border-width: 0 0 0 1;
     -fx-border-color: #29292D;
 }
 
@@ -23,7 +23,6 @@
 
 .button:hover {
     -fx-underline: true;
-    -fx-background-image: url("../img/category-tree-hover.png");
     -fx-effect: dropshadow(one-pass-box, darkgray, 1, 0.0, 0, 0);
 }
 

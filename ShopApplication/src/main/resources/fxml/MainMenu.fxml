@@ -20,7 +20,7 @@
                         <padding>
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                         </padding>
-                        <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <Image url="@../img/default-product-pic.png"/>
                         </ImageView>
                         <Button id="all-products-button" fx:id="productsMenu" mnemonicParsing="false"
@@ -45,7 +45,7 @@
                         <padding>
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                         </padding>
-                        <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <Image url="@../img/default-product-pic.png"/>
                         </ImageView>
                         <Button id="all-sales-button" fx:id="allSales" mnemonicParsing="false" text="Show All Sales"/>

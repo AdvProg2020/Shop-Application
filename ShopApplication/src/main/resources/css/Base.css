@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 #bg-pane {
     -fx-background-color: white;
 }
@@ -9,7 +13,7 @@
 }
 
 .base-button:hover {
-    -fx-effect: dropshadow(one-pass-box, black, 6, 0.0, 0, 0);
+    -fx-effect: dropshadow(one-pass-box, black, 4, 0.0, 0, 0);
 }
 
 
@@ -22,7 +26,7 @@
 }
 
 #logo-button {
-    -fx-background-image: url("../img/Flooop_Logo-removebg-preview.png");
+    -fx-background-image: url("../img/logo.png");
     -fx-padding: 10 75 10 75;
     -fx-background-size: 150;
 }
@@ -44,14 +48,14 @@
 }
 
 #login-button {
-    -fx-background-color: #009000;
+    -fx-background-color: color-1;
     -fx-text-fill: white;
     -fx-background-radius: 3px;
     -fx-border-width: 0;
     -fx-font-size: 16;
     -fx-font-weight: bold;
-    -fx-min-width: 150px;
-    -fx-max-width: 150px;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
     -fx-padding: 11 0 11 0;
     -fx-text-alignment: center;
 

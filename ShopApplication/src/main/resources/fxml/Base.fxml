@@ -31,7 +31,7 @@
                     <Button id="login-button" fx:id="loginBTN" mnemonicParsing="false" styleClass="base-button"
                             text="login">
                         <StackPane.margin>
-                            <Insets right="50.0"/>
+                            <Insets/>
                         </StackPane.margin>
                     </Button>
                     <Button id="account-button" fx:id="accountBTN" mnemonicParsing="false" styleClass="base-button"

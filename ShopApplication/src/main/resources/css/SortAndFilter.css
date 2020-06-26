@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 .accordion .titled-pane > *.content {
     -fx-background-color: white;
 }
@@ -51,7 +55,7 @@
 
 .slider .thumb {
     -fx-background-insets: -3;
-    -fx-background-color: green;
+    -fx-background-color: color-1;
 }
 
 #increasing {
@@ -68,14 +72,14 @@
 
 #increasing:selected {
     -fx-graphic: url("../img/increasing-selected.png");
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-background-radius: 0 5 5 0;
     -fx-opacity: 100%;
 }
 
 #decreasing:selected {
     -fx-graphic: url("../img/decreasing-selected.png");
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-background-radius: 5 0 0 5;
     -fx-opacity: 100%;
 }
@@ -90,7 +94,7 @@
 }
 
 #update-button {
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-text-fill: whitesmoke;
     -fx-font-weight: bold;
     -fx-font-size: 16;
