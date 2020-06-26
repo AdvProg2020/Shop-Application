@@ -21,10 +21,7 @@ A & T & M: sale details in product box
 M & A: add commercial request and reduce balance. (Slide show)
 
 
-T:  SellerAddProduct
-    requests details popupS
-    adminProductBox
-    mainMenu
+T:
     check purchase procedure
 
 
@@ -38,7 +35,6 @@ T: live filter update
 M: style register tabPane
 M: add background to some pages
 M: scroll and gird pane todo
-T: product info text area.
 M: unit test (login procedure)
 A: admin product managing menu
 A: seller product managing menu
