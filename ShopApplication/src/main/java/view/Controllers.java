@@ -690,7 +690,13 @@ public class Controllers {
             }
 
             if (info[7].contains(Constants.base)) {
-                info[7] = info[7].replace(Constants.base, "");
+                info[7] = info[7].replace(Constants.base + "\\" , "");
+            }
+            if (info[7].contains( "src/main/resources")) {
+                info[7] = info[7].replace("src/main/resources", "");
+            }
+            if (info[7].contains( "src\\main\\resources")) {
+                info[7] = info[7].replace("src\\main\\resources", "");
             }
 
             accountIMG.setImage(new Image(info[7]));
@@ -1149,6 +1155,7 @@ public class Controllers {
             phoneNumber.setText(secondaryDetails[4]);
             balance.setText(secondaryDetails[5]);
             storeName.setText(secondaryDetails[6]);
+            imageField.setText(secondaryDetails[7]);
         }
     }
 
@@ -2714,6 +2721,7 @@ public class Controllers {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
                                 customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
+                        sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
@@ -3452,6 +3460,9 @@ public class Controllers {
 
     public static class AdminCategoryManagingPopupController {
         @FXML
+        private TabPane tableTabPane;
+
+        @FXML
         private TableView<PropertyWrapper> properties;
 
         @FXML
@@ -3473,6 +3484,9 @@ public class Controllers {
         private Button cancelBTN;
 
         @FXML
+        private Tab productsTAB;
+
+        @FXML
         private TableView<MiniProductWrapper> products;
 
         @FXML
@@ -3483,6 +3497,9 @@ public class Controllers {
 
         @FXML
         private Label productErrorLBL;
+
+        @FXML
+        private Tab subCategoriesTAB;
 
         @FXML
         private TableView<SubCategoryWrapper> subCategories;
@@ -3509,6 +3526,9 @@ public class Controllers {
         private TextField parentField;
 
         @FXML
+        private Label errorLBL;
+
+        @FXML
         private Button addBTN;
 
         @FXML
@@ -3519,18 +3539,6 @@ public class Controllers {
 
         @FXML
         private Button discardBTN;
-
-        @FXML
-        private Tab subCategoriesTAB;
-
-        @FXML
-        private Tab productsTAB;
-
-        @FXML
-        private TabPane tableTabPane;
-
-        @FXML
-        private Label errorLBL;
 
         private AdminCategoryManagingMenuController.CategoryWrapper category;
         private ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
