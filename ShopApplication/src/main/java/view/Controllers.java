@@ -1433,7 +1433,7 @@ public class Controllers {
 
         private Button createCategoryButton(String category) {
             Button button = new Button();
-            button.setText(category + " >");
+            button.setText(category);
             button.setOnAction(e -> ProductsMenuController.display(category, inSale));
             return button;
         }
