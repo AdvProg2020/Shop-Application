@@ -15,8 +15,8 @@
                 <VBox alignment="CENTER" spacing="20.0">
                     <VBox alignment="CENTER">
                         <StackPane alignment="TOP_LEFT">
-                            <ImageView fx:id="productIMG" fitHeight="250.0" fitWidth="250.0"
-                                       pickOnBounds="true" preserveRatio="true">
+                            <ImageView fx:id="productIMG" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                 <Image url="@../img/default-product-pic.png"/>
                             </ImageView>
                             <Label id="sale-percentage-label" fx:id="salePercentageLBL" text="50%">
@@ -48,74 +48,63 @@
                         <StackPane fx:id="ratingsStackPane">
                             <HBox fx:id="ratingsBox" alignment="CENTER">
                                 <StackPane>
-                                    <ImageView fx:id="halfStar1" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView fx:id="halfStar1" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/half-star.png"/>
                                     </ImageView>
-                                    <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0"
-                                               pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                               preserveRatio="true">
                                         <Image url="@../img/full-star.png"/>
                                     </ImageView>
-                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/empty-star.png"/>
                                     </ImageView>
                                 </StackPane>
                                 <StackPane>
-                                    <ImageView fx:id="halfStar2" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView fx:id="halfStar2" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/half-star.png"/>
                                     </ImageView>
-                                    <ImageView fx:id="fullStar2" layoutX="10.0" layoutY="19.0"
-                                               pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="fullStar2" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                               preserveRatio="true">
                                         <Image url="@../img/full-star.png"/>
                                     </ImageView>
-                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/empty-star.png"/>
                                     </ImageView>
                                 </StackPane>
                                 <StackPane>
-                                    <ImageView fx:id="halfStar3" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView fx:id="halfStar3" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/half-star.png"/>
                                     </ImageView>
-                                    <ImageView fx:id="fullStar3" layoutX="10.0" layoutY="19.0"
-                                               pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="fullStar3" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                               preserveRatio="true">
                                         <Image url="@../img/full-star.png"/>
                                     </ImageView>
-                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/empty-star.png"/>
                                     </ImageView>
                                 </StackPane>
                                 <StackPane>
-                                    <ImageView fx:id="halfStar4" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView fx:id="halfStar4" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/half-star.png"/>
                                     </ImageView>
-                                    <ImageView fx:id="fullStar4" layoutX="10.0" layoutY="19.0"
-                                               pickOnBounds="true" preserveRatio="true"
-                                               visible="false">
-                                        <Image url="@../img/full-star.png"/>
-                                    </ImageView>
-                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true"
-                                               preserveRatio="true">
-                                        <Image url="@../img/empty-star.png"/>
-                                    </ImageView>
-                                </StackPane>
-                                <StackPane>
-                                    <ImageView fx:id="halfStar5" pickOnBounds="true"
+                                    <ImageView fx:id="fullStar4" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
                                                preserveRatio="true" visible="false">
-                                        <Image url="@../img/half-star.png"/>
-                                    </ImageView>
-                                    <ImageView fx:id="fullStar5" layoutX="10.0" layoutY="19.0"
-                                               pickOnBounds="true" preserveRatio="true"
-                                               visible="false">
                                         <Image url="@../img/full-star.png"/>
                                     </ImageView>
-                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true"
-                                               preserveRatio="true">
+                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                                        <Image url="@../img/empty-star.png"/>
+                                    </ImageView>
+                                </StackPane>
+                                <StackPane>
+                                    <ImageView fx:id="halfStar5" pickOnBounds="true" preserveRatio="true"
+                                               visible="false">
+                                        <Image url="@../img/half-star.png"/>
+                                    </ImageView>
+                                    <ImageView fx:id="fullStar5" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
+                                               preserveRatio="true" visible="false">
+                                        <Image url="@../img/full-star.png"/>
+                                    </ImageView>
+                                    <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@../img/empty-star.png"/>
                                     </ImageView>
                                 </StackPane>
@@ -127,29 +116,27 @@
                     <HBox>
                         <GridPane>
                             <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0"
-                                                   prefWidth="92.0"/>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.20001220703125"
-                                                   minWidth="10.0" prefWidth="108.80000000000001"/>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="92.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.20001220703125" minWidth="10.0"
+                                                   prefWidth="108.80000000000001"/>
                             </columnConstraints>
                             <rowConstraints>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                             </rowConstraints>
                             <Label styleClass="property-label" text="Brand:"/>
-                            <Label fx:id="brandLBL" styleClass="value-label" text="brand"
-                                   GridPane.columnIndex="1"/>
+                            <Label fx:id="brandLBL" styleClass="value-label" text="brand" GridPane.columnIndex="1"/>
                             <Label styleClass="property-label" text="Category:" GridPane.rowIndex="1"/>
-                            <Label fx:id="categoryLBL" styleClass="value-label" text="category"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Label fx:id="categoryLBL" styleClass="value-label" text="category" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="1"/>
                         </GridPane>
                         <Region HBox.hgrow="ALWAYS"/>
                     </HBox>
                     <VBox spacing="5.0">
                         <Label styleClass="property-label" text="Product Info:"/>
                     </VBox>
-                    <TextArea fx:id="productInfo" editable="false" styleClass="white-area"
-                              stylesheets="@../css/TextArea.css"
+                    <TextArea fx:id="productInfo" editable="false" prefHeight="137.0" prefWidth="563.0"
+                              styleClass="white-area" stylesheets="@../css/TextArea.css"
                               text="fes ;fmesl;mvl;emvl'aweml'evfl'evl' ev&#10;&#10;"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
@@ -174,10 +161,10 @@
                         <VBox.margin>
                             <Insets/>
                         </VBox.margin>
-                        <Button id="add-to-cart-button" fx:id="addToCartBTN" mnemonicParsing="false"
-                                text="+Add to cart" visible="false"/>
-                        <Button id="edit-button" fx:id="editBTN" layoutX="10.0" layoutY="10.0"
-                                mnemonicParsing="false" text="Edit"/>
+                        <Button id="add-to-cart-button" fx:id="addToCartBTN" mnemonicParsing="false" text="+Add to cart"
+                                visible="false"/>
+                        <Button id="edit-button" fx:id="editBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false"
+                                text="Edit"/>
                     </StackPane>
                 </VBox>
             </HBox>
@@ -190,8 +177,8 @@
                         <columns>
                             <TableColumn fx:id="sellersTBLSellerCOL" maxWidth="1000.0" minWidth="200.0"
                                          prefWidth="200.0" text="Seller"/>
-                            <TableColumn fx:id="sellersTBLPriceCOL" maxWidth="1000.0" minWidth="200.0"
-                                         prefWidth="200.0" text="Price"/>
+                            <TableColumn fx:id="sellersTBLPriceCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0"
+                                         text="Price"/>
                             <TableColumn fx:id="sellersTBLNumberAvailableCOL" maxWidth="1000.0" minWidth="200.0"
                                          prefWidth="200.0" text="Remaining Count"/>
                         </columns>
@@ -206,8 +193,7 @@
                 <Tab text="Properties">
                     <TableView fx:id="PropertiesTBL" stylesheets="@../css/TableView.css">
                         <columns>
-                            <TableColumn fx:id="propertyCOL" minWidth="200.0" prefWidth="200.0"
-                                         text="Property"/>
+                            <TableColumn fx:id="propertyCOL" minWidth="200.0" prefWidth="200.0" text="Property"/>
                             <TableColumn fx:id="valueCOL" minWidth="200.0" prefWidth="200.0" text="value"/>
                         </columns>
                         <columnResizePolicy>
