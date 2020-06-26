@@ -1320,6 +1320,8 @@ public class Controllers {
                 int numberOfProperties = propertyKeys.size();
                 int numberOfColumns = numberOfProperties / 3 + (numberOfProperties % 3 == 0 ? 0 : 1);
                 GridPane propertyFilters = new GridPane();
+                propertyFilters.setVgap(10);
+                propertyFilters.setHgap(20);
                 propertiesScrollPane.setContent(propertyFilters);
                 for (String propertyKey : propertyKeys) {
                     VBox propertyBox = creatPropertyChoiceBox(propertyKey);
@@ -1386,6 +1388,8 @@ public class Controllers {
 
         private void updatePane() {
             var productsPane = new GridPane();
+            productsPane.setHgap(20);
+            productsPane.setVgap(20);
             scrollPane.setContent(productsPane);
             int index = 0;
             for (String[] subProductPack : products) {
