@@ -108,8 +108,8 @@
                     </rowConstraints>
                     <Label id="price-before-label" fx:id="priceBefore" text="\$99"/>
                     <Label id="price-after-label" fx:id="priceAfter" text="\$59" GridPane.rowIndex="1"/>
-                    <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-                          GridPane.valignment="CENTER">
+                    <HBox fx:id="remainingDateBox" alignment="CENTER" GridPane.columnIndex="2"
+                          GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                         <ImageView pickOnBounds="true" preserveRatio="true">
                             <Image url="@../img/clock-icon.png"/>
                         </ImageView>
