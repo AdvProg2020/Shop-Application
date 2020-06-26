@@ -1231,9 +1231,6 @@ public class Controllers {
         private GridPane productsPane;
 
         @FXML
-        private HBox categoryTreeBox;
-
-        @FXML
         private BorderPane borderPane;
 
 
@@ -1430,10 +1427,13 @@ public class Controllers {
         }
 
         private void initCategoryTree() {
-            categoryTreeBox = CategoryTreeBoxController.createBox();
-            ArrayList<String> categoryNames = mainController.getCategoryTreeOfACategory(categoryName);
-            for (String s : categoryNames) {
-                categoryTreeBox.getChildren().add(createCategoryButton(s));
+            HBox categoryTreeBox = CategoryTreeBoxController.createBox();
+            if( categoryTreeBox != null){
+                ArrayList<String> categoryNames = mainController.getCategoryTreeOfACategory(categoryName);
+                for (String s : categoryNames) {
+                    categoryTreeBox.getChildren().add(createCategoryButton(s));
+                }
+                borderPane.setTop(categoryTreeBox);
             }
         }
 
