@@ -6318,7 +6318,7 @@ public class Controllers {
         private Button existingProductBTN;
 
         public static void display() {
-            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addProductPage1, 600, 400);
+            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addProductPage1, 700, 500);
         }
 
         @Override
@@ -6460,7 +6460,7 @@ public class Controllers {
         private boolean exists;
 
         public static void display(String name, String brand, String productId) {
-            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 860, 505)).initialize(name, brand, productId);
+            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 1000, 600)).initialize(name, brand, productId);
         }
 
         private void initialize(String name, String brand, String productId) {
