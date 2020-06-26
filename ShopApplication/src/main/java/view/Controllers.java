@@ -2059,6 +2059,14 @@ public class Controllers {
         }
 
         private void initialize(String productId, String subProductId) {
+            if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
+                try {
+                    mainController.showProduct(productId);
+                } catch (Exceptions.InvalidProductIdException e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
             setPacks(productId, subProductId);
             initMainObjects();
             initCategoryHBox();
@@ -4966,7 +4974,7 @@ public class Controllers {
             adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        boolean bootUp = !mainController.managerExists();
+                        boolean bootUp = mainController.doesExistManager();
                         adminController.creatAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
                                 adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
                         if (!bootUp) {
