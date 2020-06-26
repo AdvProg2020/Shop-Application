@@ -692,7 +692,7 @@ public class Controllers {
 
             info[7] = info[7].replaceAll("\\\\", "/");
 
-            accountIMG.setImage(new Image("file:" + info[7]));
+            accountIMG.setImage(new Image("file:" + (info[7].startsWith("src") ? Constants.base + "/": "")  + info[7]));
         }
 
 
@@ -1505,7 +1505,8 @@ public class Controllers {
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
-            image.setImage(new Image("file:" + Constants.base + subProductInfo[6]));
+            subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
+            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("src") ? Constants.base + "/": "")  + subProductInfo[6]));
             priceBefore.setText(subProductInfo[7]);
             priceAfter.setText(subProductInfo[8]);
             if (subProductInfo[11] != null) {
@@ -1987,7 +1988,7 @@ public class Controllers {
             ProductDetailMenuController controller;
             if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
                 controller = ((ProductDetailMenuController)
-                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600));
+                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 950));
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
@@ -2128,7 +2129,12 @@ public class Controllers {
             ratingCountLBL.setText(productPack[5]);
             categoryLBL.setText(productPack[7]);
 
-            productIMG.setImage(new Image("file:" + Constants.base + productPack[8]));
+            productPack[8] = productPack[7].replaceAll("\\\\", "/");
+            if(productPack[8].startsWith("src")) {
+                productIMG.setImage(new Image("file:" + Constants.base + "/" + productPack[8]));
+            } else {
+                productIMG.setImage(new Image("file:" + productPack[8]));
+            }
             initRatingStars();
         }
 
@@ -3923,17 +3929,6 @@ public class Controllers {
         private Button addProductBTN;
     }
 
-    public static class SellerLogMenuController implements Initializable {
-        public static void display() {
-            View.setMainPane(Constants.FXMLs.sellerSellLogsManagingMenu);
-        }
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-
-        }
-    }
-
     //add product detail menu
     public static class ShoppingCartMenuController implements Initializable {
 
@@ -3995,7 +3990,8 @@ public class Controllers {
 
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
-                img.setImage(new Image("file:" + imagePath));
+                imagePath = imagePath.replaceAll("\\\\", "/");
+                img.setImage(new Image("file:" + (imagePath.startsWith("src") ? Constants.base + "/" : "/")  + imagePath));
 
 
                 initButtons();
