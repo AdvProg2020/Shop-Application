@@ -1274,8 +1274,9 @@ public class Controllers {
         private StringProperty name;
         private StringProperty brand;
         private StringProperty seller;
-        private HashMap<String, SimpleStringProperty> properties;
-        private HashMap<String, ChoiceBox<String>> propertyChoiceBox;
+        //private ArrayList<String> propertyKeys;
+        private HashMap<String, SimpleStringProperty> properties = new HashMap<>();
+        private HashMap<String, ChoiceBox<String>> propertyChoiceBox = new HashMap<>();
 
 
         public static void display(String categoryName, boolean inSale) {
@@ -1283,11 +1284,12 @@ public class Controllers {
             if (controller != null) {
                 controller.categoryName = categoryName;
                 controller.inSale = inSale;
+                controller.initFilterBar();
+                controller.initPropertyFilters();
                 controller.update();
                 controller.initChoiceBoxes();
                 controller.initActions();
-                controller.initFilterBar();
-                controller.initPropertyFilters();
+                controller.initSliderBounds();
                 controller.initCategoryTree();
                 controller.initCategoryBox();
             }
@@ -1358,10 +1360,14 @@ public class Controllers {
             seller = new SimpleStringProperty();
             seller.bind(filterSeller.valueProperty());
 
+
+            //properties
+        }
+
+        private void initSliderBounds(){
             setMaxPrice();
             maxPriceSlider.setMax(maximumAvailablePrice);
             minPriceSlider.setMax(maximumAvailablePrice);
-            //properties
         }
 
         private void initActions() {
