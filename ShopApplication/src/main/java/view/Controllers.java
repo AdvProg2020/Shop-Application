@@ -2127,6 +2127,7 @@ public class Controllers {
             productInfoTXT.setText(productPack[3]);
             ratingCountLBL.setText(productPack[5]);
             categoryLBL.setText(productPack[7]);
+
             productIMG.setImage(new Image("file:" + Constants.base + productPack[8]));
             initRatingStars();
         }
@@ -3942,18 +3943,18 @@ public class Controllers {
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
         public class SubProductWrapper {
-            ImageView img;
+            ImageView img= new ImageView();
             String imagePath;
             String subProductId;
             String productId;
             Label nameBrandSeller;
             double unitPrice;
             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
-            TextField countField;
+            TextField countField = new TextField();
             HBox countGroup = new HBox();
             Button increaseBTN = new Button();
             Button decreaseBTN = new Button();
-            SimpleDoubleProperty totalPrice;
+            SimpleDoubleProperty totalPrice = new SimpleDoubleProperty();
             Button remove = new Button();
 
             public SubProductWrapper(String[] productInCartPack) {
@@ -3975,15 +3976,17 @@ public class Controllers {
                 View.addListener(countField, "[0-9]");
                 countProperty.addListener(((observable, oldValue, newValue) -> {
                     if (newValue.intValue() > oldValue.intValue()) {
+                        if (oldValue.intValue() == 0) return;
                         try {
                             mainController.increaseProductInCart(this.subProductId, newValue.intValue() - oldValue.intValue());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
-                        int n = newValue.intValue() == 0 ? 1 : newValue.intValue();
+                        if (newValue.intValue() == 0) ((IntegerProperty) observable).set(1);
+
                         try {
-                            mainController.decreaseProductInCart(this.subProductId, n - oldValue.intValue());
+                            mainController.decreaseProductInCart(this.subProductId, oldValue.intValue() - newValue.intValue());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -3992,7 +3995,7 @@ public class Controllers {
 
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
-                img.setImage(new Image("file:" + Constants.base + imagePath));
+                img.setImage(new Image("file:" + imagePath));
 
 
                 initButtons();
@@ -4088,7 +4091,7 @@ public class Controllers {
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
 
         @FXML
-        private TableColumn<SubProductWrapper, SimpleIntegerProperty> count;
+        private TableColumn<SubProductWrapper, HBox> count;
 
         @FXML
         private TableColumn<SubProductWrapper, SimpleDoubleProperty> totalPrice;
@@ -4169,6 +4172,7 @@ public class Controllers {
         private void iniTable() {
             initCols();
 
+            subProducts.clear();
             for (String[] cartProduct : cartProducts) {
                 subProducts.add(new SubProductWrapper(cartProduct));
             }
@@ -4195,7 +4199,7 @@ public class Controllers {
             imageCOL.setCellValueFactory(new PropertyValueFactory<>("img"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-            count.setCellValueFactory(new PropertyValueFactory<>("countField"));
+            count.setCellValueFactory(new PropertyValueFactory<>("countGroup"));
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
