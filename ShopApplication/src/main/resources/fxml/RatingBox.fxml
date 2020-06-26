@@ -6,8 +6,8 @@
 <?import javafx.scene.layout.StackPane?>
 
 <HBox fx:id="ratingBox" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$RatingBoxController">
-    <StackPane fx:id="star1" layoutX="10.0" layoutY="10.0" >
-        <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+    <StackPane fx:id="star1" layoutX="10.0" layoutY="10.0">
+        <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" visible="false">
             <Image url="@../img/full-star.png" />
         </ImageView>
         <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
@@ -15,7 +15,7 @@
         </ImageView>
     </StackPane>
     <StackPane fx:id="star2" layoutX="55.0" layoutY="10.0">
-        <ImageView fx:id="fullStar2" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="fullStar2" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" visible="false">
             <Image url="@../img/full-star.png" />
         </ImageView>
         <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
@@ -23,7 +23,7 @@
         </ImageView>
     </StackPane>
     <StackPane fx:id="star3" layoutX="70.0" layoutY="10.0">
-        <ImageView fx:id="fullStar3" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="fullStar3" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" visible="false">
             <Image url="@../img/full-star.png" />
         </ImageView>
         <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">

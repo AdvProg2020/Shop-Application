@@ -130,13 +130,14 @@ public class Utilities {
         }
 
         public static String[] getReviewInfo(Review review) {
-            String[] reviewInfo = new String[6];
+            String[] reviewInfo = new String[7];
             reviewInfo[0] = review.getReviewer().getUsername();
             reviewInfo[1] = review.getProduct().getId();
             reviewInfo[2] = review.getProduct().getName();
             reviewInfo[3] = review.getProduct().getBrand();
             reviewInfo[4] = review.getTitle();
             reviewInfo[5] = review.getText();
+            reviewInfo[6] = review.hasBought() ? "yes" : "no";
             return reviewInfo;
         }
 

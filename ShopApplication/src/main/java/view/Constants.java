@@ -77,6 +77,7 @@ public final class Constants {
         public static final String reviewBox = "ReviewBox";
         public static final String ratingBox = "RatingBox";
         public static final String categoryTreeBox = "CategoryTreeBox";
+        public static final String purchaseConfirmation = "PurchaseConfirmation";
         public static final String addReviewPopup = "AddReviewPopup";
     }
 }
