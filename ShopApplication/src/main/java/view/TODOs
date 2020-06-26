@@ -34,13 +34,9 @@ T & A: adminCategoryManagingPopup remove property from a category
 --------------------
 A: personal info image not loading.
 T: rating in buy log
-T: rate product in digest
-T: add review controller
 M: unit test (login procedure)
 M: add font
-T: sold out -> product box
 A & M: Compare is back baby!
-T: AddReviewPopup
 T: product menu debug
 hasBought in reviewBox
 A: admin edit product popup
