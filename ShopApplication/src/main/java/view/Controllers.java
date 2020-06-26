@@ -1313,16 +1313,15 @@ public class Controllers {
         private void initPropertyFilters() {
             try {
                 ArrayList<String> propertyKeys = mainController.getPropertiesOfCategory(categoryName, false);
-                int numberOfProperties = propertyKeys.size();
-                int numberOfColumns = numberOfProperties / 3 + (numberOfProperties % 3 == 0 ? 0 : 1);
                 GridPane propertyFilters = new GridPane();
                 propertyFilters.setVgap(10);
                 propertyFilters.setHgap(20);
                 propertiesScrollPane.setContent(propertyFilters);
+                int propertyIndex = 0;
                 for (String propertyKey : propertyKeys) {
                     VBox propertyBox = creatPropertyChoiceBox(propertyKey);
-                    int propertyIndex = propertyKeys.indexOf(propertyKey);
                     propertyFilters.add(propertyBox, propertyIndex / 3, propertyIndex % 3);
+                    propertyIndex ++;
                 }
             } catch (Exceptions.InvalidCategoryException e) {
                 e.printStackTrace();
@@ -1339,11 +1338,19 @@ public class Controllers {
         }
 
         private void setChoiceBoxesValues() {
-            ArrayList<String> brands = (ArrayList<String>) products.stream().map(p -> p[3]).collect(Collectors.toList());
-            filterBrand.getItems().addAll(brands);
+            HashSet<String> sellersSet = new HashSet<>();
+            HashSet<String> brandSet = new HashSet<>();
+            for (String[] product : products) {
+                try {
+                    sellersSet.addAll(mainController.subProductsOfAProduct(product[0]).stream().map(e -> e[12]).collect(Collectors.toList()));
+                } catch (Exceptions.InvalidProductIdException e) {
+                    e.printStackTrace();
+                }
+                brandSet.add(product[3]);
+            }
 
-            ArrayList<String> sellers = (ArrayList<String>) products.stream().map(p -> p[12]).collect(Collectors.toList());
-            filterSeller.getItems().addAll(sellers);
+            filterBrand.getItems().addAll(new ArrayList<>(brandSet));
+            filterSeller.getItems().addAll(new ArrayList<>(sellersSet));
 
             ArrayList<String> sorts = new ArrayList<>();
             sorts.add("view count");
@@ -1399,6 +1406,7 @@ public class Controllers {
             VBox vBox = new VBox();
             vBox.getChildren().add(new Label(property));
             ChoiceBox<String> choiceBox = new ChoiceBox<>();
+            //choiceBox.getStylesheets().add("@../");
             try {
                 ArrayList<String> propertyValues = mainController.getPropertyValuesInCategory(categoryName, property);
                 choiceBox.getItems().add("");

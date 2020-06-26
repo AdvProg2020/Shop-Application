@@ -202,8 +202,9 @@
                     </TableView>
                 </Tab>
                 <Tab text="Reviews">
-                    <ScrollPane>
-                        <VBox fx:id="reviewsVB" spacing="10.0">
+                    <ScrollPane fitToHeight="true" fitToWidth="true">
+                        <VBox fx:id="reviewsVB" alignment="CENTER" spacing="10.0"
+                              style="-fx-background-color: #29292D; -fx-background-radius: 5;">
                             <padding>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                             </padding>

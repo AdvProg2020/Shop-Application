@@ -59,7 +59,7 @@ public class Utilities {
         }
 
         public static String[] subProduct(SubProduct subProduct){
-            String[] subProductBoxPack = new String[14];
+            String[] subProductBoxPack = new String[15];
             Product product = subProduct.getProduct();
             Sale sale = subProduct.getSale();
             subProductBoxPack[0] = product.getId();
@@ -76,6 +76,7 @@ public class Utilities {
             subProductBoxPack[11] = sale != null ? Double.toString(sale.getPercentage()) : null;
             subProductBoxPack[12] = subProduct.getSeller().getStoreName();
             subProductBoxPack[13] = subProduct.getProduct().getInfoText();
+            subProductBoxPack[14] = subProduct.getSeller().getUsername();
             return subProductBoxPack;
         }
 
