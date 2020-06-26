@@ -1033,11 +1033,13 @@ public class Controllers {
         @FXML
         private Label nameLBL;
         @FXML
-        private Label titleLBL;
+        private Label boughtLBL;
         @FXML
-        private TextField titleField;
+        private Label didntBuyLBL;
         @FXML
         private Label nameBrandLBL;
+        @FXML
+        private Label titleLBL;
         @FXML
         private TextArea textArea;
 
@@ -1059,7 +1061,6 @@ public class Controllers {
                 return;
             }
 
-            titleField.setDisable(true);
             textArea.setDisable(true);
 
             initValues();
@@ -1068,8 +1069,16 @@ public class Controllers {
         private void initValues() {
             nameLBL.setText(secondaryDetails[0]);
             nameBrandLBL.setText(secondaryDetails[2] + " - " + secondaryDetails[3]);
-            titleField.setText(secondaryDetails[4]);
+            titleLBL.setText(secondaryDetails[4]);
             textArea.setText(secondaryDetails[5]);
+
+            if (secondaryDetails[6].equals("yes")) {
+                boughtLBL.setVisible(true);
+                didntBuyLBL.setVisible(false);
+            } else {
+                boughtLBL.setVisible(false);
+                didntBuyLBL.setVisible(true);
+            }
         }
     }
 
@@ -4398,7 +4407,7 @@ public class Controllers {
 
             subProductCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
-            saleCOL.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
+            ratingCOL.setCellValueFactory(new PropertyValueFactory<>("ratingBox"));
             unitPriceCOL.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
         }
 
@@ -4432,6 +4441,7 @@ public class Controllers {
             String id, nameBrandSeller, sellerStoreName;
             int count;
             double unitPrice, saleAmount;
+            Parent ratingBox;
 
             private BuyLogItemWrapper(String[] info) {
                 this(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), Double.parseDouble(info[6]), Double.parseDouble(info[7]));
@@ -4444,6 +4454,11 @@ public class Controllers {
                 this.count = count;
                 this.unitPrice = unitPrice;
                 this.saleAmount = saleAmount;
+                ratingBox = RatingBoxController.createBox(this.id);
+            }
+
+            public Parent getRatingBox() {
+                return ratingBox;
             }
 
             public String getId() {
@@ -4484,7 +4499,7 @@ public class Controllers {
         private TableColumn<BuyLogItemWrapper, Double> unitPriceCOL;
 
         @FXML
-        private TableColumn<BuyLogItemWrapper, Double> saleCOL;
+        private TableColumn<BuyLogItemWrapper, Parent> ratingCOL;
 
         @FXML
         private Label idLBL;
