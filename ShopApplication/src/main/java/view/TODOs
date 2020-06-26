@@ -30,7 +30,6 @@ T:
 T: product menu debug
 A: text area listener
 T: live filter update
-M: add background to some pages
 M: scroll and gird pane todo
 M: unit test (login procedure)
 A: admin product managing menu

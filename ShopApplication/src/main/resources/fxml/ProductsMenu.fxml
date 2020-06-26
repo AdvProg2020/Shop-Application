@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -24,7 +20,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductsMenuController">
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductsMenuController">
     <center>
         <VBox BorderPane.alignment="CENTER">
            <children>
@@ -70,7 +66,7 @@
                                                               </VBox.margin>
                                                           </Slider>
                                                           <Label text="Max Price" />
-                                                          <Slider fx:id="maxPriceSlider" majorTickUnit="20.0" minorTickCount="20" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="100.0" />
+                                                          <Slider fx:id="maxPriceSlider" majorTickUnit="20.0" minorTickCount="20" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                                                       </children>
                                                    </VBox>
                                                </children>
