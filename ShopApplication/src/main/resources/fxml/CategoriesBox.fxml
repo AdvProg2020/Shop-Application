@@ -2,14 +2,34 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" fx:id="subCategoryBox" spacing="10.0"
-      stylesheets="@../css/CategoriesBox.css" xmlns="http://javafx.com/javafx/11.0.1"
-      fx:controller="view.Controllers$CategoryBoxController">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" stylesheets="@../css/CategoriesBox.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$CategoryBoxController">
+    <center>
+        <VBox id="categories-box" fx:id="subCategoryBox" spacing="20.0">
+            <padding>
+                <Insets bottom="30.0" left="50.0" right="70.0" top="30.0"/>
+            </padding>
+            <children>
+                <Button id="category-button" fx:id="allProductsBTN" mnemonicParsing="false" text="All products"/>
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="20.0" top="20.0"/>
+            </BorderPane.margin>
+        </VBox>
+    </center>
+    <top>
+        <HBox id="heading-box" alignment="CENTER" BorderPane.alignment="CENTER">
+            <children>
+                <Label id="heading-label" text="Categories"/>
+            </children>
+            <BorderPane.margin>
+                <Insets left="20.0" right="20.0"/>
+            </BorderPane.margin>
+        </HBox>
+    </top>
     <padding>
-        <Insets bottom="50.0" left="50.0" right="100.0" top="100.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
-    <children>
-        <Button id="category-button" fx:id="allProductsBTN" mnemonicParsing="false" text="All products"/>
-    </children>
-</VBox>
+</BorderPane>
