@@ -33,7 +33,6 @@ T:  SellerAddProduct
 T: product menu debug
 A: text area listener
 T: live filter update
-M: style register tabPane
 M: add background to some pages
 M: scroll and gird pane todo
 T: product info text area.
