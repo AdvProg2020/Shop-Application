@@ -1254,11 +1254,14 @@ public class Controllers {
         private static final int numberOfColumns = 3;
         public ArrayList<String[]> products;
         private String categoryName;
-        private boolean inSale = false;
         private double maximumAvailablePrice;
-        //private ArrayList<String> propertyKeys;
         private HashMap<String, SimpleStringProperty> properties = new HashMap<>();
+        private boolean toCompare;
+        //products menu mode:
+        private boolean inSale = false;
 
+        //comparison mode:
+        private String productIdToCompareWith;
 
         public static void display(String categoryName, boolean inSale) {
             ProductsMenuController controller = View.setMainPane(Constants.FXMLs.productsMenu);
@@ -1271,11 +1274,24 @@ public class Controllers {
             }
         }
 
+        public static void displayACategoryProductsToCompare(String categoryName, String productId){
+            ProductsMenuController controller = View.setMainPane(Constants.FXMLs.productsMenu);
+            if(controller != null){
+                controller.categoryName = categoryName;
+                controller.productIdToCompareWith = productId;
+                controller.inSale = false;
+
+
+            }
+        }
+
         private void initPageObjects() {
             initActions();
             initPropertyFilters();
-            initCategoryTree();
-            initCategoryBox();
+            if( !toCompare ){
+                initCategoryBox();
+                initCategoryTree();
+            }
             initChoiceBoxes();
         }
 
@@ -1360,7 +1376,7 @@ public class Controllers {
             scrollPane.setContent(productsPane);
             int index = 0;
             for (String[] subProductPack : products) {
-                Parent productBox = ProductBoxController.createBox(subProductPack, true);
+                Parent productBox = ProductBoxController.createBox(subProductPack, !toCompare);
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
             }
