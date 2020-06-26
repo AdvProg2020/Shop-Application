@@ -1743,6 +1743,7 @@ public class Controllers {
             priceField.setText(subProductInfo[7]);
             countField.setText(subProductInfo[5]);
             infoArea.setText(productInfo[3]);
+            category.setText(productInfo[7]);
 
             usernameErrLBL.setText("Invalid name!");
             passwordErrLBL.setText("Invalid brand!");
