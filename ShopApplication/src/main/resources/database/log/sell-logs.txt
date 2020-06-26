@@ -1,0 +1,1 @@
+{"sellLogId":"SLG2005270001","parentBuyLogId":"BLG2005270001","sellerId":"SLR2005270001","receivedMoney":342.0,"totalSaleAmount":0.0}

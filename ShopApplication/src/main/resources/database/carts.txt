@@ -1,2 +1,2 @@
 {"cartId":"CRT2005270003","subProductIds":{}}
-{"cartId":"CRT2005270005","customerId":"CST2005270001","subProductIds":{"SBP2005270002":1}}
+{"cartId":"CRT2005270005","customerId":"CST2005270001","subProductIds":{}}

@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -4121,7 +4122,9 @@ public class Controllers {
                 increaseBTN.setOnAction(e -> countProperty.set(countProperty.get() + 1));
                 decreaseBTN.setOnAction(e -> countProperty.set(countProperty.get() - 1));
 
-                countGroup.getChildren().addAll(countField, increaseBTN, decreaseBTN);
+                countGroup.getChildren().addAll( decreaseBTN, countField,increaseBTN );
+                countGroup.setPadding(new Insets(5, 5 ,5 ,5));
+                countGroup.setAlignment(Pos.CENTER);
 
             }
 
@@ -4326,7 +4329,7 @@ public class Controllers {
     }
 
 
-    public static class PurchaseMenuController implements Initializable {
+    public static class PurchaseMenuController implements Initializable{
         @FXML
         private TextField receiverName;
 
@@ -4361,7 +4364,7 @@ public class Controllers {
         private Label addressError;
 
         public static void display() {
-            View.setMainPane(Constants.FXMLs.purchaseMenu);
+             View.setMainPane(Constants.FXMLs.purchaseMenu);
         }
 
         @Override
@@ -4371,21 +4374,21 @@ public class Controllers {
             initListeners();
 
             try {
-                purchaseBTN.setText("$" + customerController.getTotalPriceOfCart());
+                totalPrice.setText("$" + customerController.getTotalPriceOfCart());
             } catch (Exceptions.UnAuthorizedAccountException e) {
                 e.printStackTrace();
             }
-
         }
 
         private void initButtons() {
             purchaseBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText());
+                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText().equals("") ? null : discountCode.getText());
                         PurchaseConfirmationController.display(totalPrice.getText());
                         View.goBack();
                     } catch (Exceptions.InsufficientCreditException ex) {
+                        discountError.setText("You dont have enough money!");
                         ex.printStackTrace();
                     } catch (Exceptions.NotAvailableSubProductsInCart notAvailableSubProductsInCart) {
                         notAvailableSubProductsInCart.printStackTrace();
@@ -4454,7 +4457,7 @@ public class Controllers {
         private boolean validateDiscount() {
             if (discountCode.getText().equals("")) {
 
-                return false;
+                return true;
             } else {
                 try {
                     double newPrice = customerController.getTotalPriceOfCartWithDiscount(discountCode.getText());
@@ -5281,7 +5284,8 @@ public class Controllers {
                     this.count.setText((Integer.parseInt(this.count.getText()) - 1) + "");
                 });
 
-                countGroup.getChildren().addAll(this.count, increaseBTN, decreaseBTN);
+                countGroup.getChildren().addAll(decreaseBTN, this.count, increaseBTN);
+                countGroup.setPadding(new Insets(5, 5, 5, 5));
             }
 
             public HBox getCountGroup() {

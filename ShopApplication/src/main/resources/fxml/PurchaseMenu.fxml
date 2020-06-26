@@ -13,7 +13,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="500.0" prefWidth="750.0" styleClass="bg-pane" stylesheets="@../css/Purchase.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="500.0" prefWidth="750.0" styleClass="bg-pane" stylesheets="@../css/Purchase.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="view.Controllers$PurchaseMenuController">
     <center>
         <VBox maxWidth="-Infinity" spacing="30.0" BorderPane.alignment="CENTER">
             <padding>

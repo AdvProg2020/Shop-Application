@@ -1,0 +1,1 @@
+{"buyLogId":"BLG2005270001","customerId":"CST2005270001","paidMoney":342.0,"totalDiscountAmount":0.0,"date":"Jun 27, 2020, 1:48:25 AM","receiverName":"dana","receiverAddress":"\n","receiverPhone":"123","shippingStatus":"PROCESSING"}
