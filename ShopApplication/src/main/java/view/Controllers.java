@@ -6715,4 +6715,111 @@ public class Controllers {
             });
         }
     }
+
+    public static class CompareMenuController {
+
+        @FXML
+        private GridPane productProperties;
+
+        @FXML
+        private Label brand1;
+
+        @FXML
+        private Label brand2;
+
+        @FXML
+        private Label category1;
+
+        @FXML
+        private Label category2;
+
+        @FXML
+        private Label rating1;
+
+        @FXML
+        private Label rating2;
+
+        @FXML
+        private ImageView image1;
+
+        @FXML
+        private ImageView image2;
+
+        @FXML
+        private Label maxPrice2;
+
+        @FXML
+        private Label minPrice2;
+
+        @FXML
+        private Label maxPrice1;
+
+        @FXML
+        private Label minPrice1;
+
+        @FXML
+        private Label name2;
+
+        @FXML
+        private Label name1;
+
+        private String[] firstProductInfo;
+        private String[] secondProductInfo;
+
+        public static void display(String firstProductId, String secondProductId) {
+            ((CompareMenuController) View.popupWindow("Compare menu", Constants.FXMLs.compareMenu, 500, 620)).initialize(firstProductId, secondProductId);
+        }
+
+        private void initialize(String firstProductId, String secondProductId) {
+            try {
+                firstProductInfo = mainController.digest(firstProductId);
+                secondProductInfo = mainController.digest(secondProductId);
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
+
+            initValues();
+            initProperties();
+        }
+
+        private void initValues() {
+            name1.setText(firstProductInfo[1]);
+            name2.setText(secondProductInfo[1]);
+            brand1.setText(firstProductInfo[2]);
+            brand2.setText(secondProductInfo[2]);
+            category1.setText(firstProductInfo[7]);
+            category2.setText(secondProductInfo[7]);
+            rating1.setText(firstProductInfo[4]);
+            rating2.setText(secondProductInfo[4]);
+            minPrice1.setText(firstProductInfo[9]);
+            minPrice2.setText(secondProductInfo[9]);
+            maxPrice1.setText(firstProductInfo[10]);
+            maxPrice2.setText(secondProductInfo[10]);
+
+            firstProductInfo[8] = firstProductInfo[8].replaceAll("\\\\", "/");
+            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("src") ? Constants.base + "/": "")  + firstProductInfo[8]));
+
+            secondProductInfo[8] = secondProductInfo[8].replaceAll("\\\\", "/");
+            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("src") ? Constants.base + "/": "")  + secondProductInfo[8]));
+        }
+
+        private void initProperties() {
+            try {
+                //ArrayList<String> properties = mainController.getPropertiesOfCategory(firstProductInfo[7], true);
+                HashMap<String, String> firstValues = mainController.getPropertyValuesOfAProduct(firstProductInfo[0]);
+                HashMap<String, String> secondValues = mainController.getPropertyValuesOfAProduct(secondProductInfo[0]);
+                int index = 0;
+                for (String property : firstValues.keySet()) {
+                    var firstWrapper = new Label(firstValues.get(property));
+                    var secondWrapper = new Label(secondValues.get(property));
+                    var propertyWrapper = new Label(property);
+                    productProperties.addRow(7 + index,firstWrapper , propertyWrapper, secondWrapper);
+                }
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 }

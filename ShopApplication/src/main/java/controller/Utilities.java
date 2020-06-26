@@ -242,7 +242,7 @@ public class Utilities {
         }
 
         public static String[] digest(Product product) {
-            String[] productInfo = new String[9];
+            String[] productInfo = new String[11];
             productInfo[0] = product.getId();
             productInfo[1] = product.getName();
             productInfo[2] = product.getBrand();
@@ -252,6 +252,8 @@ public class Utilities {
             productInfo[6] = product.getDefaultSubProduct().getId();
             productInfo[7] = product.getCategory().getName();
             productInfo[8] = product.getImagePath();
+            productInfo[9] = product.getMinPrice() + "";
+            productInfo[10] = product.getMaxPrice() + "";
             return productInfo;
         }
 
