@@ -473,4 +473,13 @@ public class AdminController {
         }else
             category.addProperty(property);
     }
+
+    public void removePropertyFromACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
+        Category category = Category.getCategoryByName(categoryName);
+        if(category == null){
+            throw new Exceptions.InvalidCategoryException(categoryName);
+        }else {
+            category.removeProperty(property);
+        }
+    }
 }
