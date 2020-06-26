@@ -427,6 +427,9 @@ public class Controllers {
         @FXML
         private TableColumn<CategoryWrapper, String> parentCOL;
 
+        @FXML
+        private BorderPane mainBorderPane;
+
 
         public class CategoryWrapper {
             String name, parent;
@@ -554,7 +557,7 @@ public class Controllers {
                 ((PersonalInfoMenuController) View.setMainPane(Constants.FXMLs.personalInfoMenu)).initialize(null, false);
             } else {
                 ((PersonalInfoMenuController)
-                        View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 632, 472)).initialize(username, true);
+                        View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 900, 600)).initialize(username, true);
             }
         }
 
@@ -587,8 +590,9 @@ public class Controllers {
             if (isPopup) {
                 editBTN.setVisible(false);
                 sellLogBTN.setVisible(false);
+                buyLogBTN.setVisible(false);
                 logoutBTN.setVisible(false);
-                additionalInfoStackPane.setVisible(false);
+                mainBorderPane.rightProperty().set(null);
             } else {
                 if (type.equals(Constants.sellerUserType)) {
                     customerDiscounts.setVisible(false);
@@ -1110,7 +1114,7 @@ public class Controllers {
 
         public static void display(String requestId) {
             ((AddSellerRequestPopupController)
-                    View.popupWindow("Add seller request details", Constants.FXMLs.addSellerRequestPopup, 360, 250)).initialize(requestId);
+                    View.popupWindow("Add seller request details", Constants.FXMLs.addSellerRequestPopup, 500, 400)).initialize(requestId);
         }
 
         private void initialize(String requestId) {
@@ -1135,6 +1139,7 @@ public class Controllers {
             phoneNumber.setDisable(true);
             balance.setDisable(true);
             storeName.setDisable(true);
+            imageField.setDisable(true);
         }
 
         private void initValues() {
@@ -2600,7 +2605,7 @@ public class Controllers {
         private PasswordField sellerPassword;
 
         @FXML
-        private TextField sellerShowPasswordFIeld;
+        private TextField sellerShowPasswordField;
 
         @FXML
         private ToggleButton sellerShowPasswordBTN;
@@ -2694,6 +2699,8 @@ public class Controllers {
             sellerEmailError.setText("Invalid email address");
             customerBalanceError.setText("Please enter your initial balance");
             sellerBalanceError.setText("Please enter your initial balance");
+
+            sellerStoreNameError.setText("Please enter a store name!");
         }
 
         private void initVisibilities() {
@@ -2711,6 +2718,8 @@ public class Controllers {
             sellerEmailError.setVisible(false);
             customerBalanceError.setVisible(false);
             sellerBalanceError.setVisible(false);
+
+            sellerStoreNameError.setVisible(false);
         }
 
         private void initListeners() {
@@ -2745,7 +2754,7 @@ public class Controllers {
                     try {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), null, customerImageField.getText());
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), customerImageField.getText());
                         LoginPopupController.display(PopupStage);
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
@@ -2838,6 +2847,10 @@ public class Controllers {
                 sellerBalanceError.setVisible(true);
                 areAvailable = false;
             } else sellerBalanceError.setVisible(false);
+            if (sellerStoreName.getText().equals("")) {
+                sellerStoreNameError.setVisible(true);
+                areAvailable = false;
+            } else sellerStoreNameError.setVisible(false);
             return areAvailable;
         }
 
@@ -2846,8 +2859,8 @@ public class Controllers {
             customerShowPasswordField.visibleProperty().bind(customerPassword.visibleProperty().not());
             customerPassword.visibleProperty().bind(customerShowPasswordBTN.selectedProperty().not());
 
-            sellerShowPasswordFIeld.textProperty().bindBidirectional(sellerPassword.textProperty());
-            sellerShowPasswordFIeld.visibleProperty().bind(sellerPassword.visibleProperty().not());
+            sellerShowPasswordField.textProperty().bindBidirectional(sellerPassword.textProperty());
+            sellerShowPasswordField.visibleProperty().bind(sellerPassword.visibleProperty().not());
             sellerPassword.visibleProperty().bind(sellerShowPasswordBTN.selectedProperty().not());
         }
     }
