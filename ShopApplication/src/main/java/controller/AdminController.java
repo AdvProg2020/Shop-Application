@@ -488,7 +488,7 @@ public class AdminController {
         if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
         }else {
-
+            product.setBrand(newBrand);
         }
     }
 
