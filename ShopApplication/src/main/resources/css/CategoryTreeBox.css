@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 .button {
     -fx-background-image: url("../img/category-tree.png");
     -fx-text-fill: #29292D;
@@ -12,7 +16,7 @@
 }
 
 .button:hover {
-    -fx-text-fill: green;
+    -fx-text-fill: color-1;
     -fx-underline: true;
     -fx-background-image: url("../img/category-tree-hover.png");
     -fx-effect: dropshadow(one-pass-box, darkgray, 1, 0.0, 0, 0);

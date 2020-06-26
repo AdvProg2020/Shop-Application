@@ -1,6 +1,6 @@
 * {
     table-color-1: #29292D;
-    table-color-2: green;
+    table-color-2: #085de4;
     text-color-1: white;
     text-color-2: lightgrey;
 }
@@ -79,7 +79,7 @@
 }
 
 .table-view .cell {
-    -fx-cell-size: 35;
+    -fx-cell-size: 60;
     -fx-alignment: center;
     -fx-background-color: table-color-1;
     -fx-text-fill: text-color-2;
