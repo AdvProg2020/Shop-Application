@@ -6422,6 +6422,7 @@ public class Controllers {
             fullStar1.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 1);
+                    fillStars(1);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6429,6 +6430,7 @@ public class Controllers {
             fullStar2.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 2);
+                    fillStars(2);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6436,6 +6438,7 @@ public class Controllers {
             fullStar3.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 3);
+                    fillStars(3);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6443,6 +6446,7 @@ public class Controllers {
             fullStar4.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 4);
+                    fillStars(4);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -6450,10 +6454,26 @@ public class Controllers {
             fullStar5.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 5);
+                    fillStars(5);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             });
+        }
+
+        private void fillStars(int num) {
+            switch (num) {
+                case 5:
+                    fullStar5.setVisible(true);
+                case 4:
+                    fullStar4.setVisible(true);
+                case 3:
+                    fullStar3.setVisible(true);
+                case 2:
+                    fullStar2.setVisible(true);
+                case 1:
+                    fullStar1.setVisible(true);
+            }
         }
     }
 }
