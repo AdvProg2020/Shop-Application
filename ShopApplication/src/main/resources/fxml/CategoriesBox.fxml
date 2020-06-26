@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" stylesheets="@../css/CategoriesBox.css"
@@ -11,9 +10,6 @@
             <padding>
                 <Insets bottom="30.0" left="50.0" right="70.0" top="30.0"/>
             </padding>
-            <children>
-                <Button id="category-button" fx:id="allProductsBTN" mnemonicParsing="false" text="All products"/>
-            </children>
             <BorderPane.margin>
                 <Insets bottom="20.0" top="20.0"/>
             </BorderPane.margin>
