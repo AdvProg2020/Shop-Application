@@ -30,6 +30,7 @@ T:  SellerAddProduct
 
 
 --------------------
+T: rating in buy log
 A: personal info image not loading.
 A: rating in buy log
 M: unit test (login procedure)

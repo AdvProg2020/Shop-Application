@@ -214,11 +214,12 @@ public class Controllers {
                             }
                         }
                         PersonalInfoMenuController.current.update();
-                        discardBTN.getScene().getWindow().hide();
                     } catch (Exceptions.SameAsPreviousValueException ex) {
                         ex.printStackTrace();
                     } catch (Exceptions.InvalidFieldException ex) {
                         ex.printStackTrace();
+                    } finally {
+                        discardBTN.getScene().getWindow().hide();
                     }
                 }
             });
@@ -6330,7 +6331,7 @@ public class Controllers {
         private Button existingProductBTN;
 
         public static void display() {
-            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addProductPage1, 700, 500);
+            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addProductPage1, 600, 450);
         }
 
         @Override
@@ -6495,6 +6496,12 @@ public class Controllers {
             initChoiceBox();
             initValues();
             initActions();
+            initTable();
+        }
+
+        private void initTable() {
+            propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
+            valueCOL.setCellValueFactory(new PropertyValueFactory<>("value"));
         }
 
         private void initAccessControls() {

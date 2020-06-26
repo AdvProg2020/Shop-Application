@@ -521,6 +521,7 @@ public class Controller {
                 if (currentAccount.getImagePath().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
                 currentAccount.setImagePath(newInformation);
+                break;
             default:
                 throw new Exceptions.InvalidFieldException();
         }
