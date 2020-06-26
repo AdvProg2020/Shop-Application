@@ -2451,6 +2451,7 @@ public class Controllers {
 
         public static void display(Stage stage) {
             PopupStage = stage;
+            PopupStage.centerOnScreen();
             PopupStage.setWidth(600);
             PopupStage.setHeight(450);
             PopupStage.setResizable(false);
@@ -2676,6 +2677,7 @@ public class Controllers {
             initVisibilities();
             initListeners();
             initActions();
+            initPasswordStuff();
         }
 
         private void initTexts() {
