@@ -1719,7 +1719,14 @@ public class Controllers {
         }
 
         private void initTable() {
-
+            try {
+                HashMap<String, String> propertyMap = mainController.getPropertyValuesOfAProduct(productId);
+                for (String s : propertyMap.keySet()) {
+                    properties.getItems().add(new PropertyWrapper(s, propertyMap.get(s)));
+                }
+            }  catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
         }
 
         private void initVisibility() {
@@ -1798,16 +1805,35 @@ public class Controllers {
             saveBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        if (nameFieldChanged.get())
-                            sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
-                        if (brandFieldChanged.get())
-                            sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
-                        if (imageFieldChanged.get())
-                            sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
-                        if (countFieldChanged.get())
-                            sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
-                        if (priceFieldChanged.get())
-                            sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
+                        ArrayList<String> changed =
+                                properties.getItems().stream().filter(PropertyWrapper::hasChanged).map(c -> c.property + "," + c.value.getText()).collect(Collectors.toCollection(ArrayList::new));
+                        if (View.type.get().equals(Constants.sellerUserType)) {
+                            if (nameFieldChanged.get())
+                                sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
+                            if (brandFieldChanged.get())
+                                sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
+                            if (imageFieldChanged.get())
+                                sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
+                            if (countFieldChanged.get())
+                                sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
+                            if (priceFieldChanged.get())
+                                sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
+                            for (String properties : changed) {
+                                sellerController.editProduct(productId, "property", properties);
+                            }
+                        } else {
+                            //admin TODO
+                            if (nameFieldChanged.get())
+                                sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
+                            if (brandFieldChanged.get())
+                                sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
+                            if (imageFieldChanged.get())
+                                sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
+                            if (countFieldChanged.get())
+                                sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
+                            if (priceFieldChanged.get())
+                                sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
+                        }
                         discardBTN.getScene().getWindow().hide();
                     } catch (Exception ex) {
                         printError(ex.getMessage());
