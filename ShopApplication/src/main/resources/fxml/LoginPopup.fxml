@@ -20,7 +20,7 @@
         <Region VBox.vgrow="ALWAYS"/>
         <Label id="header-label" text="Login"/>
         <Region layoutX="10.0" layoutY="319.0" VBox.vgrow="ALWAYS"/>
-        <HBox styleClass="field-box">
+        <HBox alignment="CENTER" styleClass="field-box">
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
@@ -34,7 +34,7 @@
                 </HBox.margin>
             </TextField>
         </HBox>
-        <HBox styleClass="field-box">
+        <HBox alignment="CENTER" styleClass="field-box">
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
