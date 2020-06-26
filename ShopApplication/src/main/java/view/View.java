@@ -134,7 +134,7 @@ public class View extends Application {
 
 
     public static <T> T popupWindow(String title, String fxml, int width, int height) {
-        if (fxml.equals(Constants.FXMLs.adminRegistrationPopup) && mainController.doesExistManager()) {
+        if (fxml.equals(Constants.FXMLs.adminRegistrationPopup) && mainController.doesManagerExist()) {
                 Stage popup = new Stage();
                 popup.setOnCloseRequest(e -> System.exit(-1));
                 popup.initModality(Modality.APPLICATION_MODAL);
@@ -186,6 +186,15 @@ public class View extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        if ( ! mainController.doesManagerExist()) {
+            Controllers.AdminRegistrationPopupController.display();
+        } else {
+            subStart(stage);
+        }
+
+    }
+
+    public static void subStart(Stage stage) {
         View.mainStage = stage;
         stage.setTitle("ShopApplication");
         stage.setOnCloseRequest(event -> {
@@ -201,17 +210,15 @@ public class View extends Application {
         stage.centerOnScreen();
 
 
-        setScene(new Scene(loadFxml(Constants.FXMLs.base)));
+        try {
+            setScene(new Scene(loadFxml(Constants.FXMLs.base)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         setMainPane(Constants.FXMLs.mainMenu);
 
         isManager.bind(
                 Bindings.createBooleanBinding(() -> mainController.isManager(), type)
         );
-
-
-        if (mainController.doesExistManager()) {
-            Controllers.AdminRegistrationPopupController.display();
-        }
-
     }
 }
