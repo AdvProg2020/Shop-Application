@@ -1822,17 +1822,15 @@ public class Controllers {
                                 sellerController.editProduct(productId, "property", properties);
                             }
                         } else {
-                            //admin TODO
                             if (nameFieldChanged.get())
-                                sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
+                                adminController.editNameOfProduct(productId, productInfo[1] = nameField.getText());
                             if (brandFieldChanged.get())
-                                sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
+                                adminController.editBrandOfProduct(productId, productInfo[2] = brandField.getText());
                             if (imageFieldChanged.get())
-                                sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
-                            if (countFieldChanged.get())
-                                sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
-                            if (priceFieldChanged.get())
-                                sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
+                                adminController.editImageOfProduct(productId,  productInfo[8] = imageField.getText());
+                            for (String properties : changed) {
+                                adminController.editPropertyOfProduct(productId,  properties);
+                            }
                         }
                         discardBTN.getScene().getWindow().hide();
                     } catch (Exception ex) {
