@@ -1188,7 +1188,6 @@ public class Controllers {
         }
     }
 
-    //TODO: category tree HBox
     public static class ProductsMenuController {
 
         @FXML
@@ -1902,6 +1901,14 @@ public class Controllers {
         @FXML
         private BorderPane borderPane;
 
+        @FXML
+        private Label soldOutLBL;
+
+        @FXML
+        private Label salePercentageLBL;
+
+
+
         private String[] productPack;
         private String[] subProductPack;
         private ArrayList<PropertyWrapper> properties;
@@ -2097,10 +2104,21 @@ public class Controllers {
         private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
             priceBeforeLBL.setText(subProductPack[7]);
-            if (!subProductPack[7].equals(subProductPack[8]))
+            if (!subProductPack[7].equals(subProductPack[8])){
                 priceAfterLBL.setText(subProductPack[8]);
-            else
+            } else{
                 priceAfterLBL.setText("");
+            }
+            if( subProductPack[11] != null){
+                salePercentageLBL.setVisible(true);
+                salePercentageLBL.setText(subProductPack[11] + "%");
+            }else {
+                salePercentageLBL.setVisible(false);
+            }
+            if( Integer.parseInt(subProductPack[9]) == 0){
+                soldOutLBL.setVisible(false);
+            }else
+                soldOutLBL.setVisible(true);
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
             updateShowOfButtons();
             updateBuyersTable();

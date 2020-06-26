@@ -29,14 +29,14 @@
                                                         <Image url="@../img/default-product-pic.png" />
                                                     </image>
                                                 </ImageView>
-                                                <Label id="sale-percentage-label" text="50%">
+                                                <Label id="sale-percentage-label" fx:id="salePercentageLBL" text="50%">
                                                     <StackPane.margin>
                                                         <Insets left="10.0" top="10.0" />
                                                     </StackPane.margin>
                                                 </Label>
                                             </children>
                                         </StackPane>
-                                        <Label id="available-label" text="SOLD OUT!" />
+                                        <Label id="available-label" fx:id="soldOutLBL" text="SOLD OUT!" />
                                     </children>
                                 </VBox>
                                 <Button id="compare-button" fx:id="compareBTN" mnemonicParsing="false" text="Compare" />
