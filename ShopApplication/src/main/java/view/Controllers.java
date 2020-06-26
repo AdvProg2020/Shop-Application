@@ -1578,10 +1578,16 @@ public class Controllers {
         private Label emailErrLBL;
 
         @FXML
+        private Label priceLBL;
+
+        @FXML
         private TextField priceField;
 
         @FXML
         private Label priceError;
+
+        @FXML
+        private Label countLBL;
 
         @FXML
         private TextField countField;
@@ -1590,7 +1596,13 @@ public class Controllers {
         private Label countError;
 
         @FXML
-        private Label errorLBL;
+        private TableView<PropertyWrapper> properties;
+
+        @FXML
+        private TableColumn<PropertyWrapper, String> propertyCOL;
+
+        @FXML
+        private TableColumn<PropertyWrapper, TextField> valueCOL;
 
         @FXML
         private Button saveBTN;
@@ -1599,10 +1611,7 @@ public class Controllers {
         private Button discardBTN;
 
         @FXML
-        private Label priceLBL;
-
-        @FXML
-        private Label countLBL;
+        private Label errorLBL;
 
         String productId;
         String subProductId;
