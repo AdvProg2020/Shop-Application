@@ -42,11 +42,10 @@ M: unit test (login procedure)
 M: add font
 T: sold out -> product box
 A & M: Compare is back baby!
-M & A: purchase confirmation popup
+A: purchase confirmation popup
 T: AddReviewPopup
 T: product menu debug
 
-hasBought in reviewBox
 A: admin edit product popup
 A: text area listener
 
