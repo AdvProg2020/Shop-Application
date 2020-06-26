@@ -32,7 +32,6 @@ T & A: adminCategoryManagingPopup remove property from a category
 
 
 --------------------
-A: personal info image not loading.
 T: rating in buy log
 M: unit test (login procedure)
 M: add font
