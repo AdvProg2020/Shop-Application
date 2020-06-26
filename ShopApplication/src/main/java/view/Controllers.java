@@ -972,9 +972,9 @@ public class Controllers {
 
     public static class AddSaleRequestPopupController {
         @FXML
-        private TableView<String> products;
+        private TableView<MyStringWrapper> products;
         @FXML
-        private TableColumn<String, String> nameBrandCOL;
+        private TableColumn<MyStringWrapper, String> nameBrandCOL;
         @FXML
         private Label errorLBL;
         @FXML
@@ -992,6 +992,18 @@ public class Controllers {
 
         String[] primaryDetails;
         String[] secondaryDetails;
+
+        public class MyStringWrapper {
+            String content;
+
+            public MyStringWrapper(String content) {
+                this.content = content;
+            }
+
+            public String getContent() {
+                return content;
+            }
+        }
 
         public static void display(String requestId) {
             ((AddSaleRequestPopupController)
@@ -1026,10 +1038,10 @@ public class Controllers {
         }
 
         private void initTable() {
-            nameBrandCOL.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue()));
+            nameBrandCOL.setCellValueFactory(new PropertyValueFactory<>("content"));
+
             try {
-                ObservableList<String> items = FXCollections.observableArrayList(
-                        (Collection<? extends String>) adminController.getProductsInSaleRequest(primaryDetails[0]).stream().map(p -> p[1] + " - " + p[2]).collect(Collectors.toCollection(ArrayList::new)));
+                products.getItems().addAll(adminController.getProductsInSaleRequest(primaryDetails[0]).stream().map(s -> s[1] + " - " + s[2]).map(MyStringWrapper::new).collect(Collectors.toCollection(ArrayList::new)));
             } catch (Exceptions.InvalidRequestIdException e) {
                 e.printStackTrace();
             }
@@ -1497,8 +1509,14 @@ public class Controllers {
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
             subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
             image.setImage(new Image("file:" + (subProductInfo[6].startsWith("src") ? Constants.base + "/": "")  + subProductInfo[6]));
-            priceBefore.setText(subProductInfo[7]);
-            priceAfter.setText(subProductInfo[8]);
+            if (subProductInfo[7].equals(subProductInfo[8])) {
+                priceBefore.setVisible(false);
+                priceAfter.setText(subProductInfo[7]);
+            } else {
+                priceBefore.setText(subProductInfo[7]);
+                priceAfter.setText(subProductInfo[8]);
+                priceBefore.setVisible(true);
+            }
             if (subProductInfo[11] != null) {
                 sale.setText(subProductInfo[11] + "%");
             } else
@@ -1685,6 +1703,7 @@ public class Controllers {
                 priceField.setVisible(false);
                 countField.setVisible(false);
             }
+
             imageField.setEditable(false);
             category.setEditable(false);
 
@@ -3527,12 +3546,14 @@ public class Controllers {
                 removeBTN.getStyleClass().add("remove-button");
 
                 removeBTN.setOnAction(e -> {
-                    try {
-                        adminController.removePropertyFromACategory(category.name.get(), this.property);
-                        properties.getItems().remove(this);
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        ex.printStackTrace();
+                    if (category != null) {
+                        try {
+                            adminController.removePropertyFromACategory(category.name.get(), this.property);
+                        } catch (Exceptions.InvalidCategoryException ex) {
+                            ex.printStackTrace();
+                        }
                     }
+                    properties.getItems().remove(this);
                 });
             }
 
@@ -3659,7 +3680,7 @@ public class Controllers {
             subCategoryCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
             subCategoryRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
             propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
-            productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            propertyRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
 
             initTableItems();
         }
@@ -5325,10 +5346,10 @@ public class Controllers {
                 printError("Invalid discount code! use only characters, digits and _ .");
                 return false;
             } else if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) >= 100) {
-                printError("Invalid percentage! enter a floating point number less than 100!");
+                printError("Invalid percentage! enter a number less than 100!");
                 return false;
             } else if (!maxField.getText().matches(Constants.doublePattern)) {
-                printError("Invalid maximum amount! enter a floating point number (ex. 40.5)");
+                printError("Invalid maximum amount! enter a number (ex. 40.5)");
                 return false;
             } else if (startDate.getValue() == null) {
                 printError("Please enter a valid starting date");
@@ -5753,7 +5774,7 @@ public class Controllers {
 
         private boolean validateFields() {
             if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) >= 100) {
-                printError("Invalid percentage! enter a floating point number less than 100!");
+                printError("Invalid percentage! enter a number less than 100!");
                 return false;
             } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! (ex. 25.75)");
