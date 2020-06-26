@@ -506,7 +506,8 @@ public class AdminController {
         if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
         }else {
-
+            String[] keyValue = newProperty.split(",");
+            product.setProperty(keyValue[0], keyValue[1]);
         }
     }
 
