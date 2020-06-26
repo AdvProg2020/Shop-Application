@@ -2871,7 +2871,7 @@ public class Controllers {
 
     public static class AdminProductManagingMenu implements Initializable {
         @FXML
-        private TableView<ProductWrapper> productsTable;
+        private TableView<ProductWrapper> products;
 
         @FXML
         private TableColumn<ProductWrapper, String> idCol;
@@ -2919,7 +2919,7 @@ public class Controllers {
                 removeBTN.setOnAction(e -> {
                     try {
                         adminController.removeProduct(id);
-                        productsTable.getItems().remove(this);
+                        products.getItems().remove(this);
                     } catch (Exceptions.InvalidProductIdException ex) {
                         ex.printStackTrace();
                     }
@@ -2970,7 +2970,7 @@ public class Controllers {
 
         private void initItems() {
             var allProducts = adminController.manageAllProducts().stream().map(ProductWrapper::new).collect(Collectors.toCollection(ArrayList::new));
-            productsTable.getItems().setAll(allProducts);
+            products.getItems().setAll(allProducts);
         }
     }
 
