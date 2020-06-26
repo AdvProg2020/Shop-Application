@@ -1342,11 +1342,19 @@ public class Controllers {
         }
 
         private void setChoiceBoxesValues() {
-            ArrayList<String> brands = (ArrayList<String>) products.stream().map(p -> p[3]).collect(Collectors.toList());
-            filterBrand.getItems().addAll(brands);
+            HashSet<String> sellersSet = new HashSet<>();
+            HashSet<String> brandSet = new HashSet<>();
+            for (String[] product : products) {
+                try {
+                    sellersSet.addAll(mainController.subProductsOfAProduct(product[0]).stream().map(e -> e[12]).collect(Collectors.toList()));
+                } catch (Exceptions.InvalidProductIdException e) {
+                    e.printStackTrace();
+                }
+                brandSet.add(product[3]);
+            }
 
-            ArrayList<String> sellers = (ArrayList<String>) products.stream().map(p -> p[12]).collect(Collectors.toList());
-            filterSeller.getItems().addAll(sellers);
+            filterBrand.getItems().addAll(new ArrayList<>(brandSet));
+            filterSeller.getItems().addAll(new ArrayList<>(sellersSet));
 
             ArrayList<String> sorts = new ArrayList<>();
             sorts.add("view count");
