@@ -470,8 +470,7 @@ public class AdminController {
             throw new Exceptions.InvalidCategoryException(categoryName);
         }else if( category.hasProperty(property)){
             throw new Exceptions.ExistingPropertyException(property);
-        }else {
+        }else
             category.addProperty(property);
-        }
     }
 }
