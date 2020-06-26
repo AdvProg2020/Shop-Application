@@ -2289,6 +2289,7 @@ public class Controllers {
         }
 
         private void compare() {
+            ProductsMenuController.displayACategoryProductsToCompare(productPack[7], productPack[0]);
         }
 
         private void addReview() {
