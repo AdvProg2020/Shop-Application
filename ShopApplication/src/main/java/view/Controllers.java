@@ -1271,7 +1271,7 @@ public class Controllers {
             }
         }
 
-        private void initPageObjects(){
+        private void initPageObjects() {
             initActions();
             initPropertyFilters();
             initCategoryTree();
@@ -1279,7 +1279,7 @@ public class Controllers {
             initChoiceBoxes();
         }
 
-        private void setValuesOfPageObjects(){
+        private void setValuesOfPageObjects() {
             update();
             setChoiceBoxesValues();
             setSliderBounds();
@@ -1301,7 +1301,7 @@ public class Controllers {
             }
         }
 
-        private void initChoiceBoxes(){
+        private void initChoiceBoxes() {
             filterSeller.getItems().add("");
             filterSeller.getSelectionModel().select(0);
             filterBrand.getItems().add("");
@@ -1328,7 +1328,7 @@ public class Controllers {
 
         }
 
-        private void setSliderBounds(){
+        private void setSliderBounds() {
             setMaxPrice();
             maxPriceSlider.setMax(maximumAvailablePrice);
             minPriceSlider.setMax(maximumAvailablePrice);
@@ -1363,19 +1363,6 @@ public class Controllers {
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
             }
-        }
-
-        //TODO: creat each row and column , with hGap and vGap, you can give ID to control them
-        private void setPaneSize(int numberOfRows) {
-
-//            if (numberOfRows > currentRowsNumber) {
-//                productsPane.addRow(numberOfRows - currentRowsNumber);
-//            }
-//            new GridPane(12, 12)
-//            if (numberOfColumns > currentColumnsNumber) {
-//                productsPane.addColumn(numberOfColumns - currentColumnsNumber);
-//            }
-
         }
 
         private void setFilterPropertiesPaneSize(int numberOfColumns) {
@@ -1521,11 +1508,11 @@ public class Controllers {
             image.setImage(new Image("file:" + Constants.base + subProductInfo[6]));
             priceBefore.setText(subProductInfo[7]);
             priceAfter.setText(subProductInfo[8]);
-            if(subProductInfo[11] != null){
-                sale.setText(subProductInfo[11] +"%");
-            }else
+            if (subProductInfo[11] != null) {
+                sale.setText(subProductInfo[11] + "%");
+            } else
                 sale.setVisible(false);
-            if(subProductInfo[10] != null){
+            if (subProductInfo[10] != null) {
                 try {
                     Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
                     LocalDate now = LocalDate.now();
@@ -1538,7 +1525,7 @@ public class Controllers {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 remainingDateBox.setVisible(false);
             }
             available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
@@ -1550,7 +1537,7 @@ public class Controllers {
             p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
         }
 
-        private void initRatingStars(double rating){
+        private void initRatingStars(double rating) {
             fullStar1.setVisible(rating >= 1);
             fullStar2.setVisible(rating >= 2);
             fullStar3.setVisible(rating >= 3);
@@ -2353,7 +2340,7 @@ public class Controllers {
         }
     }
 
-    public static class AddReviewPopupController implements Initializable{
+    public static class AddReviewPopupController implements Initializable {
         @FXML
         private Button sendReviewBTN;
 
@@ -3633,7 +3620,7 @@ public class Controllers {
             addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
-            addPropertyHB.setVisible( ! isDetail);
+            addPropertyHB.setVisible(!isDetail);
             if (!isDetail) {
                 tableTabPane.getTabs().removeAll(subCategoriesTAB, productsTAB);
             }
@@ -3959,7 +3946,7 @@ public class Controllers {
             String imagePath;
             String subProductId;
             String productId;
-            Button nameBrandSeller;
+            Label nameBrandSeller;
             double unitPrice;
             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
             TextField countField;
@@ -3978,7 +3965,7 @@ public class Controllers {
             public SubProductWrapper(String id, String productId, String nameBrandSeller, double unitPrice, int count, String imagePath) {
                 this.subProductId = id;
                 this.productId = productId;
-                this.nameBrandSeller = new Button(nameBrandSeller);
+                this.nameBrandSeller = new Label(nameBrandSeller);
                 this.unitPrice = unitPrice;
                 this.countProperty.set(count);
                 this.imagePath = imagePath;
@@ -4022,7 +4009,7 @@ public class Controllers {
                     }
                 });
 
-                this.nameBrandSeller.setOnAction(e -> ProductDetailMenuController.display(productId, subProductId, false));
+                this.nameBrandSeller.setOnMouseClicked(e -> ProductDetailMenuController.display(productId, subProductId, false));
 
                 increaseBTN.getStyleClass().add("increase-button");
                 decreaseBTN.getStyleClass().add("decrease-button");
@@ -4033,6 +4020,7 @@ public class Controllers {
                 countGroup.getChildren().addAll(countField, increaseBTN, decreaseBTN);
 
             }
+
 
             public ImageView getImg() {
                 return img;
@@ -4046,7 +4034,7 @@ public class Controllers {
                 return productId;
             }
 
-            public Button getNameBrandSeller() {
+            public Label getNameBrandSeller() {
                 return nameBrandSeller;
             }
 
@@ -4094,7 +4082,7 @@ public class Controllers {
         private TableColumn<SubProductWrapper, ImageView> imageCOL;
 
         @FXML
-        private TableColumn<SubProductWrapper, String> productName;
+        private TableColumn<SubProductWrapper, Label> productName;
 
         @FXML
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
@@ -4189,10 +4177,25 @@ public class Controllers {
         }
 
         private void initCols() {
+            /**
+             * ImageView img;
+             *             String imagePath;
+             *             String subProductId;
+             *             String productId;
+             *             Button nameBrandSeller;
+             *             double unitPrice;
+             *             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
+             *             TextField countField;
+             *             HBox countGroup = new HBox();
+             *             Button increaseBTN = new Button();
+             *             Button decreaseBTN = new Button();
+             *             SimpleDoubleProperty totalPrice;
+             *             Button remove = new Button();
+             */
             imageCOL.setCellValueFactory(new PropertyValueFactory<>("img"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-            count.setCellValueFactory(new PropertyValueFactory<>("count"));
+            count.setCellValueFactory(new PropertyValueFactory<>("countField"));
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
@@ -4317,7 +4320,7 @@ public class Controllers {
 
         private boolean validateFields() {
             boolean valid = true;
-            if ( ! receiverName.getText().matches(Constants.IRLNamePattern)) {
+            if (!receiverName.getText().matches(Constants.IRLNamePattern)) {
                 nameError.setText("Invalid name!");
                 valid = false;
             } else nameError.setText("");
@@ -4332,7 +4335,7 @@ public class Controllers {
                 valid = false;
             } else addressError.setText("");
 
-            if ( ! validateDiscount()) valid = false;
+            if (!validateDiscount()) valid = false;
 
             return valid;
         }
