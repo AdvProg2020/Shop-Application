@@ -692,7 +692,7 @@ public class Controllers {
 
             info[7] = info[7].replaceAll("\\\\", "/");
 
-            accountIMG.setImage(new Image("file:" + info[7]));
+            accountIMG.setImage(new Image("file:" + (info[7].startsWith("src") ? Constants.base + "/": "")  + info[7]));
         }
 
 
@@ -972,9 +972,9 @@ public class Controllers {
 
     public static class AddSaleRequestPopupController {
         @FXML
-        private TableView<String> products;
+        private TableView<MyStringWrapper> products;
         @FXML
-        private TableColumn<String, String> nameBrandCOL;
+        private TableColumn<MyStringWrapper, String> nameBrandCOL;
         @FXML
         private Label errorLBL;
         @FXML
@@ -992,6 +992,18 @@ public class Controllers {
 
         String[] primaryDetails;
         String[] secondaryDetails;
+
+        public class MyStringWrapper {
+            String content;
+
+            public MyStringWrapper(String content) {
+                this.content = content;
+            }
+
+            public String getContent() {
+                return content;
+            }
+        }
 
         public static void display(String requestId) {
             ((AddSaleRequestPopupController)
@@ -1026,10 +1038,10 @@ public class Controllers {
         }
 
         private void initTable() {
-            nameBrandCOL.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue()));
+            nameBrandCOL.setCellValueFactory(new PropertyValueFactory<>("content"));
+
             try {
-                ObservableList<String> items = FXCollections.observableArrayList(
-                        (Collection<? extends String>) adminController.getProductsInSaleRequest(primaryDetails[0]).stream().map(p -> p[1] + " - " + p[2]).collect(Collectors.toCollection(ArrayList::new)));
+                products.getItems().addAll(adminController.getProductsInSaleRequest(primaryDetails[0]).stream().map(s -> s[1] + " - " + s[2]).map(MyStringWrapper::new).collect(Collectors.toCollection(ArrayList::new)));
             } catch (Exceptions.InvalidRequestIdException e) {
                 e.printStackTrace();
             }
@@ -1511,9 +1523,16 @@ public class Controllers {
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
-            image.setImage(new Image("file:" + Constants.base + subProductInfo[6]));
-            priceBefore.setText(subProductInfo[7]);
-            priceAfter.setText(subProductInfo[8]);
+            subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
+            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("src") ? Constants.base + "/": "")  + subProductInfo[6]));
+            if (subProductInfo[7].equals(subProductInfo[8])) {
+                priceBefore.setVisible(false);
+                priceAfter.setText(subProductInfo[7]);
+            } else {
+                priceBefore.setText(subProductInfo[7]);
+                priceAfter.setText(subProductInfo[8]);
+                priceBefore.setVisible(true);
+            }
             if (subProductInfo[11] != null) {
                 sale.setText(subProductInfo[11] + "%");
             } else
@@ -1596,10 +1615,16 @@ public class Controllers {
         private Label emailErrLBL;
 
         @FXML
+        private Label priceLBL;
+
+        @FXML
         private TextField priceField;
 
         @FXML
         private Label priceError;
+
+        @FXML
+        private Label countLBL;
 
         @FXML
         private TextField countField;
@@ -1608,7 +1633,13 @@ public class Controllers {
         private Label countError;
 
         @FXML
-        private Label errorLBL;
+        private TableView<PropertyWrapper> properties;
+
+        @FXML
+        private TableColumn<PropertyWrapper, String> propertyCOL;
+
+        @FXML
+        private TableColumn<PropertyWrapper, TextField> valueCOL;
 
         @FXML
         private Button saveBTN;
@@ -1617,10 +1648,7 @@ public class Controllers {
         private Button discardBTN;
 
         @FXML
-        private Label priceLBL;
-
-        @FXML
-        private Label countLBL;
+        private Label errorLBL;
 
         String productId;
         String subProductId;
@@ -1694,6 +1722,7 @@ public class Controllers {
                 priceField.setVisible(false);
                 countField.setVisible(false);
             }
+
             imageField.setEditable(false);
             category.setEditable(false);
 
@@ -1996,7 +2025,7 @@ public class Controllers {
             ProductDetailMenuController controller;
             if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
                 controller = ((ProductDetailMenuController)
-                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 600));
+                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 950));
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));
@@ -2144,7 +2173,10 @@ public class Controllers {
             productInfoTXT.setText(productPack[3]);
             ratingCountLBL.setText(productPack[5]);
             categoryLBL.setText(productPack[7]);
-            productIMG.setImage(new Image("file:" + Constants.base + productPack[8]));
+
+            productPack[8] = productPack[8].replaceAll("\\\\", "/");
+            productIMG.setImage(new Image("file:" + (productPack[8].startsWith("src") ? Constants.base + "/": "")  + productPack[8]));
+
             initRatingStars();
         }
 
@@ -3541,12 +3573,14 @@ public class Controllers {
                 removeBTN.getStyleClass().add("remove-button");
 
                 removeBTN.setOnAction(e -> {
-                    try {
-                        adminController.removePropertyFromACategory(category.name.get(), this.property);
-                        properties.getItems().remove(this);
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        ex.printStackTrace();
+                    if (category != null) {
+                        try {
+                            adminController.removePropertyFromACategory(category.name.get(), this.property);
+                        } catch (Exceptions.InvalidCategoryException ex) {
+                            ex.printStackTrace();
+                        }
                     }
+                    properties.getItems().remove(this);
                 });
             }
 
@@ -3673,7 +3707,7 @@ public class Controllers {
             subCategoryCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
             subCategoryRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
             propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
-            productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            propertyRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
 
             initTableItems();
         }
@@ -3938,17 +3972,6 @@ public class Controllers {
         private Button addProductBTN;
     }
 
-    public static class SellerLogMenuController implements Initializable {
-        public static void display() {
-            View.setMainPane(Constants.FXMLs.sellerSellLogsManagingMenu);
-        }
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-
-        }
-    }
-
     //add product detail menu
     public static class ShoppingCartMenuController implements Initializable {
 
@@ -3958,18 +3981,18 @@ public class Controllers {
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
         public class SubProductWrapper {
-            ImageView img;
+            ImageView img= new ImageView();
             String imagePath;
             String subProductId;
             String productId;
             Label nameBrandSeller;
             double unitPrice;
             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
-            TextField countField;
+            TextField countField = new TextField();
             HBox countGroup = new HBox();
             Button increaseBTN = new Button();
             Button decreaseBTN = new Button();
-            SimpleDoubleProperty totalPrice;
+            SimpleDoubleProperty totalPrice = new SimpleDoubleProperty();
             Button remove = new Button();
 
             public SubProductWrapper(String[] productInCartPack) {
@@ -3991,15 +4014,17 @@ public class Controllers {
                 View.addListener(countField, "[0-9]");
                 countProperty.addListener(((observable, oldValue, newValue) -> {
                     if (newValue.intValue() > oldValue.intValue()) {
+                        if (oldValue.intValue() == 0) return;
                         try {
                             mainController.increaseProductInCart(this.subProductId, newValue.intValue() - oldValue.intValue());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
-                        int n = newValue.intValue() == 0 ? 1 : newValue.intValue();
+                        if (newValue.intValue() == 0) ((IntegerProperty) observable).set(1);
+
                         try {
-                            mainController.decreaseProductInCart(this.subProductId, n - oldValue.intValue());
+                            mainController.decreaseProductInCart(this.subProductId, oldValue.intValue() - newValue.intValue());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -4008,7 +4033,8 @@ public class Controllers {
 
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
-                img.setImage(new Image("file:" + Constants.base + imagePath));
+                imagePath = imagePath.replaceAll("\\\\", "/");
+                img.setImage(new Image("file:" + (imagePath.startsWith("src") ? Constants.base + "/" : "/")  + imagePath));
 
 
                 initButtons();
@@ -4104,7 +4130,7 @@ public class Controllers {
         private TableColumn<SubProductWrapper, Double> productUnitPrice;
 
         @FXML
-        private TableColumn<SubProductWrapper, SimpleIntegerProperty> count;
+        private TableColumn<SubProductWrapper, HBox> count;
 
         @FXML
         private TableColumn<SubProductWrapper, SimpleDoubleProperty> totalPrice;
@@ -4185,6 +4211,7 @@ public class Controllers {
         private void iniTable() {
             initCols();
 
+            subProducts.clear();
             for (String[] cartProduct : cartProducts) {
                 subProducts.add(new SubProductWrapper(cartProduct));
             }
@@ -4211,7 +4238,7 @@ public class Controllers {
             imageCOL.setCellValueFactory(new PropertyValueFactory<>("img"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-            count.setCellValueFactory(new PropertyValueFactory<>("countField"));
+            count.setCellValueFactory(new PropertyValueFactory<>("countGroup"));
             totalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
@@ -5346,10 +5373,10 @@ public class Controllers {
                 printError("Invalid discount code! use only characters, digits and _ .");
                 return false;
             } else if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) >= 100) {
-                printError("Invalid percentage! enter a floating point number less than 100!");
+                printError("Invalid percentage! enter a number less than 100!");
                 return false;
             } else if (!maxField.getText().matches(Constants.doublePattern)) {
-                printError("Invalid maximum amount! enter a floating point number (ex. 40.5)");
+                printError("Invalid maximum amount! enter a number (ex. 40.5)");
                 return false;
             } else if (startDate.getValue() == null) {
                 printError("Please enter a valid starting date");
@@ -5774,7 +5801,7 @@ public class Controllers {
 
         private boolean validateFields() {
             if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) >= 100) {
-                printError("Invalid percentage! enter a floating point number less than 100!");
+                printError("Invalid percentage! enter a number less than 100!");
                 return false;
             } else if (!maxField.getText().matches(Constants.doublePattern)) {
                 printError("Invalid maximum amount! (ex. 25.75)");
@@ -6706,5 +6733,112 @@ public class Controllers {
                 }
             });
         }
+    }
+
+    public static class CompareMenuController {
+
+        @FXML
+        private GridPane productProperties;
+
+        @FXML
+        private Label brand1;
+
+        @FXML
+        private Label brand2;
+
+        @FXML
+        private Label category1;
+
+        @FXML
+        private Label category2;
+
+        @FXML
+        private Label rating1;
+
+        @FXML
+        private Label rating2;
+
+        @FXML
+        private ImageView image1;
+
+        @FXML
+        private ImageView image2;
+
+        @FXML
+        private Label maxPrice2;
+
+        @FXML
+        private Label minPrice2;
+
+        @FXML
+        private Label maxPrice1;
+
+        @FXML
+        private Label minPrice1;
+
+        @FXML
+        private Label name2;
+
+        @FXML
+        private Label name1;
+
+        private String[] firstProductInfo;
+        private String[] secondProductInfo;
+
+        public static void display(String firstProductId, String secondProductId) {
+            ((CompareMenuController) View.popupWindow("Compare menu", Constants.FXMLs.compareMenu, 500, 620)).initialize(firstProductId, secondProductId);
+        }
+
+        private void initialize(String firstProductId, String secondProductId) {
+            try {
+                firstProductInfo = mainController.digest(firstProductId);
+                secondProductInfo = mainController.digest(secondProductId);
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
+
+            initValues();
+            initProperties();
+        }
+
+        private void initValues() {
+            name1.setText(firstProductInfo[1]);
+            name2.setText(secondProductInfo[1]);
+            brand1.setText(firstProductInfo[2]);
+            brand2.setText(secondProductInfo[2]);
+            category1.setText(firstProductInfo[7]);
+            category2.setText(secondProductInfo[7]);
+            rating1.setText(firstProductInfo[4]);
+            rating2.setText(secondProductInfo[4]);
+            minPrice1.setText(firstProductInfo[9]);
+            minPrice2.setText(secondProductInfo[9]);
+            maxPrice1.setText(firstProductInfo[10]);
+            maxPrice2.setText(secondProductInfo[10]);
+
+            firstProductInfo[8] = firstProductInfo[8].replaceAll("\\\\", "/");
+            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("src") ? Constants.base + "/": "")  + firstProductInfo[8]));
+
+            secondProductInfo[8] = secondProductInfo[8].replaceAll("\\\\", "/");
+            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("src") ? Constants.base + "/": "")  + secondProductInfo[8]));
+        }
+
+        private void initProperties() {
+            try {
+                //ArrayList<String> properties = mainController.getPropertiesOfCategory(firstProductInfo[7], true);
+                HashMap<String, String> firstValues = mainController.getPropertyValuesOfAProduct(firstProductInfo[0]);
+                HashMap<String, String> secondValues = mainController.getPropertyValuesOfAProduct(secondProductInfo[0]);
+                int index = 0;
+                for (String property : firstValues.keySet()) {
+                    var firstWrapper = new Label(firstValues.get(property));
+                    var secondWrapper = new Label(secondValues.get(property));
+                    var propertyWrapper = new Label(property);
+                    productProperties.addRow(7 + index,firstWrapper , propertyWrapper, secondWrapper);
+                }
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 }

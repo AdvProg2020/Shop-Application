@@ -46,3 +46,6 @@ M & T: product info text area.
 M: unit test (login procedure)
 A: admin product managing menu
 M: change colors to blue
+A: seller product managing menu
+M: info area for product details menu
+M: fix logo pls :(
