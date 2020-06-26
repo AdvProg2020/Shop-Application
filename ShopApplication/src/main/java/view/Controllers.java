@@ -1180,11 +1180,11 @@ public class Controllers {
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
             for (String[] subProductPack : mainController.getSubProductsForAdvertisements(6)) {
-                advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack));
+                advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack, true));
             }
 
             for (String[] subProduct : mainController.getSubProductsInSale(10)) {
-                productsInSale.getChildren().add(ProductBoxController.createBox(subProduct));
+                productsInSale.getChildren().add(ProductBoxController.createBox(subProduct, true));
             }
 
             allSales.setOnAction(e -> salesMenu());
@@ -1360,7 +1360,7 @@ public class Controllers {
             scrollPane.setContent(productsPane);
             int index = 0;
             for (String[] subProductPack : products) {
-                Parent productBox = ProductBoxController.createBox(subProductPack);
+                Parent productBox = ProductBoxController.createBox(subProductPack, true);
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
             }
@@ -1474,17 +1474,17 @@ public class Controllers {
         @FXML
         private HBox remainingDateBox;
 
-
         private String[] subProduct;
 
-        public static Parent createBox(String[] subProduct) {
+
+        public static Parent createBox(String[] subProduct, boolean show) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
             Parent p;
             try {
                 p = loader.load();
                 ProductBoxController pbc = loader.getController();
                 pbc.setInfo(subProduct);
-                pbc.setAction(p);
+                pbc.setAction(p, show);
                 return p;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1523,8 +1523,10 @@ public class Controllers {
             initRatingStars(Double.parseDouble(subProductInfo[4]));
         }
 
-        private void setAction(Parent p) {
-            p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
+        //TODO: else: compare
+        private void setAction(Parent p, boolean show) {
+            if(show)
+                p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
         }
 
         private void initRatingStars(double rating) {
