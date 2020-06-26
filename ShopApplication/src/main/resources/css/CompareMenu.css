@@ -1,0 +1,81 @@
+* {
+    table-color-1: #29292D;
+    table-color-2: green;
+    text-color-1: white;
+    text-color-2: lightgrey;
+    -fx-background-color: white;
+}
+
+#bg-pane {
+    -fx-background-color: white;
+}
+
+#heading-box {
+    -fx-background-color: table-color-2;
+    -fx-background-radius: 5 5 5 5;
+}
+
+#heading-label {
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-text-fill: text-color-1;
+    -fx-background-color: table-color-2;
+}
+
+
+.property-label {
+    -fx-background-color: derive(table-color-1, 10%);
+    -fx-text-fill: text-color-2;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-min-width: 150;
+    -fx-min-height: 50;
+    -fx-border-color: text-color-2;
+    -fx-border-width: 1 0 1 0;
+}
+
+.value-label {
+    -fx-font-size: 14;
+    -fx-font-style: italic;
+}
+
+.scroll-pane {
+    -fx-background-color: white;
+}
+
+.scroll-pane .increment-button, .scroll-pane .decrement-button {
+
+    -fx-background-radius: 2em;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 2 0 0 0;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-radius: 2em;
+    -fx-border-radius: 2em;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(table-color-2, 90%);
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
+}
+
+.scroll-pane .scroll-bar:horizontal { /* hide */
+    -fx-opacity: 0;
+
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
+
+.pane {
+    -fx-background-color: white;
+}
