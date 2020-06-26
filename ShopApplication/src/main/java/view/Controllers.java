@@ -689,7 +689,11 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            accountIMG.setImage(new Image("file:" + Constants.base + info[7]));
+            if (info[7].contains(Constants.base)) {
+                info[7] = info[7].replace(Constants.base, "");
+            }
+
+            accountIMG.setImage(new Image(info[7]));
         }
 
 
@@ -5916,9 +5920,6 @@ public class Controllers {
 
         @FXML
         private TableColumn<SellLogWrapper, Button> detailsCOL;
-
-        @FXML
-        private Label errorLBL;
 
         private ArrayList<SellLogWrapper> allSellLogs = new ArrayList<>();
 

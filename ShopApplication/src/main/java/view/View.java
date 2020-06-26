@@ -117,12 +117,16 @@ public class View extends Application {
         Parent p;
         String fxml = stackTrace.get(stackSize.get() - 1);
         try {
-            p = loadFxml(fxml);
+            if (fxml.equals(Constants.FXMLs.personalInfoMenu)) {
+                Controllers.PersonalInfoMenuController.display(null);
+            } else {
+                p = loadFxml(fxml);
+                Controllers.BaseController.setMainPane(p);
+            }
         } catch (IOException e) {
             System.out.println("could not load " + fxml + ".fxml");
             return;
         }
-        Controllers.BaseController.setMainPane(p);
     }
 
 
