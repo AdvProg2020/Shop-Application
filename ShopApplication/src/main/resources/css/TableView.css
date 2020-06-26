@@ -79,13 +79,17 @@
 }
 
 .table-view .cell {
-    -fx-cell-size: 60;
+    -fx-cell-size: 60px;
     -fx-alignment: center;
     -fx-background-color: table-color-1;
     -fx-text-fill: text-color-2;
     -fx-border-color: darkgrey;
     -fx-border-width: 0 0 0 0.2;
     -fx-font-size: 14;
+}
+
+.table-view .table-row-cell {
+    -fx-cell-size: 60px;
 }
 
 
