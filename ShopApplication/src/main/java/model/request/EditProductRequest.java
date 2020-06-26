@@ -32,6 +32,9 @@ public class EditProductRequest extends Request implements SellerRequest {
             case INFO_TEXT:
                 product.setInfoText(newValue);
                 break;
+            case IMAGE_PATH:
+                product.setImagePath(newValue);
+                break;
             case SUB_PRICE:
                 subProduct.setPrice(Double.parseDouble(newValue));
                 break;
@@ -80,6 +83,7 @@ public class EditProductRequest extends Request implements SellerRequest {
         NAME,
         BRAND,
         INFO_TEXT,
+        IMAGE_PATH,
         PROPERTY,
         SUB_PRICE,
         SUB_COUNT
