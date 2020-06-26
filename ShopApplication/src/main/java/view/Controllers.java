@@ -2365,15 +2365,13 @@ public class Controllers {
         @FXML
         private Label didntBuyLBL;
 
-        private String[] review;
-
         public static Parent createReviewBox(String[] reviewPack) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.reviewBox + ".fxml"));
             Parent p;
             try {
                 p = loader.load();
                 ReviewBoxController rbc = loader.getController();
-                rbc.setInfo();
+                rbc.setInfo(reviewPack);
                 return p;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2381,7 +2379,7 @@ public class Controllers {
             }
         }
 
-        private void setInfo() {
+        private void setInfo(String[] review) {
             nameLBL.setText(review[0]);
             titleLBL.setText(review[1]);
             text.setText(review[2]);
@@ -2415,6 +2413,7 @@ public class Controllers {
             if (title.getText() != null && text.getText() != null) {
                 try {
                     mainController.addReview(productId, title.getText(), text.getText());
+                    title.getScene().getWindow().hide();
                 } catch (Exceptions.InvalidProductIdException | Exceptions.NotLoggedInException e) {
                     e.printStackTrace();
                 }
