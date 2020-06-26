@@ -217,11 +217,12 @@ public class Controllers {
                             }
                         }
                         PersonalInfoMenuController.current.update();
-                        discardBTN.getScene().getWindow().hide();
                     } catch (Exceptions.SameAsPreviousValueException ex) {
                         ex.printStackTrace();
                     } catch (Exceptions.InvalidFieldException ex) {
                         ex.printStackTrace();
+                    } finally {
+                        discardBTN.getScene().getWindow().hide();
                     }
                 }
             });
@@ -692,17 +693,11 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            if (info[7].contains(Constants.base)) {
-                info[7] = info[7].replace(Constants.base + "\\" , "");
-            }
-            if (info[7].contains( "src/main/resources")) {
-                info[7] = info[7].replace("src/main/resources", "");
-            }
-            if (info[7].contains( "src\\main\\resources")) {
-                info[7] = info[7].replace("src\\main\\resources", "");
-            }
 
-            accountIMG.setImage(new Image(info[7]));
+            info[7] = info[7].replaceAll("\\\\", "/");
+
+
+            accountIMG.setImage(new Image("file:" + info[7]));
         }
 
 
