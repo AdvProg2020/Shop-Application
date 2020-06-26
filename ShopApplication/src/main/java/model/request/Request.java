@@ -32,8 +32,8 @@ public abstract class Request implements ModelBasic {
         return archive;
     }
 
-    public static Request getRequestById(String requestId) {
-        return ModelUtilities.getInstanceById(allRequests, requestId);
+    public static Request getRequestById(String requestId, boolean... suspense) {
+        return ModelUtilities.getInstanceById(allRequests, requestId, suspense);
     }
 
     @Override

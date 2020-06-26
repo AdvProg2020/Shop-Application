@@ -15,7 +15,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -285,7 +284,7 @@ public class AdminController {
     }
 
     public ArrayList<String[]> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
-        Request request = Request.getRequestById(requestId);
+        Request request = Request.getRequestById(requestId, false);
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
         else {
@@ -441,7 +440,7 @@ public class AdminController {
     }
 
     public HashMap<String,String> getPropertyValuesOfAProductInARequest(String requestId) throws Exceptions.InvalidRequestIdException {
-        Request request = Request.getRequestById(requestId);
+        Request request = Request.getRequestById(requestId, false);
         if( request == null || !request.getClass().getSimpleName().equals("AddProductRequest")){
             throw new Exceptions.InvalidRequestIdException(requestId);
         }else {
@@ -450,7 +449,7 @@ public class AdminController {
     }
 
     public ArrayList<String[]> getProductsInSaleRequest(String requestId) throws Exceptions.InvalidRequestIdException {
-        Request request = Request.getRequestById(requestId);
+        Request request = Request.getRequestById(requestId, false);
         if( request == null || !request.getClass().getSimpleName().equals("AddSaleRequest")){
             throw new Exceptions.InvalidRequestIdException(requestId);
         }else {
