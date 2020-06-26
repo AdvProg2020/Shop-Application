@@ -6498,7 +6498,7 @@ public class Controllers {
         private boolean exists;
 
         public static void display(String name, String brand, String productId) {
-            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 1000, 600)).initialize(name, brand, productId);
+            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 1300, 600)).initialize(name, brand, productId);
         }
 
         private void initialize(String name, String brand, String productId) {
