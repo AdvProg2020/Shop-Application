@@ -1242,13 +1242,13 @@ public class Controllers {
         private ChoiceBox<String> filterSeller;
 
         @FXML
-        private GridPane propertyFilters;
-
-        @FXML
         private ScrollPane scrollPane;
 
         @FXML
         private BorderPane borderPane;
+
+        @FXML
+        private ScrollPane propertiesScrollPane;
 
 
         private static final int numberOfColumns = 3;
@@ -1290,11 +1290,12 @@ public class Controllers {
                 ArrayList<String> propertyKeys = mainController.getPropertiesOfCategory(categoryName, false);
                 int numberOfProperties = propertyKeys.size();
                 int numberOfColumns = numberOfProperties / 3 + (numberOfProperties % 3 == 0 ? 0 : 1);
-                setFilterPropertiesPaneSize(numberOfColumns);
+                GridPane propertyFilters = new GridPane();
+                propertiesScrollPane.setContent(propertyFilters);
                 for (String propertyKey : propertyKeys) {
                     VBox propertyBox = creatPropertyChoiceBox(propertyKey);
                     int propertyIndex = propertyKeys.indexOf(propertyKey);
-                    propertyFilters.add(propertyBox, propertyIndex / 3, propertyIndex % 3, 1, 1);
+                    propertyFilters.add(propertyBox, propertyIndex / 3, propertyIndex % 3);
                 }
             } catch (Exceptions.InvalidCategoryException e) {
                 e.printStackTrace();
@@ -1353,7 +1354,6 @@ public class Controllers {
         }
 
         private void updatePane() {
-            int numberOfProducts = products.size();
             var productsPane = new GridPane();
             scrollPane.setContent(productsPane);
             int index = 0;
@@ -1361,19 +1361,6 @@ public class Controllers {
                 Parent productBox = ProductBoxController.createBox(subProductPack);
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
-            }
-        }
-
-        private void setFilterPropertiesPaneSize(int numberOfColumns) {
-            propertyFilters = new GridPane();
-            int currentRowsNumber = propertyFilters.getRowCount();
-            int currentColumnsNumber = propertyFilters.getColumnCount();
-            if (numberOfColumns > currentColumnsNumber) {
-                propertyFilters.addColumn(numberOfColumns - currentColumnsNumber);
-            }
-
-            if (currentRowsNumber < 3) {
-                propertyFilters.addRow(3 - currentRowsNumber);
             }
         }
 
