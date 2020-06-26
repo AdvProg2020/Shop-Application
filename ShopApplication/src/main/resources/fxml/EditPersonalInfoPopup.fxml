@@ -69,12 +69,12 @@
                 <Label fx:id="emailError" styleClass="message-label" textFill="RED" />
             </VBox>
             <VBox GridPane.rowIndex="4">
-                <Label styleClass="property-label" text="Balance:" />
+                <Label fx:id="balanceKeyLBL" styleClass="property-label" text="Balance:" />
                 <TextField fx:id="balance" styleClass="property-box" />
                 <Label fx:id="balanceError" styleClass="message-label" textFill="RED" />
             </VBox>
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Label styleClass="property-label" text="Store name:" />
+                <Label fx:id="storeNameKeyLBL" styleClass="property-label" text="Store name:" />
                 <TextField fx:id="storeName" styleClass="property-box" />
                 <Label fx:id="storeNameError" styleClass="message-label" textFill="RED" />
             </VBox>

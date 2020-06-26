@@ -123,6 +123,11 @@ public class Controllers {
         @FXML
         private Button discardBTN;
 
+        @FXML
+        private Label balanceKeyLBL;
+        @FXML
+        private Label storeNameKeyLBL;
+
         private String[] info;
         private SimpleBooleanProperty passwordChanged = new SimpleBooleanProperty(false);
         private SimpleBooleanProperty firstNameChanged = new SimpleBooleanProperty(false);
@@ -134,7 +139,7 @@ public class Controllers {
         private SimpleBooleanProperty storeNameChanged = new SimpleBooleanProperty(false);
 
         public static void display() {
-            View.popupWindow("Edit Personal Info", Constants.FXMLs.editPersonalInfoPopup, 400, 500);
+            View.popupWindow("Edit Personal Info", Constants.FXMLs.editPersonalInfoPopup, 550, 600);
         }
 
         @Override
@@ -163,8 +168,14 @@ public class Controllers {
             balanceError.setVisible(false);
             storeNameError.setVisible(false);
             imageField.setEditable(false);
-            if (View.type.get().equals(Constants.adminUserType)) balance.setVisible(false);
-            if (!View.type.get().equals(Constants.sellerUserType)) storeName.setVisible(false);
+            if (View.type.get().equals(Constants.adminUserType)) {
+                balanceKeyLBL.setVisible(false);
+                balance.setVisible(false);
+            }
+            if (!View.type.get().equals(Constants.sellerUserType)) {
+                storeNameKeyLBL.setVisible(false);
+                storeName.setVisible(false);
+            }
         }
 
         private void initButtons() {
@@ -206,7 +217,7 @@ public class Controllers {
                             }
                         }
                         PersonalInfoMenuController.current.update();
-                        discardBTN.fire();
+                        discardBTN.getScene().getWindow().hide();
                     } catch (Exceptions.SameAsPreviousValueException ex) {
                         ex.printStackTrace();
                     } catch (Exceptions.InvalidFieldException ex) {
@@ -271,6 +282,7 @@ public class Controllers {
         }
 
         private void initValues() {
+            usernameField.setText(info[0]);
             passwordField.setText(info[1]);
             imageField.setText(info[7]);
             firstName.setText(info[3]);
@@ -448,23 +460,6 @@ public class Controllers {
             }
         }
 
-        /**
-         * edit product
-         * edit sale
-         * add product
-         * add sale
-         * add review
-         * add seller
-         * <p>
-         * product detail :
-         * add to cart and edit
-         * price store name; default ya na.
-         * <p>
-         * felan: admin edit nadarad.
-         * <p>
-         * admin: popup if managing va main pane if products menu
-         * admin edit darad. price and count ra nemitavanad.
-         */
         public class DiscountWrapper {
             String code, endDate;
             String percentage, maximumAmount;
@@ -562,7 +557,7 @@ public class Controllers {
         }
 
         private void initialize(String username, boolean isPopup) {
-            this.current = current;
+            current = this;
             this.isPopup = isPopup;
             this.username = username;
             try {
@@ -2370,7 +2365,6 @@ public class Controllers {
     }
 
     public static class AddReviewPopupController implements Initializable{
-        private static Stage PopupStage;
         @FXML
         private Button sendReviewBTN;
 
@@ -2425,7 +2419,6 @@ public class Controllers {
     }
 
     public static class LoginPopupController implements Initializable {
-        private static Stage PopupStage;
 
         @FXML
         private ImageView usernameIcon;
@@ -2454,24 +2447,8 @@ public class Controllers {
         @FXML
         private Hyperlink registerLink;
 
-        public static void display(Stage stage) {
-            PopupStage = stage;
-            PopupStage.centerOnScreen();
-            PopupStage.setWidth(600);
-            PopupStage.setHeight(450);
-            PopupStage.setResizable(false);
-            try {
-                PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.loginPopup)));
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            try {
-                PopupStage.initModality(Modality.APPLICATION_MODAL);
-            } catch (Exception ignored) {
-
-            }
-            PopupStage.show();
+        public static void display() {
+            View.popupWindow("Login Menu", Constants.FXMLs.loginPopup, 600, 450);
         }
 
         @Override
@@ -2505,15 +2482,17 @@ public class Controllers {
                     mainController.login(username, password);
                     View.type.set(mainController.getType());
                     if (!View.type.get().equals(Constants.customerUserType)) MainMenuController.display();
-
-                    PopupStage.close();
+                    registerLink.getScene().getWindow().hide();
                 } catch (Exceptions.UsernameDoesntExistException | Exceptions.WrongPasswordException ex) {
                     errorLBL.setText("invalid username or password");
                     errorLBL.setTextFill(Color.RED);
                     ex.printStackTrace();
                 }
             });
-            registerLink.setOnAction(e -> RegisterPopupController.display(PopupStage));
+            registerLink.setOnAction(e -> {
+                RegisterPopupController.display();
+                registerLink.getScene().getWindow().hide();
+            });
         }
 
         private void initPasswordStuff() {
@@ -2524,7 +2503,6 @@ public class Controllers {
     }
 
     public static class RegisterPopupController implements Initializable {
-        private static Stage PopupStage;
 
         @FXML
         private TextField customerUsername;
@@ -2664,16 +2642,8 @@ public class Controllers {
         @FXML
         private Hyperlink sellerLoginHL;
 
-        public static void display(Stage stage) {
-            PopupStage = stage;
-            PopupStage.setWidth(1000);
-            PopupStage.setHeight(700);
-            try {
-                PopupStage.setScene(new Scene(View.loadFxml(Constants.FXMLs.registerPopup)));
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+        public static void display() {
+            View.popupWindow("Register Menu", Constants.FXMLs.registerPopup, 1000, 700);
         }
 
         @Override
@@ -2740,7 +2710,7 @@ public class Controllers {
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
                                 customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
-                        LoginPopupController.display(PopupStage);
+                        LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         customerUsernameError.setText("sorry! username already taken");
                         customerUsernameError.setVisible(true);
@@ -2755,7 +2725,8 @@ public class Controllers {
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
                                 sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), customerImageField.getText());
-                        LoginPopupController.display(PopupStage);
+                        sellerLoginHL.getScene().getWindow().hide();
+                        LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         sellerUsernameError.setText("sorry! username already taken");
                         sellerUsernameError.setVisible(true);
@@ -2764,8 +2735,14 @@ public class Controllers {
                     }
                 }
             });
-            sellerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
-            customerLoginHL.setOnAction(e -> LoginPopupController.display(PopupStage));
+            sellerLoginHL.setOnAction(e -> {
+                sellerLoginHL.getScene().getWindow().hide();
+                LoginPopupController.display();
+            });
+            customerLoginHL.setOnAction(e -> {
+                sellerLoginHL.getScene().getWindow().hide();
+                LoginPopupController.display();
+            });
 
             customerBrowseBTN.setOnAction(e -> chooseFile(customerImageField));
             sellerBrowseBTN.setOnAction(e -> chooseFile(sellerImageField));
@@ -4153,7 +4130,7 @@ public class Controllers {
                     errorLBL.setText("Cart is empty!");
                 } else if (View.type.get().equals(Constants.anonymousUserType)) {
                     errorLBL.setText("Login First!");
-                    LoginPopupController.display(new Stage());
+                    LoginPopupController.display();
                 } else {
                     PurchaseMenuController.display();
                 }
@@ -6260,7 +6237,7 @@ public class Controllers {
         private void initActions() {
             logoBTN.setOnAction(e -> MainMenuController.display());
             accountBTN.setOnAction(e -> PersonalInfoMenuController.display(null));
-            loginBTN.setOnAction(e -> LoginPopupController.display(new Stage()));
+            loginBTN.setOnAction(e -> LoginPopupController.display());
             cartBTN.setOnAction(e -> ShoppingCartMenuController.display());
             searchBTN.setOnAction(e -> search(searchField.getText()));
             manageBTN.setOnAction(e -> {
