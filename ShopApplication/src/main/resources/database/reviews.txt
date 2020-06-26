@@ -1,2 +1,0 @@
-{"reviewId":"REV2005260001","reviewerId":"CST2005260001","productId":"PRO2005260001","title":"test","text":"pls work","bought":false}
-{"reviewId":"REV2005260002","reviewerId":"CST2005260001","productId":"PRO2005260001","title":"test","text":"pls work","bought":false}

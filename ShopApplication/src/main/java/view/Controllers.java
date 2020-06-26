@@ -690,7 +690,7 @@ public class Controllers {
 
             info[7] = info[7].replaceAll("\\\\", "/");
 
-            accountIMG.setImage(new Image("file:" + (info[7].startsWith("src") ? Constants.base + "/": "")  + info[7]));
+            accountIMG.setImage(new Image("file:" + (info[7].startsWith("/src") ? Constants.base: "")  + info[7]));
         }
 
 
@@ -1528,7 +1528,7 @@ public class Controllers {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
             subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
-            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("src") ? Constants.base + "/": "")  + subProductInfo[6]));
+            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("/src") ? Constants.base : "")  + subProductInfo[6]));
             if (subProductInfo[7].equals(subProductInfo[8])) {
                 priceBefore.setVisible(false);
                 priceAfter.setText(subProductInfo[7] + "$");
@@ -2210,7 +2210,7 @@ public class Controllers {
             categoryLBL.setText(productPack[7]);
 
             productPack[8] = productPack[8].replaceAll("\\\\", "/");
-            productIMG.setImage(new Image("file:" + (productPack[8].startsWith("src") ? Constants.base + "/": "")  + productPack[8]));
+            productIMG.setImage(new Image("file:" + (productPack[8].startsWith("/src") ? Constants.base: "")  + productPack[8]));
 
             initRatingStars();
         }
@@ -4100,7 +4100,7 @@ public class Controllers {
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
                 imagePath = imagePath.replaceAll("\\\\", "/");
-                img.setImage(new Image("file:" + (imagePath.startsWith("src") ? Constants.base + "/" : "/")  + imagePath));
+                img.setImage(new Image("file:" + (imagePath.startsWith("/src") ? Constants.base : "/")  + imagePath));
 
 
                 initButtons();
@@ -5051,7 +5051,7 @@ public class Controllers {
 
 
         public static void display() {
-            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 1000, 700);
+             View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 1000, 700);
         }
 
 
@@ -5086,11 +5086,13 @@ public class Controllers {
             adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        boolean bootUp = mainController.doesExistManager();
+                        boolean bootUp = !mainController.doesManagerExist();
                         adminController.creatAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
                                 adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
-                        if (!bootUp) {
+                        if ( ! bootUp) {
                             AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
+                        } else {
+                            View.subStart(new Stage());
                         }
                         adminUsername.getScene().getWindow().hide();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -6883,10 +6885,10 @@ public class Controllers {
             maxPrice2.setText(secondProductInfo[10]);
 
             firstProductInfo[8] = firstProductInfo[8].replaceAll("\\\\", "/");
-            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("src") ? Constants.base + "/": "")  + firstProductInfo[8]));
+            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("/src") ? Constants.base : "")  + firstProductInfo[8]));
 
             secondProductInfo[8] = secondProductInfo[8].replaceAll("\\\\", "/");
-            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("src") ? Constants.base + "/": "")  + secondProductInfo[8]));
+            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("/src") ? Constants.base : "")  + secondProductInfo[8]));
         }
 
         private void initProperties() {

@@ -79,8 +79,8 @@ public class Controller {
         return (currentAccount != null) && currentAccount == Admin.getManager();
     }
 
-    public boolean doesExistManager() {
-        return Admin.getManager() == null;
+    public boolean doesManagerExist() {
+        return Admin.getManager() != null;
     }
 
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
