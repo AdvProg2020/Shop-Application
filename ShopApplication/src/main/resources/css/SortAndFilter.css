@@ -102,6 +102,17 @@
     -fx-padding: 5 20 5 20;
 }
 
+.scroll-pane {
+    -fx-background-color: white;
+    -fx-control-inner-background: white;
+
+}
+
+.scroll-pane .view-port {
+    -fx-background-color: white;
+
+}
+
 .scroll-pane .increment-button, .scroll-pane .decrement-button {
     -fx-background-color: #29292D;
     -fx-background-radius: 2em;

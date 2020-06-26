@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -1315,12 +1316,14 @@ public class Controllers {
                 GridPane propertyFilters = new GridPane();
                 propertyFilters.setVgap(10);
                 propertyFilters.setHgap(20);
+                propertyFilters.setAlignment(Pos.CENTER);
+                propertyFilters.setPadding(new Insets(5, 5, 5, 5));
                 propertiesScrollPane.setContent(propertyFilters);
                 int propertyIndex = 0;
                 for (String propertyKey : propertyKeys) {
                     VBox propertyBox = creatPropertyChoiceBox(propertyKey);
                     propertyFilters.add(propertyBox, propertyIndex / 3, propertyIndex % 3);
-                    propertyIndex ++;
+                    propertyIndex++;
                 }
             } catch (Exceptions.InvalidCategoryException e) {
                 e.printStackTrace();
@@ -1403,9 +1406,11 @@ public class Controllers {
 
         private VBox creatPropertyChoiceBox(String property) {
             VBox vBox = new VBox();
-            vBox.getChildren().add(new Label(property));
+            vBox.setAlignment(Pos.CENTER);
+            vBox.setSpacing(5);
             ChoiceBox<String> choiceBox = new ChoiceBox<>();
-            //choiceBox.getStylesheets().add("@../");
+            vBox.getChildren().addAll(new Label(property), choiceBox);
+            choiceBox.getStylesheets().add(View.class.getResource("/css/ChoiceBox.css").toString());
             try {
                 ArrayList<String> propertyValues = mainController.getPropertyValuesInCategory(categoryName, property);
                 choiceBox.getItems().add("");
