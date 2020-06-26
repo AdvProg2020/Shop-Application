@@ -24,12 +24,12 @@
 .text-field {
     -fx-background-color: transparent;
     -fx-focus-color: transparent;
-    -fx-font-style: italic;
+    -fx-font-size: 14;
+    -fx-font-family: "MV Boli";
     -fx-background-radius: 40 40 40 40;
 }
 
 .field-box {
-    -fx-font-size: 14;
     -fx-background-radius: 40;
     -fx-background-color: whitesmoke;
 }

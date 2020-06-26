@@ -85,8 +85,8 @@
 }
 
 .text-field {
-    -fx-font-style: italic;
     -fx-font-size: 14;
+    -fx-font-family: "MV Boli";
     -fx-background-color: #e9e9e9;
     -fx-border-color: #e0e0e0;
     -fx-border-width: 0.5;

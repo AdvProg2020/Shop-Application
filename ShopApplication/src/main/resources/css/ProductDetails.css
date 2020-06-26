@@ -17,7 +17,7 @@
 #add-to-cart-button {
     -fx-graphic: url("../img/add-to-cart-button.png");
     -fx-text-fill: whitesmoke;
-    -fx-background-color: #009000;
+    -fx-background-color: color-1;
     -fx-font-weight: bold;
     -fx-font-size: 20;
     -fx-padding: 10 30 10 30;
@@ -26,7 +26,7 @@
 #edit-button {
     -fx-graphic: url("../img/edit-button.png");
     -fx-text-fill: whitesmoke;
-    -fx-background-color: #009000;
+    -fx-background-color: color-1;
     -fx-font-weight: bold;
     -fx-font-size: 20;
     -fx-padding: 10 50 10 50;
