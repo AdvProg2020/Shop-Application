@@ -5,7 +5,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,7 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
@@ -1927,7 +1925,7 @@ public class Controllers {
         private Label categoryLBL;
 
         @FXML
-        private TextArea productInfoTXT;
+        private TextArea productInfo;
 
         @FXML
         private Label sellerLBL;
@@ -2207,7 +2205,7 @@ public class Controllers {
         private void initMainObjects() {
             nameLBL.setText(productPack[1]);
             brandLBL.setText(productPack[2]);
-            productInfoTXT.setText(productPack[3]);
+            productInfo.setText(productPack[3]);
             ratingCountLBL.setText(productPack[5]);
             categoryLBL.setText(productPack[7]);
 
@@ -2325,6 +2323,9 @@ public class Controllers {
 
         private void compare() {
             ProductsMenuController.displayACategoryProductsToCompare(productPack[7], productPack[0]);
+            if (editable) {
+                compareBTN.getScene().getWindow().hide();
+            }
         }
 
         private void addReview() {
@@ -6622,15 +6623,16 @@ public class Controllers {
 
         private void initChoiceBox() {
             category.getItems().addAll(sellerController.getAllCategories().stream().map(c -> c[0]).collect(Collectors.toCollection(ArrayList::new)));
-            if (exists) {
-                category.getSelectionModel().select(productId);
-            }
         }
 
         private void initValues() {
             nameField.setText(name);
             brandField.setText(brand);
-            if (exists) infoArea.setText(info[3]);
+            if (exists) {
+                infoArea.setText(info[3]);
+                category.getSelectionModel().select(info[7]);
+            }
+
         }
 
         private void initListeners() {
@@ -6897,7 +6899,7 @@ public class Controllers {
                     var firstWrapper = new Label(firstValues.get(property));
                     var secondWrapper = new Label(secondValues.get(property));
                     var propertyWrapper = new Label(property);
-                    productProperties.addRow(7 + index,firstWrapper , propertyWrapper, secondWrapper);
+                    productProperties.addRow(7 + index++,firstWrapper , propertyWrapper, secondWrapper);
                 }
             } catch (Exceptions.InvalidProductIdException e) {
                 e.printStackTrace();
