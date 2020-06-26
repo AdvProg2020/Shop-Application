@@ -2898,7 +2898,7 @@ public class Controllers {
             View.setMainPane(Constants.FXMLs.adminProductManagingMenu);
         }
 
-        private class ProductWrapper {
+        public class ProductWrapper {
             String id;
             String nameBrand;
             String category;
@@ -2920,11 +2920,32 @@ public class Controllers {
                 removeBTN.setOnAction(e -> {
                     try {
                         adminController.removeProduct(id);
+                        productsTable.getItems().remove(this);
                     } catch (Exceptions.InvalidProductIdException ex) {
                         ex.printStackTrace();
                     }
                 });
                 removeBTN.getStyleClass().add("remove-button");
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getNameBrand() {
+                return nameBrand;
+            }
+
+            public String getCategory() {
+                return category;
+            }
+
+            public Button getDetailBTN() {
+                return detailBTN;
+            }
+
+            public Button getRemoveBTN() {
+                return removeBTN;
             }
         }
 
@@ -2944,6 +2965,13 @@ public class Controllers {
             categoryCOL.setCellValueFactory(new PropertyValueFactory<>("category"));
             detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailBTN"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
+
+            initItems();
+        }
+
+        private void initItems() {
+            var allProducts = adminController.manageAllProducts().stream().map(ProductWrapper::new).collect(Collectors.toCollection(ArrayList::new));
+            productsTable.getItems().setAll(allProducts);
         }
     }
 
