@@ -1242,13 +1242,13 @@ public class Controllers {
         private ChoiceBox<String> filterSeller;
 
         @FXML
-        private GridPane propertyFilters;
-
-        @FXML
         private ScrollPane scrollPane;
 
         @FXML
         private BorderPane borderPane;
+
+        @FXML
+        private ScrollPane propertiesScrollPane;
 
 
         private static final int numberOfColumns = 3;
@@ -1290,11 +1290,12 @@ public class Controllers {
                 ArrayList<String> propertyKeys = mainController.getPropertiesOfCategory(categoryName, false);
                 int numberOfProperties = propertyKeys.size();
                 int numberOfColumns = numberOfProperties / 3 + (numberOfProperties % 3 == 0 ? 0 : 1);
-                setFilterPropertiesPaneSize(numberOfColumns);
+                GridPane propertyFilters = new GridPane();
+                propertiesScrollPane.setContent(propertyFilters);
                 for (String propertyKey : propertyKeys) {
                     VBox propertyBox = creatPropertyChoiceBox(propertyKey);
                     int propertyIndex = propertyKeys.indexOf(propertyKey);
-                    propertyFilters.add(propertyBox, propertyIndex / 3, propertyIndex % 3, 1, 1);
+                    propertyFilters.add(propertyBox, propertyIndex / 3, propertyIndex % 3);
                 }
             } catch (Exceptions.InvalidCategoryException e) {
                 e.printStackTrace();
@@ -1329,9 +1330,11 @@ public class Controllers {
         }
 
         private void setSliderBounds() {
-            setMaxPrice();
-            maxPriceSlider.setMax(maximumAvailablePrice);
-            minPriceSlider.setMax(maximumAvailablePrice);
+            if( products != null){
+                setMaxPrice();
+                maxPriceSlider.setMax(maximumAvailablePrice);
+                minPriceSlider.setMax(maximumAvailablePrice);
+            }
         }
 
         private void initActions() {
@@ -1353,8 +1356,6 @@ public class Controllers {
         }
 
         private void updatePane() {
-            int numberOfProducts = products.size();
-            int numberOfRows = numberOfProducts / numberOfColumns + 1;
             var productsPane = new GridPane();
             scrollPane.setContent(productsPane);
             int index = 0;
@@ -1365,26 +1366,15 @@ public class Controllers {
             }
         }
 
-        private void setFilterPropertiesPaneSize(int numberOfColumns) {
-            propertyFilters = new GridPane();
-            int currentRowsNumber = propertyFilters.getRowCount();
-            int currentColumnsNumber = propertyFilters.getColumnCount();
-            if (numberOfColumns > currentColumnsNumber) {
-                propertyFilters.addColumn(numberOfColumns - currentColumnsNumber);
-            }
-
-            if (currentRowsNumber < 3) {
-                propertyFilters.addRow(3 - currentRowsNumber);
-            }
-        }
-
         private VBox creatPropertyChoiceBox(String property) {
             VBox vBox = new VBox();
             vBox.getChildren().add(new Label(property));
             ChoiceBox<String> choiceBox = new ChoiceBox<>();
             try {
-                HashSet<String> values = new HashSet<>(mainController.getPropertyValuesInCategory(categoryName, property));
-                choiceBox.setItems(FXCollections.observableArrayList(values));
+                ArrayList<String> propertyValues = mainController.getPropertyValuesInCategory(categoryName, property);
+                choiceBox.getItems().add("");
+                choiceBox.getSelectionModel().select(0);
+                choiceBox.getItems().addAll(propertyValues);
             } catch (Exceptions.InvalidCategoryException e) {
                 return null;
             }
@@ -1423,7 +1413,7 @@ public class Controllers {
 
         private Button createCategoryButton(String category) {
             Button button = new Button();
-            button.setText(category + " >");
+            button.setText(category);
             button.setOnAction(e -> ProductsMenuController.display(category, inSale));
             return button;
         }
@@ -2164,7 +2154,6 @@ public class Controllers {
             }
         }
 
-        //TODO: available count in sub product box
         private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
             if (!subProductPack[7].equals(subProductPack[8])) {
@@ -2220,7 +2209,7 @@ public class Controllers {
                 HBox categoryHBox = CategoryTreeBoxController.createBox();
                 if (categoryHBox != null) {
                     for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
-                        categoryHBox.getChildren().add(new Label(s + " >> "));
+                        categoryHBox.getChildren().add(new Label(s ));
                     }
                     categoryHBox.getChildren().add(new Label(productPack[1]));
                     borderPane.setTop(categoryHBox);
