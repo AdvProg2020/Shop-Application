@@ -260,7 +260,7 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
         for (SubProduct subProduct : product.getSubProducts()) {
-            subProducts.add(Utilities.Pack.subProductInProduct(subProduct));
+            subProducts.add(Utilities.Pack.subProduct(subProduct));
         }
         return subProducts;
     }
@@ -573,7 +573,7 @@ public class Controller {
         if (category != null) {
             while (!category.equals(superCategory)) {
                 categoryTree.add(0, category.getName());
-                category.getParent();
+                category = category.getParent();
             }
         }
         return categoryTree;

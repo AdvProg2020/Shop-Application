@@ -1715,6 +1715,18 @@ public class Controllers {
             initBindings();
             initListeners();
             initButtons();
+            initTable();
+        }
+
+        private void initTable() {
+            try {
+                HashMap<String, String> propertyMap = mainController.getPropertyValuesOfAProduct(productId);
+                for (String s : propertyMap.keySet()) {
+                    properties.getItems().add(new PropertyWrapper(s, propertyMap.get(s)));
+                }
+            }  catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
         }
 
         private void initVisibility() {
@@ -1743,6 +1755,7 @@ public class Controllers {
             priceField.setText(subProductInfo[7]);
             countField.setText(subProductInfo[5]);
             infoArea.setText(productInfo[3]);
+            category.setText(productInfo[7]);
 
             usernameErrLBL.setText("Invalid name!");
             passwordErrLBL.setText("Invalid brand!");
@@ -1792,17 +1805,34 @@ public class Controllers {
             saveBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        if (nameFieldChanged.get())
-                            sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
-                        if (brandFieldChanged.get())
-                            sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
-                        if (imageFieldChanged.get())
-                            sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
-                        if (countFieldChanged.get())
-                            sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
-                        if (priceFieldChanged.get())
-                            sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
-                        discardBTN.fire();
+                        ArrayList<String> changed =
+                                properties.getItems().stream().filter(PropertyWrapper::hasChanged).map(c -> c.property + "," + c.value.getText()).collect(Collectors.toCollection(ArrayList::new));
+                        if (View.type.get().equals(Constants.sellerUserType)) {
+                            if (nameFieldChanged.get())
+                                sellerController.editProduct(productId, "name", productInfo[1] = nameField.getText());
+                            if (brandFieldChanged.get())
+                                sellerController.editProduct(productId, "brand", productInfo[2] = brandField.getText());
+                            if (imageFieldChanged.get())
+                                sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
+                            if (countFieldChanged.get())
+                                sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
+                            if (priceFieldChanged.get())
+                                sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
+                            for (String properties : changed) {
+                                sellerController.editProduct(productId, "property", properties);
+                            }
+                        } else {
+                            if (nameFieldChanged.get())
+                                adminController.editNameOfProduct(productId, productInfo[1] = nameField.getText());
+                            if (brandFieldChanged.get())
+                                adminController.editBrandOfProduct(productId, productInfo[2] = brandField.getText());
+                            if (imageFieldChanged.get())
+                                adminController.editImageOfProduct(productId,  productInfo[8] = imageField.getText());
+                            for (String properties : changed) {
+                                adminController.editPropertyOfProduct(productId,  properties);
+                            }
+                        }
+                        discardBTN.getScene().getWindow().hide();
                     } catch (Exception ex) {
                         printError(ex.getMessage());
                         ex.printStackTrace();
@@ -2365,15 +2395,13 @@ public class Controllers {
         @FXML
         private Label didntBuyLBL;
 
-        private String[] review;
-
         public static Parent createReviewBox(String[] reviewPack) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.reviewBox + ".fxml"));
             Parent p;
             try {
                 p = loader.load();
                 ReviewBoxController rbc = loader.getController();
-                rbc.setInfo();
+                rbc.setInfo(reviewPack);
                 return p;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2381,7 +2409,7 @@ public class Controllers {
             }
         }
 
-        private void setInfo() {
+        private void setInfo(String[] review) {
             nameLBL.setText(review[0]);
             titleLBL.setText(review[1]);
             text.setText(review[2]);
@@ -2415,6 +2443,7 @@ public class Controllers {
             if (title.getText() != null && text.getText() != null) {
                 try {
                     mainController.addReview(productId, title.getText(), text.getText());
+                    title.getScene().getWindow().hide();
                 } catch (Exceptions.InvalidProductIdException | Exceptions.NotLoggedInException e) {
                     e.printStackTrace();
                 }
@@ -2872,7 +2901,7 @@ public class Controllers {
 
     public static class AdminProductManagingMenu implements Initializable {
         @FXML
-        private TableView<ProductWrapper> productsTable;
+        private TableView<ProductWrapper> products;
 
         @FXML
         private TableColumn<ProductWrapper, String> idCol;
@@ -2920,7 +2949,7 @@ public class Controllers {
                 removeBTN.setOnAction(e -> {
                     try {
                         adminController.removeProduct(id);
-                        productsTable.getItems().remove(this);
+                        products.getItems().remove(this);
                     } catch (Exceptions.InvalidProductIdException ex) {
                         ex.printStackTrace();
                     }
@@ -2971,7 +3000,7 @@ public class Controllers {
 
         private void initItems() {
             var allProducts = adminController.manageAllProducts().stream().map(ProductWrapper::new).collect(Collectors.toCollection(ArrayList::new));
-            productsTable.getItems().setAll(allProducts);
+            products.getItems().setAll(allProducts);
         }
     }
 
