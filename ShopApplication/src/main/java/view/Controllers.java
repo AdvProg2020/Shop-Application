@@ -2188,10 +2188,13 @@ public class Controllers {
         }
 
         private void addReview() {
+            AddReviewPopupController.display(productPack[0]);
         }
 
         private void rate() {
-
+            ratingsStackPane.getChildren().remove(rateBTN);
+            ratingsBox.setVisible(false);
+            ratingsStackPane.getChildren().add(RatingBoxController.createBox(productPack[0]));
         }
 
         private void initButtons() {
@@ -2225,9 +2228,13 @@ public class Controllers {
                 editBTN.setVisible(false);
             }
 
-            if ((type.equals(Constants.customerUserType)) && ) {
-                rateBTN.setVisible(true);
-            } else rateBTN.setVisible(false);
+            try {
+                if ((type.equals(Constants.customerUserType)) && customerController.hasBought(productPack[0])) {
+                    rateBTN.setVisible(true);
+                } else rateBTN.setVisible(false);
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
 
             if ((type.equals(Constants.customerUserType))) {
                 addReviewBTN.setVisible(true);
