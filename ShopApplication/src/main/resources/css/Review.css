@@ -59,3 +59,24 @@
     -fx-font-size: 14;
     -fx-font-style: italic;
 }
+
+#bought-label {
+    -fx-background-color: green;
+    -fx-background-radius: 20;
+    -fx-text-fill: whitesmoke;
+    -fx-font-size: 10;
+    -fx-font-weight: bold;
+    -fx-padding: 2 7 2 7;
+    -fx-graphic: url("../img/tick.png");
+}
+
+#didnt-buy-label {
+    -fx-background-color: #ff2c42;
+    -fx-background-radius: 20;
+    -fx-text-fill: whitesmoke;
+    -fx-font-size: 10;
+    -fx-font-weight: bold;
+    -fx-padding: 2 7 2 7;
+    -fx-graphic: url("../img/cross.png");
+    -fx-graphic-text-gap: 5px;
+}
