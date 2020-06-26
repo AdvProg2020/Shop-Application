@@ -1,2 +1,3 @@
 {"subProductId":"SBP2005260001","productId":"PRO2005260001","sellerId":"SLR2005260001","price":4235.54,"remainingCount":324,"suspended":false}
 {"subProductId":"SBP2005260002","productId":"PRO2005260002","sellerId":"SLR2005260001","price":432.0,"remainingCount":342,"suspended":true}
+{"subProductId":"SBP2005260003","productId":"PRO2005260001","sellerId":"SLR2005260002","price":342.0,"remainingCount":453,"suspended":false}
