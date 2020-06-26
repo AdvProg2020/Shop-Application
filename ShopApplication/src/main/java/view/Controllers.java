@@ -11,7 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -21,7 +20,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
@@ -34,7 +32,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -1259,17 +1256,8 @@ public class Controllers {
         private String categoryName;
         private boolean inSale = false;
         private double maximumAvailablePrice;
-        private DoubleProperty minPrice;
-        private DoubleProperty maxPrice;
-        private BooleanProperty available;
-        private BooleanProperty isIncreasing;
-        private StringProperty sortBy;
-        private StringProperty name;
-        private StringProperty brand;
-        private StringProperty seller;
         //private ArrayList<String> propertyKeys;
         private HashMap<String, SimpleStringProperty> properties = new HashMap<>();
-        private HashMap<String, ChoiceBox<String>> propertyChoiceBox = new HashMap<>();
 
 
         public static void display(String categoryName, boolean inSale) {
@@ -1277,15 +1265,24 @@ public class Controllers {
             if (controller != null) {
                 controller.categoryName = categoryName;
                 controller.inSale = inSale;
-                controller.initFilterBar();
-                controller.initPropertyFilters();
-                controller.update();
-                controller.initChoiceBoxes();
-                controller.initActions();
-                controller.initSliderBounds();
-                controller.initCategoryTree();
-                controller.initCategoryBox();
+
+                controller.initPageObjects();
+                controller.setValuesOfPageObjects();
             }
+        }
+
+        private void initPageObjects(){
+            initActions();
+            initPropertyFilters();
+            initCategoryTree();
+            initCategoryBox();
+            initChoiceBoxes();
+        }
+
+        private void setValuesOfPageObjects(){
+            update();
+            setChoiceBoxesValues();
+            setSliderBounds();
         }
 
         private void initPropertyFilters() {
@@ -1304,60 +1301,31 @@ public class Controllers {
             }
         }
 
-        private void initChoiceBoxes() {
+        private void initChoiceBoxes(){
+            filterSeller.getItems().add("");
+            filterBrand.getItems().add("");
+            sortByChoiceBox.getItems().add("");
+        }
+
+        private void setChoiceBoxesValues() {
             ArrayList<String> brands = (ArrayList<String>) products.stream().map(p -> p[3]).collect(Collectors.toList());
-            brands.add(null);
-            HashSet<String> b = new HashSet<>(brands);
-            filterBrand.setItems(FXCollections.observableArrayList(b));
+            filterBrand.getItems().addAll(brands);
 
             ArrayList<String> sellers = (ArrayList<String>) products.stream().map(p -> p[12]).collect(Collectors.toList());
-            sellers.add(null);
-            HashSet<String> s = new HashSet<>(sellers);
-            filterSeller.setItems(FXCollections.observableArrayList(s));
+            filterSeller.getItems().addAll(sellers);
 
             ArrayList<String> sorts = new ArrayList<>();
-            sorts.add(null);
             sorts.add("view count");
             sorts.add("price");
             sorts.add("name");
             sorts.add("rating score");
             sorts.add("category name");
             sorts.add("remaining count");
-            HashSet<String> availableSorts = new HashSet<>(sorts);
-            sortByChoiceBox.setItems(FXCollections.observableArrayList(availableSorts));
+            sortByChoiceBox.getItems().addAll(sorts);
 
         }
 
-        private void initFilterBar() {
-            minPrice = new SimpleDoubleProperty();
-            minPrice.bind(minPriceSlider.valueProperty());
-
-            maxPrice = new SimpleDoubleProperty();
-            maxPrice.bind(maxPriceSlider.valueProperty());
-
-            available = new SimpleBooleanProperty();
-            available.bind(availableCheckBox.selectedProperty());
-
-            isIncreasing = new SimpleBooleanProperty();
-            isIncreasing.bind(isIncreasingButton.selectedProperty());
-
-            sortBy = new SimpleStringProperty();
-            sortBy.bind(sortByChoiceBox.valueProperty());
-
-            name = new SimpleStringProperty();
-            name.bind(filterName.textProperty());
-
-            brand = new SimpleStringProperty();
-            brand.bind(filterBrand.valueProperty());
-
-            seller = new SimpleStringProperty();
-            seller.bind(filterSeller.valueProperty());
-
-
-            //properties
-        }
-
-        private void initSliderBounds(){
+        private void setSliderBounds(){
             setMaxPrice();
             maxPriceSlider.setMax(maximumAvailablePrice);
             minPriceSlider.setMax(maximumAvailablePrice);
@@ -1377,8 +1345,8 @@ public class Controllers {
             for (String s : properties.keySet()) {
                 propertyValues.put(s, properties.get(s).getValue());
             }
-            products = mainController.sortFilterProducts(categoryName, inSale, sortBy.getValue(), isIncreasing.getValue(), available.getValue(),
-                    minPrice.getValue(), maxPrice.getValue(), name.getValue(), brand.getValue(), seller.getValue(), 0, propertyValues);
+            products = mainController.sortFilterProducts(categoryName, inSale, sortByChoiceBox.getValue(), isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
+                    minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), filterSeller.getValue(), 0, propertyValues);
         }
 
         private void updatePane() {
