@@ -16,8 +16,8 @@ public class Rating implements ModelBasic {
     private int score; // 1 - 5
 
     public Rating(String customerId, String productId, int score) {
-        this.customerId = customerId;
         this.productId = productId;
+        this.customerId = customerId;
         this.score = score;
         initialize();
     }
@@ -37,7 +37,12 @@ public class Rating implements ModelBasic {
         allRatings.put(ratingId, this);
         lastNum++;
 
+        Rating oldRating = getProduct().getRatingByCustomerId(customerId);
+        if (oldRating != null)
+            getProduct().removeRating(oldRating.getId());
+
         getProduct().addRating(ratingId);
+
     }
 
     @ModelOnly
