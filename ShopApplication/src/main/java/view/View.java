@@ -165,6 +165,7 @@ public class View extends Application {
                 System.out.println("could not load " + fxml + ".fxml");
             }
             popup.setScene(new Scene(parent));
+            popup.initModality(Modality.APPLICATION_MODAL);
             popup.show();
             return loader.getController();
         }
