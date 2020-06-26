@@ -482,4 +482,49 @@ public class AdminController {
             category.removeProperty(property);
         }
     }
+
+    public void editBrandOfProduct(String productId, String newBrand) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+
+        }
+    }
+
+    public void editImageOfProduct(String productId, String newImage) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+
+        }
+    }
+
+    public void editPropertyOfProduct(String productId, String newProperty) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+
+        }
+    }
+
+    public void editInfoTextOfProduct(String productId, String newInfoText) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+
+        }
+    }
+
+    public void editNameOfProduct(String productId, String newName) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            product.setName(newName);
+        }
+    }
 }
