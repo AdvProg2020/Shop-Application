@@ -1354,7 +1354,6 @@ public class Controllers {
 
         private void updatePane() {
             int numberOfProducts = products.size();
-            int numberOfRows = numberOfProducts / numberOfColumns + 1;
             var productsPane = new GridPane();
             scrollPane.setContent(productsPane);
             int index = 0;
@@ -2157,7 +2156,6 @@ public class Controllers {
             }
         }
 
-        //TODO: available count in sub product box
         private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
             if (!subProductPack[7].equals(subProductPack[8])) {
@@ -2213,7 +2211,7 @@ public class Controllers {
                 HBox categoryHBox = CategoryTreeBoxController.createBox();
                 if (categoryHBox != null) {
                     for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
-                        categoryHBox.getChildren().add(new Label(s + " >> "));
+                        categoryHBox.getChildren().add(new Label(s ));
                     }
                     categoryHBox.getChildren().add(new Label(productPack[1]));
                     borderPane.setTop(categoryHBox);
