@@ -1533,10 +1533,10 @@ public class Controllers {
             image.setImage(new Image("file:" + (subProductInfo[6].startsWith("src") ? Constants.base + "/": "")  + subProductInfo[6]));
             if (subProductInfo[7].equals(subProductInfo[8])) {
                 priceBefore.setVisible(false);
-                priceAfter.setText(subProductInfo[7]);
+                priceAfter.setText(subProductInfo[7] + "$");
             } else {
-                priceBefore.setText(subProductInfo[7]);
-                priceAfter.setText(subProductInfo[8]);
+                priceBefore.setText(subProductInfo[7] + "$");
+                priceAfter.setText(subProductInfo[8] + "$");
                 priceBefore.setVisible(true);
             }
             if (subProductInfo[11] != null) {
@@ -2246,12 +2246,12 @@ public class Controllers {
         private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
             if (!subProductPack[7].equals(subProductPack[8])) {
-                priceBeforeLBL.setText(subProductPack[7]);
-                priceAfterLBL.setText(subProductPack[8]);
+                priceBeforeLBL.setText(subProductPack[7] + "$");
+                priceAfterLBL.setText(subProductPack[8] + "$");
                 priceBeforeLBL.setVisible(true);
             } else {
                 priceBeforeLBL.setVisible(false);
-                priceAfterLBL.setText(subProductPack[7]);
+                priceAfterLBL.setText(subProductPack[7] + "$");
             }
             if (subProductPack[11] != null) {
                 salePercentageLBL.setVisible(true);
