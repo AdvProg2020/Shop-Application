@@ -4111,6 +4111,25 @@ public class Controllers {
     }
 
 
+    public static class PurchaseConfirmationController {
+
+        @FXML
+        private Label priceLBL;
+
+        @FXML
+        private Button dismissBTN;
+
+        public static void display(String totalPrice) {
+            ((PurchaseConfirmationController) View.popupWindow("Purchase confirmation", Constants.FXMLs.purchaseConfirmation, 380, 190)).initialize(totalPrice);
+        }
+
+        private void initialize(String totalPrice) {
+            priceLBL.setText(totalPrice);
+            dismissBTN.setOnAction(e -> dismissBTN.getScene().getWindow().hide());
+        }
+    }
+
+
     public static class PurchaseMenuController implements Initializable {
         @FXML
         private TextField receiverName;
@@ -4142,6 +4161,9 @@ public class Controllers {
         @FXML
         private Button purchaseBTN;
 
+        @FXML
+        private Label addressError;
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.purchaseMenu);
         }
@@ -4151,26 +4173,31 @@ public class Controllers {
             initButtons();
             initBindings();
             initListeners();
+
         }
 
         private void initButtons() {
             purchaseBTN.setOnAction(e -> {
-                try {
-                    discountError.setText("");
-                    customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText());
-                    mainController.clearCart();
-                    View.goBack();
-                } catch (Exceptions.InsufficientCreditException ex) {
-                    ex.printStackTrace();
-                } catch (Exceptions.NotAvailableSubProductsInCart notAvailableSubProductsInCart) {
-                    notAvailableSubProductsInCart.printStackTrace();
-                } catch (Exceptions.InvalidDiscountException ex) {
-                    discountError.setText("Invalid discount code!");
-                    ex.printStackTrace();
-                } catch (Exceptions.EmptyCartException ex) {
-                    ex.printStackTrace();
+                if (validateFields()) {
+                    try {
+                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText());
+                        PurchaseConfirmationController.display(totalPrice.getText());
+                        View.goBack();
+                    } catch (Exceptions.InsufficientCreditException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.NotAvailableSubProductsInCart notAvailableSubProductsInCart) {
+                        notAvailableSubProductsInCart.printStackTrace();
+                    } catch (Exceptions.InvalidDiscountException ex) {
+                        discountError.setText("Invalid discount code!");
+                        ex.printStackTrace();
+                    } catch (Exceptions.EmptyCartException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
+
+            validateBTN.setOnAction(e -> validateDiscount());
+
         }
 
         private void initBindings() {
@@ -4198,8 +4225,45 @@ public class Controllers {
                 char lastInput = newValue.charAt(newValue.length() - 1);
                 if (!String.valueOf(lastInput).matches("\\w")) discountCode.setText(oldValue);
             }));
+        }
 
+        private boolean validateFields() {
+            boolean valid = true;
+            if ( ! receiverName.getText().matches(Constants.IRLNamePattern)) {
+                nameError.setText("Invalid name!");
+                valid = false;
+            } else nameError.setText("");
 
+            if (phoneNumber.getText().equals("")) {
+                phoneError.setText("Please enter a phone number");
+                valid = false;
+            } else phoneError.setText("");
+
+            if (address.getText().equals("")) {
+                addressError.setText("Please enter an address!");
+                valid = false;
+            } else addressError.setText("");
+
+            if ( ! validateDiscount()) valid = false;
+
+            return valid;
+        }
+
+        private boolean validateDiscount() {
+            if (discountCode.getText().equals("")) {
+
+                return false;
+            } else {
+                try {
+                    double newPrice = customerController.getTotalPriceOfCartWithDiscount(discountCode.getText());
+                    discountError.setText("");
+                    totalPrice.setText("$" + newPrice);
+                    return true;
+                } catch (Exceptions.InvalidDiscountException e) {
+                    discountError.setText("Invalid discount code");
+                    return false;
+                }
+            }
         }
     }
 
