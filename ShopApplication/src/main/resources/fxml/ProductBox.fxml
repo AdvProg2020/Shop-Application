@@ -34,8 +34,7 @@
                     <ImageView fx:id="halfStar1" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../img/half-star.png"/>
                     </ImageView>
-                    <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
-                               preserveRatio="true">
+                    <ImageView fx:id="fullStar1" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../img/full-star.png"/>
                     </ImageView>
                     <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
@@ -43,11 +42,10 @@
                     </ImageView>
                 </StackPane>
                 <StackPane layoutX="55.0" layoutY="10.0">
-                    <ImageView fx:id="halfStar11" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="halfStar2" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../img/half-star.png"/>
                     </ImageView>
-                    <ImageView fx:id="fullStar11" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
-                               preserveRatio="true">
+                    <ImageView fx:id="fullStar2" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../img/full-star.png"/>
                     </ImageView>
                     <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
@@ -55,11 +53,10 @@
                     </ImageView>
                 </StackPane>
                 <StackPane layoutX="70.0" layoutY="10.0">
-                    <ImageView fx:id="halfStar111" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="halfStar3" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../img/half-star.png"/>
                     </ImageView>
-                    <ImageView fx:id="fullStar111" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
-                               preserveRatio="true">
+                    <ImageView fx:id="fullStar3" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../img/full-star.png"/>
                     </ImageView>
                     <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
@@ -67,11 +64,11 @@
                     </ImageView>
                 </StackPane>
                 <StackPane layoutX="85.0" layoutY="10.0">
-                    <ImageView fx:id="halfStar1111" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="halfStar4" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../img/half-star.png"/>
                     </ImageView>
-                    <ImageView fx:id="fullStar1111" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
-                               preserveRatio="true" visible="false">
+                    <ImageView fx:id="fullStar4" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true"
+                               visible="false">
                         <Image url="@../img/full-star.png"/>
                     </ImageView>
                     <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
@@ -82,8 +79,8 @@
                     <ImageView fx:id="halfStar5" pickOnBounds="true" preserveRatio="true" visible="false">
                         <Image url="@../img/half-star.png"/>
                     </ImageView>
-                    <ImageView fx:id="fullStar5" layoutX="10.0" layoutY="19.0" pickOnBounds="true"
-                               preserveRatio="true" visible="false">
+                    <ImageView fx:id="fullStar5" layoutX="10.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true"
+                               visible="false">
                         <Image url="@../img/full-star.png"/>
                     </ImageView>
                     <ImageView layoutX="10.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
@@ -111,8 +108,8 @@
                     </rowConstraints>
                     <Label id="price-before-label" fx:id="priceBefore" text="\$99"/>
                     <Label id="price-after-label" fx:id="priceAfter" text="\$59" GridPane.rowIndex="1"/>
-                    <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER"
-                          GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                          GridPane.valignment="CENTER">
                         <ImageView pickOnBounds="true" preserveRatio="true">
                             <Image url="@../img/clock-icon.png"/>
                         </ImageView>
