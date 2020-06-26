@@ -260,7 +260,7 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
         for (SubProduct subProduct : product.getSubProducts()) {
-            subProducts.add(Utilities.Pack.subProductInProduct(subProduct));
+            subProducts.add(Utilities.Pack.subProduct(subProduct));
         }
         return subProducts;
     }
