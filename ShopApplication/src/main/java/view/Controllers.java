@@ -1293,7 +1293,8 @@ public class Controllers {
                 controller.productIdToCompareWith = productId;
                 controller.inSale = false;
 
-
+                controller.initPageObjects();
+                controller.setValuesOfPageObjects();
             }
         }
 
@@ -1558,11 +1559,12 @@ public class Controllers {
             initRatingStars(Double.parseDouble(subProductInfo[4]));
         }
 
-        //TODO: else: compare
         private void setAction(Parent p, String productToCompare) {
             if(productToCompare == null)
                 p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
-
+            else {
+                p.setOnMouseClicked(e -> CompareMenuController.display(productToCompare, subProduct[0]));
+            }
         }
 
         private void initRatingStars(double rating) {
