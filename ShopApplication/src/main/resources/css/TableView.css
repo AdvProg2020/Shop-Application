@@ -5,6 +5,11 @@
     text-color-2: lightgrey;
 }
 
+.label {
+    -fx-text-fill: text-color-2;
+    -fx-font-size: 14;
+}
+
 .button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
