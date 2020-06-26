@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 #bg-pane {
     -fx-background-color: #a8e5f6;
 }
@@ -20,7 +24,7 @@
 .log-button {
     -fx-graphic: url("../img/log-button.png");
     -fx-text-fill: whitesmoke;
-    -fx-background-color: #009000;
+    -fx-background-color: color-1;
     -fx-font-weight: bold;
     -fx-font-size: 18;
     -fx-padding: 10 50 10 50;
@@ -29,7 +33,7 @@
 #edit-button {
     -fx-graphic: url("../img/edit-button.png");
     -fx-text-fill: whitesmoke;
-    -fx-background-color: #009000;
+    -fx-background-color: color-1;
     -fx-font-weight: bold;
     -fx-font-size: 18;
     -fx-padding: 10 65 10 65;
@@ -38,7 +42,7 @@
 #logout-button {
     -fx-graphic: url("../img/logout-button.png");
     -fx-text-fill: whitesmoke;
-    -fx-background-color: #009000;
+    -fx-background-color: color-1;
     -fx-font-weight: bold;
     -fx-font-size: 18;
     -fx-padding: 10 53 10 53;

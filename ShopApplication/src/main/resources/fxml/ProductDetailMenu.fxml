@@ -188,7 +188,8 @@
                                     <Label styleClass="property-label" text="Product Info:" />
                                 </children>
                              </VBox>
-                             <TextArea fx:id="productInfo" styleClass="white-area" stylesheets="@../css/TextArea.css"/>
+                             <TextArea fx:id="productInfo" styleClass="white-area" stylesheets="@../css/TextArea.css"
+                                       text="fes ;fmesl;mvl;emvl'aweml'evfl'evl' ev&#10;&#10;"/>
                          </children>
                       </VBox>
                       <Region HBox.hgrow="ALWAYS" />

@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 .bg-pane {
     -fx-background-color: #81c9e1;
 }
@@ -33,18 +37,18 @@
 .text-field {
     -fx-background-color: transparent;
     -fx-focus-color: transparent;
-    -fx-font-style: italic;
+    -fx-font-size: 14;
+    -fx-font-family: "MV Boli";
     -fx-background-radius: 0 40 40 0;
 }
 
 .property-box {
-    -fx-font-size: 14;
     -fx-background-radius: 40;
     -fx-background-color: whitesmoke;
 }
 
 #purchase-button {
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-graphic: url("../img/purchase-button-2.png");
     -fx-graphic-text-gap: 20;
     -fx-text-fill: whitesmoke;

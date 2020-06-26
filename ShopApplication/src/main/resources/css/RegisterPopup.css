@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 .bg-pane {
     -fx-background-color: #81c9e1;
 }
@@ -20,12 +24,12 @@
 .text-field {
     -fx-background-color: transparent;
     -fx-focus-color: transparent;
-    -fx-font-style: italic;
+    -fx-font-size: 14;
+    -fx-font-family: "MV Boli";
     -fx-background-radius: 40 40 40 40;
 }
 
 .field-box {
-    -fx-font-size: 14;
     -fx-background-radius: 40;
     -fx-background-color: whitesmoke;
 }
@@ -35,7 +39,7 @@
 }
 
 .hyperlink {
-    -fx-text-fill: green;
+    -fx-text-fill: color-1;
 }
 
 .label {
@@ -56,7 +60,7 @@
 }
 
 #register-button {
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-font-size: 18;
     -fx-font-weight: bold;
     -fx-text-fill: white;

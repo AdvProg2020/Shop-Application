@@ -482,4 +482,50 @@ public class AdminController {
             category.removeProperty(property);
         }
     }
+
+    public void editBrandOfProduct(String productId, String newBrand) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            product.setBrand(newBrand);
+        }
+    }
+
+    public void editImageOfProduct(String productId, String newImage) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            product.setImagePath(newImage);
+        }
+    }
+
+    public void editPropertyOfProduct(String productId, String newProperty) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            String[] keyValue = newProperty.split(",");
+            product.setProperty(keyValue[0], keyValue[1]);
+        }
+    }
+
+    public void editInfoTextOfProduct(String productId, String newInfoText) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            product.setInfoText(newInfoText);
+        }
+    }
+
+    public void editNameOfProduct(String productId, String newName) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            product.setName(newName);
+        }
+    }
 }
