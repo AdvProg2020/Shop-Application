@@ -1292,6 +1292,7 @@ public class Controllers {
                 controller.categoryName = categoryName;
                 controller.productIdToCompareWith = productId;
                 controller.inSale = false;
+                controller.toCompare = true;
 
                 controller.initPageObjects();
                 controller.setValuesOfPageObjects();
