@@ -10,7 +10,7 @@ import model.database.Database;
 
 import java.util.*;
 
-//TODO: compare to products!
+
 public class Controller {
     private Account currentAccount;
     private Cart currentCart;

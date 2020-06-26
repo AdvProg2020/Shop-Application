@@ -1892,7 +1892,7 @@ public class Controllers {
         private Label categoryLBL;
 
         @FXML
-        private Text productInfoTXT;
+        private TextArea productInfoTXT;
 
         @FXML
         private Label sellerLBL;
