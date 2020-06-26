@@ -573,7 +573,7 @@ public class Controller {
         if (category != null) {
             while (!category.equals(superCategory)) {
                 categoryTree.add(0, category.getName());
-                category.getParent();
+                category = category.getParent();
             }
         }
         return categoryTree;
