@@ -1,6 +1,8 @@
 package view;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public final class Constants {
     public static final String caseInsensitiveMode = "(?i)";
@@ -23,7 +25,7 @@ public final class Constants {
     public static final String REQUEST_DECLINE = "DECLINED";
     public static final String REQUEST_PENDING = "PENDING";
     public static String base = new File("").getAbsolutePath();
-
+    public static final DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
 
     public static final String[] types = new String[]{anonymousUserType, customerUserType, sellerUserType, adminUserType};
 
