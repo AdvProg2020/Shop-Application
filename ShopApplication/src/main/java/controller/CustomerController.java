@@ -214,4 +214,13 @@ public class CustomerController {
     public double getTotalPriceOfCart() throws Exceptions.UnAuthorizedAccountException {
         return mainController.getTotalPriceOfCart();
     }
+
+    public boolean hasBought(String productId) throws Exceptions.InvalidProductIdException {
+        Product product = Product.getProductById(productId);
+        if(product == null){
+            throw new Exceptions.InvalidProductIdException(productId);
+        }else {
+            return product.hasBought(currentAccount().getId());
+        }
+    }
 }

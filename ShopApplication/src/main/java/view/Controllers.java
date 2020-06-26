@@ -1907,6 +1907,12 @@ public class Controllers {
         @FXML
         private Label salePercentageLBL;
 
+        @FXML
+        private HBox ratingsBox;
+
+        @FXML
+        private StackPane ratingsStackPane;
+
 
         private String[] productPack;
         private String[] subProductPack;
@@ -2185,6 +2191,7 @@ public class Controllers {
         }
 
         private void rate() {
+
         }
 
         private void initButtons() {
@@ -2218,7 +2225,7 @@ public class Controllers {
                 editBTN.setVisible(false);
             }
 
-            if ((type.equals(Constants.customerUserType))) {
+            if ((type.equals(Constants.customerUserType)) && ) {
                 rateBTN.setVisible(true);
             } else rateBTN.setVisible(false);
 
