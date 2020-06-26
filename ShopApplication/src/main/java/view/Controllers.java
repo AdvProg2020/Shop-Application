@@ -693,11 +693,17 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
+            if (info[7].contains(Constants.base)) {
+                info[7] = info[7].replace(Constants.base + "\\" , "");
+            }
+            if (info[7].contains( "src/main/resources")) {
+                info[7] = info[7].replace("src/main/resources", "");
+            }
+            if (info[7].contains( "src\\main\\resources")) {
+                info[7] = info[7].replace("src\\main\\resources", "");
+            }
 
-            info[7] = info[7].replaceAll("\\\\", "/");
-
-
-            accountIMG.setImage(new Image("file:" + info[7]));
+            accountIMG.setImage(new Image(info[7]));
         }
 
 
@@ -1269,8 +1275,9 @@ public class Controllers {
         private StringProperty name;
         private StringProperty brand;
         private StringProperty seller;
-        private HashMap<String, SimpleStringProperty> properties;
-        private HashMap<String, ChoiceBox<String>> propertyChoiceBox;
+        //private ArrayList<String> propertyKeys;
+        private HashMap<String, SimpleStringProperty> properties = new HashMap<>();
+        private HashMap<String, ChoiceBox<String>> propertyChoiceBox = new HashMap<>();
 
 
         public static void display(String categoryName, boolean inSale) {
@@ -1278,11 +1285,12 @@ public class Controllers {
             if (controller != null) {
                 controller.categoryName = categoryName;
                 controller.inSale = inSale;
+                controller.initFilterBar();
+                controller.initPropertyFilters();
                 controller.update();
                 controller.initChoiceBoxes();
                 controller.initActions();
-                controller.initFilterBar();
-                controller.initPropertyFilters();
+                controller.initSliderBounds();
                 controller.initCategoryTree();
                 controller.initCategoryBox();
             }
@@ -1353,10 +1361,14 @@ public class Controllers {
             seller = new SimpleStringProperty();
             seller.bind(filterSeller.valueProperty());
 
+
+            //properties
+        }
+
+        private void initSliderBounds(){
             setMaxPrice();
             maxPriceSlider.setMax(maximumAvailablePrice);
             minPriceSlider.setMax(maximumAvailablePrice);
-            //properties
         }
 
         private void initActions() {
@@ -6493,7 +6505,7 @@ public class Controllers {
         private boolean exists;
 
         public static void display(String name, String brand, String productId) {
-            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 1300, 505)).initialize(name, brand, productId);
+            ((AddProductPopupController_Page2) View.popupWindow("Add new Product (2 of 2)", Constants.FXMLs.addProductPage2, 1300, 600)).initialize(name, brand, productId);
         }
 
         private void initialize(String name, String brand, String productId) {
