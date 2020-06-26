@@ -61,7 +61,7 @@ public class Controller {
         usernameTypeValidation(username, type);
         switch (type) {
             case "Customer":
-                new Customer(username, password, firstName, lastName, email, phone, imagePath ,balance);
+                new Customer(username, password, firstName, lastName, email, phone, imagePath, balance);
                 database.createCustomer();
                 break;
             case "Admin":
@@ -70,6 +70,7 @@ public class Controller {
                 break;
             case "Seller":
                 new Seller(username, password, firstName, lastName, email, phone, imagePath, storeName, balance, database);
+                database.request();
                 break;
         }
     }
@@ -78,8 +79,8 @@ public class Controller {
         return (currentAccount != null) && currentAccount == Admin.getManager();
     }
 
-    public boolean managerExists() {
-        return Admin.getManager() != null;
+    public boolean doesExistManager() {
+        return Admin.getManager() == null;
     }
 
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
@@ -112,55 +113,10 @@ public class Controller {
         return currentAccount.getClass().getSimpleName();
     }
 
-    /**
-     * @return String[5]: {price, rating score, name, category name, view counts}
-     */
-    public String[] getProductAvailableSorts() {
-        return Utilities.Sort.productAvailableSorts();
+    private void sortProducts(ArrayList<Product> products) {
+        products.sort(new Utilities.Sort.ProductViewCountComparator(true));
     }
 
-    private void sortProducts(String sortBy, boolean isIncreasing, ArrayList<Product> products) {
-        if (sortBy == null)
-            sortBy = "view count";
-
-        switch (sortBy) {
-            case "view count":
-                products.sort(new Utilities.Sort.ProductViewCountComparator(isIncreasing));
-                break;
-            case "price":
-                products.sort(new Utilities.Sort.ProductPriceComparator(isIncreasing));
-                break;
-            case "rating score":
-                products.sort(new Utilities.Sort.ProductRatingScoreComparator(isIncreasing));
-                break;
-            case "name":
-                products.sort(new Utilities.Sort.ProductNameComparator(isIncreasing));
-                break;
-            case "category name":
-                products.sort(new Utilities.Sort.ProductCategoryNameComparator(isIncreasing));
-                break;
-            case "remaining count":
-                products.sort(new Utilities.Sort.ProductRemainingCountComparator(isIncreasing));
-                break;
-            default:
-                products.sort(new Utilities.Sort.ProductViewCountComparator(true));
-        }
-    }
-
-    public String[] getProductAvailableFilters() {
-        return Utilities.Filter.productAvailableFilters();
-    }
-
-    private void filterProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                String storeName, double minRatingScore, ArrayList<Product> products) {
-        Utilities.Filter.ProductFilter.available(products, available);
-        Utilities.Filter.ProductFilter.minPrice(products, minPrice);
-        Utilities.Filter.ProductFilter.maxPrice(products, maxPrice);
-        Utilities.Filter.ProductFilter.name(products, contains);
-        Utilities.Filter.ProductFilter.brand(products, brand);
-        Utilities.Filter.ProductFilter.storeName(products, storeName);
-        Utilities.Filter.ProductFilter.ratingScore(products, minRatingScore);
-    }
 
     private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
@@ -219,68 +175,27 @@ public class Controller {
 
     private ArrayList<Product> getProductsInCategory(Category category) {
         ArrayList<Product> products = new ArrayList<>(category.getProducts(true));
-        sortProducts("view count", true, products);
+        sortProducts( products);
         return products;
     }
 
-    /**
-     * @param productIds
-     * @param sortBy
-     * @param filterBy
-     * @return
-     * @throws Exceptions.InvalidProductIdException for filtering:
-     *                                              available true if only available are to be shown.
-     *                                              minPrice if N/A pass 0.00
-     *                                              maxPrice if N/A pass 0.00
-     *                                              contains if N/A pass null
-     *                                              brand if N/A pass null
-     *                                              storeName if N/A pass null
-     *                                              minRatingScore if N/A pass 0.00
-     *                                              products
-     */
-    public ArrayList<String[]> showProducts(ArrayList<String> productIds, String sortBy, boolean isIncreasing, String[] filterBy, HashMap<String, String> propertyFilters) throws Exceptions.InvalidProductIdException {
-        ArrayList<Product> products = new ArrayList<>();
-        Product product;
 
-        for (String productId : productIds) {
-            product = Product.getProductById(productId);
-            if (product == null)
-                throw new Exceptions.InvalidProductIdException(productId);
-            else
-                products.add(product);
-        }
-        for (int i = 0; i < filterBy.length; i++) {
-            if (filterBy[i] == null)
-                filterBy[i] = "";
-        }
-        filterProducts(filterBy[0].equalsIgnoreCase("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
-                , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), products);
-
-        for (String propertyFilter : propertyFilters.keySet()) {
-            if (propertyFilters.get(propertyFilter) != null)
-                Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
-        }
-        sortProducts(sortBy, isIncreasing, products);
-
-        return productToIdNameBrand(products);
-    }
-
-    public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale,  String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                                  String storeName, double minRatingScore, HashMap<String, String> propertyFilters){
+    public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
+                                                  String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
         Category category = Category.getCategoryByName(categoryName) != null ? Category.getCategoryByName(categoryName) : Category.getSuperCategory();
         ArrayList<Product> products;
-        if( category != null){
+        if (category != null) {
             products = new ArrayList<>(category.getProducts(true));
-        }else {
+        } else {
             products = new ArrayList<>(Product.getAllProducts());
         }
 
         ArrayList<SubProduct> subProducts = new ArrayList<>();
-        if( inSale ){
+        if (inSale) {
             for (Product product : products) {
                 subProducts.addAll(product.getSubProductsInSale());
             }
-        }else {
+        } else {
             for (Product product : products) {
                 subProducts.add(product.getDefaultSubProduct());
             }
@@ -293,10 +208,6 @@ public class Controller {
         }
         sortSubProducts(sortBy, isIncreasing, subProducts);
         return Utilities.Pack.subProductBoxes(subProducts);
-    }
-
-    public ArrayList<String> getAvailableValuesOfAPropertyOfACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
-        return Utilities.Filter.getAvailableValuesOfAPropertyOfACategory(categoryName, property);
     }
 
     public void showProduct(String productId) throws Exceptions.InvalidProductIdException {
@@ -349,12 +260,11 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
         for (SubProduct subProduct : product.getSubProducts()) {
-            subProducts.add(Utilities.Pack.subProduct(subProduct));
+            subProducts.add(Utilities.Pack.subProductInProduct(subProduct));
         }
         return subProducts;
     }
 
-    //TODO: Useless
     public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
@@ -455,19 +365,9 @@ public class Controller {
                 throw new Exceptions.InvalidProductIdException(productId);
             else {
                 new Review(currentAccount.getId(), productId, title, text, database);
+                database.request();
             }
         }
-    }
-
-    /**
-     * @return String[6]: ID, percentage, sellerStoreName, startDate, endDate, numberOfProductsInSale.
-     */
-    public ArrayList<String[]> sales() {
-        ArrayList<String[]> sales = new ArrayList<>();
-        for (Sale sale : Sale.getAllSales()) {
-            sales.add(Utilities.Pack.saleInfo(sale));
-        }
-        return sales;
     }
 
     /**
@@ -525,43 +425,6 @@ public class Controller {
         }
     }
 
-    public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
-        Sale sale = Sale.getSaleById(saleId);
-        if (sale == null)
-            throw new Exceptions.InvalidSaleIdException(saleId);
-        else
-            return getProductsInSale(sale);
-    }
-
-    private ArrayList<String[]> getProductsInSale(Sale sale) {
-        ArrayList<String[]> productsInSale = new ArrayList<>();
-        ArrayList<SubProduct> subProducts = new ArrayList<>(sale.getSubProducts());
-        sortSubProducts("view count", false, subProducts);
-        for (SubProduct subProduct : subProducts) {
-            productsInSale.add(Utilities.Pack.productInSale(subProduct));
-        }
-        return productsInSale;
-    }
-
-    public ArrayList<String[]> showInSaleProducts(String sortBy, boolean isIncreasing, String[] filterBy) {
-        ArrayList<String[]> subProductsSalePacks = new ArrayList<>();
-        ArrayList<SubProduct> subProductsInSale = new ArrayList<>();
-        for (Sale sale : Sale.getAllSales()) {
-            subProductsInSale.addAll(sale.getSubProducts());
-        }
-        for (int i = 0; i < filterBy.length; i++) {
-            if (filterBy[i] == null)
-                filterBy[i] = "";
-        }
-        filterSubProducts(filterBy[0].equalsIgnoreCase("true"), Double.parseDouble(filterBy[1]), Double.parseDouble(filterBy[2])
-                , filterBy[3], filterBy[4], filterBy[5], Double.parseDouble(filterBy[6]), subProductsInSale);
-        sortSubProducts(sortBy, isIncreasing, subProductsInSale);
-        for (SubProduct subProduct : subProductsInSale) {
-            subProductsSalePacks.add(Utilities.Pack.productInSale(subProduct));
-        }
-        return subProductsSalePacks;
-    }
-
     private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
                                    String storeName, double minRatingScore, ArrayList<SubProduct> subProducts) {
         Utilities.Filter.SubProductFilter.available(subProducts, available);
@@ -606,38 +469,39 @@ public class Controller {
     }
 
     public void removeSubProductFromCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        if (SubProduct.getSubProductById(subProductId) == null) throw new Exceptions.InvalidSubProductIdException(subProductId);
+        if (SubProduct.getSubProductById(subProductId) == null)
+            throw new Exceptions.InvalidSubProductIdException(subProductId);
         else currentCart.removeSubProduct(subProductId);
     }
 
     public String[] getDefaultSubProductOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
-        if( product == null)
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         return Utilities.Pack.subProduct(product.getDefaultSubProduct());
     }
 
     public ArrayList<String> getPropertyValuesInCategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if( category != null){
+        if (category != null) {
             ArrayList<String> values = new ArrayList<>();
             values.add(null);
             for (Product product : category.getProducts(true)) {
                 values.add(product.getValue(property));
             }
             return values;
-        }else
+        } else
             throw new Exceptions.InvalidCategoryException(categoryName);
     }
 
-    public ArrayList<String[]> getSubProductsForAdvertisements(int number){
+    public ArrayList<String[]> getSubProductsForAdvertisements(int number) {
         ArrayList<Product> selectedProducts = new ArrayList<>(Product.getAllProducts());
-        int rangeSize = number*3;
+        int rangeSize = number * 3;
         int numberOfProducts = selectedProducts.size();
-        if( numberOfProducts > rangeSize){
+        if (numberOfProducts > rangeSize) {
             ArrayList<Product> allProducts = selectedProducts;
             selectedProducts = new ArrayList<>();
-            for(int i = 0; i < rangeSize; i++){
+            for (int i = 0; i < rangeSize; i++) {
                 selectedProducts.add(allProducts.get(numberOfProducts - 1 - i));
             }
             numberOfProducts = rangeSize;
@@ -647,24 +511,24 @@ public class Controller {
         Random r = new Random();
         int randomNumber;
         number = Math.min(number, numberOfProducts);
-        for( int i = 0; i < number; i++){
+        for (int i = 0; i < number; i++) {
             randomNumber = r.nextInt(numberOfProducts);
             chosenSubProduct = selectedProducts.get(randomNumber).getDefaultSubProduct();
             productsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
             selectedProducts.remove(randomNumber);
-            numberOfProducts --;
+            numberOfProducts--;
         }
 
         return productsToShow;
     }
 
-    public ArrayList<String[]> getSubProductsInSale(int number){
+    public ArrayList<String[]> getSubProductsInSale(int number) {
         HashSet<Product> candidateProducts = new HashSet<>();
         choosingProduct:
         for (Sale sale : Sale.getAllSales()) {
             for (SubProduct subProduct : sale.getSubProducts()) {
                 candidateProducts.add(subProduct.getProduct());
-                if(candidateProducts.size() > number * 3){
+                if (candidateProducts.size() > number * 3) {
                     break choosingProduct;
                 }
             }
@@ -679,11 +543,11 @@ public class Controller {
         Product chosenProduct;
         SubProduct chosenSubProduct;
         ArrayList<SubProduct> inSaleSubProducts;
-        for( int i = 0; i < number; i++){
+        for (int i = 0; i < number; i++) {
             randomNumber = r.nextInt(numberOfProducts);
             chosenProduct = orderedProducts.get(randomNumber);
             orderedProducts.remove(randomNumber);
-            numberOfProducts --;
+            numberOfProducts--;
 
             inSaleSubProducts = new ArrayList<>(chosenProduct.getSubProductsInSale());
             chosenSubProduct = inSaleSubProducts.get(r.nextInt(inSaleSubProducts.size()));
@@ -695,21 +559,21 @@ public class Controller {
 
     public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
-        if(product == null){
+        if (product == null) {
             throw new Exceptions.InvalidProductIdException(productId);
-        }else {
+        } else {
             return getCategoryTreeOfACategory(product.getCategory().getName());
         }
     }
 
-    public ArrayList<String> getCategoryTreeOfACategory(String categoryName){
+    public ArrayList<String> getCategoryTreeOfACategory(String categoryName) {
         Category superCategory = Category.getSuperCategory();
         Category category = Category.getCategoryByName(categoryName);
         ArrayList<String> categoryTree = new ArrayList<>();
         if (category != null) {
-            while ( !category.equals( superCategory )){
+            while (!category.equals(superCategory)) {
                 categoryTree.add(0, category.getName());
-                category = category.getParent();
+                category.getParent();
             }
         }
         return categoryTree;
@@ -717,9 +581,9 @@ public class Controller {
 
     public ArrayList<String> getBuyersOfASubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if(subProduct == null){
+        if (subProduct == null) {
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        }else {
+        } else {
             ArrayList<String> buyerUserNames = new ArrayList<>();
             for (Customer customer : subProduct.getCustomers()) {
                 buyerUserNames.add(customer.getUsername());
