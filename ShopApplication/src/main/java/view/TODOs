@@ -23,8 +23,6 @@ M & A: add commercial request and reduce balance. (Slide show)
 
 T:  SellerAddProduct
     requests details popupS
-    adminProductBox
-    mainMenu
     check purchase procedure
 
 
@@ -35,15 +33,12 @@ A: edit product popup and addSale and AddProduct
 --------------------
 A: personal info image not loading.
 A: purchase discount handle -> customerController.
-T: rating in buy log
-T: rate product in digest
-T: add review controller
+A: rating in buy log
 M: unit test (login procedure)
 M: add font
 T: sold out -> product box
 A & M: Compare is back baby!
 M & A: purchase confirmation popup
-T: AddReviewPopup
 T: product menu debug
 
 hasBought in reviewBox
