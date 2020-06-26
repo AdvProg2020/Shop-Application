@@ -1371,8 +1371,10 @@ public class Controllers {
             vBox.getChildren().add(new Label(property));
             ChoiceBox<String> choiceBox = new ChoiceBox<>();
             try {
-                HashSet<String> values = new HashSet<>(mainController.getPropertyValuesInCategory(categoryName, property));
-                choiceBox.setItems(FXCollections.observableArrayList(values));
+                ArrayList<String> propertyValues = mainController.getPropertyValuesInCategory(categoryName, property);
+                choiceBox.getItems().add("");
+                choiceBox.getSelectionModel().select(0);
+                choiceBox.getItems().addAll(propertyValues);
             } catch (Exceptions.InvalidCategoryException e) {
                 return null;
             }
