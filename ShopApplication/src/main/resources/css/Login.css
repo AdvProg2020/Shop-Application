@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 .bg-pane {
     -fx-background-color: #81c9e1;
 }
@@ -35,7 +39,7 @@
 }
 
 .hyperlink {
-    -fx-text-fill: green;
+    -fx-text-fill: color-1;
 }
 
 #header-label {
@@ -49,7 +53,7 @@
 }
 
 #login-button {
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-font-size: 18;
     -fx-font-weight: bold;
     -fx-text-fill: white;

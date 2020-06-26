@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 .bg-pane {
     -fx-background-color: #81c9e1;
 }
@@ -44,7 +48,7 @@
 }
 
 #purchase-button {
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-graphic: url("../img/purchase-button-2.png");
     -fx-graphic-text-gap: 20;
     -fx-text-fill: whitesmoke;

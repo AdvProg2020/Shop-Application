@@ -1,3 +1,7 @@
+* {
+    color-1: #085de4;
+}
+
 #bg-pane {
     -fx-background-color: white;
 }
@@ -50,7 +54,7 @@
     -fx-background-color: transparent;
     -fx-font-size: 14;
     -fx-underline: true;
-    -fx-text-fill: green;
+    -fx-text-fill: color-1;
 }
 
 #rate-button:hover {

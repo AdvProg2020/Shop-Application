@@ -4,6 +4,7 @@
     -fx-border-style: none;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
+    color-1: #085de4;
 }
 
 #bg-pane {
@@ -22,7 +23,7 @@
 }
 
 #send-button {
-    -fx-background-color: green;
+    -fx-background-color: color-1;
     -fx-font-size: 14;
     -fx-font-weight: bold;
     -fx-text-fill: whitesmoke;
