@@ -1330,9 +1330,11 @@ public class Controllers {
         }
 
         private void setSliderBounds() {
-            setMaxPrice();
-            maxPriceSlider.setMax(maximumAvailablePrice);
-            minPriceSlider.setMax(maximumAvailablePrice);
+            if( products != null){
+                setMaxPrice();
+                maxPriceSlider.setMax(maximumAvailablePrice);
+                minPriceSlider.setMax(maximumAvailablePrice);
+            }
         }
 
         private void initActions() {
