@@ -1,1 +1,1 @@
-{"CLASSNAME":"model.account.Seller","INSTANCE":{"storeName":"sdgf","balance":4576.0,"accountId":"SLR2005270001","suspended":false,"username":"sdana","password":"a","firstName":"a","lastName":"a","email":"1@@@.com","phone":"32","imagePath":""}}
+{"CLASSNAME":"model.account.Seller","INSTANCE":{"storeName":"sdgf","balance":6286.0,"accountId":"SLR2005270001","suspended":false,"username":"sdana","password":"a","firstName":"a","lastName":"a","email":"1@@@.com","phone":"32","imagePath":""}}

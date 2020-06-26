@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$PurchaseConfirmationController">
+<VBox alignment="CENTER" prefHeight="191.0" prefWidth="435.0" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$PurchaseConfirmationController">
    <padding>
       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
    </padding>
