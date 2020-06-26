@@ -43,3 +43,5 @@ A: text area listener
 T: live filter update
 M: style register tabPane
 A: percentage check
+M: add background to some pages
+M: make category boxes larger

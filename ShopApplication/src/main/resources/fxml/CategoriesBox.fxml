@@ -7,7 +7,7 @@
       stylesheets="@../css/CategoriesBox.css" xmlns="http://javafx.com/javafx/11.0.1"
       fx:controller="view.Controllers$CategoryBoxController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="40.0"/>
+        <Insets bottom="50.0" left="50.0" right="100.0" top="100.0"/>
     </padding>
     <children>
         <Button id="category-button" fx:id="allProductsBTN" mnemonicParsing="false" text="All products"/>
