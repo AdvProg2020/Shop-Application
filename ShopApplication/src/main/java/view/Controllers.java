@@ -2254,6 +2254,12 @@ public class Controllers {
         @FXML
         private TextArea text;
 
+        @FXML
+        private Label boughtLBL;
+
+        @FXML
+        private Label didntBuyLBL;
+
         private String[] review;
 
         public static Parent createReviewBox(String[] reviewPack) {
@@ -2270,12 +2276,13 @@ public class Controllers {
             }
         }
 
-        //TODO: add hasBoughtField to reviewBox
         private void setInfo() {
             nameLBL.setText(review[0]);
             titleLBL.setText(review[1]);
             text.setText(review[2]);
-            //reviewPack[3] = review.hasBought() ? "yes" : "no";
+            boughtLBL.setVisible(review[3].equals("yes"));
+            didntBuyLBL.setVisible(review[3].equals("no"));
+
         }
     }
 
