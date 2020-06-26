@@ -14,7 +14,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -284,7 +286,7 @@ public class AdminController {
     }
 
     public ArrayList<String[]> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
-        Request request = Request.getRequestById(requestId, false);
+        Request request = Request.getRequestById(requestId);
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
         else {
@@ -459,6 +461,17 @@ public class AdminController {
                 productPacks.add(Utilities.Pack.product(subProduct.getProduct()));
             }
             return productPacks;
+        }
+    }
+
+    public void addPropertyToACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException, Exceptions.ExistingPropertyException {
+        Category category = Category.getCategoryByName(categoryName);
+        if( category == null){
+            throw new Exceptions.InvalidCategoryException(categoryName);
+        }else if( category.hasProperty(property)){
+            throw new Exceptions.ExistingPropertyException(property);
+        }else {
+            category.addProperty(property);
         }
     }
 }

@@ -195,4 +195,12 @@ public class Exceptions {
             super("This account doesnt have access to shopping cart!");
         }
     }
+
+    public static class ExistingPropertyException extends Exception{
+        public ExistingPropertyException(String property){
+            super("This category already has a property with name: "+ property);
+        }
+    }
+
+
 }
