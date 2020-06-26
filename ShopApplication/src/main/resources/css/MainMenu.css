@@ -52,11 +52,13 @@
 }
 
 .scroll-pane .increment-button, .scroll-pane .decrement-button {
+    -fx-background-color: #29292D;
     -fx-background-radius: 2em;
 }
 
 .scroll-pane .scroll-bar:vertical {
-    -fx-padding: 2 0 0 0;
+    -fx-background-color: #29292D;
+    -fx-padding: 2 3 0 5;
 }
 
 .scroll-pane .scroll-bar:vertical .track {
