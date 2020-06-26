@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import java.lang.String?>
-
-<VBox id="bg-pane" spacing="5.0" styleClass="black" stylesheets="@../css/Review.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ReviewBoxController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" spacing="5.0" styleClass="black" stylesheets="@../css/Review.css"
+      xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$ReviewBoxController">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="20.0"/>
     </padding>
-   <children>
-       <HBox alignment="CENTER_LEFT" spacing="10.0">
-           <VBox.margin>
-               <Insets bottom="10.0" />
-           </VBox.margin>
-           <children>
-               <Label text="Name:">
-                   <styleClass>
-                       <String fx:value="property-label" />
-                       <String fx:value="black" />
-                   </styleClass>
-               </Label>
-               <Label fx:id="nameLBL" layoutX="10.0" layoutY="10.0" text="firstName lastName">
-                   <styleClass>
-                       <String fx:value="value-label" />
-                       <String fx:value="black" />
-                   </styleClass>
-               </Label>
-           </children>
-       </HBox>
-       <Label id="title-label" fx:id="titleLBL" layoutX="10.0" layoutY="10.0" styleClass="black" text="Title">
-           <VBox.margin>
-               <Insets top="5.0" />
-           </VBox.margin>
-       </Label>
-       <TextArea fx:id="text" editable="false" prefHeight="77.0" prefWidth="478.0" styleClass="black-area" stylesheets="@../css/TextArea.css" text="wedmlkfcwep;cmewpsc&#10;" />
-   </children>
+    <HBox alignment="CENTER_LEFT" spacing="10.0">
+        <VBox.margin>
+            <Insets bottom="10.0"/>
+        </VBox.margin>
+        <Label text="Name:">
+            <styleClass>
+                <String fx:value="property-label"/>
+                <String fx:value="black"/>
+            </styleClass>
+        </Label>
+
+        <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1">
+            <Label fx:id="nameLBL" layoutX="10.0" layoutY="10.0" text="firstName lastName">
+                <styleClass>
+                    <String fx:value="value-label"/>
+                    <String fx:value="black"/>
+                </styleClass>
+            </Label>
+            <StackPane>
+                <Label id="bought-label" fx:id="boughtLBL" text="Bought"/>
+                <Label id="didnt-buy-label" fx:id="didntBuyLBL" layoutX="10.0" layoutY="11.0" text="Didn't Buy"
+                       visible="false"/>
+            </StackPane>
+        </HBox>
+    </HBox>
+    <Label id="title-label" fx:id="titleLBL" layoutX="10.0" layoutY="10.0" styleClass="black" text="Title">
+        <VBox.margin>
+            <Insets top="5.0"/>
+        </VBox.margin>
+    </Label>
+    <TextArea fx:id="text" editable="false" prefHeight="77.0" prefWidth="478.0" styleClass="black-area"
+              stylesheets="@../css/TextArea.css" text="wedmlkfcwep;cmewpsc&#10;"/>
 </VBox>

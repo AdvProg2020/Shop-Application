@@ -21,8 +21,15 @@
                     <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
                     <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
                 </rowConstraints>
-                <Label fx:id="nameLBL" styleClass="value-label" text="username" GridPane.columnIndex="1"/>
                 <Label styleClass="property-label" text="Reviewer:"/>
+                <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1">
+                    <Label fx:id="nameLBL" styleClass="value-label" text="username"/>
+                    <StackPane>
+                        <Label id="bought-label" fx:id="boughtLBL" text="Bought" visible="false"/>
+                        <Label id="didnt-buy-label" fx:id="didntBuyLBL" layoutX="10.0" layoutY="11.0"
+                               text="Didn't Buy"/>
+                    </StackPane>
+                </HBox>
                 <Label styleClass="property-label" text="Product:" GridPane.rowIndex="1"/>
                 <Label fx:id="nameBrandLBL" styleClass="value-label" text="name-brand" GridPane.columnIndex="1"
                        GridPane.rowIndex="1"/>
