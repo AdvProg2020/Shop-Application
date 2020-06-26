@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane id="bg-pane" fx:id="borderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductDetailMenuController">
+<BorderPane id="bg-pane" fx:id="borderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$ProductDetailMenuController">
     <center>
         <VBox stylesheets="@../css/ProductDetails.css">
             <children>
@@ -241,7 +253,6 @@
                          <content>
                              <TableView fx:id="sellersTBL" stylesheets="@../css/TableView.css">
                                  <columns>
-                                     <TableColumn fx:id="sellersTBLNumberCOL" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
                                      <TableColumn fx:id="sellersTBLSellerCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0" text="Seller" />
                                      <TableColumn fx:id="sellersTBLPriceCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0" text="Price" />
                                      <TableColumn fx:id="sellersTBLNumberAvailableCOL" maxWidth="1000.0" minWidth="200.0" prefWidth="200.0" text="Remaining Count" />

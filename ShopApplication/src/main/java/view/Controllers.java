@@ -1303,8 +1303,11 @@ public class Controllers {
 
         private void initChoiceBoxes(){
             filterSeller.getItems().add("");
+            filterSeller.getSelectionModel().select(0);
             filterBrand.getItems().add("");
+            filterBrand.getSelectionModel().select(0);
             sortByChoiceBox.getItems().add("");
+            sortByChoiceBox.getSelectionModel().select(0);
         }
 
         private void setChoiceBoxesValues() {
@@ -1883,9 +1886,6 @@ public class Controllers {
         private TableView<SellerWrapper> sellersTBL;
 
         @FXML
-        private TableColumn<SellerWrapper, Label> sellersTBLNumberCOL;
-
-        @FXML
         private TableColumn<SellerWrapper, String> sellersTBLSellerCOL;
 
         @FXML
@@ -1972,12 +1972,18 @@ public class Controllers {
         @FXML
         private StackPane ratingsStackPane;
 
+        @FXML
+        private TableColumn<PropertyWrapper, Label> propertyCOL;
+
+        @FXML
+        private TableColumn<PropertyWrapper, Label> valueCOL;
+
 
         private String[] productPack;
         private String[] subProductPack;
-        private ArrayList<PropertyWrapper> properties;
-        private ArrayList<SellerWrapper> sellers;
-        private ArrayList<String[]> subProductPacks;
+        private ArrayList<PropertyWrapper> properties = new ArrayList<>();
+        private ArrayList<SellerWrapper> sellers = new ArrayList<>();
+        private ArrayList<String[]> subProductPacks = new ArrayList<>();
         private boolean editable;
         private String type;
 
@@ -2082,7 +2088,7 @@ public class Controllers {
             initReviewsVB();
             initPropertiesTable();
             initButtons();
-
+            updateSubProductBox();
             initSellersTable();
 
         }
@@ -2167,11 +2173,13 @@ public class Controllers {
         //TODO: available count in sub product box
         private void updateSubProductBox() {
             sellerLBL.setText(subProductPack[12]);
-            priceBeforeLBL.setText(subProductPack[7]);
             if (!subProductPack[7].equals(subProductPack[8])) {
+                priceBeforeLBL.setText(subProductPack[7]);
                 priceAfterLBL.setText(subProductPack[8]);
+                priceBeforeLBL.setVisible(true);
             } else {
-                priceAfterLBL.setText("");
+                priceBeforeLBL.setVisible(false);
+                priceAfterLBL.setText(subProductPack[7]);
             }
             if (subProductPack[11] != null) {
                 salePercentageLBL.setVisible(true);
@@ -2180,9 +2188,9 @@ public class Controllers {
                 salePercentageLBL.setVisible(false);
             }
             if (Integer.parseInt(subProductPack[9]) == 0) {
-                soldOutLBL.setVisible(false);
-            } else
                 soldOutLBL.setVisible(true);
+            } else
+                soldOutLBL.setVisible(false);
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
             updateShowOfButtons();
             updateBuyersTable();
@@ -2205,8 +2213,8 @@ public class Controllers {
                 for (String s : propertyValues.keySet()) {
                     properties.add(new PropertyWrapper(s, propertyValues.get(s)));
                 }
-                propertyTab.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
-                propertyTab.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
+                propertyCOL.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
+                valueCOL.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
             } catch (Exceptions.InvalidProductIdException e) {
                 System.out.println(e.getMessage());
@@ -2270,10 +2278,10 @@ public class Controllers {
             if (type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)) {
                 if (Integer.parseInt(subProductPack[9]) != 0) {
                     addToCartBTN.setVisible(true);
-                    addToCartBTN.setDisable(true);
+                    addToCartBTN.setDisable(false);
                 } else {
                     addToCartBTN.setVisible(true);
-                    addToCartBTN.setDisable(false);
+                    addToCartBTN.setDisable(true);
                 }
             } else {
                 addToCartBTN.setVisible(false);
