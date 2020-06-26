@@ -1,59 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
     <center>
-        <ScrollPane hbarPolicy="NEVER">
+        <ScrollPane>
             <content>
-                <VBox alignment="CENTER">
+                <GridPane fx:id="productProperties" alignment="CENTER" hgap="50.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0"
+                                           prefWidth="150.0"/>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0"
+                                           prefWidth="150.0"/>
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0"
+                                           prefWidth="150.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="50.0" minHeight="0.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
                     <children>
-                        <Label text="Product Properties"/>
-                        <GridPane fx:id="productProperties" alignment="CENTER" VBox.vgrow="ALWAYS">
-                            <columnConstraints>
-                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="95.20001220703125"
-                                                   minWidth="10.0" prefWidth="84.79998779296875"/>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.20001220703125" minWidth="10.0"
-                                                   prefWidth="131.20001220703125"/>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.20001220703125" minWidth="10.0"
-                                                   prefWidth="84.0"/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            </rowConstraints>
-                            <children>
-                                <Label text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER"/>
-                                <Label layoutX="210.0" layoutY="17.0" text="Label" GridPane.columnIndex="1"
-                                       GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-                                <Label layoutX="10.0" layoutY="47.0" text="Label" GridPane.rowIndex="2"/>
-                                <Label layoutX="10.0" layoutY="47.0" text="Label" GridPane.columnIndex="2"/>
-                                <Label layoutX="410.0" layoutY="47.0" text="Label" GridPane.columnIndex="1"
-                                       GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-                                <Label layoutX="10.0" layoutY="47.0" text="Label" GridPane.columnIndex="2"
-                                       GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
-                                <ImageView pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1"
-                                           GridPane.valignment="CENTER"/>
-                                <Label layoutX="246.0" layoutY="64.0" text="Label" GridPane.rowIndex="3"/>
-                                <Label layoutX="10.0" layoutY="94.0" text="Label" GridPane.columnIndex="1"
-                                       GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
-                                <Label layoutX="110.0" layoutY="94.0" text="Label" GridPane.columnIndex="2"
-                                       GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
-                                <Label layoutX="210.0" layoutY="94.0" text="Label" GridPane.rowIndex="4"/>
-                                <Label layoutX="10.0" layoutY="124.0" text="Label" GridPane.columnIndex="1"
-                                       GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
-                                <Label layoutX="110.0" layoutY="124.0" text="Label" GridPane.columnIndex="2"
-                                       GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
-                            </children>
-                        </GridPane>
+                        <Label layoutX="210.0" layoutY="17.0" styleClass="property-label" text="Name"
+                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label fx:id="brand1" layoutX="10.0" layoutY="47.0" styleClass="value-label" text="Label"
+                               GridPane.rowIndex="2"/>
+                        <Label layoutX="410.0" layoutY="47.0" styleClass="property-label" text="Brand"
+                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label fx:id="brand2" layoutX="10.0" layoutY="47.0" styleClass="value-label" text="Label"
+                               GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <Label fx:id="category1" layoutX="246.0" layoutY="64.0" styleClass="value-label" text="Label"
+                               GridPane.rowIndex="3"/>
+                        <Label layoutX="10.0" layoutY="94.0" styleClass="property-label" text="Category"
+                               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label fx:id="category2" layoutX="110.0" layoutY="94.0" styleClass="value-label" text="Label"
+                               GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                        <Label fx:id="rating1" layoutX="210.0" layoutY="94.0" styleClass="value-label" text="Label"
+                               GridPane.rowIndex="4"/>
+                        <Label layoutX="10.0" layoutY="124.0" styleClass="property-label" text="Rating Score"
+                               GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label fx:id="rating2" layoutX="110.0" layoutY="124.0" styleClass="value-label" text="Label"
+                               GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                        <Label alignment="CENTER" layoutX="128.0" layoutY="126.0" styleClass="property-label"
+                               text="Min Price" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <Label alignment="CENTER" layoutX="136.0" layoutY="156.0" styleClass="property-label"
+                               text="Max Price" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <ImageView fx:id="image1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
+                                   preserveRatio="true"/>
+                        <ImageView fx:id="image2" fitHeight="150.0" fitWidth="150.0" layoutX="-105.0" layoutY="-50.0"
+                                   pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2"/>
+                        <Label fx:id="maxPrice2" layoutX="132.0" layoutY="377.0" styleClass="value-label" text="Label"
+                               GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                        <Label fx:id="minPrice2" layoutX="132.0" layoutY="101.0" styleClass="value-label" text="Label"
+                               GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                        <Label fx:id="maxPrice1" layoutX="132.0" layoutY="101.0" styleClass="value-label" text="Label"
+                               GridPane.rowIndex="6"/>
+                        <Label fx:id="minPrice1" layoutX="132.0" layoutY="101.0" styleClass="value-label" text="Label"
+                               GridPane.rowIndex="5"/>
+                        <Label fx:id="name2" layoutX="412.0" layoutY="277.0" styleClass="value-label" text="Label"
+                               GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <Label fx:id="name1" layoutX="132.0" layoutY="101.0" styleClass="value-label" text="Label"
+                               GridPane.rowIndex="1"/>
                     </children>
-                </VBox>
+                </GridPane>
             </content>
         </ScrollPane>
     </center>
+    <top>
+        <Label id="heading-label" text="Compare Menu" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets bottom="20.0"/>
+            </BorderPane.margin>
+        </Label>
+    </top>
+    <padding>
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+    </padding>
 </BorderPane>
