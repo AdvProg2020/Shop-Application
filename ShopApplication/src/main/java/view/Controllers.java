@@ -592,12 +592,15 @@ public class Controllers {
                 if (type.equals(Constants.sellerUserType)) {
                     customerDiscounts.setVisible(false);
                     discountTABPANE.setVisible(false);
+                    buyLogBTN.setVisible(false);
+                    sellLogBTN.setVisible(true);
                     sellerRequests.setVisible(true);
                     requestTABPANE.setVisible(true);
                 } else if (type.equals(Constants.customerUserType)) {
                     customerDiscounts.setVisible(true);
                     sellerRequests.setVisible(false);
                     buyLogBTN.setVisible(true);
+                    sellLogBTN.setVisible(false);
                     discountTABPANE.setVisible(true);
                     requestTABPANE.setVisible(false);
                 } else {
@@ -3540,6 +3543,9 @@ public class Controllers {
         @FXML
         private Button discardBTN;
 
+        @FXML
+        private HBox addPropertyHB;
+
         private AdminCategoryManagingMenuController.CategoryWrapper category;
         private ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
         private ArrayList<MiniProductWrapper> categoryProducts = new ArrayList<>();
@@ -3652,6 +3658,7 @@ public class Controllers {
             addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
+            addPropertyHB.setVisible( ! isDetail);
             if (!isDetail) {
                 tableTabPane.getTabs().removeAll(subCategoriesTAB, productsTAB);
             }
@@ -3777,6 +3784,7 @@ public class Controllers {
 
                 if (category == null) {
                     properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
+                    newPropertyField.setText("");
                 } else {
                     try {
                         adminController.addPropertyToACategory(category.name.get(), newPropertyField.getText());
