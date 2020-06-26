@@ -1,6 +1,9 @@
 package view;
 
-import controller.*;
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
+import controller.SellerController;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -196,8 +199,6 @@ public class View extends Application {
         stage.setWidth(1050);
         stage.setHeight(700);
         stage.centerOnScreen();
-
-
 
 
         setScene(new Scene(loadFxml(Constants.FXMLs.base)));

@@ -128,6 +128,10 @@ public class Category implements ModelBasic {
         }
     }
 
+    public boolean hasProperty(String property) {
+        return properties.contains(property);
+    }
+
     public Category getParent() {
         if (parentId.equals(superCategory.getId())) return superCategory;
 
