@@ -286,7 +286,7 @@ public class AdminController {
     }
 
     public ArrayList<String[]> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
-        Request request = Request.getRequestById(requestId);
+        Request request = Request.getRequestById(requestId, false);
         if (request == null)
             throw new Exceptions.InvalidRequestIdException(requestId);
         else {

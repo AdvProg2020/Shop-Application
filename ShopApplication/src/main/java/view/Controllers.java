@@ -6558,6 +6558,7 @@ public class Controllers {
                         printError(ex.getMessage());
                         ex.printStackTrace();
                     }
+                    addProductBTN.getScene().getWindow().hide();
                 }
             });
         }
