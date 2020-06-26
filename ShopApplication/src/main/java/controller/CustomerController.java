@@ -47,9 +47,9 @@ public class CustomerController {
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
         if (field.equals("balance")) {
-            if (((Seller) currentAccount()).getBalance() == Double.parseDouble(newInformation))
+            if (((Customer) currentAccount()).getBalance() == Double.parseDouble(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(newInformation);
-            ((Seller) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getBalance());
+            ((Customer) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Customer) currentAccount()).getBalance());
         } else
             mainController.editPersonalInfo(field, newInformation);
         database().editAccount();

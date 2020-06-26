@@ -618,13 +618,9 @@ public class Controllers {
         }
 
         private void initActions() {
-            sellLogBTN.setOnAction(e -> {
-                if (info[info.length - 1].equals(Constants.customerUserType)) {
-                    CustomerBuyLogMenuController.display();
-                } else {
-                    SellerSellLogsManagingMenuController.display();
-                }
-            });
+            sellLogBTN.setOnAction(e -> SellerSellLogsManagingMenuController.display());
+
+            buyLogBTN.setOnAction(e -> CustomerBuyLogMenuController.display());
 
             logoutBTN.setOnAction(e -> {
                 try {
@@ -4373,6 +4369,12 @@ public class Controllers {
             initButtons();
             initBindings();
             initListeners();
+
+            try {
+                purchaseBTN.setText("$" + customerController.getTotalPriceOfCart());
+            } catch (Exceptions.UnAuthorizedAccountException e) {
+                e.printStackTrace();
+            }
 
         }
 
