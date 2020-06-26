@@ -30,23 +30,19 @@ T:  SellerAddProduct
 
 T & A: adminCategoryManagingPopup remove property from a category
 
-A: edit product popup and addSale and AddProduct
 
 --------------------
 A: personal info image not loading.
-A: purchase discount handle -> customerController.
-A: rating in buy log
+T: rating in buy log
+T: rate product in digest
+T: add review controller
 M: unit test (login procedure)
 M: add font
 T: sold out -> product box
 A & M: Compare is back baby!
-A: has bought
-A: purchase confirmation popup
 T: AddReviewPopup
 T: product menu debug
-
 hasBought in reviewBox
 A: admin edit product popup
 A: text area listener
-
 T: live filter update
