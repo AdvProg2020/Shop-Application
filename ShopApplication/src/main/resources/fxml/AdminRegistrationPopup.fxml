@@ -14,7 +14,7 @@
                         <Label fx:id="adminUsernameError" styleClass="error-label" />
                     </VBox>
                     <VBox spacing="5.0" GridPane.columnIndex="1">
-                        <Label styleClass="property-label" text="Password:" />
+                        <Label styleClass="property-label" text="Password:"/>
                         <HBox alignment="CENTER" styleClass="field-box">
                             <StackPane>
                                 <PasswordField fx:id="adminPassword"/>
@@ -23,17 +23,29 @@
                             <ToggleButton id="show-password-button" fx:id="adminShowPasswordBTN" mnemonicParsing="false"
                                           prefHeight="25.0" prefWidth="34.0"/>
                         </HBox>
-                        <Label id="error-label" fx:id="adminPasswordError" />
+                        <Label id="error-label" fx:id="adminPasswordError"/>
+                    </VBox>
+                    <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                        <Label styleClass="property-label" text="Profile Picture:"/>
+                        <HBox alignment="CENTER" spacing="10.0" styleClass="field-box">
+                            <TextField fx:id="adminImageField" disable="true" editable="false"
+                                       promptText="upload image..." HBox.hgrow="ALWAYS"/>
+                            <Button id="browse-button" fx:id="adminBrowseBTN" mnemonicParsing="false"/>
+                            <VBox.margin>
+                                <Insets/>
+                            </VBox.margin>
+                        </HBox>
+                        <Label id="error-label" fx:id="adminImageError"/>
                     </VBox>
                     <VBox spacing="5.0" GridPane.rowIndex="2">
-                        <Label styleClass="property-label" text="First name:" />
+                        <Label styleClass="property-label" text="First name:"/>
                         <TextField fx:id="adminFirstName" promptText="John" styleClass="field-box"/>
-                        <Label id="error-label" fx:id="adminFirstNameError" />
+                        <Label id="error-label" fx:id="adminFirstNameError"/>
                     </VBox>
                     <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                        <Label styleClass="property-label" text="Last name:" />
+                        <Label styleClass="property-label" text="Last name:"/>
                         <TextField fx:id="adminLastName" promptText="Smith" styleClass="field-box"/>
-                        <Label id="error-label" fx:id="adminLastNameError" />
+                        <Label id="error-label" fx:id="adminLastNameError"/>
                     </VBox>
                     <VBox spacing="5.0" GridPane.rowIndex="3">
                         <Label styleClass="property-label" text="Phone number:" />
@@ -44,17 +56,6 @@
                         <Label styleClass="property-label" text="Email:" />
                         <TextField fx:id="adminEmail" promptText="sample@atm.com" styleClass="field-box" />
                         <Label id="error-label" fx:id="adminEmailError" />
-                    </VBox>
-                    <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                        <Label styleClass="property-label" text="Profile Picture:" />
-                        <HBox alignment="CENTER" spacing="10.0" styleClass="field-box">
-                            <TextField fx:id="adminImageField" promptText="upload image..." HBox.hgrow="ALWAYS"/>
-                            <Button id="browse-button" fx:id="adminBrowseBTN" mnemonicParsing="false"/>
-                            <VBox.margin>
-                                <Insets/>
-                            </VBox.margin>
-                        </HBox>
-                        <Label id="error-label" fx:id="adminImageError" />
                     </VBox>
                     <columnConstraints>
                         <ColumnConstraints maxWidth="196.00003662109376" minWidth="180.00003662109376" prefWidth="192.8000244140625" />
