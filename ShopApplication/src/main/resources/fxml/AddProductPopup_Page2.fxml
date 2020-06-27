@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/AddProduct-2.css"
@@ -21,8 +21,16 @@
                     </VBox>
                     <VBox spacing="5.0" GridPane.rowIndex="1">
                         <Label styleClass="property-label" text="Category:"/>
-                        <ChoiceBox fx:id="category" prefWidth="220.0" styleClass="field-box"
-                                   stylesheets="@../css/ChoiceBox.css"/>
+                        <HBox>
+                            <children>
+                                <ChoiceBox fx:id="category" prefWidth="220.0" styleClass="field-box"
+                                           stylesheets="@../css/ChoiceBox.css">
+                                    <padding>
+                                        <Insets bottom="5.0" top="5.0"/>
+                                    </padding>
+                                </ChoiceBox>
+                            </children>
+                        </HBox>
                         <Label fx:id="imageErrLBL1" textFill="RED"/>
                     </VBox>
                     <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">

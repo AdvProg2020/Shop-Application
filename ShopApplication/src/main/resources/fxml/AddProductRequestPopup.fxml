@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <BorderPane id="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AddProductRequestPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
@@ -32,7 +21,7 @@
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <Label styleClass="property-label" text="Profile Picture:" />
                 <HBox spacing="10.0">
-                    <TextField fx:id="imageField" editable="false" promptText="upload image..." styleClass="property-box" HBox.hgrow="ALWAYS" />
+                    <TextField fx:id="imageField" editable="false" styleClass="property-box" HBox.hgrow="ALWAYS"/>
                 </HBox>
             </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
