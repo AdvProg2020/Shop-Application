@@ -4129,6 +4129,8 @@ public class Controllers {
                 remove.setOnAction(e -> {
                     try {
                         mainController.removeSubProductFromCart(this.subProductId);
+                        totalPrice.unbind();
+                        totalPrice.set(0);
                         productsTable.getItems().remove(this);
                     } catch (Exceptions.InvalidSubProductIdException ex) {
                         ex.printStackTrace();
@@ -4399,7 +4401,6 @@ public class Controllers {
         @Override
         public void initialize(URL location, ResourceBundle resources) {
             initButtons();
-            initBindings();
             initListeners();
 
             try {
