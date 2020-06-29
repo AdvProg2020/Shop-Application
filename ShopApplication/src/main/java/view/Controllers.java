@@ -4417,12 +4417,10 @@ public class Controllers {
                         PurchaseConfirmationController.display(totalPrice.getText());
                     } catch (Exceptions.InsufficientCreditException ex) {
                         discountError.setText("You dont have enough money!");
-                        ex.printStackTrace();
                     } catch (Exceptions.NotAvailableSubProductsInCart notAvailableSubProductsInCart) {
                         notAvailableSubProductsInCart.printStackTrace();
                     } catch (Exceptions.InvalidDiscountException ex) {
                         discountError.setText("Invalid discount code!");
-                        ex.printStackTrace();
                     } catch (Exceptions.EmptyCartException ex) {
                         ex.printStackTrace();
                     }
@@ -4431,20 +4429,6 @@ public class Controllers {
 
             validateBTN.setOnAction(e -> validateDiscount());
 
-        }
-
-        private void initBindings() {
-            discountCode.disableProperty().bind(
-                    Bindings.createObjectBinding(() -> !receiverName.getText().matches(Constants.IRLNamePattern) ||
-                                    address.getText().equals("") || phoneNumber.getText().equals(""),
-                            receiverName.textProperty(), address.textProperty(), phoneNumber.textProperty())
-            );
-            discountCode.opacityProperty().bind(Bindings.when(discountCode.disableProperty()).then(0.5).otherwise(1));
-
-            purchaseBTN.disableProperty().bind(
-                    Bindings.when(discountCode.disableProperty().not().and(discountCode.textProperty().isNotNull())).then(false).otherwise(true)
-            );
-            purchaseBTN.opacityProperty().bind(Bindings.when(purchaseBTN.disableProperty()).then(0.5).otherwise(1));
         }
 
         private void initListeners() {

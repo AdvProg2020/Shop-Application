@@ -28,10 +28,8 @@ T:
 
 --------------------
 T: product menu debug
-A: text area listener
 T: live filter update
 M: unit test (login procedure)
 A: admin product managing menu
 A: seller product managing menu
-
-review scroll pane background
+T: check if seller already has the sub product
