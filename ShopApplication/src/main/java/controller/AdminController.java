@@ -1,9 +1,6 @@
 package controller;
 
-import model.Category;
-import model.Discount;
-import model.Product;
-import model.SubProduct;
+import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
@@ -170,7 +167,7 @@ public class AdminController {
     }
 
     public ArrayList<String> viewArchiveDiscountCodes() {
-        return Discount.getDiscountArchive().stream().map(Discount::getDiscountCode).collect(Collectors.toCollection(ArrayList::new));
+        return Discount.getDiscountArchive().stream().map(Discount::getId).collect(Collectors.toCollection(ArrayList::new));
     }
 
 
@@ -183,13 +180,13 @@ public class AdminController {
     }
 
     public String[] viewDiscountCodeById(String discountId) throws Exceptions.DiscountCodeException {
-        Discount discount = Discount.getDiscountById(discountId);
+        Discount discount = Discount.getDiscountById(discountId, false);
         if (discount == null) throw new Exceptions.DiscountCodeException(discountId); // :P
         else return Utilities.Pack.discountInfo(discount);
     }
 
     public ArrayList<String[]> peopleWhoHaveThisDiscount(String id) throws Exceptions.DiscountCodeException {
-        Discount discount = Discount.getDiscountById(id);
+        Discount discount = Discount.getDiscountById(id, false);
         if (discount == null)
             throw new Exceptions.DiscountCodeException(id);
         else {

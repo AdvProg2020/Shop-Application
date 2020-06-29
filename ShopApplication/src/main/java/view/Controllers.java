@@ -3115,7 +3115,7 @@ public class Controllers {
             for (String discountCode : adminController.viewArchiveDiscountCodes()) {
                 String[] details;
                 try {
-                    details = adminController.viewDiscountCodeByCode(discountCode);
+                    details = adminController.viewDiscountCodeById(discountCode);
                     archiveDiscountWrappers.add(new DiscountWrapper(details));
                 } catch (Exceptions.DiscountCodeException e) {
                     e.printStackTrace();
@@ -3166,7 +3166,13 @@ public class Controllers {
                 this.startDate.set(startDate);
                 this.endDate.set(endDate);
                 perMax.bind(this.percentage.asString().concat("% (").concat(this.maximumAmount).concat("$)"));
-                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this, true));
+                detail.setOnAction(e -> {
+                    if (discounts.getItems().contains(this)) {
+                        AdminDiscountManagingPopupController.display(this, true);
+                    } else {
+                        AdminDiscountManagingPopupController.display(this, false);
+                    }
+                });
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
@@ -5275,7 +5281,7 @@ public class Controllers {
             int initCount;
 
             public CustomerWrapper(String[] customerPack, boolean hasCode) {
-                this(customerPack[2], customerPack[0], Integer.parseInt(customerPack[1]), true);
+                this(customerPack[2], customerPack[0], Integer.parseInt(customerPack[1]), hasCode);
             }
 
             public CustomerWrapper(String id, String username, int count, boolean hasCode) {
@@ -5285,13 +5291,13 @@ public class Controllers {
                 this.username = username;
                 this.hasCode.setSelected(hasCode);
                 this.initCount = count;
-                this.count.editableProperty().bind(this.hasCode.selectedProperty());
+                this.count.editableProperty().bind(this.hasCode.selectedProperty().and(new SimpleBooleanProperty(editable)));
                 this.countGroup.opacityProperty().bind(
                         Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
                 );
                 View.addListener(this.count, Constants.unsignedIntPattern);
                 this.count.textProperty().addListener((observable, oldValue, newValue) -> {
-                    if (Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
+                    if ( !newValue.equals("") && Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
                 });
                 this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
@@ -5315,6 +5321,10 @@ public class Controllers {
 
                 countGroup.getChildren().addAll(decreaseBTN, this.count, increaseBTN);
                 countGroup.setPadding(new Insets(5, 5, 5, 5));
+                if (! editable) {
+                    increaseBTN.setVisible(false);
+                    decreaseBTN.setVisible(false);
+                }
             }
 
             public HBox getCountGroup() {
@@ -5343,6 +5353,8 @@ public class Controllers {
             }
         }
 
+        private boolean editable;
+
         public static void display(AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             String discountId = discount == null ? null : discount.getId();
             ((AdminDiscountManagingPopupController)
@@ -5351,6 +5363,7 @@ public class Controllers {
 
         private void initialize(String discountId, AdminDiscountManagingMenuController.DiscountWrapper discount, boolean editable) {
             ArrayList<String[]> customersWithCode = null;
+            this.editable = editable;
 
             if (discountId != null) {
                 try {
@@ -5371,14 +5384,11 @@ public class Controllers {
 
         private void initBindings(String discountId) {
             if (discountId != null) {
-                discount.startDate.set("20" + discount.startDate.get());
-                discount.endDate.set("20" + discount.endDate.get());
-
                 codeFieldChanged.bind(Bindings.when(codeField.textProperty().isEqualTo(discount.getCode())).then(false).otherwise(true));
                 percentageFieldChanged.bind(Bindings.when(percentageField.textProperty().isEqualTo(discount.percentage.asString())).then(false).otherwise(true));
                 maxFieldChanged.bind(Bindings.when(maxField.textProperty().isEqualTo(discount.maximumAmount.asString())).then(false).otherwise(true));
-                startDateChanged.bind(Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse(discount.startDate.get()))).then(false).otherwise(true));
-                endDateChanged.bind(Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse(discount.endDate.get()))).then(false).otherwise(true));
+                startDateChanged.bind(Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse("20" + discount.startDate.get()))).then(false).otherwise(true));
+                endDateChanged.bind(Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse("20" + discount.endDate.get()))).then(false).otherwise(true));
             }
         }
 
@@ -5404,6 +5414,13 @@ public class Controllers {
             maxField.setEditable(editable);
             codeField.setEditable(editable);
             percentageField.setEditable(editable);
+
+            startDate.setDisable( ! editable);
+            startDate.setStyle("-fx-opacity: 1");
+            startDate.getEditor().setStyle("-fx-opacity: 1");
+            endDate.setDisable( ! editable);
+            endDate.setStyle("-fx-opacity: 1");
+            endDate.getEditor().setStyle("-fx-opacity: 1");
         }
 
         private void initActions(String discountId) {
@@ -5498,11 +5515,12 @@ public class Controllers {
             countCOL.setCellValueFactory(new PropertyValueFactory<>("countGroup"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("hasCode"));
             usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            if (! editable) customersTable.getColumns().remove(removeCOL);
 
-            initTableContent(discountId);
+            initItems(discountId);
         }
 
-        private void initTableContent(String discountId) {
+        private void initItems(String discountId) {
             ArrayList<String[]> withCode = new ArrayList<>();
             if (discountId != null) {
                 try {
@@ -5534,8 +5552,8 @@ public class Controllers {
                 codeField.setText(discount.code);
                 percentageField.setText(discount.percentage.get() + "");
                 maxField.setText(discount.maximumAmount.get() + "");
-                startDate.setValue(LocalDate.parse(discount.startDate.get()));
-                endDate.setValue(LocalDate.parse(discount.endDate.get()));
+                startDate.setValue(LocalDate.parse("20" + discount.startDate.get()));
+                endDate.setValue(LocalDate.parse("20" + discount.endDate.get()));
             }
         }
     }
