@@ -526,6 +526,7 @@ public class Controller {
         HashSet<Product> candidateProducts = new HashSet<>();
         choosingProduct:
         for (Sale sale : Sale.getAllSales()) {
+            if ( ! sale.hasStarted()) continue;
             for (SubProduct subProduct : sale.getSubProducts()) {
                 candidateProducts.add(subProduct.getProduct());
                 if (candidateProducts.size() > number * 3) {
@@ -545,8 +546,7 @@ public class Controller {
         ArrayList<SubProduct> inSaleSubProducts;
         for (int i = 0; i < number; i++) {
             randomNumber = r.nextInt(numberOfProducts);
-            chosenProduct = orderedProducts.get(randomNumber);
-            orderedProducts.remove(randomNumber);
+            chosenProduct  = orderedProducts.remove(randomNumber);
             numberOfProducts--;
 
             inSaleSubProducts = new ArrayList<>(chosenProduct.getSubProductsInSale());

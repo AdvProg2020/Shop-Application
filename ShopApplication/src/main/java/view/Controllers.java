@@ -5889,7 +5889,7 @@ public class Controllers {
                             sellerController.editSale(sale[0], "end date", endDate.getValue().toString());
                         errorLBL.setTextFill(Color.GREEN);
                         errorLBL.setText("Edition request has been sent!");
-
+                        editBTN.getScene().getWindow().hide();
                     } catch (Exceptions.InvalidDateException ex) {
                         ex.printStackTrace();
                     } catch (Exceptions.InvalidFieldException ex) {
