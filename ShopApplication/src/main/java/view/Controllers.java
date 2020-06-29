@@ -734,6 +734,7 @@ public class Controllers {
 
             public PropertyWrapper(String property, String value) {
                 this.property = property;
+                this.value = value;
             }
 
             public String getProperty() {
@@ -835,6 +836,7 @@ public class Controllers {
                 var detailsOfRequest = adminController.detailsOfRequest(requestId);
                 primaryDetails = detailsOfRequest.get(0);
                 secondaryDetails = detailsOfRequest.get(1);
+                tertiaryDetails = detailsOfRequest.get(2);
             } catch (Exceptions.InvalidRequestIdException e) {
                 e.printStackTrace();
                 return;
