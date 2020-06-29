@@ -2069,7 +2069,7 @@ public class Controllers {
             ProductDetailMenuController controller;
             if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
                 controller = ((ProductDetailMenuController)
-                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 950));
+                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 800));
             } else {
                 controller = ((ProductDetailMenuController)
                         View.setMainPane(Constants.FXMLs.productDetailMenu));

@@ -79,7 +79,7 @@
 }
 
 .table-view .cell {
-    -fx-cell-size: 100px;
+    -fx-cell-size: 40px;
     -fx-alignment: center;
     -fx-background-color: table-color-1;
     -fx-text-fill: text-color-2;
@@ -89,7 +89,7 @@
 }
 
 .table-row-cell {
-    -fx-cell-size: 100px;
+    -fx-cell-size: 40px;
 }
 
 .table-view .increment-button, .table-view .decrement-button {

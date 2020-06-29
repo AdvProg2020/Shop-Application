@@ -8,13 +8,13 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" fx:id="borderPane" stylesheets="@../css/MainMenu.css"
             xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$MainMenuController">
     <center>
-        <ScrollPane BorderPane.alignment="CENTER">
+        <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
             <content>
-                <VBox>
+                <VBox spacing="30.0">
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
                     </padding>
-                    <Region layoutX="10.0" layoutY="127.0" VBox.vgrow="ALWAYS"/>
+                    <Region layoutX="20.0" layoutY="620.0" VBox.vgrow="ALWAYS"/>
                     <VBox id="advertisement-box" alignment="CENTER">
                         <HBox VBox.vgrow="ALWAYS">
                             <VBox alignment="CENTER" spacing="10.0">
@@ -27,12 +27,8 @@
                                 <Button id="all-products-button" fx:id="productsMenu" mnemonicParsing="false"
                                         text="Show All Products"/>
                             </VBox>
-                            <ScrollPane hbarPolicy="ALWAYS" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
-                                <HBox fx:id="advertisingProducts" alignment="CENTER" spacing="20.0">
-                                    <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </padding>
-                                </HBox>
+                            <ScrollPane hbarPolicy="ALWAYS" minHeight="370.0" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+                                <HBox fx:id="advertisingProducts" alignment="CENTER" spacing="20.0"/>
                             </ScrollPane>
                         </HBox>
                         <padding>
@@ -52,19 +48,15 @@
                                 <Button id="all-sales-button" fx:id="allSales" mnemonicParsing="false"
                                         text="Show All Sales"/>
                             </VBox>
-                            <ScrollPane hbarPolicy="ALWAYS" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
-                                <HBox fx:id="productsInSale" alignment="CENTER" spacing="20.0">
-                                    <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </padding>
-                                </HBox>
+                            <ScrollPane hbarPolicy="ALWAYS" minHeight="370.0" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+                                <HBox fx:id="productsInSale" alignment="CENTER" spacing="20.0"/>
                             </ScrollPane>
                         </HBox>
                         <padding>
                             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
                         </padding>
                     </VBox>
-                    <Region VBox.vgrow="ALWAYS"/>
+                    <Region layoutX="20.0" layoutY="320.0" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </content>
         </ScrollPane>

@@ -32,11 +32,13 @@
 #heading-box {
     -fx-background-color: #29292D;
     -fx-background-radius: 5 5 5 5;
-    -fx-min-width: 200;
+    -fx-min-width: 250;
+    -fx-padding: 5 0 5 0;
+    -fx-opacity: 90%;
 }
 
 #heading-label {
-    -fx-font-size: 36;
+    -fx-font-size: 32;
     -fx-font-weight: bold;
     -fx-text-fill: lightgrey;
     -fx-background-color: #29292D;
