@@ -134,7 +134,7 @@ public class View extends Application {
 
 
     public static <T> T popupWindow(String title, String fxml, int width, int height) {
-        if (fxml.equals(Constants.FXMLs.adminRegistrationPopup) && mainController.doesManagerExist()) {
+        if (fxml.equals(Constants.FXMLs.adminRegistrationPopup) &&  ! mainController.doesManagerExist()) {
                 Stage popup = new Stage();
                 popup.setOnCloseRequest(e -> System.exit(-1));
                 popup.initModality(Modality.APPLICATION_MODAL);

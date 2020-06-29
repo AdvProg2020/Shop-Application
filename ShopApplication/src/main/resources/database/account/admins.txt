@@ -1,1 +1,0 @@
-{"CLASSNAME":"model.account.Admin","INSTANCE":{"accountId":"ADM2005270001","suspended":false,"username":"adana","password":"a","firstName":"a","lastName":"a","email":"@@@.com","phone":"32","imagePath":"C:\\Users\\Dana\\Dropbox\\ap\\ProjectAP\\ShopApplication\\src\\main\\resources\\profileImages\\profile-2-icon.png"}}

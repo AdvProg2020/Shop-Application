@@ -1,2 +1,0 @@
-{"categoryId":"CTG2005270001","name":"SuperCategory","properties":[],"suspended":false}
-{"categoryId":"CTG2005270002","name":"first","parentId":"CTG2005270001","properties":["1","2","3"],"suspended":false}

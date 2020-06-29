@@ -4483,6 +4483,7 @@ public class Controllers {
                     double newPrice = customerController.getTotalPriceOfCartWithDiscount(discountCode.getText());
                     discountError.setText("");
                     totalPrice.setText("$" + newPrice);
+                    totalPrice.setTextFill(Color.RED);
                     return true;
                 } catch (Exceptions.InvalidDiscountException e) {
                     discountError.setText("Invalid discount code");
