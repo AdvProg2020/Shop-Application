@@ -6449,7 +6449,7 @@ public class Controllers {
         }
 
         private void search(String input) {
-            if (input != null) {
+            if ( ! input.equals("")) {
                 ArrayList<String[]> products = getCurrentProducts();
                 if (products != null) {
                     ProductsMenuController.display("SuperCategory", false);
