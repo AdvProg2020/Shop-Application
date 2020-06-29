@@ -6822,7 +6822,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            fullStar1.setOnMouseClicked(e -> {
+            star1.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 1);
                     colorStars(1);
@@ -6830,7 +6830,7 @@ public class Controllers {
                     ex.printStackTrace();
                 }
             });
-            fullStar2.setOnMouseClicked(e -> {
+            star2.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 2);
                     colorStars(2);
@@ -6838,7 +6838,7 @@ public class Controllers {
                     ex.printStackTrace();
                 }
             });
-            fullStar3.setOnMouseClicked(e -> {
+            star3.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 3);
                     colorStars(3);
@@ -6846,7 +6846,7 @@ public class Controllers {
                     ex.printStackTrace();
                 }
             });
-            fullStar4.setOnMouseClicked(e -> {
+            star4.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 4);
                     colorStars(4);
@@ -6854,7 +6854,7 @@ public class Controllers {
                     ex.printStackTrace();
                 }
             });
-            fullStar5.setOnMouseClicked(e -> {
+            star5.setOnMouseClicked(e -> {
                 try {
                     customerController.rateProduct(productId, 5);
                     colorStars(5);
@@ -6876,6 +6876,17 @@ public class Controllers {
                     fullStar2.setVisible(true);
                 case 1:
                     fullStar1.setVisible(true);
+            }
+
+            switch (num) {
+                case 4:
+                    fullStar5.setVisible(false);
+                case 3:
+                    fullStar4.setVisible(false);
+                case 2:
+                    fullStar3.setVisible(false);
+                case 1:
+                    fullStar2.setVisible(false);
             }
         }
     }
