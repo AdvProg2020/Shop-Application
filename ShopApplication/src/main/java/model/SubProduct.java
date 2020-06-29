@@ -89,14 +89,14 @@ public class SubProduct implements ModelBasic {
 
     public Sale getSale() {
         Sale sale = Sale.getSaleById(saleId);
-        if (sale == null || !sale.hasStarted()) return null;
+        if (!sale.hasStarted()) return null;
 
         return sale;
     }
 
     @ModelOnly
     public void setSale(String saleId) {
-        if (this.saleId != null)
+        if (getSale() != null)
             getSale().removeSubProduct(subProductId);
         this.saleId = saleId;
     }
@@ -110,8 +110,7 @@ public class SubProduct implements ModelBasic {
     }
 
     public double getPriceWithSale() {
-        if (getSale() == null)
-            return price;
+        if (getSale() == null) return price;
 
         double saleAmount = price * getSale().getPercentage() / 100;
         double maximumAmount = getSale().getMaximumAmount();

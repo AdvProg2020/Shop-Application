@@ -3,6 +3,7 @@ package model;
 import model.ModelUtilities.ModelOnly;
 import model.database.Database;
 import model.request.AddProductRequest;
+import model.request.Request;
 
 import java.util.*;
 
@@ -60,6 +61,18 @@ public class Product implements ModelBasic {
         }
 
         return null;
+    }
+
+    public static boolean isProductNameAndBrandUsed(String name, String brand) {
+        if (getProductByNameAndBrand(name, brand) != null) return true;
+
+        for (Request request : Request.getPendingRequests()) {
+            if (request instanceof AddProductRequest)
+                if (((AddProductRequest) request).getProduct().getName().equals(name) && ((AddProductRequest) request).getProduct().getBrand().equals(brand))
+                    return true;
+        }
+
+        return false;
     }
 
     @Override
