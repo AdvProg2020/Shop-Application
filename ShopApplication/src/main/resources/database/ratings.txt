@@ -1,0 +1,2 @@
+{"ratingId":"RAT2006010003","customerId":"CST2006010001","productId":"PRO2006010001","score":4}
+{"ratingId":"RAT2006010004","customerId":"CST2006010001","productId":"PRO2006010002","score":2}

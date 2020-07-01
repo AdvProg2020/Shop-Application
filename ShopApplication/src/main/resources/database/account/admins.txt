@@ -1,0 +1,1 @@
+{"CLASSNAME":"model.account.Admin","INSTANCE":{"accountId":"ADM2006010001","suspended":false,"username":"adana","password":"a","firstName":"sfd","lastName":"sfd","email":"sd@@.c","phone":"432","imagePath":""}}

@@ -1,0 +1,5 @@
+{"categoryId":"CTG2006010001","name":"SuperCategory","properties":[],"suspended":false}
+{"categoryId":"CTG2006010002","name":"test","parentId":"CTG2006010001","properties":["a","b","c","x"],"suspended":false}
+{"categoryId":"CTG2006010003","name":"test2","parentId":"CTG2006010002","properties":["a"],"suspended":true}
+{"categoryId":"CTG2006010004","name":"test2","parentId":"CTG2006010002","properties":[],"suspended":true}
+{"categoryId":"CTG2006010005","name":"test2","parentId":"CTG2006010002","properties":["a"],"suspended":false}

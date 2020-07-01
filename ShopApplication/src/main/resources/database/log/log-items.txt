@@ -1,0 +1,4 @@
+{"logItemId":"LGI2006010001","buyLogId":"BLG2006010001","sellLogId":"SLG2006010001","subProductId":"SBP2006010002","count":2,"price":432.0,"saleAmount":0.0}
+{"logItemId":"LGI2006010002","buyLogId":"BLG2006010001","sellLogId":"SLG2006010001","subProductId":"SBP2006010001","count":1,"price":432.0,"saleAmount":0.0}
+{"logItemId":"LGI2006010003","buyLogId":"BLG2006010002","sellLogId":"SLG2006010002","subProductId":"SBP2006010001","count":1,"price":432.0,"saleAmount":0.0}
+{"logItemId":"LGI2006010004","buyLogId":"BLG2006010002","sellLogId":"SLG2006010003","subProductId":"SBP2006010003","count":4,"price":423.0,"saleAmount":181.89}
