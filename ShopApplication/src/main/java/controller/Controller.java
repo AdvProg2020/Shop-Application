@@ -190,6 +190,11 @@ public class Controller {
             products = new ArrayList<>(Product.getAllProducts());
         }
 
+        for (String propertyFilter : propertyFilters.keySet()) {
+            if ( ! propertyFilters.get(propertyFilter).equals(""))
+                Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
+        }
+
         ArrayList<SubProduct> subProducts = new ArrayList<>();
         if (inSale) {
             for (Product product : products) {
@@ -202,10 +207,7 @@ public class Controller {
         }
 
         filterSubProducts(available, minPrice, maxPrice, contains, brand, storeName, minRatingScore, subProducts);
-        for (String propertyFilter : propertyFilters.keySet()) {
-            if (propertyFilters.get(propertyFilter) != null)
-                Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
-        }
+
         sortSubProducts(sortBy, isIncreasing, subProducts);
         return Utilities.Pack.subProductBoxes(subProducts);
     }

@@ -1260,7 +1260,7 @@ public class Controllers {
         private ScrollPane propertiesScrollPane;
 
 
-        private static final int numberOfColumns = 5;
+        private int numberOfColumns = 5;
         public ArrayList<String[]> products;
         private String categoryName;
         private double maximumAvailablePrice;
@@ -1284,8 +1284,10 @@ public class Controllers {
         }
 
         public static void displayACategoryProductsToCompare(String categoryName, String productId){
-            ProductsMenuController controller = View.setMainPane(Constants.FXMLs.productsMenu);
+            ProductsMenuController controller = View.popupWindow("Product choosing menu", Constants.FXMLs.productsMenu, 1200, 800);
             if(controller != null){
+                currentController = controller;
+                controller.numberOfColumns = 4;
                 controller.categoryName = categoryName;
                 controller.productIdToCompareWith = productId;
                 controller.inSale = false;
@@ -1294,6 +1296,13 @@ public class Controllers {
                 controller.initPageObjects();
                 controller.setValuesOfPageObjects();
             }
+        }
+
+        public static ProductsMenuController currentController;
+
+        public void close() {
+            currentController.availableCheckBox.getScene().getWindow().hide();
+            currentController = null;
         }
 
         private void initPageObjects() {
@@ -1579,7 +1588,10 @@ public class Controllers {
             if(productToCompare == null)
                 p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
             else {
-                p.setOnMouseClicked(e -> CompareMenuController.display(productToCompare, subProduct[0]));
+                p.setOnMouseClicked(e -> {
+                    ProductsMenuController.currentController.close();
+                    CompareMenuController.display(productToCompare, subProduct[0]);
+                });
             }
         }
 
@@ -1769,7 +1781,7 @@ public class Controllers {
             brandField.setText(productInfo[2]);
             imageField.setText(productInfo[8]);
             priceField.setText(subProductInfo[7]);
-            countField.setText(subProductInfo[5]);
+            countField.setText(subProductInfo[9]);
             infoArea.setText(productInfo[3]);
             category.setText(productInfo[7]);
 
@@ -1791,7 +1803,7 @@ public class Controllers {
                     Bindings.when(priceField.textProperty().isEqualTo(subProductInfo[7])).then(false).otherwise(true)
             );
             countFieldChanged.bind(
-                    Bindings.when(countField.textProperty().isEqualTo(subProductInfo[5])).then(false).otherwise(true)
+                    Bindings.when(countField.textProperty().isEqualTo(subProductInfo[9])).then(false).otherwise(true)
             );
             imageFieldChanged.bind(
                     Bindings.when(imageField.textProperty().isEqualTo(productInfo[8])).then(false).otherwise(true)
@@ -1831,7 +1843,7 @@ public class Controllers {
                             if (imageFieldChanged.get())
                                 sellerController.editProduct(productId, "imagePath", productInfo[8] = imageField.getText());
                             if (countFieldChanged.get())
-                                sellerController.editProduct(productId, "count", subProductInfo[5] = countField.getText());
+                                sellerController.editProduct(productId, "count", subProductInfo[9] = countField.getText());
                             if (priceFieldChanged.get())
                                 sellerController.editProduct(productId, "price", subProductInfo[7] = priceField.getText());
                             for (String properties : changed) {
@@ -1850,7 +1862,6 @@ public class Controllers {
                         }
                         discardBTN.getScene().getWindow().hide();
                     } catch (Exception ex) {
-                        printError(ex.getMessage());
                         ex.printStackTrace();
                     }
 
@@ -1881,11 +1892,6 @@ public class Controllers {
             } else countError.setVisible(false);
 
             return valid;
-        }
-
-        private void printError(String err) {
-            errorLBL.setTextFill(Color.RED);
-            errorLBL.setText(err);
         }
     }
 
@@ -4021,7 +4027,7 @@ public class Controllers {
             }
 
             public String getSaleId() {
-                return saleId;
+                return saleId == null ? "-" : saleId;
             }
 
             public double getPrice() {
@@ -6962,7 +6968,7 @@ public class Controllers {
         private String[] secondProductInfo;
 
         public static void display(String firstProductId, String secondProductId) {
-            ((CompareMenuController) View.popupWindow("Compare menu", Constants.FXMLs.compareMenu, 500, 620)).initialize(firstProductId, secondProductId);
+            ((CompareMenuController) View.popupWindow("Compare menu", Constants.FXMLs.compareMenu, 520, 620)).initialize(firstProductId, secondProductId);
         }
 
         private void initialize(String firstProductId, String secondProductId) {
@@ -7005,9 +7011,12 @@ public class Controllers {
                 HashMap<String, String> secondValues = mainController.getPropertyValuesOfAProduct(secondProductInfo[0]);
                 int index = 0;
                 for (String property : firstValues.keySet()) {
-                    var firstWrapper = new Label(firstValues.get(property));
-                    var secondWrapper = new Label(secondValues.get(property));
+                    var firstWrapper = new Label(firstValues.get(property).equals("") ? "-" : firstValues.get(property));
+                    firstWrapper.getStyleClass().add("value-label");
+                    var secondWrapper = new Label(secondValues.get(property).equals("") ? "-" : secondValues.get(property));
+                    secondWrapper.getStyleClass().add("value-label");
                     var propertyWrapper = new Label(property);
+                    propertyWrapper.getStyleClass().add("property-label");
                     productProperties.addRow(7 + index++,firstWrapper , propertyWrapper, secondWrapper);
                 }
             } catch (Exceptions.InvalidProductIdException e) {
