@@ -73,6 +73,15 @@ public class SellerController {
         else return p.getId();
     }
 
+    public boolean isNameAndBrandUsed(String name, String brand){
+        return Product.isProductNameAndBrandUsed(name, brand);
+    }
+
+    public boolean doesSellerSellThisProduct(String productId){
+        Product product = Product.getProductById(productId);
+        return product.isSoldInStoreWithName(((Seller)currentAccount()).getStoreName());
+    }
+
     public ArrayList<String[]> getAllSellLogs() {
         ArrayList<String[]> allSells = new ArrayList<>();
         for (SellLog sellLog : ((Seller) currentAccount()).getSellLogs()) {

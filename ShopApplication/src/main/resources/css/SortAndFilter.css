@@ -1,5 +1,4 @@
 * {
-    -fx-background-color: white;
     color-1: #085de4;
 }
 
@@ -115,12 +114,12 @@
 }
 
 .scroll-pane .increment-button, .scroll-pane .decrement-button {
-    -fx-background-color: #29292D;
+    -fx-background-color: transparent;
     -fx-background-radius: 2em;
 }
 
 .scroll-pane .scroll-bar:horizontal {
-    -fx-background-color: #29292D;
+    -fx-background-color: transparent;
     -fx-padding: 2 3 0 5;
 }
 
