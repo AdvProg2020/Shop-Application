@@ -87,6 +87,7 @@ public class Seller extends Account {
             sales.add(Sale.getSaleById(saleId));
         }
 
+        sales.sort(Comparator.comparing(Sale::getId));
         return sales;
     }
 
@@ -97,6 +98,7 @@ public class Seller extends Account {
         }
         sales.removeAll(getActiveSales());
 
+        sales.sort(Comparator.comparing(Sale::getId));
         return sales;
     }
 
@@ -117,6 +119,7 @@ public class Seller extends Account {
             subProducts.add(SubProduct.getSubProductById(subProductId));
         }
 
+        subProducts.sort(Comparator.comparing(SubProduct::getId));
         return subProducts;
     }
 
@@ -136,6 +139,7 @@ public class Seller extends Account {
             sellLogs.add(SellLog.getSellLogById(sellLogId));
         }
 
+        sellLogs.sort(Comparator.comparing(SellLog::getId));
         return sellLogs;
     }
 
@@ -150,6 +154,7 @@ public class Seller extends Account {
             requests.add(Request.getRequestById(requestId));
         }
 
+        requests.sort(Comparator.comparing(Request::getId));
         return requests;
     }
 

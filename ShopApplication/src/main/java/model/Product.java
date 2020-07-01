@@ -168,6 +168,7 @@ public class Product implements ModelBasic {
             subProducts.add(SubProduct.getSubProductById(subProductId));
         }
 
+        subProducts.sort(Comparator.comparing(SubProduct::getId));
         return subProducts;
     }
 
@@ -187,6 +188,7 @@ public class Product implements ModelBasic {
                 subProducts.add(subProduct);
         }
 
+        subProducts.sort(Comparator.comparing(SubProduct::getId));
         return subProducts;
     }
 
@@ -270,6 +272,7 @@ public class Product implements ModelBasic {
         for (String reviewId : reviewIds) {
             reviews.add(Review.getReviewById(reviewId));
         }
+        reviews.sort(Comparator.comparing(Review::getId));
         return reviews;
     }
 
@@ -345,7 +348,6 @@ public class Product implements ModelBasic {
         return maximum;
     }
 
-    //TODO: delete
     public int getTotalRemainingCount() {
         int total = 0;
         for (SubProduct subProduct : getSubProducts()) {
