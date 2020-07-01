@@ -11,6 +11,7 @@ public class EditSaleRequest extends Request implements SellerRequest {
     private String saleId;
     private Field field;
     private String newValue;
+    private String oldValue;
 
 
     public EditSaleRequest(String saleId, String newValue, Field field) {
@@ -23,6 +24,7 @@ public class EditSaleRequest extends Request implements SellerRequest {
 
     @Override
     public void accept() {
+        setOldValue();
         Sale sale = Sale.getSaleById(saleId);
         try {
             SimpleDateFormat parser = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -45,6 +47,12 @@ public class EditSaleRequest extends Request implements SellerRequest {
     }
 
     @Override
+    public void decline() {
+        setOldValue();
+        super.decline();
+    }
+
+    @Override
     protected boolean isInvalid() {
         return (status == RequestStatus.PENDING) && (getSale() == null);
     }
@@ -64,6 +72,31 @@ public class EditSaleRequest extends Request implements SellerRequest {
 
     public String getNewValue() {
         return newValue;
+    }
+
+    public String getOldValue() {
+        if (suspended) return oldValue;
+
+        setOldValue();
+        return oldValue;
+    }
+
+    private void setOldValue() {
+        Sale sale = Sale.getSaleById(saleId);
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        switch (field) {
+            case START_DATE:
+                oldValue = parser.format(sale.getStartDate());
+                break;
+            case END_DATE:
+                oldValue = parser.format(sale.getEndDate());
+                break;
+            case PERCENTAGE:
+                oldValue = String.valueOf(sale.getPercentage());
+                break;
+            case MAXIMUM:
+                oldValue = String.valueOf(sale.getMaximumAmount());
+        }
     }
 
     @Override

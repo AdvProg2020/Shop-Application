@@ -9,6 +9,7 @@ public class EditProductRequest extends Request implements SellerRequest {
     private String subProductId;
     private Field field;
     private String newValue;
+    private String oldValue;
 
     public EditProductRequest(String subProductId, Field field, String newValue) {
         super();
@@ -20,6 +21,7 @@ public class EditProductRequest extends Request implements SellerRequest {
 
     @Override
     public void accept() {
+        setOldValue();
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         Product product = subProduct.getProduct();
         switch (field) {
@@ -50,6 +52,12 @@ public class EditProductRequest extends Request implements SellerRequest {
     }
 
     @Override
+    public void decline() {
+        setOldValue();
+        super.decline();
+    }
+
+    @Override
     protected boolean isInvalid() {
         return (status == RequestStatus.PENDING) && (getSubProduct() == null);
     }
@@ -69,6 +77,41 @@ public class EditProductRequest extends Request implements SellerRequest {
 
     public String getNewValue() {
         return newValue;
+    }
+
+    public String getOldValue() {
+        if (suspended) return oldValue;
+
+        setOldValue();
+        return oldValue;
+    }
+
+    private void setOldValue() {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        Product product = subProduct.getProduct();
+        switch (field) {
+            case NAME:
+                oldValue = product.getName();
+                break;
+            case BRAND:
+                oldValue = product.getBrand();
+                break;
+            case INFO_TEXT:
+                oldValue = product.getInfoText();
+                break;
+            case IMAGE_PATH:
+                oldValue = product.getImagePath();
+                break;
+            case SUB_PRICE:
+                oldValue = String.valueOf(subProduct.getRawPrice());
+                break;
+            case SUB_COUNT:
+                oldValue = String.valueOf(subProduct.getRemainingCount());
+                break;
+            case PROPERTY:
+                String[] data = newValue.split(",");
+                oldValue = data[0] + "," + product.getValue(data[0]);
+        }
     }
 
     @Override
