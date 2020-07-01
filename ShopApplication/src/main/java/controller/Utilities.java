@@ -311,9 +311,10 @@ public class Utilities {
         }
 
         public static String[] productChange(EditProductRequest request) {
-            String[] productChange = new String[2];
+            String[] productChange = new String[3];
             productChange[0] = request.getField().toString();
             productChange[1] = request.getNewValue();
+            productChange[2] = request.getOldValue();
             return productChange;
         }
 
