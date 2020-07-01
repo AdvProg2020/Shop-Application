@@ -849,53 +849,9 @@ public class Controllers {
         }
 
         private void initValues() {
-            switch (tertiaryDetails[0]) {
-                case "NAME":
-                    fieldLBL.setText("Name");
-                    oldValue.setText(secondaryDetails[2]);
-                    break;
-                case "BRAND":
-                    fieldLBL.setText("Brand");
-                    oldValue.setText(secondaryDetails[3]);
-                    break;
-                case "INFO_TEXT":
-                    fieldLBL.setText("Info text");
-                    oldValue.setText(secondaryDetails[13]);
-                    break;
-                case "PROPERTY":
-                    fieldLBL.setText("Property");
-                    //TODO
-                    break;
-                case "SUB_PRICE":
-                    fieldLBL.setText("Sub product price");
-                    oldValue.setText(secondaryDetails[7]);
-                    break;
-                case "SUB_COUNT":
-                    fieldLBL.setText("Sub product count");
-                    oldValue.setText(secondaryDetails[9]);
-                    break;
-
-                case "START_DATE":
-                    fieldLBL.setText("Start date");
-                    oldValue.setText(secondaryDetails[3]);
-                    break;
-                case "END_DATE":
-                    fieldLBL.setText("End date");
-                    oldValue.setText(secondaryDetails[4]);
-                    break;
-                case "PERCENTAGE":
-                    fieldLBL.setText("Percentage");
-                    oldValue.setText(secondaryDetails[2]);
-                    break;
-                case "MAXIMUM":
-                    fieldLBL.setText("Maximum sale amount");
-                    oldValue.setText(secondaryDetails[6]);
-                    break;
-
-            }
-
+            fieldLBL.setText(tertiaryDetails[0]);
+            oldValue.setText(tertiaryDetails[2]);
             idValue.setText(secondaryDetails[0]);
-
             newValue.setText(tertiaryDetails[1]);
         }
     }
@@ -1064,7 +1020,7 @@ public class Controllers {
 
         public static void display(String requestId) {
             ((AddReviewRequestPopupController)
-                    View.popupWindow("Add review request details", Constants.FXMLs.addReviewRequestPopup, 500, 180)).initialize(requestId);
+                    View.popupWindow("Add review request details", Constants.FXMLs.addReviewRequestPopup, 500, 350)).initialize(requestId);
         }
 
         private void initialize(String requestId) {
@@ -1189,11 +1145,11 @@ public class Controllers {
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
             for (String[] subProductPack : mainController.getSubProductsForAdvertisements(6)) {
-                advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack, null));
+                advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack, null, null, false));
             }
 
             for (String[] subProduct : mainController.getSubProductsInSale(10)) {
-                productsInSale.getChildren().add(ProductBoxController.createBox(subProduct, null));
+                productsInSale.getChildren().add(ProductBoxController.createBox(subProduct, null, null, false));
             }
 
             allSales.setOnAction(e -> salesMenu());
@@ -1258,7 +1214,6 @@ public class Controllers {
 
         @FXML
         private ScrollPane propertiesScrollPane;
-
 
         private int numberOfColumns = 5;
         public ArrayList<String[]> products;
@@ -1410,7 +1365,7 @@ public class Controllers {
             productsPane.setPadding(new Insets(30, 30, 30, 30));
             int index = 0;
             for (String[] subProductPack : products) {
-                Parent productBox = ProductBoxController.createBox(subProductPack, productIdToCompareWith);
+                Parent productBox = ProductBoxController.createBox(subProductPack, productIdToCompareWith, categoryName, inSale);
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
             }
@@ -1531,7 +1486,9 @@ public class Controllers {
         private String[] subProduct;
 
 
-        public static Parent createBox(String[] subProduct, String productToCompare) {
+        private String categoryName;
+        private boolean inSale;
+        public static Parent createBox(String[] subProduct, String productToCompare, String categoryName, boolean inSale) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
             Parent p;
             try {
@@ -1539,6 +1496,8 @@ public class Controllers {
                 ProductBoxController pbc = loader.getController();
                 pbc.setInfo(subProduct);
                 pbc.setAction(p, productToCompare);
+                pbc.categoryName = categoryName;
+                pbc.inSale = inSale;
                 return p;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1586,7 +1545,11 @@ public class Controllers {
 
         private void setAction(Parent p, String productToCompare) {
             if(productToCompare == null)
-                p.setOnMouseClicked(e -> ProductDetailMenuController.display(subProduct[0], subProduct[1], false));
+                p.setOnMouseClicked(e -> {
+                    View.categoryName = categoryName;
+                    View.inSale = inSale;
+                    ProductDetailMenuController.display(subProduct[0], subProduct[1], false);
+                });
             else {
                 p.setOnMouseClicked(e -> {
                     ProductsMenuController.currentController.close();
@@ -4485,7 +4448,6 @@ public class Controllers {
 
         private boolean validateDiscount() {
             if (discountCode.getText().equals("")) {
-
                 return true;
             } else {
                 try {

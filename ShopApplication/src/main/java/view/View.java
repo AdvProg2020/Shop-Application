@@ -39,7 +39,8 @@ public class View extends Application {
     public static SimpleBooleanProperty isManager = new SimpleBooleanProperty(false);
     private static Stage mainStage;
     private static Scene mainScene;
-    public static Parent productsMenu;
+    public static boolean inSale;
+    public static String categoryName;
     static ArrayList<String> stackTrace = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -123,7 +124,9 @@ public class View extends Application {
         try {
             if (fxml.equals(Constants.FXMLs.personalInfoMenu)) {
                 Controllers.PersonalInfoMenuController.display(null);
-            } else {
+            } else if (fxml.equals(Constants.FXMLs.productsMenu)) {
+                Controllers.ProductsMenuController.display(categoryName, inSale);
+            }else {
                 p = loadFxml(fxml);
                 Controllers.BaseController.setMainPane(p);
             }

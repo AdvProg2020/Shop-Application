@@ -65,7 +65,7 @@ public class CustomerController {
 
     public double getTotalPriceOfCartWithDiscount(String discountCode) throws Exceptions.InvalidDiscountException {
         Discount discount = Discount.getDiscountByCode(discountCode);
-        if (discount == null || discount.hasCustomerWithId(currentAccount().getId())) {
+        if (discount == null || ! discount.hasCustomerWithId(currentAccount().getId())) {
             throw new Exceptions.InvalidDiscountException(discountCode);
         } else {
             return discount.calculateDiscountAmount(currentCart().getTotalPrice());
