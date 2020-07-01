@@ -120,6 +120,7 @@ public class Sale implements ModelBasic {
             subProducts.add(SubProduct.getSubProductById(subProductId));
         }
 
+        subProducts.sort(Comparator.comparing(SubProduct::getId));
         return subProducts;
     }
 

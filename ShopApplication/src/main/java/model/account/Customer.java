@@ -86,6 +86,7 @@ public class Customer extends Account {
             buyLogs.add(BuyLog.getBuyLogById(buyLogId));
         }
 
+        buyLogs.sort(Comparator.comparing(BuyLog::getId));
         return buyLogs;
     }
 
