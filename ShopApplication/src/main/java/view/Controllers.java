@@ -6507,7 +6507,7 @@ public class Controllers {
             newProductBTN.setOnAction(e -> {
                 if (validateFields()) {
                     String productId = sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText());
-                    if (productId != null) {
+                    if (productId != null || sellerController.isNameAndBrandUsed(ameField.getText(), brandField.getText())) {
                         printError("This product already exits!");
                     } else {
                         AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), productId);
@@ -6521,7 +6521,9 @@ public class Controllers {
                     String productId = sellerController.isProductWithNameAndBrand(ameField.getText(), brandField.getText());
                     if (productId == null) {
                         printError("There is no such product!");
-                    } else {
+                    } else if(sellerController.doesSellerSellThisProduct(productId)){
+                        printError("You already sell this product!");
+                    }else {
                         AddProductPopupController_Page2.display(ameField.getText(), brandField.getText(), productId);
                         ameField.getScene().getWindow().hide();
                     }
