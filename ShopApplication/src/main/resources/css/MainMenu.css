@@ -94,8 +94,8 @@
 }
 
 .hScroll-pane .scroll-bar:horizontal .thumb {
-    -fx-background-color: derive(#020708, 70%);
-    -fx-background-insets: 2, 0, 0;
+    -fx-background-color: derive(#fffcf6, 40%);
+    -fx-background-insets: 0, 0, 0;
     -fx-background-radius: 2em;
 }
 

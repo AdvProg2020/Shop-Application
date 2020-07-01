@@ -455,7 +455,7 @@ public class Utilities {
             if(!categoryProperties.contains(property))
                 return true;
             else {
-                return !value.equals(product.getValue(property));
+                return value.equals(product.getValue(property));
             }
         }
 
@@ -510,7 +510,7 @@ public class Utilities {
             public static void property(ArrayList<Product> products, String property, String value){
                 if(property == null || property.equals(""))
                     return;
-                products.removeIf(product -> Filter.doesMatchTheProperty(product, property, value));
+                products.removeIf(product ->  ! Filter.doesMatchTheProperty(product, property, value));
             }
         }
 

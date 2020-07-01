@@ -32,11 +32,13 @@
     -fx-min-height: 50;
     -fx-border-color: text-color-2;
     -fx-border-width: 1 0 1 0;
+    -fx-alignment: center;
 }
 
 .value-label {
     -fx-font-size: 14;
     -fx-font-style: italic;
+    -fx-alignment: center;
 }
 
 .scroll-pane {
