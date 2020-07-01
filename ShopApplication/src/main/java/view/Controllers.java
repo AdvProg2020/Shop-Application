@@ -1260,7 +1260,7 @@ public class Controllers {
         private ScrollPane propertiesScrollPane;
 
 
-        private static final int numberOfColumns = 3;
+        private static final int numberOfColumns = 5;
         public ArrayList<String[]> products;
         private String categoryName;
         private double maximumAvailablePrice;
@@ -1389,15 +1389,16 @@ public class Controllers {
             for (String s : properties.keySet()) {
                 propertyValues.put(s, properties.get(s).getValue());
             }
-            products = mainController.sortFilterProducts(categoryName, inSale, sortByChoiceBox.getValue(), isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
+            products = mainController.sortFilterProducts(categoryName, inSale, sortByChoiceBox.getValue(),  isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
                     minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), filterSeller.getValue(), 0, propertyValues);
         }
 
         private void updatePane() {
             var productsPane = new GridPane();
-            productsPane.setHgap(20);
-            productsPane.setVgap(20);
+            productsPane.setHgap(30);
+            productsPane.setVgap(30);
             scrollPane.setContent(productsPane);
+            productsPane.setPadding(new Insets(30, 30, 30, 30));
             int index = 0;
             for (String[] subProductPack : products) {
                 Parent productBox = ProductBoxController.createBox(subProductPack, productIdToCompareWith);
@@ -1415,6 +1416,7 @@ public class Controllers {
             choiceBox.getStylesheets().add(View.class.getResource("/css/ChoiceBox.css").toString());
             try {
                 ArrayList<String> propertyValues = mainController.getPropertyValuesInCategory(categoryName, property);
+                propertyValues.removeIf(s -> s.equals(""));
                 choiceBox.getItems().add("");
                 choiceBox.getSelectionModel().select(0);
                 choiceBox.getItems().addAll(propertyValues);
@@ -3717,7 +3719,15 @@ public class Controllers {
             public SubCategoryWrapper(String id, String name) {
                 this.name = name;
                 remove.getStyleClass().add("remove-button");
-                remove.setOnAction(e -> AdminCategoryManagingMenuController.currentController.removeItem(name));
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.removeCategory(this.name);
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    }
+                    subCategories.getItems().remove(this);
+                    AdminCategoryManagingMenuController.currentController.removeItem(name);
+                });
             }
 
             public String getName() {
@@ -3749,11 +3759,11 @@ public class Controllers {
         private void initVisibility() {
             boolean isDetail = category != null;
 
+            parentField.setEditable(false);
             editHB.setVisible(isDetail);
             addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
-            addPropertyHB.setVisible(!isDetail);
             if (!isDetail) {
                 tableTabPane.getTabs().removeAll(subCategoriesTAB, productsTAB);
             }
@@ -4345,7 +4355,7 @@ public class Controllers {
         private Button dismissBTN;
 
         public static void display(String totalPrice) {
-            ((PurchaseConfirmationController) View.popupWindow("Purchase confirmation", Constants.FXMLs.purchaseConfirmation, 380, 190)).initialize(totalPrice);
+            ((PurchaseConfirmationController) View.popupWindow("Purchase confirmation", Constants.FXMLs.purchaseConfirmation, 500, 190)).initialize(totalPrice);
         }
 
         private void initialize(String totalPrice) {
@@ -5385,7 +5395,6 @@ public class Controllers {
             addBTN.setVisible(!isDetail && editable);
             idKeyLBL.setVisible(isDetail);
             idValueLBL.setVisible(isDetail);
-
             editBTN.opacityProperty().bind(
                     Bindings.createObjectBinding(() -> {
                         if (codeFieldChanged.get() || percentageFieldChanged.get() || maxFieldChanged.get()
@@ -6250,7 +6259,7 @@ public class Controllers {
                 this.count = count;
             }
 
-            public String nameBrand() {
+            public String getNameBrand() {
                 return name + " (" + brand + ")";
             }
 
@@ -6362,6 +6371,10 @@ public class Controllers {
         private Button cartBTN;
         @FXML
         private Button manageBTN;
+
+        public static Parent getMainPane() {
+            return currentBase.mainPane;
+        }
 
         public static BaseController getCurrentBase() {
             return currentBase;
@@ -6601,10 +6614,14 @@ public class Controllers {
             String property;
             TextField value = new TextField();
 
-            public PropertyWrapper(String property) {
+            public PropertyWrapper(String property, String value) {
                 this.property = property;
-                value.setPromptText("Enter value...");
-                value.setEditable(! exists);
+                if (value == null) {
+                    this.value.setPromptText("Enter value...");
+                } else {
+                    this.value.setText(value);
+                }
+                this.value.setEditable(! exists);
             }
 
             public String getProperty() {
@@ -6653,6 +6670,20 @@ public class Controllers {
         private void initTable() {
             propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
             valueCOL.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+            if (exists)
+                initItems();
+        }
+
+        private void initItems() {
+            try {
+                HashMap<String, String> values = mainController.getPropertyValuesOfAProduct(info[0]);
+                for (String s : values.keySet()) {
+                    properties.getItems().add(new PropertyWrapper(s, values.get(s)));
+                }
+            } catch (Exceptions.InvalidProductIdException e) {
+                e.printStackTrace();
+            }
         }
 
         private void initAccessControls() {
@@ -6744,9 +6775,11 @@ public class Controllers {
 
         private void updateProperties(String categoryName) {
             try {
-                properties.getItems().clear();
-                for (String category : mainController.getPropertiesOfCategory(categoryName, true)) {
-                    properties.getItems().add(new PropertyWrapper(category));
+                if (! exists) {
+                    properties.getItems().clear();
+                    for (String category : mainController.getPropertiesOfCategory(categoryName, true)) {
+                        properties.getItems().add(new PropertyWrapper(category, null));
+                    }
                 }
             } catch (Exceptions.InvalidCategoryException e) {
                 e.printStackTrace();
@@ -6851,6 +6884,17 @@ public class Controllers {
 
         private void colorStars(int num) {
             switch (num) {
+                case 1:
+                    fullStar2.setVisible(false);
+                case 2:
+                    fullStar3.setVisible(false);
+                case 3:
+                    fullStar4.setVisible(false);
+                case 4:
+                    fullStar5.setVisible(false);
+            }
+
+            switch (num) {
                 case 5:
                     fullStar5.setVisible(true);
                 case 4:
@@ -6861,17 +6905,6 @@ public class Controllers {
                     fullStar2.setVisible(true);
                 case 1:
                     fullStar1.setVisible(true);
-            }
-
-            switch (num) {
-                case 4:
-                    fullStar5.setVisible(false);
-                case 3:
-                    fullStar4.setVisible(false);
-                case 2:
-                    fullStar3.setVisible(false);
-                case 1:
-                    fullStar2.setVisible(false);
             }
         }
     }

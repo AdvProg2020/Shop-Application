@@ -19,7 +19,7 @@
         <VBox BorderPane.alignment="CENTER">
             <TableView fx:id="logItems" maxWidth="-Infinity" stylesheets="@../css/TableView.css">
                 <columns>
-                    <TableColumn fx:id="subProductCOL" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Name-Brand (Seller)" />
+                    <TableColumn fx:id="subProductCOL" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Name Brand (Seller)" />
                     <TableColumn fx:id="countCOL" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Count" />
                     <TableColumn fx:id="unitPriceCOL" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Unit Price" />
                     <TableColumn fx:id="ratingCOL" editable="false" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" sortable="false" text="Rate" />

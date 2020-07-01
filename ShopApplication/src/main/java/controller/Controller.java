@@ -485,7 +485,6 @@ public class Controller {
         Category category = Category.getCategoryByName(categoryName);
         if (category != null) {
             ArrayList<String> values = new ArrayList<>();
-            values.add(null);
             for (Product product : category.getProducts(true)) {
                 values.add(product.getValue(property));
             }

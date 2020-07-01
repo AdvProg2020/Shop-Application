@@ -89,7 +89,7 @@ public class SubProduct implements ModelBasic {
 
     public Sale getSale() {
         Sale sale = Sale.getSaleById(saleId);
-        if (!sale.hasStarted()) return null;
+        if (sale == null || !sale.hasStarted()) return null;
 
         return sale;
     }
@@ -97,7 +97,7 @@ public class SubProduct implements ModelBasic {
     @ModelOnly
     public void setSale(String saleId) {
         if (getSale() != null)
-            getSale().removeSubProduct(subProductId);
+            getSale().removeSubProduct(subProductId, false);
         this.saleId = saleId;
     }
 

@@ -39,6 +39,7 @@ public class View extends Application {
     public static SimpleBooleanProperty isManager = new SimpleBooleanProperty(false);
     private static Stage mainStage;
     private static Scene mainScene;
+    public static Parent productsMenu;
     static ArrayList<String> stackTrace = new ArrayList<>();
 
     public static void main(String[] args) {

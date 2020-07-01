@@ -34,3 +34,4 @@ A: admin product managing menu
 A: seller product managing menu
 T: check if seller already has the sub product
 A: fixing add and deletion in discount and sale edit
+A: format double Strings.

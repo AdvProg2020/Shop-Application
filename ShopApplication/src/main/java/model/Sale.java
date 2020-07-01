@@ -129,8 +129,10 @@ public class Sale implements ModelBasic {
             SubProduct.getSubProductById(subProductId).setSale(saleId);
     }
 
-    public void removeSubProduct(String subProductId) {
+    public void removeSubProduct(String subProductId, boolean... deep) {
+        boolean isDeep = (deep.length == 0) || deep[0]; // optional (default = true)
         subProductIds.remove(subProductId);
-        SubProduct.getSubProductById(subProductId).setSale(null);
+        if (isDeep)
+            SubProduct.getSubProductById(subProductId).setSale(null);
     }
 }

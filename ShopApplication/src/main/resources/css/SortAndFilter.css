@@ -1,4 +1,5 @@
 * {
+    -fx-background-color: white;
     color-1: #085de4;
 }
 
@@ -118,23 +119,23 @@
     -fx-background-radius: 2em;
 }
 
-.scroll-pane .scroll-bar:vertical {
+.scroll-pane .scroll-bar:horizontal {
     -fx-background-color: #29292D;
     -fx-padding: 2 3 0 5;
 }
 
-.scroll-pane .scroll-bar:vertical .track {
+.scroll-pane .scroll-bar:horizontal .track {
     -fx-background-radius: 2em;
     -fx-border-radius: 2em;
 }
 
-.scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: derive(color-1, 90%);
+.scroll-pane .scroll-bar:horizontal .thumb {
+    -fx-background-color: derive(#085de4, 70%);
     -fx-background-insets: 2, 0, 0;
     -fx-background-radius: 2em;
 }
 
-.scroll-pane .scroll-bar:horizontal { /* hide */
+.scroll-pane .scroll-bar:vertical { /* hide */
     -fx-opacity: 0;
 
     -fx-min-width: 0;
