@@ -304,9 +304,10 @@ public class Utilities {
         }
 
         public static String[] saleChange(EditSaleRequest request) {
-            String[] saleChange = new String[2];
+            String[] saleChange = new String[3];
             saleChange[0] = request.getField().toString();
             saleChange[1] = request.getNewValue();
+            saleChange[2] = request.getOldValue();
             return saleChange;
         }
 
