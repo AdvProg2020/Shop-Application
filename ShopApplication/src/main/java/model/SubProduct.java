@@ -56,7 +56,7 @@ public class SubProduct implements ModelBasic {
     public void suspend() {
         getSeller().removeSubProduct(subProductId);
         getProduct().removeSubProduct(subProductId);
-        setSale(null);
+        setSale(null, false);
         Cart.removeSubProductFromAll(subProductId);
         suspended = true;
     }
@@ -87,17 +87,19 @@ public class SubProduct implements ModelBasic {
         return Seller.getSellerById(sellerId, checkSuspense);
     }
 
-    public Sale getSale() {
-        Sale sale = Sale.getSaleById(saleId);
-        if (sale == null || !sale.hasStarted()) return null;
+    public Sale getSale(boolean... suspense) {
+        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
+
+        Sale sale = Sale.getSaleById(saleId, suspense);
+        if (checkSuspense && (sale == null || !sale.hasStarted())) return null;
 
         return sale;
     }
 
     @ModelOnly
-    public void setSale(String saleId) {
-        if (getSale() != null)
-            getSale().removeSubProduct(subProductId, false);
+    public void setSale(String saleId, boolean... suspense) {
+        if (getSale(suspense) != null)
+            getSale(suspense).removeSubProduct(subProductId, false);
         this.saleId = saleId;
     }
 
