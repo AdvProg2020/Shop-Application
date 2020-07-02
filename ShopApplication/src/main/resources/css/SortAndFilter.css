@@ -94,7 +94,9 @@
 }
 
 #search-button {
-    -fx-graphic: url("../img/search-button.png");
+    -fx-graphic: url("../img/search-button-2.png");
+    -fx-background-color: color-1;
+    -fx-background-radius: 0 2 2 0;
 }
 
 #update-button {
