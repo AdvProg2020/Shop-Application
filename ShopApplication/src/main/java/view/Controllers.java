@@ -1215,6 +1215,9 @@ public class Controllers {
         @FXML
         private ScrollPane propertiesScrollPane;
 
+        @FXML
+        private Button searchBTN;
+
         private int numberOfColumns = 5;
         public ArrayList<String[]> products;
         private String categoryName;
@@ -1261,7 +1264,6 @@ public class Controllers {
         }
 
         private void initPageObjects() {
-            initBindings();
             initActions();
             initPropertyFilters();
             if( !toCompare ){
@@ -1269,11 +1271,18 @@ public class Controllers {
                 initCategoryTree();
             }
             initChoiceBoxes();
+            initBindings();
         }
 
         private void initBindings(){
             sortByChoiceBox.getSelectionModel().selectedItemProperty().addListener(((observableValue, s, t1) -> update()));
             isIncreasingButton.getToggleGroup().selectedToggleProperty().addListener((observableValue, toggle, t1) -> update());
+            maxPriceSlider.setOnMouseReleased(e -> update());
+            minPriceSlider.setOnMouseReleased(e -> update());
+            filterSeller.getSelectionModel().selectedItemProperty().addListener(((observable) -> update()));
+            filterBrand.getSelectionModel().selectedItemProperty().addListener(((observable) -> update()));
+            searchBTN.setOnAction(e -> update());
+            availableCheckBox.selectedProperty().addListener((observable -> update()));
         }
 
         private void setValuesOfPageObjects() {
@@ -1384,6 +1393,7 @@ public class Controllers {
             ChoiceBox<String> choiceBox = new ChoiceBox<>();
             vBox.getChildren().addAll(new Label(property), choiceBox);
             choiceBox.getStylesheets().add(View.class.getResource("/css/ChoiceBox.css").toString());
+            choiceBox.getSelectionModel().selectedItemProperty().addListener((observable -> update()));
             try {
                 ArrayList<String> propertyValues = mainController.getPropertyValuesInCategory(categoryName, property);
                 propertyValues.removeIf(s -> s.equals(""));
