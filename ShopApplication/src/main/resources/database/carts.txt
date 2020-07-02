@@ -1,6 +1,0 @@
-{"cartId":"CRT2006010001","subProductIds":{}}
-{"cartId":"CRT2006010002","customerId":"CST2006010001","subProductIds":{}}
-{"cartId":"CRT2006010004","subProductIds":{}}
-{"cartId":"CRT2006010005","customerId":"CST2006010002","subProductIds":{}}
-{"cartId":"CRT2006010007","subProductIds":{}}
-{"cartId":"CRT2006020001","subProductIds":{}}

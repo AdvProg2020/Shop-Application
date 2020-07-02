@@ -1,1 +1,0 @@
-{"discountId":"DSC2006010001","discountCode":"test","startDate":"Jun 29, 2020, 12:00:00 AM","endDate":"Jul 22, 2020, 12:00:00 AM","percentage":50.0,"maximumAmount":2000.0,"customerIds":{"CST2006010001":4},"suspended":false}

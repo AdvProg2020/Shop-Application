@@ -1,4 +1,0 @@
-{"saleId":"SAL2006010001","sellerId":"SLR2006010001","startDate":"Jul 3, 2020, 12:00:00 AM","endDate":"Jul 24, 2020, 12:00:00 AM","percentage":12.0,"maximumAmount":234.0,"subProductIds":["SBP2006010002"],"suspended":false}
-{"saleId":"SAL2006010002","sellerId":"SLR2006010001","startDate":"Jun 30, 2020, 12:00:00 AM","endDate":"Jul 17, 2020, 12:00:00 AM","percentage":50.0,"maximumAmount":6.0,"subProductIds":[],"suspended":false}
-{"saleId":"SAL2006010003","sellerId":"SLR2006010002","startDate":"Jul 2, 2020, 12:00:00 AM","endDate":"Jul 31, 2020, 12:00:00 AM","percentage":54.0,"maximumAmount":54.0,"subProductIds":["SBP2006010009","SBP2006010008","SBP2006010007"],"suspended":false}
-{"saleId":"SAL2006010004","sellerId":"SLR2006010002","startDate":"Jun 29, 2020, 12:00:00 AM","endDate":"Jul 16, 2020, 12:00:00 AM","percentage":43.0,"maximumAmount":4532.0,"subProductIds":["SBP2006010006","SBP2006010005","SBP2006010004","SBP2006010003"],"suspended":false}

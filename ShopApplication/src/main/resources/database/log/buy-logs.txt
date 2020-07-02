@@ -1,2 +1,0 @@
-{"buyLogId":"BLG2006010001","customerId":"CST2006010001","paidMoney":1296.0,"totalDiscountAmount":0.0,"date":"Jul 1, 2020, 5:53:08 PM","receiverName":"dd","receiverAddress":"sdfsdsffsdsdf","receiverPhone":"4324","shippingStatus":"PROCESSING"}
-{"buyLogId":"BLG2006010002","customerId":"CST2006010001","paidMoney":698.22,"totalDiscountAmount":698.22,"date":"Jul 1, 2020, 10:06:32 PM","receiverName":"fsd","receiverAddress":"sdffsd","receiverPhone":"45345","shippingStatus":"PROCESSING"}

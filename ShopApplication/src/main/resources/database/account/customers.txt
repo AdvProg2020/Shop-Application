@@ -1,2 +1,0 @@
-{"CLASSNAME":"model.account.Customer","INSTANCE":{"balance":802.78,"accountId":"CST2006010001","suspended":false,"username":"cdana","password":"a","firstName":"sdf","lastName":"f","email":"@@@.c","phone":"32","imagePath":""}}
-{"CLASSNAME":"model.account.Customer","INSTANCE":{"balance":423.0,"accountId":"CST2006010002","suspended":false,"username":"cdana2","password":"a","firstName":"fsd","lastName":"sfd","email":"@@@.com","phone":"342","imagePath":""}}

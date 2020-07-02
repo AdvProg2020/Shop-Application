@@ -1,31 +1,3 @@
-A: afa T: talaee M: mohammadi
-
-T: salesMenu and productsMenu compare  product box (PRIORITY)
-T (notice from afa): man yedone mainController.viewPersonalInfo(String username) baraye detail menu ezafe kardam.
-A & T: addRating to product detail menu addReview button (popUp)
-A & T: booting add admin.
-
-T: update product pack (specially product box methods) send view what it needs to wrap.
-    has: productId, subProductId, imagePath, name, brand, rating, price before/after, percentage.
-T: fxml product box add css id.
-T: getAll categories method for view
-T & A: image for users
-    T: connecting model and view with image path. adding and editing support for image view.
-    A: connect the thing.
-T & M: null catching for default subProduct
-A: handle opacity of non existing products
-A & T & M: compare! new box fxml and pass it to productsMenu and create a compare.
-A & T & M: video
-A: button.setGraphic for table show of products and for user managing of admin
-A & T & M: sale details in product box
-M & A: add commercial request and reduce balance. (Slide show)
-
-
-T:
-    check purchase procedure
-
-
-
 --------------------
 T: product menu debug
 T: live filter update
@@ -35,3 +7,10 @@ A: seller product managing menu
 T: check if seller already has the sub product
 A: fixing add and deletion in discount and sale edit
 A: format double Strings.
+M: stack overflow.
+-----------------------
+PHASE 3:
+M: update model requirements.
+A & T: read the docs and find a solution.
+A & T: update and connect FXMLs.
+Due: 13/4/99.

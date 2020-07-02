@@ -1,9 +1,0 @@
-{"subProductId":"SBP2006010001","productId":"PRO2006010001","sellerId":"SLR2006010001","price":432.0,"remainingCount":421,"suspended":false}
-{"subProductId":"SBP2006010002","productId":"PRO2006010002","sellerId":"SLR2006010001","price":432.0,"remainingCount":0,"suspended":false}
-{"subProductId":"SBP2006010003","productId":"PRO2006010001","sellerId":"SLR2006010002","price":423.0,"remainingCount":419,"suspended":false}
-{"subProductId":"SBP2006010004","productId":"PRO2006010003","sellerId":"SLR2006010002","price":342.0,"remainingCount":432,"suspended":false}
-{"subProductId":"SBP2006010005","productId":"PRO2006010004","sellerId":"SLR2006010002","price":3.0,"remainingCount":432,"suspended":false}
-{"subProductId":"SBP2006010006","productId":"PRO2006010005","sellerId":"SLR2006010002","price":432.0,"remainingCount":432,"suspended":false}
-{"subProductId":"SBP2006010007","productId":"PRO2006010006","sellerId":"SLR2006010002","price":324.0,"remainingCount":32,"suspended":false}
-{"subProductId":"SBP2006010008","productId":"PRO2006010007","sellerId":"SLR2006010002","price":43.0,"remainingCount":423,"suspended":false}
-{"subProductId":"SBP2006010009","productId":"PRO2006010008","sellerId":"SLR2006010002","price":423.0,"remainingCount":432,"suspended":false}

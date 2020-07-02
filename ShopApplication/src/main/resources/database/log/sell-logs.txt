@@ -1,3 +1,0 @@
-{"sellLogId":"SLG2006010001","parentBuyLogId":"BLG2006010001","sellerId":"SLR2006010001","receivedMoney":10368.0,"totalSaleAmount":0.0}
-{"sellLogId":"SLG2006010002","parentBuyLogId":"BLG2006010002","sellerId":"SLR2006010001","receivedMoney":864.0,"totalSaleAmount":0.0}
-{"sellLogId":"SLG2006010003","parentBuyLogId":"BLG2006010002","sellerId":"SLR2006010002","receivedMoney":1928.88,"totalSaleAmount":1455.12}

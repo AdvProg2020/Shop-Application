@@ -1,7 +1,0 @@
-{"reviewId":"REV2006010001","reviewerId":"CST2006010001","productId":"PRO2006010001","title":"ziba","text":"zibast","bought":true}
-{"reviewId":"REV2006010002","reviewerId":"CST2006010001","productId":"PRO2006010001","title":"test","text":"test","bought":true}
-{"reviewId":"REV2006010003","reviewerId":"CST2006010001","productId":"PRO2006010001","title":"aaaaa","text":"aaaaa","bought":true}
-{"reviewId":"REV2006010004","reviewerId":"CST2006010001","productId":"PRO2006010001","title":"lol","text":"olo","bought":true}
-{"reviewId":"REV2006010005","reviewerId":"CST2006010001","productId":"PRO2006010001","title":"fdsa","text":"fds","bought":true}
-{"reviewId":"REV2006010006","reviewerId":"CST2006010001","productId":"PRO2006010001","title":"fdsa","text":"fds","bought":true}
-{"reviewId":"REV2006010007","reviewerId":"CST2006010002","productId":"PRO2006010001","title":"sdffsd","text":"sfdfsd","bought":false}
