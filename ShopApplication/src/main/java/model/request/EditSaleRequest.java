@@ -27,7 +27,7 @@ public class EditSaleRequest extends Request implements SellerRequest {
         setOldValue();
         Sale sale = Sale.getSaleById(saleId);
         try {
-            SimpleDateFormat parser = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            SimpleDateFormat parser = new SimpleDateFormat("yy-MM-dd");
             switch (field) {
                 case START_DATE:
                     sale.setStartDate(parser.parse(newValue));
@@ -83,7 +83,7 @@ public class EditSaleRequest extends Request implements SellerRequest {
 
     private void setOldValue() {
         Sale sale = Sale.getSaleById(saleId);
-        SimpleDateFormat parser = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        SimpleDateFormat parser = new SimpleDateFormat("yy-MM-dd");
         switch (field) {
             case START_DATE:
                 oldValue = parser.format(sale.getStartDate());
