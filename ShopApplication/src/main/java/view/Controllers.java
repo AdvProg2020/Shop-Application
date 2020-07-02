@@ -1215,6 +1215,9 @@ public class Controllers {
         @FXML
         private ScrollPane propertiesScrollPane;
 
+        @FXML
+        private Button searchBTN;
+
         private int numberOfColumns = 5;
         public ArrayList<String[]> products;
         private String categoryName;
@@ -1278,7 +1281,7 @@ public class Controllers {
             minPriceSlider.setOnMouseReleased(e -> update());
             filterSeller.getSelectionModel().selectedItemProperty().addListener(((observable) -> update()));
             filterBrand.getSelectionModel().selectedItemProperty().addListener(((observable) -> update()));
-            filterName.textProperty().addListener((observable -> update()));
+            searchBTN.setOnAction(e -> update());
             availableCheckBox.selectedProperty().addListener((observable -> update()));
         }
 
