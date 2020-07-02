@@ -54,7 +54,7 @@ public class Sale implements ModelBasic {
 
     public void suspend() {
         for (SubProduct subProduct : getSubProducts()) {
-            subProduct.setSale(null);
+            subProduct.setSale(null, false);
         }
         suspended = true;
     }
