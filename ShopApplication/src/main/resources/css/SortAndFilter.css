@@ -93,6 +93,10 @@
     -fx-border-radius: 3px;
 }
 
+#search-button {
+    -fx-graphic: url("../img/search-button.png");
+}
+
 #update-button {
     -fx-background-color: color-1;
     -fx-text-fill: whitesmoke;
