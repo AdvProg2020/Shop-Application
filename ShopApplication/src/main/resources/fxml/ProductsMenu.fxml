@@ -74,7 +74,8 @@
                                                    GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                                                  <children>
                                                      <TextField fx:id="filterName"/>
-                                                     <Button id="search-button" mnemonicParsing="false"/>
+                                                     <Button id="search-button" fx:id="searchBTN"
+                                                             mnemonicParsing="false"/>
                                                  </children>
                                              </HBox>
                                              <ChoiceBox fx:id="filterBrand" prefWidth="150.0"
