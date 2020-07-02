@@ -1261,6 +1261,7 @@ public class Controllers {
         }
 
         private void initPageObjects() {
+            initBindings();
             initActions();
             initPropertyFilters();
             if( !toCompare ){
@@ -1268,6 +1269,11 @@ public class Controllers {
                 initCategoryTree();
             }
             initChoiceBoxes();
+        }
+
+        private void initBindings(){
+            sortByChoiceBox.getSelectionModel().selectedItemProperty().addListener(((observableValue, s, t1) -> update()));
+            isIncreasingButton.getToggleGroup().selectedToggleProperty().addListener((observableValue, toggle, t1) -> update());
         }
 
         private void setValuesOfPageObjects() {
