@@ -3,6 +3,7 @@ package model;
 import model.account.Seller;
 import model.database.Database;
 import model.request.AddSaleRequest;
+import model.sellable.SubProduct;
 
 import java.util.*;
 
@@ -54,7 +55,7 @@ public class Sale implements ModelBasic {
 
     public void suspend() {
         for (SubProduct subProduct : getSubProducts()) {
-            subProduct.setSale(null, false);
+            subProduct.removeSale();
         }
         suspended = true;
     }
@@ -130,10 +131,8 @@ public class Sale implements ModelBasic {
             SubProduct.getSubProductById(subProductId).setSale(saleId);
     }
 
-    public void removeSubProduct(String subProductId, boolean... deep) {
-        boolean isDeep = (deep.length == 0) || deep[0]; // optional (default = true)
+    public void removeSubProduct(String subProductId) {
         subProductIds.remove(subProductId);
-        if (isDeep)
-            SubProduct.getSubProductById(subProductId).setSale(null);
+        SubProduct.getSubProductById(subProductId).removeSale();
     }
 }
