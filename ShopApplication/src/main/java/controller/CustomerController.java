@@ -1,7 +1,9 @@
 package controller;
 
 
-import model.*;
+import model.Cart;
+import model.Discount;
+import model.Rating;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
@@ -10,6 +12,8 @@ import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.log.ShippingStatus;
+import model.sellable.Sellable;
+import model.sellable.SubSellable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,9 +51,9 @@ public class CustomerController {
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
         if (field.equals("balance")) {
-            if (((Customer) currentAccount()).getBalance() == Double.parseDouble(newInformation))
+            if (((Customer) currentAccount()).getWallet().getBalance() == Double.parseDouble(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(newInformation);
-            ((Customer) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Customer) currentAccount()).getBalance());
+            ((Customer) currentAccount()).getWallet().changeBalance(Double.parseDouble(newInformation) - ((Customer) currentAccount()).getWallet().getBalance());
         } else
             mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
@@ -76,7 +80,7 @@ public class CustomerController {
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
             Exceptions.NotAvailableSubProductsInCart, Exceptions.InvalidDiscountException, Exceptions.EmptyCartException {
         String notAvailableSubProducts;
-        Map<SubProduct, Integer> subProductsInCart = currentCart().getSubProducts();
+        Map<SubSellable, Integer> subProductsInCart = currentCart().getSubSellables();
         if (subProductsInCart.isEmpty())
             throw new Exceptions.EmptyCartException();
         if (!(notAvailableSubProducts = notAvailableSubProductsInCart()).isEmpty())
@@ -91,40 +95,40 @@ public class CustomerController {
                 throw new Exceptions.InvalidDiscountException(discountCode);
         }
         double paidMoney = totalPrice - discountAmount;
-        if (paidMoney > ((Customer) currentAccount()).getBalance())
-            throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getBalance());
+        if (paidMoney > ((Customer) currentAccount()).getWallet().getBalance())
+            throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getWallet().getBalance());
         BuyLog buyLog = new BuyLog(currentAccount().getId(), paidMoney, discountAmount, receiverName, address, receiverPhone, ShippingStatus.PROCESSING);
         HashMap<Seller, SellLog> sellLogs = new HashMap<>();
         SellLog sellLog;
         Seller seller;
         int subProductCount;
-        for (SubProduct subProduct : subProductsInCart.keySet()) {
-            seller = subProduct.getSeller();
+        for (SubSellable subSellable : subProductsInCart.keySet()) {
+            seller = subSellable.getSeller();
             if (sellLogs.containsKey(seller))
                 sellLog = sellLogs.get(seller);
             else {
                 sellLog = new SellLog(buyLog.getId(), seller.getId());
                 sellLogs.put(seller, sellLog);
             }
-            subProductCount = subProductsInCart.get(subProduct);
-            new LogItem(buyLog.getId(), sellLog.getId(), subProduct.getId(), subProductCount);
-            subProduct.changeRemainingCount(-subProductCount);
-            seller.changeBalance(subProduct.getPriceWithSale() * subProductCount);
+            subProductCount = subProductsInCart.get(subSellable);
+            new LogItem(buyLog.getId(), sellLog.getId(), subSellable.getId(), subProductCount);
+            subSellable.changeRemainingCount(-subProductCount);
+            seller.getWallet().changeBalance(subSellable.getPriceWithSale() * subProductCount);
         }
         if (discount != null)
             discount.changeCount(currentAccount().getId(), -1);
-        ((Customer) currentAccount()).changeBalance(-paidMoney);
+        ((Customer) currentAccount()).getWallet().changeBalance(-paidMoney);
         currentCart().clearCart();
         database().purchase();
     }
 
     private String notAvailableSubProductsInCart() {
         StringBuilder notAvailableSubProducts = new StringBuilder();
-        Map<SubProduct, Integer> subProductsInCart = currentCart().getSubProducts();
-        for (SubProduct subProduct : subProductsInCart.keySet()) {
-            if (subProduct.getRemainingCount() < subProductsInCart.get(subProduct)) {
-                String notAvailableProduct = "\n" + subProduct.getId() + " number in cart: " + subProductsInCart.get(subProduct) +
-                        " available count: " + subProduct.getRemainingCount();
+        Map<SubSellable, Integer> subProductsInCart = currentCart().getSubSellables();
+        for (SubSellable subSellable : subProductsInCart.keySet()) {
+            if (subSellable.getRemainingCount() < subProductsInCart.get(subSellable)) {
+                String notAvailableProduct = "\n" + subSellable.getId() + " number in cart: " + subProductsInCart.get(subSellable) +
+                        " available count: " + subSellable.getRemainingCount();
                 notAvailableSubProducts.append(notAvailableProduct);
             }
         }
@@ -175,13 +179,13 @@ public class CustomerController {
 
     public void rateProduct(String productID, int score) throws
             Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
-        Product product = Product.getProductById(productID);
-        if (product == null)
+        Sellable sellable = Sellable.getSellableById(productID);
+        if (sellable == null)
             throw new Exceptions.InvalidProductIdException(productID);
         else {
             if (currentAccount() != null) {
-                for (SubProduct subProduct : product.getSubProducts()) {
-                    if (new ArrayList<>(subProduct.getCustomers()).contains(currentAccount())) {
+                for (SubSellable subSellable : sellable.getSubSellables()) {
+                    if (new ArrayList<>(subSellable.getCustomers()).contains(currentAccount())) {
                         new Rating(currentAccount().getId(), productID, score);
                         database().addRating();
                         return;
@@ -193,7 +197,7 @@ public class CustomerController {
     }
 
     public double viewBalance() {
-        return ((Customer) currentAccount()).getBalance();
+        return ((Customer) currentAccount()).getWallet().getBalance();
     }
 
     public ArrayList<String[]> viewDiscountCodes() {
@@ -216,11 +220,11 @@ public class CustomerController {
     }
 
     public boolean hasBought(String productId) throws Exceptions.InvalidProductIdException {
-        Product product = Product.getProductById(productId);
-        if(product == null){
+        Sellable sellable = Sellable.getSellableById(productId);
+        if (sellable == null) {
             throw new Exceptions.InvalidProductIdException(productId);
-        }else {
-            return product.hasBought(currentAccount().getId());
+        } else {
+            return sellable.hasBought(currentAccount().getId());
         }
     }
 }

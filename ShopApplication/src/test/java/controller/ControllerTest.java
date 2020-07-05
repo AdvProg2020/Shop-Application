@@ -33,8 +33,6 @@ class ControllerTest {
         Assertions.assertDoesNotThrow(() -> mainController.login("unexpectedUser", "salam"));
         Assertions.assertThrows(Exceptions.UsernameAlreadyTakenException.class, () -> mainController.creatAccount("Customer", "unexpectedUser", "salam", "user", "user",
                 "salam@user.com", "09113204", 3244, "asdf", "/src/main/resources"));
-        Assertions.assertThrows(Exceptions.AdminRegisterException.class, () -> mainController.creatAccount("Admin", "unexpectedUser2", "salam", "user", "user",
-                "salam@user.com", "09113204", 3244, "asdf", "/src/main/resources"));
 
     }
 }
