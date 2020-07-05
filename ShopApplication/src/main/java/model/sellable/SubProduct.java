@@ -1,131 +1,28 @@
 package model.sellable;
 
-import model.Cart;
-import model.ModelBasic;
-import model.ModelUtilities;
-import model.ModelUtilities.ModelOnly;
-import model.Sale;
-import model.account.Customer;
-import model.account.Seller;
 import model.database.Database;
 import model.request.AddProductRequest;
 
-import java.util.*;
-
-public class SubProduct implements ModelBasic {
-    private static Map<String, SubProduct> allSubProducts = new HashMap<>();
-    private static int lastNum = 1;
-    private String subProductId;
-    private String productId;
-    private String sellerId;
-    private double price;
+public class SubProduct extends SubSellable {
     private int remainingCount;
-    private transient String saleId; //can be null
-    private transient Set<String> customerIds;
-    private boolean suspended;
 
-    public SubProduct(String productId, String sellerId, double price, int count, Database database) {
-        this.productId = productId;
-        this.sellerId = sellerId;
-        this.price = price;
-        remainingCount = count;
-        saleId = null;
-        suspended = false;
-        if (productId != null)
+    public SubProduct(String productId, String sellerId, double price, int remainingCount, Database database) {
+        super(productId, sellerId, price, database);
+        this.remainingCount = remainingCount;
+        if (sellableId != null)
             new AddProductRequest(null, this).updateDatabase(database);
     }
 
-    public static List<SubProduct> getAllSubProducts(boolean... suspense) {
-        return ModelUtilities.getAllInstances(allSubProducts.values(), suspense);
-    }
-
     public static SubProduct getSubProductById(String subProductId, boolean... suspense) {
-        return ModelUtilities.getInstanceById(allSubProducts, subProductId, suspense);
-    }
+        SubSellable subSellable = getSubSellableById(subProductId, suspense);
+        if (subSellable instanceof SubProduct)
+            return (SubProduct) subSellable;
 
-    @Override
-    public void initialize() {
-        if (subProductId == null)
-            subProductId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
-        allSubProducts.put(subProductId, this);
-        lastNum++;
-
-        customerIds = new HashSet<>();
-        if (!suspended) {
-            getSeller().addSubProduct(subProductId);
-            getProduct().addSubProduct(subProductId);
-        }
-    }
-
-    public void suspend() {
-        getSeller().removeSubProduct(subProductId);
-        getProduct().removeSubProduct(subProductId);
-        getSale().removeSubProduct(subProductId);
-        Cart.removeSubProductFromAll(subProductId);
-        suspended = true;
-    }
-
-    @Override
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    @Override
-    public String getId() {
-        return subProductId;
+        return null;
     }
 
     public Product getProduct(boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-        return Product.getProductById(productId, checkSuspense);
-    }
-
-    @ModelOnly
-    public void setProductId(String productId) { // only used for accepting productRequest
-        if (this.productId == null)
-            this.productId = productId;
-    }
-
-    public Seller getSeller(boolean... suspense) {
-        boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
-        return Seller.getSellerById(sellerId, checkSuspense);
-    }
-
-    public Sale getSale() {
-        Sale sale = Sale.getSaleById(saleId);
-        if (sale == null || !sale.hasStarted()) return null;
-
-        return sale;
-    }
-
-    @ModelOnly
-    public void setSale(String saleId) {
-        if (getSale() != null)
-            getSale().removeSubProduct(subProductId);
-        this.saleId = saleId;
-    }
-
-    public void removeSale() {
-        this.saleId = null;
-    }
-
-    public double getRawPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double getPriceWithSale() {
-        if (getSale() == null) return price;
-
-        double saleAmount = price * getSale().getPercentage() / 100;
-        double maximumAmount = getSale().getMaximumAmount();
-        if (saleAmount > maximumAmount)
-            saleAmount = maximumAmount;
-
-        return price - saleAmount;
+        return Product.getProductById(sellableId, suspense);
     }
 
     public int getRemainingCount() {
@@ -138,21 +35,8 @@ public class SubProduct implements ModelBasic {
             remainingCount = 0;
     }
 
-    public List<Customer> getCustomers() {
-        List<Customer> customers = new ArrayList<>();
-        for (String customerId : customerIds) {
-            customers.add(Customer.getCustomerById(customerId, false));
-        }
-
-        return customers;
-    }
-
-    public boolean hasCustomerWithId(String customerId) {
-        return customerIds.contains(customerId);
-    }
-
-    @ModelOnly
-    public void addCustomer(String customerId) {
-        customerIds.add(customerId);
+    @Override
+    public boolean isAvailable() {
+        return (remainingCount > 0);
     }
 }
