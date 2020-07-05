@@ -1,12 +1,14 @@
 package model.request;
 
+import model.Wallet;
 import model.account.Seller;
 import model.database.Database;
 
 public class AddSellerRequest extends Request {
     private Seller seller;
+    private double balance;
 
-    public AddSellerRequest(Seller seller) {
+    public AddSellerRequest(Seller seller, double balance) {
         super();
         this.seller = seller;
         initialize();
@@ -15,6 +17,7 @@ public class AddSellerRequest extends Request {
     @Override
     public void accept() {
         seller.initialize();
+        new Wallet(seller.getId(), balance);
         super.accept();
     }
 

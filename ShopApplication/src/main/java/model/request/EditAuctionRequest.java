@@ -1,22 +1,22 @@
 package model.request;
 
-import model.Sale;
+import model.Auction;
 import model.account.Seller;
 import model.database.Database;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class EditSaleRequest extends Request implements SellerRequest {
-    private String saleId;
+public class EditAuctionRequest extends Request implements SellerRequest {
+    private String auctionId;
     private Field field;
     private String newValue;
     private String oldValue;
 
 
-    public EditSaleRequest(String saleId, String newValue, Field field) {
+    public EditAuctionRequest(String auctionId, String newValue, Field field) {
         super();
-        this.saleId = saleId;
+        this.auctionId = auctionId;
         this.field = field;
         this.newValue = newValue;
         initialize();
@@ -25,21 +25,16 @@ public class EditSaleRequest extends Request implements SellerRequest {
     @Override
     public void accept() {
         setOldValue();
-        Sale sale = Sale.getSaleById(saleId);
+        Auction auction = Auction.getAuctionById(auctionId);
         try {
             SimpleDateFormat parser = new SimpleDateFormat("yy-MM-dd");
             switch (field) {
                 case START_DATE:
-                    sale.setStartDate(parser.parse(newValue));
+                    auction.setStartDate(parser.parse(newValue));
                     break;
                 case END_DATE:
-                    sale.setEndDate(parser.parse(newValue));
+                    auction.setEndDate(parser.parse(newValue));
                     break;
-                case PERCENTAGE:
-                    sale.setPercentage(Double.parseDouble(newValue));
-                    break;
-                case MAXIMUM:
-                    sale.setMaximumAmount(Double.parseDouble(newValue));
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -55,16 +50,16 @@ public class EditSaleRequest extends Request implements SellerRequest {
 
     @Override
     protected boolean isInvalid() {
-        return (status == RequestStatus.PENDING) && (getSale() == null);
+        return (status == RequestStatus.PENDING) && (getAuction() == null);
     }
 
-    public Sale getSale() {
-        return Sale.getSaleById(saleId);
+    public Auction getAuction() {
+        return Auction.getAuctionById(auctionId);
     }
 
     @Override
     public Seller getSeller() {
-        return getSale().getSeller();
+        return getAuction().getSeller();
     }
 
     public Field getField() {
@@ -83,33 +78,25 @@ public class EditSaleRequest extends Request implements SellerRequest {
     }
 
     private void setOldValue() {
-        Sale sale = Sale.getSaleById(saleId);
+        Auction auction = Auction.getAuctionById(auctionId);
         SimpleDateFormat parser = new SimpleDateFormat("yy-MM-dd");
         switch (field) {
             case START_DATE:
-                oldValue = parser.format(sale.getStartDate());
+                oldValue = parser.format(auction.getStartDate());
                 break;
             case END_DATE:
-                oldValue = parser.format(sale.getEndDate());
+                oldValue = parser.format(auction.getEndDate());
                 break;
-            case PERCENTAGE:
-                oldValue = String.valueOf(sale.getPercentage());
-                break;
-            case MAXIMUM:
-                oldValue = String.valueOf(sale.getMaximumAmount());
         }
     }
 
     @Override
     public void updateDatabase(Database database) {
-        database.editSale();
+        database.editAuction();
     }
 
     public enum Field {
         START_DATE,
-        END_DATE,
-        PERCENTAGE,
-        MAXIMUM
+        END_DATE
     }
-
 }

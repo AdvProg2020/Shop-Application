@@ -2,18 +2,18 @@ package model.request;
 
 import model.account.Seller;
 import model.database.Database;
-import model.sellable.Product;
-import model.sellable.SubProduct;
+import model.sellable.File;
+import model.sellable.SubFile;
 
-public class EditProductRequest extends Request implements SellerRequest {
-    private String subProductId;
+public class EditFileRequest extends Request implements SellerRequest {
+    private String subFileId;
     private Field field;
     private String newValue;
     private String oldValue;
 
-    public EditProductRequest(String subProductId, Field field, String newValue) {
+    public EditFileRequest(String subFileId, Field field, String newValue) {
         super();
-        this.subProductId = subProductId;
+        this.subFileId = subFileId;
         this.field = field;
         this.newValue = newValue;
         initialize();
@@ -22,31 +22,30 @@ public class EditProductRequest extends Request implements SellerRequest {
     @Override
     public void accept() {
         setOldValue();
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        Product product = subProduct.getProduct();
+        SubFile subFile = SubFile.getSubFileById(subFileId);
+        File file = subFile.getFile();
         switch (field) {
             case NAME:
-                product.setName(newValue);
+                file.setName(newValue);
                 break;
-            case BRAND:
-                product.setBrand(newValue);
+            case EXTENSION:
+                file.setExtension(newValue);
                 break;
             case INFO_TEXT:
-                product.setInfoText(newValue);
+                file.setInfoText(newValue);
                 break;
             case IMAGE_PATH:
-                product.setImagePath(newValue);
+                file.setImagePath(newValue);
                 break;
             case SUB_PRICE:
-                subProduct.setPrice(Double.parseDouble(newValue));
+                subFile.setPrice(Double.parseDouble(newValue));
                 break;
-            case SUB_COUNT:
-                int changeAmount = Integer.parseInt(newValue) - subProduct.getRemainingCount();
-                subProduct.changeRemainingCount(changeAmount);
+            case SUB_PATH:
+                subFile.setDownloadPath(newValue);
                 break;
             case PROPERTY:
                 String[] data = newValue.split(",");
-                product.setProperty(data[0], data[1]);
+                file.setProperty(data[0], data[1]);
         }
         super.accept();
     }
@@ -59,16 +58,16 @@ public class EditProductRequest extends Request implements SellerRequest {
 
     @Override
     protected boolean isInvalid() {
-        return (status == RequestStatus.PENDING) && (getSubProduct() == null);
+        return (status == RequestStatus.PENDING) && (getSubFile() == null);
     }
 
-    public SubProduct getSubProduct() {
-        return SubProduct.getSubProductById(subProductId);
+    public SubFile getSubFile() {
+        return SubFile.getSubFileById(subFileId);
     }
 
     @Override
     public Seller getSeller() {
-        return getSubProduct().getSeller();
+        return getSubFile().getSeller();
     }
 
     public Field getField() {
@@ -87,30 +86,30 @@ public class EditProductRequest extends Request implements SellerRequest {
     }
 
     private void setOldValue() {
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        Product product = subProduct.getProduct();
+        SubFile subFile = SubFile.getSubFileById(subFileId);
+        File file = subFile.getFile();
         switch (field) {
             case NAME:
-                oldValue = product.getName();
+                oldValue = file.getName();
                 break;
-            case BRAND:
-                oldValue = product.getBrand();
+            case EXTENSION:
+                oldValue = file.getExtension();
                 break;
             case INFO_TEXT:
-                oldValue = product.getInfoText();
+                oldValue = file.getInfoText();
                 break;
             case IMAGE_PATH:
-                oldValue = product.getImagePath();
+                oldValue = file.getImagePath();
                 break;
             case SUB_PRICE:
-                oldValue = String.valueOf(subProduct.getRawPrice());
+                oldValue = String.valueOf(subFile.getRawPrice());
                 break;
-            case SUB_COUNT:
-                oldValue = String.valueOf(subProduct.getRemainingCount());
+            case SUB_PATH:
+                oldValue = subFile.getDownloadPath();
                 break;
             case PROPERTY:
                 String[] data = newValue.split(",");
-                oldValue = data[0] + "," + product.getValue(data[0]);
+                oldValue = data[0] + "," + file.getValue(data[0]);
         }
     }
 
@@ -124,11 +123,11 @@ public class EditProductRequest extends Request implements SellerRequest {
 
     public enum Field {
         NAME,
-        BRAND,
+        EXTENSION,
         INFO_TEXT,
         IMAGE_PATH,
         PROPERTY,
         SUB_PRICE,
-        SUB_COUNT
+        SUB_PATH
     }
 }

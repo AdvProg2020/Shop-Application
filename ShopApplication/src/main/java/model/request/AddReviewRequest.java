@@ -20,7 +20,7 @@ public class AddReviewRequest extends Request {
 
     @Override
     protected boolean isInvalid() {
-        return (status == RequestStatus.PENDING) && (review.getProduct() == null);
+        return (status == RequestStatus.PENDING) && (review.getSellable() == null);
     }
 
     public Review getReview() {
