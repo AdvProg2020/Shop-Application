@@ -3,6 +3,8 @@ package model.database;
 import com.google.gson.*;
 import model.account.Account;
 import model.request.Request;
+import model.sellable.Sellable;
+import model.sellable.SubSellable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +19,8 @@ class DatabaseUtilities {
         file.getParentFile().mkdirs();
         try {
             file.createNewFile();
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -49,6 +52,8 @@ class DatabaseUtilities {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Account.class, new Adapter<Account>());
         builder.registerTypeAdapter(Request.class, new Adapter<Request>());
+        builder.registerTypeAdapter(Sellable.class, new Adapter<Sellable>());
+        builder.registerTypeAdapter(SubSellable.class, new Adapter<SubSellable>());
         return builder.create();
     }
 

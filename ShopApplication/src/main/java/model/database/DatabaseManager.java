@@ -2,14 +2,15 @@ package model.database;
 
 import com.google.gson.Gson;
 import model.*;
-import model.account.Account;
-import model.account.Admin;
-import model.account.Customer;
-import model.account.Seller;
+import model.account.*;
+import model.chat.Chat;
+import model.chat.Message;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.request.Request;
+import model.sellable.Sellable;
+import model.sellable.SubSellable;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -55,10 +56,22 @@ public class DatabaseManager implements Database {
         update(FileNames.CUSTOMER, Account.class, Customer.getAllCustomers(false));
     }
 
+    private void updateSupporters() {
+        update(FileNames.SUPPORTER, Account.class, Supporter.getAllSupporters(false));
+    }
+
     private void updateLogs() {
         update(FileNames.BUY_LOG, BuyLog.class, BuyLog.getAllBuyLogs());
         update(FileNames.SELL_LOG, SellLog.class, SellLog.getAllSellLogs());
         update(FileNames.LOG_ITEM, LogItem.class, LogItem.getAllLogItems());
+    }
+
+    private void updateChats() {
+        update(FileNames.CHAT, Chat.class, Chat.getAllChats());
+    }
+
+    private void updateMessages() {
+        update(FileNames.MESSAGE, Message.class, Message.getAllMessages());
     }
 
     private void updateRequests() {
@@ -79,20 +92,28 @@ public class DatabaseManager implements Database {
         update(FileNames.SALE, Sale.class, Sale.getAllSales(false));
     }
 
+    private void updateAuctions() {
+        update(FileNames.AUCTION, Auction.class, Auction.getAllAuctions(false));
+    }
+
     private void updateCategories() {
         update(FileNames.CATEGORY, Category.class, Category.getAllCategories(false));
     }
 
-    private void updateProducts() {
-        update(FileNames.PRODUCT, Product.class, Product.getAllProducts(false));
+    private void updateSellables() {
+        update(FileNames.SELLABLE, Sellable.class, Sellable.getAllSellables(false));
     }
 
-    private void updateSubProducts() {
-        update(FileNames.SUB_PRODUCT, SubProduct.class, SubProduct.getAllSubProducts(false));
+    private void updateSubSellables() {
+        update(FileNames.SUB_SELLABLE, SubSellable.class, SubSellable.getAllSubSellables(false));
     }
 
     private void updateCarts() {
         update(FileNames.CART, Cart.class, Cart.getAllCarts());
+    }
+
+    private void updateWallets() {
+        update(FileNames.WALLET, Wallet.class, Wallet.getAllWallets());
     }
 
     private void updateReviews() {
@@ -108,11 +129,14 @@ public class DatabaseManager implements Database {
         load(FileNames.ADMIN, Account.class);
         load(FileNames.SELLER, Account.class);
         load(FileNames.CUSTOMER, Account.class);
+        load(FileNames.SUPPORTER, Account.class);
         load(FileNames.CATEGORY, Category.class);
-        load(FileNames.PRODUCT, Product.class);
-        load(FileNames.SUB_PRODUCT, SubProduct.class);
+        load(FileNames.SELLABLE, Sellable.class);
+        load(FileNames.SUB_SELLABLE, SubSellable.class);
         load(FileNames.CART, Cart.class);
+        load(FileNames.WALLET, Wallet.class);
         load(FileNames.SALE, Sale.class);
+        load(FileNames.AUCTION, Auction.class);
         load(FileNames.DISCOUNT, Discount.class);
         load(FileNames.REVIEW, Review.class);
         load(FileNames.RATING, Rating.class);
@@ -120,6 +144,7 @@ public class DatabaseManager implements Database {
         load(FileNames.BUY_LOG, BuyLog.class);
         load(FileNames.SELL_LOG, SellLog.class);
         load(FileNames.LOG_ITEM, LogItem.class);
+        // TODO: load chats
     }
 
     @Override
@@ -127,21 +152,28 @@ public class DatabaseManager implements Database {
         updateAdmins();
         updateSellers();
         updateCustomers();
-        updateProducts();
-        updateSubProducts();
+        updateSellables();
+        updateSubSellables();
         updateCategories();
         updateCarts();
+        updateWallets();
         updateSales();
+        updateAuctions();
         updateDiscounts();
         updateRatings();
         updateReviews();
         updateRequests();
         updateLogs();
+        //TODO: update chats
     }
 
     @Override
     public void cart() {
         updateCarts();
+    }
+
+    public void wallet() {
+        updateWallets();
     }
 
     @Override
@@ -158,12 +190,19 @@ public class DatabaseManager implements Database {
     public void createCustomer() {
         updateCustomers();
         updateCarts();
+        updateWallets();
     }
 
     @Override
     public void createSeller() {
         updateRequests();
         updateSellers();
+        updateWallets();
+    }
+
+    @Override
+    public void createSupporter() {
+        updateSupporters();
     }
 
     @Override
@@ -171,6 +210,7 @@ public class DatabaseManager implements Database {
         updateAdmins();
         updateSellers();
         updateCustomers();
+        updateSupporters();
     }
 
     @Override
@@ -188,8 +228,14 @@ public class DatabaseManager implements Database {
     @Override
     public void removeSeller() {
         updateSellers();
-        updateSubProducts();
+        updateSubSellables();
         updateSales();
+    }
+
+    @Override
+    public void removeSupporter() {
+        updateSupporters();
+        chat();
     }
 
     @Override
@@ -197,7 +243,7 @@ public class DatabaseManager implements Database {
         updateLogs();
         updateSellers();
         updateCustomers();
-        updateSubProducts();
+        updateSubSellables();
         updateCarts();
     }
 
@@ -234,6 +280,23 @@ public class DatabaseManager implements Database {
     }
 
     @Override
+    public void createAuction() {
+        updateRequests();
+        updateAuctions();
+    }
+
+    @Override
+    public void editAuction() {
+        updateRequests();
+        updateAuctions();
+    }
+
+    @Override
+    public void removeAuction() {
+        updateAuctions();
+    }
+
+    @Override
     public void createCategory() {
         updateCategories();
     }
@@ -246,45 +309,45 @@ public class DatabaseManager implements Database {
     @Override
     public void removeCategory() {
         updateCategories();
-        removeProduct();
+        removeSellable();
     }
 
     @Override
-    public void createProduct() {
+    public void createSellable() {
         updateRequests();
-        updateProducts();
-        updateSubProducts();
+        updateSellables();
+        updateSubSellables();
     }
 
     @Override
-    public void editProduct() {
+    public void editSellable() {
         updateRequests();
-        updateProducts();
+        updateSellables();
     }
 
     @Override
-    public void removeProduct() {
-        updateProducts();
-        removeSubProduct();
+    public void removeSellable() {
+        updateSellables();
+        removeSubSellable();
         updateReviews();
         updateRatings();
     }
 
     @Override
-    public void createSubProduct() {
+    public void createSubSellable() {
         updateRequests();
-        updateSubProducts();
+        updateSubSellables();
     }
 
     @Override
-    public void editSubProduct() {
+    public void editSubSellable() {
         updateRequests();
-        updateSubProducts();
+        updateSubSellables();
     }
 
     @Override
-    public void removeSubProduct() {
-        updateSubProducts();
+    public void removeSubSellable() {
+        updateSubSellables();
         updateSales();
         updateCarts();
     }
@@ -297,5 +360,11 @@ public class DatabaseManager implements Database {
     @Override
     public void addRating() {
         updateRatings();
+    }
+
+    @Override
+    public void chat() {
+        updateChats();
+        updateMessages();
     }
 }
