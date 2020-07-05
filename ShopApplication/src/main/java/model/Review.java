@@ -4,6 +4,7 @@ import model.ModelUtilities.ModelOnly;
 import model.account.Account;
 import model.database.Database;
 import model.request.AddReviewRequest;
+import model.sellable.Sellable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,14 +15,14 @@ public class Review implements ModelBasic {
     private static int lastNum = 1;
     private String reviewId;
     private String reviewerId;
-    private String productId;
+    private String sellableId;
     private String title;
     private String text;
     private boolean bought;
 
-    public Review(String reviewerId, String productId, String title, String text, Database database) {
+    public Review(String reviewerId, String sellableId, String title, String text, Database database) {
         this.reviewerId = reviewerId;
-        this.productId = productId;
+        this.sellableId = sellableId;
         this.title = title;
         this.text = text;
         setBought();
@@ -43,7 +44,7 @@ public class Review implements ModelBasic {
         allReviews.put(reviewId, this);
         lastNum++;
 
-        getProduct().addReview(reviewId);
+        getSellable().addReview(reviewId);
     }
 
     @ModelOnly
@@ -65,8 +66,8 @@ public class Review implements ModelBasic {
         return Account.getAccountById(reviewerId, false);
     }
 
-    public Product getProduct() {
-        return Product.getProductById(productId);
+    public Sellable getSellable() {
+        return Sellable.getSellableById(sellableId);
     }
 
     public String getTitle() {
@@ -82,6 +83,6 @@ public class Review implements ModelBasic {
     }
 
     private void setBought() {
-        bought = getProduct().hasBought(reviewerId);
+        bought = getSellable().hasBought(reviewerId);
     }
 }

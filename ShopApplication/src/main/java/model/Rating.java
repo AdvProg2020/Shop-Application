@@ -2,6 +2,7 @@ package model;
 
 import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
+import model.sellable.Sellable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +13,11 @@ public class Rating implements ModelBasic {
     private static int lastNum = 1;
     private String ratingId;
     private String customerId;
-    private String productId;
+    private String sellableId;
     private int score; // 1 - 5
 
-    public Rating(String customerId, String productId, int score) {
-        this.productId = productId;
+    public Rating(String customerId, String sellableId, int score) {
+        this.sellableId = sellableId;
         this.customerId = customerId;
         this.score = score;
         initialize();
@@ -37,11 +38,11 @@ public class Rating implements ModelBasic {
         allRatings.put(ratingId, this);
         lastNum++;
 
-        Rating oldRating = getProduct().getRatingByCustomerId(customerId);
+        Rating oldRating = getSellable().getRatingByCustomerId(customerId);
         if (oldRating != null)
-            getProduct().removeRating(oldRating.getId());
+            getSellable().removeRating(oldRating.getId());
 
-        getProduct().addRating(ratingId);
+        getSellable().addRating(ratingId);
 
     }
 
@@ -64,8 +65,8 @@ public class Rating implements ModelBasic {
         return Customer.getCustomerById(customerId, false);
     }
 
-    public Product getProduct() {
-        return Product.getProductById(productId);
+    public Sellable getSellable() {
+        return Sellable.getSellableById(sellableId);
     }
 
     public int getScore() {

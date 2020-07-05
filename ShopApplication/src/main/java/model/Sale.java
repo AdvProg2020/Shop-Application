@@ -3,7 +3,7 @@ package model;
 import model.account.Seller;
 import model.database.Database;
 import model.request.AddSaleRequest;
-import model.sellable.SubProduct;
+import model.sellable.SubSellable;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ public class Sale implements ModelBasic {
     private Date endDate;
     private double percentage; // 0 - 100
     private double maximumAmount;
-    private Set<String> subProductIds;
+    private Set<String> subSellableIds;
     private boolean suspended;
 
     public Sale(String sellerId, Date startDate, Date endDate, double percentage, double maximumAmount, Database database) {
@@ -25,7 +25,7 @@ public class Sale implements ModelBasic {
         this.endDate = endDate;
         this.percentage = percentage;
         this.maximumAmount = maximumAmount;
-        subProductIds = new HashSet<>();
+        subSellableIds = new HashSet<>();
         suspended = false;
         new AddSaleRequest(this).updateDatabase(database);
     }
@@ -47,15 +47,15 @@ public class Sale implements ModelBasic {
 
         getSeller().addSale(saleId);
         if (!suspended) {
-            for (SubProduct subProduct : getSubProducts()) {
-                subProduct.setSale(saleId);
+            for (SubSellable subSellable : getSubSellables()) {
+                subSellable.setSale(saleId);
             }
         }
     }
 
     public void suspend() {
-        for (SubProduct subProduct : getSubProducts()) {
-            subProduct.removeSale();
+        for (SubSellable subSellable : getSubSellables()) {
+            subSellable.removeSale();
         }
         suspended = true;
     }
@@ -114,25 +114,25 @@ public class Sale implements ModelBasic {
         this.maximumAmount = maximumAmount;
     }
 
-    public List<SubProduct> getSubProducts() {
-        List<SubProduct> subProducts = new ArrayList<>();
-        subProductIds.removeIf(subProductId -> SubProduct.getSubProductById(subProductId) == null);
-        for (String subProductId : subProductIds) {
-            subProducts.add(SubProduct.getSubProductById(subProductId));
+    public List<SubSellable> getSubSellables() {
+        List<SubSellable> subSellables = new ArrayList<>();
+        subSellableIds.removeIf(subProductId -> SubSellable.getSubSellableById(subProductId) == null);
+        for (String subSellableId : subSellableIds) {
+            subSellables.add(SubSellable.getSubSellableById(subSellableId));
         }
 
-        subProducts.sort(Comparator.comparing(SubProduct::getId));
-        return subProducts;
+        subSellables.sort(Comparator.comparing(SubSellable::getId));
+        return subSellables;
     }
 
-    public void addSubProduct(String subProductId) {
-        subProductIds.add(subProductId);
+    public void addSubSellable(String subSellableId) {
+        subSellableIds.add(subSellableId);
         if (saleId != null)
-            SubProduct.getSubProductById(subProductId).setSale(saleId);
+            SubSellable.getSubSellableById(subSellableId).setSale(saleId);
     }
 
-    public void removeSubProduct(String subProductId) {
-        subProductIds.remove(subProductId);
-        SubProduct.getSubProductById(subProductId).removeSale();
+    public void removeSubSellable(String subSellableId) {
+        subSellableIds.remove(subSellableId);
+        SubSellable.getSubSellableById(subSellableId).removeSale();
     }
 }

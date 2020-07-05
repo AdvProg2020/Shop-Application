@@ -2,6 +2,7 @@ package model;
 
 import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
+import model.sellable.SubSellable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +13,11 @@ public class Cart implements ModelBasic {
     private static int lastNum = 1;
     private String cartId;
     private String customerId; // can be null
-    private Map<String, Integer> subProductIds;
+    private Map<String, Integer> subSellableIds;
 
     public Cart(String customerId) {
         this.customerId = customerId;
-        subProductIds = new HashMap<>();
+        subSellableIds = new HashMap<>();
         initialize();
     }
 
@@ -29,9 +30,9 @@ public class Cart implements ModelBasic {
     }
 
     @ModelOnly
-    public static void removeSubProductFromAll(String subProductId) {
+    public static void removeSubSellableFromAll(String subSellableId) {
         for (Cart cart : allCarts.values()) {
-            cart.subProductIds.remove(subProductId);
+            cart.subSellableIds.remove(subSellableId);
         }
     }
 
@@ -39,8 +40,8 @@ public class Cart implements ModelBasic {
     public static void mergeCarts(String srcCartId, String destCartId) {
         Cart srcCart = getCartById(srcCartId);
         Cart destCart = getCartById(destCartId);
-        for (Map.Entry<String, Integer> entry : srcCart.subProductIds.entrySet()) {
-            destCart.addSubProductCount(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, Integer> entry : srcCart.subSellableIds.entrySet()) {
+            destCart.addSubSellableCount(entry.getKey(), entry.getValue());
         }
         srcCart.terminate();
     }
@@ -71,52 +72,52 @@ public class Cart implements ModelBasic {
         return cartId;
     }
 
-    public Customer getCustomer() {
-        return Customer.getCustomerById(customerId);
-    }
-
-    public Map<SubProduct, Integer> getSubProducts() {
-        Map<SubProduct, Integer> subProducts = new HashMap<>();
-        for (Map.Entry<String, Integer> entry : subProductIds.entrySet()) {
-            SubProduct subProduct = SubProduct.getSubProductById(entry.getKey());
-            subProducts.put(subProduct, entry.getValue());
+    public Map<SubSellable, Integer> getSubSellables() {
+        Map<SubSellable, Integer> subSellables = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : subSellableIds.entrySet()) {
+            SubSellable subSellable = SubSellable.getSubSellableById(entry.getKey());
+            subSellables.put(subSellable, entry.getValue());
         }
 
-        return subProducts;
+        return subSellables;
     }
 
-    public int getCountOfaSubProduct(String subProductId) {
-        if (!subProductIds.containsKey(subProductId))
+    public int getCountOfaSubSellable(String subSellableId) {
+        if (!subSellableIds.containsKey(subSellableId))
             return 0;
 
-        return subProductIds.get(subProductId);
+        return subSellableIds.get(subSellableId);
     }
 
-    public void addSubProductCount(String subProductId, int count) {
-        if (subProductIds.containsKey(subProductId))
-            count += subProductIds.get(subProductId);
+    public void addSubSellableCount(String subProductId, int count) {
+        if (subSellableIds.containsKey(subProductId))
+            count += subSellableIds.get(subProductId);
 
         if (count <= 0)
-            removeSubProduct(subProductId);
+            removeSubSellable(subProductId);
         else
-            subProductIds.put(subProductId, count);
+            subSellableIds.put(subProductId, count);
     }
 
-    public void removeSubProduct(String subProductId) {
-        subProductIds.remove(subProductId);
+    public void removeSubSellable(String subSellable) {
+        subSellableIds.remove(subSellable);
+    }
+
+    public void clearCart() {
+        subSellableIds = new HashMap<>();
     }
 
     public double getTotalPrice() {
         double total = 0;
-        Map<SubProduct, Integer> subProducts = getSubProducts();
-        for (SubProduct subProduct : subProducts.keySet()) {
-            total += subProduct.getPriceWithSale() * subProducts.get(subProduct);
+        Map<SubSellable, Integer> subSellables = getSubSellables();
+        for (SubSellable subSellable : subSellables.keySet()) {
+            total += subSellable.getPriceWithSale() * subSellables.get(subSellable);
         }
 
         return total;
     }
 
-    public void clearCart() {
-        subProductIds = new HashMap<>();
+    private Customer getCustomer() {
+        return Customer.getCustomerById(customerId);
     }
 }
