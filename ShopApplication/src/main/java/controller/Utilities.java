@@ -1,6 +1,9 @@
 package controller;
 
-import model.*;
+import model.Category;
+import model.Discount;
+import model.Review;
+import model.Sale;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
@@ -10,6 +13,8 @@ import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
+import model.sellable.Sellable;
+import model.sellable.SubSellable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,7 +38,7 @@ public class Utilities {
             salePack[2] = Double.toString(sale.getPercentage());
             salePack[3] = dateFormat.format(sale.getStartDate());
             salePack[4] = dateFormat.format(sale.getEndDate());
-            salePack[5] = Integer.toString(sale.getSubProducts().size());
+            salePack[5] = Integer.toString(sale.getSubSellables().size());
             salePack[6] = String.valueOf(sale.getMaximumAmount());
             return salePack;
         }
@@ -49,75 +54,75 @@ public class Utilities {
             return salePack;
         }
 
-        public static String[] product(Product product) {
+        public static String[] product(Sellable sellable) {
             String[] productPack = new String[4];
-            productPack[0] = product.getId();
-            productPack[1] = product.getName();
-            productPack[2] = product.getBrand();
-            productPack[3] = product.getCategory().getName();
+            productPack[0] = sellable.getId();
+            productPack[1] = sellable.getName();
+            productPack[2] = sellable.getBrand();
+            productPack[3] = sellable.getCategory().getName();
             return productPack;
         }
 
-        public static String[] subProduct(SubProduct subProduct){
+        public static String[] subProduct(SubSellable subSellable) {
             String[] subProductBoxPack = new String[15];
-            Product product = subProduct.getProduct();
-            Sale sale = subProduct.getSale();
-            subProductBoxPack[0] = product.getId();
-            subProductBoxPack[1] = subProduct.getId();
-            subProductBoxPack[2] = product.getName();
-            subProductBoxPack[3] = product.getBrand();
-            subProductBoxPack[4] = Double.toString(product.getAverageRatingScore());
-            subProductBoxPack[5] = Integer.toString(product.getRatingsCount());
-            subProductBoxPack[6] = product.getImagePath();
-            subProductBoxPack[7] = Double.toString(subProduct.getRawPrice());
-            subProductBoxPack[8] = Double.toString(subProduct.getPriceWithSale());
-            subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
+            Sellable sellable = subSellable.getSellable();
+            Sale sale = subSellable.getSale();
+            subProductBoxPack[0] = sellable.getId();
+            subProductBoxPack[1] = subSellable.getId();
+            subProductBoxPack[2] = sellable.getName();
+            subProductBoxPack[3] = sellable.getBrand();
+            subProductBoxPack[4] = Double.toString(sellable.getAverageRatingScore());
+            subProductBoxPack[5] = Integer.toString(sellable.getRatingsCount());
+            subProductBoxPack[6] = sellable.getImagePath();
+            subProductBoxPack[7] = Double.toString(subSellable.getRawPrice());
+            subProductBoxPack[8] = Double.toString(subSellable.getPriceWithSale());
+            subProductBoxPack[9] = Integer.toString(subSellable.getRemainingCount());
             subProductBoxPack[10] = sale != null ? dateFormat.format(sale.getEndDate()) : null;
             subProductBoxPack[11] = sale != null ? Double.toString(sale.getPercentage()) : null;
-            subProductBoxPack[12] = subProduct.getSeller().getStoreName();
-            subProductBoxPack[13] = subProduct.getProduct().getInfoText();
-            subProductBoxPack[14] = subProduct.getSeller().getUsername();
+            subProductBoxPack[12] = subSellable.getSeller().getStoreName();
+            subProductBoxPack[13] = subSellable.getSellable().getInfoText();
+            subProductBoxPack[14] = subSellable.getSeller().getUsername();
             return subProductBoxPack;
         }
 
-        public static String[] subProductInProduct(SubProduct subProduct){
+        public static String[] subProductInProduct(SubSellable subSellable) {
             String[] subProductPack = new String[8];
-            Product product = subProduct.getProduct();
-            Sale sale = subProduct.getSale();
-            subProductPack[0] = product.getId();
-            subProductPack[1] = subProduct.getId();
-            subProductPack[2] = Double.toString(subProduct.getRawPrice());
-            subProductPack[3] = Double.toString(subProduct.getPriceWithSale());
-            subProductPack[4] = Integer.toString(subProduct.getRemainingCount());
+            Sellable sellable = subSellable.getSellable();
+            Sale sale = subSellable.getSale();
+            subProductPack[0] = sellable.getId();
+            subProductPack[1] = subSellable.getId();
+            subProductPack[2] = Double.toString(subSellable.getRawPrice());
+            subProductPack[3] = Double.toString(subSellable.getPriceWithSale());
+            subProductPack[4] = Integer.toString(subSellable.getRemainingCount());
             subProductPack[5] = sale != null ? dateFormat.format(sale.getEndDate()) : null;
             subProductPack[6] = sale != null ? Double.toString(sale.getPercentage()) : null;
-            subProductPack[7] = subProduct.getSeller().getStoreName();
+            subProductPack[7] = subSellable.getSeller().getStoreName();
             return subProductPack;
         }
 
-        public static String[] sellerSubProduct(SubProduct subProduct){
+        public static String[] sellerSubProduct(SubSellable subSellable) {
             String[] subProductPack = new String[7];
-            Product product = subProduct.getProduct();
-            Sale sale = subProduct.getSale();
-            subProductPack[0] = product.getId();
-            subProductPack[1] = subProduct.getId();
-            subProductPack[2] = product.getName();
-            subProductPack[3] = product.getBrand();
-            subProductPack[4] = Double.toString(subProduct.getRawPrice());
-            subProductPack[5] = Integer.toString(subProduct.getRemainingCount());
+            Sellable sellable = subSellable.getSellable();
+            Sale sale = subSellable.getSale();
+            subProductPack[0] = sellable.getId();
+            subProductPack[1] = subSellable.getId();
+            subProductPack[2] = sellable.getName();
+            subProductPack[3] = sellable.getBrand();
+            subProductPack[4] = Double.toString(subSellable.getRawPrice());
+            subProductPack[5] = Integer.toString(subSellable.getRemainingCount());
             subProductPack[6] = sale != null ? sale.getId() : null;
             return subProductPack;
         }
 
-        public static String[] addProductRequest(SubProduct subProduct, Product product){
+        public static String[] addProductRequest(SubSellable subSellable, Sellable sellable) {
             String[] productPack = new String[7];
-            productPack[0] = product.getName();
-            productPack[1] = product.getBrand();
-            productPack[2] = product.getImagePath();
-            productPack[3] = product.getCategory().getName();
-            productPack[4] = product.getInfoText();
-            productPack[5] = Integer.toString(subProduct.getRemainingCount());
-            productPack[6] = Double.toString(subProduct.getRawPrice());
+            productPack[0] = sellable.getName();
+            productPack[1] = sellable.getBrand();
+            productPack[2] = sellable.getImagePath();
+            productPack[3] = sellable.getCategory().getName();
+            productPack[4] = sellable.getInfoText();
+            productPack[5] = Integer.toString(subSellable.getRemainingCount());
+            productPack[6] = Double.toString(subSellable.getRawPrice());
             return productPack;
         }
 
@@ -133,36 +138,36 @@ public class Utilities {
         public static String[] getReviewInfo(Review review) {
             String[] reviewInfo = new String[7];
             reviewInfo[0] = review.getReviewer().getUsername();
-            reviewInfo[1] = review.getProduct().getId();
-            reviewInfo[2] = review.getProduct().getName();
-            reviewInfo[3] = review.getProduct().getBrand();
+            reviewInfo[1] = review.getSellable().getId();
+            reviewInfo[2] = review.getSellable().getName();
+            reviewInfo[3] = review.getSellable().getBrand();
             reviewInfo[4] = review.getTitle();
             reviewInfo[5] = review.getText();
             reviewInfo[6] = review.hasBought() ? "yes" : "no";
             return reviewInfo;
         }
 
-        public static String[] productInCart(SubProduct subProduct, int count) {
+        public static String[] productInCart(SubSellable subSellable, int count) {
             String[] productPack = new String[9];
-            productPack[0] = subProduct.getId();
-            productPack[1] = subProduct.getProduct().getId();
-            productPack[2] = subProduct.getProduct().getName();
-            productPack[3] = subProduct.getProduct().getBrand();
-            productPack[4] = subProduct.getSeller().getUsername();
-            productPack[5] = subProduct.getSeller().getStoreName();
+            productPack[0] = subSellable.getId();
+            productPack[1] = subSellable.getSellable().getId();
+            productPack[2] = subSellable.getSellable().getName();
+            productPack[3] = subSellable.getSellable().getBrand();
+            productPack[4] = subSellable.getSeller().getUsername();
+            productPack[5] = subSellable.getSeller().getStoreName();
             productPack[6] = Integer.toString(count);
-            productPack[7] = Double.toString(subProduct.getPriceWithSale());
-            productPack[8] = subProduct.getProduct().getImagePath();
+            productPack[7] = Double.toString(subSellable.getPriceWithSale());
+            productPack[8] = subSellable.getSellable().getImagePath();
             return productPack;
         }
 
-        public static String[] productInSale(SubProduct subProduct) {
+        public static String[] productInSale(SubSellable subSellable) {
             String[] productPack = new String[5];
-            productPack[0] = subProduct.getProduct().getId();
-            productPack[1] = subProduct.getProduct().getName();
-            productPack[2] = subProduct.getProduct().getBrand();
-            productPack[3] = Double.toString(subProduct.getRawPrice());
-            productPack[4] = Double.toString(subProduct.getPriceWithSale());
+            productPack[0] = subSellable.getSellable().getId();
+            productPack[1] = subSellable.getSellable().getName();
+            productPack[2] = subSellable.getSellable().getBrand();
+            productPack[3] = Double.toString(subSellable.getRawPrice());
+            productPack[4] = Double.toString(subSellable.getPriceWithSale());
             return productPack;
         }
 
@@ -182,10 +187,10 @@ public class Utilities {
 
         public static String[] sellLogItem(LogItem item) {
             String[] productPack = new String[8];
-            Product product = item.getSubProduct().getProduct();
-            productPack[0] = product.getId();
-            productPack[1] = product.getName();
-            productPack[2] = product.getBrand();
+            Sellable sellable = item.getSubProduct().getSellable();
+            productPack[0] = sellable.getId();
+            productPack[1] = sellable.getName();
+            productPack[2] = sellable.getBrand();
             productPack[3] = Integer.toString(item.getCount());
             productPack[4] = Double.toString(item.getPrice());
             productPack[5] = Double.toString(item.getSaleAmount());
@@ -207,11 +212,11 @@ public class Utilities {
             String[] info;
             if (account instanceof Customer) {
                 info = new String[10];
-                info[8] = Double.toString(((Customer) account).getBalance());
+                info[8] = Double.toString(((Customer) account).getWallet().getBalance());
                 info[9] = account.getClass().getSimpleName();
             } else if (account instanceof Seller) {
                 info = new String[11];
-                info[8] = Double.toString(((Seller) account).getBalance());
+                info[8] = Double.toString(((Seller) account).getWallet().getBalance());
                 info[9] = ((Seller) account).getStoreName();
                 info[10] = account.getClass().getSimpleName();
             } else {
@@ -236,25 +241,25 @@ public class Utilities {
             info[2] = seller.getLastName();
             info[3] = seller.getEmail();
             info[4] = seller.getPhone();
-            info[5] = Double.toString(seller.getBalance());
+            info[5] = Double.toString(seller.getWallet().getBalance());
             info[6] = seller.getStoreName();
             info[7] = seller.getImagePath();
             return info;
         }
 
-        public static String[] digest(Product product) {
+        public static String[] digest(Sellable sellable) {
             String[] productInfo = new String[11];
-            productInfo[0] = product.getId();
-            productInfo[1] = product.getName();
-            productInfo[2] = product.getBrand();
-            productInfo[3] = product.getInfoText();
-            productInfo[4] = Double.toString(product.getAverageRatingScore());
-            productInfo[5] = Integer.toString(product.getRatingsCount());
-            productInfo[6] = product.getDefaultSubProduct().getId();
-            productInfo[7] = product.getCategory().getName();
-            productInfo[8] = product.getImagePath();
-            productInfo[9] = product.getMinPrice() + "";
-            productInfo[10] = product.getMaxPrice() + "";
+            productInfo[0] = sellable.getId();
+            productInfo[1] = sellable.getName();
+            productInfo[2] = sellable.getBrand();
+            productInfo[3] = sellable.getInfoText();
+            productInfo[4] = Double.toString(sellable.getAverageRatingScore());
+            productInfo[5] = Integer.toString(sellable.getRatingsCount());
+            productInfo[6] = sellable.getDefaultSubSellable().getId();
+            productInfo[7] = sellable.getCategory().getName();
+            productInfo[8] = sellable.getImagePath();
+            productInfo[9] = sellable.getMinPrice() + "";
+            productInfo[10] = sellable.getMaxPrice() + "";
             return productInfo;
         }
 
@@ -282,10 +287,10 @@ public class Utilities {
 
         public static String[] buyLogItem(LogItem item) {
             String[] productPack = new String[8];
-            Product product = item.getSubProduct().getProduct();
-            productPack[0] = product.getId();
-            productPack[1] = product.getName();
-            productPack[2] = product.getBrand();
+            Sellable sellable = item.getSubProduct().getSellable();
+            productPack[0] = sellable.getId();
+            productPack[1] = sellable.getName();
+            productPack[2] = sellable.getBrand();
             productPack[3] = item.getSeller().getUsername();
             productPack[4] = item.getSeller().getStoreName();
             productPack[5] = Integer.toString(item.getCount());
@@ -347,10 +352,10 @@ public class Utilities {
             return invalidAccountIds.toString();
         }
 
-        public static ArrayList<String[]> subProductBoxes(ArrayList<SubProduct> subProducts){
+        public static ArrayList<String[]> subProductBoxes(ArrayList<SubSellable> subSellables) {
             ArrayList<String[]> subProductBoxes = new ArrayList<>();
-            for (SubProduct subProduct : subProducts) {
-                subProductBoxes.add(subProduct(subProduct));
+            for (SubSellable subSellable : subSellables) {
+                subProductBoxes.add(subProduct(subSellable));
             }
             return subProductBoxes;
         }
@@ -439,12 +444,12 @@ public class Utilities {
 
         public static ArrayList<String> getAvailableValuesOfAPropertyOfACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
             Category category = Category.getCategoryByName(categoryName);
-            if(category == null)
+            if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
-            ArrayList<Product> products = new ArrayList<>(category.getProducts(false));
+            ArrayList<Sellable> sellables = new ArrayList<>(category.getSellables(false));
             ArrayList<String> values = new ArrayList<>();
-            for (Product product : products) {
-                values.add(product.getValue(property));
+            for (Sellable sellable : sellables) {
+                values.add(sellable.getValue(property));
             }
             Set<String> valuesSet = new HashSet<>(values);
             values.clear();
@@ -452,97 +457,103 @@ public class Utilities {
             return values;
         }
 
-        private static boolean doesMatchTheProperty(Product product, String property, String value){
-            ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties(false));
-            if(!categoryProperties.contains(property))
+        private static boolean doesMatchTheProperty(Sellable sellable, String property, String value) {
+            ArrayList<String> categoryProperties = new ArrayList<>(sellable.getCategory().getProperties(false));
+            if (!categoryProperties.contains(property))
                 return true;
             else {
-                return value.equals(product.getValue(property));
+                return value.equals(sellable.getValue(property));
             }
         }
 
         static class ProductFilter {
-            public static void available(ArrayList<Product> products, boolean available) {
+            public static void available(ArrayList<Sellable> sellables, boolean available) {
                 if (available)
-                    products.removeIf(product -> (product.getTotalRemainingCount() == 0));
+                    sellables.removeIf(product -> (product.getTotalRemainingCount() == 0));
             }
 
-            public static void minPrice(ArrayList<Product> products, double minPrice) {
+            public static void minPrice(ArrayList<Sellable> sellables, double minPrice) {
                 if (minPrice != 0)
-                    products.removeIf(product -> product.getMaxPrice() < minPrice);
+                    sellables.removeIf(product -> product.getMaxPrice() < minPrice);
             }
 
-            public static void maxPrice(ArrayList<Product> products, double maxPrice) {
+            public static void maxPrice(ArrayList<Sellable> sellables, double maxPrice) {
                 if (maxPrice != 0)
-                    products.removeIf(product -> product.getMinPrice() > maxPrice);
+                    sellables.removeIf(product -> product.getMinPrice() > maxPrice);
             }
 
-            public static void name(ArrayList<Product> products, String contains) {
+            public static void name(ArrayList<Sellable> sellables, String contains) {
                 if (contains == null) {
                     return;
                 }
                 if (!contains.equals(""))
-                if (!contains.isEmpty())
-                    products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
+                    if (!contains.isEmpty())
+                        sellables.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
             }
 
-            public static void brand(ArrayList<Product> products, String brand) {
+            public static void brand(ArrayList<Sellable> sellables, String brand) {
                 if (brand == null) {
                     return;
                 }
                 if (!brand.equals(""))
-                if (!brand.isEmpty())
-                    products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
+                    if (!brand.isEmpty())
+                        sellables.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
 
-            public static void storeName(ArrayList<Product> products, String storeName) {
+            public static void storeName(ArrayList<Sellable> sellables, String storeName) {
                 if (storeName == null) {
                     return;
                 }
 
                 if (!storeName.isEmpty()) {
-                    products.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
+                    sellables.removeIf(product -> !product.isSoldInStoreWithName(storeName.toLowerCase()));
                 }
             }
 
-            public static void ratingScore(ArrayList<Product> products, double minRatingScore) {
-                products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
+            public static void ratingScore(ArrayList<Sellable> sellables, double minRatingScore) {
+                sellables.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
             }
 
-            public static void property(ArrayList<Product> products, String property, String value){
-                if(property == null || property.equals(""))
+            public static void property(ArrayList<Sellable> sellables, String property, String value) {
+                if (property == null || property.equals(""))
                     return;
-                products.removeIf(product ->  ! Filter.doesMatchTheProperty(product, property, value));
+                sellables.removeIf(product -> !Filter.doesMatchTheProperty(product, property, value));
             }
         }
 
         static class SubProductFilter {
-            public static void available(ArrayList<SubProduct> subProducts, boolean available) {
+            public static void available(ArrayList<SubSellable> subSellables, boolean available) {
                 if (available)
-                    subProducts.removeIf(subProduct -> (subProduct.getRemainingCount() == 0));
+                    subSellables.removeIf(subProduct -> (subProduct.getRemainingCount() == 0));
             }
-            public static void minPrice(ArrayList<SubProduct> subProducts, double minPrice) {
+
+            public static void minPrice(ArrayList<SubSellable> subSellables, double minPrice) {
                 if (minPrice != 0)
-                    subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() < minPrice);
+                    subSellables.removeIf(subProduct -> subProduct.getPriceWithSale() < minPrice);
             }
-            public static void maxPrice(ArrayList<SubProduct> subProducts, double maxPrice) {
+
+            public static void maxPrice(ArrayList<SubSellable> subSellables, double maxPrice) {
                 if (maxPrice != 0)
-                    subProducts.removeIf(subProduct -> subProduct.getPriceWithSale() > maxPrice);
+                    subSellables.removeIf(subProduct -> subProduct.getPriceWithSale() > maxPrice);
             }
-            public static void name(ArrayList<SubProduct> subProducts, String contains) {
+
+            public static void name(ArrayList<SubSellable> subSellables, String contains) {
                 if (!contains.isEmpty())
-                    subProducts.removeIf(subProduct -> !(subProduct.getProduct().getName().toLowerCase().contains(contains.toLowerCase())));
+                    subSellables.removeIf(subProduct -> !(subProduct.getSellable().getName().toLowerCase().contains(contains.toLowerCase())));
             }
-            public static void brand(ArrayList<SubProduct> subProducts, String brand) {
+
+            public static void brand(ArrayList<SubSellable> subSellables, String brand) {
                 if (!brand.isEmpty())
-                    subProducts.removeIf(subProduct -> !(subProduct.getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
+                    subSellables.removeIf(subProduct -> !(subProduct.getSellable().getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
-            public static void storeName(ArrayList<SubProduct> subProducts, String storeName) {
+
+            public static void storeName(ArrayList<SubSellable> subSellables, String storeName) {
                 if (!storeName.isEmpty())
-                    subProducts.removeIf(subProduct -> !subProduct.getSeller().getStoreName().contains(storeName.toLowerCase()));
+                    subSellables.removeIf(subProduct -> !subProduct.getSeller().getStoreName().contains(storeName.toLowerCase()));
             }
-            public static void ratingScore(ArrayList<SubProduct> subProducts, double minRatingScore){
-                subProducts.removeIf(subProduct -> subProduct.getProduct().getAverageRatingScore() < minRatingScore);
+
+            public static void ratingScore(ArrayList<SubSellable> subSellables, double minRatingScore) {
+                subSellables.removeIf(subProduct -> subProduct.getSellable().getAverageRatingScore() < minRatingScore);
             }
         }
     }
@@ -558,7 +569,7 @@ public class Utilities {
             return availableSorts;
         }
 
-        public static class ProductPriceComparator implements Comparator<Product> {
+        public static class ProductPriceComparator implements Comparator<Sellable> {
             private int direction;
 
             public ProductPriceComparator(boolean isIncreasing) {
@@ -566,12 +577,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(Product o1, Product o2) {
+            public int compare(Sellable o1, Sellable o2) {
                 return direction * Double.compare(o1.getMinPrice(), o2.getMinPrice());
             }
         }
 
-        public static class ProductRatingScoreComparator implements Comparator<Product> {
+        public static class ProductRatingScoreComparator implements Comparator<Sellable> {
             private int direction;
 
             public ProductRatingScoreComparator(boolean isIncreasing) {
@@ -579,12 +590,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(Product o1, Product o2) {
+            public int compare(Sellable o1, Sellable o2) {
                 return direction * Double.compare(o1.getAverageRatingScore(), o2.getAverageRatingScore());
             }
         }
 
-        public static class ProductNameComparator implements Comparator<Product> {
+        public static class ProductNameComparator implements Comparator<Sellable> {
             private int direction;
 
             public ProductNameComparator(boolean isIncreasing) {
@@ -592,12 +603,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(Product o1, Product o2) {
+            public int compare(Sellable o1, Sellable o2) {
                 return direction * o1.getName().compareTo(o2.getName());
             }
         }
 
-        public static class ProductCategoryNameComparator implements Comparator<Product> {
+        public static class ProductCategoryNameComparator implements Comparator<Sellable> {
             private int direction;
 
             public ProductCategoryNameComparator(boolean isIncreasing) {
@@ -605,12 +616,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(Product o1, Product o2) {
+            public int compare(Sellable o1, Sellable o2) {
                 return direction * o1.getCategory().getName().compareTo(o2.getCategory().getName());
             }
         }
 
-        public static class ProductRemainingCountComparator implements Comparator<Product> {
+        public static class ProductRemainingCountComparator implements Comparator<Sellable> {
             private int direction;
 
             public ProductRemainingCountComparator(boolean isIncreasing) {
@@ -618,12 +629,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(Product o1, Product o2) {
+            public int compare(Sellable o1, Sellable o2) {
                 return direction * Integer.compare(o1.getTotalRemainingCount(), o2.getTotalRemainingCount());
             }
         }
 
-        public static class ProductViewCountComparator implements Comparator<Product> {
+        public static class ProductViewCountComparator implements Comparator<Sellable> {
             private int direction;
 
             public ProductViewCountComparator(boolean isIncreasing) {
@@ -631,12 +642,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(Product o1, Product o2) {
+            public int compare(Sellable o1, Sellable o2) {
                 return direction * Integer.compare(o1.getViewCount(), o2.getViewCount());
             }
         }
 
-        public static class SubProductPriceComparator implements Comparator<SubProduct> {
+        public static class SubProductPriceComparator implements Comparator<SubSellable> {
             private int direction;
 
             public SubProductPriceComparator(boolean isIncreasing) {
@@ -644,12 +655,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(SubProduct o1, SubProduct o2) {
+            public int compare(SubSellable o1, SubSellable o2) {
                 return direction * Double.compare(o1.getPriceWithSale(), o2.getPriceWithSale());
             }
         }
 
-        public static class SubProductRatingScoreComparator implements Comparator<SubProduct> {
+        public static class SubProductRatingScoreComparator implements Comparator<SubSellable> {
             private int direction;
 
             public SubProductRatingScoreComparator(boolean isIncreasing) {
@@ -657,12 +668,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(SubProduct o1, SubProduct o2) {
-                return direction * Double.compare(o1.getProduct().getAverageRatingScore(), o2.getProduct().getAverageRatingScore());
+            public int compare(SubSellable o1, SubSellable o2) {
+                return direction * Double.compare(o1.getSellable().getAverageRatingScore(), o2.getSellable().getAverageRatingScore());
             }
         }
 
-        public static class SubProductNameComparator implements Comparator<SubProduct> {
+        public static class SubProductNameComparator implements Comparator<SubSellable> {
             private int direction;
 
             public SubProductNameComparator(boolean isIncreasing) {
@@ -670,12 +681,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(SubProduct o1, SubProduct o2) {
-                return direction * o1.getProduct().getName().compareTo(o2.getProduct().getName());
+            public int compare(SubSellable o1, SubSellable o2) {
+                return direction * o1.getSellable().getName().compareTo(o2.getSellable().getName());
             }
         }
 
-        public static class SubProductCategoryNameComparator implements Comparator<SubProduct> {
+        public static class SubProductCategoryNameComparator implements Comparator<SubSellable> {
             private int direction;
 
             public SubProductCategoryNameComparator(boolean isIncreasing) {
@@ -683,12 +694,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(SubProduct o1, SubProduct o2) {
-                return direction * o1.getProduct().getCategory().getName().compareTo(o2.getProduct().getCategory().getName());
+            public int compare(SubSellable o1, SubSellable o2) {
+                return direction * o1.getSellable().getCategory().getName().compareTo(o2.getSellable().getCategory().getName());
             }
         }
 
-        public static class SubProductRemainingCountComparator implements Comparator<SubProduct> {
+        public static class SubProductRemainingCountComparator implements Comparator<SubSellable> {
             private int direction;
 
             public SubProductRemainingCountComparator(boolean isIncreasing) {
@@ -696,12 +707,12 @@ public class Utilities {
             }
 
             @Override
-            public int compare(SubProduct o1, SubProduct o2) {
+            public int compare(SubSellable o1, SubSellable o2) {
                 return direction * Integer.compare(o1.getRemainingCount(), o2.getRemainingCount());
             }
         }
 
-        public static class SubProductViewCountComparator implements Comparator<SubProduct> {
+        public static class SubProductViewCountComparator implements Comparator<SubSellable> {
             private int direction;
 
             public SubProductViewCountComparator(boolean isIncreasing) {
@@ -709,8 +720,8 @@ public class Utilities {
             }
 
             @Override
-            public int compare(SubProduct o1, SubProduct o2) {
-                return direction * Integer.compare(o1.getProduct().getViewCount(), o2.getProduct().getViewCount());
+            public int compare(SubSellable o1, SubSellable o2) {
+                return direction * Integer.compare(o1.getSellable().getViewCount(), o2.getSellable().getViewCount());
             }
         }
     }

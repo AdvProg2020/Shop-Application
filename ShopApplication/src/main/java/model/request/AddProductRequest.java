@@ -1,9 +1,9 @@
 package model.request;
 
-import model.Product;
-import model.SubProduct;
 import model.account.Seller;
 import model.database.Database;
+import model.sellable.Product;
+import model.sellable.SubProduct;
 
 public class AddProductRequest extends Request implements SellerRequest {
     private Product product;
@@ -20,7 +20,7 @@ public class AddProductRequest extends Request implements SellerRequest {
     public void accept() {
         if (product != null) {
             product.initialize();
-            subProduct.setProductId(product.getId());
+            subProduct.setSellableId(product.getId());
         }
         subProduct.initialize();
         super.accept();
@@ -50,8 +50,8 @@ public class AddProductRequest extends Request implements SellerRequest {
     @Override
     public void updateDatabase(Database database) {
         if (product == null)
-            database.createSubProduct();
+            database.createSubSellable();
         else
-            database.createProduct();
+            database.createSellable();
     }
 }

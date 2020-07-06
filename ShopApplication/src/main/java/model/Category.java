@@ -1,6 +1,7 @@
 package model;
 
 import model.ModelUtilities.ModelOnly;
+import model.sellable.Sellable;
 
 import java.util.*;
 
@@ -13,7 +14,7 @@ public class Category implements ModelBasic {
     private String name;
     private String parentId;
     private List<String> properties;
-    private transient Set<String> productIds;
+    private transient Set<String> sellableIds;
     private transient Set<String> subCategoryIds;
     private boolean suspended;
 
@@ -68,7 +69,7 @@ public class Category implements ModelBasic {
             allCategories.put(categoryId, this);
             if (!suspended) {
                 subCategoryIds = new HashSet<>();
-                productIds = new HashSet<>();
+                sellableIds = new HashSet<>();
                 getParent().addSubCategory(categoryId);
             }
         }
@@ -79,10 +80,10 @@ public class Category implements ModelBasic {
             subCategory.suspend();
         }
         subCategoryIds = null;
-        for (Product product : getProducts(false)) {
-            product.suspend();
+        for (Sellable sellable : getSellables(false)) {
+            sellable.suspend();
         }
-        productIds = null;
+        sellableIds = null;
         getParent().removeSubCategory(categoryId);
         suspended = true;
     }
@@ -116,15 +117,15 @@ public class Category implements ModelBasic {
 
     public void addProperty(String property) {
         properties.add(property);
-        for (Product product : getProducts(true)) {
-            product.addProperty(property);
+        for (Sellable sellable : getSellables(true)) {
+            sellable.addProperty(property);
         }
     }
 
     public void removeProperty(String property) {
         properties.remove(property);
-        for (Product product : getProducts(true)) {
-            product.removeProperty(property);
+        for (Sellable sellable : getSellables(true)) {
+            sellable.removeProperty(property);
         }
     }
 
@@ -145,30 +146,30 @@ public class Category implements ModelBasic {
         getParent().addSubCategory(categoryId);
     }
 
-    public List<Product> getProducts(boolean deep) {
-        List<Product> products = new ArrayList<>();
+    public List<Sellable> getSellables(boolean deep) {
+        List<Sellable> sellables = new ArrayList<>();
         if (deep) {
             for (Category subCategory : getSubCategories()) {
-                products.addAll(subCategory.getProducts(true));
+                sellables.addAll(subCategory.getSellables(true));
             }
         }
         if (this != superCategory) {
-            for (String productId : productIds) {
-                products.add(Product.getProductById(productId));
+            for (String sellableId : sellableIds) {
+                sellables.add(Sellable.getSellableById(sellableId));
             }
         }
 
-        return products;
+        return sellables;
     }
 
     @ModelOnly
-    public void addProduct(String productId) {
-        productIds.add(productId);
+    public void addSellable(String sellableId) {
+        sellableIds.add(sellableId);
     }
 
     @ModelOnly
-    public void removeProduct(String productId) {
-        productIds.remove(productId);
+    public void removeSellable(String sellableId) {
+        sellableIds.remove(sellableId);
     }
 
     public List<Category> getSubCategories() {

@@ -1,10 +1,10 @@
 --------------------
-T: product menu debug
+T: sellable menu debug
 T: live filter update
 M: unit test (login procedure)
-A: admin product managing menu
-A: seller product managing menu
-T: check if seller already has the sub product
+A: admin sellable managing menu
+A: seller sellable managing menu
+T: check if seller already has the sub sellable
 A: fixing add and deletion in discount and sale edit
 A: format double Strings.
 M: stack overflow.

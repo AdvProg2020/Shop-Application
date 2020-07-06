@@ -11,6 +11,8 @@ public interface Database {
 
     void createSeller();
 
+    void createSupporter();
+
     void editAccount();
 
     void removeAdmin();
@@ -18,6 +20,8 @@ public interface Database {
     void removeCustomer();
 
     void removeSeller();
+
+    void removeSupporter();
 
     void request();
 
@@ -33,30 +37,40 @@ public interface Database {
 
     void removeSale();
 
+    void createAuction();
+
+    void editAuction();
+
+    void removeAuction();
+
     void createCategory();
 
     void editCategory();
 
     void removeCategory();
 
-    void createProduct();
+    void createSellable();
 
-    void editProduct();
+    void editSellable();
 
-    void removeProduct();
+    void removeSellable();
 
-    void createSubProduct();
+    void createSubSellable();
 
-    void editSubProduct();
+    void editSubSellable();
 
-    void removeSubProduct();
+    void removeSubSellable();
 
     void cart();
+
+    void wallet();
 
     void purchase();
 
     void addReview();
 
     void addRating();
+
+    void chat();
 
 }

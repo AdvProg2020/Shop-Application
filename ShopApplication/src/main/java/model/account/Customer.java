@@ -4,25 +4,25 @@ import model.Cart;
 import model.Discount;
 import model.ModelUtilities;
 import model.ModelUtilities.ModelOnly;
+import model.Wallet;
 import model.log.BuyLog;
 
 import java.util.*;
 
 
-public class Customer extends Account {
+public class Customer extends Account { // TODO: add chat
     protected static Map<String, Customer> allCustomers = new HashMap<>();
     private static int lastNum = 1;
-    private double balance;
+    private transient String walletId;
     private transient String cartId;
     private transient Map<String, Integer> discountIds;
     private transient Set<String> buyLogIds;
 
     public Customer(String username, String password, String firstName, String lastName, String email, String phone, String image, double balance) {
         super(username, password, firstName, lastName, email, phone, image);
-        this.balance = balance;
-        this.balance = balance;
         initialize();
         new Cart(accountId);
+        new Wallet(accountId, balance);
     }
 
     public static List<Customer> getAllCustomers(boolean... suspense) {
@@ -54,15 +54,8 @@ public class Customer extends Account {
         }
         discountIds = null;
         setCart(null);
+        setWallet(null);
         super.suspend();
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void changeBalance(double changeAmount) {
-        balance += changeAmount;
     }
 
     public Cart getCart() {
@@ -74,6 +67,17 @@ public class Customer extends Account {
         if (this.cartId != null)
             getCart().terminate();
         this.cartId = cartId;
+    }
+
+    public Wallet getWallet() {
+        return Wallet.getWalletById(walletId);
+    }
+
+    @ModelOnly
+    public void setWallet(String walletId) {
+        if (this.walletId != null)
+            getWallet().terminate();
+        this.walletId = walletId;
     }
 
     public void mergeCart(String cartId) {

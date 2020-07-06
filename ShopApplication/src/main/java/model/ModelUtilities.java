@@ -7,6 +7,8 @@ import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.request.Request;
+import model.sellable.Sellable;
+import model.sellable.SubSellable;
 
 import java.io.File;
 import java.lang.annotation.ElementType;
@@ -29,11 +31,11 @@ public class ModelUtilities {
             entry(Cart.class.getSimpleName(), "CRT"),
             entry(Category.class.getSimpleName(), "CTG"),
             entry(Discount.class.getSimpleName(), "DSC"),
-            entry(Product.class.getSimpleName(), "PRO"),
+            entry(Sellable.class.getSimpleName(), "PRO"),
             entry(Rating.class.getSimpleName(), "RAT"),
             entry(Review.class.getSimpleName(), "REV"),
             entry(Sale.class.getSimpleName(), "SAL"),
-            entry(SubProduct.class.getSimpleName(), "SBP")
+            entry(SubSellable.class.getSimpleName(), "SBP")
     );
 
     private static String fixedLengthNumber(int number, int length) {

@@ -1,13 +1,15 @@
 package model.account;
 
+import model.Auction;
 import model.ModelUtilities;
 import model.ModelUtilities.ModelOnly;
 import model.Sale;
-import model.SubProduct;
+import model.Wallet;
 import model.database.Database;
 import model.log.SellLog;
 import model.request.AddSellerRequest;
 import model.request.Request;
+import model.sellable.SubSellable;
 
 import java.util.*;
 
@@ -15,17 +17,17 @@ public class Seller extends Account {
     protected static Map<String, Seller> allSellers = new HashMap<>();
     private static int lastNum = 1;
     private String storeName;
-    private double balance;
-    private transient Set<String> subProductIds;
+    private transient String walletId;
+    private transient Set<String> subSellableIds;
     private transient Set<String> saleIds;
+    private transient Set<String> auctionIds;
     private transient Set<String> sellLogIds;
     private transient Set<String> pendingRequestIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone, String image, String storeName, double balance, Database database) {
         super(username, password, firstName, lastName, email, phone, image);
         this.storeName = storeName;
-        this.balance = balance;
-        new AddSellerRequest(this).updateDatabase(database);
+        new AddSellerRequest(this, balance).updateDatabase(database);
     }
 
     public static List<Seller> getAllSellers(boolean... suspense) {
@@ -46,7 +48,7 @@ public class Seller extends Account {
 
         sellLogIds = new HashSet<>();
         if (!suspended) {
-            subProductIds = new HashSet<>();
+            subSellableIds = new HashSet<>();
             saleIds = new HashSet<>();
             pendingRequestIds = new HashSet<>();
         }
@@ -54,14 +56,19 @@ public class Seller extends Account {
 
     @Override
     public void suspend() {
-        for (SubProduct subProduct : getSubProducts()) {
-            subProduct.suspend();
+        for (SubSellable subSellable : getSubSellables()) {
+            subSellable.suspend();
         }
-        subProductIds = null;
+        subSellableIds = null;
         for (Sale sale : getActiveSales()) {
             sale.suspend();
         }
         saleIds = null;
+        for (Auction auction : getActiveAuctions()) {
+            auction.suspend();
+        }
+        auctionIds = null;
+        setWallet(null);
         super.suspend();
     }
 
@@ -73,12 +80,15 @@ public class Seller extends Account {
         this.storeName = storeName;
     }
 
-    public double getBalance() {
-        return balance;
+    public Wallet getWallet() {
+        return Wallet.getWalletById(walletId);
     }
 
-    public void changeBalance(double changeAmount) {
-        balance += changeAmount;
+    @ModelOnly
+    public void setWallet(String walletId) {
+        if (this.walletId != null)
+            getWallet().terminate();
+        this.walletId = walletId;
     }
 
     public List<Sale> getActiveSales() {
@@ -102,35 +112,55 @@ public class Seller extends Account {
         return sales;
     }
 
-
     @ModelOnly
     public void addSale(String saleId) {
         saleIds.add(saleId);
     }
 
-    @ModelOnly
-    public void removeSale(String saleId) {
-        saleIds.remove(saleId);
-    }
-
-    public List<SubProduct> getSubProducts() {
-        List<SubProduct> subProducts = new ArrayList<>();
-        for (String subProductId : subProductIds) {
-            subProducts.add(SubProduct.getSubProductById(subProductId));
+    public List<Auction> getActiveAuctions() {
+        List<Auction> auctions = new ArrayList<>();
+        for (String auctionId : auctionIds) {
+            auctions.add(Auction.getAuctionById(auctionId));
         }
 
-        subProducts.sort(Comparator.comparing(SubProduct::getId));
-        return subProducts;
+        auctions.sort(Comparator.comparing(Auction::getId));
+        return auctions;
+    }
+
+    public List<Auction> getAuctionArchive() {
+        List<Auction> auctions = new ArrayList<>();
+        for (String saleId : saleIds) {
+            auctions.add(Auction.getAuctionById(saleId, false));
+        }
+        auctions.removeAll(getActiveAuctions());
+
+        auctions.sort(Comparator.comparing(Auction::getId));
+        return auctions;
     }
 
     @ModelOnly
-    public void addSubProduct(String subProductId) {
-        subProductIds.add(subProductId);
+    public void addAuction(String auctionId) {
+        auctionIds.add(auctionId);
+    }
+
+    public List<SubSellable> getSubSellables() {
+        List<SubSellable> subSellables = new ArrayList<>();
+        for (String subSellableId : subSellableIds) {
+            subSellables.add(SubSellable.getSubSellableById(subSellableId));
+        }
+
+        subSellables.sort(Comparator.comparing(SubSellable::getId));
+        return subSellables;
     }
 
     @ModelOnly
-    public void removeSubProduct(String subProductId) {
-        subProductIds.remove(subProductId);
+    public void addSubSellable(String subSellableId) {
+        subSellableIds.add(subSellableId);
+    }
+
+    @ModelOnly
+    public void removeSubSellable(String subSellableId) {
+        subSellableIds.remove(subSellableId);
     }
 
     public List<SellLog> getSellLogs() {

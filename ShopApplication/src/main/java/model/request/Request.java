@@ -102,4 +102,7 @@ public abstract class Request implements ModelBasic {
 
     public abstract void updateDatabase(Database database);
 
+    public enum RequestStatus {
+        PENDING, ACCEPTED, DECLINED
+    }
 }
