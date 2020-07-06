@@ -13,4 +13,21 @@ PHASE 3:
 M: update model requirements.
 A & T: read the docs and find a solution.
 A & T: update and connect FXMLs.
-Due: 13/4/99.
+T: add auction and support controller.
+T: updates in controller.
+------------------------
+FXML additions:
+1- After purchase button, wallet or bank.
+2- Personal info increase balance of wallet.
+7- seller wallet withdraw
+3- Add support FXML.
+4- support main page and chat managing menu for supporter
+    * one chat managing menu and each chat is a popup
+    * after pressing chats button on base, open a telegram like popup. if its already open, bring it up.
+5- auction page for customer and auction products menu.
+6- seller add auction -> auctionManaging menu
+8- things to ask:
+    * server - client structure.
+    * what is REST.
+    * how to call sub routines.
+    * rpc?
