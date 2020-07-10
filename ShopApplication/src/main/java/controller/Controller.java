@@ -11,6 +11,7 @@ import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
 import model.sellable.Sellable;
+import model.sellable.SubProduct;
 import model.sellable.SubSellable;
 
 import java.util.*;
@@ -306,7 +307,7 @@ public class Controller {
         SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
         if (subSellable == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (subSellable.getRemainingCount() < count + currentCart.getCountOfaSubSellable(subProductId))
+        else if (((SubProduct)subSellable).getRemainingCount() < count + currentCart.getCountOfaSubSellable(subProductId))
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubSellableCount(subProductId, count);
@@ -335,7 +336,7 @@ public class Controller {
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else if (!subProducts.containsKey(subSellable))
             throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
-        else if (number + subProducts.get(subSellable) > subSellable.getRemainingCount())
+        else if (number + subProducts.get(subSellable) > ((SubProduct)subSellable).getRemainingCount())
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
             currentCart.addSubSellableCount(subProductId, number);

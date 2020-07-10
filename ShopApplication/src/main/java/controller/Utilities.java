@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Utilities {
+
     private static DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
 
     public static DateFormat getDateFormat() {
@@ -557,6 +558,7 @@ public class Utilities {
             }
         }
     }
+
     static class Sort {
         public static String[] productAvailableSorts() {
             String[] availableSorts = new String[6];
@@ -725,4 +727,5 @@ public class Utilities {
             }
         }
     }
+
 }

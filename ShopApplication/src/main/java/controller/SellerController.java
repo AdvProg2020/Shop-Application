@@ -12,6 +12,7 @@ import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
+import model.sellable.Product;
 import model.sellable.Sellable;
 import model.sellable.SubSellable;
 
@@ -68,13 +69,13 @@ public class SellerController {
     }
 
     public String isProductWithNameAndBrand(String name, String brand){
-        Sellable p = Sellable.getProductByNameAndBrand(name, brand);
+        Product p = Product.getProductByNameAndBrand(name, brand);
         if (p == null) return null;
         else return p.getId();
     }
 
     public boolean isNameAndBrandUsed(String name, String brand){
-        return Sellable.isProductNameAndBrandUsed(name, brand);
+        return Product.isProductNameAndBrandUsed(name, brand);
     }
 
     public boolean doesSellerSellThisProduct(String productId) {
