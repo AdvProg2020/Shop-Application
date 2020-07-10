@@ -14,6 +14,7 @@ import model.request.EditSaleRequest;
 import model.request.Request;
 import model.sellable.Product;
 import model.sellable.Sellable;
+import model.sellable.SubProduct;
 import model.sellable.SubSellable;
 
 import java.text.DateFormat;
@@ -158,7 +159,7 @@ public class SellerController {
             switch (field) {
                 case "name": {
                     String existingProductId;
-                    if ((existingProductId = exist(newInformation, targetedSubSellable.getSellable().getBrand())) == null) {
+                    if ((existingProductId = exist(newInformation, ((Product)targetedSubSellable.getSellable()).getBrand())) == null) {
                         if (targetedSubSellable.getSellable().getName().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.NAME, newInformation);
@@ -170,7 +171,7 @@ public class SellerController {
                 case "brand": {
                     String existingProductId;
                     if ((existingProductId = exist(targetedSubSellable.getSellable().getName(), newInformation)) == null) {
-                        if (targetedSubSellable.getSellable().getBrand().equals(newInformation))
+                        if (((Product)targetedSubSellable.getSellable()).getBrand().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
                         new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.BRAND, newInformation);
                         database().request();
@@ -191,7 +192,7 @@ public class SellerController {
                     database().request();
                     break;
                 case "count":
-                    if (targetedSubSellable.getRemainingCount() == Integer.parseInt(newInformation))
+                    if (((SubProduct)targetedSubSellable).getRemainingCount() == Integer.parseInt(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
                     new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
                     database().request();
