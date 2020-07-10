@@ -218,9 +218,9 @@ public class SellerController {
      * else it returns null
      */
     public String exist(String productName, String brand) {
-        Sellable sellable = Sellable.getProductByNameAndBrand(productName, brand);
-        if (sellable != null)
-            return sellable.getId();
+        Product product = Product.getProductByNameAndBrand(productName, brand);
+        if (product != null)
+            return product.getId();
         else
             return null;
     }
@@ -229,14 +229,14 @@ public class SellerController {
     public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
-        Sellable sellable = Sellable.getProductByNameAndBrand(name, brand);
-        if (sellable != null)
-            throw new Exceptions.ExistingProductException(sellable.getId());
+        Product product = Product.getProductByNameAndBrand(name, brand);
+        if (product != null)
+            throw new Exceptions.ExistingProductException(product.getId());
         else {
             Category category = Category.getCategoryByName(categoryName);
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
-            SubSellable subSellable = new SubSellable(null, currentAccount().getId(), price, count, database());
+            SubSellable subSellable = new SubProduct(null, currentAccount().getId(), price, count, database());
             new Sellable(name, brand, infoText, imagePath, category.getId(), propertyValues, subSellable, database());
         }
     }
