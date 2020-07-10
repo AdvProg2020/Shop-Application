@@ -1,6 +1,8 @@
 package model;
 
 import model.ModelUtilities.ModelOnly;
+import model.sellable.File;
+import model.sellable.Product;
 import model.sellable.Sellable;
 
 import java.util.*;
@@ -170,6 +172,26 @@ public class Category implements ModelBasic {
     @ModelOnly
     public void removeSellable(String sellableId) {
         sellableIds.remove(sellableId);
+    }
+
+    public List<Product> getProducts(boolean deep) {
+        List<Product> products = new ArrayList<>();
+        for (Sellable sellable : getSellables(deep)) {
+            if (sellable instanceof Product)
+                products.add((Product) sellable);
+        }
+
+        return products;
+    }
+
+    public List<File> getFiles(boolean deep) {
+        List<File> files = new ArrayList<>();
+        for (Sellable sellable : getSellables(deep)) {
+            if (sellable instanceof File)
+                files.add((File) sellable);
+        }
+
+        return files;
     }
 
     public List<Category> getSubCategories() {

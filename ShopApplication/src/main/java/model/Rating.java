@@ -65,11 +65,12 @@ public class Rating implements ModelBasic {
         return Customer.getCustomerById(customerId, false);
     }
 
-    public Sellable getSellable() {
-        return Sellable.getSellableById(sellableId);
-    }
-
     public int getScore() {
         return score;
+    }
+
+    @ModelOnly
+    public Sellable getSellable() {
+        return Sellable.getSellableById(sellableId);
     }
 }

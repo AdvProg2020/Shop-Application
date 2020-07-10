@@ -55,7 +55,8 @@ public abstract class SubSellable implements ModelBasic {
         getSellable().removeSubSellable(subSellableId);
         getSale().removeSubSellable(subSellableId);
         getAuction().suspend();
-        Cart.removeSubSellableFromAll(subSellableId);
+        if (this instanceof SubProduct)
+            Cart.removeSubProductFromAll(subSellableId);
         suspended = true;
     }
 

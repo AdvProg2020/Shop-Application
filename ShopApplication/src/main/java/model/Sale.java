@@ -3,6 +3,8 @@ package model;
 import model.account.Seller;
 import model.database.Database;
 import model.request.AddSaleRequest;
+import model.sellable.SubFile;
+import model.sellable.SubProduct;
 import model.sellable.SubSellable;
 
 import java.util.*;
@@ -116,7 +118,7 @@ public class Sale implements ModelBasic {
 
     public List<SubSellable> getSubSellables() {
         List<SubSellable> subSellables = new ArrayList<>();
-        subSellableIds.removeIf(subProductId -> SubSellable.getSubSellableById(subProductId) == null);
+        subSellableIds.removeIf(subSellableId -> SubSellable.getSubSellableById(subSellableId) == null);
         for (String subSellableId : subSellableIds) {
             subSellables.add(SubSellable.getSubSellableById(subSellableId));
         }
@@ -134,5 +136,31 @@ public class Sale implements ModelBasic {
     public void removeSubSellable(String subSellableId) {
         subSellableIds.remove(subSellableId);
         SubSellable.getSubSellableById(subSellableId).removeSale();
+    }
+
+    public List<SubProduct> getSubProducts() {
+        List<SubProduct> subProducts = new ArrayList<>();
+        subSellableIds.removeIf(subProductId -> SubSellable.getSubSellableById(subProductId) == null);
+        for (String subSellableId : subSellableIds) {
+            SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
+            if (subSellable instanceof SubProduct)
+                subProducts.add((SubProduct) subSellable);
+        }
+
+        subProducts.sort(Comparator.comparing(SubProduct::getId));
+        return subProducts;
+    }
+
+    public List<SubFile> getSubFiles() {
+        List<SubFile> subFiles = new ArrayList<>();
+        subSellableIds.removeIf(subProductId -> SubSellable.getSubSellableById(subProductId) == null);
+        for (String subSellableId : subSellableIds) {
+            SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
+            if (subSellable instanceof SubFile)
+                subFiles.add((SubFile) subSellable);
+        }
+
+        subFiles.sort(Comparator.comparing(SubFile::getId));
+        return subFiles;
     }
 }

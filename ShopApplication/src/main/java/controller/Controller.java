@@ -306,9 +306,9 @@ public class Controller {
         SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
         if (subSellable == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (subSellable.getRemainingCount() < count + currentCart.getCountOfaSubSellable(subProductId))
-            throw new Exceptions.UnavailableProductException(subProductId);
-        else {
+        else if (subSellable /.getRemainingCount() < count + currentCart.getCountOfaSubSellable(subProductId))
+        throw new Exceptions.UnavailableProductException(subProductId);
+        else{
             currentCart.addSubSellableCount(subProductId, count);
             database.cart();
         }
