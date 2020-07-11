@@ -4,7 +4,7 @@ import model.ModelBasic;
 import model.ModelUtilities;
 import model.account.Customer;
 import model.account.Seller;
-import model.sellable.SubSellable;
+import model.sellable.SubProduct;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,8 +77,8 @@ public class LogItem implements ModelBasic {
         return getSellLog().getSeller();
     }
 
-    public SubSellable getSubProduct() {
-        return SubSellable.getSubSellableById(subProductId, false);
+    public SubProduct getSubProduct() {
+        return SubProduct.getSubProductById(subProductId, false);
     }
 
     public double getPrice() {

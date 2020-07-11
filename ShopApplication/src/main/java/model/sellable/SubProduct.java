@@ -35,6 +35,10 @@ public class SubProduct extends SubSellable {
             remainingCount = 0;
     }
 
+    public Product getProduct() {
+        return (Product) getSellable();
+    }
+
     @Override
     public boolean isAvailable() {
         return (remainingCount > 0);

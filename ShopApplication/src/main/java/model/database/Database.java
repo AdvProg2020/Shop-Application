@@ -49,17 +49,29 @@ public interface Database {
 
     void removeCategory();
 
-    void createSellable();
+    void createProduct();
 
-    void editSellable();
+    void editProduct();
 
-    void removeSellable();
+    void removeProduct();
 
-    void createSubSellable();
+    void createSubProduct();
 
-    void editSubSellable();
+    void editSubProduct();
 
-    void removeSubSellable();
+    void removeSubProduct();
+
+    void createFile();
+
+    void editFile();
+
+    void removeFile();
+
+    void createSubFile();
+
+    void editSubFile();
+
+    void removeSubFile();
 
     void cart();
 

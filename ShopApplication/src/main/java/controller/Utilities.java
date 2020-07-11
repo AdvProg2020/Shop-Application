@@ -1,6 +1,9 @@
 package controller;
 
-import model.*;
+import model.Category;
+import model.Discount;
+import model.Review;
+import model.Sale;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
@@ -209,11 +212,11 @@ public class Utilities {
             String[] info;
             if (account instanceof Customer) {
                 info = new String[10];
-                info[8] = Double.toString(((Customer) account).getBalance());
+                info[8] = Double.toString(((Customer) account).getWallet().getBalance());
                 info[9] = account.getClass().getSimpleName();
             } else if (account instanceof Seller) {
                 info = new String[11];
-                info[8] = Double.toString(((Seller) account).getBalance());
+                info[8] = Double.toString(((Seller) account).getWallet().getBalance());
                 info[9] = ((Seller) account).getStoreName();
                 info[10] = account.getClass().getSimpleName();
             } else {
@@ -238,7 +241,7 @@ public class Utilities {
             info[2] = seller.getLastName();
             info[3] = seller.getEmail();
             info[4] = seller.getPhone();
-            info[5] = Double.toString(seller.getBalance());
+            info[5] = Double.toString(seller.getWallet().getBalance());
             info[6] = seller.getStoreName();
             info[7] = seller.getImagePath();
             return info;

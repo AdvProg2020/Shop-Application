@@ -1,12 +1,17 @@
 package controller;
 
 
-import model.*;
+import model.Cart;
+import model.Category;
+import model.Review;
+import model.Sale;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
+import model.sellable.Product;
+import model.sellable.SubProduct;
 
 import java.util.*;
 
@@ -473,7 +478,7 @@ public class Controller {
     public void removeSubProductFromCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
         if (SubProduct.getSubProductById(subProductId) == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else currentCart.removeSubProduct(subProductId);
+        else currentCart.removeSubSellable(subProductId);
     }
 
     public String[] getDefaultSubProductOfAProduct(String productId) throws Exceptions.InvalidProductIdException {

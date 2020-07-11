@@ -4,6 +4,9 @@ import model.database.Database;
 import model.request.AddProductRequest;
 import model.request.Request;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 public class Product extends Sellable {
@@ -14,6 +17,11 @@ public class Product extends Sellable {
         super(name, infoText, imagePath, categoryId, propertyValues, subSellable, database);
         this.brand = brand;
         new AddProductRequest(this, (SubProduct) subSellable).updateDatabase(database);
+    }
+
+    public static List<Product> getAllProducts() {
+        //TODO: implement
+        return null;
     }
 
     public static Product getProductById(String productId, boolean... suspense) {
@@ -64,5 +72,39 @@ public class Product extends Sellable {
             total += ((SubProduct) subSellable).getRemainingCount();
         }
         return total;
+    }
+
+    public List<SubProduct> getSubProducts() {
+        List<SubSellable> subSellables = new ArrayList<>();
+        for (String subSellableId : subSellableIds) {
+            subSellables.add(SubSellable.getSubSellableById(subSellableId));
+        }
+
+        subSellables.sort(Comparator.comparing(SubSellable::getId));
+        return subSellables;
+    }
+
+    public SubProduct getSubProductOfSeller(String sellerId) {
+        for (SubSellable subSellable : getSubSellables()) {
+            if (subSellable.getSeller().getId().equals(sellerId))
+                return subSellable;
+        }
+
+        return null;
+    }
+
+    public List<SubProduct> getSubProductsInSale() {
+        List<SubProduct> subSellables = new ArrayList<>();
+        for (SubSellable subSellable : getSubSellables()) {
+            if (subSellable.getSale() != null)
+                subSellables.add(subSellable);
+        }
+
+        subSellables.sort(Comparator.comparing(SubSellable::getId));
+        return subSellables;
+    }
+
+    public SubProduct getDefaultSubProduct() {
+        return (SubProduct) getDefaultSubSellable();
     }
 }

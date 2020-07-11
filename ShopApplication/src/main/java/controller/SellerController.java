@@ -2,9 +2,7 @@ package controller;
 
 
 import model.Category;
-import model.Product;
 import model.Sale;
-import model.SubProduct;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
@@ -14,6 +12,8 @@ import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
+import model.sellable.Product;
+import model.sellable.SubProduct;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,9 +53,9 @@ public class SellerController {
                 throw new Exceptions.SameAsPreviousValueException(field);
             ((Seller) currentAccount()).setStoreName(newInformation);
         } else if (field.equals("balance")) {
-            if (((Seller) currentAccount()).getBalance() == Double.parseDouble(newInformation))
+            if (((Seller) currentAccount()).getWallet().getBalance() == Double.parseDouble(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(newInformation);
-            ((Seller) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getBalance());
+            ((Seller) currentAccount()).getWallet().changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getWallet().getBalance());
         } else
             mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
@@ -370,7 +370,7 @@ public class SellerController {
                 if (product != null) {
                     subProduct = product.getSubProductOfSeller(currentAccount().getId());
                     if (subProduct != null)
-                        sale.addSubProduct(subProduct.getId());
+                        sale.addSubSellable(subProduct.getId());
                     else
                         invalidSubProductIds.add(productId);
                 } else
@@ -385,19 +385,19 @@ public class SellerController {
     public void addProductsToSale(String saleId, ArrayList<String> subProductIds){
         Sale sale = Sale.getSaleById(saleId);
         for (String subProductId : subProductIds) {
-            sale.addSubProduct(subProductId);
+            sale.addSubSellable(subProductId);
         }
     }
 
     public void removeProductsFromSale(String saleId, ArrayList<String> subProductIds){
         Sale sale = Sale.getSaleById(saleId);
         for (String subProductId : subProductIds) {
-            sale.removeSubProduct(subProductId);
+            sale.removeSubSellable(subProductId);
         }
     }
 
     public double viewBalance() {
-        return ((Seller) currentAccount()).getBalance();
+        return ((Seller) currentAccount()).getWallet().getBalance();
     }
 
     public void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {

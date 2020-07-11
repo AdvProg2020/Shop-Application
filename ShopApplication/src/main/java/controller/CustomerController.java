@@ -1,7 +1,9 @@
 package controller;
 
 
-import model.*;
+import model.Cart;
+import model.Discount;
+import model.Rating;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
@@ -10,6 +12,8 @@ import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.log.ShippingStatus;
+import model.sellable.Product;
+import model.sellable.SubProduct;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,9 +51,9 @@ public class CustomerController {
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
         if (field.equals("balance")) {
-            if (((Customer) currentAccount()).getBalance() == Double.parseDouble(newInformation))
+            if (((Customer) currentAccount()).getWallet().getBalance() == Double.parseDouble(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(newInformation);
-            ((Customer) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Customer) currentAccount()).getBalance());
+            ((Customer) currentAccount()).getWallet().changeBalance(Double.parseDouble(newInformation) - ((Customer) currentAccount()).getWallet().getBalance());
         } else
             mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
@@ -91,8 +95,8 @@ public class CustomerController {
                 throw new Exceptions.InvalidDiscountException(discountCode);
         }
         double paidMoney = totalPrice - discountAmount;
-        if (paidMoney > ((Customer) currentAccount()).getBalance())
-            throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getBalance());
+        if (paidMoney > ((Customer) currentAccount()).getWallet().getBalance())
+            throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getWallet().getBalance());
         BuyLog buyLog = new BuyLog(currentAccount().getId(), paidMoney, discountAmount, receiverName, address, receiverPhone, ShippingStatus.PROCESSING);
         HashMap<Seller, SellLog> sellLogs = new HashMap<>();
         SellLog sellLog;
@@ -109,11 +113,11 @@ public class CustomerController {
             subProductCount = subProductsInCart.get(subProduct);
             new LogItem(buyLog.getId(), sellLog.getId(), subProduct.getId(), subProductCount);
             subProduct.changeRemainingCount(-subProductCount);
-            seller.changeBalance(subProduct.getPriceWithSale() * subProductCount);
+            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount);
         }
         if (discount != null)
             discount.changeCount(currentAccount().getId(), -1);
-        ((Customer) currentAccount()).changeBalance(-paidMoney);
+        ((Customer) currentAccount()).getWallet().changeBalance(-paidMoney);
         currentCart().clearCart();
         database().purchase();
     }
@@ -193,7 +197,7 @@ public class CustomerController {
     }
 
     public double viewBalance() {
-        return ((Customer) currentAccount()).getBalance();
+        return ((Customer) currentAccount()).getWallet().getBalance();
     }
 
     public ArrayList<String[]> viewDiscountCodes() {

@@ -43,6 +43,12 @@ public class Chat implements ModelBasic {
 
     public void terminate() {
         allChats.remove(chatId);
+        for (Message message : getMessages()) {
+            message.terminate();
+        }
+        for (Account account : getAccounts()) {
+
+        }
     }
 
     @Override

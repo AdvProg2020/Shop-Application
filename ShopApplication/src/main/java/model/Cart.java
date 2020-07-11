@@ -2,7 +2,7 @@ package model;
 
 import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
-import model.sellable.SubSellable;
+import model.sellable.SubProduct;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +41,7 @@ public class Cart implements ModelBasic {
         Cart srcCart = getCartById(srcCartId);
         Cart destCart = getCartById(destCartId);
         for (Map.Entry<String, Integer> entry : srcCart.subProductIds.entrySet()) {
-            destCart.addSubSellableCount(entry.getKey(), entry.getValue());
+            destCart.addSubProductCount(entry.getKey(), entry.getValue());
         }
         srcCart.terminate();
     }
@@ -72,24 +72,24 @@ public class Cart implements ModelBasic {
         return cartId;
     }
 
-    public Map<SubSellable, Integer> getSubSellables() {
-        Map<SubSellable, Integer> subSellables = new HashMap<>();
+    public Map<SubProduct, Integer> getSubProducts() {
+        Map<SubProduct, Integer> subProducts = new HashMap<>();
         for (Map.Entry<String, Integer> entry : subProductIds.entrySet()) {
-            SubSellable subSellable = SubSellable.getSubSellableById(entry.getKey());
-            subSellables.put(subSellable, entry.getValue());
+            SubProduct subProduct = SubProduct.getSubProductById(entry.getKey());
+            subProducts.put(subProduct, entry.getValue());
         }
 
-        return subSellables;
+        return subProducts;
     }
 
-    public int getCountOfaSubSellable(String subSellableId) {
-        if (!subProductIds.containsKey(subSellableId))
+    public int getCountOfaSubProduct(String subProductId) {
+        if (!subProductIds.containsKey(subProductId))
             return 0;
 
-        return subProductIds.get(subSellableId);
+        return subProductIds.get(subProductId);
     }
 
-    public void addSubSellableCount(String subProductId, int count) {
+    public void addSubProductCount(String subProductId, int count) {
         if (subProductIds.containsKey(subProductId))
             count += subProductIds.get(subProductId);
 
@@ -109,9 +109,9 @@ public class Cart implements ModelBasic {
 
     public double getTotalPrice() {
         double total = 0;
-        Map<SubSellable, Integer> subSellables = getSubSellables();
-        for (SubSellable subSellable : subSellables.keySet()) {
-            total += subSellable.getPriceWithSale() * subSellables.get(subSellable);
+        Map<SubProduct, Integer> subProducts = getSubProducts();
+        for (SubProduct subProduct : subProducts.keySet()) {
+            total += subProduct.getPriceWithSale() * subProducts.get(subProduct);
         }
 
         return total;

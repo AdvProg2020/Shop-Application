@@ -1,6 +1,7 @@
 package controller;
 
-import model.*;
+import model.Category;
+import model.Discount;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import
 
 public class AdminController {
 
