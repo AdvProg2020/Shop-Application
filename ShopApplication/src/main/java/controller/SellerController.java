@@ -2,7 +2,9 @@ package controller;
 
 
 import model.Category;
+import model.Product;
 import model.Sale;
+import model.SubProduct;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
@@ -12,10 +14,6 @@ import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
-import model.sellable.Product;
-import model.sellable.Sellable;
-import model.sellable.SubProduct;
-import model.sellable.SubSellable;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -55,9 +53,9 @@ public class SellerController {
                 throw new Exceptions.SameAsPreviousValueException(field);
             ((Seller) currentAccount()).setStoreName(newInformation);
         } else if (field.equals("balance")) {
-            if (((Seller) currentAccount()).getWallet().getBalance() == Double.parseDouble(newInformation))
+            if (((Seller) currentAccount()).getBalance() == Double.parseDouble(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(newInformation);
-            ((Seller) currentAccount()).getWallet().changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getWallet().getBalance());
+            ((Seller) currentAccount()).changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getBalance());
         } else
             mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
@@ -70,7 +68,7 @@ public class SellerController {
     }
 
     public String isProductWithNameAndBrand(String name, String brand){
-        Product p = Product.getProductByNameAndBrand(name, brand);
+        Product  p =  Product.getProductByNameAndBrand(name, brand);
         if (p == null) return null;
         else return p.getId();
     }
@@ -79,9 +77,9 @@ public class SellerController {
         return Product.isProductNameAndBrandUsed(name, brand);
     }
 
-    public boolean doesSellerSellThisProduct(String productId) {
-        Sellable sellable = Sellable.getSellableById(productId);
-        return sellable.isSoldInStoreWithName(((Seller) currentAccount()).getStoreName());
+    public boolean doesSellerSellThisProduct(String productId){
+        Product product = Product.getProductById(productId);
+        return product.isSoldInStoreWithName(((Seller)currentAccount()).getStoreName());
     }
 
     public ArrayList<String[]> getAllSellLogs() {
@@ -112,27 +110,27 @@ public class SellerController {
 
     public ArrayList<String[]> manageProducts() {
         ArrayList<String[]> products = new ArrayList<>();
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
-            products.add(Utilities.Pack.sellerSubProduct(subSellable));
+        for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
+            products.add(Utilities.Pack.sellerSubProduct(subProduct));
         }
         return products;
     }
 
     //TODO: Useless
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
-            if (subSellable.getSellable().getId().equals(productID))
-                return Utilities.Pack.subProduct(subSellable);
+        for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
+            if (subProduct.getProduct().getId().equals(productID))
+                return Utilities.Pack.subProduct(subProduct);
         }
         throw new Exceptions.InvalidProductIdException(productID);
     }
 
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
         Seller seller = ((Seller) currentAccount());
-        for (SubSellable subSellable : seller.getSubFiles()) {
-            if (subSellable.getSellable().getId().equals(productID)) {
+        for (SubProduct subProduct : seller.getSubProducts()) {
+            if (subProduct.getProduct().getId().equals(productID)) {
                 ArrayList<String> buyers = new ArrayList<>();
-                for (Customer customer : subSellable.getCustomers()) {
+                for (Customer customer : subProduct.getCustomers()) {
                     buyers.add(customer.getId());
                 }
                 return buyers;
@@ -146,23 +144,23 @@ public class SellerController {
     }
 
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
-        SubSellable targetedSubSellable = null;
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
-            if (subSellable.getSellable().getId().equals(productID)) {
-                targetedSubSellable = subSellable;
+        SubProduct targetedSubProduct = null;
+        for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
+            if (subProduct.getProduct().getId().equals(productID)) {
+                targetedSubProduct = subProduct;
                 break;
             }
         }
-        if (targetedSubSellable == null)
+        if (targetedSubProduct == null)
             throw new Exceptions.InvalidProductIdException(productID);
         else {
             switch (field) {
                 case "name": {
                     String existingProductId;
-                    if ((existingProductId = exist(newInformation, ((Product)targetedSubSellable.getSellable()).getBrand())) == null) {
-                        if (targetedSubSellable.getSellable().getName().equals(newInformation))
+                    if ((existingProductId = exist(newInformation, targetedSubProduct.getProduct().getBrand())) == null) {
+                        if (targetedSubProduct.getProduct().getName().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
-                        new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.NAME, newInformation);
+                        new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
                         database().request();
                     } else
                         throw new Exceptions.ExistingProductException(existingProductId);
@@ -170,39 +168,39 @@ public class SellerController {
                 }
                 case "brand": {
                     String existingProductId;
-                    if ((existingProductId = exist(targetedSubSellable.getSellable().getName(), newInformation)) == null) {
-                        if (((Product)targetedSubSellable.getSellable()).getBrand().equals(newInformation))
+                    if ((existingProductId = exist(targetedSubProduct.getProduct().getName(), newInformation)) == null) {
+                        if (targetedSubProduct.getProduct().getBrand().equals(newInformation))
                             throw new Exceptions.SameAsPreviousValueException(field);
-                        new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.BRAND, newInformation);
+                        new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.BRAND, newInformation);
                         database().request();
                     } else
                         throw new Exceptions.ExistingProductException(existingProductId);
                     break;
                 }
                 case "info text":
-                    if (targetedSubSellable.getSellable().getInfoText().equals(newInformation))
+                    if (targetedSubProduct.getProduct().getInfoText().equals(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
                     database().request();
                     break;
                 case "price":
-                    if (targetedSubSellable.getRawPrice() == Double.parseDouble(newInformation))
+                    if (targetedSubProduct.getRawPrice() == Double.parseDouble(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.SUB_PRICE, newInformation);
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_PRICE, newInformation);
                     database().request();
                     break;
                 case "count":
-                    if (((SubProduct)targetedSubSellable).getRemainingCount() == Integer.parseInt(newInformation))
+                    if (targetedSubProduct.getRemainingCount() == Integer.parseInt(newInformation))
                         throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
                     database().request();
                     break;
                 case "imagePath":
-                    new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.IMAGE_PATH, newInformation);
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.IMAGE_PATH, newInformation);
                     database().request();
                     break;
                 case "property":
-                    new EditProductRequest(targetedSubSellable.getId(), EditProductRequest.Field.PROPERTY, newInformation);
+                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.PROPERTY, newInformation);
                     database().request();
                     break;
                 default:
@@ -236,25 +234,25 @@ public class SellerController {
             Category category = Category.getCategoryByName(categoryName);
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
-            SubSellable subSellable = new SubProduct(null, currentAccount().getId(), price, count, database());
-            new Sellable(name, brand, infoText, imagePath, category.getId(), propertyValues, subSellable, database());
+            SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
+            new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
     }
 
     //TODO
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidProductIdException {
-        if (Sellable.getSellableById(productId) == null)
+        if (Product.getProductById(productId) == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
-            new SubSellable(productId, currentAccount().getId(), price, count, database());
+            new SubProduct(productId, currentAccount().getId(), price, count, database());
         }
     }
 
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
-            if (subSellable.getSellable().getId().equals(productID)) {
-                subSellable.suspend();
-                database().removeSubSellable();
+        for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
+            if (subProduct.getProduct().getId().equals(productID)) {
+                subProduct.suspend();
+                database().removeSubProduct();
                 return;
             }
         }
@@ -286,7 +284,7 @@ public class SellerController {
         Sale sale = Sale.getSaleById(saleId);
         if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
 
-        return sale.getSubSellables().stream().map(Utilities.Pack::productInSale).collect(Collectors.toCollection(ArrayList::new));
+        return sale.getSubProducts().stream().map(Utilities.Pack::productInSale).collect(Collectors.toCollection(ArrayList::new));
     }
 
     //TODO: DEPRECATED
@@ -364,15 +362,15 @@ public class SellerController {
 
         if (startDate.before(endDate)) {
             Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum, database());
-            Sellable sellable;
-            SubSellable subSellable;
+            Product product;
+            SubProduct subProduct;
             ArrayList<String> invalidSubProductIds = new ArrayList<>();
             for (String productId : productIds) {
-                sellable = Sellable.getSellableById(productId);
-                if (sellable != null) {
-                    subSellable = sellable.getSubSellableOfaSeller(currentAccount().getId());
-                    if (subSellable != null)
-                        sale.addSubSellable(subSellable.getId());
+                product = Product.getProductById(productId);
+                if (product != null) {
+                    subProduct = product.getSubProductOfSeller(currentAccount().getId());
+                    if (subProduct != null)
+                        sale.addSubProduct(subProduct.getId());
                     else
                         invalidSubProductIds.add(productId);
                 } else
@@ -387,19 +385,19 @@ public class SellerController {
     public void addProductsToSale(String saleId, ArrayList<String> subProductIds){
         Sale sale = Sale.getSaleById(saleId);
         for (String subProductId : subProductIds) {
-            sale.addSubSellable(subProductId);
+            sale.addSubProduct(subProductId);
         }
     }
 
     public void removeProductsFromSale(String saleId, ArrayList<String> subProductIds){
         Sale sale = Sale.getSaleById(saleId);
         for (String subProductId : subProductIds) {
-            sale.removeSubSellable(subProductId);
+            sale.removeSubProduct(subProductId);
         }
     }
 
     public double viewBalance() {
-        return ((Seller) currentAccount()).getWallet().getBalance();
+        return ((Seller) currentAccount()).getBalance();
     }
 
     public void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {
@@ -436,11 +434,11 @@ public class SellerController {
     }
 
     public boolean doesSellSubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
-        if (subSellable == null) {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if( subProduct == null ){
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        } else {
-            return ((Seller) currentAccount()) == subSellable.getSeller();
+        }else {
+            return ((Seller)currentAccount()) == subProduct.getSeller();
         }
     }
 }

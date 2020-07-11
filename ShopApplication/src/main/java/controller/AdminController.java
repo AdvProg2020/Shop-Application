@@ -1,15 +1,13 @@
 package controller;
 
-import model.Category;
-import model.Discount;
+import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.database.Database;
 import model.request.*;
 import model.sellable.Product;
-import model.sellable.Sellable;
-import model.sellable.SubSellable;
+import model.sellable.SubProduct;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import
 
 public class AdminController {
 
@@ -112,21 +110,21 @@ public class AdminController {
 
     public ArrayList<String[]> manageAllProducts() {
         ArrayList<String[]> productPacks = new ArrayList<>();
-        ArrayList<Sellable> sellables = new ArrayList<>(Sellable.getAllSellables());
-        sellables.sort(new Utilities.Sort.ProductViewCountComparator(true));
-        for (Sellable sellable : sellables) {
-            productPacks.add(Utilities.Pack.product(sellable));
+        ArrayList<Product> products = new ArrayList<>(Product.getAllProducts());
+        products.sort(new Utilities.Sort.ProductViewCountComparator(true));
+        for (Product product : products) {
+            productPacks.add(Utilities.Pack.product(product));
         }
         return productPacks;
     }
 
     public void removeProduct(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null)
+        Product product = Product.getProductById(productId);
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
-            sellable.suspend();
-            database().removeSellable();
+            product.suspend();
+            database().removeProduct();
         }
     }
 
@@ -454,10 +452,10 @@ public class AdminController {
         if( request == null || !request.getClass().getSimpleName().equals("AddSaleRequest")){
             throw new Exceptions.InvalidRequestIdException(requestId);
         }else {
-            ArrayList<SubSellable> subSellables = new ArrayList<>(((AddSaleRequest) request).getSale().getSubSellables());
+            ArrayList<SubProduct> subProducts = new ArrayList<>(((AddSaleRequest)request).getSale().getSubProducts());
             ArrayList<String[]> productPacks = new ArrayList<>();
-            for (SubSellable subSellable : subSellables) {
-                productPacks.add(Utilities.Pack.product(subSellable.getSellable()));
+            for (SubProduct subProduct : subProducts) {
+                productPacks.add(Utilities.Pack.product(subProduct.getProduct()));
             }
             return productPacks;
         }
@@ -483,48 +481,48 @@ public class AdminController {
     }
 
     public void editBrandOfProduct(String productId, String newBrand) throws Exceptions.InvalidProductIdException {
-        Product pro = Product.getProductById(productId);
-        if (pro == null) {
+        Product product = Product.getProductById(productId);
+        if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
-        } else {
-            pro.setBrand(newBrand);
+        }else {
+            product.setBrand(newBrand);
         }
     }
 
     public void editImageOfProduct(String productId, String newImage) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null) {
+        Product product = Product.getProductById(productId);
+        if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
-        } else {
-            sellable.setImagePath(newImage);
+        }else {
+            product.setImagePath(newImage);
         }
     }
 
     public void editPropertyOfProduct(String productId, String newProperty) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null) {
+        Product product = Product.getProductById(productId);
+        if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
-        } else {
+        }else {
             String[] keyValue = newProperty.split(",");
-            sellable.setProperty(keyValue[0], keyValue[1]);
+            product.setProperty(keyValue[0], keyValue[1]);
         }
     }
 
     public void editInfoTextOfProduct(String productId, String newInfoText) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null) {
+        Product product = Product.getProductById(productId);
+        if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
-        } else {
-            sellable.setInfoText(newInfoText);
+        }else {
+            product.setInfoText(newInfoText);
         }
     }
 
     public void editNameOfProduct(String productId, String newName) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null) {
+        Product product = Product.getProductById(productId);
+        if(product == null){
             throw new Exceptions.InvalidProductIdException(productId);
-        } else {
-            sellable.setName(newName);
+        }else {
+            product.setName(newName);
         }
     }
 }

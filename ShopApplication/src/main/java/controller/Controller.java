@@ -1,17 +1,12 @@
 package controller;
 
 
-import model.Cart;
-import model.Category;
-import model.Review;
-import model.Sale;
+import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
-import model.sellable.Sellable;
-import model.sellable.SubSellable;
 
 import java.util.*;
 
@@ -118,15 +113,15 @@ public class Controller {
         return currentAccount.getClass().getSimpleName();
     }
 
-    private void sortProducts(ArrayList<Sellable> sellables) {
-        sellables.sort(new Utilities.Sort.ProductViewCountComparator(true));
+    private void sortProducts(ArrayList<Product> products) {
+        products.sort(new Utilities.Sort.ProductViewCountComparator(true));
     }
 
 
-    private ArrayList<String[]> productToIdNameBrand(ArrayList<Sellable> sellables) {
+    private ArrayList<String[]> productToIdNameBrand(ArrayList<Product> products) {
         ArrayList<String[]> productIdNames = new ArrayList<>();
-        for (Sellable sellable : sellables) {
-            productIdNames.add(Utilities.Pack.product(sellable));
+        for (Product product : products) {
+            productIdNames.add(Utilities.Pack.product(product));
         }
         return productIdNames;
     }
@@ -178,51 +173,51 @@ public class Controller {
         }
     }
 
-    private ArrayList<Sellable> getProductsInCategory(Category category) {
-        ArrayList<Sellable> sellables = new ArrayList<>(category.getSellables(true));
-        sortProducts(sellables);
-        return sellables;
+    private ArrayList<Product> getProductsInCategory(Category category) {
+        ArrayList<Product> products = new ArrayList<>(category.getProducts(true));
+        sortProducts( products);
+        return products;
     }
 
 
     public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
                                                   String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
         Category category = Category.getCategoryByName(categoryName) != null ? Category.getCategoryByName(categoryName) : Category.getSuperCategory();
-        ArrayList<Sellable> sellables;
+        ArrayList<Product> products;
         if (category != null) {
-            sellables = new ArrayList<>(category.getSellables(true));
+            products = new ArrayList<>(category.getProducts(true));
         } else {
-            sellables = new ArrayList<>(Sellable.getAllSellables());
+            products = new ArrayList<>(Product.getAllProducts());
         }
 
         for (String propertyFilter : propertyFilters.keySet()) {
             if ( ! propertyFilters.get(propertyFilter).equals(""))
-                Utilities.Filter.ProductFilter.property(sellables, propertyFilter, propertyFilters.get(propertyFilter));
+                Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
         }
 
-        ArrayList<SubSellable> subSellables = new ArrayList<>();
+        ArrayList<SubProduct> subProducts = new ArrayList<>();
         if (inSale) {
-            for (Sellable sellable : sellables) {
-                subSellables.addAll(sellable.getSubSellablesInSale());
+            for (Product product : products) {
+                subProducts.addAll(product.getSubProductsInSale());
             }
         } else {
-            for (Sellable sellable : sellables) {
-                subSellables.add(sellable.getDefaultSubSellable());
+            for (Product product : products) {
+                subProducts.add(product.getDefaultSubProduct());
             }
         }
 
-        filterSubProducts(available, minPrice, maxPrice, contains, brand, storeName, minRatingScore, subSellables);
+        filterSubProducts(available, minPrice, maxPrice, contains, brand, storeName, minRatingScore, subProducts);
 
-        sortSubProducts(sortBy, isIncreasing, subSellables);
-        return Utilities.Pack.subProductBoxes(subSellables);
+        sortSubProducts(sortBy, isIncreasing, subProducts);
+        return Utilities.Pack.subProductBoxes(subProducts);
     }
 
     public void showProduct(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null)
+        Product product = Product.getProductById(productId);
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
-            sellable.increaseViewCount();
+            product.increaseViewCount();
         }
     }
 
@@ -233,18 +228,18 @@ public class Controller {
      * @throws Exceptions.InvalidProductIdException
      */
     public String[] digest(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null)
+        Product product = Product.getProductById(productId);
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
-        return Utilities.Pack.digest(sellable);
+        return Utilities.Pack.digest(product);
     }
 
     public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null)
+        Product product = Product.getProductById(productId);
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
-            return new HashMap<>(sellable.getPropertyValues());
+            return new HashMap<>(product.getPropertyValues());
         }
     }
 
@@ -262,22 +257,22 @@ public class Controller {
      * @throws Exceptions.InvalidProductIdException
      */
     public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null)
+        Product product = Product.getProductById(productId);
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
-        for (SubSellable subSellable : sellable.getSubSellables()) {
-            subProducts.add(Utilities.Pack.subProduct(subSellable));
+        for (SubProduct subProduct : product.getSubProducts()) {
+            subProducts.add(Utilities.Pack.subProduct(subProduct));
         }
         return subProducts;
     }
 
     public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
-        if (subSellable == null)
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else
-            return Utilities.Pack.subProduct(subSellable);
+            return Utilities.Pack.subProduct(subProduct);
     }
 
     /**
@@ -286,11 +281,11 @@ public class Controller {
      * @throws Exceptions.InvalidProductIdException
      */
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null)
+        Product product = Product.getProductById(productId);
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
         ArrayList<String[]> reviews = new ArrayList<>();
-        for (Review review : sellable.getReviews()) {
+        for (Review review : product.getReviews()) {
             reviews.add(Utilities.Pack.review(review));
         }
         return reviews;
@@ -303,13 +298,13 @@ public class Controller {
 
     public void addToCart(String subProductId, int count) throws Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
         checkAuthorityOverCart();
-        SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
-        if (subSellable == null)
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (subSellable /.getRemainingCount() < count + currentCart.getCountOfaSubSellable(subProductId))
-        throw new Exceptions.UnavailableProductException(subProductId);
-        else{
-            currentCart.addSubSellableCount(subProductId, count);
+        else if (subProduct.getRemainingCount() < count + currentCart.getCountOfaSubProduct(subProductId))
+            throw new Exceptions.UnavailableProductException(subProductId);
+        else {
+            currentCart.addSubProductCount(subProductId, count);
             database.cart();
         }
     }
@@ -317,11 +312,11 @@ public class Controller {
     public ArrayList<String[]> getProductsInCart() throws Exceptions.UnAuthorizedAccountException {
         checkAuthorityOverCart();
         ArrayList<String[]> shoppingCart = new ArrayList<>();
-        Map<SubSellable, Integer> subProducts;
-        if (currentAccount == null) subProducts = currentCart.getSubSellables();
-        else subProducts = ((Customer) currentAccount).getCart().getSubSellables();
-        for (SubSellable subSellable : subProducts.keySet()) {
-            shoppingCart.add(Utilities.Pack.productInCart(subSellable, subProducts.get(subSellable)));
+        Map<SubProduct, Integer> subProducts;
+        if (currentAccount == null) subProducts = currentCart.getSubProducts();
+        else subProducts = ((Customer) currentAccount).getCart().getSubProducts();
+        for (SubProduct subProduct : subProducts.keySet()) {
+            shoppingCart.add(Utilities.Pack.productInCart(subProduct, subProducts.get(subProduct)));
         }
         return shoppingCart;
     }
@@ -329,16 +324,16 @@ public class Controller {
     public void increaseProductInCart(String subProductId, int number) throws Exceptions.NotSubProductIdInTheCartException,
             Exceptions.UnavailableProductException, Exceptions.InvalidSubProductIdException, Exceptions.UnAuthorizedAccountException {
         checkAuthorityOverCart();
-        Map<SubSellable, Integer> subProducts = currentCart.getSubSellables();
-        SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
-        if (subSellable == null)
+        Map<SubProduct, Integer> subProducts = currentCart.getSubProducts();
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (!subProducts.containsKey(subSellable))
+        else if (!subProducts.containsKey(subProduct))
             throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
-        else if (number + subProducts.get(subSellable) > subSellable.getRemainingCount())
+        else if (number + subProducts.get(subProduct) > subProduct.getRemainingCount())
             throw new Exceptions.UnavailableProductException(subProductId);
         else {
-            currentCart.addSubSellableCount(subProductId, number);
+            currentCart.addSubProductCount(subProductId, number);
             database.cart();
         }
     }
@@ -346,13 +341,13 @@ public class Controller {
     public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
             Exceptions.NotSubProductIdInTheCartException, Exceptions.UnAuthorizedAccountException {
         checkAuthorityOverCart();
-        SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
-        if (subSellable == null)
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         else {
-            Map<SubSellable, Integer> subProductsInCart = currentCart.getSubSellables();
-            if (subProductsInCart.containsKey(subSellable)) {
-                currentCart.addSubSellableCount(subProductId, -number);
+            Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
+            if (subProductsInCart.containsKey(subProduct)) {
+                currentCart.addSubProductCount(subProductId, -number);
                 database.cart();
             } else
                 throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
@@ -368,7 +363,7 @@ public class Controller {
         if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
         else {
-            if (Sellable.getSellableById(productId) == null)
+            if (Product.getProductById(productId) == null)
                 throw new Exceptions.InvalidProductIdException(productId);
             else {
                 new Review(currentAccount.getId(), productId, title, text, database);
@@ -433,41 +428,41 @@ public class Controller {
     }
 
     private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                   String storeName, double minRatingScore, ArrayList<SubSellable> subSellables) {
-        Utilities.Filter.SubProductFilter.available(subSellables, available);
-        Utilities.Filter.SubProductFilter.minPrice(subSellables, minPrice);
-        Utilities.Filter.SubProductFilter.maxPrice(subSellables, maxPrice);
-        Utilities.Filter.SubProductFilter.name(subSellables, contains);
-        Utilities.Filter.SubProductFilter.brand(subSellables, brand);
-        Utilities.Filter.SubProductFilter.storeName(subSellables, storeName);
-        Utilities.Filter.SubProductFilter.ratingScore(subSellables, minRatingScore);
+                                   String storeName, double minRatingScore, ArrayList<SubProduct> subProducts) {
+        Utilities.Filter.SubProductFilter.available(subProducts, available);
+        Utilities.Filter.SubProductFilter.minPrice(subProducts, minPrice);
+        Utilities.Filter.SubProductFilter.maxPrice(subProducts, maxPrice);
+        Utilities.Filter.SubProductFilter.name(subProducts, contains);
+        Utilities.Filter.SubProductFilter.brand(subProducts, brand);
+        Utilities.Filter.SubProductFilter.storeName(subProducts, storeName);
+        Utilities.Filter.SubProductFilter.ratingScore(subProducts, minRatingScore);
     }
 
-    private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubSellable> subSellables) {
+    private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts) {
         if (sortBy == null) {
             sortBy = "view count";
         }
         switch (sortBy) {
             case "view count":
-                subSellables.sort(new Utilities.Sort.SubProductViewCountComparator(isIncreasing));
+                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(isIncreasing));
                 break;
             case "price":
-                subSellables.sort(new Utilities.Sort.SubProductPriceComparator(isIncreasing));
+                subProducts.sort(new Utilities.Sort.SubProductPriceComparator(isIncreasing));
                 break;
             case "name":
-                subSellables.sort(new Utilities.Sort.SubProductNameComparator(isIncreasing));
+                subProducts.sort(new Utilities.Sort.SubProductNameComparator(isIncreasing));
                 break;
             case "rating score":
-                subSellables.sort(new Utilities.Sort.SubProductRatingScoreComparator(isIncreasing));
+                subProducts.sort(new Utilities.Sort.SubProductRatingScoreComparator(isIncreasing));
                 break;
             case "category name":
-                subSellables.sort(new Utilities.Sort.SubProductCategoryNameComparator(isIncreasing));
+                subProducts.sort(new Utilities.Sort.SubProductCategoryNameComparator(isIncreasing));
                 break;
             case "remaining count":
-                subSellables.sort(new Utilities.Sort.SubProductRemainingCountComparator(isIncreasing));
+                subProducts.sort(new Utilities.Sort.SubProductRemainingCountComparator(isIncreasing));
                 break;
             default:
-                subSellables.sort(new Utilities.Sort.SubProductViewCountComparator(true));
+                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(true));
         }
     }
 
@@ -476,24 +471,24 @@ public class Controller {
     }
 
     public void removeSubProductFromCart(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        if (SubSellable.getSubSellableById(subProductId) == null)
+        if (SubProduct.getSubProductById(subProductId) == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else currentCart.removeSubSellable(subProductId);
+        else currentCart.removeSubProduct(subProductId);
     }
 
     public String[] getDefaultSubProductOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null)
+        Product product = Product.getProductById(productId);
+        if (product == null)
             throw new Exceptions.InvalidProductIdException(productId);
-        return Utilities.Pack.subProduct(sellable.getDefaultSubSellable());
+        return Utilities.Pack.subProduct(product.getDefaultSubProduct());
     }
 
     public ArrayList<String> getPropertyValuesInCategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category != null) {
             ArrayList<String> values = new ArrayList<>();
-            for (Sellable sellable : category.getSellables(true)) {
-                values.add(sellable.getValue(property));
+            for (Product product : category.getProducts(true)) {
+                values.add(product.getValue(property));
             }
             return values;
         } else
@@ -501,27 +496,27 @@ public class Controller {
     }
 
     public ArrayList<String[]> getSubProductsForAdvertisements(int number) {
-        ArrayList<Sellable> selectedSellables = new ArrayList<>(Sellable.getAllSellables());
+        ArrayList<Product> selectedProducts = new ArrayList<>(Product.getAllProducts());
         int rangeSize = number * 3;
-        int numberOfProducts = selectedSellables.size();
+        int numberOfProducts = selectedProducts.size();
         if (numberOfProducts > rangeSize) {
-            ArrayList<Sellable> allSellables = selectedSellables;
-            selectedSellables = new ArrayList<>();
+            ArrayList<Product> allProducts = selectedProducts;
+            selectedProducts = new ArrayList<>();
             for (int i = 0; i < rangeSize; i++) {
-                selectedSellables.add(allSellables.get(numberOfProducts - 1 - i));
+                selectedProducts.add(allProducts.get(numberOfProducts - 1 - i));
             }
             numberOfProducts = rangeSize;
         }
         ArrayList<String[]> productsToShow = new ArrayList<>();
-        SubSellable chosenSubSellable;
+        SubProduct chosenSubProduct;
         Random r = new Random();
         int randomNumber;
         number = Math.min(number, numberOfProducts);
         for (int i = 0; i < number; i++) {
             randomNumber = r.nextInt(numberOfProducts);
-            chosenSubSellable = selectedSellables.get(randomNumber).getDefaultSubSellable();
-            productsToShow.add(Utilities.Pack.subProduct(chosenSubSellable));
-            selectedSellables.remove(randomNumber);
+            chosenSubProduct = selectedProducts.get(randomNumber).getDefaultSubProduct();
+            productsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
+            selectedProducts.remove(randomNumber);
             numberOfProducts--;
         }
 
@@ -529,46 +524,46 @@ public class Controller {
     }
 
     public ArrayList<String[]> getSubProductsInSale(int number) {
-        HashSet<Sellable> candidateSellables = new HashSet<>();
+        HashSet<Product> candidateProducts = new HashSet<>();
         choosingProduct:
         for (Sale sale : Sale.getAllSales()) {
-            if (!sale.hasStarted()) continue;
-            for (SubSellable subSellable : sale.getSubSellables()) {
-                candidateSellables.add(subSellable.getSellable());
-                if (candidateSellables.size() > number * 3) {
+            if ( ! sale.hasStarted()) continue;
+            for (SubProduct subProduct : sale.getSubProducts()) {
+                candidateProducts.add(subProduct.getProduct());
+                if (candidateProducts.size() > number * 3) {
                     break choosingProduct;
                 }
             }
         }
 
-        int numberOfProducts = candidateSellables.size();
+        int numberOfProducts = candidateProducts.size();
         number = Math.min(numberOfProducts, number);
-        ArrayList<Sellable> orderedSellables = new ArrayList<>(candidateSellables);
+        ArrayList<Product> orderedProducts = new ArrayList<>(candidateProducts);
         ArrayList<String[]> subProductsToShow = new ArrayList<>();
         Random r = new Random();
         int randomNumber;
-        Sellable chosenSellable;
-        SubSellable chosenSubSellable;
-        ArrayList<SubSellable> inSaleSubSellables;
+        Product chosenProduct;
+        SubProduct chosenSubProduct;
+        ArrayList<SubProduct> inSaleSubProducts;
         for (int i = 0; i < number; i++) {
             randomNumber = r.nextInt(numberOfProducts);
-            chosenSellable = orderedSellables.remove(randomNumber);
+            chosenProduct  = orderedProducts.remove(randomNumber);
             numberOfProducts--;
 
-            inSaleSubSellables = new ArrayList<>(chosenSellable.getSubSellablesInSale());
-            chosenSubSellable = inSaleSubSellables.get(r.nextInt(inSaleSubSellables.size()));
-            subProductsToShow.add(Utilities.Pack.subProduct(chosenSubSellable));
+            inSaleSubProducts = new ArrayList<>(chosenProduct.getSubProductsInSale());
+            chosenSubProduct = inSaleSubProducts.get(r.nextInt(inSaleSubProducts.size()));
+            subProductsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
         }
 
         return subProductsToShow;
     }
 
     public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
-        Sellable sellable = Sellable.getSellableById(productId);
-        if (sellable == null) {
+        Product product = Product.getProductById(productId);
+        if (product == null) {
             throw new Exceptions.InvalidProductIdException(productId);
         } else {
-            return getCategoryTreeOfACategory(sellable.getCategory().getName());
+            return getCategoryTreeOfACategory(product.getCategory().getName());
         }
     }
 
@@ -586,12 +581,12 @@ public class Controller {
     }
 
     public ArrayList<String> getBuyersOfASubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
-        if (subSellable == null) {
+        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
+        if (subProduct == null) {
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         } else {
             ArrayList<String> buyerUserNames = new ArrayList<>();
-            for (Customer customer : subSellable.getCustomers()) {
+            for (Customer customer : subProduct.getCustomers()) {
                 buyerUserNames.add(customer.getUsername());
             }
             return buyerUserNames;
