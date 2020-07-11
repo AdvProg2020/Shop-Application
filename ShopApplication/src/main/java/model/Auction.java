@@ -1,5 +1,6 @@
 package model;
 
+import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 import model.account.Seller;
 import model.database.Database;
@@ -112,6 +113,7 @@ public class Auction implements ModelBasic { //TODO: add group chat
         }
     }
 
+    @ModelOnly
     public SubSellable getSubSellable() {
         return SubSellable.getSubSellableById(subSellableId);
     }

@@ -13,11 +13,11 @@ public class Cart implements ModelBasic {
     private static int lastNum = 1;
     private String cartId;
     private String customerId; // can be null
-    private Map<String, Integer> subSellableIds;
+    private Map<String, Integer> subProductIds;
 
     public Cart(String customerId) {
         this.customerId = customerId;
-        subSellableIds = new HashMap<>();
+        subProductIds = new HashMap<>();
         initialize();
     }
 
@@ -30,9 +30,9 @@ public class Cart implements ModelBasic {
     }
 
     @ModelOnly
-    public static void removeSubSellableFromAll(String subSellableId) {
+    public static void removeSubProductFromAll(String subProductId) {
         for (Cart cart : allCarts.values()) {
-            cart.subSellableIds.remove(subSellableId);
+            cart.subProductIds.remove(subProductId);
         }
     }
 
@@ -40,7 +40,7 @@ public class Cart implements ModelBasic {
     public static void mergeCarts(String srcCartId, String destCartId) {
         Cart srcCart = getCartById(srcCartId);
         Cart destCart = getCartById(destCartId);
-        for (Map.Entry<String, Integer> entry : srcCart.subSellableIds.entrySet()) {
+        for (Map.Entry<String, Integer> entry : srcCart.subProductIds.entrySet()) {
             destCart.addSubSellableCount(entry.getKey(), entry.getValue());
         }
         srcCart.terminate();
@@ -74,7 +74,7 @@ public class Cart implements ModelBasic {
 
     public Map<SubSellable, Integer> getSubSellables() {
         Map<SubSellable, Integer> subSellables = new HashMap<>();
-        for (Map.Entry<String, Integer> entry : subSellableIds.entrySet()) {
+        for (Map.Entry<String, Integer> entry : subProductIds.entrySet()) {
             SubSellable subSellable = SubSellable.getSubSellableById(entry.getKey());
             subSellables.put(subSellable, entry.getValue());
         }
@@ -83,28 +83,28 @@ public class Cart implements ModelBasic {
     }
 
     public int getCountOfaSubSellable(String subSellableId) {
-        if (!subSellableIds.containsKey(subSellableId))
+        if (!subProductIds.containsKey(subSellableId))
             return 0;
 
-        return subSellableIds.get(subSellableId);
+        return subProductIds.get(subSellableId);
     }
 
     public void addSubSellableCount(String subProductId, int count) {
-        if (subSellableIds.containsKey(subProductId))
-            count += subSellableIds.get(subProductId);
+        if (subProductIds.containsKey(subProductId))
+            count += subProductIds.get(subProductId);
 
         if (count <= 0)
             removeSubSellable(subProductId);
         else
-            subSellableIds.put(subProductId, count);
+            subProductIds.put(subProductId, count);
     }
 
     public void removeSubSellable(String subSellable) {
-        subSellableIds.remove(subSellable);
+        subProductIds.remove(subSellable);
     }
 
     public void clearCart() {
-        subSellableIds = new HashMap<>();
+        subProductIds = new HashMap<>();
     }
 
     public double getTotalPrice() {

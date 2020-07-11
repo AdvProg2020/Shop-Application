@@ -112,7 +112,7 @@ public class SellerController {
 
     public ArrayList<String[]> manageProducts() {
         ArrayList<String[]> products = new ArrayList<>();
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubSellables()) {
+        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
             products.add(Utilities.Pack.sellerSubProduct(subSellable));
         }
         return products;
@@ -120,7 +120,7 @@ public class SellerController {
 
     //TODO: Useless
     public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubSellables()) {
+        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
             if (subSellable.getSellable().getId().equals(productID))
                 return Utilities.Pack.subProduct(subSellable);
         }
@@ -129,7 +129,7 @@ public class SellerController {
 
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
         Seller seller = ((Seller) currentAccount());
-        for (SubSellable subSellable : seller.getSubSellables()) {
+        for (SubSellable subSellable : seller.getSubFiles()) {
             if (subSellable.getSellable().getId().equals(productID)) {
                 ArrayList<String> buyers = new ArrayList<>();
                 for (Customer customer : subSellable.getCustomers()) {
@@ -147,7 +147,7 @@ public class SellerController {
 
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         SubSellable targetedSubSellable = null;
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubSellables()) {
+        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
             if (subSellable.getSellable().getId().equals(productID)) {
                 targetedSubSellable = subSellable;
                 break;
@@ -251,7 +251,7 @@ public class SellerController {
     }
 
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
-        for (SubSellable subSellable : ((Seller) currentAccount()).getSubSellables()) {
+        for (SubSellable subSellable : ((Seller) currentAccount()).getSubFiles()) {
             if (subSellable.getSellable().getId().equals(productID)) {
                 subSellable.suspend();
                 database().removeSubSellable();

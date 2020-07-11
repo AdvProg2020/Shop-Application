@@ -6,6 +6,7 @@ import model.ModelUtilities;
 import model.ModelUtilities.ModelOnly;
 import model.Wallet;
 import model.log.BuyLog;
+import model.log.FileLog;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ public class Customer extends Account { // TODO: add chat
     private transient String cartId;
     private transient Map<String, Integer> discountIds;
     private transient Set<String> buyLogIds;
+    private transient Set<String> fileLogIds;
 
     public Customer(String username, String password, String firstName, String lastName, String email, String phone, String image, double balance) {
         super(username, password, firstName, lastName, email, phone, image);
@@ -97,6 +99,21 @@ public class Customer extends Account { // TODO: add chat
     @ModelOnly
     public void addBuyLog(String buyLogId) {
         buyLogIds.add(buyLogId);
+    }
+
+    public List<FileLog> getFileLogs() {
+        List<FileLog> fileLogs = new ArrayList<>();
+        for (String fileLogId : fileLogIds) {
+            fileLogs.add(FileLog.getFileLogById(fileLogId));
+        }
+
+        fileLogs.sort(Comparator.comparing(FileLog::getId));
+        return fileLogs;
+    }
+
+    @ModelOnly
+    public void addFileLog(String fileLogId) {
+        fileLogIds.add(fileLogId);
     }
 
     public Map<Discount, Integer> getDiscounts() {

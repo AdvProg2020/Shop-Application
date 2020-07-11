@@ -6,9 +6,12 @@ import model.ModelUtilities.ModelOnly;
 import model.Sale;
 import model.Wallet;
 import model.database.Database;
+import model.log.FileLog;
 import model.log.SellLog;
 import model.request.AddSellerRequest;
 import model.request.Request;
+import model.sellable.SubFile;
+import model.sellable.SubProduct;
 import model.sellable.SubSellable;
 
 import java.util.*;
@@ -22,6 +25,7 @@ public class Seller extends Account {
     private transient Set<String> saleIds;
     private transient Set<String> auctionIds;
     private transient Set<String> sellLogIds;
+    private transient Set<String> fileLogIds;
     private transient Set<String> pendingRequestIds;
 
     public Seller(String username, String password, String firstName, String lastName, String email, String phone, String image, String storeName, double balance, Database database) {
@@ -145,7 +149,7 @@ public class Seller extends Account {
 
     public List<SubSellable> getSubSellables() {
         List<SubSellable> subSellables = new ArrayList<>();
-        for (String subSellableId : subSellableIds) {
+        for (String subSellableId : this.subSellableIds) {
             subSellables.add(SubSellable.getSubSellableById(subSellableId));
         }
 
@@ -163,6 +167,30 @@ public class Seller extends Account {
         subSellableIds.remove(subSellableId);
     }
 
+    public List<SubProduct> getSubProducts() {
+        List<SubProduct> subProducts = new ArrayList<>();
+        for (String subSellableId : subSellableIds) {
+            SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
+            if (subSellable instanceof SubProduct)
+                subProducts.add((SubProduct) subSellable);
+        }
+
+        subProducts.sort(Comparator.comparing(SubProduct::getId));
+        return subProducts;
+    }
+
+    public List<SubFile> getSubFiles() {
+        List<SubFile> subFiles = new ArrayList<>();
+        for (String subSellableId : subSellableIds) {
+            SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
+            if (subSellable instanceof SubFile)
+                subFiles.add((SubFile) subSellable);
+        }
+
+        subFiles.sort(Comparator.comparing(SubFile::getId));
+        return subFiles;
+    }
+
     public List<SellLog> getSellLogs() {
         List<SellLog> sellLogs = new ArrayList<>();
         for (String sellLogId : sellLogIds) {
@@ -176,6 +204,21 @@ public class Seller extends Account {
     @ModelOnly
     public void addSellLog(String sellLogId) {
         sellLogIds.add(sellLogId);
+    }
+
+    public List<FileLog> getFileLogs() {
+        List<FileLog> fileLogs = new ArrayList<>();
+        for (String fileLogId : fileLogIds) {
+            fileLogs.add(FileLog.getFileLogById(fileLogId));
+        }
+
+        fileLogs.sort(Comparator.comparing(FileLog::getId));
+        return fileLogs;
+    }
+
+    @ModelOnly
+    public void addFileLog(String fileLogId) {
+        fileLogIds.add(fileLogId);
     }
 
     public List<Request> getPendingRequests() {
