@@ -5108,7 +5108,7 @@ public class Controllers {
                 if (validateFields()) {
                     try {
                         boolean bootUp = !mainController.doesManagerExist();
-                        adminController.creatAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
+                        adminController.createAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
                                 adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
                         if ( ! bootUp) {
                             AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());

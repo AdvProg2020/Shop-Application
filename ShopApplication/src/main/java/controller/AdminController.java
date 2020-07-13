@@ -5,6 +5,7 @@ import model.Discount;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
+import model.account.Supporter;
 import model.database.Database;
 import model.request.*;
 import model.sellable.Product;
@@ -103,13 +104,19 @@ public class AdminController {
     }
 
 
-    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
+    public void createAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
         new Admin(username, password, firstName, lastName, email, phone, imagePath);
         database().createAdmin();
     }
 
+    public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
+        if(Account.isUsernameUsed(username))
+            throw new Exceptions.UsernameAlreadyTakenException(username);
+        new Supporter(username, password, firstName, lastName, email, phone, imagePath);
+        database().createSupporter();
+    }
 
     public ArrayList<String[]> manageAllProducts() {
         ArrayList<String[]> productPacks = new ArrayList<>();

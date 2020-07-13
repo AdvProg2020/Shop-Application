@@ -376,11 +376,6 @@ public class SellerController {
         return sale.getSubProducts().stream().map(Utilities.Pack::productInSale).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    //TODO: DEPRECATED
-    public String[] getSaleEditableFields() {
-        return Utilities.Field.saleEditableFields();
-    }
-
     public void editSale(String saleId, String field, String newInformation) throws
             Exceptions.InvalidSaleIdException, Exceptions.InvalidFormatException, Exceptions.InvalidDateException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         Sale targetedSale = null;
@@ -497,12 +492,6 @@ public class SellerController {
             throw new Exceptions.InvalidSaleIdException(saleId);
         }
     }
-
-//    public void removeSale(ArrayList<String> saleIds) throws Exceptions.InvalidSaleIdException {
-//        for (String saleId : saleIds) {
-//            removeSale(saleId);
-//        }
-//    }
 
     public ArrayList<String[]> getPendingRequests(){
         ArrayList<Request> requests = new ArrayList<>(((Seller)currentAccount()).getPendingRequests());
