@@ -10,6 +10,7 @@ import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
 import model.chat.Chat;
+import model.chat.Message;
 import model.database.Database;
 import model.sellable.Product;
 import model.sellable.SubProduct;
@@ -603,6 +604,12 @@ public class Controller {
         Chat chat = Chat.getChatById(chatId);
         if(chat == null){
             throw new Exceptions.InvalidChatIdException(chatId);
-        }else if( );
+        }else {
+            ArrayList<String[]> messages = new ArrayList<>();
+            for (Message message : chat.getMessages()) {
+                messages.add(Utilities.Pack.message(message));
+            }
+            return messages;
+        }
     }
 }
