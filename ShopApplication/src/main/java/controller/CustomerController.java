@@ -8,6 +8,7 @@ import model.Rating;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
+import model.chat.AuctionChat;
 import model.chat.Message;
 import model.chat.SupportChat;
 import model.database.Database;
@@ -248,7 +249,7 @@ public class CustomerController {
         }
     }
 
-    private void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
+    private void sendMessageInSupportChat(String chatId, String text) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getCustomer() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -257,7 +258,7 @@ public class CustomerController {
         }
     }
 
-    private void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
+    private void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getCustomer() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -266,8 +267,28 @@ public class CustomerController {
         }
     }
 
-    private void viewAuction(String auctionId){
+    private String[] viewAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
+        Auction auction = Auction.getAuctionById(auctionId);
+        if( auction == null ){
+            throw new Exceptions.InvalidAuctionIdException(auctionId);
+        }else {
+            return Utilities.Pack.auction(auction);
+        }
+    }
 
+    private ArrayList<String[]> viewSupportChat(String auctionId){
+        Auction auction = Auction.getAuctionById(auctionId);
+        if( auction == null ){
+            throw new Exceptions.InvalidAuctionIdException(auctionId)
+        }else {
+            AuctionChat chat = auction.getChat();
+            ArrayList<String[]> messages = new ArrayList<>();
+            String username = currentAccount().getUsername();
+            for (Message message : chat.getMessages()) {
+                messages.add(Utilities.Pack.message(message, username));
+            }
+            return messages;
+        }
     }
 
     private void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
