@@ -91,4 +91,13 @@ public class Chat implements ModelBasic {
     public void removeAccount(String messageId) {
         messageIds.remove(messageId);
     }
+
+    public boolean isAccountInChat(Account targetedAccount){
+        for (Account account : getAccounts()) {
+            if(account == targetedAccount){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -9,6 +9,7 @@ import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
+import model.chat.Chat;
 import model.database.Database;
 import model.sellable.Product;
 import model.sellable.SubProduct;
@@ -598,7 +599,10 @@ public class Controller {
         }
     }
 
-    public ArrayList<String[]> getMessagesInChat(String chatId){
-        return null;
+    public ArrayList<String[]> getMessagesInChat(String chatId) throws Exceptions.InvalidChatIdException {
+        Chat chat = Chat.getChatById(chatId);
+        if(chat == null){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else if();
     }
 }
