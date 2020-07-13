@@ -9,6 +9,7 @@ import model.account.Seller;
 import model.database.Database;
 import model.log.LogItem;
 import model.log.SellLog;
+import model.request.EditFileRequest;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
@@ -201,6 +202,65 @@ public class SellerController {
                     break;
                 case "property":
                     new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.PROPERTY, newInformation);
+                    database().request();
+                    break;
+                default:
+                    throw new Exceptions.InvalidFieldException();
+            }
+        }
+    }
+
+    public void editFile(String fileID, String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException, Exceptions.ExistingFileException, Exceptions.InvalidFileIdException {
+        SubFile targetedSubFile = null;
+        for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
+            if (subFile.getFile().getId().equals(fileID)) {
+                targetedSubFile = subFile;
+                break;
+            }
+        }
+        if (targetedSubFile == null)
+            throw new Exceptions.InvalidFileIdException(fileID);
+        else {
+            switch (field) {
+                case "name": {
+                    if (exist(newInformation, targetedSubFile.getFile().getExtension()) == null) {
+                        if (targetedSubFile.getFile().getName().equals(newInformation))
+                            throw new Exceptions.SameAsPreviousValueException(field);
+                        new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.NAME, newInformation);
+                        database().request();
+                    } else
+                        throw new Exceptions.ExistingFileException();
+                    break;
+                }
+                case "extension": {
+                    String existingFileId;
+                    if (exist(targetedSubFile.getFile().getName(), newInformation) == null) {
+                        if (targetedSubFile.getFile().getExtension().equals(newInformation))
+                            throw new Exceptions.SameAsPreviousValueException(field);
+                        new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.EXTENSION, newInformation);
+                        database().request();
+                    } else
+                        throw new Exceptions.ExistingFileException();
+                    break;
+                }
+                case "info text":
+                    if (targetedSubFile.getFile().getInfoText().equals(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
+                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.INFO_TEXT, newInformation);
+                    database().request();
+                    break;
+                case "price":
+                    if (targetedSubFile.getRawPrice() == Double.parseDouble(newInformation))
+                        throw new Exceptions.SameAsPreviousValueException(field);
+                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.SUB_PRICE, newInformation);
+                    database().request();
+                    break;
+                case "imagePath":
+                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.IMAGE_PATH, newInformation);
+                    database().request();
+                    break;
+                case "property":
+                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.PROPERTY, newInformation);
                     database().request();
                     break;
                 default:
