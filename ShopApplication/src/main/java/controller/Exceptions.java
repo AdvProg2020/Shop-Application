@@ -202,5 +202,9 @@ public class Exceptions {
         }
     }
 
-
+    public static class InvalidChatIdException extends Exception{
+        public InvalidChatIdException(String chatId){
+            super("There is no chat with id: " + chatId);
+        }
+    }
 }

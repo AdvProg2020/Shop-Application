@@ -598,4 +598,7 @@ public class Controller {
         }
     }
 
+    public ArrayList<String[]> getMessagesInChat(String chatId){
+        return null;
+    }
 }
