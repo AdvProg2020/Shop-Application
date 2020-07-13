@@ -209,11 +209,6 @@ public class AdminController {
         }
     }
 
-    //TODO: DEPRECATED
-    public String[] getDiscountEditableFields() {
-        return Utilities.Field.discountEditableFields();
-    }
-
     /**
      * @param code           String
      * @param field          String ->                     "start date", "end date", "maximum amount", "percentage"
@@ -345,7 +340,6 @@ public class AdminController {
         }
     }
 
-
     public ArrayList<String[]> manageCategories() {
         ArrayList<String[]> categoryNames = new ArrayList<>();
         for (Category category : Category.getAllCategories()) {
@@ -356,11 +350,6 @@ public class AdminController {
             categoryNames.add(info);
         }
         return categoryNames;
-    }
-
-    //TODO: DEPRECATED
-    public String[] getCategoryEditableFields() {
-        return Utilities.Field.getCategoryEditableFields();
     }
 
     /**
