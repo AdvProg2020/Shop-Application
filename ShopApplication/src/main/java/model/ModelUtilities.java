@@ -3,12 +3,17 @@ package model;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
+import model.account.Supporter;
+import model.chat.Chat;
+import model.chat.Message;
 import model.log.BuyLog;
+import model.log.FileLog;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.request.Request;
-import model.sellable.Sellable;
-import model.sellable.SubSellable;
+import model.sellable.Product;
+import model.sellable.SubFile;
+import model.sellable.SubProduct;
 
 import java.io.File;
 import java.lang.annotation.ElementType;
@@ -24,18 +29,26 @@ public class ModelUtilities {
             entry(Customer.class.getSimpleName(), "CST"),
             entry(Seller.class.getSimpleName(), "SLR"),
             entry(Admin.class.getSimpleName(), "ADM"),
+            entry(Supporter.class.getSimpleName(), "SPT"),
+            entry(Cart.class.getSimpleName(), "CRT"),
+            entry(Wallet.class.getSimpleName(), "WLT"),
+            entry(Chat.class.getSimpleName(), "CHT"),
+            entry(Message.class.getSimpleName(), "MSG"),
             entry(BuyLog.class.getSimpleName(), "BLG"),
             entry(SellLog.class.getSimpleName(), "SLG"),
             entry(LogItem.class.getSimpleName(), "LGI"),
+            entry(FileLog.class.getSimpleName(), "FLG"),
             entry(Request.class.getSimpleName(), "REQ"),
-            entry(Cart.class.getSimpleName(), "CRT"),
             entry(Category.class.getSimpleName(), "CTG"),
             entry(Discount.class.getSimpleName(), "DSC"),
-            entry(Sellable.class.getSimpleName(), "PRO"),
-            entry(Rating.class.getSimpleName(), "RAT"),
-            entry(Review.class.getSimpleName(), "REV"),
             entry(Sale.class.getSimpleName(), "SAL"),
-            entry(SubSellable.class.getSimpleName(), "SBP")
+            entry(Auction.class.getSimpleName(), "AUC"),
+            entry(Product.class.getSimpleName(), "PRO"),
+            entry(SubProduct.class.getSimpleName(), "SBP"),
+            entry(File.class.getSimpleName(), "FIL"),
+            entry(SubFile.class.getSimpleName(), "SLF"),
+            entry(Rating.class.getSimpleName(), "RAT"),
+            entry(Review.class.getSimpleName(), "REV")
     );
 
     private static String fixedLengthNumber(int number, int length) {
