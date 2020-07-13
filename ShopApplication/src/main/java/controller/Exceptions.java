@@ -225,4 +225,10 @@ public class Exceptions {
             super("There is a file with this name and extension!");
         }
     }
+
+    public static class InvalidFileIdException extends Exception{
+        public InvalidFileIdException(String fileId){
+            super("There is no file with id: " + fileId);
+        }
+    }
 }

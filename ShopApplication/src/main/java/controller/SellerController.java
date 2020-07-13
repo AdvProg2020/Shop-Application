@@ -258,6 +258,11 @@ public class SellerController {
         }
     }
 
+    public void addNewSubFileToAnExistingFile(String fileId, double price){
+        if(File.getFileById(fileId) == null)
+            throw new Exceptions.Invalid
+    }
+
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
