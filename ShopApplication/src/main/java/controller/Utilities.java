@@ -1,9 +1,6 @@
 package controller;
 
-import model.Category;
-import model.Discount;
-import model.Review;
-import model.Sale;
+import model.*;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
@@ -115,6 +112,18 @@ public class Utilities {
                 return subProduct((SubProduct) subSellable);
             else
                 return subFile((SubFile) subSellable);
+        }
+
+        public static String[] auction(Auction auction){
+            String[] auctionPack = new String[7];
+            auctionPack[0] = auction.getId();
+            auctionPack[1] = auction.getSubSellable().getId();
+            auctionPack[2] = auction.getChat().getId();
+            auctionPack[3] = Double.toString(auction.getHighestBid());
+            auctionPack[4] = auction.getHighestBidder().getUsername();
+            auctionPack[5] = dateFormat.format(auction.getStartDate());
+            auctionPack[6] = dateFormat.format(auction.getEndDate());
+            return auctionPack;
         }
 
         public static String[] subProductInProduct(SubProduct subProduct){
