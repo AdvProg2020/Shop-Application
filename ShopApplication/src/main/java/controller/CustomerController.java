@@ -266,6 +266,18 @@ public class CustomerController {
         }
     }
 
-    private void bid(String auctionId, double bidAmount){
+    private void viewAuction(String auctionId){
+
     }
+
+    private void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
+        Auction auction = Auction.getAuctionById(auctionId);
+        if(auction == null){
+            throw new Exceptions.InvalidAuctionIdException(auctionId);
+        }else {
+            auction.bid(currentAccount().getId(), bidAmount);
+        }
+    }
+
+
 }
