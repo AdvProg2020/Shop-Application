@@ -258,9 +258,12 @@ public class SellerController {
         }
     }
 
-    public void addNewSubFileToAnExistingFile(String fileId, double price){
+    public void addNewSubFileToAnExistingFile(String fileId, double price, String downloadPath) throws Exceptions.InvalidFileIdException {
         if(File.getFileById(fileId) == null)
-            throw new Exceptions.Invalid
+            throw new Exceptions.InvalidFileIdException(fileId);
+        else {
+            new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
+        }
     }
 
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
