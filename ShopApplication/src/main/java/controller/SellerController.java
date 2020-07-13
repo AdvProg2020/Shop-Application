@@ -266,6 +266,16 @@ public class SellerController {
         }
     }
 
+    public void removeFile(String fileId){
+        for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
+            if(subFile.getFile().getId().equals(fileId)){
+                subFile.suspend();
+                database().removeSubFile();
+                return;
+            }
+        }
+    }
+
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
