@@ -7,6 +7,8 @@ import model.Rating;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
+import model.chat.Message;
+import model.chat.SupportChat;
 import model.database.Database;
 import model.log.BuyLog;
 import model.log.LogItem;
@@ -227,4 +229,38 @@ public class CustomerController {
             return product.hasBought(currentAccount().getId());
         }
     }
+
+    private ArrayList<String[]> viewSupportChat() throws Exceptions.DontHaveChatException {
+        SupportChat chat = ((Customer) currentAccount()).getSupportChat();
+        if( chat == null ){
+            throw new Exceptions.DontHaveChatException();
+        }else {
+            ArrayList<String[]> messages = new ArrayList<>();
+            String username = currentAccount().getUsername();
+            for (Message message : chat.getMessages()) {
+                messages.add(Utilities.Pack.message(message, username));
+            }
+            return messages;
+        }
+    }
+
+    private void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
+        SupportChat chat = SupportChat.getSupportChatById(chatId);
+        if( chat == null || chat.getCustomer() != currentAccount()){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else {
+            new Message(chatId, currentAccount().getId(), text);
+        }
+    }
+
+    private void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
+        SupportChat chat = SupportChat.getSupportChatById(chatId);
+        if( chat == null || chat.getCustomer() != currentAccount()){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else {
+            chat.suspend();
+        }
+    }
+
+
 }

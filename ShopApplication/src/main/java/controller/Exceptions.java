@@ -231,4 +231,10 @@ public class Exceptions {
             super("There is no file with id: " + fileId);
         }
     }
+
+    public static class DontHaveChatException extends Exception{
+        public DontHaveChatException(){
+            super("You don't have any chat!");
+        }
+    }
 }
