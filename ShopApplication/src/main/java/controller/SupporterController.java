@@ -64,6 +64,13 @@ public class SupporterController {
         }
     }
 
-
+    private void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
+        SupportChat chat = SupportChat.getSupportChatById(chatId);
+        if( chat == null || chat.getSupporter() != currentAccount()){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else {
+            chat.suspend();
+        }
+    }
 
 }
