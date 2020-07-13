@@ -3,6 +3,7 @@ package model;
 import model.ModelUtilities.ModelOnly;
 import model.account.Customer;
 import model.account.Seller;
+import model.chat.AuctionChat;
 import model.database.Database;
 import model.request.AddAuctionRequest;
 import model.sellable.SubSellable;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Auction implements ModelBasic { //TODO: add group chat
+public class Auction implements ModelBasic {
     private static Map<String, Auction> allAuctions = new HashMap<>();
     private static int lastNum = 1;
     private String auctionId;
@@ -22,6 +23,7 @@ public class Auction implements ModelBasic { //TODO: add group chat
     private Date endDate;
     private String highestBidderId;
     private double highestBid;
+    private transient String chatId;
     private boolean suspended;
 
     public Auction(String sellerId, String subSellableId, Date startDate, Date endDate, Database database) {
@@ -30,6 +32,7 @@ public class Auction implements ModelBasic { //TODO: add group chat
         this.startDate = startDate;
         this.endDate = endDate;
         highestBid = 0;
+        chatId = null;
         suspended = false;
         new AddAuctionRequest(this).updateDatabase(database);
     }
@@ -80,6 +83,15 @@ public class Auction implements ModelBasic { //TODO: add group chat
     public Seller getSeller(boolean... suspense) {
         boolean checkSuspense = (suspense.length == 0) || suspense[0]; // optional (default = true)
         return Seller.getSellerById(sellerId, checkSuspense);
+    }
+
+    public AuctionChat getChat() {
+        return AuctionChat.getAuctionChatById(chatId);
+    }
+
+    @ModelOnly
+    public void setChat(String chatId) {
+        this.chatId = chatId;
     }
 
     public Date getStartDate() {

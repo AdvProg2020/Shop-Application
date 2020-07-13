@@ -2,6 +2,7 @@ package model.request;
 
 import model.Auction;
 import model.account.Seller;
+import model.chat.AuctionChat;
 import model.database.Database;
 
 public class AddAuctionRequest extends Request implements SellerRequest {
@@ -16,6 +17,7 @@ public class AddAuctionRequest extends Request implements SellerRequest {
     @Override
     public void accept() {
         auction.initialize();
+        new AuctionChat(auction.getId());
         super.accept();
     }
 

@@ -2,28 +2,21 @@ package model.chat;
 
 import model.ModelBasic;
 import model.ModelUtilities;
-import model.account.Account;
 
 import java.util.*;
 
-public class Chat implements ModelBasic {
-    private static Map<String, Chat> allChats = new HashMap<>();
-    private static int lastNum = 1;
-    private String chatId;
-    private Set<String> accountIds;
-    private transient Set<String> messageIds;
+public abstract class Chat implements ModelBasic {
+    protected static Map<String, Chat> allChats = new HashMap<>();
+    protected static int lastNum = 1;
+    protected String chatId;
+    protected transient Set<String> messageIds;
 
-    public Chat(String... initialAccountIds) {
-        accountIds = new HashSet<>(Arrays.asList(initialAccountIds));
-        initialize();
+    public static List<Chat> getAllChats(boolean... suspense) {
+        return ModelUtilities.getAllInstances(allChats.values(), suspense);
     }
 
-    public static List<Chat> getAllChats() {
-        return ModelUtilities.getAllInstances(allChats.values(), false);
-    }
-
-    public static Chat getChatById(String chatId) {
-        return ModelUtilities.getInstanceById(allChats, chatId, false);
+    public static Chat getChatById(String chatId, boolean... suspense) {
+        return ModelUtilities.getInstanceById(allChats, chatId, suspense);
     }
 
     @Override
@@ -37,19 +30,7 @@ public class Chat implements ModelBasic {
     }
 
     @Override
-    public boolean isSuspended() {
-        return false;
-    }
-
-    public void terminate() {
-        allChats.remove(chatId);
-        for (Message message : getMessages()) {
-            message.terminate();
-        }
-        for (Account account : getAccounts()) {
-
-        }
-    }
+    public abstract boolean isSuspended();
 
     @Override
     public String getId() {
@@ -72,32 +53,5 @@ public class Chat implements ModelBasic {
 
     public void removeMessage(String messageId) {
         messageIds.remove(messageId);
-    }
-
-    public List<Account> getAccounts() {
-        List<Account> accounts = new ArrayList<>();
-        for (String accountId : accountIds) {
-            accounts.add(Account.getAccountById(accountId));
-        }
-
-        accounts.sort(Comparator.comparing(Account::getId));
-        return accounts;
-    }
-
-    public void addAccount(String accountId) {
-        messageIds.add(accountId);
-    }
-
-    public void removeAccount(String messageId) {
-        messageIds.remove(messageId);
-    }
-
-    public boolean isAccountInChat(Account targetedAccount){
-        for (Account account : getAccounts()) {
-            if(account == targetedAccount){
-                return true;
-            }
-        }
-        return false;
     }
 }

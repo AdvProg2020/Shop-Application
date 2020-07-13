@@ -18,20 +18,20 @@ public class Message implements ModelBasic {
     private Date sendDate;
     private String text;
 
-    public Message(String chatId, String senderId, Date sendDate, String text) {
+    public Message(String chatId, String senderId, String text) {
         this.chatId = chatId;
         this.senderId = senderId;
-        this.sendDate = sendDate;
+        sendDate = new Date();
         this.text = text;
         initialize();
     }
 
     public static List<Message> getAllMessages() {
-        return ModelUtilities.getAllInstances(allMessages.values(), false);
+        return ModelUtilities.getAllInstances(allMessages.values());
     }
 
     public static Message getMessageById(String messageId) {
-        return ModelUtilities.getInstanceById(allMessages, messageId, false);
+        return ModelUtilities.getInstanceById(allMessages, messageId);
     }
 
     @Override
@@ -47,10 +47,6 @@ public class Message implements ModelBasic {
     @Override
     public boolean isSuspended() {
         return false;
-    }
-
-    public void terminate() {
-        allMessages.remove(messageId);
     }
 
     @Override

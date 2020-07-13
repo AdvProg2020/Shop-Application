@@ -5,23 +5,26 @@ import model.Discount;
 import model.ModelUtilities;
 import model.ModelUtilities.ModelOnly;
 import model.Wallet;
+import model.chat.SupportChat;
 import model.log.BuyLog;
 import model.log.FileLog;
 
 import java.util.*;
 
 
-public class Customer extends Account { // TODO: add chat
+public class Customer extends Account {
     protected static Map<String, Customer> allCustomers = new HashMap<>();
     private static int lastNum = 1;
     private transient String walletId;
     private transient String cartId;
+    private transient String supportChatId;
     private transient Map<String, Integer> discountIds;
     private transient Set<String> buyLogIds;
     private transient Set<String> fileLogIds;
 
     public Customer(String username, String password, String firstName, String lastName, String email, String phone, String image, double balance) {
         super(username, password, firstName, lastName, email, phone, image);
+        supportChatId = null;
         initialize();
         new Cart(accountId);
         new Wallet(accountId, balance);
@@ -57,6 +60,7 @@ public class Customer extends Account { // TODO: add chat
         discountIds = null;
         setCart(null);
         setWallet(null);
+        setSupportChat(null);
         super.suspend();
     }
 
@@ -66,9 +70,13 @@ public class Customer extends Account { // TODO: add chat
 
     @ModelOnly
     public void setCart(String cartId) {
-        if (this.cartId != null)
+        if (getCart() != null)
             getCart().terminate();
         this.cartId = cartId;
+    }
+
+    public void mergeCart(String cartId) {
+        Cart.mergeCarts(cartId, this.cartId);
     }
 
     public Wallet getWallet() {
@@ -77,13 +85,25 @@ public class Customer extends Account { // TODO: add chat
 
     @ModelOnly
     public void setWallet(String walletId) {
-        if (this.walletId != null)
+        if (getWallet() != null)
             getWallet().terminate();
         this.walletId = walletId;
     }
 
-    public void mergeCart(String cartId) {
-        Cart.mergeCarts(cartId, this.cartId);
+    public SupportChat getSupportChat() {
+        return SupportChat.getSupportChatById(supportChatId);
+    }
+
+    @ModelOnly
+    public void setSupportChat(String chatId) {
+        if (getSupportChat() != null)
+            getSupportChat().suspend();
+        this.supportChatId = chatId;
+    }
+
+    @ModelOnly
+    public void removeSupportChat() {
+        supportChatId = null;
     }
 
     public List<BuyLog> getBuyLogs() {
