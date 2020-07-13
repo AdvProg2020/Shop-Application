@@ -3,6 +3,8 @@ package controller;
 import model.account.Account;
 import model.account.Supporter;
 import model.chat.Chat;
+import model.chat.Message;
+import model.chat.SupportChat;
 import model.database.Database;
 
 import java.text.DateFormat;
@@ -28,13 +30,26 @@ public class SupporterController {
     private ArrayList<String[]> getChatsOfSupporter() throws Exceptions.UnAuthorizedAccountException {
         ArrayList<String[]> chatPacks = new ArrayList<>();
         if(currentAccount().getClass().getSimpleName().equals("Supporter")){
-            String username = currentAccount().getUsername();
-            for (Chat chat : ((Supporter) currentAccount()).getActiveChats()) {
-                chatPacks.add(Utilities.Pack.chat(chat, username));
+            for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
+                chatPacks.add(Utilities.Pack.supportChat(chat));
             }
             return chatPacks;
         }else {
             throw new Exceptions.UnAuthorizedAccountException();
+        }
+    }
+
+    private ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
+        SupportChat chat = SupportChat.getSupportChatById(chatId);
+        if( chat == null || chat.getSupporter() != currentAccount()){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else {
+            ArrayList<String[]> messages = new ArrayList<>();
+            String username = currentAccount().getUsername();
+            for (Message message : chat.getMessages()) {
+                messages.add(Utilities.Pack.message(message, username));
+            }
+            return messages;
         }
     }
 
