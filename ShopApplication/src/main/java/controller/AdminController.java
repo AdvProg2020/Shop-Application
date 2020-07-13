@@ -321,7 +321,8 @@ public class AdminController {
                     detailsOfRequest.add(Utilities.Pack.saleChange(((EditSaleRequest) request)));
                     break;
                 case "AddFileRequest":
-                    detailsOfRequest.add();
+                    detailsOfRequest.add(Utilities.Pack.addFileRequest(((AddFileRequest) request).getSubFile(), ((AddFileRequest)request).getFile()));
+
             }
             return detailsOfRequest;
         }
