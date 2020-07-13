@@ -89,6 +89,28 @@ public class Utilities {
             return subProductBoxPack;
         }
 
+        public static String[] subFile(SubFile subFile){
+            String[] subFileBoxPack = new String[15];
+            File file = subFile.getFile();
+            Sale sale = subFile.getSale();
+            subFileBoxPack[0] = file.getId();
+            subFileBoxPack[1] = subFile.getId();
+            subFileBoxPack[2] = file.getName();
+            subFileBoxPack[3] = file.getExtension();
+            subFileBoxPack[4] = Double.toString(file.getAverageRatingScore());
+            subFileBoxPack[5] = Integer.toString(file.getRatingsCount());
+            subFileBoxPack[6] = file.getImagePath();
+            subFileBoxPack[7] = Double.toString(subFile.getRawPrice());
+            subFileBoxPack[8] = Double.toString(subFile.getPriceWithSale());
+            subFileBoxPack[9] = "-";
+            subFileBoxPack[10] = sale != null ? dateFormat.format(sale.getEndDate()) : null;
+            subFileBoxPack[11] = sale != null ? Double.toString(sale.getPercentage()) : null;
+            subFileBoxPack[12] = subFile.getSeller().getStoreName();
+            subFileBoxPack[13] = subFile.getFile().getInfoText();
+            subFileBoxPack[14] = subFile.getSeller().getUsername();
+            return subFileBoxPack;
+        }
+
         public static String[] subProductInProduct(SubProduct subProduct){
             String[] subProductPack = new String[8];
             Product product = subProduct.getProduct();
