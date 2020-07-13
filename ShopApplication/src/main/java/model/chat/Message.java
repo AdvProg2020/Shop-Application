@@ -16,11 +16,13 @@ public class Message implements ModelBasic {
     private String chatId;
     private String senderId;
     private Date sendDate;
+    private String text;
 
-    public Message(String chatId, String senderId, Date sendDate) {
+    public Message(String chatId, String senderId, Date sendDate, String text) {
         this.chatId = chatId;
         this.senderId = senderId;
         this.sendDate = sendDate;
+        this.text = text;
         initialize();
     }
 
@@ -66,5 +68,9 @@ public class Message implements ModelBasic {
 
     public Date getSendDate() {
         return sendDate;
+    }
+
+    public String getText(){
+        return text;
     }
 }
