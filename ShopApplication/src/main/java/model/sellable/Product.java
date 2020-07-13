@@ -1,16 +1,19 @@
 package model.sellable;
 
+import model.ModelUtilities;
 import model.database.Database;
 import model.request.AddProductRequest;
 import model.request.Request;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Product extends Sellable {
     private static final String DEFAULT_IMAGE_PATH = "/src/main/resources/img/default-product-pic.png";
+    private static Map<String, Product> allProducts = new HashMap<>();
+    private static int lastNum = 1;
     private String brand;
 
     public Product(String name, String brand, String infoText, String imagePath, String categoryId, Map<String, String> propertyValues, SubSellable subSellable, Database database) {
@@ -19,23 +22,28 @@ public class Product extends Sellable {
         new AddProductRequest(this, (SubProduct) subSellable).updateDatabase(database);
     }
 
-    public static List<Product> getAllProducts() {
-        //TODO: implement
-        return null;
+    public static List<Product> getAllProducts(boolean... suspense) {
+        return ModelUtilities.getAllInstances(allProducts.values(), suspense);
     }
 
     public static Product getProductById(String productId, boolean... suspense) {
-        Sellable sellable = getSellableById(productId, suspense);
-        if (sellable instanceof Product)
-            return (Product) sellable;
+        return ModelUtilities.getInstanceById(allProducts, productId, suspense);
+    }
 
-        return null;
+    public static List<Product> getProductsByName(String name) {
+        List<Product> products = new ArrayList<>();
+        for (Product product : allProducts.values()) {
+            if (!product.suspended && product.getName().equals(name))
+                products.add(product);
+        }
+
+        return products;
     }
 
     public static Product getProductByNameAndBrand(String name, String brand) {
-        for (Sellable sellable : getSellablesByName(name)) {
-            if (sellable instanceof Product && ((Product) sellable).getBrand().equals(brand))
-                return (Product) sellable;
+        for (Product product : getProductsByName(name)) {
+            if (product.getBrand().equals(brand))
+                return product;
         }
 
         return null;
@@ -45,12 +53,23 @@ public class Product extends Sellable {
         if (getProductByNameAndBrand(name, brand) != null) return true;
 
         for (Request request : Request.getPendingRequests()) {
-            if (request instanceof AddProductRequest)
-                if (((AddProductRequest) request).getProduct().getName().equals(name) && ((AddProductRequest) request).getProduct().getBrand().equals(brand))
+            if (request instanceof AddProductRequest) {
+                Product product = ((AddProductRequest) request).getProduct();
+                if (product.getName().equals(name) && product.getBrand().equals(brand))
                     return true;
+            }
         }
 
         return false;
+    }
+
+    @Override
+    public void initialize() {
+        if (sellableId == null)
+            sellableId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+        allProducts.put(sellableId, this);
+        lastNum++;
+        super.initialize();
     }
 
     @Override
@@ -68,40 +87,22 @@ public class Product extends Sellable {
 
     public int getTotalRemainingCount() {
         int total = 0;
-        for (SubSellable subSellable : getSubSellables()) {
-            total += ((SubProduct) subSellable).getRemainingCount();
+        for (SubProduct subProduct : getSubProducts()) {
+            total += subProduct.getRemainingCount();
         }
         return total;
     }
 
-    public List<SubProduct> getSubProducts() {
-        List<SubSellable> subSellables = new ArrayList<>();
-        for (String subSellableId : subSellableIds) {
-            subSellables.add(SubSellable.getSubSellableById(subSellableId));
-        }
-
-        subSellables.sort(Comparator.comparing(SubSellable::getId));
-        return subSellables;
+    public List<SubProduct> getSubProducts() { // TODO: check if it works properly
+        return (List<SubProduct>) (List<?>) getSubSellables();
     }
 
     public SubProduct getSubProductOfSeller(String sellerId) {
-        for (SubSellable subSellable : getSubSellables()) {
-            if (subSellable.getSeller().getId().equals(sellerId))
-                return subSellable;
-        }
-
-        return null;
+        return (SubProduct) getSubSellableOfSeller(sellerId);
     }
 
-    public List<SubProduct> getSubProductsInSale() {
-        List<SubProduct> subSellables = new ArrayList<>();
-        for (SubSellable subSellable : getSubSellables()) {
-            if (subSellable.getSale() != null)
-                subSellables.add(subSellable);
-        }
-
-        subSellables.sort(Comparator.comparing(SubSellable::getId));
-        return subSellables;
+    public List<SubProduct> getSubProductsInSale() { // TODO: delete?!
+        return (List<SubProduct>) (List<?>) getSubSellablesInSale();
     }
 
     public SubProduct getDefaultSubProduct() {

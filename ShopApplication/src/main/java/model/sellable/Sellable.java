@@ -8,7 +8,6 @@ import java.util.*;
 
 public abstract class Sellable implements ModelBasic {
     private static Map<String, Sellable> allSellables = new HashMap<>();
-    private static int lastNum = 1;
     protected String sellableId;
     protected String name;
     protected String infoText;
@@ -41,20 +40,17 @@ public abstract class Sellable implements ModelBasic {
 
     public static List<Sellable> getSellablesByName(String name) {
         List<Sellable> sellables = new ArrayList<>();
-        for (Sellable sellable : allSellables.values())
-            if (!sellable.suspended && sellable.getName().equals(name)) {
+        for (Sellable sellable : allSellables.values()) {
+            if (!sellable.suspended && sellable.getName().equals(name))
                 sellables.add(sellable);
-            }
+        }
 
         return sellables;
     }
 
     @Override
     public void initialize() {
-        if (sellableId == null)
-            sellableId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allSellables.put(sellableId, this);
-        lastNum++;
 
         if (!suspended) {
             subSellableIds = new HashSet<>();
@@ -130,8 +126,8 @@ public abstract class Sellable implements ModelBasic {
         return Category.getCategoryById(categoryId);
     }
 
-    public List<SubSellable> getSubSellables() {
-        List<SubSellable> subSellables = new ArrayList<>();
+    public ArrayList<SubSellable> getSubSellables() {
+        ArrayList<SubSellable> subSellables = new ArrayList<>();
         for (String subSellableId : subSellableIds) {
             subSellables.add(SubSellable.getSubSellableById(subSellableId));
         }
@@ -140,7 +136,7 @@ public abstract class Sellable implements ModelBasic {
         return subSellables;
     }
 
-    public SubSellable getSubSellableOfaSeller(String sellerId) {
+    public SubSellable getSubSellableOfSeller(String sellerId) {
         for (SubSellable subSellable : getSubSellables()) {
             if (subSellable.getSeller().getId().equals(sellerId))
                 return subSellable;
@@ -292,7 +288,7 @@ public abstract class Sellable implements ModelBasic {
         return ratingIds.size();
     }
 
-    //TODO: delete
+    //TODO: delete?
     public double getMinPrice() {
         double minimum = Double.MAX_VALUE;
         for (SubSellable subSellable : getSubSellables()) {
@@ -304,7 +300,7 @@ public abstract class Sellable implements ModelBasic {
         return minimum;
     }
 
-    //TODO: delete
+    //TODO: delete?
     public double getMaxPrice() {
         double maximum = 0.0;
         for (SubSellable subSellable : getSubSellables()) {
