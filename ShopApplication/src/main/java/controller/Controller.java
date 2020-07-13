@@ -607,9 +607,18 @@ public class Controller {
         }else {
             ArrayList<String[]> messages = new ArrayList<>();
             for (Message message : chat.getMessages()) {
-                messages.add(Utilities.Pack.message(message));
+                messages.add(Utilities.Pack.message(message, currentAccount.getUsername()));
             }
             return messages;
+        }
+    }
+
+    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
+        Chat chat = Chat.getChatById(chatId);
+        if( chat == null ){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else {
+            new Message(chatId, currentAccount.getId(), text);
         }
     }
 }
