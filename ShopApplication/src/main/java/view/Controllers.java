@@ -1144,11 +1144,11 @@ public class Controllers {
         @Override
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
-            for (String[] subProductPack : mainController.getSubProductsForAdvertisements(6)) {
+            for (String[] subProductPack : mainController.getSubSellablesForAdvertisements(6)) {
                 advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack, null, null, false));
             }
 
-            for (String[] subProduct : mainController.getSubProductsInSale(10)) {
+            for (String[] subProduct : mainController.getSubSellablesInSale(10)) {
                 productsInSale.getChildren().add(ProductBoxController.createBox(subProduct, null, null, false));
             }
 

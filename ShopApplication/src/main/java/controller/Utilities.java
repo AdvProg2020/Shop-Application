@@ -17,10 +17,7 @@ import model.request.EditFileRequest;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
-import model.sellable.File;
-import model.sellable.Product;
-import model.sellable.SubFile;
-import model.sellable.SubProduct;
+import model.sellable.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -111,6 +108,13 @@ public class Utilities {
             subFileBoxPack[13] = subFile.getFile().getInfoText();
             subFileBoxPack[14] = subFile.getSeller().getUsername();
             return subFileBoxPack;
+        }
+
+        public static String[] subSellable(SubSellable subSellable){
+            if(subSellable.getClass().getSimpleName().equals("SubProduct"))
+                return subProduct((SubProduct) subSellable);
+            else
+                return subFile((SubFile) subSellable);
         }
 
         public static String[] subProductInProduct(SubProduct subProduct){

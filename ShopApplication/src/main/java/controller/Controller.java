@@ -11,7 +11,9 @@ import model.chat.Chat;
 import model.chat.Message;
 import model.database.Database;
 import model.sellable.Product;
+import model.sellable.Sellable;
 import model.sellable.SubProduct;
+import model.sellable.SubSellable;
 
 import java.util.*;
 
@@ -500,67 +502,67 @@ public class Controller {
             throw new Exceptions.InvalidCategoryException(categoryName);
     }
 
-    public ArrayList<String[]> getSubProductsForAdvertisements(int number) {
-        ArrayList<Product> selectedProducts = new ArrayList<>(Product.getAllProducts());
+    public ArrayList<String[]> getSubSellablesForAdvertisements(int number) {
+        ArrayList<Sellable> selectedSellables = new ArrayList<>(Sellable.getAllSellables());
         int rangeSize = number * 3;
-        int numberOfProducts = selectedProducts.size();
-        if (numberOfProducts > rangeSize) {
-            ArrayList<Product> allProducts = selectedProducts;
-            selectedProducts = new ArrayList<>();
+        int numberOfSellables = selectedSellables.size();
+        if (numberOfSellables > rangeSize) {
+            ArrayList<Sellable> allSellables = selectedSellables;
+            selectedSellables = new ArrayList<>();
             for (int i = 0; i < rangeSize; i++) {
-                selectedProducts.add(allProducts.get(numberOfProducts - 1 - i));
+                selectedSellables.add(allSellables.get(numberOfSellables - 1 - i));
             }
-            numberOfProducts = rangeSize;
+            numberOfSellables = rangeSize;
         }
         ArrayList<String[]> productsToShow = new ArrayList<>();
-        SubProduct chosenSubProduct;
+        SubSellable chosenSubSellable;
         Random r = new Random();
         int randomNumber;
-        number = Math.min(number, numberOfProducts);
+        number = Math.min(number, numberOfSellables);
         for (int i = 0; i < number; i++) {
-            randomNumber = r.nextInt(numberOfProducts);
-            chosenSubProduct = selectedProducts.get(randomNumber).getDefaultSubProduct();
-            productsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
-            selectedProducts.remove(randomNumber);
-            numberOfProducts--;
+            randomNumber = r.nextInt(numberOfSellables);
+            chosenSubSellable = selectedSellables.get(randomNumber).getDefaultSubSellable();
+            productsToShow.add(Utilities.Pack.subSellable(chosenSubSellable));
+            selectedSellables.remove(randomNumber);
+            numberOfSellables--;
         }
 
         return productsToShow;
     }
 
-    public ArrayList<String[]> getSubProductsInSale(int number) {
-        HashSet<Product> candidateProducts = new HashSet<>();
-        choosingProduct:
+    public ArrayList<String[]> getSubSellablesInSale(int number) {
+        HashSet<Sellable> candidateSellables = new HashSet<>();
+        choosingSellable:
         for (Sale sale : Sale.getAllSales()) {
             if ( ! sale.hasStarted()) continue;
-            for (SubProduct subProduct : sale.getSubProducts()) {
-                candidateProducts.add(subProduct.getProduct());
-                if (candidateProducts.size() > number * 3) {
-                    break choosingProduct;
+            for (SubSellable subSellable : sale.getSubSellables()) {
+                candidateSellables.add(subSellable.getSellable());
+                if (candidateSellables.size() > number * 3) {
+                    break choosingSellable;
                 }
             }
         }
 
-        int numberOfProducts = candidateProducts.size();
-        number = Math.min(numberOfProducts, number);
-        ArrayList<Product> orderedProducts = new ArrayList<>(candidateProducts);
-        ArrayList<String[]> subProductsToShow = new ArrayList<>();
+        int numberOfSellables = candidateSellables.size();
+        number = Math.min(numberOfSellables, number);
+        ArrayList<Sellable> orderedSellables = new ArrayList<>(candidateSellables);
+        ArrayList<String[]> subSellablesToShow = new ArrayList<>();
         Random r = new Random();
         int randomNumber;
-        Product chosenProduct;
-        SubProduct chosenSubProduct;
-        ArrayList<SubProduct> inSaleSubProducts;
+        Sellable chosenSellable;
+        SubSellable chosenSubSellable;
+        ArrayList<SubSellable> inSaleSubSellables;
         for (int i = 0; i < number; i++) {
-            randomNumber = r.nextInt(numberOfProducts);
-            chosenProduct  = orderedProducts.remove(randomNumber);
-            numberOfProducts--;
+            randomNumber = r.nextInt(numberOfSellables);
+            chosenSellable  = orderedSellables.remove(randomNumber);
+            numberOfSellables--;
 
-            inSaleSubProducts = new ArrayList<>(chosenProduct.getSubProductsInSale());
-            chosenSubProduct = inSaleSubProducts.get(r.nextInt(inSaleSubProducts.size()));
-            subProductsToShow.add(Utilities.Pack.subProduct(chosenSubProduct));
+            inSaleSubSellables = new ArrayList<>(chosenSellable.getSubSellablesInSale());
+            chosenSubSellable = inSaleSubSellables.get(r.nextInt(inSaleSubSellables.size()));
+            subSellablesToShow.add(Utilities.Pack.subSellable(chosenSubSellable));
         }
 
-        return subProductsToShow;
+        return subSellablesToShow;
     }
 
     public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
