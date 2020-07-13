@@ -322,7 +322,11 @@ public class AdminController {
                     break;
                 case "AddFileRequest":
                     detailsOfRequest.add(Utilities.Pack.addFileRequest(((AddFileRequest) request).getSubFile(), ((AddFileRequest)request).getFile()));
-
+                    break;
+                case "EditFileRequest":
+                    detailsOfRequest.add(Utilities.Pack.subFile(((EditFileRequest) request).getSubFile()));
+                    detailsOfRequest.add(Utilities.Pack.fileChange(((EditFileRequest) request)));
+                    break;
             }
             return detailsOfRequest;
         }
