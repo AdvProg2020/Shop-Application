@@ -237,4 +237,10 @@ public class Exceptions {
             super("You don't have any chat!");
         }
     }
+
+    public static class InvalidAuctionIdException extends Exception{
+        public InvalidAuctionIdException(String auctionId){
+            super("There is no auction with id: "+ auctionId);
+        }
+    }
 }

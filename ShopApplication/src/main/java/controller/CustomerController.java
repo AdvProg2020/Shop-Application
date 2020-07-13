@@ -1,6 +1,7 @@
 package controller;
 
 
+import model.Auction;
 import model.Cart;
 import model.Discount;
 import model.Rating;
@@ -123,6 +124,9 @@ public class CustomerController {
         currentCart().clearCart();
         database().purchase();
     }
+
+    //Todo: discount, ...
+    //public void purchaseTheFile();
 
     private String notAvailableSubProductsInCart() {
         StringBuilder notAvailableSubProducts = new StringBuilder();
@@ -262,5 +266,6 @@ public class CustomerController {
         }
     }
 
-
+    private void bid(String auctionId, double bidAmount){
+    }
 }

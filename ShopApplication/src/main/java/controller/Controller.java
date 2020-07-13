@@ -186,11 +186,12 @@ public class Controller {
         return products;
     }
 
-
-    public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
+    public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale, boolean inAuction, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
                                                   String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
+
         Category category = Category.getCategoryByName(categoryName) != null ? Category.getCategoryByName(categoryName) : Category.getSuperCategory();
         ArrayList<Product> products;
+
         if (category != null) {
             products = new ArrayList<>(category.getProducts(true));
         } else {
@@ -203,15 +204,22 @@ public class Controller {
         }
 
         ArrayList<SubProduct> subProducts = new ArrayList<>();
-        if (inSale) {
+        if(inAuction){
             for (Product product : products) {
-                subProducts.addAll(product.getSubProductsInSale());
+                //subProducts.addAll(product.getSubProductsInAuction());
             }
-        } else {
-            for (Product product : products) {
-                subProducts.add(product.getDefaultSubProduct());
+        }else{
+            if (inSale) {
+                for (Product product : products) {
+                    subProducts.addAll(product.getSubProductsInSale());
+                }
+            } else {
+                for (Product product : products) {
+                    subProducts.add(product.getDefaultSubProduct());
+                }
             }
         }
+
 
         filterSubProducts(available, minPrice, maxPrice, contains, brand, storeName, minRatingScore, subProducts);
 
@@ -385,6 +393,7 @@ public class Controller {
      * customer:  7: username, type, firstName, lastName, email, phone, balance;
      * seller:    8: username, type, firstName, lastName, email, phone, balance, storeName;
      */
+    //Todo: supporter
     public String[] viewPersonalInfo() throws Exceptions.NotLoggedInException {
         if (currentAccount == null) throw new Exceptions.NotLoggedInException();
         return Utilities.Pack.personalInfo(currentAccount);
