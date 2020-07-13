@@ -361,6 +361,29 @@ public class Utilities {
             }
             return subProductBoxes;
         }
+
+        public static String[] chat(Chat chat, String viewerUsername){
+            ArrayList<Account> accounts = new ArrayList<>(chat.getAccounts());
+            String[] pack = new String[accounts.size()];
+            pack[0] = chat.getId();
+            int i = 1;
+            for (Account account : accounts) {
+                if( !account.getUsername().equals(viewerUsername)){
+                    pack[i] = account.getUsername();
+                    i++;
+                }
+            }
+            return pack;
+        }
+
+        public static String[] message(Message message){
+            String[] messagePack = new String[4];
+            messagePack[0] = message.getId();
+            messagePack[1] = message.getSender().getUsername();
+            messagePack[2] = dateFormat.format(message.getSendDate());
+            messagePack[3] = message.getText();
+            return messagePack;
+        }
     }
 
     static class Field {
@@ -430,28 +453,6 @@ public class Utilities {
             return editableFields;
         }
 
-        public static String[] chat(Chat chat, String viewerUsername){
-            ArrayList<Account> accounts = new ArrayList<>(chat.getAccounts());
-            String[] pack = new String[accounts.size()];
-            pack[0] = chat.getId();
-            int i = 1;
-            for (Account account : accounts) {
-                if( !account.getUsername().equals(viewerUsername)){
-                    pack[i] = account.getUsername();
-                    i++;
-                }
-            }
-            return pack;
-        }
-
-        public static String[] message(Message message){
-            String[] messagePack = new String[4];
-            messagePack[0] = message.getId();
-            messagePack[1] = message.getSender().getUsername();
-            messagePack[2] = dateFormat.format(message.getSendDate());
-            messagePack[3] = message.getText();
-            return messagePack;
-        }
     }
 
     static class Filter {

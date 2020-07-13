@@ -1,6 +1,8 @@
 package controller;
 
 import model.account.Account;
+import model.account.Supporter;
+import model.chat.Chat;
 import model.database.Database;
 
 import java.text.DateFormat;
@@ -23,9 +25,16 @@ public class SupporterController {
         return mainController.getDatabase();
     }
 
-    private ArrayList<String[]> getChatsOfSupporter(){
+    private ArrayList<String[]> getChatsOfSupporter() throws Exceptions.UnAuthorizedAccountException {
+        ArrayList<String[]> chatPacks = new ArrayList<>();
         if(currentAccount().getClass().getSimpleName().equals("Supporter")){
-
+            String username = currentAccount().getUsername();
+            for (Chat chat : ((Supporter) currentAccount()).getChats()) {
+                chatPacks.add(Utilities.Pack.chat(chat, username));
+            }
+            return chatPacks;
+        }else {
+            throw new Exceptions.UnAuthorizedAccountException();
         }
     }
 }
