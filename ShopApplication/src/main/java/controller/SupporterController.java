@@ -39,6 +39,8 @@ public class SupporterController {
         }
     }
 
+
+    //
     private ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
@@ -52,5 +54,16 @@ public class SupporterController {
             return messages;
         }
     }
+
+    private void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
+        SupportChat chat = SupportChat.getSupportChatById(chatId);
+        if( chat == null || chat.getSupporter() != currentAccount()){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else {
+            new Message(chatId, currentAccount().getId(), text);
+        }
+    }
+
+
 
 }
