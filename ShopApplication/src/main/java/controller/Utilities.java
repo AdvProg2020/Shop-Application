@@ -444,6 +444,14 @@ public class Utilities {
             return pack;
         }
 
+        public static String[] message(Message message){
+            String[] messagePack = new String[4];
+            messagePack[0] = message.getId();
+            messagePack[1] = message.getSender().getUsername();
+            messagePack[2] = dateFormat.format(message.getSendDate());
+            messagePack[3] = message.getText();
+            return messagePack;
+        }
     }
 
     static class Filter {
