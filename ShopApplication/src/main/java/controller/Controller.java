@@ -603,6 +603,6 @@ public class Controller {
         Chat chat = Chat.getChatById(chatId);
         if(chat == null){
             throw new Exceptions.InvalidChatIdException(chatId);
-        }else if();
+        }else if( );
     }
 }

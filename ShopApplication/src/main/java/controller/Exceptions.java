@@ -207,4 +207,16 @@ public class Exceptions {
             super("There is no chat with id: " + chatId);
         }
     }
+
+    public static class InvalidAccountTypeException extends Exception{
+        public InvalidAccountTypeException(){
+            super("You don't have access to this action!");
+        }
+    }
+
+    public static class NotParticipantInChat extends Exception{
+        public NotParticipantInChat(){
+            super("You are not in this chat!");
+        }
+    }
 }
