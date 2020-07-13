@@ -1,14 +1,12 @@
 package controller;
 
 
-import model.Cart;
-import model.Category;
-import model.Review;
-import model.Sale;
+import model.*;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
 import model.account.Seller;
+import model.chat.AuctionChat;
 import model.chat.Chat;
 import model.chat.Message;
 import model.database.Database;
@@ -600,8 +598,8 @@ public class Controller {
         }
     }
 
-    public ArrayList<String[]> getMessagesInChat(String chatId) throws Exceptions.InvalidChatIdException {
-        Chat chat = Chat.getChatById(chatId);
+    public ArrayList<String[]> getMessagesInAuctionChat(String chatId) throws Exceptions.InvalidChatIdException {
+        AuctionChat chat = AuctionChat.getAuctionChatById(chatId);
         if(chat == null){
             throw new Exceptions.InvalidChatIdException(chatId);
         }else {
@@ -613,12 +611,15 @@ public class Controller {
         }
     }
 
-    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
+    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException, Exceptions.InvalidAccountTypeException {
         Chat chat = Chat.getChatById(chatId);
         if( chat == null ){
             throw new Exceptions.InvalidChatIdException(chatId);
         }else {
-            new Message(chatId, currentAccount.getId(), text);
+            if( currentAccount.getClass().getSimpleName().equals("Customer"))
+                new Message(chatId, currentAccount.getId(), text);
+            else
+                throw new Exceptions.InvalidAccountTypeException();
         }
     }
 }
