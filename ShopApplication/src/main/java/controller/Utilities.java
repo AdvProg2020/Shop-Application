@@ -7,6 +7,8 @@ import model.Sale;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
+import model.chat.Chat;
+import model.chat.Message;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
@@ -427,6 +429,21 @@ public class Utilities {
             editableFields[1] = "parent";
             return editableFields;
         }
+
+        public static String[] chat(Chat chat, String viewerUsername){
+            ArrayList<Account> accounts = new ArrayList<>(chat.getAccounts());
+            String[] pack = new String[accounts.size()];
+            pack[0] = chat.getId();
+            int i = 1;
+            for (Account account : accounts) {
+                if( !account.getUsername().equals(viewerUsername)){
+                    pack[i] = account.getUsername();
+                    i++;
+                }
+            }
+            return pack;
+        }
+
     }
 
     static class Filter {

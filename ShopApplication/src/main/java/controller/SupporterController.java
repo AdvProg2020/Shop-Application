@@ -4,6 +4,7 @@ import model.account.Account;
 import model.database.Database;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 
 public class SupporterController {
 
@@ -22,5 +23,9 @@ public class SupporterController {
         return mainController.getDatabase();
     }
 
+    private ArrayList<String[]> getChatsOfSupporter(){
+        if(currentAccount().getClass().getSimpleName().equals("Supporter")){
 
+        }
+    }
 }

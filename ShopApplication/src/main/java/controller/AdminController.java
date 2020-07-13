@@ -96,6 +96,9 @@ public class AdminController {
             case "Seller":
                 database().removeSeller();
                 break;
+            case "Supporter":
+                database().removeSupporter();
+                break;
         }
     }
 
