@@ -219,4 +219,10 @@ public class Exceptions {
             super("You are not in this chat!");
         }
     }
+
+    public static class ExistingFileException extends Exception{
+        public ExistingFileException(){
+            super("There is a file with this name and extension!");
+        }
+    }
 }

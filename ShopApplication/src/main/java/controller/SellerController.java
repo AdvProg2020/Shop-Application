@@ -12,14 +12,14 @@ import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
-import model.sellable.Product;
-import model.sellable.SubProduct;
+import model.sellable.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SellerController {
@@ -223,7 +223,6 @@ public class SellerController {
             return null;
     }
 
-    //Todo: change it again!
     public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
@@ -239,12 +238,23 @@ public class SellerController {
         }
     }
 
-    //TODO
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidProductIdException {
         if (Product.getProductById(productId) == null)
             throw new Exceptions.InvalidProductIdException(productId);
         else {
             new SubProduct(productId, currentAccount().getId(), price, count, database());
+        }
+    }
+
+    public void addNewFile(String name, String extension, String infoText, String imagePath, String categoryName, Map<String, String> propertyValues, double price, String downloadPath) throws Exceptions.ExistingFileException, Exceptions.InvalidCategoryException {
+        if( File.isFileNameAndExtensionUsed(name, extension) ){
+            throw new Exceptions.ExistingFileException();
+        }else {
+            Category category = Category.getCategoryByName(categoryName);
+            if(category == null)
+                throw new Exceptions.InvalidCategoryException(categoryName);
+            SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
+            new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         }
     }
 
