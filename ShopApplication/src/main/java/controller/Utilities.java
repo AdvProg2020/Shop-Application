@@ -12,6 +12,7 @@ import model.chat.Message;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
+import model.request.EditFileRequest;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
@@ -359,6 +360,14 @@ public class Utilities {
             productChange[1] = request.getNewValue();
             productChange[2] = request.getOldValue();
             return productChange;
+        }
+
+        public static String[] fileChange(EditFileRequest request){
+            String[] fileChange = new String[3];
+            fileChange[0] = request.getField().toString();
+            fileChange[1] = request.getNewValue();
+            fileChange[2] = request.getOldValue();
+            return fileChange;
         }
 
         public static String[] customerDiscountRemainingCount(Customer customer, int count) {
