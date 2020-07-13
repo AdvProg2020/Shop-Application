@@ -36,15 +36,6 @@ public class AdminController {
     }
 
 
-    /**
-     * @return admin:
-     * { String firstName, String lastName, String phone, String email, String password}
-     */
-    //TODO: DEPRECATED
-    public String[] getPersonalInfoEditableFields() {
-        return Utilities.Field.adminPersonalInfoEditableFields();
-    }
-
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         mainController.editPersonalInfo(field, newInformation);
         database().editAccount();
