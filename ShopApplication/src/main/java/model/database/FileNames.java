@@ -10,14 +10,17 @@ final class FileNames {
     static final String BUY_LOG = "log/buy-logs.txt";
     static final String SELL_LOG = "log/sell-logs.txt";
     static final String LOG_ITEM = "log/log-items.txt";
+    static final String FILE_LOG = "log/file-logs.txt";
 
     static final String CHAT = "chat/chats.txt";
     static final String MESSAGE = "chat/messages.txt";
 
     static final String REQUEST = "requests.txt";
 
-    static final String SELLABLE = "sellables.txt";
-    static final String SUB_SELLABLE = "sub-sellables.txt";
+    static final String PRODUCT = "sellable/products.txt";
+    static final String SUB_PRODUCT = "sellable/sub-products.txt";
+    static final String FILE = "sellable/files.txt";
+    static final String SUB_FILE = "sellable/sub-files.txt";
 
     static final String CATEGORY = "categories.txt";
     static final String DISCOUNT = "discounts.txt";

@@ -116,9 +116,9 @@ public class EditFileRequest extends Request implements SellerRequest {
     @Override
     public void updateDatabase(Database database) {
         if (field.toString().startsWith("SUB"))
-            database.editSubSellable();
+            database.editSubFile();
         else
-            database.editSellable();
+            database.editFile();
     }
 
     public enum Field {
