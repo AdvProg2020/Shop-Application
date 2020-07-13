@@ -1,15 +1,14 @@
 package model.account;
 
 import model.ModelUtilities;
-import model.chat.Chat;
+import model.chat.SupportChat;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Supporter extends Account { //TODO: add chat
+public class Supporter extends Account {
     protected static Map<String, Supporter> allSupporters = new HashMap<>();
     private static int lastNum = 1;
+    private transient Set<String> chatIds;
 
     public Supporter(String username, String password, String firstName, String lastName, String email, String phone, String image) {
         super(username, password, firstName, lastName, email, phone, image);
@@ -32,9 +31,32 @@ public class Supporter extends Account { //TODO: add chat
         allSupporters.put(accountId, this);
         lastNum++;
         super.initialize();
+
+        chatIds = new HashSet<>();
     }
 
-    public List<Chat> getChats(){
-        return null;
+    public List<SupportChat> getActiveChats() {
+        List<SupportChat> chats = new ArrayList<>();
+        for (String chatId : chatIds) {
+            chats.add(SupportChat.getSupportChatById(chatId));
+        }
+
+        chats.sort(Comparator.comparing(SupportChat::getId));
+        return chats;
+    }
+
+    public List<SupportChat> getChatArchive() {
+        List<SupportChat> chats = new ArrayList<>();
+        for (String chatId : chatIds) {
+            chats.add(SupportChat.getSupportChatById(chatId, false));
+        }
+        chats.removeAll(getActiveChats());
+
+        chats.sort(Comparator.comparing(SupportChat::getId));
+        return chats;
+    }
+
+    public void addChat(String chatId) {
+        chatIds.add(chatId);
     }
 }

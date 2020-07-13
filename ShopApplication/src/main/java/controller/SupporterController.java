@@ -29,7 +29,7 @@ public class SupporterController {
         ArrayList<String[]> chatPacks = new ArrayList<>();
         if(currentAccount().getClass().getSimpleName().equals("Supporter")){
             String username = currentAccount().getUsername();
-            for (Chat chat : ((Supporter) currentAccount()).getChats()) {
+            for (Chat chat : ((Supporter) currentAccount()).getActiveChats()) {
                 chatPacks.add(Utilities.Pack.chat(chat, username));
             }
             return chatPacks;
