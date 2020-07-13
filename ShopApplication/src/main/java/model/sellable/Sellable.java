@@ -156,6 +156,19 @@ public abstract class Sellable implements ModelBasic {
         return subSellables;
     }
 
+    public List<SubSellable> getSubSellablesInAuction() {
+        List<SubSellable> subSellables = new ArrayList<>();
+        for (SubSellable subSellable : getSubSellables()) {
+            if (subSellable.getAuction() != null)
+                subSellables.add(subSellable);
+        }
+
+        subSellables.sort(Comparator.comparing(SubSellable::getId));
+        return subSellables;
+    }
+
+
+
     public boolean isSoldInStoreWithName(String storeName) {
         for (SubSellable subSellable : getSubSellables()) {
             if (subSellable.getSeller().getStoreName().equals(storeName))

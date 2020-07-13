@@ -565,6 +565,36 @@ public class Controller {
         return subSellablesToShow;
     }
 
+    public ArrayList<String[]> getSubSellablesInAuction(int number) {
+        HashSet<Sellable> candidateSellables = new HashSet<>();
+        for (Auction auction : Auction.getAllAuctions()) {
+            if (!auction.hasStarted()) continue;
+            candidateSellables.add(auction.getSubSellable().getSellable());
+            if (candidateSellables.size() > number * 3) break;
+        }
+
+        int numberOfSellables = candidateSellables.size();
+        number = Math.min(numberOfSellables, number);
+        ArrayList<Sellable> orderedSellables = new ArrayList<>(candidateSellables);
+        ArrayList<String[]> subSellablesToShow = new ArrayList<>();
+        Random r = new Random();
+        int randomNumber;
+        Sellable chosenSellable;
+        SubSellable chosenSubSellable;
+        ArrayList<SubSellable> inAuctionSubSellables;
+        for (int i = 0; i < number; i++) {
+            randomNumber = r.nextInt(numberOfSellables);
+            chosenSellable = orderedSellables.remove(randomNumber);
+            numberOfSellables--;
+
+            inAuctionSubSellables = new ArrayList<>(chosenSellable.getSubSellablesInAuction());
+            chosenSubSellable = inAuctionSubSellables.get(r.nextInt(inAuctionSubSellables.size()));
+            subSellablesToShow.add(Utilities.Pack.subSellable(chosenSubSellable));
+        }
+
+        return subSellablesToShow;
+    }
+
     public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
         Product product = Product.getProductById(productId);
         if (product == null) {
