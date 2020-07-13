@@ -1,9 +1,16 @@
 package model.sellable;
 
+import model.ModelUtilities;
 import model.database.Database;
 import model.request.AddFileRequest;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class SubFile extends SubSellable {
+    private static Map<String, SubFile> allSubFiles = new HashMap<>();
+    private static int lastNum = 1;
     private String downloadPath;
 
     public SubFile(String fileId, String sellerId, double price, String downloadPath, Database database) {
@@ -13,12 +20,25 @@ public class SubFile extends SubSellable {
             new AddFileRequest(null, this).updateDatabase(database);
     }
 
-    public static SubFile getSubFileById(String subFileId, boolean... suspense) {
-        SubSellable subSellable = getSubSellableById(subFileId, suspense);
-        if (subSellable instanceof SubFile)
-            return (SubFile) subSellable;
+    public static List<SubFile> getAllSubFiles(boolean... suspense) {
+        return ModelUtilities.getAllInstances(allSubFiles.values(), suspense);
+    }
 
-        return null;
+    public static SubFile getSubFileById(String subFileId, boolean... suspense) {
+        return ModelUtilities.getInstanceById(allSubFiles, subFileId, suspense);
+    }
+
+    @Override
+    public void initialize() {
+        if (subSellableId == null)
+            subSellableId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+        allSubFiles.put(subSellableId, this);
+        lastNum++;
+        super.initialize();
+    }
+
+    public File getFile(boolean... suspense) {
+        return File.getFileById(sellableId, suspense);
     }
 
     public String getDownloadPath() {
@@ -27,10 +47,6 @@ public class SubFile extends SubSellable {
 
     public void setDownloadPath(String downloadPath) {
         this.downloadPath = downloadPath;
-    }
-
-    public File getFile(boolean... suspense) {
-        return File.getFileById(sellableId, suspense);
     }
 
     @Override

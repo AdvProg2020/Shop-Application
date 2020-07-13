@@ -10,7 +10,6 @@ import java.util.*;
 
 public abstract class SubSellable implements ModelBasic {
     private static Map<String, SubSellable> allSubSellables = new HashMap<>();
-    private static int lastNum = 1;
     protected String subSellableId;
     protected String sellableId;
     protected String sellerId;
@@ -38,10 +37,7 @@ public abstract class SubSellable implements ModelBasic {
 
     @Override
     public void initialize() {
-        if (subSellableId == null)
-            subSellableId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
         allSubSellables.put(subSellableId, this);
-        lastNum++;
 
         buyerIds = new HashSet<>();
         if (!suspended) {
