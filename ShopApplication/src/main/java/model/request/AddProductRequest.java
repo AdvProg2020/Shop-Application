@@ -50,8 +50,8 @@ public class AddProductRequest extends Request implements SellerRequest {
     @Override
     public void updateDatabase(Database database) {
         if (product == null)
-            database.createSubSellable();
+            database.createProduct();
         else
-            database.createSellable();
+            database.createSubProduct();
     }
 }

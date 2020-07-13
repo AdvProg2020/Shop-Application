@@ -23,6 +23,14 @@ public interface Database {
 
     void removeSupporter();
 
+    void cart();
+
+    void wallet();
+
+    void purchase();
+
+    void chat();
+
     void request();
 
     void createDiscount();
@@ -73,16 +81,9 @@ public interface Database {
 
     void removeSubFile();
 
-    void cart();
-
-    void wallet();
-
-    void purchase();
-
     void addReview();
 
     void addRating();
 
-    void chat();
 
 }

@@ -117,9 +117,9 @@ public class EditProductRequest extends Request implements SellerRequest {
     @Override
     public void updateDatabase(Database database) {
         if (field.toString().startsWith("SUB"))
-            database.editSubSellable();
+            database.editSubProduct();
         else
-            database.editSellable();
+            database.editProduct();
     }
 
     public enum Field {
