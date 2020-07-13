@@ -276,10 +276,10 @@ public class CustomerController {
         }
     }
 
-    private ArrayList<String[]> viewSupportChat(String auctionId){
+    private ArrayList<String[]> viewSupportChat(String auctionId) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
         if( auction == null ){
-            throw new Exceptions.InvalidAuctionIdException(auctionId)
+            throw new Exceptions.InvalidAuctionIdException(auctionId);
         }else {
             AuctionChat chat = auction.getChat();
             ArrayList<String[]> messages = new ArrayList<>();
@@ -290,6 +290,16 @@ public class CustomerController {
             return messages;
         }
     }
+
+    private void sendMessageInAuctionChat(String auctionId, String text) throws Exceptions.InvalidAuctionIdException {
+        Auction auction = Auction.getAuctionById(auctionId);
+        if( auction == null ){
+            throw new Exceptions.InvalidAuctionIdException(auctionId);
+        }else {
+            new Message(auction.getChat().getId(), currentAccount().getId(), text);
+        }
+    }
+
 
     private void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
