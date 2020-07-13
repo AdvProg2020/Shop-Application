@@ -320,6 +320,8 @@ public class AdminController {
                     detailsOfRequest.add(Utilities.Pack.saleInfo(((EditSaleRequest) request).getSale()));
                     detailsOfRequest.add(Utilities.Pack.saleChange(((EditSaleRequest) request)));
                     break;
+                case "AddFileRequest":
+                    detailsOfRequest.add();
             }
             return detailsOfRequest;
         }

@@ -15,7 +15,9 @@ import model.log.SellLog;
 import model.request.EditProductRequest;
 import model.request.EditSaleRequest;
 import model.request.Request;
+import model.sellable.File;
 import model.sellable.Product;
+import model.sellable.SubFile;
 import model.sellable.SubProduct;
 
 import java.text.DateFormat;
@@ -126,6 +128,17 @@ public class Utilities {
             productPack[5] = Integer.toString(subProduct.getRemainingCount());
             productPack[6] = Double.toString(subProduct.getRawPrice());
             return productPack;
+        }
+
+        public static String[] addFileRequest(SubFile subFile, File file){
+            String[] filePack = new String[6];
+            filePack[0] = file.getName();
+            filePack[1] = file.getExtension();
+            filePack[2] = file.getImagePath();
+            filePack[3] = file.getCategory().getName();
+            filePack[4] = file.getInfoText();
+            filePack[5] = Double.toString(subFile.getRawPrice());
+            return filePack;
         }
 
         public static String[] review(Review review) {
