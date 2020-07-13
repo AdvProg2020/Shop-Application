@@ -1,6 +1,7 @@
 package model.account;
 
 import model.ModelUtilities;
+import model.chat.Chat;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,5 +32,9 @@ public class Supporter extends Account { //TODO: add chat
         allSupporters.put(accountId, this);
         lastNum++;
         super.initialize();
+    }
+
+    public List<Chat> getChats(){
+        return null;
     }
 }
