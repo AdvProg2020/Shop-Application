@@ -266,7 +266,7 @@ public class SellerController {
         }
     }
 
-    public void removeFile(String fileId){
+    public void removeFile(String fileId) throws Exceptions.InvalidFileIdException {
         for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
             if(subFile.getFile().getId().equals(fileId)){
                 subFile.suspend();
@@ -274,6 +274,7 @@ public class SellerController {
                 return;
             }
         }
+        throw new Exceptions.InvalidFileIdException(fileId);
     }
 
     public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
