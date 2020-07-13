@@ -9,6 +9,7 @@ import model.account.Customer;
 import model.account.Seller;
 import model.chat.Chat;
 import model.chat.Message;
+import model.chat.SupportChat;
 import model.log.BuyLog;
 import model.log.LogItem;
 import model.log.SellLog;
@@ -406,18 +407,11 @@ public class Utilities {
             return subProductBoxes;
         }
 
-        public static String[] chat(Chat chat, String viewerUsername){
-            ArrayList<Account> accounts = new ArrayList<>(chat.getAccounts());
-            String[] pack = new String[accounts.size()];
-            pack[0] = chat.getId();
-            int i = 1;
-            for (Account account : accounts) {
-                if( !account.getUsername().equals(viewerUsername)){
-                    pack[i] = account.getUsername();
-                    i++;
-                }
-            }
-            return pack;
+        public static String[] supportChat(SupportChat chat){
+            String[] chatPack = new String[2];
+            chatPack[0] = chat.getId();
+            chatPack[1] = chat.getCustomer().getUsername();
+            return chatPack;
         }
 
         public static String[] message(Message message, String viewerUsername){
