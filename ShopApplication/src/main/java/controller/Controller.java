@@ -452,6 +452,7 @@ public class Controller {
         Utilities.Filter.SubProductFilter.brand(subSellables, brand);
         Utilities.Filter.SubProductFilter.storeName(subSellables, storeName);
         Utilities.Filter.SubProductFilter.ratingScore(subSellables, minRatingScore);
+        Utilities.Filter.SubProductFilter.extension(subSellables, extension);
     }
 
     private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubSellable> subSellables) {
