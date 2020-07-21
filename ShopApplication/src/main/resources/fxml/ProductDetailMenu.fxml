@@ -19,7 +19,12 @@
                                        preserveRatio="true">
                                 <Image url="@../img/default-product-pic.png"/>
                             </ImageView>
-                            <Label id="sale-percentage-label" fx:id="salePercentageLBL" text="50%">
+                            <Label id="auction-label" fx:id="salePercentageLBL1" layoutX="20.0" layoutY="20.0">
+                                <StackPane.margin>
+                                    <Insets left="10.0" top="10.0"/>
+                                </StackPane.margin>
+                            </Label>
+                            <Label id="sale-percentage-label" fx:id="salePercentageLBL" text="50%" visible="false">
                                 <StackPane.margin>
                                     <Insets left="10.0" top="10.0"/>
                                 </StackPane.margin>
@@ -163,6 +168,10 @@
                         </VBox.margin>
                         <Button id="add-to-cart-button" fx:id="addToCartBTN" mnemonicParsing="false" text="+Add to cart"
                                 visible="false"/>
+                        <Button id="auction-button" fx:id="auctionBTN" layoutX="36.0" layoutY="14.0"
+                                mnemonicParsing="false" text="View Auction"/>
+                        <Button id="download-button" fx:id="downloadBTN" layoutX="10.0" layoutY="10.0"
+                                mnemonicParsing="false" text="Download"/>
                         <Button id="edit-button" fx:id="editBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false"
                                 text="Edit"/>
                     </StackPane>

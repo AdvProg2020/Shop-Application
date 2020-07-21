@@ -29,8 +29,27 @@
     -fx-background-color: color-1;
     -fx-font-weight: bold;
     -fx-font-size: 20;
+    -fx-padding: 10 60 10 60;
+}
+
+#auction-button {
+    -fx-graphic: url("../img/auction-button.png");
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: color-1;
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-padding: 10 30 10 30;
+}
+
+#download-button {
+    -fx-graphic: url("../img/download-button.png");
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: color-1;
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
     -fx-padding: 10 50 10 50;
 }
+
 
 #compare-button {
     -fx-graphic: url("../img/compare-button.png");
@@ -107,6 +126,13 @@
     -fx-font-size: 14;
     -fx-font-weight: bold;
     -fx-padding: 5 10 5 10;
+}
+
+#auction-label {
+    -fx-background-color: #ff2c42;
+    -fx-background-radius: 20;
+    -fx-graphic: url("../img/auction-button.png");;
+    -fx-padding: 5 15 5 15;
 }
 
 #available-label {

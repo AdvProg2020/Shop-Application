@@ -41,8 +41,25 @@
     -fx-min-width: 250;
 }
 
+#all-auctions-button {
+    -fx-background-color: color-1;
+    -fx-graphic: url("../img/auction-button.png");
+    -fx-graphic-text-gap: 20;
+    -fx-text-fill: whitesmoke;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10 5 0;
+    -fx-min-width: 250;
+}
+
 #sales-box {
     -fx-background-color: rgba(249, 65, 78, 0.93);
+    -fx-background-radius: 10;
+}
+
+#auctions-box {
+    -fx-background-color: rgba(249, 180, 65, 0.93);
     -fx-background-radius: 10;
 }
 

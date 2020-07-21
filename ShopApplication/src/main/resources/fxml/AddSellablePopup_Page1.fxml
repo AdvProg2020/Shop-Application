@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" prefHeight="450.0" prefWidth="800.0" styleClass="bg-pane"
+      stylesheets="@../css/AddProduct-1.css" xmlns="http://javafx.com/javafx/11.0.1"
+      fx:controller="view.Controllers$AddProductPopupController_Page1">
+    <padding>
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+    </padding>
+    <Pane id="add-product-image" HBox.hgrow="ALWAYS"/>
+    <TabPane stylesheets="@../css/TabPane.css">
+        <tabs>
+            <Tab closable="false" text="Product">
+                <content>
+                    <VBox alignment="CENTER" spacing="10.0"
+                          style="-fx-background-color: rgba(8, 93, 228, 0.2); -fx-background-radius: 5;">
+                        <padding>
+                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        </padding>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Label id="header-label" text="Add Product"/>
+                        <Region layoutX="10.0" layoutY="319.0" VBox.vgrow="ALWAYS"/>
+                        <VBox spacing="10.0">
+                            <children>
+                                <HBox styleClass="field-box">
+                                    <padding>
+                                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                                    </padding>
+                                    <TextField fx:id="productNameField" promptText="name" HBox.hgrow="ALWAYS">
+                                        <HBox.margin>
+                                            <Insets left="5.0"/>
+                                        </HBox.margin>
+                                    </TextField>
+                                </HBox>
+                                <HBox styleClass="field-box">
+                                    <padding>
+                                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                                    </padding>
+                                    <TextField fx:id="productBrandField" promptText="brand" HBox.hgrow="ALWAYS"/>
+                                </HBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets left="40.0" right="40.0"/>
+                            </VBox.margin>
+                        </VBox>
+                        <Label id="message-label" fx:id="productErrorLBL"/>
+                        <Region layoutX="10.0" layoutY="287.0" VBox.vgrow="ALWAYS"/>
+                        <HBox spacing="5.0">
+                            <children>
+                                <Button id="new-product-button" fx:id="newProductBTN" mnemonicParsing="false"
+                                        text="Add New Product"/>
+                                <Button id="existing-product-button" fx:id="existingProductBTN" mnemonicParsing="false"
+                                        text="Sell Existing"/>
+                            </children>
+                        </HBox>
+                    </VBox>
+                </content>
+            </Tab>
+            <Tab closable="false" text="File">
+                <content>
+                    <VBox alignment="CENTER" spacing="10.0"
+                          style="-fx-background-color: rgba(8, 93, 228, 0.2); -fx-background-radius: 5;">
+                        <padding>
+                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        </padding>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Label id="header-label" text="Add File"/>
+                        <Region layoutX="10.0" layoutY="319.0" VBox.vgrow="ALWAYS"/>
+                        <VBox spacing="10.0">
+                            <children>
+                                <HBox styleClass="field-box">
+                                    <padding>
+                                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                                    </padding>
+                                    <TextField fx:id="fileNameField" promptText="name" HBox.hgrow="ALWAYS">
+                                        <HBox.margin>
+                                            <Insets left="5.0"/>
+                                        </HBox.margin>
+                                    </TextField>
+                                </HBox>
+                                <HBox styleClass="field-box">
+                                    <padding>
+                                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                                    </padding>
+                                    <TextField fx:id="fileExtensionField" promptText="extension" HBox.hgrow="ALWAYS"/>
+                                </HBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets left="40.0" right="40.0"/>
+                            </VBox.margin>
+                        </VBox>
+                        <Label id="message-label" fx:id="fileErrorLBL"/>
+                        <Region layoutX="10.0" layoutY="287.0" VBox.vgrow="ALWAYS"/>
+                        <HBox spacing="5.0">
+                            <children>
+                                <Button id="new-product-button" fx:id="newFileBTN" mnemonicParsing="false"
+                                        text="Add New File"/>
+                                <Button id="existing-product-button" fx:id="existingFileBTN" mnemonicParsing="false"
+                                        text="Sell Existing"/>
+                            </children>
+                        </HBox>
+                    </VBox>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+</HBox>

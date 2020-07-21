@@ -4,6 +4,7 @@
     -fx-border-width: 0.5;
     -fx-border-radius: 3px;
     -fx-font-size: 14;
+    -fx-min-width: 180;
 }
 
 .action-button:hover {
@@ -20,6 +21,10 @@
 
 #register-admin-button {
     -fx-graphic: url("../img/register-admin-button.png");
+}
+
+#register-supporter-button {
+    -fx-graphic: url("../img/register-supporter-button.png");
 }
 
 #purchase-button {

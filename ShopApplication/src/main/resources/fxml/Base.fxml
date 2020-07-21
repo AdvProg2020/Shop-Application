@@ -25,6 +25,8 @@
                 <StackPane>
                     <Button id="manage-button" fx:id="manageBTN" mnemonicParsing="false" styleClass="base-button"
                             visible="false"/>
+                    <Button id="chat-button" fx:id="chatBTN" layoutX="10.0" layoutY="13.0" mnemonicParsing="false"
+                            styleClass="base-button" visible="false"/>
                     <Button id="cart-button" fx:id="cartBTN" mnemonicParsing="false" styleClass="base-button"/>
                 </StackPane>
                 <StackPane id="account-button-wrapper">

@@ -6,7 +6,7 @@
     -fx-background-color: #81c9e1;
 }
 
-#login-image {
+#add-product-image {
     -fx-background-image: url("../img/add-product-page.png");
     -fx-background-size: 300;
     -fx-background-repeat: no-repeat;
@@ -48,7 +48,8 @@
     -fx-font-size: 18;
     -fx-font-weight: bold;
     -fx-text-fill: white;
-    -fx-padding: 10 33 10 33;
+    -fx-padding: 10 0 10 0;
+    -fx-min-width: 200;
     -fx-background-radius: 40;
 }
 
@@ -57,6 +58,7 @@
     -fx-font-size: 18;
     -fx-font-weight: bold;
     -fx-text-fill: white;
-    -fx-padding: 10 55 10 55;
+    -fx-padding: 10 0 10 0;
+    -fx-min-width: 200;
     -fx-background-radius: 40;
 }

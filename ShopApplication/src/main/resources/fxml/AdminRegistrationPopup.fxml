@@ -11,7 +11,7 @@
                     <VBox spacing="5.0">
                         <Label styleClass="property-label" text="Username:" />
                         <TextField fx:id="adminUsername" styleClass="field-box" />
-                        <Label fx:id="adminUsernameError" styleClass="error-label" />
+                        <Label fx:id="adminUsernameError"/>
                     </VBox>
                     <VBox spacing="5.0" GridPane.columnIndex="1">
                         <Label styleClass="property-label" text="Password:"/>

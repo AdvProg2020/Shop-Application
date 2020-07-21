@@ -19,7 +19,7 @@
                 <TextField fx:id="categoryField" editable="false" styleClass="property-box" />
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Label styleClass="property-label" text="Profile Picture:" />
+                <Label styleClass="property-label" text="Picture:"/>
                 <HBox spacing="10.0">
                     <TextField fx:id="imageField" editable="false" styleClass="property-box" HBox.hgrow="ALWAYS"/>
                 </HBox>

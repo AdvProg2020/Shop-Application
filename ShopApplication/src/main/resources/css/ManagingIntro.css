@@ -25,7 +25,7 @@
     -fx-background-color: #d0d0d0;
 }
 
-#products-button {
+#sellables-button {
     -fx-graphic: url("../img/products-button.png");
 }
 
@@ -33,8 +33,16 @@
     -fx-graphic: url("../img/sales-button.png");
 }
 
+#auctions-button {
+    -fx-graphic: url("../img/auction-managing-button.png");
+}
+
 #requests-button {
     -fx-graphic: url("../img/request-button.png");
+}
+
+#commission-button {
+    -fx-graphic: url("../img/dollar.png");
 }
 
 #accounts-button {

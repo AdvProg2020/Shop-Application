@@ -21,7 +21,12 @@
                         </ImageView>
                         <Label id="available-label" fx:id="available" text="SOLD OUT"/>
                     </VBox>
-                    <Label id="sale-percentage-label" fx:id="sale" text="50%">
+                    <Label id="auction-label" fx:id="auction" layoutX="15.0" layoutY="15.0">
+                        <StackPane.margin>
+                            <Insets left="5.0" top="3.0"/>
+                        </StackPane.margin>
+                    </Label>
+                    <Label id="sale-percentage-label" fx:id="sale" text="50%" visible="false">
                         <StackPane.margin>
                             <Insets left="5.0" top="5.0"/>
                         </StackPane.margin>

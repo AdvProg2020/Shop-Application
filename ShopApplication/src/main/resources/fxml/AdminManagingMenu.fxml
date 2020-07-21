@@ -8,10 +8,12 @@
     <center>
         <VBox alignment="CENTER" spacing="40.0">
             <Button id="accounts-button" fx:id="manageAccounts" mnemonicParsing="false" text="Manage Accounts"/>
-            <Button id="products-button" fx:id="manageProducts" mnemonicParsing="false" text="Manage Products"/>
+            <Button id="sellables-button" fx:id="manageSellables" mnemonicParsing="false" text="Manage Sellables"/>
             <Button id="categories-button" fx:id="manageCategories" mnemonicParsing="false" text="Manage Categories"/>
             <Button id="sales-button" fx:id="manageDiscounts" mnemonicParsing="false" text="Manage Discounts"/>
             <Button id="requests-button" fx:id="manageRequests" mnemonicParsing="false" text="Manage Requests"/>
+            <Button id="commission-button" fx:id="manageCommission" layoutX="10.0" layoutY="410.0"
+                    mnemonicParsing="false" text="Manage Commission"/>
         </VBox>
     </center>
 </BorderPane>
