@@ -187,44 +187,44 @@ public class Controller {
     }
 
     public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale, boolean inAuction, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                                  String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
+                                                  String extension, String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
 
         Category category = Category.getCategoryByName(categoryName) != null ? Category.getCategoryByName(categoryName) : Category.getSuperCategory();
-        ArrayList<Product> products;
+        ArrayList<Sellable> sellables;
 
         if (category != null) {
-            products = new ArrayList<>(category.getProducts(true));
+            sellables = new ArrayList<>(category.getProducts(true));
         } else {
-            products = new ArrayList<>(Product.getAllProducts());
+            sellables = new ArrayList<>(Sellable.getAllSellables());
         }
 
         for (String propertyFilter : propertyFilters.keySet()) {
             if ( ! propertyFilters.get(propertyFilter).equals(""))
-                Utilities.Filter.ProductFilter.property(products, propertyFilter, propertyFilters.get(propertyFilter));
+                Utilities.Filter.SellableFilter.property(sellables, propertyFilter, propertyFilters.get(propertyFilter));
         }
 
-        ArrayList<SubProduct> subProducts = new ArrayList<>();
+        ArrayList<SubSellable> subSellables = new ArrayList<>();
         if(inAuction){
-            for (Product product : products) {
-                //subProducts.addAll(product.getSubProductsInAuction());
+            for (Sellable product : sellables) {
+                subSellables.addAll(product.getSubSellablesInAuction());
             }
         }else{
             if (inSale) {
-                for (Product product : products) {
-                    subProducts.addAll(product.getSubProductsInSale());
+                for (Sellable product : sellables) {
+                    subSellables.addAll(product.getSubSellablesInSale());
                 }
             } else {
-                for (Product product : products) {
-                    subProducts.add(product.getDefaultSubProduct());
+                for (Sellable product : sellables) {
+                    subSellables.add(product.getDefaultSubSellable());
                 }
             }
         }
 
 
-        filterSubProducts(available, minPrice, maxPrice, contains, brand, storeName, minRatingScore, subProducts);
+        filterSubProducts(available, minPrice, maxPrice, contains, brand, extension, storeName, minRatingScore, subSellables);
 
-        sortSubProducts(sortBy, isIncreasing, subProducts);
-        return Utilities.Pack.subProductBoxes(subProducts);
+        sortSubProducts(sortBy, isIncreasing, subSellables);
+        return Utilities.Pack.subSellableBoxes(subSellables);
     }
 
     public void showProduct(String productId) throws Exceptions.InvalidProductIdException {
@@ -444,41 +444,41 @@ public class Controller {
     }
 
     private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                   String storeName, double minRatingScore, ArrayList<SubProduct> subProducts) {
-        Utilities.Filter.SubProductFilter.available(subProducts, available);
-        Utilities.Filter.SubProductFilter.minPrice(subProducts, minPrice);
-        Utilities.Filter.SubProductFilter.maxPrice(subProducts, maxPrice);
-        Utilities.Filter.SubProductFilter.name(subProducts, contains);
-        Utilities.Filter.SubProductFilter.brand(subProducts, brand);
-        Utilities.Filter.SubProductFilter.storeName(subProducts, storeName);
-        Utilities.Filter.SubProductFilter.ratingScore(subProducts, minRatingScore);
+                                   String extension, String storeName, double minRatingScore, ArrayList<SubSellable> subSellables) {
+        Utilities.Filter.SubProductFilter.available(subSellables, available);
+        Utilities.Filter.SubProductFilter.minPrice(subSellables, minPrice);
+        Utilities.Filter.SubProductFilter.maxPrice(subSellables, maxPrice);
+        Utilities.Filter.SubProductFilter.name(subSellables, contains);
+        Utilities.Filter.SubProductFilter.brand(subSellables, brand);
+        Utilities.Filter.SubProductFilter.storeName(subSellables, storeName);
+        Utilities.Filter.SubProductFilter.ratingScore(subSellables, minRatingScore);
     }
 
-    private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubProduct> subProducts) {
+    private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubSellable> subSellables) {
         if (sortBy == null) {
             sortBy = "view count";
         }
         switch (sortBy) {
             case "view count":
-                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(isIncreasing));
+                subSellables.sort(new Utilities.Sort.SubSellableViewCountComparator(isIncreasing));
                 break;
             case "price":
-                subProducts.sort(new Utilities.Sort.SubProductPriceComparator(isIncreasing));
+                subSellables.sort(new Utilities.Sort.SubSellablePriceComparator(isIncreasing));
                 break;
             case "name":
-                subProducts.sort(new Utilities.Sort.SubProductNameComparator(isIncreasing));
+                subSellables.sort(new Utilities.Sort.SubSellableNameComparator(isIncreasing));
                 break;
             case "rating score":
-                subProducts.sort(new Utilities.Sort.SubProductRatingScoreComparator(isIncreasing));
+                subSellables.sort(new Utilities.Sort.SubSellableRatingScoreComparator(isIncreasing));
                 break;
             case "category name":
-                subProducts.sort(new Utilities.Sort.SubProductCategoryNameComparator(isIncreasing));
+                subSellables.sort(new Utilities.Sort.SubSellableCategoryNameComparator(isIncreasing));
                 break;
             case "remaining count":
-                subProducts.sort(new Utilities.Sort.SubProductRemainingCountComparator(isIncreasing));
+                subSellables.sort(new Utilities.Sort.SubSellableRemainingCountComparator(isIncreasing));
                 break;
             default:
-                subProducts.sort(new Utilities.Sort.SubProductViewCountComparator(true));
+                subSellables.sort(new Utilities.Sort.SubSellableViewCountComparator(true));
         }
     }
 

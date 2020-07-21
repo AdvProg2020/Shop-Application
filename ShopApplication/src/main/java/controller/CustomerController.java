@@ -127,7 +127,9 @@ public class CustomerController {
     }
 
     //Todo: discount, ...
-    //public void purchaseTheFile();
+    public void purchaseTheFile(String subFileId, String discountCode){
+        
+    }
 
     private String notAvailableSubProductsInCart() {
         StringBuilder notAvailableSubProducts = new StringBuilder();
