@@ -1,9 +1,7 @@
 package controller;
 
 import model.*;
-import model.account.Account;
-import model.account.Customer;
-import model.account.Seller;
+import model.account.*;
 import model.chat.Chat;
 import model.chat.Message;
 import model.chat.SupportChat;
@@ -271,6 +269,9 @@ public class Utilities {
                 info[8] = Double.toString(((Seller) account).getWallet().getBalance());
                 info[9] = ((Seller) account).getStoreName();
                 info[10] = account.getClass().getSimpleName();
+            } else if (account instanceof Admin){
+                info = new String[9];
+                info[8] = account.getClass().getSimpleName();
             } else {
                 info = new String[9];
                 info[8] = account.getClass().getSimpleName();

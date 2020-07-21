@@ -26,11 +26,8 @@ FXML additions:
     * after pressing chats button on base, open a telegram like popup. if its already open, bring it up.
 5- auction page for customer and auction products menu.
 6- seller add auction -> auctionManaging menu
-8- things to ask:
-    * server - client structure.
-    * what is REST.
-    * how to call sub routines.
-    * rpc?
+
+for shayan talaee: adminController.createSupporterProfile(...)
 
 
 account karmozd managing menu
