@@ -513,6 +513,8 @@ public class Controllers {
                         case "AddSaleRequest":
                             AddSaleRequestPopupController.display(id);
                             break;
+                        case "AddAuctionRequest":
+
                     }
                 });
 
@@ -797,18 +799,6 @@ public class Controllers {
             }
         }
     }
-
-    /**
-     * public static String[] productEditableFields() {
-     * String[] editableFields = new String[5];
-     * editableFields[0] = "name";
-     * editableFields[1] = "brand";
-     * editableFields[2] = "info text";
-     * editableFields[3] = "price";
-     * editableFields[4] = "count";
-     * return editableFields;
-     * }
-     */
 
     public static class EditRequestPopupController {
         @FXML
@@ -1114,6 +1104,112 @@ public class Controllers {
             balance.setText(secondaryDetails[5]);
             storeName.setText(secondaryDetails[6]);
             imageField.setText(secondaryDetails[7]);
+        }
+    }
+
+    public static class AddFileRequestPopupController {
+        @FXML
+        private TextField nameField;
+        @FXML
+        private TextField extensionField;
+        @FXML
+        private TextField categoryField;
+        @FXML
+        private TextField imageField;
+        @FXML
+        private TextArea infoArea;
+        @FXML
+        private TextField priceField;
+        @FXML
+        private TextField pathField;
+        @FXML
+        private TableView<PropertyWrapper> properties;
+        @FXML
+        private TableColumn<PropertyWrapper, String> propertyCOL;
+        @FXML
+        private TableColumn<PropertyWrapper, String> valueCOL;
+
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public class PropertyWrapper {
+            String property;
+            String value;
+
+            public PropertyWrapper(String property, String value) {
+                this.property = property;
+                this.value = value;
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public String getValue() {
+                return value;
+            }
+        }
+
+        public static void display(String requestId) {
+            ((AddFileRequestPopupController) View.popupWindow("Add file request details.", Constants.FXMLs.addFileRequestPopup, 860, 480)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            nameField.setDisable(true);
+            extensionField.setDisable(true);
+            categoryField.setDisable(true);
+            imageField.setDisable(true);
+            infoArea.setDisable(true);
+            pathField.setDisable(true);
+            priceField.setDisable(true);
+            pathField.setDisable(true);
+
+            initValues();
+            initTable();
+        }
+
+        private void initValues() {
+
+        }
+
+        private void initTable() {
+
+        }
+    }
+
+    public static class AddAuctionRequestPopupController {
+        @FXML
+        private Label errorLBL;
+        @FXML
+        private Label idKeyLBL;
+        @FXML
+        private Label sellerLBL;
+        @FXML
+        private TextField startDate;
+        @FXML
+        private TextField endDate;
+        @FXML
+        private Label subsellableLBL;
+
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public static void display(String requestId) {
+            ((AddAuctionRequestPopupController)
+                    View.popupWindow("Add Auction request details", Constants.FXMLs.addAuctionRequestPopup, 450, 450)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+
         }
     }
 
@@ -3315,6 +3411,12 @@ public class Controllers {
                         case "EditProductRequest":
                         case "EditSaleRequest":
                             EditRequestPopupController.display(id);
+                            break;
+                        case "AddFileRequest":
+                            AddFileRequestPopupController.display(id);
+                            break;
+                        case "AddAuctionRequest":
+                            AddAuctionRequestPopupController.display(id);
                             break;
                     }
                 });
@@ -7144,7 +7246,7 @@ public class Controllers {
             supporterRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        adminController.createsupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
+                        adminController.createSupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
                                 supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), supporterImageField.getText());
                         supporterUsername.getScene().getWindow().hide();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {

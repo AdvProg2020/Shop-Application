@@ -75,6 +75,8 @@ public final class Constants {
         public static final String addSellablePopup_Page1 = "AddSellablePopup_Page1";
         public static final String addProductPage2 = "AddProductPopup_Page2";
         public static final String addProductRequestPopup = "AddProductRequestPopup";
+        public static final String addAuctionRequestPopup = "AddAuctionRequestPopup";
+        public static final String addFileRequestPopup = "AddFileRequestPopup";
         public static final String addSaleRequestPopup = "AddSaleRequestPopup";
         public static final String addReviewRequestPopup = "AddReviewRequestPopup";
         public static final String addSellerRequestPopup = "AddSellerRequestPopup";
