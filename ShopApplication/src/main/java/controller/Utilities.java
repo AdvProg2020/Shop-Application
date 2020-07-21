@@ -638,7 +638,7 @@ public class Utilities {
             }
             public static void extension(ArrayList<SubSellable> subProducts, String extension) {
                 if (!extension.isEmpty())
-                    subProducts.removeIf(subProduct -> subProduct.getClass().getSimpleName().equals("SubFile") && !(((SubFile)subProduct).getFile().getExtension().toLowerCase().contains(brand.toLowerCase())));
+                    subProducts.removeIf(subProduct -> subProduct.getClass().getSimpleName().equals("SubFile") && !(((SubFile)subProduct).getFile().getExtension().toLowerCase().contains(extension.toLowerCase())));
             }
         }
     }
