@@ -636,6 +636,10 @@ public class Utilities {
             public static void ratingScore(ArrayList<SubSellable> subSellables, double minRatingScore){
                 subSellables.removeIf(subSellable -> subSellable.getSellable().getAverageRatingScore() < minRatingScore);
             }
+            public static void extension(ArrayList<SubSellable> subProducts, String extension) {
+                if (!extension.isEmpty())
+                    subProducts.removeIf(subProduct -> subProduct.getClass().getSimpleName().equals("SubFile") && !(((SubFile)subProduct).getFile().getExtension().toLowerCase().contains(brand.toLowerCase())));
+            }
         }
     }
     static class Sort {
