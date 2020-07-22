@@ -7,6 +7,8 @@ import model.account.Admin;
 import model.account.Customer;
 import model.account.Supporter;
 import model.database.Database;
+import model.log.BuyLog;
+import model.log.SellLog;
 import model.request.*;
 import model.sellable.Product;
 import model.sellable.SubProduct;
@@ -532,6 +534,40 @@ public class AdminController {
             throw new Exceptions.InvalidProductIdException(productId);
         }else {
             product.setName(newName);
+        }
+    }
+
+    public ArrayList<String[]> getAllBuyLogs(){
+        ArrayList<String[]> buyLogPacks = new ArrayList<>();
+        for (BuyLog buyLog : BuyLog.getAllBuyLogs()) {
+            buyLogPacks.add(Utilities.Pack.buyLog(buyLog));
+        }
+        return buyLogPacks;
+    }
+
+    public ArrayList<String[]> getAllSellLogs(){
+        ArrayList<String[]> sellLogPacks = new ArrayList<>();
+        for (SellLog sellLog : SellLog.getAllSellLogs()) {
+            sellLogPacks.add(Utilities.Pack.sellLog(sellLog));
+        }
+        return sellLogPacks;
+    }
+
+    public String[] getBuyLogWithId(String logId) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if( buyLog == null ){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            return Utilities.Pack.buyLog(buyLog);
+        }
+    }
+
+    public String[] getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException{
+        SellLog sellLog = SellLog.getSellLogById(logId);
+        if( sellLog == null ){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            return Utilities.Pack.sellLog(sellLog);
         }
     }
 }
