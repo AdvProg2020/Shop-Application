@@ -62,9 +62,10 @@ public class Utilities {
         }
 
         public static String[] subProduct(SubProduct subProduct){
-            String[] subProductBoxPack = new String[16];
+            String[] subProductBoxPack = new String[18];
             Product product = subProduct.getProduct();
             Sale sale = subProduct.getSale();
+            Auction auction = subProduct.getAuction();
             subProductBoxPack[0] = product.getId();
             subProductBoxPack[1] = subProduct.getId();
             subProductBoxPack[2] = product.getName();
@@ -81,13 +82,16 @@ public class Utilities {
             subProductBoxPack[13] = subProduct.getProduct().getInfoText();
             subProductBoxPack[14] = subProduct.getSeller().getUsername();
             subProductBoxPack[15] = "SubProduct";
+            subProductBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
+            subProductBoxPack[17] = auction != null ? auction.getHighestBidder().getUsername() : null;
             return subProductBoxPack;
         }
 
         public static String[] subFile(SubFile subFile){
-            String[] subFileBoxPack = new String[16];
+            String[] subFileBoxPack = new String[18];
             File file = subFile.getFile();
             Sale sale = subFile.getSale();
+            Auction auction = subFile.getAuction();
             subFileBoxPack[0] = file.getId();
             subFileBoxPack[1] = subFile.getId();
             subFileBoxPack[2] = file.getName();
@@ -104,6 +108,8 @@ public class Utilities {
             subFileBoxPack[13] = subFile.getFile().getInfoText();
             subFileBoxPack[14] = subFile.getSeller().getUsername();
             subFileBoxPack[15] = "SubFile";
+            subFileBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
+            subFileBoxPack[17] = auction != null ? auction.getHighestBidder().getUsername() : null;
             return subFileBoxPack;
         }
 

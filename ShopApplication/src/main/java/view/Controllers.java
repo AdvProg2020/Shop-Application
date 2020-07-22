@@ -1241,11 +1241,11 @@ public class Controllers {
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
             for (String[] subProductPack : mainController.getSubSellablesForAdvertisements(6)) {
-                advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack, null, null, false));
+                advertisingProducts.getChildren().add(SellableBoxController.createBox(subProductPack, null, null, false));
             }
 
             for (String[] subProduct : mainController.getSubSellablesInSale(10)) {
-                productsInSale.getChildren().add(ProductBoxController.createBox(subProduct, null, null, false));
+                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false));
             }
 
             allSales.setOnAction(e -> salesMenu());
@@ -1476,7 +1476,7 @@ public class Controllers {
             productsPane.setPadding(new Insets(30, 30, 30, 30));
             int index = 0;
             for (String[] subProductPack : products) {
-                Parent productBox = ProductBoxController.createBox(subProductPack, productIdToCompareWith, categoryName, inSale);
+                Parent productBox = SellableBoxController.createBox(subProductPack, productIdToCompareWith, categoryName, inSale);
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
             }
@@ -1544,7 +1544,7 @@ public class Controllers {
         }
     }
 
-    public static class ProductBoxController {
+    public static class SellableBoxController {
 
         @FXML
         private Label sale;
@@ -1600,14 +1600,14 @@ public class Controllers {
 
         private String categoryName;
         private boolean inSale;
-        public static Parent createBox(String[] subProduct, String productToCompare, String categoryName, boolean inSale) {
+        public static Parent createBox(String[] subSellable, String sellableToCompare, String categoryName, boolean inSale) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
             Parent p;
             try {
                 p = loader.load();
-                ProductBoxController pbc = loader.getController();
-                pbc.setInfo(subProduct);
-                pbc.setAction(p, productToCompare);
+                SellableBoxController pbc = loader.getController();
+                pbc.setInfo(subSellable);
+                pbc.setAction(p, sellableToCompare);
                 pbc.categoryName = categoryName;
                 pbc.inSale = inSale;
                 return p;
