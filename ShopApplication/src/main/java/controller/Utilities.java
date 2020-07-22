@@ -42,12 +42,13 @@ public class Utilities {
         }
 
         public static String[] auctionInfo(Auction auction) {
-            String[] auctionPack = new String[5];
+            String[] auctionPack = new String[6];
             auctionPack[0] = auction.getId();
             auctionPack[1] = auction.getSeller().getUsername();
             auctionPack[2] = auction.getSubSellable().getId();
             auctionPack[3] = dateFormat.format(auction.getStartDate());
             auctionPack[4] = dateFormat.format(auction.getEndDate());
+            auctionPack[5] = auction.getHighestBid() + "";
             return auctionPack;
         }
 

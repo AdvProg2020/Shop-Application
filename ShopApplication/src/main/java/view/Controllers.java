@@ -1282,7 +1282,7 @@ public class Controllers {
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
             for (String[] subProductPack : mainController.getSubSellablesForAdvertisements(6)) {
-                advertisingProducts.getChildren().add(SelableBoxController.createBox(subProductPack, null, null, false));
+                advertisingProducts.getChildren().add(SellableBoxController.createBox(subProductPack, null, null, false));
             }
 
             for (String[] subProduct : mainController.getSubSellablesInSale(10)) {
@@ -6919,8 +6919,6 @@ public class Controllers {
             this.fileId = fileId;
             exists = fileId != null;
 
-            //TODO: info =
-
             initAccessControls();
             initListeners();
             initChoiceBox();
@@ -7539,50 +7537,86 @@ public class Controllers {
 
     public static class SellerAuctionMangingMenuController implements Initializable{
         @FXML
-        private TableView<?> auctions;
+        private TableView<AuctionWrapper> auctions;
         @FXML
-        private TableColumn<?, ?> idCol;
+        private TableColumn<AuctionWrapper, String> idCol;
         @FXML
-        private TableColumn<?, ?> highestBidCOL;
+        private TableColumn<AuctionWrapper, Double> highestBidCOL;
         @FXML
-        private TableColumn<?, ?> startDateCOL;
+        private TableColumn<AuctionWrapper, String> startDateCOL;
         @FXML
-        private TableColumn<?, ?> endDateCOL;
+        private TableColumn<AuctionWrapper, String> endDateCOL;
         @FXML
-        private TableColumn<?, ?> detailsCOL;
+        private TableColumn<AuctionWrapper, Button> detailsCOL;
         @FXML
-        private TableColumn<?, ?> removeCOL;
+        private TableColumn<AuctionWrapper, Button> removeCOL;
         @FXML
-        private TableView<?> archive;
+        private TableView<AuctionWrapper> archive;
         @FXML
-        private TableColumn<?, ?> archiveIdCol;
+        private TableColumn<AuctionWrapper, String> archiveIdCol;
         @FXML
-        private TableColumn<?, ?> archiveHighestBidCOL;
+        private TableColumn<AuctionWrapper, Double> archiveHighestBidCOL;
         @FXML
-        private TableColumn<?, ?> archiveStartDateCOL;
+        private TableColumn<AuctionWrapper, String> archiveStartDateCOL;
         @FXML
-        private TableColumn<?, ?> archiveEndDateCOL;
+        private TableColumn<AuctionWrapper, String> archiveEndDateCOL;
         @FXML
-        private TableColumn<?, ?> archiveDetailsCOL;
+        private TableColumn<AuctionWrapper, Button> archiveDetailsCOL;
         @FXML
         private Label errorLBL;
         @FXML
         private Button addAuctionBTN;
 
-        private ArrayList activeAuctions;
-        private ArrayList archiveAuctions;
-
-        public static class AuctionWrapper {
+        public class AuctionWrapper {
             String id, startDate, endDate;
             double highestBid;
             Button detailsBTN, removeBTN;
 
             public AuctionWrapper(String[] pack) {
-
+                this(pack[0], pack[3], pack[4], Double.parseDouble(pack[5]));
             }
 
-        }
+            public AuctionWrapper(String id, String startDate, String endDate, double highestBid) {
+                this.id = id;
+                this.startDate = startDate;
+                this.endDate = endDate;
+                this.highestBid = highestBid;
 
+                detailsBTN = new Button(); removeBTN = new Button();
+                detailsBTN.getStyleClass().add("details-button"); removeBTN.getStyleClass().add("remove-button");
+
+                removeBTN.setOnAction(e -> {
+                    archive.getItems().add(this);
+                    auctions.getItems().remove(this);
+                });
+
+                detailsBTN.setOnAction(e -> SellerAuctionMangingPopupController.display(id));
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getStartDate() {
+                return startDate;
+            }
+
+            public String getEndDate() {
+                return endDate;
+            }
+
+            public double getHighestBid() {
+                return highestBid;
+            }
+
+            public Button getDetailsBTN() {
+                return detailsBTN;
+            }
+
+            public Button getRemoveBTN() {
+                return removeBTN;
+            }
+        }
 
         public static void display() {
             View.setMainPane(Constants.FXMLs.sellerAuctionMangingMenu);
@@ -7590,12 +7624,37 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            initTable();
+            initItems();
+            initActions();
+        }
 
+        private void initTable() {
+            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            highestBidCOL.setCellValueFactory(new PropertyValueFactory<>("highestBid"));
+            startDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+            endDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailsBTN"));
+            removeCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
+
+            archiveIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            archiveHighestBidCOL.setCellValueFactory(new PropertyValueFactory<>("highestBid"));
+            archiveStartDateCOL.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+            archiveEndDateCOL.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+            archiveDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailsBTN"));
+        }
+
+        private void initItems() {
+            sellerController.viewActiveAuctions().forEach(auction -> auctions.getItems().add(new AuctionWrapper(auction)));
+            sellerController.viewArchiveAuctions().forEach(auction -> archive.getItems().add(new AuctionWrapper(auction)));
+        }
+
+        private void initActions() {
+            addAuctionBTN.setOnAction(e -> SellerAuctionMangingPopupController.display(null));
         }
     }
 
     public static class SellerAuctionMangingPopupController {
-
         @FXML
         private Label idKeyLBL;
         @FXML
@@ -7619,8 +7678,67 @@ public class Controllers {
         @FXML
         private Button discardBTN;
 
-        public static void display() {
-            View.popupWindow( "seller auction managing popup", Constants.FXMLs.sellerAuctionMangingPopup, 600, 500);
+        private String auctionId;
+        private String[] info;
+        private boolean exists;
+
+        private SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
+        private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
+
+        public static void display(String auctionId) {
+            ((SellerAuctionMangingPopupController) View.popupWindow("seller auction managing popup", Constants.FXMLs.sellerAuctionMangingPopup, 600, 500)).initialize(auctionId);
+        }
+
+        private void initialize(String auctionId) {
+            this.auctionId = auctionId;
+            exists = auctionId != null;
+            if (exists) {
+                try {
+                    info = sellerController.viewAuctionWithId(auctionId);
+                } catch (Exceptions.InvalidAuctionIdException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            initActions();
+            initValues();
+            initVisibilities();
+            initBindings();
+        }
+
+        private void initActions() {
+            editBTN.setOnAction(e -> {
+
+            });
+            addBTN.setOnAction(e -> {
+                 if (validateFields()) {
+
+                 }
+            });
+            discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
+        }
+        private void initValues() {
+            if (exists) {
+                idValueLBL.setText(info[0]);
+                subSellableLBL.setText(info[1]);
+                highestBidLBL.setText(info[3] + "$");
+                startDate.setValue(LocalDate.parse("20" + info[5]));
+                endDate.setValue(LocalDate.parse("20" + info[6]));
+            }
+        }
+
+        private void initVisibilities() {
+            editHB.setVisible(exists);
+            addBTN.setVisible( ! editHB.isVisible());
+        }
+        private void initBindings() {
+            startDateChanged.bind(
+                    Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[5]))).then(false).otherwise(true)
+            );
+            endDateChanged.bind(
+                    Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[6]))).then(false).otherwise(true)
+            );
+            editBTN.disableProperty().bind(startDateChanged.or(endDateChanged).not());
         }
     }
 
