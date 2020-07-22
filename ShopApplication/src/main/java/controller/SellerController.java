@@ -369,6 +369,14 @@ public class SellerController {
         return ((Seller) currentAccount()).getSaleArchive().stream().map(Utilities.Pack::saleInfo).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public ArrayList<String[]> viewArchiveAuctions() {
+        ArrayList<String[]> auctionInfos = new ArrayList<>();
+        for (Auction auction : ((Seller) currentAccount()).getAuctionArchive()) {
+            auctionInfos.add(Utilities.Pack.auctionInfo(auction));
+        }
+        return auctionInfos;
+    }
+
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
         for (Sale sale : ((Seller) currentAccount()).getActiveSales()) {
             if (sale.getId().equals(saleId)) {
