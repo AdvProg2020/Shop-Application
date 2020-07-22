@@ -1668,7 +1668,7 @@ public class Controllers {
             priceAfter.setText(subProductInfo[16]);
             priceBefore.setVisible(false);
             try {
-                Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
+                Date endDate = Constants.dateFormat.parse(subProductInfo[18]);
                 LocalDate now = LocalDate.now();
                 ZoneId defaultZoneId = ZoneId.systemDefault();
                 Instant instant = endDate.toInstant();
