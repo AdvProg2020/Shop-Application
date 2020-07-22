@@ -8,6 +8,7 @@ import model.account.Customer;
 import model.account.Supporter;
 import model.database.Database;
 import model.log.BuyLog;
+import model.log.SellLog;
 import model.request.*;
 import model.sellable.Product;
 import model.sellable.SubProduct;
@@ -531,6 +532,16 @@ public class AdminController {
         }
         return buyLogPacks;
     }
+
+    public ArrayList<String[]> getAllSellLogs(){
+        ArrayList<String[]> sellLogPacks = new ArrayList<>();
+        for (SellLog sellLog : SellLog.getAllSellLogs()) {
+            sellLogPacks.add(Utilities.Pack.sellLog(sellLog));
+        }
+        return sellLogPacks;
+    }
+
+
 
 
 }
