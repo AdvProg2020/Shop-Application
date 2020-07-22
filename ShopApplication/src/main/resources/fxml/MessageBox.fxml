@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            xmlns="http://javafx.com/javafx"
-            fx:controller="fxml.MessageBox"
-            prefHeight="400.0" prefWidth="600.0">
 
-</AnchorPane>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" minWidth="300.0" spacing="5.0"
+      xmlns="http://javafx.com/javafx/11.0.1">
+    <children>
+        <Label fx:id="sender" text="Label"/>
+        <Text fx:id="message" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
+        <HBox alignment="CENTER_RIGHT">
+            <children>
+                <Label fx:id="date" text="date"/>
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0"/>
+    </padding>
+</VBox>
