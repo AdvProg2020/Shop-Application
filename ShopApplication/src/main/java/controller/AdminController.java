@@ -541,7 +541,14 @@ public class AdminController {
         return sellLogPacks;
     }
 
-
+    public String[] getBuyLogWithId(String logId) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if( buyLog == null ){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            return Utilities.Pack.buyLog(buyLog);
+        }
+    }
 
 
 }
