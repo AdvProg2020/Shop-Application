@@ -166,14 +166,25 @@ public class Utilities {
         }
 
         public static String[] addFileRequest(SubFile subFile, File file){
-            String[] filePack = new String[6];
+            String[] filePack = new String[7];
             filePack[0] = file.getName();
             filePack[1] = file.getExtension();
             filePack[2] = file.getImagePath();
             filePack[3] = file.getCategory().getName();
             filePack[4] = file.getInfoText();
             filePack[5] = Double.toString(subFile.getRawPrice());
+            filePack[6] = subFile.getDownloadPath();
             return filePack;
+        }
+
+        public static String[] addAuctionRequest(Auction auction) {
+            String[] auctionPack = new String[5];
+            auctionPack[0] = auction.getId();
+            auctionPack[1] = auction.getSeller().getStoreName();
+            auctionPack[2] = auction.getSubSellable().getId();
+            auctionPack[3] = dateFormat.format(auction.getStartDate());
+            auctionPack[4] = dateFormat.format(auction.getEndDate());
+            return auctionPack;
         }
 
         public static String[] review(Review review) {

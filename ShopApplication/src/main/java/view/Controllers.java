@@ -508,13 +508,18 @@ public class Controllers {
                             break;
                         case "EditProductRequest":
                         case "EditSaleRequest":
+                        case "EditFileRequest":
                             EditRequestPopupController.display(id);
                             break;
                         case "AddSaleRequest":
                             AddSaleRequestPopupController.display(id);
                             break;
                         case "AddAuctionRequest":
-
+                            AddAuctionRequestPopupController.display(id);
+                            break;
+                        case "AddFileRequest":
+                            AddFileRequestPopupController.display(id);
+                            break;
                     }
                 });
 
@@ -1178,11 +1183,26 @@ public class Controllers {
         }
 
         private void initValues() {
-
+            nameField.setText(secondaryDetails[0]);
+            extensionField.setText(secondaryDetails[1]);
+            categoryField.setText(secondaryDetails[3]);
+            imageField.setText(secondaryDetails[2]);
+            infoArea.setText(secondaryDetails[4]);
+            priceField.setText(secondaryDetails[5]);
+            pathField.setText(secondaryDetails[6]);
         }
 
         private void initTable() {
+            propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
+            valueCOL.setCellValueFactory(new PropertyValueFactory<>("value"));
 
+            try {
+                adminController.getPropertyValuesOfAFileInARequest(primaryDetails[0]).forEach((key, value) -> {
+                    properties.getItems().add(new PropertyWrapper(key, value));
+                });
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -1209,7 +1229,24 @@ public class Controllers {
         }
 
         private void initialize(String requestId) {
+            try {
+                var details = adminController.detailsOfRequest(requestId);
+                primaryDetails = details.get(0);
+                secondaryDetails = details.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+            }
 
+            startDate.setEditable(false);
+            endDate.setEditable(false);
+            initValues();
+        }
+
+        private void initValues() {
+            sellerLBL.setText(secondaryDetails[1]);
+            subsellableLBL.setText(secondaryDetails[2]);
+            startDate.setText(secondaryDetails[3]);
+            endDate.setText(secondaryDetails[4]);
         }
     }
 
@@ -1464,7 +1501,8 @@ public class Controllers {
             for (String s : properties.keySet()) {
                 propertyValues.put(s, properties.get(s).getValue());
             }
-            products = mainController.sortFilterProducts(categoryName, inSale, sortByChoiceBox.getValue(),  isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
+            //TODO: fix the auction stuff
+            products = mainController.sortFilterProducts(categoryName, inSale, false, sortByChoiceBox.getValue(),  isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
                     minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), filterSeller.getValue(), 0, propertyValues);
         }
 
@@ -3410,6 +3448,7 @@ public class Controllers {
                             break;
                         case "EditProductRequest":
                         case "EditSaleRequest":
+                        case "EditFileRequest":
                             EditRequestPopupController.display(id);
                             break;
                         case "AddFileRequest":
