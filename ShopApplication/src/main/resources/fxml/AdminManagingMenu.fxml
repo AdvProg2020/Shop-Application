@@ -14,6 +14,8 @@
             <Button id="requests-button" fx:id="manageRequests" mnemonicParsing="false" text="Manage Requests"/>
             <Button id="commission-button" fx:id="manageCommission" layoutX="10.0" layoutY="410.0"
                     mnemonicParsing="false" text="Manage Commission"/>
+            <Button id="commission-button" fx:id="manageShippings" layoutX="10.0" layoutY="510.0"
+                    mnemonicParsing="false" text="Manage Shippings"/>
         </VBox>
     </center>
 </BorderPane>
