@@ -1265,6 +1265,12 @@ public class Controllers {
         @FXML
         private Button productsMenu;
 
+        @FXML
+        private Button allAuctions;
+
+        @FXML
+        private HBox productsInAuction;
+
         private static void display() {
             View.getStackTrace().clear();
             View.stackSize.set(0);
@@ -1276,29 +1282,38 @@ public class Controllers {
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
             for (String[] subProductPack : mainController.getSubSellablesForAdvertisements(6)) {
-                advertisingProducts.getChildren().add(ProductBoxController.createBox(subProductPack, null, null, false));
+                advertisingProducts.getChildren().add(SelableBoxController.createBox(subProductPack, null, null, false));
             }
 
             for (String[] subProduct : mainController.getSubSellablesInSale(10)) {
-                productsInSale.getChildren().add(ProductBoxController.createBox(subProduct, null, null, false));
+                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false));
+            }
+
+            for (String[] subProduct : mainController.getSubSellablesInAuction(10)) {
+                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false));
             }
 
             allSales.setOnAction(e -> salesMenu());
             productsMenu.setOnAction(e -> productsMenu());
+            allAuctions.setOnAction(e -> auctionMenu());
 
             initCategoriesBox();
         }
 
         private void salesMenu() {
-            ProductsMenuController.display("SuperCategory", true);
+            ProductsMenuController.display("SuperCategory", true, false);
         }
 
         private void productsMenu() {
-            ProductsMenuController.display("SuperCategory", false);
+            ProductsMenuController.display("SuperCategory", false, false);
+        }
+
+        private void auctionMenu(){
+            ProductsMenuController.display("SuperCategory", false, true);
         }
 
         private void initCategoriesBox() {
-            borderPane.setLeft(CategoryBoxController.createBox("SuperCategory", false));
+            borderPane.setLeft(CategoryBoxController.createBox("SuperCategory", false, false));
         }
     }
 
@@ -1357,15 +1372,17 @@ public class Controllers {
         private boolean toCompare;
         //products menu mode:
         private boolean inSale = false;
+        private boolean inAuction = false;
 
         //comparison mode:
         private String productIdToCompareWith;
 
-        public static void display(String categoryName, boolean inSale) {
+        public static void display(String categoryName, boolean inSale, boolean inAuction) {
             ProductsMenuController controller = View.setMainPane(Constants.FXMLs.productsMenu);
             if (controller != null) {
                 controller.categoryName = categoryName;
                 controller.inSale = inSale;
+                controller.inAuction = inAuction;
 
                 controller.initPageObjects();
                 controller.setValuesOfPageObjects();
@@ -1512,7 +1529,7 @@ public class Controllers {
             productsPane.setPadding(new Insets(30, 30, 30, 30));
             int index = 0;
             for (String[] subProductPack : products) {
-                Parent productBox = ProductBoxController.createBox(subProductPack, productIdToCompareWith, categoryName, inSale);
+                Parent productBox = SellableBoxController.createBox(subProductPack, productIdToCompareWith, categoryName, inSale);
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
             }
@@ -1571,16 +1588,19 @@ public class Controllers {
         private Button createCategoryButton(String category) {
             Button button = new Button();
             button.setText(category);
-            button.setOnAction(e -> ProductsMenuController.display(category, inSale));
+            button.setOnAction(e -> ProductsMenuController.display(category, inSale, inAuction));
             return button;
         }
 
         private void initCategoryBox() {
-            borderPane.setLeft(CategoryBoxController.createBox(categoryName, inSale));
+            borderPane.setLeft(CategoryBoxController.createBox(categoryName, inSale, inAuction));
         }
     }
 
-    public static class ProductBoxController {
+    public static class SellableBoxController {
+
+        @FXML
+        public Label auction;
 
         @FXML
         private Label sale;
@@ -1636,14 +1656,14 @@ public class Controllers {
 
         private String categoryName;
         private boolean inSale;
-        public static Parent createBox(String[] subProduct, String productToCompare, String categoryName, boolean inSale) {
+        public static Parent createBox(String[] subSellable, String sellableToCompare, String categoryName, boolean inSale) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
             Parent p;
             try {
                 p = loader.load();
-                ProductBoxController pbc = loader.getController();
-                pbc.setInfo(subProduct);
-                pbc.setAction(p, productToCompare);
+                SellableBoxController pbc = loader.getController();
+                pbc.setInfo(subSellable);
+                pbc.setAction(p, sellableToCompare);
                 pbc.categoryName = categoryName;
                 pbc.inSale = inSale;
                 return p;
@@ -1658,37 +1678,63 @@ public class Controllers {
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
             subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
             image.setImage(new Image("file:" + (subProductInfo[6].startsWith("/src") ? Constants.base : "")  + subProductInfo[6]));
-            if (subProductInfo[7].equals(subProductInfo[8])) {
-                priceBefore.setVisible(false);
-                priceAfter.setText(subProductInfo[7] + "$");
-            } else {
-                priceBefore.setText(subProductInfo[7] + "$");
-                priceAfter.setText(subProductInfo[8] + "$");
-                priceBefore.setVisible(true);
-            }
-            if (subProductInfo[11] != null) {
-                sale.setText(subProductInfo[11] + "%");
-            } else
-                sale.setVisible(false);
-            if (subProductInfo[10] != null) {
-                try {
-                    Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
-                    LocalDate now = LocalDate.now();
-                    ZoneId defaultZoneId = ZoneId.systemDefault();
-                    Instant instant = endDate.toInstant();
-                    LocalDate localDate = instant.atZone(defaultZoneId).toLocalDate();
-                    Period period = Period.between(now, localDate);
-                    int daysLeft = period.getDays();
-                    remainingTime.setText(daysLeft + " days");
-                } catch (ParseException e) {
-                    e.printStackTrace();
+            if( subProductInfo[16] != null){
+                auctionMode(subProductInfo);
+            }else {
+                if (subProductInfo[7].equals(subProductInfo[8])) {
+                    priceBefore.setVisible(false);
+                    priceAfter.setText(subProductInfo[7] + "$");
+                } else {
+                    priceBefore.setText(subProductInfo[7] + "$");
+                    priceAfter.setText(subProductInfo[8] + "$");
+                    priceBefore.setVisible(true);
                 }
-            } else {
-                remainingDateBox.setVisible(false);
+                if (subProductInfo[11] != null) {
+                    sale.setText(subProductInfo[11] + "%");
+                } else
+                    sale.setVisible(false);
+                if (subProductInfo[10] != null) {
+                    try {
+                        Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
+                        LocalDate now = LocalDate.now();
+                        ZoneId defaultZoneId = ZoneId.systemDefault();
+                        Instant instant = endDate.toInstant();
+                        LocalDate localDate = instant.atZone(defaultZoneId).toLocalDate();
+                        Period period = Period.between(now, localDate);
+                        int daysLeft = period.getDays();
+                        remainingTime.setText(daysLeft + " days");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    remainingDateBox.setVisible(false);
+                }
             }
-            available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
+            if(subProductInfo[9].equals("-")){
+                available.setVisible(false);
+            }else
+                available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
             rating.setText(subProductInfo[5]);
             initRatingStars(Double.parseDouble(subProductInfo[4]));
+        }
+
+        private void auctionMode(String[] subProductInfo){
+            sale.setVisible(false);
+            auction.setVisible(true);
+            priceAfter.setText(subProductInfo[16]);
+            priceBefore.setVisible(false);
+            try {
+                Date endDate = Constants.dateFormat.parse(subProductInfo[18]);
+                LocalDate now = LocalDate.now();
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                Instant instant = endDate.toInstant();
+                LocalDate localDate = instant.atZone(defaultZoneId).toLocalDate();
+                Period period = Period.between(now, localDate);
+                int daysLeft = period.getDays();
+                remainingTime.setText(daysLeft + " days");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         private void setAction(Parent p, String productToCompare) {
@@ -2011,7 +2057,7 @@ public class Controllers {
         @FXML
         private VBox subCategoryBox;
 
-        public static Parent createBox(String categoryName, boolean inSale) {
+        public static Parent createBox(String categoryName, boolean inSale, boolean inAuction) {
             try {
                 ArrayList<String> subCategories = mainController.getSubCategoriesOfACategory(categoryName);
                 FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoriesBox + ".fxml"));
@@ -2020,7 +2066,7 @@ public class Controllers {
                 CategoryBoxController cbc = loader.getController();
                 VBox subCategoryBox = cbc.subCategoryBox;
                 for (String subCategory : subCategories) {
-                    subCategoryBox.getChildren().add(createCategoryButton(subCategory, inSale));
+                    subCategoryBox.getChildren().add(createCategoryButton(subCategory, inSale, inAuction));
                 }
                 return p;
             } catch (Exception e) {
@@ -2030,10 +2076,10 @@ public class Controllers {
         }
 
 
-        private static Button createCategoryButton(String categoryName, boolean inSale) {
+        private static Button createCategoryButton(String categoryName, boolean inSale, boolean inAuction) {
             Button button = new Button();
             button.setText(categoryName);
-            button.setOnAction(e -> ProductsMenuController.display(categoryName, inSale));
+            button.setOnAction(e -> ProductsMenuController.display(categoryName, inSale, inAuction));
             return button;
         }
     }
@@ -6631,7 +6677,7 @@ public class Controllers {
             if ( ! input.equals("")) {
                 ArrayList<String[]> products = getCurrentProducts();
                 if (products != null) {
-                    ProductsMenuController.display("SuperCategory", false);
+                    ProductsMenuController.display("SuperCategory", false, false);
                 }
             }
         }

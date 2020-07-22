@@ -1,6 +1,7 @@
 package controller;
 
 
+import model.Auction;
 import model.Category;
 import model.Sale;
 import model.account.Account;
@@ -371,8 +372,24 @@ public class SellerController {
         return saleInfos;
     }
 
+    public ArrayList<String[]> viewActiveAuctions() {
+        ArrayList<String[]> auctionInfos = new ArrayList<>();
+        for (Auction auction : ((Seller) currentAccount()).getActiveAuctions()) {
+            auctionInfos.add(Utilities.Pack.auctionInfo(auction));
+        }
+        return auctionInfos;
+    }
+
     public ArrayList<String[]> viewArchiveSales() {
         return ((Seller) currentAccount()).getSaleArchive().stream().map(Utilities.Pack::saleInfo).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<String[]> viewArchiveAuctions() {
+        ArrayList<String[]> auctionInfos = new ArrayList<>();
+        for (Auction auction : ((Seller) currentAccount()).getAuctionArchive()) {
+            auctionInfos.add(Utilities.Pack.auctionInfo(auction));
+        }
+        return auctionInfos;
     }
 
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
@@ -383,6 +400,17 @@ public class SellerController {
         }
         throw new Exceptions.InvalidSaleIdException(saleId);
     }
+
+    public String[] viewAuctionWithId(String auctionId) throws Exceptions.InvalidAuctionIdException {
+        for (Auction auction : ((Seller) currentAccount()).getActiveAuctions()) {
+            if (auction.getId().equals(auctionId)) {
+                return Utilities.Pack.auctionInfo(auction);
+            }
+        }
+        throw new Exceptions.InvalidAuctionIdException(auctionId);
+    }
+
+
 
     public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
