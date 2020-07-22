@@ -7,6 +7,7 @@ import model.account.Admin;
 import model.account.Customer;
 import model.account.Supporter;
 import model.database.Database;
+import model.log.BuyLog;
 import model.request.*;
 import model.sellable.Product;
 import model.sellable.SubProduct;
@@ -522,4 +523,14 @@ public class AdminController {
             product.setName(newName);
         }
     }
+
+    public ArrayList<String[]> getAllBuyLogs(){
+        ArrayList<String[]> buyLogPacks = new ArrayList<>();
+        for (BuyLog buyLog : BuyLog.getAllBuyLogs()) {
+            buyLogPacks.add(Utilities.Pack.buyLog(buyLog));
+        }
+        return buyLogPacks;
+    }
+
+
 }

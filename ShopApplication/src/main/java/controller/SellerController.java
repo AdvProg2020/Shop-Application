@@ -395,8 +395,6 @@ public class SellerController {
         throw new Exceptions.InvalidAuctionIdException(auctionId);
     }
 
-
-
     public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
