@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
+import model.log.LogItem;
 
 import java.io.File;
 import java.io.IOException;
@@ -4946,6 +4947,12 @@ public class Controllers {
         @FXML
         private Button manageRequests;
 
+        @FXML
+        private Button manageCommission;
+
+        @FXML
+        private Button manageShippings;
+
         @Override
         public void initialize(URL location, ResourceBundle resources) {
 
@@ -4958,6 +4965,98 @@ public class Controllers {
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
             manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
             manageRequests.setOnAction(e -> AdminRequestManagingMenuController.display());
+
+            manageShippings.setOnAction(e -> AdminBuyLogManagingMenuController.display());
+        }
+    }
+
+    public static class AdminBuyLogManagingMenuController implements Initializable {
+        @FXML
+        private TableView<BuyLogWrapper> products;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, String> dateCol;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, String> customerCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, Double> paidMoneyCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, Double> discountAmountCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, String> shippingStatusCOL;
+
+        @FXML
+        private TableColumn<BuyLogWrapper, Button> detailsCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        public static class BuyLogWrapper {
+            String id, date, receiverName, shippingStatus;
+            Double receivedMoney, totalSale;
+            Button details = new Button();
+
+            public BuyLogWrapper(String[] info) {
+            }
+
+            public BuyLogWrapper(String id, String date, String receiverName, String shippingStatus, Double receivedMoney, Double totalSale) {
+                this.id = id;
+                this.date = date;
+                this.receiverName = receiverName;
+                this.shippingStatus = shippingStatus;
+                this.receivedMoney = receivedMoney;
+                this.totalSale = totalSale;
+
+                details.getStyleClass().add("details-button");
+                details.setOnAction(e -> SellerSellLogDetailsPopupController.display(this.id));
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public String getReceiverName() {
+                return receiverName;
+            }
+
+            public String getShippingStatus() {
+                return shippingStatus;
+            }
+
+            public Double getReceivedMoney() {
+                return receivedMoney;
+            }
+
+            public Double getTotalSale() {
+                return totalSale;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+        }
+
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.adminBuyLogManagingMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
+        }
+    }
+
+    public static class AdminBuyLogManagingPopupController {
+        public static void display(String logId) {
+
         }
     }
 
@@ -7668,7 +7767,7 @@ public class Controllers {
         @FXML
         private Label highestBidLBL;
         @FXML
-        private Label subSellableLBL;
+        private ChoiceBox<String> subSellable;
         @FXML
         private Button addBTN;
         @FXML
@@ -7677,6 +7776,12 @@ public class Controllers {
         private Button editBTN;
         @FXML
         private Button discardBTN;
+        @FXML
+        private Label errorLBL;
+        @FXML
+        private Label highestBidKey;
+        @FXML
+        private Label highestBidderKey;
 
         private String auctionId;
         private String[] info;
@@ -7700,6 +7805,7 @@ public class Controllers {
                 }
             }
 
+            initChoiceBox();
             initActions();
             initValues();
             initVisibilities();
@@ -7708,19 +7814,20 @@ public class Controllers {
 
         private void initActions() {
             editBTN.setOnAction(e -> {
-
+                //TODO: edit auction
             });
             addBTN.setOnAction(e -> {
                  if (validateFields()) {
-
+                    //TODO: create auction.
                  }
             });
             discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
         }
+
         private void initValues() {
             if (exists) {
                 idValueLBL.setText(info[0]);
-                subSellableLBL.setText(info[1]);
+
                 highestBidLBL.setText(info[3] + "$");
                 startDate.setValue(LocalDate.parse("20" + info[5]));
                 endDate.setValue(LocalDate.parse("20" + info[6]));
@@ -7729,8 +7836,15 @@ public class Controllers {
 
         private void initVisibilities() {
             editHB.setVisible(exists);
+            idKeyLBL.setVisible(exists);
+            idValueLBL.setVisible(exists);
+            highestBidLBL.setVisible(exists);
+            highestBidKey.setVisible(exists);
+            highestBidderKey.setVisible(exists);
+            customerLBL.setVisible(exists);
             addBTN.setVisible( ! editHB.isVisible());
         }
+
         private void initBindings() {
             startDateChanged.bind(
                     Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[5]))).then(false).otherwise(true)
@@ -7739,6 +7853,36 @@ public class Controllers {
                     Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[6]))).then(false).otherwise(true)
             );
             editBTN.disableProperty().bind(startDateChanged.or(endDateChanged).not());
+        }
+
+        private boolean validateFields() {
+            if (subSellable.getSelectionModel().getSelectedItem() == null) {
+                errorLBL.setText("choose a product");
+                return false;
+            }
+            if (startDate.getValue() == null) {
+                errorLBL.setText("choose a start date");
+                return false;
+            }
+            if (endDate.getValue() == null) {
+                errorLBL.setText("choose an end date");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void initChoiceBox() {
+            subSellable.getItems().addAll(sellerController.manageProducts().stream().map(p -> p[2]).collect(Collectors.toCollection(ArrayList::new)));
+
+            if (exists) {
+                try {
+                    subSellable.getSelectionModel().select(mainController.digest(info[1])[1]);
+                } catch (Exceptions.InvalidProductIdException e) {
+                    e.printStackTrace();
+                }
+                subSellable.setDisable(true);
+            }
         }
     }
 
