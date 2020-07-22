@@ -36,9 +36,19 @@ public class Utilities {
             salePack[2] = Double.toString(sale.getPercentage());
             salePack[3] = dateFormat.format(sale.getStartDate());
             salePack[4] = dateFormat.format(sale.getEndDate());
-            salePack[5] = Integer.toString(sale.getSubProducts().size());
+            salePack[5] = Integer.toString(sale.getSubSellables().size());
             salePack[6] = String.valueOf(sale.getMaximumAmount());
             return salePack;
+        }
+
+        public static String[] auctionInfo(Auction auction) {
+            String[] auctionPack = new String[5];
+            auctionPack[0] = auction.getId();
+            auctionPack[1] = auction.getSeller().getUsername();
+            auctionPack[2] = auction.getSubSellable().getId();
+            auctionPack[3] = dateFormat.format(auction.getStartDate());
+            auctionPack[4] = dateFormat.format(auction.getEndDate());
+            return auctionPack;
         }
 
         public static String[] newSaleInRequest(Sale sale) {

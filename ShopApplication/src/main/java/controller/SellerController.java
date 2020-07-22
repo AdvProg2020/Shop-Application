@@ -1,6 +1,7 @@
 package controller;
 
 
+import model.Auction;
 import model.Category;
 import model.Sale;
 import model.account.Account;
@@ -368,6 +369,17 @@ public class SellerController {
         }
         throw new Exceptions.InvalidSaleIdException(saleId);
     }
+
+    public String[] viewAuctionWithId(String auctionId) throws Exceptions.InvalidAuctionIdException {
+        for (Auction auction : ((Seller) currentAccount()).getActiveAuctions()) {
+            if (auction.getId().equals(auctionId)) {
+                return Utilities.Pack.auctionInfo(auction);
+            }
+        }
+        throw new Exceptions.InvalidAuctionIdException(auctionId);
+    }
+
+
 
     public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
