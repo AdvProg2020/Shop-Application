@@ -54,8 +54,8 @@
                        GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <Label layoutX="65.0" layoutY="20.0" styleClass="property-label" text="SubSellable:"
                        GridPane.rowIndex="1"/>
-                <Label fx:id="subSellableLBL" layoutX="190.0" layoutY="20.0" styleClass="value-label"
-                       text="name-brand/extension" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <ChoiceBox fx:id="subSellable" prefWidth="188.0" stylesheets="@../css/ChoiceBox.css"
+                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             </GridPane>
             <Region layoutX="10.0" layoutY="10.0" VBox.vgrow="ALWAYS"/>
             <StackPane>
