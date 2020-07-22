@@ -1255,15 +1255,19 @@ public class Controllers {
         }
 
         private void salesMenu() {
-            ProductsMenuController.display("SuperCategory", true);
+            ProductsMenuController.display("SuperCategory", true, false);
         }
 
         private void productsMenu() {
-            ProductsMenuController.display("SuperCategory", false);
+            ProductsMenuController.display("SuperCategory", false, false);
+        }
+
+        private void auctionMenu(){
+            ProductsMenuController.display("SuperCategory", false, true);
         }
 
         private void initCategoriesBox() {
-            borderPane.setLeft(CategoryBoxController.createBox("SuperCategory", false));
+            borderPane.setLeft(CategoryBoxController.createBox("SuperCategory", false, false));
         }
     }
 
@@ -1537,12 +1541,12 @@ public class Controllers {
         private Button createCategoryButton(String category) {
             Button button = new Button();
             button.setText(category);
-            button.setOnAction(e -> ProductsMenuController.display(category, inSale));
+            button.setOnAction(e -> ProductsMenuController.display(category, inSale, inAuction));
             return button;
         }
 
         private void initCategoryBox() {
-            borderPane.setLeft(CategoryBoxController.createBox(categoryName, inSale));
+            borderPane.setLeft(CategoryBoxController.createBox(categoryName, inSale, inAuction));
         }
     }
 
@@ -2006,7 +2010,7 @@ public class Controllers {
         @FXML
         private VBox subCategoryBox;
 
-        public static Parent createBox(String categoryName, boolean inSale) {
+        public static Parent createBox(String categoryName, boolean inSale, boolean inAuction) {
             try {
                 ArrayList<String> subCategories = mainController.getSubCategoriesOfACategory(categoryName);
                 FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.categoriesBox + ".fxml"));
@@ -2015,7 +2019,7 @@ public class Controllers {
                 CategoryBoxController cbc = loader.getController();
                 VBox subCategoryBox = cbc.subCategoryBox;
                 for (String subCategory : subCategories) {
-                    subCategoryBox.getChildren().add(createCategoryButton(subCategory, inSale));
+                    subCategoryBox.getChildren().add(createCategoryButton(subCategory, inSale, inAuction));
                 }
                 return p;
             } catch (Exception e) {
@@ -2025,10 +2029,10 @@ public class Controllers {
         }
 
 
-        private static Button createCategoryButton(String categoryName, boolean inSale) {
+        private static Button createCategoryButton(String categoryName, boolean inSale, boolean inAuction) {
             Button button = new Button();
             button.setText(categoryName);
-            button.setOnAction(e -> ProductsMenuController.display(categoryName, inSale));
+            button.setOnAction(e -> ProductsMenuController.display(categoryName, inSale, inAuction));
             return button;
         }
     }
@@ -6618,7 +6622,7 @@ public class Controllers {
             if ( ! input.equals("")) {
                 ArrayList<String[]> products = getCurrentProducts();
                 if (products != null) {
-                    ProductsMenuController.display("SuperCategory", false);
+                    ProductsMenuController.display("SuperCategory", false, false);
                 }
             }
         }
