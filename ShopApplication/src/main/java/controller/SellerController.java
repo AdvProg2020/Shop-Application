@@ -357,6 +357,14 @@ public class SellerController {
         return saleInfos;
     }
 
+    public ArrayList<String[]> viewActiveAuctions() {
+        ArrayList<String[]> auctionInfos = new ArrayList<>();
+        for (Auction auction : ((Seller) currentAccount()).getActiveAuctions()) {
+            auctionInfos.add(Utilities.Pack.auctionInfo(auction));
+        }
+        return auctionInfos;
+    }
+
     public ArrayList<String[]> viewArchiveSales() {
         return ((Seller) currentAccount()).getSaleArchive().stream().map(Utilities.Pack::saleInfo).collect(Collectors.toCollection(ArrayList::new));
     }
