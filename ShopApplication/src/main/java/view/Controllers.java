@@ -1547,6 +1547,9 @@ public class Controllers {
     public static class SellableBoxController {
 
         @FXML
+        public Label auction;
+
+        @FXML
         private Label sale;
 
         @FXML
@@ -1622,37 +1625,60 @@ public class Controllers {
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
             subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
             image.setImage(new Image("file:" + (subProductInfo[6].startsWith("/src") ? Constants.base : "")  + subProductInfo[6]));
-            if (subProductInfo[7].equals(subProductInfo[8])) {
-                priceBefore.setVisible(false);
-                priceAfter.setText(subProductInfo[7] + "$");
-            } else {
-                priceBefore.setText(subProductInfo[7] + "$");
-                priceAfter.setText(subProductInfo[8] + "$");
-                priceBefore.setVisible(true);
-            }
-            if (subProductInfo[11] != null) {
-                sale.setText(subProductInfo[11] + "%");
-            } else
-                sale.setVisible(false);
-            if (subProductInfo[10] != null) {
-                try {
-                    Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
-                    LocalDate now = LocalDate.now();
-                    ZoneId defaultZoneId = ZoneId.systemDefault();
-                    Instant instant = endDate.toInstant();
-                    LocalDate localDate = instant.atZone(defaultZoneId).toLocalDate();
-                    Period period = Period.between(now, localDate);
-                    int daysLeft = period.getDays();
-                    remainingTime.setText(daysLeft + " days");
-                } catch (ParseException e) {
-                    e.printStackTrace();
+            if( subProductInfo[16] != null){
+                auctionMode(subProductInfo);
+            }else {
+                if (subProductInfo[7].equals(subProductInfo[8])) {
+                    priceBefore.setVisible(false);
+                    priceAfter.setText(subProductInfo[7] + "$");
+                } else {
+                    priceBefore.setText(subProductInfo[7] + "$");
+                    priceAfter.setText(subProductInfo[8] + "$");
+                    priceBefore.setVisible(true);
                 }
-            } else {
-                remainingDateBox.setVisible(false);
+                if (subProductInfo[11] != null) {
+                    sale.setText(subProductInfo[11] + "%");
+                } else
+                    sale.setVisible(false);
+                if (subProductInfo[10] != null) {
+                    try {
+                        Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
+                        LocalDate now = LocalDate.now();
+                        ZoneId defaultZoneId = ZoneId.systemDefault();
+                        Instant instant = endDate.toInstant();
+                        LocalDate localDate = instant.atZone(defaultZoneId).toLocalDate();
+                        Period period = Period.between(now, localDate);
+                        int daysLeft = period.getDays();
+                        remainingTime.setText(daysLeft + " days");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    remainingDateBox.setVisible(false);
+                }
             }
             available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
             rating.setText(subProductInfo[5]);
             initRatingStars(Double.parseDouble(subProductInfo[4]));
+        }
+
+        private void auctionMode(String[] subProductInfo){
+            sale.setVisible(false);
+            auction.setVisible(true);
+            priceAfter.setText(subProductInfo[16]);
+            priceBefore.setVisible(false);
+            try {
+                Date endDate = Constants.dateFormat.parse(subProductInfo[10]);
+                LocalDate now = LocalDate.now();
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                Instant instant = endDate.toInstant();
+                LocalDate localDate = instant.atZone(defaultZoneId).toLocalDate();
+                Period period = Period.between(now, localDate);
+                int daysLeft = period.getDays();
+                remainingTime.setText(daysLeft + " days");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         private void setAction(Parent p, String productToCompare) {
