@@ -513,6 +513,8 @@ public class Controllers {
                         case "AddSaleRequest":
                             AddSaleRequestPopupController.display(id);
                             break;
+                        case "AddAuctionRequest":
+
                     }
                 });
 
@@ -797,18 +799,6 @@ public class Controllers {
             }
         }
     }
-
-    /**
-     * public static String[] productEditableFields() {
-     * String[] editableFields = new String[5];
-     * editableFields[0] = "name";
-     * editableFields[1] = "brand";
-     * editableFields[2] = "info text";
-     * editableFields[3] = "price";
-     * editableFields[4] = "count";
-     * return editableFields;
-     * }
-     */
 
     public static class EditRequestPopupController {
         @FXML
@@ -1114,6 +1104,112 @@ public class Controllers {
             balance.setText(secondaryDetails[5]);
             storeName.setText(secondaryDetails[6]);
             imageField.setText(secondaryDetails[7]);
+        }
+    }
+
+    public static class AddFileRequestPopupController {
+        @FXML
+        private TextField nameField;
+        @FXML
+        private TextField extensionField;
+        @FXML
+        private TextField categoryField;
+        @FXML
+        private TextField imageField;
+        @FXML
+        private TextArea infoArea;
+        @FXML
+        private TextField priceField;
+        @FXML
+        private TextField pathField;
+        @FXML
+        private TableView<PropertyWrapper> properties;
+        @FXML
+        private TableColumn<PropertyWrapper, String> propertyCOL;
+        @FXML
+        private TableColumn<PropertyWrapper, String> valueCOL;
+
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public class PropertyWrapper {
+            String property;
+            String value;
+
+            public PropertyWrapper(String property, String value) {
+                this.property = property;
+                this.value = value;
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public String getValue() {
+                return value;
+            }
+        }
+
+        public static void display(String requestId) {
+            ((AddFileRequestPopupController) View.popupWindow("Add file request details.", Constants.FXMLs.addFileRequestPopup, 860, 480)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+            try {
+                var detailsOfRequest = adminController.detailsOfRequest(requestId);
+                primaryDetails = detailsOfRequest.get(0);
+                secondaryDetails = detailsOfRequest.get(1);
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            nameField.setDisable(true);
+            extensionField.setDisable(true);
+            categoryField.setDisable(true);
+            imageField.setDisable(true);
+            infoArea.setDisable(true);
+            pathField.setDisable(true);
+            priceField.setDisable(true);
+            pathField.setDisable(true);
+
+            initValues();
+            initTable();
+        }
+
+        private void initValues() {
+
+        }
+
+        private void initTable() {
+
+        }
+    }
+
+    public static class AddAuctionRequestPopupController {
+        @FXML
+        private Label errorLBL;
+        @FXML
+        private Label idKeyLBL;
+        @FXML
+        private Label sellerLBL;
+        @FXML
+        private TextField startDate;
+        @FXML
+        private TextField endDate;
+        @FXML
+        private Label subsellableLBL;
+
+        String[] primaryDetails;
+        String[] secondaryDetails;
+
+        public static void display(String requestId) {
+            ((AddAuctionRequestPopupController)
+                    View.popupWindow("Add Auction request details", Constants.FXMLs.addAuctionRequestPopup, 450, 450)).initialize(requestId);
+        }
+
+        private void initialize(String requestId) {
+
         }
     }
 
@@ -3316,6 +3412,12 @@ public class Controllers {
                         case "EditSaleRequest":
                             EditRequestPopupController.display(id);
                             break;
+                        case "AddFileRequest":
+                            AddFileRequestPopupController.display(id);
+                            break;
+                        case "AddAuctionRequest":
+                            AddAuctionRequestPopupController.display(id);
+                            break;
                     }
                 });
 
@@ -3920,7 +4022,7 @@ public class Controllers {
     public static class SellerProductManagingMenuController implements Initializable {
 
         public static void display() {
-            View.setMainPane(Constants.FXMLs.sellerProductManagingMenu);
+            View.setMainPane(Constants.FXMLs.sellerSellableManagingMenu);
         }
 
         @Override
@@ -4782,6 +4884,7 @@ public class Controllers {
         public ArrayList<AccountWrapper> allAdmins;
         public ArrayList<AccountWrapper> allCustomers;
         public ArrayList<AccountWrapper> allSellers;
+        public ArrayList<AccountWrapper> allSupporters;
 
         public class AccountWrapper {
             String id, username, firstName, lastName, phone, email, fullName;
@@ -4934,6 +5037,31 @@ public class Controllers {
         @FXML
         private TableColumn<AccountWrapper, Button> customerRemoveCOL;
 
+        @FXML
+        private TableView<AccountWrapper> supporters;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> supporterIdCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> supporterUsernameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> supporterFullNameCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, String> supporterPhoneCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> supporterDetailsCOL;
+
+        @FXML
+        private TableColumn<AccountWrapper, Button> supporterRemoveCOL;
+
+        @FXML
+        private Button registerSupporterBTN;
+
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminAccountManagingMenu);
         }
@@ -4942,6 +5070,15 @@ public class Controllers {
             try {
                 String[] info = adminController.viewUsername(username);
                 admins.getItems().add(new AccountWrapper(info[2], username, info[3], info[4], info[6], info[5], Constants.adminUserType, admins));
+            } catch (Exceptions.UsernameDoesntExistException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void addSupporter(String username) {
+            try {
+                String[] info = adminController.viewUsername(username);
+                supporters.getItems().add(new AccountWrapper(info[2], username, info[3], info[4], info[6], info[5], Constants.supporterUserType, supporters));
             } catch (Exceptions.UsernameDoesntExistException e) {
                 e.printStackTrace();
             }
@@ -4956,27 +5093,34 @@ public class Controllers {
 
         private void initActions() {
             registerAdminBTN.setOnAction(e -> AdminRegistrationPopupController.display());
+            registerSupporterBTN.setOnAction(e -> SupporterRegistrationPopupController.display());
         }
 
         private void initTable() {
             adminIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
             sellerIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
             customerIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
+            supporterIdCOL.setCellValueFactory(new PropertyValueFactory<>("id"));
             adminUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
             sellerUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
             customerUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+            supporterUsernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
             adminFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
             sellerFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
             customerFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+            supporterFullNameCOL.setCellValueFactory(new PropertyValueFactory<>("fullName"));
             adminPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
             sellerPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
             customerPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            supporterPhoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
             adminDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
             sellerDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
             customerDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            supporterDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
             adminRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
             sellerRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
             customerRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            supporterRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
 
             initItems();
         }
@@ -4986,20 +5130,24 @@ public class Controllers {
             allSellers = new ArrayList<>();
             allCustomers = new ArrayList<>();
             allAdmins = new ArrayList<>();
+            allSupporters = new ArrayList<>();
 
             for (String[] strings : all) {
                 if (strings[6].equals("Seller")) {
                     allSellers.add(new AccountWrapper(strings, sellers));
                 } else if (strings[6].equals("Customer")) {
                     allCustomers.add(new AccountWrapper(strings, customers));
-                } else {
+                } else if (strings[6].equals("Admin")) {
                     allAdmins.add(new AccountWrapper(strings, admins));
+                } else {
+                    allSupporters.add(new AccountWrapper(strings, supporters));
                 }
             }
 
-            admins.getItems().addAll(allAdmins);
-            sellers.getItems().addAll(allSellers);
-            customers.getItems().addAll(allCustomers);
+            admins.getItems    ().addAll(allAdmins);
+            sellers.getItems   ().addAll(allSellers);
+            customers.getItems ().addAll(allCustomers);
+            supporters.getItems().addAll(allSupporters);
         }
     }
 
@@ -6348,13 +6496,15 @@ public class Controllers {
         @FXML
         private Button searchBTN;
         @FXML
-        private Button accountBTN;
+        private Button manageBTN;
         @FXML
-        private Button loginBTN;
+        private Button chatBTN;
         @FXML
         private Button cartBTN;
         @FXML
-        private Button manageBTN;
+        private Button loginBTN;
+        @FXML
+        private Button accountBTN;
 
         public static Parent getMainPane() {
             return currentBase.mainPane;
@@ -6394,6 +6544,7 @@ public class Controllers {
             );
             accountBTN.visibleProperty().bind(loginBTN.visibleProperty().not());
             backBTN.visibleProperty().bind(View.getStackSizeProperty().greaterThan(1));
+            chatBTN.visibleProperty().bind(View.type.isEqualTo(Constants.supporterUserType));
         }
 
         private void initActions() {
@@ -6479,7 +6630,7 @@ public class Controllers {
         private Button existingProductBTN;
 
         public static void display() {
-            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addProductPage1, 600, 450);
+            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addSellablePopup_Page1, 600, 450);
         }
 
         @Override
@@ -7000,8 +7151,171 @@ public class Controllers {
             } catch (Exceptions.InvalidProductIdException e) {
                 e.printStackTrace();
             }
+        }
+    }
 
+    public static class SupporterChatMenuController {
+        //TODO;
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.supporterChatMenu);
+        }
+    }
+
+    public static class SellerAuctionMangingMenuController {
+        public static void display() {
+            View.setMainPane(Constants.FXMLs.sellerAuctionMangingMenu);
+        }
+    }
+
+    public static class SellerAuctionMangingPopupController {
+        public static void display() {
+            View.popupWindow( "seller auction managing popup", Constants.FXMLs.sellerAuctionMangingPopup, 600, 500);
+        }
+    }
+
+    public static class SupporterRegistrationPopupController implements Initializable{
+        @FXML
+        private TextField supporterUsername;
+        @FXML
+        private Label supporterUsernameError;
+        @FXML
+        private PasswordField supporterPassword;
+        @FXML
+        private TextField supporterShowPasswordField;
+        @FXML
+        private ToggleButton supporterShowPasswordBTN;
+        @FXML
+        private Label supporterPasswordError;
+        @FXML
+        private TextField supporterImageField;
+        @FXML
+        private Button supporterBrowseBTN;
+        @FXML
+        private Label supporterImageError;
+        @FXML
+        private TextField supporterFirstName;
+        @FXML
+        private Label supporterFirstNameError;
+        @FXML
+        private TextField supporterLastName;
+        @FXML
+        private Label supporterLastNameError;
+        @FXML
+        private TextField supporterPhoneNumber;
+        @FXML
+        private Label supporterPhoneNumberError;
+        @FXML
+        private TextField supporterEmail;
+        @FXML
+        private Label supporterEmailError;
+        @FXML
+        private Button supporterRegister;
+
+        public static void display() {
+            View.popupWindow("Supporter registration popup", Constants.FXMLs.supporterRegistrationPopup, 1000, 700);
         }
 
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            supporterImageField.setEditable(false);
+            initBindings();
+            initActions();
+            initLBLs();
+            initVisibilities();
+            initListeners();
+        }
+
+        private void initBindings() {
+            supporterShowPasswordField.textProperty().bindBidirectional(supporterPassword.textProperty());
+            supporterShowPasswordField.visibleProperty().bind(supporterPassword.visibleProperty().not());
+            supporterPassword.visibleProperty().bind(supporterShowPasswordBTN.selectedProperty().not());
+        }
+
+
+        private void initActions() {
+            supporterBrowseBTN.setOnAction(e -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg"));
+                File chosenFile = fileChooser.showOpenDialog(new Stage());
+                if (chosenFile != null) {
+                    supporterImageField.setText(chosenFile.getPath());
+                }
+            });
+
+            supporterRegister.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        adminController.createSupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
+                                supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), supporterImageField.getText());
+                        supporterUsername.getScene().getWindow().hide();
+                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                        supporterUsernameError.setText("Sorry! this username is already taken.");
+                        supporterUsernameError.setVisible(true);
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        private boolean validateFields() {
+            boolean valid = true;
+            if (supporterUsername.getText().equals("")) {
+                supporterUsernameError.setText("You can only use alphabet, digits and \"_\"");
+                supporterUsernameError.setVisible(true);
+                valid = false;
+            } else supporterUsernameError.setVisible(false);
+
+            if (supporterPassword.getText().equals("")) {
+                supporterPasswordError.setVisible(true);
+                valid = false;
+            } else supporterPasswordError.setVisible(false);
+
+            if (!supporterFirstName.getText().matches(Constants.IRLNamePattern)) {
+                supporterFirstNameError.setVisible(true);
+                valid = false;
+            } else supporterFirstNameError.setVisible(false);
+
+            if (!supporterLastName.getText().matches(Constants.IRLNamePattern)) {
+                supporterLastNameError.setVisible(true);
+                valid = false;
+            } else supporterLastNameError.setVisible(false);
+
+            if (supporterPhoneNumber.getText().equals("")) {
+                supporterPhoneNumberError.setVisible(true);
+                valid = false;
+            } else supporterPhoneNumberError.setVisible(false);
+
+            if (!supporterEmail.getText().matches(Constants.emailPattern)) {
+                supporterEmailError.setVisible(true);
+                valid = false;
+            } else supporterEmailError.setVisible(false);
+
+            return valid;
+        }
+
+        private void initLBLs() {
+            supporterPasswordError.setText("You can only use alphabet, digits and \"_\"");
+            supporterFirstNameError.setText("Invalid first name!");
+            supporterLastNameError.setText("Invalid last name");
+            supporterPhoneNumberError.setText("Enter a phone number!");
+            supporterEmailError.setText("Invalid email address!");
+        }
+
+        private void initVisibilities() {
+            supporterUsernameError.setVisible(false);
+            supporterPasswordError.setVisible(false);
+            supporterFirstNameError.setVisible(false);
+            supporterLastNameError.setVisible(false);
+            supporterPhoneNumberError.setVisible(false);
+            supporterEmailError.setVisible(false);
+            supporterImageError.setVisible(false);
+        }
+
+        private void initListeners() {
+            View.addListener(supporterUsername, "\\w");
+            View.addListener(supporterPassword, "\\w");
+            View.addListener(supporterPhoneNumber, "[0-9]");
+        }
     }
 }

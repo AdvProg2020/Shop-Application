@@ -20,6 +20,7 @@ public final class Constants {
     public static final String adminUserType = "Admin";
     public static final String customerUserType = "Customer";
     public static final String sellerUserType = "Seller";
+    public static final String supporterUserType = "Supporter";
     public static final String SUPER_CATEGORY_NAME = "SuperCategory";
     public static final String REQUEST_ACCEPT = "ACCEPTED";
     public static final String REQUEST_DECLINE = "DECLINED";
@@ -58,20 +59,24 @@ public final class Constants {
         public static final String purchaseMenu = "PurchaseMenu";
         public static final String productBox = "ProductBox";
         public static final String sellerManagingMenu = "SellerManagingMenu";
-        public static final String sellerProductManagingMenu = "SellerProductManagingMenu";
+        public static final String sellerSellableManagingMenu = "SellerSellableManagingMenu";
         public static final String sellerSaleManagingMenu = "SellerSaleManagingMenu";
         public static final String sellerSaleManagingPopup = "SellerSaleManagingPopup";
         public static final String sellerSellLogsManagingMenu = "SellerSellLogsManagingMenu";
         public static final String sellerSellLogDetailsPopup = "SellerSellLogDetailsPopup";
+        public static final String sellerAuctionMangingMenu = "SellerAuctionMangingMenu";
+        public static final String sellerAuctionMangingPopup = "SellerAuctionMangingPopup";
         public static final String customerBuyLogMenu = "CustomerBuyLogMenu";
         public static final String customerBuyLogDetailsPopup = "CustomerBuyLogDetailsPopup";
         public static final String productDetailMenu = "ProductDetailMenu";
         public static final String categoriesBox = "CategoriesBox";
         public static final String editPersonalInfoPopup = "EditPersonalInfoPopup";
         public static final String editProductPopup = "EditProductPopup";
-        public static final String addProductPage1 = "AddProductPopup_Page1";
+        public static final String addSellablePopup_Page1 = "AddSellablePopup_Page1";
         public static final String addProductPage2 = "AddProductPopup_Page2";
         public static final String addProductRequestPopup = "AddProductRequestPopup";
+        public static final String addAuctionRequestPopup = "AddAuctionRequestPopup";
+        public static final String addFileRequestPopup = "AddFileRequestPopup";
         public static final String addSaleRequestPopup = "AddSaleRequestPopup";
         public static final String addReviewRequestPopup = "AddReviewRequestPopup";
         public static final String addSellerRequestPopup = "AddSellerRequestPopup";
@@ -82,5 +87,7 @@ public final class Constants {
         public static final String purchaseConfirmation = "PurchaseConfirmation";
         public static final String addReviewPopup = "AddReviewPopup";
         public static final String compareMenu = "CompareMenu";
+        public static final String supporterChatMenu = "SupporterChatMenu";
+        public static final String supporterRegistrationPopup = "SupporterRegistrationPopup";
     }
 }
