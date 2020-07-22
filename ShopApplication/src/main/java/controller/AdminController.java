@@ -550,5 +550,12 @@ public class AdminController {
         }
     }
 
-
+    public String[] getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException{
+        SellLog sellLog = SellLog.getSellLogById(logId);
+        if( sellLog == null ){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            return Utilities.Pack.sellLog(sellLog);
+        }
+    }
 }
