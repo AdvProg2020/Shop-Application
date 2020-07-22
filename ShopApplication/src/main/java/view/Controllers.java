@@ -1322,15 +1322,17 @@ public class Controllers {
         private boolean toCompare;
         //products menu mode:
         private boolean inSale = false;
+        private boolean inAuction = false;
 
         //comparison mode:
         private String productIdToCompareWith;
 
-        public static void display(String categoryName, boolean inSale) {
+        public static void display(String categoryName, boolean inSale, boolean inAuction) {
             ProductsMenuController controller = View.setMainPane(Constants.FXMLs.productsMenu);
             if (controller != null) {
                 controller.categoryName = categoryName;
                 controller.inSale = inSale;
+                controller.inAuction = inAuction;
 
                 controller.initPageObjects();
                 controller.setValuesOfPageObjects();
@@ -1464,8 +1466,8 @@ public class Controllers {
             for (String s : properties.keySet()) {
                 propertyValues.put(s, properties.get(s).getValue());
             }
-            products = mainController.sortFilterProducts(categoryName, inSale, sortByChoiceBox.getValue(),  isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
-                    minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), filterSeller.getValue(), 0, propertyValues);
+            products = mainController.sortFilterProducts(categoryName, inSale, inAuction, sortByChoiceBox.getValue(),  isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
+                    minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), "", filterSeller.getValue(), 0, propertyValues);
         }
 
         private void updatePane() {
