@@ -1657,7 +1657,10 @@ public class Controllers {
                     remainingDateBox.setVisible(false);
                 }
             }
-            available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
+            if(subProductInfo[9].equals("-")){
+                available.setVisible(false);
+            }else
+                available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
             rating.setText(subProductInfo[5]);
             initRatingStars(Double.parseDouble(subProductInfo[4]));
         }
