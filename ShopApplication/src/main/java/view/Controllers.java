@@ -1230,6 +1230,12 @@ public class Controllers {
         @FXML
         private Button productsMenu;
 
+        @FXML
+        private Button allAuctions;
+
+        @FXML
+        private HBox productsInAuction;
+
         private static void display() {
             View.getStackTrace().clear();
             View.stackSize.set(0);
@@ -1248,8 +1254,13 @@ public class Controllers {
                 productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false));
             }
 
+            for (String[] subProduct : mainController.getSubSellablesInAuction(10)) {
+                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false));
+            }
+
             allSales.setOnAction(e -> salesMenu());
             productsMenu.setOnAction(e -> productsMenu());
+            allAuctions.setOnAction(e -> auctionMenu());
 
             initCategoriesBox();
         }

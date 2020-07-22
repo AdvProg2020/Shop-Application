@@ -81,7 +81,7 @@
                                     <ScrollPane hbarPolicy="ALWAYS" minHeight="370.0" styleClass="hScroll-pane"
                                                 vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
                                         <content>
-                                            <HBox fx:id="productsInSale1" alignment="CENTER" spacing="20.0"/>
+                                            <HBox fx:id="productsInAuction" alignment="CENTER" spacing="20.0"/>
                                         </content>
                                     </ScrollPane>
                                 </children>
