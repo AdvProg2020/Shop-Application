@@ -310,7 +310,7 @@ public class AdminController {
                     detailsOfRequest.add(Utilities.Pack.addFileRequest(((AddFileRequest) request).getSubFile(), ((AddFileRequest)request).getFile()));
                     break;
                 case "AddAuctionRequest":
-                    detailsOfRequest.add(Utilities.Pack.addAuctionRequest((AddAuctionRequest) request));
+                    detailsOfRequest.add(Utilities.Pack.addAuctionRequest(((AddAuctionRequest) request).getAuction()));
                     break;
                 case "EditFileRequest":
                     detailsOfRequest.add(Utilities.Pack.subFile(((EditFileRequest) request).getSubFile()));
@@ -444,6 +444,15 @@ public class AdminController {
             throw new Exceptions.InvalidRequestIdException(requestId);
         }else {
             return new HashMap<>(((AddProductRequest)request).getProduct().getPropertyValues());
+        }
+    }
+
+    public HashMap<String, String> getPropertyValuesOfAFileInRequest(String requestId) throws Exceptions.InvalidRequestIdException {
+        Request request = Request.getRequestById(requestId, false);
+        if (request == null || ! request.getClass().getSimpleName().equals("AddFileRequest")) {
+            throw new Exceptions.InvalidRequestIdException(requestId);
+        } else {
+            return new HashMap<>(((AddFileRequest) request).getFile().getPropertyValues());
         }
     }
 

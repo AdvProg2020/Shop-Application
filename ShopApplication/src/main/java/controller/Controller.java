@@ -10,10 +10,7 @@ import model.chat.AuctionChat;
 import model.chat.Chat;
 import model.chat.Message;
 import model.database.Database;
-import model.sellable.Product;
-import model.sellable.Sellable;
-import model.sellable.SubProduct;
-import model.sellable.SubSellable;
+import model.sellable.*;
 
 import java.util.*;
 
@@ -255,6 +252,14 @@ public class Controller {
             throw new Exceptions.InvalidProductIdException(productId);
         else {
             return new HashMap<>(product.getPropertyValues());
+        }
+    }
+
+    public HashMap<String, String> getPropertyValuesOfAFile(String fileId) throws Exceptions.InvalidFileIdException {
+        File file = File.getFileById(fileId);
+        if (file == null) throw new Exceptions.InvalidFileIdException(fileId);
+        else {
+            return new HashMap<>(file.getPropertyValues());
         }
     }
 

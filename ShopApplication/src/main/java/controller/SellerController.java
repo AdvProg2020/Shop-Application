@@ -74,13 +74,28 @@ public class SellerController {
         else return p.getId();
     }
 
+    public String isFileWithNameAndExtension(String name, String extension) {
+        File f = File.getFileByNameAndExtension(name, extension);
+        if (f == null) return null;
+        else return f.getId();
+    }
+
     public boolean isNameAndBrandUsed(String name, String brand){
         return Product.isProductNameAndBrandUsed(name, brand);
+    }
+
+    public boolean isNameAndExtensionUsed(String name, String extension) {
+        return File.isFileNameAndExtensionUsed(name, extension);
     }
 
     public boolean doesSellerSellThisProduct(String productId){
         Product product = Product.getProductById(productId);
         return product.isSoldInStoreWithName(((Seller)currentAccount()).getStoreName());
+    }
+
+    public boolean doesSellerSellThisFile(String fileId) {
+        File file = File.getFileById(fileId);
+        return file.isSoldInStoreWithName(((Seller) currentAccount()).getStoreName());
     }
 
     public ArrayList<String[]> getAllSellLogs() {
