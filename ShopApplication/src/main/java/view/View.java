@@ -1,9 +1,6 @@
 package view;
 
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import controller.SellerController;
+import controller.*;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,6 +31,7 @@ public class View extends Application {
     public static CustomerController customerController = new CustomerController(mainController);
     public static AdminController adminController = new AdminController(mainController);
     public static SellerController sellerController = new SellerController(mainController);
+    public static SupporterController supporterController = new SupporterController(mainController);
     public static SimpleIntegerProperty stackSize = new SimpleIntegerProperty(0);
     public static SimpleStringProperty type = new SimpleStringProperty(Constants.anonymousUserType);
     public static SimpleBooleanProperty isManager = new SimpleBooleanProperty(false);

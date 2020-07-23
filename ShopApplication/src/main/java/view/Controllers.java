@@ -40,12 +40,14 @@ public class Controllers {
     private static AdminController adminController;
     private static SellerController sellerController;
     private static CustomerController customerController;
+    private static SupporterController supporterController;
 
     public static void init() {
         mainController = View.mainController;
         adminController = View.adminController;
         sellerController = View.sellerController;
         customerController = View.customerController;
+        supporterController = View.supporterController;
     }
 
 
@@ -7823,10 +7825,67 @@ public class Controllers {
         }
     }
 
-    public static class SupporterChatMenuController {
-        //TODO;
+    public static class SupporterChatMenuController implements Initializable{
+        @FXML
+        private AnchorPane chatPane;
+        @FXML
+        private TableView<ChatWrapper> activeChats;
+        @FXML
+        private TableColumn<ChatWrapper, Hyperlink> activeCustomers;
+        @FXML
+        private TableColumn<ChatWrapper, Button> activeRemove;
+        @FXML
+        private TableView<ChatWrapper> archiveChats;
+        @FXML
+        private TableColumn<ChatWrapper, Hyperlink> archiveCustomers;
+
+        private String currentChat;
+
+        public class ChatWrapper {
+            String chatId;
+            Hyperlink customer = new Hyperlink();
+            Button remove = new Button();
+
+            public ChatWrapper(String[] pack) {
+
+            }
+
+            public ChatWrapper(String chatId, String username) {
+                this.chatId = chatId;
+                this.customer.setText(username);
+                this.remove.getStyleClass().add("remove-button");
+                customer.setOnAction(e -> {
+                    if (currentChat != null &&  !customer.getText().equals(currentChat)) {
+                        currentChat = customer.getText();
+                        chatPane.getChildren().add(ChatPageController.getChatPage(chatId));
+                    }
+                });
+
+                remove.setOnAction(e -> {
+                    supporterController
+                });
+            }
+
+            public String getChatId() {
+                return chatId;
+            }
+
+            public Hyperlink getCustomer() {
+                return customer;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+        }
+
         public static void display() {
             View.setMainPane(Constants.FXMLs.supporterChatMenu);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+
         }
     }
 
@@ -8329,6 +8388,13 @@ public class Controllers {
             }
         }
 
+
+    }
+
+    public static class AuctionPopupController {
+        public static void display() {
+
+        }
         private void setInfo(String[] messagePack) {
             message.setText(messagePack[3]);
             date.setText(messagePack[2]);

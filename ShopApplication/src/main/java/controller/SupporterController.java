@@ -27,7 +27,7 @@ public class SupporterController {
         return mainController.getDatabase();
     }
 
-    private ArrayList<String[]> getChatsOfSupporter() throws Exceptions.UnAuthorizedAccountException {
+    public ArrayList<String[]> getChatsOfSupporter() throws Exceptions.UnAuthorizedAccountException {
         ArrayList<String[]> chatPacks = new ArrayList<>();
         if(currentAccount().getClass().getSimpleName().equals("Supporter")){
             for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
@@ -41,7 +41,7 @@ public class SupporterController {
 
 
     //
-    private ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
+    public ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -55,7 +55,7 @@ public class SupporterController {
         }
     }
 
-    private void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
+    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -64,7 +64,7 @@ public class SupporterController {
         }
     }
 
-    private void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
+    public void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
