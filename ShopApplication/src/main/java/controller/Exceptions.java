@@ -243,4 +243,16 @@ public class Exceptions {
             super("There is no auction with id: "+ auctionId);
         }
     }
+
+    public static class AlreadyInAChatException extends Exception{
+        public AlreadyInAChatException(String chatId){
+            super("You are currently in chat with ID: " + chatId);
+        }
+    }
+
+    public static class InvalidSupporterIdException extends Exception{
+        public InvalidSupporterIdException(String supporterId){
+            super("There is no supporter with id: " + supporterId);
+        }
+    }
 }

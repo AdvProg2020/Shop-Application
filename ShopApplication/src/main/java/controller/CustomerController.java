@@ -8,7 +8,9 @@ import model.Rating;
 import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
+import model.account.Supporter;
 import model.chat.AuctionChat;
+import model.chat.Chat;
 import model.chat.Message;
 import model.chat.SupportChat;
 import model.database.Database;
@@ -237,7 +239,8 @@ public class CustomerController {
         }
     }
 
-    private String getSupportChatId() throws Exceptions.DontHaveChatException {
+
+    public String getSupportChatId() throws Exceptions.DontHaveChatException {
         SupportChat chat = ((Customer) currentAccount()).getSupportChat();
         if( chat == null ){
             throw new Exceptions.DontHaveChatException();
@@ -246,7 +249,21 @@ public class CustomerController {
         }
     }
 
-    private void sendMessageInSupportChat(String chatId, String text) throws Exceptions.InvalidChatIdException {
+    public String createSupportChat(String supporterId) throws Exceptions.AlreadyInAChatException, Exceptions.InvalidSupporterIdException {
+        Chat chat = ((Customer)currentAccount()).getSupportChat();
+        if( ((Customer)currentAccount()).getSupportChat() != null){
+            throw new Exceptions.AlreadyInAChatException(chat.getId());
+        }else {
+            if(Supporter.getSupporterById(supporterId) == null){
+                throw new Exceptions.InvalidSupporterIdException( supporterId );
+            }else {
+                chat = new SupportChat(supporterId, currentAccount().getId());
+                return chat.getId();
+            }
+        }
+    }
+
+    public void sendMessageInSupportChat(String chatId, String text) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getCustomer() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -255,7 +272,7 @@ public class CustomerController {
         }
     }
 
-    private void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
+    public void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getCustomer() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -264,7 +281,7 @@ public class CustomerController {
         }
     }
 
-    private String[] viewAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
+    public String[] viewAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
         if( auction == null ){
             throw new Exceptions.InvalidAuctionIdException(auctionId);
@@ -273,7 +290,7 @@ public class CustomerController {
         }
     }
 
-    private ArrayList<String[]> viewSupportChat(String auctionId) throws Exceptions.InvalidAuctionIdException {
+    public ArrayList<String[]> viewAuctionChat(String auctionId) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
         if( auction == null ){
             throw new Exceptions.InvalidAuctionIdException(auctionId);
@@ -288,7 +305,7 @@ public class CustomerController {
         }
     }
 
-    private void sendMessageInAuctionChat(String auctionId, String text) throws Exceptions.InvalidAuctionIdException {
+    public void sendMessageInAuctionChat(String auctionId, String text) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
         if( auction == null ){
             throw new Exceptions.InvalidAuctionIdException(auctionId);
@@ -297,8 +314,7 @@ public class CustomerController {
         }
     }
 
-
-    private void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
+    public void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
         if(auction == null){
             throw new Exceptions.InvalidAuctionIdException(auctionId);
@@ -306,6 +322,4 @@ public class CustomerController {
             auction.bid(currentAccount().getId(), bidAmount);
         }
     }
-
-
 }
