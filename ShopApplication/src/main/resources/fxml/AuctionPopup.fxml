@@ -14,7 +14,7 @@
     <left>
         <VBox BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                <Insets bottom="40.0" left="20.0" right="20.0" top="40.0"/>
             </padding>
             <children>
                 <VBox alignment="CENTER" spacing="10.0">
@@ -25,16 +25,18 @@
                     </children>
                 </VBox>
                 <Region VBox.vgrow="ALWAYS"/>
-                <HBox>
+                <HBox spacing="10.0">
                     <children>
+                        <Button id="refresh-button" fx:id="refreshBTN" layoutX="169.0" layoutY="10.0"
+                                mnemonicParsing="false" text="Refresh"/>
                         <TextField fx:id="bidField" promptText="make a higher bid..."/>
-                        <Button fx:id="bidBTN" mnemonicParsing="false" text="Bid"/>
+                        <Button id="bid-button" fx:id="bidBTN" mnemonicParsing="false" text="Bid"/>
                     </children>
                 </HBox>
             </children>
         </VBox>
     </left>
     <center>
-        <AnchorPane fx:id="chatPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+        <AnchorPane fx:id="chatPane" BorderPane.alignment="CENTER"/>
     </center>
 </BorderPane>
