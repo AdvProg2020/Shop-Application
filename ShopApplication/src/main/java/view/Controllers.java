@@ -697,7 +697,7 @@ public class Controllers {
 
             info[7] = info[7].replaceAll("\\\\", "/");
 
-            accountIMG.setImage(new Image("file:" + (info[7].startsWith("/src") ? Constants.base: "")  + info[7]));
+            accountIMG.setImage(new Image("file:" + (info[7].startsWith("/src") ? Constants.base : "") + info[7]));
         }
 
 
@@ -1311,7 +1311,7 @@ public class Controllers {
             ProductsMenuController.display("SuperCategory", false, false);
         }
 
-        private void auctionMenu(){
+        private void auctionMenu() {
             ProductsMenuController.display("SuperCategory", false, true);
         }
 
@@ -1392,9 +1392,9 @@ public class Controllers {
             }
         }
 
-        public static void displayACategoryProductsToCompare(String categoryName, String productId){
+        public static void displayACategoryProductsToCompare(String categoryName, String productId) {
             ProductsMenuController controller = View.popupWindow("Product choosing menu", Constants.FXMLs.productsMenu, 1200, 800);
-            if(controller != null){
+            if (controller != null) {
                 currentController = controller;
                 controller.numberOfColumns = 4;
                 controller.categoryName = categoryName;
@@ -1417,7 +1417,7 @@ public class Controllers {
         private void initPageObjects() {
             initActions();
             initPropertyFilters();
-            if( !toCompare ){
+            if (!toCompare) {
                 initCategoryBox();
                 initCategoryTree();
             }
@@ -1425,7 +1425,7 @@ public class Controllers {
             initBindings();
         }
 
-        private void initBindings(){
+        private void initBindings() {
             sortByChoiceBox.getSelectionModel().selectedItemProperty().addListener(((observableValue, s, t1) -> update()));
             isIncreasingButton.getToggleGroup().selectedToggleProperty().addListener((observableValue, toggle, t1) -> update());
             maxPriceSlider.setOnMouseReleased(e -> update());
@@ -1498,7 +1498,7 @@ public class Controllers {
         }
 
         private void setSliderBounds() {
-            if( products != null){
+            if (products != null) {
                 setMaxPrice();
                 maxPriceSlider.setMax(maximumAvailablePrice);
                 minPriceSlider.setMax(maximumAvailablePrice);
@@ -1520,7 +1520,7 @@ public class Controllers {
                 propertyValues.put(s, properties.get(s).getValue());
             }
             //TODO: fix the auction stuff
-            products = mainController.sortFilterProducts(categoryName, inSale, false, sortByChoiceBox.getValue(),  isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
+            products = mainController.sortFilterProducts(categoryName, inSale, false, sortByChoiceBox.getValue(), isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
                     minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), "", filterSeller.getValue(), 0, propertyValues);
         }
 
@@ -1660,6 +1660,7 @@ public class Controllers {
         private String categoryName;
         private boolean inSale;
         private boolean inAuction;
+
         public static Parent createBox(String[] subSellable, String sellableToCompare, String categoryName, boolean inSale, boolean inAuction) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
             Parent p;
@@ -1682,10 +1683,10 @@ public class Controllers {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
             subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
-            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("/src") ? Constants.base : "")  + subProductInfo[6]));
-            if( subProductInfo[16] != null){
+            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("/src") ? Constants.base : "") + subProductInfo[6]));
+            if (subProductInfo[16] != null) {
                 auctionMode(subProductInfo);
-            }else {
+            } else {
                 auction.setVisible(false);
                 if (subProductInfo[7].equals(subProductInfo[8])) {
                     priceBefore.setVisible(false);
@@ -1716,15 +1717,15 @@ public class Controllers {
                     remainingDateBox.setVisible(false);
                 }
             }
-            if(subProductInfo[9].equals("-")){
+            if (subProductInfo[9].equals("-")) {
                 available.setVisible(false);
-            }else
+            } else
                 available.setVisible(Integer.parseInt(subProductInfo[9]) == 0);
             rating.setText(subProductInfo[5]);
             initRatingStars(Double.parseDouble(subProductInfo[4]));
         }
 
-        private void auctionMode(String[] subProductInfo){
+        private void auctionMode(String[] subProductInfo) {
             sale.setVisible(false);
             auction.setVisible(true);
             priceAfter.setText(subProductInfo[16]);
@@ -1744,7 +1745,7 @@ public class Controllers {
         }
 
         private void setAction(Parent p, String productToCompare) {
-            if(productToCompare == null)
+            if (productToCompare == null)
                 p.setOnMouseClicked(e -> {
                     View.categoryName = categoryName;
                     View.inSale = inSale;
@@ -1916,7 +1917,7 @@ public class Controllers {
                 for (String s : propertyMap.keySet()) {
                     properties.getItems().add(new PropertyWrapper(s, propertyMap.get(s)));
                 }
-            }  catch (Exceptions.InvalidSellableIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
         }
@@ -2019,9 +2020,9 @@ public class Controllers {
                             if (brandFieldChanged.get())
                                 adminController.editBrandOfProduct(productId, productInfo[2] = brandField.getText());
                             if (imageFieldChanged.get())
-                                adminController.editImageOfProduct(productId,  productInfo[8] = imageField.getText());
+                                adminController.editImageOfProduct(productId, productInfo[8] = imageField.getText());
                             for (String properties : changed) {
-                                adminController.editPropertyOfProduct(productId,  properties);
+                                adminController.editPropertyOfProduct(productId, properties);
                             }
                         }
                         discardBTN.getScene().getWindow().hide();
@@ -2334,7 +2335,7 @@ public class Controllers {
         }
 
         private void initialize(String sellableId, String subSellableId) {
-            if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
+            if (type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)) {
                 try {
                     mainController.showProduct(sellableId);
                 } catch (Exceptions.InvalidSellableIdException e) {
@@ -2402,12 +2403,12 @@ public class Controllers {
             categoryLBL.setText(sellablePack[7]);
 
             sellablePack[8] = sellablePack[8].replaceAll("\\\\", "/");
-            sellableIMG.setImage(new Image("file:" + (sellablePack[8].startsWith("/src") ? Constants.base: "")  + sellablePack[8]));
+            sellableIMG.setImage(new Image("file:" + (sellablePack[8].startsWith("/src") ? Constants.base : "") + sellablePack[8]));
 
             initRatingStars();
         }
 
-        private void initMainObjectsInFileMode(){
+        private void initMainObjectsInFileMode() {
 
         }
 
@@ -2492,7 +2493,7 @@ public class Controllers {
                 HBox categoryHBox = CategoryTreeBoxController.createBox();
                 if (categoryHBox != null) {
                     for (String s : mainController.getCategoryTreeOfAProduct(sellablePack[0])) {
-                        categoryHBox.getChildren().add(new Label(s ));
+                        categoryHBox.getChildren().add(new Label(s));
                     }
                     categoryHBox.getChildren().add(new Label(sellablePack[1]));
                     borderPane.setTop(categoryHBox);
@@ -4266,7 +4267,7 @@ public class Controllers {
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
         public class SubProductWrapper {
-            ImageView img= new ImageView();
+            ImageView img = new ImageView();
             String imagePath;
             String subProductId;
             String productId;
@@ -4319,7 +4320,7 @@ public class Controllers {
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
                 imagePath = imagePath.replaceAll("\\\\", "/");
-                img.setImage(new Image("file:" + (imagePath.startsWith("/src") ? Constants.base : "/")  + imagePath));
+                img.setImage(new Image("file:" + (imagePath.startsWith("/src") ? Constants.base : "/") + imagePath));
 
 
                 initButtons();
@@ -4346,8 +4347,8 @@ public class Controllers {
                 increaseBTN.setOnAction(e -> countProperty.set(countProperty.get() + 1));
                 decreaseBTN.setOnAction(e -> countProperty.set(countProperty.get() - 1));
 
-                countGroup.getChildren().addAll( decreaseBTN, countField,increaseBTN );
-                countGroup.setPadding(new Insets(5, 5 ,5 ,5));
+                countGroup.getChildren().addAll(decreaseBTN, countField, increaseBTN);
+                countGroup.setPadding(new Insets(5, 5, 5, 5));
                 countGroup.setAlignment(Pos.CENTER);
 
             }
@@ -4560,7 +4561,7 @@ public class Controllers {
     }
 
 
-    public static class PurchaseMenuController implements Initializable{
+    public static class PurchaseMenuController implements Initializable {
 
         @FXML
         private TextField receiverName;
@@ -4596,7 +4597,7 @@ public class Controllers {
         private Label addressError;
 
         public static void display() {
-             View.setMainPane(Constants.FXMLs.purchaseMenu);
+            View.setMainPane(Constants.FXMLs.purchaseMenu);
         }
 
         @Override
@@ -4800,7 +4801,7 @@ public class Controllers {
 
         public static void display(String logId) {
             ((CustomerBuyLogDetailsPopupController)
-                    View.popupWindow("Buy Log detail",Constants.FXMLs.customerBuyLogDetailsPopup, 910, 470)).init(logId);
+                    View.popupWindow("Buy Log detail", Constants.FXMLs.customerBuyLogDetailsPopup, 910, 470)).init(logId);
         }
 
         private void init(String logId) {
@@ -5256,7 +5257,7 @@ public class Controllers {
 
             discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
         }
-     }
+    }
 
     public static class AdminAccountManagingMenuController implements Initializable {
 
@@ -5524,9 +5525,9 @@ public class Controllers {
                 }
             }
 
-            admins.getItems    ().addAll(allAdmins);
-            sellers.getItems   ().addAll(allSellers);
-            customers.getItems ().addAll(allCustomers);
+            admins.getItems().addAll(allAdmins);
+            sellers.getItems().addAll(allSellers);
+            customers.getItems().addAll(allCustomers);
             supporters.getItems().addAll(allSupporters);
         }
     }
@@ -5600,7 +5601,7 @@ public class Controllers {
 
 
         public static void display() {
-             View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 1000, 700);
+            View.popupWindow("Admin registration window", Constants.FXMLs.adminRegistrationPopup, 1000, 700);
         }
 
 
@@ -5638,7 +5639,7 @@ public class Controllers {
                         boolean bootUp = !mainController.doesManagerExist();
                         adminController.createAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
                                 adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
-                        if ( ! bootUp) {
+                        if (!bootUp) {
                             AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
                         } else {
                             View.subStart(new Stage());
@@ -5806,7 +5807,7 @@ public class Controllers {
                 );
                 View.addListener(this.count, Constants.unsignedIntPattern);
                 this.count.textProperty().addListener((observable, oldValue, newValue) -> {
-                    if ( !newValue.equals("") && Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
+                    if (!newValue.equals("") && Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
                 });
                 this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
@@ -5830,7 +5831,7 @@ public class Controllers {
 
                 countGroup.getChildren().addAll(decreaseBTN, this.count, increaseBTN);
                 countGroup.setPadding(new Insets(5, 5, 5, 5));
-                if (! editable) {
+                if (!editable) {
                     increaseBTN.setVisible(false);
                     decreaseBTN.setVisible(false);
                 }
@@ -5923,10 +5924,10 @@ public class Controllers {
             codeField.setEditable(editable);
             percentageField.setEditable(editable);
 
-            startDate.setDisable( ! editable);
+            startDate.setDisable(!editable);
             startDate.setStyle("-fx-opacity: 1");
             startDate.getEditor().setStyle("-fx-opacity: 1");
-            endDate.setDisable( ! editable);
+            endDate.setDisable(!editable);
             endDate.setStyle("-fx-opacity: 1");
             endDate.getEditor().setStyle("-fx-opacity: 1");
         }
@@ -6023,7 +6024,7 @@ public class Controllers {
             countCOL.setCellValueFactory(new PropertyValueFactory<>("countGroup"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("hasCode"));
             usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
-            if (! editable) customersTable.getColumns().remove(removeCOL);
+            if (!editable) customersTable.getColumns().remove(removeCOL);
 
             initItems(discountId);
         }
@@ -6972,7 +6973,7 @@ public class Controllers {
         }
 
         private void search(String input) {
-            if ( ! input.equals("")) {
+            if (!input.equals("")) {
                 ArrayList<String[]> products = getCurrentProducts();
                 if (products != null) {
                     ProductsMenuController.display("SuperCategory", false, false);
@@ -7059,9 +7060,9 @@ public class Controllers {
                     String productId = sellerController.isProductWithNameAndBrand(productNameField.getText(), productBrandField.getText());
                     if (productId == null) {
                         printProductError("There is no such product!");
-                    } else if(sellerController.doesSellerSellThisProduct(productId)){
+                    } else if (sellerController.doesSellerSellThisProduct(productId)) {
                         printProductError("You already sell this product!");
-                    }else {
+                    } else {
                         AddProductPopupController_Page2.display(productNameField.getText(), productBrandField.getText(), productId);
                         productNameField.getScene().getWindow().hide();
                     }
@@ -7189,7 +7190,7 @@ public class Controllers {
                 } else {
                     this.value.setText(value);
                 }
-                this.value.setEditable(! exists);
+                this.value.setEditable(!exists);
             }
 
             public String getProperty() {
@@ -7339,7 +7340,7 @@ public class Controllers {
 
         private void updateProperties(String categoryName) {
             try {
-                if (! exists) {
+                if (!exists) {
                     properties.getItems().clear();
                     for (String category : mainController.getPropertiesOfCategory(categoryName, true)) {
                         properties.getItems().add(new PropertyWrapper(category, null));
@@ -7430,7 +7431,7 @@ public class Controllers {
                 } else {
                     this.value.setText(value);
                 }
-                this.value.setEditable(! exists);
+                this.value.setEditable(!exists);
             }
 
             public String getProperty() {
@@ -7584,7 +7585,7 @@ public class Controllers {
 
         private void updateProperties(String categoryName) {
             try {
-                if (! exists) {
+                if (!exists) {
                     properties.getItems().clear();
                     for (String category : mainController.getPropertiesOfCategory(categoryName, true)) {
                         properties.getItems().add(new PropertyWrapper(category, null));
@@ -7799,10 +7800,10 @@ public class Controllers {
             maxPrice2.setText(secondProductInfo[10]);
 
             firstProductInfo[8] = firstProductInfo[8].replaceAll("\\\\", "/");
-            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("/src") ? Constants.base : "")  + firstProductInfo[8]));
+            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("/src") ? Constants.base : "") + firstProductInfo[8]));
 
             secondProductInfo[8] = secondProductInfo[8].replaceAll("\\\\", "/");
-            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("/src") ? Constants.base : "")  + secondProductInfo[8]));
+            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("/src") ? Constants.base : "") + secondProductInfo[8]));
         }
 
         private void initProperties() {
@@ -7818,7 +7819,7 @@ public class Controllers {
                     secondWrapper.getStyleClass().add("value-label");
                     var propertyWrapper = new Label(property);
                     propertyWrapper.getStyleClass().add("property-label");
-                    productProperties.addRow(7 + index++,firstWrapper , propertyWrapper, secondWrapper);
+                    productProperties.addRow(7 + index++, firstWrapper, propertyWrapper, secondWrapper);
                 }
             } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
@@ -7858,7 +7859,7 @@ public class Controllers {
                 this.customer.setText(username);
                 this.remove.getStyleClass().add("remove-button");
                 customer.setOnAction(e -> {
-                    if (currentChat != null &&  !customer.getText().equals(currentChat)) {
+                    if (currentChat != null && !customer.getText().equals(currentChat)) {
                         currentChat = customer.getText();
                         chatPane.getChildren().add(ChatPageController.getChatPage(chatId));
                     }
@@ -7914,7 +7915,7 @@ public class Controllers {
         }
     }
 
-    public static class SellerAuctionMangingMenuController implements Initializable{
+    public static class SellerAuctionMangingMenuController implements Initializable {
         @FXML
         private TableView<AuctionWrapper> auctions;
         @FXML
@@ -7961,8 +7962,10 @@ public class Controllers {
                 this.endDate = endDate;
                 this.highestBid = highestBid;
 
-                detailsBTN = new Button(); removeBTN = new Button();
-                detailsBTN.getStyleClass().add("details-button"); removeBTN.getStyleClass().add("remove-button");
+                detailsBTN = new Button();
+                removeBTN = new Button();
+                detailsBTN.getStyleClass().add("details-button");
+                removeBTN.getStyleClass().add("remove-button");
 
                 removeBTN.setOnAction(e -> {
                     try {
@@ -8121,16 +8124,16 @@ public class Controllers {
                 }
             });
             addBTN.setOnAction(e -> {
-                 if (validateFields()) {
-                     try {
-                         sellerController.addAuction(startDate.getValue().toString(), endDate.getValue().toString(), nameToId.get(subSellable.getSelectionModel().getSelectedItem()));
-                         addBTN.getScene().getWindow().hide();
-                     } catch (Exceptions.InvalidFormatException ex) {
-                         ex.printStackTrace();
-                     } catch (Exceptions.InvalidDateException ex) {
-                         ex.printStackTrace();
-                     }
-                 }
+                if (validateFields()) {
+                    try {
+                        sellerController.addAuction(startDate.getValue().toString(), endDate.getValue().toString(), nameToId.get(subSellable.getSelectionModel().getSelectedItem()));
+                        addBTN.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidFormatException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidDateException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             });
             discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
         }
@@ -8153,7 +8156,7 @@ public class Controllers {
             highestBidKey.setVisible(exists);
             highestBidderKey.setVisible(exists);
             customerLBL.setVisible(exists);
-            addBTN.setVisible( ! editHB.isVisible());
+            addBTN.setVisible(!editHB.isVisible());
         }
 
         private void initBindings() {
@@ -8202,7 +8205,7 @@ public class Controllers {
         }
     }
 
-    public static class SupporterRegistrationPopupController implements Initializable{
+    public static class SupporterRegistrationPopupController implements Initializable {
         @FXML
         private TextField supporterUsername;
         @FXML
@@ -8369,16 +8372,14 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
+            }
         }
-
-
-    }
 
         private void updateMessages() {
             try {
                 messagePacks = mainController.getMessagesInChat(chatPageId);
                 int numberOfMessages = messagePacks.size();
-                for( int i = lastMessageNumber; i < numberOfMessages; i++){
+                for (int i = lastMessageNumber; i < numberOfMessages; i++) {
                     messages.getChildren().add(MessageBoxController.createMessageBox(messagePacks.get(i)));
                 }
                 lastMessageNumber = numberOfMessages;
@@ -8388,12 +8389,12 @@ public class Controllers {
             }
         }
 
-        private void setOnActions(){
+        private void setOnActions() {
 
         }
-        }
+    }
 
-    public static class MessageBoxController{
+    public static class MessageBoxController {
         @FXML
         private Label sender;
 
@@ -8418,6 +8419,11 @@ public class Controllers {
             }
         }
 
+        private void setInfo(String[] messagePack) {
+            message.setText(messagePack[3]);
+            date.setText(messagePack[2]);
+            sender.setText(messagePack[1]);
+        }
 
     }
 
@@ -8434,6 +8440,8 @@ public class Controllers {
         private Button bidBTN;
         @FXML
         private AnchorPane chatPane;
+        @FXML
+        private Label errorLBL;
 
         private String[] info;
         private String auctionId;
@@ -8464,12 +8472,17 @@ public class Controllers {
         }
 
         private void initActions() {
-            refreshBTN.setOnAction();
-        }
-        private void setInfo(String[] messagePack) {
-            message.setText(messagePack[3]);
-            date.setText(messagePack[2]);
-            sender.setText(messagePack[1]);
+            refreshBTN.setOnAction(e -> updateValues());
+            bidBTN.setOnAction(e -> {
+                if (bidField.getText().matches(Constants.doublePattern)) {
+                    try {
+                        customerController.bid(auctionId, Double.parseDouble(bidField.getText()));
+                        errorLBL.setText("");
+                    } catch (Exceptions.InvalidAuctionIdException ex) {
+                        ex.printStackTrace();
+                    }
+                } else errorLBL.setText("please enter a valid double");
+            });
         }
     }
 }

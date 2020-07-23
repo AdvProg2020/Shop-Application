@@ -38,6 +38,7 @@
                         <Button id="bid-button" fx:id="bidBTN" mnemonicParsing="false" text="Bid" />
                     </children>
                 </HBox>
+            <Label fx:id="errorLBL" alignment="CENTER" prefHeight="33.0" prefWidth="258.0" textFill="RED" />
             </children>
         </VBox>
     </left>
