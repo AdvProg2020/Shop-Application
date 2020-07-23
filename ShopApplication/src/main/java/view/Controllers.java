@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
@@ -8248,5 +8249,37 @@ public class Controllers {
         }
 
 
+    }
+
+    public static class MessageBoxController{
+        @FXML
+        private Label sender;
+
+        @FXML
+        private Text message;
+
+        @FXML
+        private Label date;
+
+
+        public static Parent createMessageBox(String[] messagePack) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.messageBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                MessageBoxController mbc = loader.getController();
+                mbc.setInfo(messagePack);
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private void setInfo(String[] messagePack) {
+            message.setText(messagePack[3]);
+            date.setText(messagePack[2]);
+            sender.setText(messagePack[1]);
+        }
     }
 }
