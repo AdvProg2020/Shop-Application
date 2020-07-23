@@ -1283,15 +1283,15 @@ public class Controllers {
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
             for (String[] subProductPack : mainController.getSubSellablesForAdvertisements(6)) {
-                advertisingProducts.getChildren().add(SellableBoxController.createBox(subProductPack, null, null, false));
+                advertisingProducts.getChildren().add(SellableBoxController.createBox(subProductPack, null, null, false, false));
             }
 
             for (String[] subProduct : mainController.getSubSellablesInSale(10)) {
-                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false));
+                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false, false));
             }
 
             for (String[] subProduct : mainController.getSubSellablesInAuction(10)) {
-                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false));
+                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false, false));
             }
 
             allSales.setOnAction(e -> salesMenu());
@@ -1519,7 +1519,7 @@ public class Controllers {
             }
             //TODO: fix the auction stuff
             products = mainController.sortFilterProducts(categoryName, inSale, false, sortByChoiceBox.getValue(),  isIncreasingButton.isSelected(), availableCheckBox.isSelected(),
-                    minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), filterSeller.getValue(), 0, propertyValues);
+                    minPriceSlider.getValue(), maxPriceSlider.getValue(), filterName.getText(), filterBrand.getValue(), "", filterSeller.getValue(), 0, propertyValues);
         }
 
         private void updatePane() {
@@ -1530,7 +1530,7 @@ public class Controllers {
             productsPane.setPadding(new Insets(30, 30, 30, 30));
             int index = 0;
             for (String[] subProductPack : products) {
-                Parent productBox = SellableBoxController.createBox(subProductPack, productIdToCompareWith, categoryName, inSale);
+                Parent productBox = SellableBoxController.createBox(subProductPack, productIdToCompareWith, categoryName, inSale, inAuction);
                 productsPane.add(productBox, index % numberOfColumns, index / numberOfColumns);
                 index++;
             }
@@ -1657,7 +1657,8 @@ public class Controllers {
 
         private String categoryName;
         private boolean inSale;
-        public static Parent createBox(String[] subSellable, String sellableToCompare, String categoryName, boolean inSale) {
+        private boolean inAuction;
+        public static Parent createBox(String[] subSellable, String sellableToCompare, String categoryName, boolean inSale, boolean inAuction) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.productBox + ".fxml"));
             Parent p;
             try {
@@ -1667,6 +1668,7 @@ public class Controllers {
                 pbc.setAction(p, sellableToCompare);
                 pbc.categoryName = categoryName;
                 pbc.inSale = inSale;
+                pbc.inAuction = inAuction;
                 return p;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1743,6 +1745,7 @@ public class Controllers {
                 p.setOnMouseClicked(e -> {
                     View.categoryName = categoryName;
                     View.inSale = inSale;
+                    View.inAuction = inAuction;
                     ProductDetailMenuController.display(subProduct[0], subProduct[1], false);
                 });
             else {
@@ -8238,6 +8241,4 @@ public class Controllers {
             View.addListener(supporterPhoneNumber, "[0-9]");
         }
     }
-
-
 }
