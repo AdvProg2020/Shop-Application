@@ -8241,4 +8241,12 @@ public class Controllers {
             View.addListener(supporterPhoneNumber, "[0-9]");
         }
     }
+
+    public static class ChatPageController {
+        public static Parent getChatPage(String chatPageId) {
+            return null;
+        }
+
+
+    }
 }
