@@ -8,6 +8,7 @@ module view {
     opens model.account to com.google.gson;
     opens model.request to com.google.gson;
     opens model.log to com.google.gson;
+    opens model.sellable to com.google.gson;
 
     opens view to javafx.fxml, javafx.base;
     exports view;

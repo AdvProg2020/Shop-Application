@@ -66,8 +66,8 @@ public final class Constants {
         public static final String sellerSaleManagingPopup = "SellerSaleManagingPopup";
         public static final String sellerSellLogsManagingMenu = "SellerSellLogsManagingMenu";
         public static final String sellerSellLogDetailsPopup = "SellerSellLogDetailsPopup";
-        public static final String sellerAuctionMangingMenu = "SellerAuctionMangingMenu";
-        public static final String sellerAuctionMangingPopup = "SellerAuctionMangingPopup";
+        public static final String sellerAuctionManagingMenu = "SellerAuctionManagingMenu";
+        public static final String sellerAuctionManagingPopup = "SellerAuctionManagingPopup";
         public static final String customerBuyLogMenu = "CustomerBuyLogMenu";
         public static final String customerBuyLogDetailsPopup = "CustomerBuyLogDetailsPopup";
         public static final String productDetailMenu = "ProductDetailMenu";
