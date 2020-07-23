@@ -54,6 +54,7 @@ public class Seller extends Account {
         if (!suspended) {
             subSellableIds = new HashSet<>();
             saleIds = new HashSet<>();
+            auctionIds = new HashSet<>();
             pendingRequestIds = new HashSet<>();
         }
     }
