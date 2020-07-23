@@ -93,5 +93,6 @@ public final class Constants {
         public static final String supporterChatMenu = "SupporterChatMenu";
         public static final String supporterRegistrationPopup = "SupporterRegistrationPopup";
         public static final String messageBox = "MessageBox";
+        public static final String chatPage = "ChatPage";
     }
 }

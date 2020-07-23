@@ -658,6 +658,19 @@ public class Controller {
         }
     }
 
+    public ArrayList<String[]> getMessagesInChat(String chatId) throws Exceptions.InvalidChatIdException {
+        Chat chat = Chat.getChatById(chatId);
+        if(chat == null){
+            throw new Exceptions.InvalidChatIdException(chatId);
+        }else {
+            ArrayList<String[]> messages = new ArrayList<>();
+            for (Message message : chat.getMessages()) {
+                messages.add(Utilities.Pack.message(message, currentAccount.getUsername()));
+            }
+            return messages;
+        }
+    }
+
     public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException, Exceptions.InvalidAccountTypeException {
         Chat chat = Chat.getChatById(chatId);
         if( chat == null ){

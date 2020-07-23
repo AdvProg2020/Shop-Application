@@ -8244,14 +8244,34 @@ public class Controllers {
     }
 
     public static class ChatPageController {
+
+        private String chatPageId;
+        private int lastMessageNumber = 0;
+        private ArrayList<String[]> messagePacks;
+
         public static Parent getChatPage(String chatPageId) {
-            return null;
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.chatPage + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                ChatPageController cpc = loader.getController();
+                cpc.chatPageId = chatPageId;
+                cpc.updateMessages();
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
         }
 
 
     }
 
-    public static class MessageBoxController{
+        private void updateMessages() {
+            messagePacks = mainController.getMessages
+        }
+        }
+
+        public static class MessageBoxController{
         @FXML
         private Label sender;
 
