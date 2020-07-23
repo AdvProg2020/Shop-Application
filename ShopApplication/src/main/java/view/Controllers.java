@@ -1645,6 +1645,7 @@ public class Controllers {
             if( subProductInfo[16] != null){
                 auctionMode(subProductInfo);
             }else {
+                auction.setVisible(false);
                 if (subProductInfo[7].equals(subProductInfo[8])) {
                     priceBefore.setVisible(false);
                     priceAfter.setText(subProductInfo[7] + "$");
