@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
@@ -1475,8 +1476,8 @@ public class Controllers {
             HashSet<String> brandSet = new HashSet<>();
             for (String[] product : products) {
                 try {
-                    sellersSet.addAll(mainController.subProductsOfAProduct(product[0]).stream().map(e -> e[12]).collect(Collectors.toList()));
-                } catch (Exceptions.InvalidProductIdException e) {
+                    sellersSet.addAll(mainController.subSellablesOfASellable(product[0]).stream().map(e -> e[12]).collect(Collectors.toList()));
+                } catch (Exceptions.InvalidSellableIdException e) {
                     e.printStackTrace();
                 }
                 brandSet.add(product[3]);
@@ -1748,7 +1749,7 @@ public class Controllers {
                     View.categoryName = categoryName;
                     View.inSale = inSale;
                     View.inAuction = inAuction;
-                    ProductDetailMenuController.display(subProduct[0], subProduct[1], false);
+                    SellableDetailMenuController.display(subProduct[0], subProduct[1], false);
                 });
             else {
                 p.setOnMouseClicked(e -> {
@@ -1915,7 +1916,7 @@ public class Controllers {
                 for (String s : propertyMap.keySet()) {
                     properties.getItems().add(new PropertyWrapper(s, propertyMap.get(s)));
                 }
-            }  catch (Exceptions.InvalidProductIdException e) {
+            }  catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
         }
@@ -2090,9 +2091,9 @@ public class Controllers {
         }
     }
 
-    public static class ProductDetailMenuController {
+    public static class SellableDetailMenuController {
         @FXML
-        private ImageView productIMG;
+        private ImageView sellableIMG;
 
         @FXML
         private Button compareBTN;
@@ -2101,13 +2102,13 @@ public class Controllers {
         private Label nameLBL;
 
         @FXML
-        private Label brandLBL;
+        private Label brandExtensionLBL;
 
         @FXML
         private Label categoryLBL;
 
         @FXML
-        private TextArea productInfo;
+        private TextArea sellableInfo;
 
         @FXML
         private Label sellerLBL;
@@ -2123,6 +2124,15 @@ public class Controllers {
 
         @FXML
         private Button editBTN;
+
+        @FXML
+        private Label auctionLBL;
+
+        @FXML
+        private Button auctionBTN;
+
+        @FXML
+        private Button downloadBTN;
 
         @FXML
         private TableView<SellerWrapper> sellersTBL;
@@ -2221,36 +2231,36 @@ public class Controllers {
         private TableColumn<PropertyWrapper, Label> valueCOL;
 
 
-        private String[] productPack;
-        private String[] subProductPack;
+        private String[] sellablePack;
+        private String[] subSellablePack;
         private ArrayList<PropertyWrapper> properties = new ArrayList<>();
         private ArrayList<SellerWrapper> sellers = new ArrayList<>();
-        private ArrayList<String[]> subProductPacks = new ArrayList<>();
+        private ArrayList<String[]> subSellablePacks = new ArrayList<>();
         private boolean editable;
         private String type;
 
-        public static void display(String productId, boolean editable) {
+        public static void display(String sellableId, boolean editable) {
             try {
-                display(productId, mainController.getDefaultSubProductOfAProduct(productId)[1], editable);
-            } catch (Exceptions.InvalidProductIdException e) {
+                display(sellableId, mainController.getDefaultSubSellableOfASellable(sellableId)[1], editable);
+            } catch (Exceptions.InvalidSellableIdException e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        public static void display(String productId, String subProductId, boolean editable) {
+        public static void display(String sellableId, String subSellableId, boolean editable) {
             String type = View.type.get();
-            ProductDetailMenuController controller;
+            SellableDetailMenuController controller;
             if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
-                controller = ((ProductDetailMenuController)
-                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 800));
+                controller = ((SellableDetailMenuController)
+                        View.popupWindow("Sellable details", Constants.FXMLs.sellableDetailMenu, 1200, 800));
             } else {
-                controller = ((ProductDetailMenuController)
-                        View.setMainPane(Constants.FXMLs.productDetailMenu));
+                controller = ((SellableDetailMenuController)
+                        View.setMainPane(Constants.FXMLs.sellableDetailMenu));
             }
             if (controller != null) {
                 controller.editable = editable;
                 controller.type = View.type.get();
-                controller.initialize(productId, subProductId);
+                controller.initialize(sellableId, subSellableId);
             } else
                 System.out.println("There is an error with loading the controller...");
 
@@ -2261,9 +2271,9 @@ public class Controllers {
             String price;
             String available;
             String[] subProductPack;
-            ProductDetailMenuController controller;
+            SellableDetailMenuController controller;
 
-            public SellerWrapper(String name, String price, String available, String[] subProductPack, ProductDetailMenuController controller) {
+            public SellerWrapper(String name, String price, String available, String[] subProductPack, SellableDetailMenuController controller) {
                 this.name.setText(name);
                 this.price = price;
                 this.available = available;
@@ -2271,8 +2281,8 @@ public class Controllers {
                 this.controller = controller;
 
                 this.name.setOnMouseClicked(e -> {
-                    controller.subProductPack = subProductPack;
-                    controller.updateSubProductBox();
+                    controller.subSellablePack = subProductPack;
+                    controller.updateSubSellableBox();
                 });
             }
 
@@ -2323,22 +2333,22 @@ public class Controllers {
             }
         }
 
-        private void initialize(String productId, String subProductId) {
+        private void initialize(String sellableId, String subSellableId) {
             if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
                 try {
-                    mainController.showProduct(productId);
-                } catch (Exceptions.InvalidProductIdException e) {
+                    mainController.showProduct(sellableId);
+                } catch (Exceptions.InvalidSellableIdException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
                 }
             }
-            setPacks(productId, subProductId);
+            setPacks(sellableId, subSellableId);
             initMainObjects();
             initCategoryHBox();
             initReviewsVB();
             initPropertiesTable();
             initButtons();
-            updateSubProductBox();
+            updateSubSellableBox();
             initSellersTable();
 
         }
@@ -2347,7 +2357,7 @@ public class Controllers {
             sellersTBLSellerCOL.setCellValueFactory(new PropertyValueFactory<>("name"));
             sellersTBLPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
             sellersTBLNumberAvailableCOL.setCellValueFactory(new PropertyValueFactory<>("available"));
-            for (String[] pack : subProductPacks) {
+            for (String[] pack : subSellablePacks) {
                 sellers.add(new SellerWrapper(pack[12], pack[8], pack[9], pack, this));
             }
             sellersTBL.setItems(FXCollections.observableArrayList(sellers));
@@ -2361,7 +2371,7 @@ public class Controllers {
                         tabPane.getTabs().remove(buyersTab);
                         return;
                     case Constants.sellerUserType:
-                        if (sellerController.doesSellSubProduct(subProductPack[1])) {
+                        if (sellerController.doesSellSubProduct(subSellablePack[1])) {
                             if (!tabPane.getTabs().contains(buyersTab))
                                 tabPane.getTabs().add(buyersTab);
                         } else
@@ -2373,7 +2383,7 @@ public class Controllers {
                         break;
                 }
                 ArrayList<BuyerWrapper> buyers = new ArrayList<>();
-                for (String s : mainController.getBuyersOfASubProduct(subProductPack[1])) {
+                for (String s : mainController.getBuyersOfASubProduct(subSellablePack[1])) {
                     buyers.add(new BuyerWrapper(s));
                 }
                 buyerCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -2385,20 +2395,24 @@ public class Controllers {
         }
 
         private void initMainObjects() {
-            nameLBL.setText(productPack[1]);
-            brandLBL.setText(productPack[2]);
-            productInfo.setText(productPack[3]);
-            ratingCountLBL.setText(productPack[5]);
-            categoryLBL.setText(productPack[7]);
+            nameLBL.setText(sellablePack[1]);
+            brandExtensionLBL.setText(sellablePack[2]);
+            sellableInfo.setText(sellablePack[3]);
+            ratingCountLBL.setText(sellablePack[5]);
+            categoryLBL.setText(sellablePack[7]);
 
-            productPack[8] = productPack[8].replaceAll("\\\\", "/");
-            productIMG.setImage(new Image("file:" + (productPack[8].startsWith("/src") ? Constants.base: "")  + productPack[8]));
+            sellablePack[8] = sellablePack[8].replaceAll("\\\\", "/");
+            sellableIMG.setImage(new Image("file:" + (sellablePack[8].startsWith("/src") ? Constants.base: "")  + sellablePack[8]));
 
             initRatingStars();
         }
 
+        private void initMainObjectsInFileMode(){
+
+        }
+
         private void initRatingStars() {
-            double rating = Double.parseDouble(productPack[4]);
+            double rating = Double.parseDouble(sellablePack[4]);
             fullStar1.setVisible(rating >= 1);
             fullStar2.setVisible(rating >= 2);
             fullStar3.setVisible(rating >= 3);
@@ -2413,33 +2427,33 @@ public class Controllers {
 
         }
 
-        private void setPacks(String productId, String subProductId) {
+        private void setPacks(String sellableId, String subSellableId) {
             try {
-                productPack = mainController.digest(productId);
-                subProductPack = mainController.getSubProductByID(subProductId);
-                subProductPacks = mainController.subProductsOfAProduct(productPack[0]);
+                sellablePack = mainController.digest(sellableId);
+                subSellablePack = mainController.getSubProductByID(subSellableId);
+                subSellablePacks = mainController.subSellablesOfASellable(sellablePack[0]);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        private void updateSubProductBox() {
-            sellerLBL.setText(subProductPack[12]);
-            if (!subProductPack[7].equals(subProductPack[8])) {
-                priceBeforeLBL.setText(subProductPack[7] + "$");
-                priceAfterLBL.setText(subProductPack[8] + "$");
+        private void updateSubSellableBox() {
+            sellerLBL.setText(subSellablePack[12]);
+            if (!subSellablePack[7].equals(subSellablePack[8])) {
+                priceBeforeLBL.setText(subSellablePack[7] + "$");
+                priceAfterLBL.setText(subSellablePack[8] + "$");
                 priceBeforeLBL.setVisible(true);
             } else {
                 priceBeforeLBL.setVisible(false);
-                priceAfterLBL.setText(subProductPack[7] + "$");
+                priceAfterLBL.setText(subSellablePack[7] + "$");
             }
-            if (subProductPack[11] != null) {
+            if (subSellablePack[11] != null) {
                 salePercentageLBL.setVisible(true);
-                salePercentageLBL.setText(subProductPack[11] + "%");
+                salePercentageLBL.setText(subSellablePack[11] + "%");
             } else {
                 salePercentageLBL.setVisible(false);
             }
-            if (Integer.parseInt(subProductPack[9]) == 0) {
+            if (Integer.parseInt(subSellablePack[9]) == 0) {
                 soldOutLBL.setVisible(true);
             } else
                 soldOutLBL.setVisible(false);
@@ -2450,25 +2464,25 @@ public class Controllers {
 
         private void initReviewsVB() {
             try {
-                ArrayList<String[]> reviews = mainController.reviewsOfProductWithId(productPack[0]);
+                ArrayList<String[]> reviews = mainController.reviewsOfProductWithId(sellablePack[0]);
                 for (String[] review : reviews) {
                     reviewsVB.getChildren().add(ReviewBoxController.createReviewBox(review));
                 }
-            } catch (Exceptions.InvalidProductIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 System.out.println(e.getMessage());
             }
         }
 
         private void initPropertiesTable() {
             try {
-                HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(productPack[0]);
+                HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(sellablePack[0]);
                 for (String s : propertyValues.keySet()) {
                     properties.add(new PropertyWrapper(s, propertyValues.get(s)));
                 }
                 propertyCOL.setCellValueFactory(new PropertyValueFactory<>("propertyLBL"));
                 valueCOL.setCellValueFactory(new PropertyValueFactory<>("valueLBL"));
                 PropertiesTBL.setItems(FXCollections.observableArrayList(properties));
-            } catch (Exceptions.InvalidProductIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -2477,20 +2491,20 @@ public class Controllers {
             try {
                 HBox categoryHBox = CategoryTreeBoxController.createBox();
                 if (categoryHBox != null) {
-                    for (String s : mainController.getCategoryTreeOfAProduct(productPack[0])) {
+                    for (String s : mainController.getCategoryTreeOfAProduct(sellablePack[0])) {
                         categoryHBox.getChildren().add(new Label(s ));
                     }
-                    categoryHBox.getChildren().add(new Label(productPack[1]));
+                    categoryHBox.getChildren().add(new Label(sellablePack[1]));
                     borderPane.setTop(categoryHBox);
                 }
-            } catch (Exceptions.InvalidProductIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
         }
 
         private void addToCart() {
             try {
-                mainController.addToCart(subProductPack[1], 1);
+                mainController.addToCart(subSellablePack[1], 1);
             } catch (Exceptions.UnavailableProductException e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
@@ -2500,24 +2514,24 @@ public class Controllers {
         }
 
         private void edit() {
-            EditProductPopupController.display(productPack[0], subProductPack[1]);
+            EditProductPopupController.display(sellablePack[0], subSellablePack[1]);
         }
 
         private void compare() {
-            ProductsMenuController.displayACategoryProductsToCompare(productPack[7], productPack[0]);
+            ProductsMenuController.displayACategoryProductsToCompare(sellablePack[7], sellablePack[0]);
             if (editable) {
                 compareBTN.getScene().getWindow().hide();
             }
         }
 
         private void addReview() {
-            AddReviewPopupController.display(productPack[0]);
+            AddReviewPopupController.display(sellablePack[0]);
         }
 
         private void rate() {
             ratingsStackPane.getChildren().remove(rateBTN);
             ratingsBox.setVisible(false);
-            ratingsStackPane.getChildren().add(RatingBoxController.createBox(productPack[0]));
+            ratingsStackPane.getChildren().add(RatingBoxController.createBox(sellablePack[0]));
         }
 
         private void initButtons() {
@@ -2532,7 +2546,7 @@ public class Controllers {
 
         private void updateShowOfButtons() {
             if (type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)) {
-                if (Integer.parseInt(subProductPack[9]) != 0) {
+                if (Integer.parseInt(subSellablePack[9]) != 0) {
                     addToCartBTN.setVisible(true);
                     addToCartBTN.setDisable(false);
                 } else {
@@ -2552,10 +2566,10 @@ public class Controllers {
             }
 
             try {
-                if ((type.equals(Constants.customerUserType)) && customerController.hasBought(productPack[0])) {
+                if ((type.equals(Constants.customerUserType)) && customerController.hasBought(sellablePack[0])) {
                     rateBTN.setVisible(true);
                 } else rateBTN.setVisible(false);
-            } catch (Exceptions.InvalidProductIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
 
@@ -2565,6 +2579,7 @@ public class Controllers {
 
             compareBTN.setVisible(true);
         }
+
     }
 
     public static class ReviewBoxController {
@@ -2632,7 +2647,7 @@ public class Controllers {
                 try {
                     mainController.addReview(productId, title.getText(), text.getText());
                     title.getScene().getWindow().hide();
-                } catch (Exceptions.InvalidProductIdException | Exceptions.NotLoggedInException e) {
+                } catch (Exceptions.InvalidSellableIdException | Exceptions.NotLoggedInException e) {
                     e.printStackTrace();
                 }
             }
@@ -3131,14 +3146,14 @@ public class Controllers {
                 this.nameBrand = nameBrand;
                 this.category = category;
 
-                detailBTN.setOnAction(e -> ProductDetailMenuController.display(id, true));
+                detailBTN.setOnAction(e -> SellableDetailMenuController.display(id, true));
                 detailBTN.getStyleClass().add("details-button");
 
                 removeBTN.setOnAction(e -> {
                     try {
                         adminController.removeProduct(id);
                         products.getItems().remove(this);
-                    } catch (Exceptions.InvalidProductIdException ex) {
+                    } catch (Exceptions.InvalidSellableIdException ex) {
                         ex.printStackTrace();
                     }
                 });
@@ -3873,7 +3888,7 @@ public class Controllers {
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeProduct(this.id);
-                    } catch (Exceptions.InvalidProductIdException ex) {
+                    } catch (Exceptions.InvalidSellableIdException ex) {
                         ex.printStackTrace();
                     }
                 });
@@ -4165,12 +4180,12 @@ public class Controllers {
                 details.getStyleClass().add("details-button");
                 remove.getStyleClass().add("remove-button");
 
-                details.setOnAction(e -> ProductDetailMenuController.display(productId, id, true));
+                details.setOnAction(e -> SellableDetailMenuController.display(productId, id, true));
 
                 remove.setOnAction(e -> {
                     try {
                         sellerController.removeProduct(id);
-                    } catch (Exceptions.InvalidProductIdException ex) {
+                    } catch (Exceptions.InvalidSellableIdException ex) {
                         ex.printStackTrace();
                     }
                 });
@@ -4323,7 +4338,7 @@ public class Controllers {
                     }
                 });
 
-                this.nameBrandSeller.setOnMouseClicked(e -> ProductDetailMenuController.display(productId, subProductId, false));
+                this.nameBrandSeller.setOnMouseClicked(e -> SellableDetailMenuController.display(productId, subProductId, false));
 
                 increaseBTN.getStyleClass().add("increase-button");
                 decreaseBTN.getStyleClass().add("decrease-button");
@@ -7447,7 +7462,7 @@ public class Controllers {
             if (exists) {
                 try {
                     info = mainController.digest(productId);
-                } catch (Exceptions.InvalidProductIdException e) {
+                } catch (Exceptions.InvalidSellableIdException e) {
                     e.printStackTrace();
                     printError(e.getMessage());
                 }
@@ -7475,7 +7490,7 @@ public class Controllers {
                 for (String s : values.keySet()) {
                     properties.getItems().add(new PropertyWrapper(s, values.get(s)));
                 }
-            } catch (Exceptions.InvalidProductIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
         }
@@ -7761,7 +7776,7 @@ public class Controllers {
             try {
                 firstProductInfo = mainController.digest(firstProductId);
                 secondProductInfo = mainController.digest(secondProductId);
-            } catch (Exceptions.InvalidProductIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
 
@@ -7805,7 +7820,7 @@ public class Controllers {
                     propertyWrapper.getStyleClass().add("property-label");
                     productProperties.addRow(7 + index++,firstWrapper , propertyWrapper, secondWrapper);
                 }
-            } catch (Exceptions.InvalidProductIdException e) {
+            } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
         }
@@ -8179,7 +8194,7 @@ public class Controllers {
             if (exists) {
                 try {
                     subSellable.getSelectionModel().select(mainController.digest(info[2])[1]);
-                } catch (Exceptions.InvalidProductIdException e) {
+                } catch (Exceptions.InvalidSellableIdException e) {
                     e.printStackTrace();
                 }
                 subSellable.setDisable(true);
@@ -8334,8 +8349,73 @@ public class Controllers {
     }
 
     public static class ChatPageController {
+
+        @FXML
+        private VBox messages;
+
+        private String chatPageId;
+        private int lastMessageNumber = 0;
+        private ArrayList<String[]> messagePacks;
+
         public static Parent getChatPage(String chatPageId) {
-            return null;
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.chatPage + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                ChatPageController cpc = loader.getController();
+                cpc.chatPageId = chatPageId;
+                cpc.updateMessages();
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+        }
+
+
+    }
+
+        private void updateMessages() {
+            try {
+                messagePacks = mainController.getMessagesInChat(chatPageId);
+                int numberOfMessages = messagePacks.size();
+                for( int i = lastMessageNumber; i < numberOfMessages; i++){
+                    messages.getChildren().add(MessageBoxController.createMessageBox(messagePacks.get(i)));
+                }
+                lastMessageNumber = numberOfMessages;
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        private void setOnActions(){
+
+        }
+        }
+
+    public static class MessageBoxController{
+        @FXML
+        private Label sender;
+
+        @FXML
+        private Text message;
+
+        @FXML
+        private Label date;
+
+
+        public static Parent createMessageBox(String[] messagePack) {
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.messageBox + ".fxml"));
+            Parent p;
+            try {
+                p = loader.load();
+                MessageBoxController mbc = loader.getController();
+                mbc.setInfo(messagePack);
+                return p;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
 
@@ -8385,6 +8465,11 @@ public class Controllers {
 
         private void initActions() {
             refreshBTN.setOnAction();
+        }
+        private void setInfo(String[] messagePack) {
+            message.setText(messagePack[3]);
+            date.setText(messagePack[2]);
+            sender.setText(messagePack[1]);
         }
     }
 }

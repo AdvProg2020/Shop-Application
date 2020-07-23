@@ -122,10 +122,10 @@ public class AdminController {
         return productPacks;
     }
 
-    public void removeProduct(String productId) throws Exceptions.InvalidProductIdException {
+    public void removeProduct(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         else {
             product.suspend();
             database().removeProduct();
@@ -492,47 +492,47 @@ public class AdminController {
         }
     }
 
-    public void editBrandOfProduct(String productId, String newBrand) throws Exceptions.InvalidProductIdException {
+    public void editBrandOfProduct(String productId, String newBrand) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if(product == null){
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         }else {
             product.setBrand(newBrand);
         }
     }
 
-    public void editImageOfProduct(String productId, String newImage) throws Exceptions.InvalidProductIdException {
+    public void editImageOfProduct(String productId, String newImage) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if(product == null){
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         }else {
             product.setImagePath(newImage);
         }
     }
 
-    public void editPropertyOfProduct(String productId, String newProperty) throws Exceptions.InvalidProductIdException {
+    public void editPropertyOfProduct(String productId, String newProperty) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if(product == null){
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         }else {
             String[] keyValue = newProperty.split(",");
             product.setProperty(keyValue[0], keyValue[1]);
         }
     }
 
-    public void editInfoTextOfProduct(String productId, String newInfoText) throws Exceptions.InvalidProductIdException {
+    public void editInfoTextOfProduct(String productId, String newInfoText) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if(product == null){
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         }else {
             product.setInfoText(newInfoText);
         }
     }
 
-    public void editNameOfProduct(String productId, String newName) throws Exceptions.InvalidProductIdException {
+    public void editNameOfProduct(String productId, String newName) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if(product == null){
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         }else {
             product.setName(newName);
         }

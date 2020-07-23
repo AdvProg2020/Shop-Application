@@ -70,7 +70,7 @@ public final class Constants {
         public static final String sellerAuctionManagingPopup = "SellerAuctionManagingPopup";
         public static final String customerBuyLogMenu = "CustomerBuyLogMenu";
         public static final String customerBuyLogDetailsPopup = "CustomerBuyLogDetailsPopup";
-        public static final String productDetailMenu = "ProductDetailMenu";
+        public static final String sellableDetailMenu = "ProductDetailMenu";
         public static final String categoriesBox = "CategoriesBox";
         public static final String editPersonalInfoPopup = "EditPersonalInfoPopup";
         public static final String editProductPopup = "EditProductPopup";
@@ -93,5 +93,7 @@ public final class Constants {
         public static final String supporterChatMenu = "SupporterChatMenu";
         public static final String supporterRegistrationPopup = "SupporterRegistrationPopup";
         public static final String auctionPopup = "AuctionPopup";
+        public static final String messageBox = "MessageBox";
+        public static final String chatPage = "ChatPage";
     }
 }
