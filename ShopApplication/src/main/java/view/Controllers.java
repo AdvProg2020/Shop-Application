@@ -8087,7 +8087,7 @@ public class Controllers {
 
             if (exists) {
                 try {
-                    subSellable.getSelectionModel().select(mainController.digest(info[1])[1]);
+                    subSellable.getSelectionModel().select(mainController.digest(info[2])[1]);
                 } catch (Exceptions.InvalidProductIdException e) {
                     e.printStackTrace();
                 }
