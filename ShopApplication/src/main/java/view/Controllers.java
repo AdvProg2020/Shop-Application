@@ -8245,6 +8245,9 @@ public class Controllers {
 
     public static class ChatPageController {
 
+        @FXML
+        private VBox messages;
+
         private String chatPageId;
         private int lastMessageNumber = 0;
         private ArrayList<String[]> messagePacks;
@@ -8267,7 +8270,21 @@ public class Controllers {
     }
 
         private void updateMessages() {
-            messagePacks = mainController.getMessages
+            try {
+                messagePacks = mainController.getMessagesInChat(chatPageId);
+                int numberOfMessages = messagePacks.size();
+                for( int i = lastMessageNumber; i < numberOfMessages; i++){
+                    messages.getChildren().add(MessageBoxController.createMessageBox(messagePacks.get(i)));
+                }
+                lastMessageNumber = numberOfMessages;
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        private void setOnActions(){
+            
         }
         }
 
