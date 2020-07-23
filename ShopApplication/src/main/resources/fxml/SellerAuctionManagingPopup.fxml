@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="500.0" prefWidth="500.0"
-            stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="view.Controllers$SellerSaleManagingPopupController">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="500.0" prefWidth="500.0" stylesheets="@../css/ManagingPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="view.Controllers$SellerAuctionMangingPopupController">
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="40.0"/>
     </padding>
@@ -30,7 +41,7 @@
                 <Label fx:id="idKeyLBL" layoutX="10.0" layoutY="47.0" styleClass="property-label" text="ID:"/>
                 <Label fx:id="idValueLBL" layoutX="110.0" layoutY="47.0" styleClass="value-label" text="id"
                        GridPane.columnIndex="1"/>
-                <Label styleClass="property-label" text="Highest Bid:" GridPane.rowIndex="2"/>
+                <Label fx:id="highestBidKey" styleClass="property-label" text="Highest Bid:" GridPane.rowIndex="2"/>
                 <Label styleClass="property-label" text="Highest Bidder:" GridPane.rowIndex="3"/>
                 <Label styleClass="property-label" text="Start Date:" GridPane.rowIndex="4"/>
                 <Label styleClass="property-label" text="End Date:" GridPane.rowIndex="5"/>
@@ -63,12 +74,13 @@
                     <Insets/>
                 </VBox.margin>
                 <Button id="add-button" fx:id="addBTN" mnemonicParsing="false" text="Add" visible="false"/>
-                <HBox fx:id="editHB" alignment="CENTER" spacing="10.0">
+                <HBox fx:id="editHB" alignment="CENTER" prefHeight="70.0" prefWidth="410.0" spacing="10.0">
                     <Button id="save-button" fx:id="editBTN" mnemonicParsing="false" text="Save changes"/>
                     <Button id="discard-button" fx:id="discardBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false"
                             text="Discard"/>
                 </HBox>
             </StackPane>
+            <Label fx:id="errorLBL" alignment="CENTER" prefHeight="17.0" prefWidth="234.0" textFill="RED"/>
             <BorderPane.margin>
                 <Insets left="30.0"/>
             </BorderPane.margin>

@@ -312,6 +312,9 @@ public class AdminController {
                 case "AddFileRequest":
                     detailsOfRequest.add(Utilities.Pack.addFileRequest(((AddFileRequest) request).getSubFile(), ((AddFileRequest)request).getFile()));
                     break;
+                case "AddAuctionRequest":
+                    detailsOfRequest.add(Utilities.Pack.addAuctionRequest(((AddAuctionRequest) request).getAuction()));
+                    break;
                 case "EditFileRequest":
                     detailsOfRequest.add(Utilities.Pack.subFile(((EditFileRequest) request).getSubFile()));
                     detailsOfRequest.add(Utilities.Pack.fileChange(((EditFileRequest) request)));
@@ -447,6 +450,15 @@ public class AdminController {
         }
     }
 
+    public HashMap<String, String> getPropertyValuesOfAFileInRequest(String requestId) throws Exceptions.InvalidRequestIdException {
+        Request request = Request.getRequestById(requestId, false);
+        if (request == null || ! request.getClass().getSimpleName().equals("AddFileRequest")) {
+            throw new Exceptions.InvalidRequestIdException(requestId);
+        } else {
+            return new HashMap<>(((AddFileRequest) request).getFile().getPropertyValues());
+        }
+    }
+
     public ArrayList<String[]> getProductsInSaleRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId, false);
         if( request == null || !request.getClass().getSimpleName().equals("AddSaleRequest")){
@@ -551,6 +563,17 @@ public class AdminController {
         }
     }
 
+    public ArrayList<String[]> getBuyLogItemsWithId(String logId) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if ( buyLog == null ) {
+            throw new Exceptions.InvalidLogIdException(logId);
+        } else {
+            ArrayList<String[]> items = new ArrayList<>();
+            buyLog.getLogItems().forEach(li -> items.add(Utilities.Pack.buyLogItem(li)));
+            return items;
+        }
+    }
+
     public String[] getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException{
         SellLog sellLog = SellLog.getSellLogById(logId);
         if( sellLog == null ){
@@ -566,13 +589,13 @@ public class AdminController {
             throw new Exceptions.InvalidLogIdException(logId);
         }else {
             switch (newStatus) {
-                case "PROCESSING":
+                case "Processing":
                     buyLog.setShippingStatus(ShippingStatus.PROCESSING);
                     break;
-                case "SENDING":
+                case "Sending":
                     buyLog.setShippingStatus(ShippingStatus.SENDING);
                     break;
-                case "RECEIVED":
+                case "Received":
                     buyLog.setShippingStatus(ShippingStatus.RECEIVED);
                     break;
             }
