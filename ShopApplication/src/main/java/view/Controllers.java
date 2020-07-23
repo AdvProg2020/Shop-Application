@@ -2091,7 +2091,7 @@ public class Controllers {
 
     public static class SellableDetailMenuController {
         @FXML
-        private ImageView productIMG;
+        private ImageView sellableIMG;
 
         @FXML
         private Button compareBTN;
@@ -2100,13 +2100,13 @@ public class Controllers {
         private Label nameLBL;
 
         @FXML
-        private Label brandLBL;
+        private Label brandExtensionLBL;
 
         @FXML
         private Label categoryLBL;
 
         @FXML
-        private TextArea productInfo;
+        private TextArea sellableInfo;
 
         @FXML
         private Label sellerLBL;
@@ -2245,20 +2245,20 @@ public class Controllers {
             }
         }
 
-        public static void display(String productId, String subProductId, boolean editable) {
+        public static void display(String sellableId, String subSellableId, boolean editable) {
             String type = View.type.get();
             SellableDetailMenuController controller;
             if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
                 controller = ((SellableDetailMenuController)
-                        View.popupWindow("Product details", Constants.FXMLs.productDetailMenu, 1200, 800));
+                        View.popupWindow("Sellable details", Constants.FXMLs.sellableDetailMenu, 1200, 800));
             } else {
                 controller = ((SellableDetailMenuController)
-                        View.setMainPane(Constants.FXMLs.productDetailMenu));
+                        View.setMainPane(Constants.FXMLs.sellableDetailMenu));
             }
             if (controller != null) {
                 controller.editable = editable;
                 controller.type = View.type.get();
-                controller.initialize(productId, subProductId);
+                controller.initialize(sellableId, subSellableId);
             } else
                 System.out.println("There is an error with loading the controller...");
 
@@ -2280,7 +2280,7 @@ public class Controllers {
 
                 this.name.setOnMouseClicked(e -> {
                     controller.subSellablePack = subProductPack;
-                    controller.updateSubProductBox();
+                    controller.updateSubSellableBox();
                 });
             }
 
@@ -2331,22 +2331,22 @@ public class Controllers {
             }
         }
 
-        private void initialize(String productId, String subProductId) {
+        private void initialize(String sellableId, String subSellableId) {
             if( type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)){
                 try {
-                    mainController.showProduct(productId);
+                    mainController.showProduct(sellableId);
                 } catch (Exceptions.InvalidSellableIdException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
                 }
             }
-            setPacks(productId, subProductId);
+            setPacks(sellableId, subSellableId);
             initMainObjects();
             initCategoryHBox();
             initReviewsVB();
             initPropertiesTable();
             initButtons();
-            updateSubProductBox();
+            updateSubSellableBox();
             initSellersTable();
 
         }
@@ -2394,15 +2394,19 @@ public class Controllers {
 
         private void initMainObjects() {
             nameLBL.setText(sellablePack[1]);
-            brandLBL.setText(sellablePack[2]);
-            productInfo.setText(sellablePack[3]);
+            brandExtensionLBL.setText(sellablePack[2]);
+            sellableInfo.setText(sellablePack[3]);
             ratingCountLBL.setText(sellablePack[5]);
             categoryLBL.setText(sellablePack[7]);
 
             sellablePack[8] = sellablePack[8].replaceAll("\\\\", "/");
-            productIMG.setImage(new Image("file:" + (sellablePack[8].startsWith("/src") ? Constants.base: "")  + sellablePack[8]));
+            sellableIMG.setImage(new Image("file:" + (sellablePack[8].startsWith("/src") ? Constants.base: "")  + sellablePack[8]));
 
             initRatingStars();
+        }
+
+        private void initMainObjectsInFileMode(){
+
         }
 
         private void initRatingStars() {
@@ -2421,17 +2425,17 @@ public class Controllers {
 
         }
 
-        private void setPacks(String productId, String subProductId) {
+        private void setPacks(String sellableId, String subSellableId) {
             try {
-                sellablePack = mainController.digest(productId);
-                subSellablePack = mainController.getSubProductByID(subProductId);
+                sellablePack = mainController.digest(sellableId);
+                subSellablePack = mainController.getSubProductByID(subSellableId);
                 subSellablePacks = mainController.subProductsOfAProduct(sellablePack[0]);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        private void updateSubProductBox() {
+        private void updateSubSellableBox() {
             sellerLBL.setText(subSellablePack[12]);
             if (!subSellablePack[7].equals(subSellablePack[8])) {
                 priceBeforeLBL.setText(subSellablePack[7] + "$");
