@@ -1474,7 +1474,7 @@ public class Controllers {
             HashSet<String> brandSet = new HashSet<>();
             for (String[] product : products) {
                 try {
-                    sellersSet.addAll(mainController.subProductsOfAProduct(product[0]).stream().map(e -> e[12]).collect(Collectors.toList()));
+                    sellersSet.addAll(mainController.subSellablesOfASellable(product[0]).stream().map(e -> e[12]).collect(Collectors.toList()));
                 } catch (Exceptions.InvalidSellableIdException e) {
                     e.printStackTrace();
                 }
@@ -2429,7 +2429,7 @@ public class Controllers {
             try {
                 sellablePack = mainController.digest(sellableId);
                 subSellablePack = mainController.getSubProductByID(subSellableId);
-                subSellablePacks = mainController.subProductsOfAProduct(sellablePack[0]);
+                subSellablePacks = mainController.subSellablesOfASellable(sellablePack[0]);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -2577,6 +2577,7 @@ public class Controllers {
 
             compareBTN.setVisible(true);
         }
+
     }
 
     public static class ReviewBoxController {

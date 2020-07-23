@@ -272,19 +272,19 @@ public class Controller {
     }
 
     /**
-     * @param productId
+     * @param sellableId
      * @return String[4]: ID, storeName, price, remaining count.
      * @throws Exceptions.InvalidSellableIdException
      */
-    public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if (product == null)
-            throw new Exceptions.InvalidSellableIdException(productId);
-        ArrayList<String[]> subProducts = new ArrayList<>();
-        for (SubProduct subProduct : product.getSubProducts()) {
-            subProducts.add(Utilities.Pack.subProduct(subProduct));
+    public ArrayList<String[]> subSellablesOfASellable(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null)
+            throw new Exceptions.InvalidSellableIdException(sellableId);
+        ArrayList<String[]> subSellables = new ArrayList<>();
+        for (SubSellable subSellable : sellable.getSubSellables()) {
+            subSellables.add(Utilities.Pack.subSellable(subSellable));
         }
-        return subProducts;
+        return subSellables;
     }
 
     public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
