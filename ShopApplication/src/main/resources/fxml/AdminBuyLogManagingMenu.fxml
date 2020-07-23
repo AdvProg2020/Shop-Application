@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$CustomerBuyLogMenuController">
+<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AdminBuyLogManagingMenuController">
     <center>
         <VBox alignment="CENTER" maxWidth="-Infinity" BorderPane.alignment="CENTER">
             <padding>
@@ -24,7 +24,7 @@
                     <TableColumn fx:id="dateCol" editable="false" prefWidth="150.0" resizable="false" text="Date" />
                     <TableColumn fx:id="customerCOL" editable="false" prefWidth="200.0" resizable="false" text="Receiver Name" />
                     <TableColumn fx:id="paidMoneyCOL" editable="false" prefWidth="150.0" resizable="false" text="Paid Money" />
-                    <TableColumn fx:id="discountAmountCOL" editable="false" prefWidth="150.0" resizable="false" text="Total Sale" />
+                    <TableColumn fx:id="discountAmountCOL" editable="false" prefWidth="150.0" resizable="false" text="Total Discount" />
                     <TableColumn fx:id="shippingStatusCOL" editable="false" prefWidth="150.0" resizable="false" text="Shipping Status" />
                     <TableColumn fx:id="detailsCOL" editable="false" prefWidth="100.0" resizable="false" sortable="false" text="Details" />
                 </columns>

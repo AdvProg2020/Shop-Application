@@ -562,6 +562,17 @@ public class AdminController {
         }
     }
 
+    public ArrayList<String[]> getBuyLogItemsWithId(String logId) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if ( buyLog == null ) {
+            throw new Exceptions.InvalidLogIdException(logId);
+        } else {
+            ArrayList<String[]> items = new ArrayList<>();
+            buyLog.getLogItems().forEach(li -> items.add(Utilities.Pack.buyLogItem(li)));
+            return items;
+        }
+    }
+
     public String[] getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException{
         SellLog sellLog = SellLog.getSellLogById(logId);
         if( sellLog == null ){

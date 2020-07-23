@@ -4997,22 +4997,23 @@ public class Controllers {
 
         public static class BuyLogWrapper {
             String id, date, receiverName, shippingStatus;
-            Double receivedMoney, totalSale;
+            Double receivedMoney, totalDiscount;
             Button details = new Button();
 
             public BuyLogWrapper(String[] info) {
+                this(info[0], info[5], info[2], info[6], Double.parseDouble(info[7]), Double.parseDouble(info[8]));
             }
 
-            public BuyLogWrapper(String id, String date, String receiverName, String shippingStatus, Double receivedMoney, Double totalSale) {
+            public BuyLogWrapper(String id, String date, String receiverName, String shippingStatus, Double receivedMoney, Double totalDiscount) {
                 this.id = id;
                 this.date = date;
                 this.receiverName = receiverName;
                 this.shippingStatus = shippingStatus;
                 this.receivedMoney = receivedMoney;
-                this.totalSale = totalSale;
+                this.totalDiscount = totalDiscount;
 
                 details.getStyleClass().add("details-button");
-                details.setOnAction(e -> SellerSellLogDetailsPopupController.display(this.id));
+                details.setOnAction(e -> AdminBuyLogManagingPopupController.display(this.id));
             }
 
             public String getId() {
@@ -5035,8 +5036,8 @@ public class Controllers {
                 return receivedMoney;
             }
 
-            public Double getTotalSale() {
-                return totalSale;
+            public Double getTotalDiscount() {
+                return totalDiscount;
             }
 
             public Button getDetails() {
@@ -5050,15 +5051,182 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            initCols();
+            initItems();
+        }
 
+        private void initCols() {
+            dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+            customerCOL.setCellValueFactory(new PropertyValueFactory<>("receiverName"));
+            paidMoneyCOL.setCellValueFactory(new PropertyValueFactory<>("receivedMoney"));
+            discountAmountCOL.setCellValueFactory(new PropertyValueFactory<>("totalDiscount"));
+            shippingStatusCOL.setCellValueFactory(new PropertyValueFactory<>("shippingStatus"));
+            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+        }
+
+        private void initItems() {
+            adminController.getAllBuyLogs().forEach(bl -> products.getItems().add(new BuyLogWrapper(bl)));
         }
     }
 
     public static class AdminBuyLogManagingPopupController {
-        public static void display(String logId) {
+        @FXML
+        private TableView<LogItemWrapper> logItems;
+        @FXML
+        private TableColumn<LogItemWrapper, String> subProductCOL;
+        @FXML
+        private TableColumn<LogItemWrapper, Integer> countCOL;
+        @FXML
+        private TableColumn<LogItemWrapper, Double> unitPriceCOL;
+        @FXML
+        private TableColumn<LogItemWrapper, Double> ratingCOL;
+        @FXML
+        private Label idLBL;
+        @FXML
+        private Label receiverPhoneLBL;
+        @FXML
+        private Label receiverNameLBL;
+        @FXML
+        private Label priceLBL;
+        @FXML
+        private Label dateLBL;
+        @FXML
+        private Label shipStatusLBL;
+        @FXML
+        private TextArea addressArea;
+        @FXML
+        private Label discountLBL;
+        @FXML
+        private RadioButton processingBTN;
+        @FXML
+        private ToggleGroup shippingStatus;
+        @FXML
+        private RadioButton sendingBTN;
+        @FXML
+        private RadioButton receivedBTN;
+        @FXML
+        private Button editBTN;
+        @FXML
+        private Button discardBTN;
 
+        private String[] info;
+        private String logId;
+        private SimpleBooleanProperty statusChanged = new SimpleBooleanProperty(false);
+        private RadioButton defaultStatus;
+
+        public static class LogItemWrapper {
+            String name, brand, seller, nameBrandSeller;
+            double unitPrice, rate;
+            int count;
+
+            public LogItemWrapper(String[] pack) {
+                this(pack[1], pack[2], pack[4], Double.parseDouble(pack[6]), Double.parseDouble(pack[8]), Integer.parseInt(pack[5]));
+            }
+
+            public LogItemWrapper(String name, String brand, String seller, double unitPrice, double rate, int count) {
+                this.name = name;
+                this.brand = brand;
+                this.seller = seller;
+                this.unitPrice = unitPrice;
+                this.rate = rate;
+                this.count = count;
+                nameBrandSeller = name + " - " + brand + " (" + seller + ")";
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getBrand() {
+                return brand;
+            }
+
+            public String getSeller() {
+                return seller;
+            }
+
+            public String getNameBrandSeller() {
+                return nameBrandSeller;
+            }
+
+            public double getUnitPrice() {
+                return unitPrice;
+            }
+
+            public double getRate() {
+                return rate;
+            }
+
+            public int getCount() {
+                return count;
+            }
         }
-    }
+
+        public static void display(String logId) {
+            ((AdminBuyLogManagingPopupController)
+                    View.popupWindow("buy log details", Constants.FXMLs.adminBuyLogMangingPopup, 1000, 550)).initialize(logId);
+        }
+
+        private void initialize(String buyLogId) {
+            try {
+                logId = buyLogId;
+                info = adminController.getBuyLogWithId(logId);
+            } catch (Exceptions.InvalidLogIdException e) {
+                e.printStackTrace();
+            }
+            initCols();
+            initItems();
+            iniToggleGroup();
+            initBindings();
+            initValues();
+            initActions();
+        }
+
+        private void initCols() {
+            countCOL.setCellValueFactory(new PropertyValueFactory<>("count"));
+            ratingCOL.setCellValueFactory(new PropertyValueFactory<>("rate"));
+            unitPriceCOL.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+            subProductCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
+        }
+
+        private void initItems() {
+            try {
+                adminController.getBuyLogItemsWithId(logId).forEach(li -> logItems.getItems().add(new LogItemWrapper(li)));
+            } catch (Exceptions.InvalidLogIdException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void iniToggleGroup() {
+            if (info[6].equals("Processing")) shippingStatus.selectToggle(defaultStatus = processingBTN);
+            else if (info[6].equals("Sending")) shippingStatus.selectToggle(defaultStatus = sendingBTN);
+            else shippingStatus.selectToggle(defaultStatus = receivedBTN);
+        }
+
+        private void initBindings() {
+            statusChanged.bind(shippingStatus.selectedToggleProperty().isEqualTo(defaultStatus).not());
+            editBTN.disableProperty().bind(statusChanged.not());
+        }
+
+        private void initValues() {
+            idLBL.setText(info[0]);
+            dateLBL.setText(info[5]);
+            priceLBL.setText(info[7]);
+            addressArea.setText(info[4]);
+            discountLBL.setText(info[8]);
+            shipStatusLBL.setText(info[6]);
+            receiverNameLBL.setText(info[2]);
+            receiverPhoneLBL.setText(info[3]);
+        }
+
+        private void initActions() {
+            editBTN.setOnAction(e -> {
+                adminController.
+            });
+
+            discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
+        }
+     }
 
     public static class AdminAccountManagingMenuController implements Initializable {
 

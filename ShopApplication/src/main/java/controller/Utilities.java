@@ -374,7 +374,7 @@ public class Utilities {
         }
 
         public static String[] buyLogItem(LogItem item) {
-            String[] productPack = new String[8];
+            String[] productPack = new String[9];
             Product product = item.getSubProduct().getProduct();
             productPack[0] = product.getId();
             productPack[1] = product.getName();
@@ -384,6 +384,7 @@ public class Utilities {
             productPack[5] = Integer.toString(item.getCount());
             productPack[6] = Double.toString(item.getPrice());
             productPack[7] = Double.toString(item.getSaleAmount());
+            productPack[8] = product.getAverageRatingScore() + "";
             return productPack;
         }
 

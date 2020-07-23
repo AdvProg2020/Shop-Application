@@ -14,66 +14,78 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="500.0" prefWidth="500.0" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$SellerSaleManagingPopupController">
+<BorderPane prefHeight="500.0" prefWidth="500.0" stylesheets="@../css/ManagingPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="view.Controllers$SellerAuctionMangingPopupController">
     <padding>
-        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0"/>
     </padding>
     <center>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-            <Region VBox.vgrow="ALWAYS" />
+            <Region VBox.vgrow="ALWAYS"/>
             <GridPane alignment="CENTER" VBox.vgrow="ALWAYS">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="124.00003662109376" minWidth="10.0" prefWidth="124.00003662109376" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.20001220703125" minWidth="10.0" prefWidth="152.79996337890628" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="124.00003662109376" minWidth="10.0"
+                                       prefWidth="124.00003662109376"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.20001220703125" minWidth="10.0"
+                                       prefWidth="152.79996337890628"/>
                 </columnConstraints>
                 <rowConstraints>
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 </rowConstraints>
-                <Label fx:id="idKeyLBL" layoutX="10.0" layoutY="47.0" styleClass="property-label" text="ID:" />
-                <Label fx:id="idValueLBL" layoutX="110.0" layoutY="47.0" styleClass="value-label" text="id" GridPane.columnIndex="1" />
-                <Label fx:id="highestBidKey" styleClass="property-label" text="Highest Bid:" GridPane.rowIndex="2" />
-                <Label styleClass="property-label" text="Highest Bidder:" GridPane.rowIndex="3" />
-                <Label styleClass="property-label" text="Start Date:" GridPane.rowIndex="4" />
-                <Label styleClass="property-label" text="End Date:" GridPane.rowIndex="5" />
+                <Label fx:id="idKeyLBL" layoutX="10.0" layoutY="47.0" styleClass="property-label" text="ID:"/>
+                <Label fx:id="idValueLBL" layoutX="110.0" layoutY="47.0" styleClass="value-label" text="id"
+                       GridPane.columnIndex="1"/>
+                <Label fx:id="highestBidKey" styleClass="property-label" text="Highest Bid:" GridPane.rowIndex="2"/>
+                <Label styleClass="property-label" text="Highest Bidder:" GridPane.rowIndex="3"/>
+                <Label styleClass="property-label" text="Start Date:" GridPane.rowIndex="4"/>
+                <Label styleClass="property-label" text="End Date:" GridPane.rowIndex="5"/>
                 <HBox alignment="CENTER_LEFT" styleClass="property-box" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <GridPane.margin>
-                        <Insets bottom="10.0" top="10.0" />
+                        <Insets bottom="10.0" top="10.0"/>
                     </GridPane.margin>
-                    <DatePicker fx:id="startDate" editable="false" promptText="select date..." stylesheets="@../css/DatePicker.css" />
+                    <DatePicker fx:id="startDate" editable="false" promptText="select date..."
+                                stylesheets="@../css/DatePicker.css"/>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" styleClass="property-box" GridPane.columnIndex="1" GridPane.rowIndex="5">
                     <GridPane.margin>
-                        <Insets bottom="10.0" top="10.0" />
+                        <Insets bottom="10.0" top="10.0"/>
                     </GridPane.margin>
-                    <DatePicker fx:id="endDate" editable="false" promptText="select date..." stylesheets="@../css/DatePicker.css" />
+                    <DatePicker fx:id="endDate" editable="false" promptText="select date..."
+                                stylesheets="@../css/DatePicker.css"/>
                 </HBox>
-                <Label fx:id="customerLBL" layoutX="190.0" layoutY="23.0" styleClass="value-label" text="username" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <Label fx:id="highestBidLBL" layoutX="65.0" layoutY="23.0" styleClass="value-label" text="90$" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Label layoutX="65.0" layoutY="20.0" styleClass="property-label" text="SubSellable:" GridPane.rowIndex="1" />
-                <ChoiceBox fx:id="subSellable" prefWidth="188.0" stylesheets="@../css/ChoiceBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label fx:id="customerLBL" layoutX="190.0" layoutY="23.0" styleClass="value-label" text="username"
+                       GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label fx:id="highestBidLBL" layoutX="65.0" layoutY="23.0" styleClass="value-label" text="90$"
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label layoutX="65.0" layoutY="20.0" styleClass="property-label" text="SubSellable:"
+                       GridPane.rowIndex="1"/>
+                <ChoiceBox fx:id="subSellable" prefWidth="188.0" stylesheets="@../css/ChoiceBox.css"
+                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             </GridPane>
-            <Region layoutX="10.0" layoutY="10.0" VBox.vgrow="ALWAYS" />
+            <Region layoutX="10.0" layoutY="10.0" VBox.vgrow="ALWAYS"/>
             <StackPane>
                 <VBox.margin>
-                    <Insets />
+                    <Insets/>
                 </VBox.margin>
-                <Button id="add-button" fx:id="addBTN" mnemonicParsing="false" text="Add" visible="false" />
+                <Button id="add-button" fx:id="addBTN" mnemonicParsing="false" text="Add" visible="false"/>
                 <HBox fx:id="editHB" alignment="CENTER" prefHeight="70.0" prefWidth="410.0" spacing="10.0">
-                    <Button id="save-button" fx:id="editBTN" mnemonicParsing="false" text="Save changes" />
-                    <Button id="discard-button" fx:id="discardBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Discard" />
+                    <Button id="save-button" fx:id="editBTN" mnemonicParsing="false" text="Save changes"/>
+                    <Button id="discard-button" fx:id="discardBTN" layoutX="10.0" layoutY="10.0" mnemonicParsing="false"
+                            text="Discard"/>
                 </HBox>
             </StackPane>
-         <Label fx:id="errorLBL" alignment="CENTER" prefHeight="17.0" prefWidth="234.0" textFill="RED" />
+            <Label fx:id="errorLBL" alignment="CENTER" prefHeight="17.0" prefWidth="234.0" textFill="RED"/>
             <BorderPane.margin>
-                <Insets left="30.0" />
+                <Insets left="30.0"/>
             </BorderPane.margin>
             <padding>
-                <Insets bottom="20.0" />
+                <Insets bottom="20.0"/>
             </padding>
         </VBox>
     </center>
