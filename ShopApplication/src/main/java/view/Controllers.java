@@ -8035,9 +8035,9 @@ public class Controllers {
             if (exists) {
                 idValueLBL.setText(info[0]);
 
-                highestBidLBL.setText(info[3] + "$");
-                startDate.setValue(LocalDate.parse("20" + info[5]));
-                endDate.setValue(LocalDate.parse("20" + info[6]));
+                highestBidLBL.setText(info[5] + "$");
+                startDate.setValue(LocalDate.parse("20" + info[3]));
+                endDate.setValue(LocalDate.parse("20" + info[4]));
             }
         }
 
@@ -8054,10 +8054,10 @@ public class Controllers {
 
         private void initBindings() {
             startDateChanged.bind(
-                    Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[5]))).then(false).otherwise(true)
+                    Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[3]))).then(false).otherwise(true)
             );
             endDateChanged.bind(
-                    Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[6]))).then(false).otherwise(true)
+                    Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse("20" + info[4]))).then(false).otherwise(true)
             );
             editBTN.disableProperty().bind(startDateChanged.or(endDateChanged).not());
         }
