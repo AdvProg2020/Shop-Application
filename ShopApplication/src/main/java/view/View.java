@@ -89,6 +89,7 @@ public class View extends Application {
             p = loader.load();
         } catch (IOException e) {
             System.out.println("could not load " + fxml + ".fxml");
+            e.printStackTrace();
             return null;
         }
 

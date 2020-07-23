@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
-import model.log.LogItem;
 
 import java.io.File;
 import java.io.IOException;
@@ -4940,7 +4939,7 @@ public class Controllers {
         private Button manageAccounts;
 
         @FXML
-        private Button manageProducts;
+        private Button manageSellables;
 
         @FXML
         private Button manageCategories;
@@ -4967,7 +4966,7 @@ public class Controllers {
             manageAccounts.setOnAction(e -> AdminAccountManagingMenuController.display());
             manageCategories.setOnAction(e -> AdminCategoryManagingMenuController.display());
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
-            manageProducts.setOnAction(e -> AdminProductManagingMenu.display());
+            manageSellables.setOnAction(e -> AdminProductManagingMenu.display());
             manageRequests.setOnAction(e -> AdminRequestManagingMenuController.display());
 
             manageShippings.setOnAction(e -> AdminBuyLogManagingMenuController.display());
@@ -6546,16 +6545,16 @@ public class Controllers {
 
     public static class SellerManagingMenuController implements Initializable {
         @FXML
-        private Button manageProducts;
+        private Button manageSellables;
 
         @FXML
         private Button manageSales;
 
         @FXML
-        private Button sellLogs;
+        private Button manageAuctions;
 
         @FXML
-        private Button manageAuctions;
+        private Button sellLogs;
 
         public static void display() {
             View.setMainPane(Constants.FXMLs.sellerManagingMenu);
@@ -6567,7 +6566,7 @@ public class Controllers {
         }
 
         private void initActions() {
-            manageProducts.setOnAction(e -> SellerProductManagingMenuController.display());
+            manageSellables.setOnAction(e -> SellerProductManagingMenuController.display());
             manageSales.setOnAction(e -> SellerSaleManagingMenuController.display());
             sellLogs.setOnAction(e -> SellerSellLogsManagingMenuController.display());
             manageAuctions.setOnAction(e -> SellerAuctionMangingMenuController.display());
@@ -7016,7 +7015,7 @@ public class Controllers {
         private Button existingFileBTN;
 
         public static void display() {
-            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addSellablePopup_Page1, 600, 450);
+            View.popupWindow("Add new Product (1 of 2)", Constants.FXMLs.addSellablePopup_Page1, 900, 550);
         }
 
         @Override
@@ -7900,7 +7899,7 @@ public class Controllers {
         }
 
         public static void display() {
-            View.setMainPane(Constants.FXMLs.sellerAuctionMangingMenu);
+            View.setMainPane(Constants.FXMLs.sellerAuctionManagingMenu);
         }
 
         @Override
@@ -7974,7 +7973,7 @@ public class Controllers {
         private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
 
         public static void display(String auctionId) {
-            ((SellerAuctionMangingPopupController) View.popupWindow("seller auction managing popup", Constants.FXMLs.sellerAuctionMangingPopup, 600, 500)).initialize(auctionId);
+            ((SellerAuctionMangingPopupController) View.popupWindow("seller auction managing popup", Constants.FXMLs.sellerAuctionManagingPopup, 600, 500)).initialize(auctionId);
         }
 
         private void initialize(String auctionId) {
