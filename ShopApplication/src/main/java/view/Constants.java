@@ -92,5 +92,6 @@ public final class Constants {
         public static final String compareMenu = "CompareMenu";
         public static final String supporterChatMenu = "SupporterChatMenu";
         public static final String supporterRegistrationPopup = "SupporterRegistrationPopup";
+        public static final String auctionPopup = "AuctionPopup";
     }
 }
