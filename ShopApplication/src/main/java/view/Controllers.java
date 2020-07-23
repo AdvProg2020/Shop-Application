@@ -7964,6 +7964,7 @@ public class Controllers {
         private String auctionId;
         private String[] info;
         private boolean exists;
+        private HashMap<String, String> nameToId = new HashMap<>();
 
         private SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
         private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
@@ -7992,11 +7993,36 @@ public class Controllers {
 
         private void initActions() {
             editBTN.setOnAction(e -> {
-                //TODO: edit auction
+                if (validateFields()) {
+                    try {
+                        if (startDateChanged.get())
+                            sellerController.editAuction(auctionId, "start date", startDate.getValue().toString());
+                        if (endDateChanged.get())
+                            sellerController.editAuction(auctionId, "end date", endDate.getValue().toString());
+                        editBTN.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidDateException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidFieldException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidFormatException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidAuctionIdException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.SameAsPreviousValueException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             });
             addBTN.setOnAction(e -> {
                  if (validateFields()) {
-                    //TODO: create auction.
+                     try {
+                         sellerController.addAuction(startDate.getValue().toString(), endDate.getValue().toString(), nameToId.get(subSellable.getSelectionModel().getSelectedItem()));
+                         addBTN.getScene().getWindow().hide();
+                     } catch (Exceptions.InvalidFormatException ex) {
+                         ex.printStackTrace();
+                     } catch (Exceptions.InvalidDateException ex) {
+                         ex.printStackTrace();
+                     }
                  }
             });
             discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());
@@ -8051,7 +8077,10 @@ public class Controllers {
         }
 
         private void initChoiceBox() {
-            subSellable.getItems().addAll(sellerController.manageProducts().stream().map(p -> p[2]).collect(Collectors.toCollection(ArrayList::new)));
+            sellerController.manageProducts().forEach(p -> {
+                nameToId.put(p[2], p[1]);
+                subSellable.getItems().add(p[2]);
+            });
 
             if (exists) {
                 try {
