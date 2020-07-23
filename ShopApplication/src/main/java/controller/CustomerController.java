@@ -237,17 +237,12 @@ public class CustomerController {
         }
     }
 
-    private ArrayList<String[]> viewSupportChat() throws Exceptions.DontHaveChatException {
+    private String getSupportChatId() throws Exceptions.DontHaveChatException {
         SupportChat chat = ((Customer) currentAccount()).getSupportChat();
         if( chat == null ){
             throw new Exceptions.DontHaveChatException();
         }else {
-            ArrayList<String[]> messages = new ArrayList<>();
-            String username = currentAccount().getUsername();
-            for (Message message : chat.getMessages()) {
-                messages.add(Utilities.Pack.message(message, username));
-            }
-            return messages;
+            return chat.getId();
         }
     }
 
