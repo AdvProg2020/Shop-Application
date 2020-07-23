@@ -6939,6 +6939,7 @@ public class Controllers {
 
                 View.goBack();
             });
+            chatBTN.setOnAction(e -> SupporterChatMenuController.display());
         }
 
         private void initTexts() {
@@ -8341,8 +8342,49 @@ public class Controllers {
     }
 
     public static class AuctionPopupController {
-        public static void display() {
+        @FXML
+        private Label customerLBL;
+        @FXML
+        private Label highestBidLBL;
+        @FXML
+        private Button refreshBTN;
+        @FXML
+        private TextField bidField;
+        @FXML
+        private Button bidBTN;
+        @FXML
+        private AnchorPane chatPane;
 
+        private String[] info;
+        private String auctionId;
+
+        public static void display(String auctionId) {
+            ((AuctionPopupController) View.setMainPane(Constants.FXMLs.auctionPopup)).initialize(auctionId);
+        }
+
+        private void initialize(String auctionId) {
+            this.auctionId = auctionId;
+            updateValues();
+            initChat();
+            initActions();
+        }
+
+        private void updateValues() {
+            try {
+                info = sellerController.viewAuctionWithId(auctionId);
+                highestBidLBL.setText(info[5] + "$");
+                customerLBL.setText(info[6]);
+            } catch (Exceptions.InvalidAuctionIdException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void initChat() {
+            chatPane.getChildren().add(ChatPageController.getChatPage(info[7]));
+        }
+
+        private void initActions() {
+            refreshBTN.setOnAction();
         }
     }
 }
