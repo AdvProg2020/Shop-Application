@@ -5221,7 +5221,17 @@ public class Controllers {
 
         private void initActions() {
             editBTN.setOnAction(e -> {
-                adminController.
+                String newStatus;
+                RadioButton selected = ((RadioButton) shippingStatus.getSelectedToggle());
+                if (selected == processingBTN) newStatus = "Processing";
+                else if (selected == sendingBTN) newStatus = "Sending";
+                else newStatus = "Received";
+                try {
+                    adminController.editBuyLogStatus(info[0], newStatus);
+                    discardBTN.getScene().getWindow().hide();
+                } catch (Exceptions.InvalidLogIdException ex) {
+                    ex.printStackTrace();
+                }
             });
 
             discardBTN.setOnAction(e -> discardBTN.getScene().getWindow().hide());

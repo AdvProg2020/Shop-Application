@@ -589,13 +589,13 @@ public class AdminController {
             throw new Exceptions.InvalidLogIdException(logId);
         }else {
             switch (newStatus) {
-                case "PROCESSING":
+                case "Processing":
                     buyLog.setShippingStatus(ShippingStatus.PROCESSING);
                     break;
-                case "SENDING":
+                case "Sending":
                     buyLog.setShippingStatus(ShippingStatus.SENDING);
                     break;
-                case "RECEIVED":
+                case "Received":
                     buyLog.setShippingStatus(ShippingStatus.RECEIVED);
                     break;
             }
