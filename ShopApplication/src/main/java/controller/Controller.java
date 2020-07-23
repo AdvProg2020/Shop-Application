@@ -224,10 +224,10 @@ public class Controller {
         return Utilities.Pack.subSellableBoxes(subSellables);
     }
 
-    public void showProduct(String productId) throws Exceptions.InvalidProductIdException {
+    public void showProduct(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         else {
             product.increaseViewCount();
         }
@@ -237,19 +237,19 @@ public class Controller {
     /**
      * @param productId
      * @return String[5]: ID, name, brand, infoText, averageRatingScore.
-     * @throws Exceptions.InvalidProductIdException
+     * @throws Exceptions.InvalidSellableIdException
      */
-    public String[] digest(String productId) throws Exceptions.InvalidProductIdException {
+    public String[] digest(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         return Utilities.Pack.digest(product);
     }
 
-    public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+    public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         else {
             return new HashMap<>(product.getPropertyValues());
         }
@@ -274,12 +274,12 @@ public class Controller {
     /**
      * @param productId
      * @return String[4]: ID, storeName, price, remaining count.
-     * @throws Exceptions.InvalidProductIdException
+     * @throws Exceptions.InvalidSellableIdException
      */
-    public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+    public ArrayList<String[]> subProductsOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         ArrayList<String[]> subProducts = new ArrayList<>();
         for (SubProduct subProduct : product.getSubProducts()) {
             subProducts.add(Utilities.Pack.subProduct(subProduct));
@@ -298,12 +298,12 @@ public class Controller {
     /**
      * @param productId
      * @return String[3]: usernameOfReviewer, title, body, hasBought.
-     * @throws Exceptions.InvalidProductIdException
+     * @throws Exceptions.InvalidSellableIdException
      */
-    public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidProductIdException {
+    public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         ArrayList<String[]> reviews = new ArrayList<>();
         for (Review review : product.getReviews()) {
             reviews.add(Utilities.Pack.review(review));
@@ -379,12 +379,12 @@ public class Controller {
         return currentCart.getTotalPrice();
     }
 
-    public void addReview(String productId, String title, String text) throws Exceptions.InvalidProductIdException, Exceptions.NotLoggedInException {
+    public void addReview(String productId, String title, String text) throws Exceptions.InvalidSellableIdException, Exceptions.NotLoggedInException {
         if (currentAccount == null)
             throw new Exceptions.NotLoggedInException();
         else {
             if (Product.getProductById(productId) == null)
-                throw new Exceptions.InvalidProductIdException(productId);
+                throw new Exceptions.InvalidSellableIdException(productId);
             else {
                 new Review(currentAccount.getId(), productId, title, text, database);
                 database.request();
@@ -498,10 +498,10 @@ public class Controller {
         else currentCart.removeSubSellable(subProductId);
     }
 
-    public String[] getDefaultSubProductOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
-        Product product = Product.getProductById(productId);
+    public String[] getDefaultSubSellableOfASellable(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Product product = Product.getProductById(sellableId);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(sellableId);
         return Utilities.Pack.subProduct(product.getDefaultSubProduct());
     }
 
@@ -610,10 +610,10 @@ public class Controller {
         return subSellablesToShow;
     }
 
-    public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidProductIdException {
+    public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if (product == null) {
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         } else {
             return getCategoryTreeOfACategory(product.getCategory().getName());
         }

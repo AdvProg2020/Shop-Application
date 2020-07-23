@@ -187,10 +187,10 @@ public class CustomerController {
     }
 
     public void rateProduct(String productID, int score) throws
-            Exceptions.InvalidProductIdException, Exceptions.HaveNotBoughtException {
+            Exceptions.InvalidSellableIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID);
         if (product == null)
-            throw new Exceptions.InvalidProductIdException(productID);
+            throw new Exceptions.InvalidSellableIdException(productID);
         else {
             if (currentAccount() != null) {
                 for (SubProduct subProduct : product.getSubProducts()) {
@@ -228,10 +228,10 @@ public class CustomerController {
         return mainController.getTotalPriceOfCart();
     }
 
-    public boolean hasBought(String productId) throws Exceptions.InvalidProductIdException {
+    public boolean hasBought(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
         if(product == null){
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         }else {
             return product.hasBought(currentAccount().getId());
         }

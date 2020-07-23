@@ -70,8 +70,8 @@ public class Exceptions {
         }
     }
 
-    public static class InvalidProductIdException extends Exception {
-        public InvalidProductIdException(String productId) {
+    public static class InvalidSellableIdException extends Exception {
+        public InvalidSellableIdException(String productId) {
             super("ProductId: " + productId + " is Invalid!");
         }
     }
