@@ -9,6 +9,7 @@ import model.account.Supporter;
 import model.database.Database;
 import model.log.BuyLog;
 import model.log.SellLog;
+import model.log.ShippingStatus;
 import model.request.*;
 import model.sellable.Product;
 import model.sellable.SubProduct;
@@ -579,6 +580,25 @@ public class AdminController {
             throw new Exceptions.InvalidLogIdException(logId);
         }else {
             return Utilities.Pack.sellLog(sellLog);
+        }
+    }
+
+    public void editBuyLogStatus(String logId, String newStatus) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if( buyLog == null){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            switch (newStatus) {
+                case "PROCESSING":
+                    buyLog.setShippingStatus(ShippingStatus.PROCESSING);
+                    break;
+                case "SENDING":
+                    buyLog.setShippingStatus(ShippingStatus.SENDING);
+                    break;
+                case "RECEIVED":
+                    buyLog.setShippingStatus(ShippingStatus.RECEIVED);
+                    break;
+            }
         }
     }
 }
