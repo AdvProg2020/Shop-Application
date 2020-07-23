@@ -2444,27 +2444,37 @@ public class Controllers {
             }
         }
 
-        //TODO...
+        //Done...
         private void updateSubSellableBox() {
             sellerLBL.setText(subSellablePack[12]);
-            if (!subSellablePack[7].equals(subSellablePack[8])) {
-                priceBeforeLBL.setText(subSellablePack[7] + "$");
-                priceAfterLBL.setText(subSellablePack[8] + "$");
-                priceBeforeLBL.setVisible(true);
-            } else {
-                priceBeforeLBL.setVisible(false);
-                priceAfterLBL.setText(subSellablePack[7] + "$");
-            }
-            if (subSellablePack[11] != null) {
-                salePercentageLBL.setVisible(true);
-                salePercentageLBL.setText(subSellablePack[11] + "%");
-            } else {
-                salePercentageLBL.setVisible(false);
-            }
-            if (Integer.parseInt(subSellablePack[9]) == 0) {
-                soldOutLBL.setVisible(true);
-            } else
+            if( subSellablePack[19] == null){
+                if (!subSellablePack[7].equals(subSellablePack[8])) {
+                    priceBeforeLBL.setText(subSellablePack[7] + "$");
+                    priceAfterLBL.setText(subSellablePack[8] + "$");
+                    priceBeforeLBL.setVisible(true);
+                } else {
+                    priceBeforeLBL.setVisible(false);
+                    priceAfterLBL.setText(subSellablePack[7] + "$");
+                }
+                if (subSellablePack[11] != null) {
+                    salePercentageLBL.setVisible(true);
+                    salePercentageLBL.setText(subSellablePack[11] + "%");
+                } else {
+                    salePercentageLBL.setVisible(false);
+                }
+                if (Integer.parseInt(subSellablePack[9]) == 0) {
+                    soldOutLBL.setVisible(true);
+                } else
+                    soldOutLBL.setVisible(false);
+            }else {
                 soldOutLBL.setVisible(false);
+                salePercentageLBL.setVisible(false);
+                auctionLBL.setVisible(true);
+                priceBeforeLBL.setVisible(false);
+                priceAfterLBL.setVisible(true);
+                priceAfterLBL.setText(subSellablePack[16]);
+            }
+
             //subProductBoxPack[9] = Integer.toString(subProduct.getRemainingCount());
             updateShowOfButtons();
             updateBuyersTable();
