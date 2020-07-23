@@ -7810,7 +7810,7 @@ public class Controllers {
         }
     }
 
-    public static class SupporterChatMenuController implements Initializable{
+    public static class SupporterChatMenuController implements Initializable {
         @FXML
         private AnchorPane chatPane;
         @FXML
@@ -7830,9 +7830,11 @@ public class Controllers {
             String chatId;
             Hyperlink customer = new Hyperlink();
             Button remove = new Button();
+            boolean archived;
 
-            public ChatWrapper(String[] pack) {
-
+            public ChatWrapper(String[] pack, boolean archived) {
+                this(pack[0], pack[1]);
+                this.archived = archived;
             }
 
             public ChatWrapper(String chatId, String username) {
@@ -7847,7 +7849,13 @@ public class Controllers {
                 });
 
                 remove.setOnAction(e -> {
-                    supporterController
+                    try {
+                        supporterController.deleteChat(chatId);
+                        archiveChats.getItems().add(this);
+                        activeChats.getItems().remove(this);
+                    } catch (Exceptions.InvalidChatIdException ex) {
+                        ex.printStackTrace();
+                    }
                 });
             }
 
@@ -7870,7 +7878,23 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
+            initCols();
+            initItems();
+        }
 
+        private void initCols() {
+            activeCustomers.setCellValueFactory(new PropertyValueFactory<>("customer"));
+            archiveCustomers.setCellValueFactory(new PropertyValueFactory<>("customer"));
+            activeRemove.setCellValueFactory(new PropertyValueFactory<>("remove"));
+        }
+
+        private void initItems() {
+            try {
+                supporterController.getActiveChats().forEach(ch -> activeChats.getItems().add(new ChatWrapper(ch, false)));
+                supporterController.getArchiveChats().forEach(ch -> archiveChats.getItems().add(new ChatWrapper(ch, true)));
+            } catch (Exceptions.UnAuthorizedAccountException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -7925,8 +7949,13 @@ public class Controllers {
                 detailsBTN.getStyleClass().add("details-button"); removeBTN.getStyleClass().add("remove-button");
 
                 removeBTN.setOnAction(e -> {
-                    archive.getItems().add(this);
-                    auctions.getItems().remove(this);
+                    try {
+                        sellerController.removeAuction(id);
+                        archive.getItems().add(this);
+                        auctions.getItems().remove(this);
+                    } catch (Exceptions.InvalidAuctionIdException ex) {
+                        ex.printStackTrace();
+                    }
                 });
 
                 detailsBTN.setOnAction(e -> SellerAuctionMangingPopupController.display(id));

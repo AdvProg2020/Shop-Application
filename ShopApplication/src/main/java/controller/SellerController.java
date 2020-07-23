@@ -581,6 +581,15 @@ public class SellerController {
         return ((Seller) currentAccount()).getWallet().getBalance();
     }
 
+    public void removeAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
+        Auction auction = Auction.getAuctionById(auctionId);
+        if (auction != null) {
+            auction.suspend();
+        } else {
+            throw new Exceptions.InvalidAuctionIdException(auctionId);
+        }
+    }
+
     public void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if( sale != null ){

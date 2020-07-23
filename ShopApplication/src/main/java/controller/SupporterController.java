@@ -1,6 +1,7 @@
 package controller;
 
 import model.account.Account;
+import model.account.Seller;
 import model.account.Supporter;
 import model.chat.Chat;
 import model.chat.Message;
@@ -27,16 +28,26 @@ public class SupporterController {
         return mainController.getDatabase();
     }
 
-    public ArrayList<String[]> getChatsOfSupporter() throws Exceptions.UnAuthorizedAccountException {
+    public ArrayList<String[]> getActiveChats() throws Exceptions.UnAuthorizedAccountException {
         ArrayList<String[]> chatPacks = new ArrayList<>();
         if(currentAccount().getClass().getSimpleName().equals("Supporter")){
             for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
                 chatPacks.add(Utilities.Pack.supportChat(chat));
             }
             return chatPacks;
-        }else {
+        } else {
             throw new Exceptions.UnAuthorizedAccountException();
         }
+    }
+
+    public ArrayList<String[]> getArchiveChats() throws Exceptions.UnAuthorizedAccountException {
+        ArrayList<String[]> chatPacks = new ArrayList<>();
+        if (currentAccount().getClass().getSimpleName().equals("Supporter")) {
+            for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
+                chatPacks.add(Utilities.Pack.supportChat(chat));
+            }
+            return chatPacks;
+        } throw new Exceptions.UnAuthorizedAccountException();
     }
 
 
