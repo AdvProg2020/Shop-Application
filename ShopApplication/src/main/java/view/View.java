@@ -40,6 +40,7 @@ public class View extends Application {
     private static Stage mainStage;
     private static Scene mainScene;
     public static boolean inSale;
+    public static boolean inAuction;
     public static String categoryName;
     static ArrayList<String> stackTrace = new ArrayList<>();
 
@@ -88,6 +89,7 @@ public class View extends Application {
             p = loader.load();
         } catch (IOException e) {
             System.out.println("could not load " + fxml + ".fxml");
+            e.printStackTrace();
             return null;
         }
 
@@ -125,7 +127,7 @@ public class View extends Application {
             if (fxml.equals(Constants.FXMLs.personalInfoMenu)) {
                 Controllers.PersonalInfoMenuController.display(null);
             } else if (fxml.equals(Constants.FXMLs.productsMenu)) {
-                Controllers.ProductsMenuController.display(categoryName, inSale);
+                Controllers.ProductsMenuController.display(categoryName, inSale, inAuction);
             }else {
                 p = loadFxml(fxml);
                 Controllers.BaseController.setMainPane(p);

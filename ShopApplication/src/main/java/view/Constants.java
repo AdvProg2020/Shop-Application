@@ -53,9 +53,11 @@ public final class Constants {
         public static final String adminDiscountManagingPopup = "AdminDiscountManagingPopup";
         public static final String adminAccountManagingMenu = "AdminAccountManagingMenu";
         public static final String adminRegistrationPopup = "AdminRegistrationPopup";
-        public static final String adminProductManagingMenu =  "AdminProductManagingMenu";
+        public static final String adminProductManagingMenu =  "AdminSellableManagingMenu";
         public static final String adminRequestManagingMenu = "AdminRequestManagingMenu";
         public static final String adminManagingMenu = "AdminManagingMenu";
+        public static final String adminBuyLogManagingMenu = "AdminBuyLogManagingMenu";
+        public static final String adminBuyLogMangingPopup = "AdminBuyLogManagingPopup";
         public static final String purchaseMenu = "PurchaseMenu";
         public static final String productBox = "ProductBox";
         public static final String sellerManagingMenu = "SellerManagingMenu";
@@ -64,8 +66,8 @@ public final class Constants {
         public static final String sellerSaleManagingPopup = "SellerSaleManagingPopup";
         public static final String sellerSellLogsManagingMenu = "SellerSellLogsManagingMenu";
         public static final String sellerSellLogDetailsPopup = "SellerSellLogDetailsPopup";
-        public static final String sellerAuctionMangingMenu = "SellerAuctionMangingMenu";
-        public static final String sellerAuctionMangingPopup = "SellerAuctionMangingPopup";
+        public static final String sellerAuctionManagingMenu = "SellerAuctionManagingMenu";
+        public static final String sellerAuctionManagingPopup = "SellerAuctionManagingPopup";
         public static final String customerBuyLogMenu = "CustomerBuyLogMenu";
         public static final String customerBuyLogDetailsPopup = "CustomerBuyLogDetailsPopup";
         public static final String productDetailMenu = "ProductDetailMenu";
@@ -74,6 +76,7 @@ public final class Constants {
         public static final String editProductPopup = "EditProductPopup";
         public static final String addSellablePopup_Page1 = "AddSellablePopup_Page1";
         public static final String addProductPage2 = "AddProductPopup_Page2";
+        public static final String addFilePage2 = "AddFilePopup_Page2";
         public static final String addProductRequestPopup = "AddProductRequestPopup";
         public static final String addAuctionRequestPopup = "AddAuctionRequestPopup";
         public static final String addFileRequestPopup = "AddFileRequestPopup";

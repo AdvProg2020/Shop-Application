@@ -7,6 +7,9 @@ import model.account.Admin;
 import model.account.Customer;
 import model.account.Supporter;
 import model.database.Database;
+import model.log.BuyLog;
+import model.log.SellLog;
+import model.log.ShippingStatus;
 import model.request.*;
 import model.sellable.Product;
 import model.sellable.SubProduct;
@@ -309,6 +312,9 @@ public class AdminController {
                 case "AddFileRequest":
                     detailsOfRequest.add(Utilities.Pack.addFileRequest(((AddFileRequest) request).getSubFile(), ((AddFileRequest)request).getFile()));
                     break;
+                case "AddAuctionRequest":
+                    detailsOfRequest.add(Utilities.Pack.addAuctionRequest(((AddAuctionRequest) request).getAuction()));
+                    break;
                 case "EditFileRequest":
                     detailsOfRequest.add(Utilities.Pack.subFile(((EditFileRequest) request).getSubFile()));
                     detailsOfRequest.add(Utilities.Pack.fileChange(((EditFileRequest) request)));
@@ -444,6 +450,15 @@ public class AdminController {
         }
     }
 
+    public HashMap<String, String> getPropertyValuesOfAFileInRequest(String requestId) throws Exceptions.InvalidRequestIdException {
+        Request request = Request.getRequestById(requestId, false);
+        if (request == null || ! request.getClass().getSimpleName().equals("AddFileRequest")) {
+            throw new Exceptions.InvalidRequestIdException(requestId);
+        } else {
+            return new HashMap<>(((AddFileRequest) request).getFile().getPropertyValues());
+        }
+    }
+
     public ArrayList<String[]> getProductsInSaleRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId, false);
         if( request == null || !request.getClass().getSimpleName().equals("AddSaleRequest")){
@@ -520,6 +535,70 @@ public class AdminController {
             throw new Exceptions.InvalidProductIdException(productId);
         }else {
             product.setName(newName);
+        }
+    }
+
+    public ArrayList<String[]> getAllBuyLogs(){
+        ArrayList<String[]> buyLogPacks = new ArrayList<>();
+        for (BuyLog buyLog : BuyLog.getAllBuyLogs()) {
+            buyLogPacks.add(Utilities.Pack.buyLog(buyLog));
+        }
+        return buyLogPacks;
+    }
+
+    public ArrayList<String[]> getAllSellLogs(){
+        ArrayList<String[]> sellLogPacks = new ArrayList<>();
+        for (SellLog sellLog : SellLog.getAllSellLogs()) {
+            sellLogPacks.add(Utilities.Pack.sellLog(sellLog));
+        }
+        return sellLogPacks;
+    }
+
+    public String[] getBuyLogWithId(String logId) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if( buyLog == null ){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            return Utilities.Pack.buyLog(buyLog);
+        }
+    }
+
+    public ArrayList<String[]> getBuyLogItemsWithId(String logId) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if ( buyLog == null ) {
+            throw new Exceptions.InvalidLogIdException(logId);
+        } else {
+            ArrayList<String[]> items = new ArrayList<>();
+            buyLog.getLogItems().forEach(li -> items.add(Utilities.Pack.buyLogItem(li)));
+            return items;
+        }
+    }
+
+    public String[] getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException{
+        SellLog sellLog = SellLog.getSellLogById(logId);
+        if( sellLog == null ){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            return Utilities.Pack.sellLog(sellLog);
+        }
+    }
+
+    public void editBuyLogStatus(String logId, String newStatus) throws Exceptions.InvalidLogIdException {
+        BuyLog buyLog = BuyLog.getBuyLogById(logId);
+        if( buyLog == null){
+            throw new Exceptions.InvalidLogIdException(logId);
+        }else {
+            switch (newStatus) {
+                case "Processing":
+                    buyLog.setShippingStatus(ShippingStatus.PROCESSING);
+                    break;
+                case "Sending":
+                    buyLog.setShippingStatus(ShippingStatus.SENDING);
+                    break;
+                case "Received":
+                    buyLog.setShippingStatus(ShippingStatus.RECEIVED);
+                    break;
+            }
         }
     }
 }

@@ -10,10 +10,7 @@ import model.account.Seller;
 import model.database.Database;
 import model.log.LogItem;
 import model.log.SellLog;
-import model.request.EditFileRequest;
-import model.request.EditProductRequest;
-import model.request.EditSaleRequest;
-import model.request.Request;
+import model.request.*;
 import model.sellable.*;
 
 import java.text.DateFormat;
@@ -75,13 +72,28 @@ public class SellerController {
         else return p.getId();
     }
 
+    public String isFileWithNameAndExtension(String name, String extension) {
+        File f = File.getFileByNameAndExtension(name, extension);
+        if (f == null) return null;
+        else return f.getId();
+    }
+
     public boolean isNameAndBrandUsed(String name, String brand){
         return Product.isProductNameAndBrandUsed(name, brand);
+    }
+
+    public boolean isNameAndExtensionUsed(String name, String extension) {
+        return File.isFileNameAndExtensionUsed(name, extension);
     }
 
     public boolean doesSellerSellThisProduct(String productId){
         Product product = Product.getProductById(productId);
         return product.isSoldInStoreWithName(((Seller)currentAccount()).getStoreName());
+    }
+
+    public boolean doesSellerSellThisFile(String fileId) {
+        File file = File.getFileById(fileId);
+        return file.isSoldInStoreWithName(((Seller) currentAccount()).getStoreName());
     }
 
     public ArrayList<String[]> getAllSellLogs() {
@@ -395,8 +407,6 @@ public class SellerController {
         throw new Exceptions.InvalidAuctionIdException(auctionId);
     }
 
-
-
     public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
@@ -492,6 +502,65 @@ public class SellerController {
                 throw new Exceptions.InvalidProductIdsForASeller(Utilities.Pack.invalidProductIds(invalidSubProductIds));
         } else
             throw new Exceptions.InvalidDateException();
+    }
+
+    public void addAuction(String StartDate, String EndDate, String subSellableID) throws Exceptions.InvalidFormatException, Exceptions.InvalidDateException {
+        Date startDate;
+        Date endDate;
+        try {
+            startDate = dateFormat.parse(StartDate);
+            endDate = dateFormat.parse(EndDate);
+        } catch (ParseException e) {
+            throw new Exceptions.InvalidFormatException("date");
+        }
+        if (startDate.before(endDate)) {
+            Auction auction = new Auction(currentAccount().getId(), subSellableID, startDate, endDate, database());
+        } else
+            throw new Exceptions.InvalidDateException();
+    }
+
+    public void editAuction(String auctionId, String field, String newInformation) throws Exceptions.InvalidAuctionIdException, Exceptions.InvalidFieldException, Exceptions.InvalidDateException, Exceptions.InvalidFormatException, Exceptions.SameAsPreviousValueException {
+        Auction targetedAuction = null;
+        for (Auction auction : ((Seller) currentAccount()).getActiveAuctions()) {
+            if (auction.getId().equals(auctionId)) {
+                targetedAuction = auction;
+                break;
+            }
+        }
+        if (targetedAuction == null)
+            throw new Exceptions.InvalidAuctionIdException(auctionId);
+        else {
+            switch (field) {
+                case "start date":
+                    try {
+                        if (targetedAuction.getEndDate().after(dateFormat.parse(newInformation))) {
+                            if (dateFormat.parse(newInformation).equals(targetedAuction.getStartDate()))
+                                throw new Exceptions.SameAsPreviousValueException("start date");
+                            new EditAuctionRequest(auctionId, newInformation, EditAuctionRequest.Field.START_DATE);
+                            database().request();
+                        } else
+                            throw new Exceptions.InvalidDateException();
+                    } catch (ParseException | Exceptions.SameAsPreviousValueException e) {
+                        throw new Exceptions.InvalidFormatException("date");
+                    }
+                    break;
+                case "end date":
+                    try {
+                        if (targetedAuction.getStartDate().before(dateFormat.parse(newInformation))) {
+                            if (dateFormat.parse(newInformation).equals(targetedAuction.getEndDate()))
+                                throw new Exceptions.SameAsPreviousValueException("end date");
+                            new EditAuctionRequest(auctionId, newInformation, EditAuctionRequest.Field.END_DATE);
+                            database().request();
+                        } else
+                            throw new Exceptions.InvalidDateException();
+                    } catch (ParseException e) {
+                        throw new Exceptions.InvalidFormatException("date");
+                    }
+                    break;
+                default:
+                    throw new Exceptions.InvalidFieldException();
+            }
+        }
     }
 
     public void addProductsToSale(String saleId, ArrayList<String> subProductIds){

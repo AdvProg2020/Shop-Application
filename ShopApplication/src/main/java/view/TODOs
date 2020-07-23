@@ -27,6 +27,16 @@ FXML additions:
 5- auction page for customer and auction products menu.
 6- seller add auction -> auctionManaging menu.
 
-account karmozd managing menu
 
-dana and shayanT: addAuctionRequest, addFileRequestPopup Details.
+account karmozd managing menu
+auction: chat: shayan T
+         auction popup: dana
+bank: how to handle?
+    admin
+    seller
+    customer -> 1. purchase menu 2. deposit
+chat supporter and customer:
+    chat: shayan T
+    fxml: dana
+chat: refresh for messages button and send button: shayan M
+auction popup: refresh highest bidder button: shayan M
