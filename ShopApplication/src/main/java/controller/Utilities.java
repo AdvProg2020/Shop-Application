@@ -75,7 +75,7 @@ public class Utilities {
         }
 
         public static String[] subProduct(SubProduct subProduct){
-            String[] subProductBoxPack = new String[19];
+            String[] subProductBoxPack = new String[20];
             Product product = subProduct.getProduct();
             Sale sale = subProduct.getSale();
             Auction auction = subProduct.getAuction();
@@ -98,11 +98,12 @@ public class Utilities {
             subProductBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
             subProductBoxPack[17] = auction != null ? auction.getHighestBidder().getUsername() : null;
             subProductBoxPack[18] = auction != null ? dateFormat.format(auction.getEndDate()) : null;
+            subProductBoxPack[19] = auction != null ? auction.getId() : null;
             return subProductBoxPack;
         }
 
         public static String[] subFile(SubFile subFile){
-            String[] subFileBoxPack = new String[19];
+            String[] subFileBoxPack = new String[20];
             File file = subFile.getFile();
             Sale sale = subFile.getSale();
             Auction auction = subFile.getAuction();
@@ -125,6 +126,7 @@ public class Utilities {
             subFileBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
             subFileBoxPack[17] = auction != null ? auction.getHighestBidder().getUsername() : null;
             subFileBoxPack[18] = auction != null ? dateFormat.format(auction.getEndDate()) : null;
+            subFileBoxPack[19] = auction != null ? auction.getId() : null;
             return subFileBoxPack;
         }
 

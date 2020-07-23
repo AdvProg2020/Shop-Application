@@ -2106,6 +2106,9 @@ public class Controllers {
         private Label brandExtensionLBL;
 
         @FXML
+        private Label brandExtension;
+
+        @FXML
         private Label categoryLBL;
 
         @FXML
@@ -2271,14 +2274,14 @@ public class Controllers {
             Label name = new Label();
             String price;
             String available;
-            String[] subProductPack;
+            String[] subSellablePack;
             SellableDetailMenuController controller;
 
             public SellerWrapper(String name, String price, String available, String[] subProductPack, SellableDetailMenuController controller) {
                 this.name.setText(name);
                 this.price = price;
                 this.available = available;
-                this.subProductPack = subProductPack;
+                this.subSellablePack = subProductPack;
                 this.controller = controller;
 
                 this.name.setOnMouseClicked(e -> {
@@ -2299,8 +2302,8 @@ public class Controllers {
                 return available;
             }
 
-            public String[] getSubProductPack() {
-                return subProductPack;
+            public String[] getSubSellablePack() {
+                return subSellablePack;
             }
         }
 
@@ -2408,10 +2411,12 @@ public class Controllers {
             initRatingStars();
         }
 
-        private void initMainObjectsInFileMode() {
+        private void initMainObjectsInFileMode(){
+            brandExtension.setText("Extension: ");
 
         }
 
+        //Done...
         private void initRatingStars() {
             double rating = Double.parseDouble(sellablePack[4]);
             fullStar1.setVisible(rating >= 1);
@@ -2428,6 +2433,7 @@ public class Controllers {
 
         }
 
+        //Done...
         private void setPacks(String sellableId, String subSellableId) {
             try {
                 sellablePack = mainController.digest(sellableId);
@@ -2438,6 +2444,7 @@ public class Controllers {
             }
         }
 
+        //TODO...
         private void updateSubSellableBox() {
             sellerLBL.setText(subSellablePack[12]);
             if (!subSellablePack[7].equals(subSellablePack[8])) {
@@ -2463,6 +2470,7 @@ public class Controllers {
             updateBuyersTable();
         }
 
+        //Done...
         private void initReviewsVB() {
             try {
                 ArrayList<String[]> reviews = mainController.reviewsOfProductWithId(sellablePack[0]);
@@ -2474,6 +2482,7 @@ public class Controllers {
             }
         }
 
+        //Done...
         private void initPropertiesTable() {
             try {
                 HashMap<String, String> propertyValues = mainController.getPropertyValuesOfAProduct(sellablePack[0]);
@@ -2488,6 +2497,7 @@ public class Controllers {
             }
         }
 
+        //Done...
         private void initCategoryHBox() {
             try {
                 HBox categoryHBox = CategoryTreeBoxController.createBox();
@@ -2503,6 +2513,7 @@ public class Controllers {
             }
         }
 
+        //Done...
         private void addToCart() {
             try {
                 mainController.addToCart(subSellablePack[1], 1);
@@ -2514,10 +2525,12 @@ public class Controllers {
             }
         }
 
+        //Done...
         private void edit() {
             EditProductPopupController.display(sellablePack[0], subSellablePack[1]);
         }
 
+        //Done...
         private void compare() {
             ProductsMenuController.displayACategoryProductsToCompare(sellablePack[7], sellablePack[0]);
             if (editable) {
@@ -2525,25 +2538,40 @@ public class Controllers {
             }
         }
 
+        //Done...
         private void addReview() {
             AddReviewPopupController.display(sellablePack[0]);
         }
 
+        //Done
         private void rate() {
             ratingsStackPane.getChildren().remove(rateBTN);
             ratingsBox.setVisible(false);
             ratingsStackPane.getChildren().add(RatingBoxController.createBox(sellablePack[0]));
         }
 
+        //Todo
+        private void download(){
+        }
+
+        //Done
+        private void auction(){
+            AuctionPopupController.display(subSellablePack[19]);
+        }
+
+        //Done
         private void initButtons() {
             addToCartBTN.setOnAction(e -> addToCart());
             editBTN.setOnAction(e -> edit());
             compareBTN.setOnAction(e -> compare());
             addReviewBTN.setOnAction(e -> addReview());
             rateBTN.setOnAction(e -> rate());
+            downloadBTN.setOnAction(e -> download());
+            auctionBTN.setOnAction(e -> auction());
 
             updateShowOfButtons();
         }
+
 
         private void updateShowOfButtons() {
             if (type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)) {
@@ -2579,6 +2607,16 @@ public class Controllers {
             } else addReviewBTN.setVisible(false);
 
             compareBTN.setVisible(true);
+
+            if( !editable && subSellablePack[19] != null ){
+                auctionLBL.setVisible(true);
+                salePercentageLBL.setVisible(false);
+
+                auctionBTN.setVisible(true);
+                addToCartBTN.setVisible(false);
+                editBTN.setVisible(false);
+                downloadBTN.setVisible(false);
+            }
         }
 
     }
@@ -8484,5 +8522,7 @@ public class Controllers {
                 } else errorLBL.setText("please enter a valid double");
             });
         }
+
     }
+
 }
