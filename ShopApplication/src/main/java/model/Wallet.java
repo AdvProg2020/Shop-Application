@@ -13,6 +13,7 @@ import java.util.Map;
 public class Wallet implements ModelBasic {
     private static Map<String, Wallet> allWallets = new HashMap<>();
     private static int lastNum = 1;
+    private static double minBalance = 0;
     private String walletId;
     private String accountId;
     private double balance;
@@ -64,11 +65,21 @@ public class Wallet implements ModelBasic {
         return balance;
     }
 
-    public void changeBalance(double changeAmount) {
-        balance += changeAmount;
+    public static double getMinBalance() {
+        return minBalance;
     }
 
     public Account getAccount() {
         return Account.getAccountById(accountId);
+    }
+
+    public static void setMinBalance(double minBalance) {
+        Wallet.minBalance = minBalance;
+    }
+
+    public void changeBalance(double changeAmount) {
+        balance += changeAmount;
+        if (balance < minBalance)
+            balance = minBalance;
     }
 }

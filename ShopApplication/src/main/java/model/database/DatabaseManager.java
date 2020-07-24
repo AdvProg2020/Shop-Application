@@ -29,6 +29,14 @@ public class DatabaseManager implements Database {
 
     private <T> void load(String fileName, Class<T> classType) {
         Scanner scanner = DatabaseUtilities.getScanner(fileName);
+        if (classType == Admin.class) {
+            String[] input = scanner.nextLine().split("\\s");
+            Admin.setCommission(Double.parseDouble(input[1]));
+        } else if (classType == Wallet.class) {
+            String[] input = scanner.nextLine().split("\\s");
+            Wallet.setMinBalance(Double.parseDouble(input[1]));
+        }
+
         while (scanner.hasNextLine()) {
             String gsonString = scanner.nextLine();
             ((ModelBasic) gson.fromJson(gsonString, classType)).initialize();
@@ -40,6 +48,10 @@ public class DatabaseManager implements Database {
         PrintWriter printWriter = DatabaseUtilities.getPrintWriter(fileName);
         if (classType == Category.class) // writing superCategory first
             printWriter.println(gson.toJson(Category.getSuperCategory(), classType));
+        else if (classType == Admin.class) // writing commission
+            printWriter.println("Commission:" + Admin.getCommission());
+        else if (classType == Wallet.class) // writing wallet min balance
+            printWriter.println("Min Balance:" + Wallet.getMinBalance());
 
         for (T instance : allInstances) {
             printWriter.println(gson.toJson(instance, classType));
