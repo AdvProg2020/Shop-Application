@@ -49,8 +49,22 @@
             <artifactId>javafx-media</artifactId>
             <version>14</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.jai-imageio/jai-imageio-core -->
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-core</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+
 
     </dependencies>
+    <repositories>
+        <repository>
+            <id>com.springsource.repository.bundles.external</id>
+            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+            <url>http://repository.springsource.com/maven/bundles/external</url>
+        </repository>
+    </repositories>
     <build>
         <finalName>ShopApplication</finalName>
 

@@ -696,7 +696,7 @@ public class Controller {
         }
     }
 
-    private byte[] loadFileFromDataBase(String path){
+    public byte[] loadFileFromDataBase(String path){
         Path filePath = Paths.get(path);
         try {
             return Files.readAllBytes(filePath);

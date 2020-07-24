@@ -23,9 +23,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -695,9 +696,18 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            info[7] = info[7].replaceAll("\\\\", "/");
+            String imgPath = "/src/main/resources/temp/accountImage.png";
+            byte[] byteArray = mainController.loadFileFromDataBase(info[7]);
+            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                stream.write(byteArray);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            accountIMG.setImage(new Image("file:" + Constants.base + imgPath));
 
-            accountIMG.setImage(new Image("file:" + (info[7].startsWith("/src") ? Constants.base : "") + info[7]));
+
         }
 
 
@@ -1682,8 +1692,18 @@ public class Controllers {
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
-            subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
-            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("/src") ? Constants.base : "") + subProductInfo[6]));
+
+            String imgPath = "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
+            byte[] byteArray = mainController.loadFileFromDataBase(subProductInfo[6]);
+            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                stream.write(byteArray);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            image.setImage(new Image("file:" + Constants.base + imgPath));
+
             if (subProductInfo[16] != null) {
                 auctionMode(subProductInfo);
             } else {
@@ -2405,8 +2425,16 @@ public class Controllers {
             ratingCountLBL.setText(sellablePack[5]);
             categoryLBL.setText(sellablePack[7]);
 
-            sellablePack[8] = sellablePack[8].replaceAll("\\\\", "/");
-            sellableIMG.setImage(new Image("file:" + (sellablePack[8].startsWith("/src") ? Constants.base : "") + sellablePack[8]));
+            String imgPath = "/src/main/resources/temp/digestImg.png";
+            byte[] byteArray = mainController.loadFileFromDataBase(sellablePack[8]);
+            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                stream.write(byteArray);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            sellableIMG.setImage(new Image("file:" + Constants.base + imgPath));
 
             initRatingStars();
         }
@@ -4379,8 +4407,17 @@ public class Controllers {
 
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
-                imagePath = imagePath.replaceAll("\\\\", "/");
-                img.setImage(new Image("file:" + (imagePath.startsWith("/src") ? Constants.base : "/") + imagePath));
+
+                String imgPath = "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
+                byte[] byteArray = mainController.loadFileFromDataBase(imagePath);
+                try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                    stream.write(byteArray);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                img.setImage(new Image("file:" + Constants.base + imgPath));
 
 
                 initButtons();
@@ -7375,11 +7412,15 @@ public class Controllers {
                         propertyMap.put(item.property, item.value.getText());
                     }
                     try {
-                        if (!exists)
-                            sellerController.addNewFile(nameField.getText(), extensionField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
-                                    propertyMap, Double.parseDouble(priceField.getText()), pathField.getText());
-                        else
-                            sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), pathField.getText());
+                        if (!exists) {
+                            byte[] image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            byte[] file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            sellerController.addNewFile(nameField.getText(), extensionField.getText(), infoArea.getText(), image, category.getValue(),
+                                    propertyMap, Double.parseDouble(priceField.getText()), file);
+                        } else {
+                            byte[] file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), file);
+                        }
                     } catch (Exception ex) {
                         printError(ex.getMessage());
                         ex.printStackTrace();
@@ -7620,10 +7661,11 @@ public class Controllers {
                         propertyMap.put(item.property, item.value.getText());
                     }
                     try {
-                        if (!exists)
-                            sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
+                        if (!exists) {
+                            byte[] image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), image, category.getValue(),
                                     propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
-                        else
+                        } else
                             sellerController.addNewSubProductToAnExistingProduct(productId, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
                     } catch (Exception ex) {
                         printError(ex.getMessage());
@@ -7866,11 +7908,27 @@ public class Controllers {
             maxPrice1.setText(firstProductInfo[10]);
             maxPrice2.setText(secondProductInfo[10]);
 
-            firstProductInfo[8] = firstProductInfo[8].replaceAll("\\\\", "/");
-            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("/src") ? Constants.base : "") + firstProductInfo[8]));
+            String firstPath = "/src/main/resources/temp/compareFirstImage.png";
+            byte[] byteArray1 = mainController.loadFileFromDataBase(firstProductInfo[8]);
+            try (FileOutputStream stream = new FileOutputStream(firstPath)) {
+                stream.write(byteArray1);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            image1.setImage(new Image("file:" + Constants.base + firstPath));
 
-            secondProductInfo[8] = secondProductInfo[8].replaceAll("\\\\", "/");
-            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("/src") ? Constants.base : "") + secondProductInfo[8]));
+            String secondPath = "/src/main/resources/temp/compareSecondImage.png";
+            byte[] byteArray2 = mainController.loadFileFromDataBase(firstProductInfo[8]);
+            try (FileOutputStream stream = new FileOutputStream(secondPath)) {
+                stream.write(byteArray2);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            image2.setImage(new Image("file:" + Constants.base + secondPath));
         }
 
         private void initProperties() {
