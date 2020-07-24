@@ -35,6 +35,10 @@ public class ServerRequestHandler extends Thread {
             lastReq = System.currentTimeMillis()/1000;
         }
 
+        public SupporterController getSupporterController() {
+            return supporterController;
+        }
+
         public Controller getMainController() {
             return mainController;
         }

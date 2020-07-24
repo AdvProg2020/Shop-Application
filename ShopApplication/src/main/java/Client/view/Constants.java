@@ -228,6 +228,7 @@ public final class Constants {
         public static final String sellerViewAuctionWithId = "/seller/viewAuctionWithId";
         public static final String sellerEditAuction = "/seller/editAuction";
         public static final String sellerAddAuction = "/seller/addAuction";
+        public static final String sellerRemoveFile = "/seller/removeFile";
         //customer Server.controller methods.
         public static final String customerEditPersonalInfo = "/customer/editPersonalInfo";
         public static final String customerGetTotalPriceOfCartWithDiscount = "/customer/getTotalPriceOfCartWithDiscount";
@@ -240,5 +241,11 @@ public final class Constants {
         public static final String customerGetTotalPriceOfCart = "/customer/getTotalPriceOfCart";
         public static final String customerHasBought = "/customer/hasBought";
         public static final String customerBid = "/customer/bid";
+        //supporterController methods.
+        public static final String supporterGetActiveChats = "/supporter/getActiveChats";
+        public static final String supporterGetArchiveChats = "/supporter/getArchiveChats";
+        public static final String supporterViewChat = "/supporter/viewChat";
+        public static final String supporterSendMessage = "/supporter/sendMessage";
+        public static final String supporterDeleteChat = "/supporter/deleteChat";
     }
 }

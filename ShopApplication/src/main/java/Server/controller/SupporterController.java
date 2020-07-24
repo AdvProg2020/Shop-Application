@@ -66,7 +66,7 @@ public class SupporterController {
 
     public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if( chat == null || chat.getSupporter() != currentAccount()){
+        if( chat == null){
             throw new Exceptions.InvalidChatIdException(chatId);
         }else {
             new Message(chatId, currentAccount().getId(), text);

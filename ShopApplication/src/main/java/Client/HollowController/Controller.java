@@ -394,13 +394,35 @@ public class Controller {
 
 
     public HashMap<String, String> getPropertyValuesOfAFile(String fileId) throws InvalidFileIdException {
-
+        String body = convertToJson(fileId);
+        String response = sender.sendRequest(Constants.Commands.getPropertyValuesOfAFile, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidFileIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>(){}.getType());
+        }
     }
 
     public ArrayList<String[]> getMessagesInAuctionChat(String chatId) throws Exceptions.InvalidChatIdException {
-
+        String body = convertToJson(chatId);
+        String response = sender.sendRequest(Constants.Commands.getMessagesInAuctionChat, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidChatIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringArrayListType);
+        }
     }
 
     public ArrayList<String[]> getMessagesInChat(String chatId) throws Exceptions.InvalidChatIdException {
+        String body = convertToJson(chatId);
+        String response = sender.sendRequest(Constants.Commands.getMessagesInChat, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidChatIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringArrayListType);
+        }
     }
 }

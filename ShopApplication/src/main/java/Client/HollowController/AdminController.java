@@ -383,19 +383,43 @@ public class AdminController {
     }
 
     public String[] getBuyLogWithId(String logId) throws InvalidLogIdException {
-
+        String body = convertToJson(logId);
+        String response = sender.sendRequest(Constants.Commands.adminGetBuyLogById, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidLogIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringArrayType);
+        }
     }
 
-    public ArrayList<String[]> getBuyLogItemsWithId(String lodId) throws InvalidLogIdException {
-
+    public ArrayList<String[]> getBuyLogItemsWithId(String logId) throws InvalidLogIdException {
+        String body = convertToJson(logId);
+        String response = sender.sendRequest(Constants.Commands.adminGetBuyLogItemsWithId, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidLogIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringArrayListType);
+        }
     }
 
-    public void editBuyLogStatus(String lodId, String newStatus) throws InvalidLogIdException{
-
+    public void editBuyLogStatus(String logId, String newStatus) throws InvalidLogIdException{
+        String body = convertToJson(logId, newStatus);
+        String response = sender.sendRequest(Constants.Commands.adminEditBuyLogStatus, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidLogIdException(nameBody[1]);
+        }
     }
 
     public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
-
+        String body = convertToJson(username, password, firstName, lastName, email, phone, imagePath);
+        String response = sender.sendRequest(Constants.Commands.adminCreateSupporterProfile, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new UsernameAlreadyTakenException(nameBody[1]);
+        }
     }
 
 }

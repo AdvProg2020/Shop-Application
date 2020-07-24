@@ -153,6 +153,7 @@ public class Commands {
     public static final String sellerViewArchiveAuctions = "/seller/viewArchiveAuctions";
     public static final String sellerEditAuction = "/seller/editAuction";
     public static final String sellerAddAuction = "/seller/addAuction";
+    public static final String sellerRemoveFile = "/seller/removeFile";
     //customer Server.controller methods.
     public static final String customerEditPersonalInfo = "/customer/editPersonalInfo";
     public static final String customerGetTotalPriceOfCartWithDiscount = "/customer/getTotalPriceOfCartWithDiscount";
@@ -166,6 +167,12 @@ public class Commands {
     public static final String customerHasBought = "/customer/hasBought";
 
     public static final String customerBid = "/customer/bid";
+    //supporterController methods
+    public static final String supporterGetActiveChats = "/supporter/getActiveChats";
+    public static final String supporterGetArchiveChats = "/supporter/getArchiveChats";
+    public static final String supporterViewChat = "/supporter/viewChat";
+    public static final String supporterSendMessage = "/supporter/sendMessage";
+    public static final String supporterDeleteChat = "/supporter/deleteChat";
 
     static Map<String, Task> allTasks = Map.ofEntries(
             entry(authTokenRequest, new Task() {
@@ -1327,106 +1334,247 @@ public class Commands {
                     return currentSession.getMainController().getSubSellablesInAuction(((int) objectArgs[0]));
                 }
             }),
-            entry(adminGetBuyLogItemsWithId, new Task() {
+            entry(adminGetBuyLogItemsWithId, new Task(stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getAdminController().getBuyLogItemsWithId(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(adminEditBuyLogStatus, new Task() {
+            entry(adminEditBuyLogStatus, new Task(stringType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO;
+                    try {
+                        currentSession.getAdminController().editBuyLogStatus(objectArgs[0] + "", objectArgs[1] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerIsFileWithNameAndExtension, new Task() {
+            entry(sellerIsFileWithNameAndExtension, new Task(stringType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getSellerController().isFileWithNameAndExtension(objectArgs[0] + "", objectArgs[1] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerIsNameAndExtensionUsed, new Task() {
+            entry(sellerIsNameAndExtensionUsed, new Task(stringType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getSellerController().isNameAndExtensionUsed(objectArgs[0] + "", objectArgs[1] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerDoesSellerSellThisFile, new Task() {
+            entry(sellerDoesSellerSellThisFile, new Task(stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getSellerController().doesSellerSellThisFile(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(getPropertyValuesOfAFile, new Task() {
+            entry(getPropertyValuesOfAFile, new Task(stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getMainController().getPropertyValuesOfAFile(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerAddNewFile, new Task() {
+            entry(sellerAddNewFile, new Task(stringType, stringType, stringType, stringType, stringType, new TypeToken<HashMap<String, String>>(){}.getType(), doubleType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        currentSession.getSellerController().addNewFile(objectArgs[0] + "", objectArgs[1] + "", objectArgs[2] + "",
+                                objectArgs[3] + "", objectArgs[4] + "", ((HashMap<String, String>) objectArgs[5]), ((double) objectArgs[6]), objectArgs[7] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerAddNewSubFileToAnExistingFile, new Task() {
+            entry(sellerAddNewSubFileToAnExistingFile, new Task(stringType, doubleType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        currentSession.getSellerController().addNewSubFileToAnExistingFile(objectArgs[0] + "", ((double) objectArgs[1]), objectArgs[2] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerRemoveAuction, new Task() {
+            entry(sellerRemoveAuction, new Task(stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        currentSession.getSellerController().removeAuction(objectArgs[0] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
             entry(sellerViewActiveAuctions, new Task() {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO
+                    try {
+                        return currentSession.getSellerController().viewActiveAuctions();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
             entry(sellerViewArchiveAuctions, new Task() {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getSellerController().viewArchiveAuctions();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerEditAuction, new Task() {
+            entry(sellerEditAuction, new Task(stringType, stringType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        currentSession.getSellerController().editAuction(objectArgs[0] + "", objectArgs[1] + "", objectArgs[2] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(sellerAddAuction, new Task() {
+            entry(sellerAddAuction, new Task(stringType, stringType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        currentSession.getSellerController().addAuction(objectArgs[0] + "", objectArgs[1] + "", objectArgs[2] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(adminCreateSupporterProfile, new Task() {
+            entry(adminCreateSupporterProfile, new Task(stringType, stringType, stringType, stringType, stringType, stringType, stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        currentSession.getAdminController().createSupporterProfile(objectArgs[0] + "", objectArgs[1] + "", objectArgs[2] + "",
+                                objectArgs[3] + "", objectArgs[4] + "", objectArgs[5] + "", objectArgs[6] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(getMessagesInAuctionChat, new Task() {
+            entry(getMessagesInAuctionChat, new Task(stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getMainController().getMessagesInAuctionChat(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(getMessagesInChat, new Task() {
+            entry(getMessagesInChat, new Task(stringType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        return currentSession.getMainController().getMessagesInChat(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             }),
-            entry(customerBid, new Task() {
+            entry(customerBid, new Task(stringType, doubleType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    //TODO:
+                    try {
+                        currentSession.getCustomerController().bid(objectArgs[0] + "", ((double) objectArgs[1]));
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(sellerRemoveFile, new Task(stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        currentSession.getSellerController().removeFile(objectArgs[0] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(supporterGetActiveChats, new Task() {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getSupporterController().getActiveChats();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(supporterGetArchiveChats, new Task() {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getSupporterController().getArchiveChats();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(supporterViewChat, new Task(stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getSupporterController().viewChat(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(supporterSendMessage, new Task(stringType, stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        currentSession.getSupporterController().sendMessage(objectArgs[0] + "", objectArgs[1] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(supporterDeleteChat, new Task(stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        currentSession.getSupporterController().deleteChat(objectArgs[0] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             })
 

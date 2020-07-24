@@ -1,6 +1,7 @@
 package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
+import Server.ServerGate.Task;
 import Server.controller.Utilities;
 import Server.model.Auction;
 import Server.model.account.Seller;
@@ -281,27 +282,49 @@ public class SellerController {
     }
 
     public String isFileWithNameAndExtension(String name, String extension) {
-
+        String body = convertToJson(name, extension);
+        String response = sender.sendRequest(Constants.Commands.sellerIsFileWithNameAndExtension, body);
+        return new Gson().fromJson(response, stringType);
     }
 
     public boolean isNameAndExtensionUsed(String name, String extension) {
-
+        String body = convertToJson(name, extension);
+        String response = sender.sendRequest(Constants.Commands.sellerIsNameAndExtensionUsed, body);
+        return new Gson().fromJson(response, booleanType);
     }
 
     public boolean doesSellerSellThisFile(String fileId) {
-
+        String body = convertToJson(fileId);
+        String response = sender.sendRequest(Constants.Commands.sellerDoesSellerSellThisFile, body);
+        return new Gson().fromJson(response, booleanType);
     }
 
     public void addNewFile(String name, String extension, String info, String imagePath, String category, HashMap<String, String> properties, double price, String path) throws ExistingFileException, InvalidCategoryException{
-
+        String body = convertToJson(name, extension, info, imagePath, category, properties, price, path);
+        String response = sender.sendRequest(Constants.Commands.sellerAddNewFile, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            if (nameBody[0].startsWith("Existing")) throw new ExistingFileException(nameBody[1]);
+            else throw new InvalidCategoryException(nameBody[1]);
+        }
     }
 
     public void addNewSubFileToAnExistingFile(String fileId, double price, String path) throws InvalidFileIdException{
-
+        String body = convertToJson(fileId, price, path);
+        String response = sender.sendRequest(Constants.Commands.sellerAddNewSubFileToAnExistingFile, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidFileIdException(nameBody[1]);
+        }
     }
 
     public void removeFile(String fileId) throws Exceptions.InvalidFileIdException {
-
+        String body = convertToJson(fileId);
+        String response = sender.sendRequest(Constants.Commands.sellerRemoveFile, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidFileIdException(nameBody[1]);
+        }
     }
 
     public void removeAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
@@ -314,24 +337,50 @@ public class SellerController {
     }
 
     public ArrayList<String[]> viewArchiveAuctions() {
-
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.sellerViewArchiveAuctions, body);
+        return new Gson().fromJson(response, stringArrayListType);
     }
 
     public ArrayList<String[]> viewActiveAuctions() {
-
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.sellerViewActiveAuctions, body);
+        return new Gson().fromJson(response, stringArrayListType);
     }
 
     public String[] viewAuctionWithId(String auctionId) throws Exceptions.InvalidAuctionIdException {
-
+        String body = convertToJson(auctionId);
+        String response = sender.sendRequest(Constants.Commands.sellerViewAuctionWithId, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidAuctionIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringArrayType);
+        }
     }
 
-    public void editAuction(String auctionId, String field, String newInformation)
+    public void editAuction(String auctionId, String fileId, String newInformation)
             throws Exceptions.InvalidAuctionIdException, Exceptions.InvalidFieldException, Exceptions.InvalidDateException, Exceptions.InvalidFormatException, Exceptions.SameAsPreviousValueException {
-
+        String body = convertToJson(auctionId, fileId, newInformation);
+        String response = sender.sendRequest(Constants.Commands.sellerEditAuction, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            if (nameBody[0].startsWith("InvalidAuction")) throw new InvalidAuctionIdException(nameBody[1]);
+            else if (nameBody[0].startsWith("InvalidField")) throw new InvalidFieldException();
+            else if (nameBody[0].startsWith("InvalidDate")) throw new InvalidDateException();
+            else if (nameBody[0].startsWith("InvalidFormat")) throw new InvalidFormatException(nameBody[1]);
+            else throw new SameAsPreviousValueException(nameBody[1]);
+        }
     }
 
-    public void addAuction(String StartDate, String EndDate, String subSellableID) throws Exceptions.InvalidFormatException, Exceptions.InvalidDateException {
-
+    public void addAuction(String startDate, String endDate, String subSellableID) throws Exceptions.InvalidFormatException, Exceptions.InvalidDateException {
+        String body = convertToJson(startDate, endDate, subSellableID);
+        String response = sender.sendRequest(Constants.Commands.sellerAddAuction, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            if (nameBody[0].startsWith("InvalidFormat")) throw new InvalidFormatException(nameBody[1]);
+            else throw new InvalidDateException();
+        }
     }
 
 }

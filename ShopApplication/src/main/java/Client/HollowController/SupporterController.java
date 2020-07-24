@@ -1,5 +1,6 @@
 package Client.HollowController;
 
+import Client.view.Constants;
 import Server.controller.Utilities;
 import Server.model.account.Supporter;
 import Server.model.chat.Message;
@@ -41,24 +42,53 @@ public class SupporterController {
     }
 
     public ArrayList<String[]> getActiveChats() throws Exceptions.UnAuthorizedAccountException {
-
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.supporterGetActiveChats, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new Exceptions.UnAuthorizedAccountException();
+        } else {
+            return new Gson().fromJson(response, stringArrayListType);
+        }
     }
 
     public ArrayList<String[]> getArchiveChats() throws Exceptions.UnAuthorizedAccountException {
-
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.supporterGetArchiveChats, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new Exceptions.UnAuthorizedAccountException();
+        } else {
+            return new Gson().fromJson(response, stringArrayListType);
+        }
     }
 
-
-    //
     public ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
-
+        String body = convertToJson(chatId);
+        String response = sender.sendRequest(Constants.Commands.supporterViewChat, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new Exceptions.InvalidChatIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringArrayListType);
+        }
     }
 
     public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
-
+        String body = convertToJson(chatId, text);
+        String response = sender.sendRequest(Constants.Commands.supporterSendMessage, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new Exceptions.InvalidChatIdException(nameBody[1]);
+        }
     }
 
     public void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
-
+        String body = convertToJson(chatId);
+        String response = sender.sendRequest(Constants.Commands.supporterDeleteChat, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new Exceptions.InvalidChatIdException(nameBody[1]);
+        }
     }
 }
