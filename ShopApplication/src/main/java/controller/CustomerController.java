@@ -135,11 +135,15 @@ public class CustomerController {
         
     }
 
-    public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException {
+    public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException, Exceptions.HaveNotBoughtException {
         SubFile subFile = SubFile.getSubFileById(subFileId);
         try {
             if(subFile != null ){
-                return Files.readAllBytes(Paths.get(subFile.getDownloadPath()));
+                if( subFile.hasCustomerWithId(currentAccount().getId())){
+                    return Files.readAllBytes(Paths.get(subFile.getDownloadPath()));
+                }else {
+                    throw new Exceptions.HaveNotBoughtException(subFileId);
+                }
             }else {
                 throw new Exceptions.InvalidFileIdException(subFileId);
             }
