@@ -1,14 +1,8 @@
 package controller;
 
 
-import model.Auction;
-import model.Cart;
-import model.Discount;
-import model.Rating;
-import model.account.Account;
-import model.account.Customer;
-import model.account.Seller;
-import model.account.Supporter;
+import model.*;
+import model.account.*;
 import model.chat.Chat;
 import model.chat.SupportChat;
 import model.database.Database;
@@ -110,7 +104,7 @@ public class CustomerController {
                 throw new Exceptions.InvalidDiscountException(discountCode);
         }
         double paidMoney = totalPrice - discountAmount;
-        if (paidMoney > ((Customer) currentAccount()).getWallet().getBalance())
+        if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - paidMoney)
             throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getWallet().getBalance());
         BuyLog buyLog = new BuyLog(currentAccount().getId(), paidMoney, discountAmount, receiverName, address, receiverPhone, ShippingStatus.PROCESSING);
         HashMap<Seller, SellLog> sellLogs = new HashMap<>();
@@ -128,7 +122,7 @@ public class CustomerController {
             subProductCount = subProductsInCart.get(subProduct);
             new LogItem(buyLog.getId(), sellLog.getId(), subProduct.getId(), subProductCount);
             subProduct.changeRemainingCount(-subProductCount);
-            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount);
+            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount*(100 - Admin.getCommission())/100);
         }
         if (discount != null)
             discount.changeCount(currentAccount().getId(), -1);
@@ -153,12 +147,13 @@ public class CustomerController {
                 } else
                     throw new Exceptions.InvalidDiscountException(discountCode);
             }
-            if (totalPrice > ((Customer) currentAccount()).getWallet().getBalance())
+            if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - totalPrice)
                 throw new Exceptions.InsufficientCreditException(totalPrice, ((Customer) currentAccount()).getWallet().getBalance());
             FileLog fileLog = new FileLog(subFileId, currentAccount().getId(), discountAmount);
             if (discount != null)
                 discount.changeCount(currentAccount().getId(), -1);
             ((Customer) currentAccount()).getWallet().changeBalance(-totalPrice);
+            (SubFile.getSubSellableById(subFileId)).getSeller().getWallet().changeBalance(totalPrice * (100 - Admin.getCommission())/100);
             database().purchase();
         }
     }
