@@ -658,5 +658,6 @@ public class SellerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
