@@ -7,6 +7,7 @@ import model.chat.Chat;
 import model.chat.Message;
 import model.chat.SupportChat;
 import model.database.Database;
+import view.Controllers;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -64,6 +65,12 @@ public class SupporterController {
             }
             return messages;
         }
+    }
+
+    public String[] viewChatById(String chatId) throws Exceptions.InvalidChatIdException {
+        SupportChat chat = SupportChat.getSupportChatById(chatId);
+        if (chat == null) throw new Exceptions.InvalidChatIdException(chatId);
+        else return Utilities.Pack.supportChat(chat);
     }
 
     public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
