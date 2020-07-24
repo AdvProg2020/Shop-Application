@@ -12,10 +12,7 @@ import model.account.Supporter;
 import model.chat.Chat;
 import model.chat.SupportChat;
 import model.database.Database;
-import model.log.BuyLog;
-import model.log.LogItem;
-import model.log.SellLog;
-import model.log.ShippingStatus;
+import model.log.*;
 import model.sellable.Product;
 import model.sellable.SubFile;
 import model.sellable.SubProduct;
@@ -131,9 +128,30 @@ public class CustomerController {
         database().purchase();
     }
 
-    //Todo: discount, ...
-    public void purchaseTheFile(String subFileId, String discountCode){
-        
+    public void purchaseTheFile(String subFileId, String discountCode) throws Exceptions.InvalidFileIdException, Exceptions.InvalidDiscountException, Exceptions.InsufficientCreditException {
+        SubFile subFile = SubFile.getSubFileById(subFileId);
+        Discount discount = null;
+        if(subFile == null){
+            throw new Exceptions.InvalidFileIdException(subFileId);
+        }else {
+            double totalPrice = subFile.getPriceWithSale();
+            double discountAmount = 0;
+            if( discountCode != null){
+                discount = Discount.getDiscountByCode(discountCode);
+                if (isDiscountCodeValid(discountCode) && (discount = Discount.getDiscountByCode(discountCode)) != null) {
+                    discountAmount = discount.calculateDiscountAmount(totalPrice);
+                    totalPrice -= discountAmount;
+                } else
+                    throw new Exceptions.InvalidDiscountException(discountCode);
+            }
+            if (totalPrice > ((Customer) currentAccount()).getWallet().getBalance())
+                throw new Exceptions.InsufficientCreditException(totalPrice, ((Customer) currentAccount()).getWallet().getBalance());
+            FileLog fileLog = new FileLog(subFileId, currentAccount().getId(), discountAmount);
+            if (discount != null)
+                discount.changeCount(currentAccount().getId(), -1);
+            ((Customer) currentAccount()).getWallet().changeBalance(-totalPrice);
+            database().purchase();
+        }
     }
 
     public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException, Exceptions.HaveNotBoughtException {

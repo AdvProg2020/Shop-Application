@@ -275,10 +275,6 @@ public class SellerController {
                     new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.SUB_PRICE, newInformation);
                     database().request();
                     break;
-                case "imagePath":
-                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.IMAGE_PATH, newInformation);
-                    database().request();
-                    break;
                 case "property":
                     new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.PROPERTY, newInformation);
                     database().request();
