@@ -310,7 +310,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
-            String imagePath = mainController.saveFileInDataBase(image, name+"_"+brand+"_IMG");
+            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name+"_"+brand+"_IMG") : null;
             new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
     }
@@ -331,7 +331,7 @@ public class SellerController {
             if(category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             String downloadPath = mainController.saveFileInDataBase(file, name+"_"+extension+"_"+currentAccount().getUsername());
-            String imagePath = mainController.saveFileInDataBase(image, name + "_" + extension + "_IMG");
+            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name + "_" + extension + "_IMG") : null;
             SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
             new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         }
@@ -342,7 +342,13 @@ public class SellerController {
             throw new Exceptions.InvalidFileIdException(fileId);
         else {
             File f = File.getFileById(fileId);
-            String downloadPath = mainController.saveFileInDataBase(file, f.getName() +"_"+ f.getExtension() + "_"+ currentAccount().getUsername());
+            String downloadPath;
+            if( file.length != 0){
+                downloadPath = mainController.saveFileInDataBase(file, f.getName() +"_"+ f.getExtension() + "_"+ currentAccount().getUsername());
+            }else {
+                downloadPath = null;
+            }
+
             new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
         }
     }
