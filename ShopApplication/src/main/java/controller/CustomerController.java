@@ -9,9 +9,7 @@ import model.account.Account;
 import model.account.Customer;
 import model.account.Seller;
 import model.account.Supporter;
-import model.chat.AuctionChat;
 import model.chat.Chat;
-import model.chat.Message;
 import model.chat.SupportChat;
 import model.database.Database;
 import model.log.BuyLog;
@@ -19,8 +17,12 @@ import model.log.LogItem;
 import model.log.SellLog;
 import model.log.ShippingStatus;
 import model.sellable.Product;
+import model.sellable.SubFile;
 import model.sellable.SubProduct;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -131,6 +133,22 @@ public class CustomerController {
     //Todo: discount, ...
     public void purchaseTheFile(String subFileId, String discountCode){
         
+    }
+
+
+
+    public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException {
+        SubFile subFile = SubFile.getSubFileById(subFileId);
+        try {
+            if(subFile != null ){
+                return Files.readAllBytes(Paths.get(subFile.getDownloadPath()));
+            }else {
+                throw new Exceptions.InvalidFileIdException(subFileId);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private String notAvailableSubProductsInCart() {
@@ -263,15 +281,6 @@ public class CustomerController {
         }
     }
 
-    public void sendMessageInSupportChat(String chatId, String text) throws Exceptions.InvalidChatIdException {
-        SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if( chat == null || chat.getCustomer() != currentAccount()){
-            throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            new Message(chatId, currentAccount().getId(), text);
-        }
-    }
-
     public void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getCustomer() != currentAccount()){
@@ -290,29 +299,6 @@ public class CustomerController {
         }
     }
 
-    public ArrayList<String[]> viewAuctionChat(String auctionId) throws Exceptions.InvalidAuctionIdException {
-        Auction auction = Auction.getAuctionById(auctionId);
-        if( auction == null ){
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        }else {
-            AuctionChat chat = auction.getChat();
-            ArrayList<String[]> messages = new ArrayList<>();
-            String username = currentAccount().getUsername();
-            for (Message message : chat.getMessages()) {
-                messages.add(Utilities.Pack.message(message, username));
-            }
-            return messages;
-        }
-    }
-
-    public void sendMessageInAuctionChat(String auctionId, String text) throws Exceptions.InvalidAuctionIdException {
-        Auction auction = Auction.getAuctionById(auctionId);
-        if( auction == null ){
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        }else {
-            new Message(auction.getChat().getId(), currentAccount().getId(), text);
-        }
-    }
 
     public void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
