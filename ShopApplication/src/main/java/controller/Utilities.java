@@ -143,7 +143,7 @@ public class Utilities {
             auctionPack[1] = auction.getSubSellable().getId();
             auctionPack[2] = auction.getChat().getId();
             auctionPack[3] = Double.toString(auction.getHighestBid());
-            auctionPack[4] = auction.getHighestBidder().getUsername();
+            auctionPack[4] = auction.getHighestBidder() != null ? auction.getHighestBidder().getUsername() : "-";
             auctionPack[5] = dateFormat.format(auction.getStartDate());
             auctionPack[6] = dateFormat.format(auction.getEndDate());
             return auctionPack;
