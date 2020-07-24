@@ -13,6 +13,10 @@ import model.chat.SupportChat;
 import model.database.Database;
 import model.sellable.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -690,5 +694,15 @@ public class Controller {
             }
 
         }
+    }
+
+    private byte[] loadFileFromDataBase(String path){
+        Path filePath = Paths.get(path);
+        try {
+            return Files.readAllBytes(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

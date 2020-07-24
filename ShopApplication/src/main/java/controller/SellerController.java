@@ -651,13 +651,5 @@ public class SellerController {
         }
     }
 
-    private byte[] loadFileFromDataBase(String path){
-        Path filePath = Paths.get(path);
-        try {
-            return Files.readAllBytes(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 }
