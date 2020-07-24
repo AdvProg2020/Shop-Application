@@ -38,7 +38,7 @@ bank: how to handle?
     admin: admin boot up: view and fxml.
     seller
     customer -> 1. purchase menu: fxml 2. deposit
-chat supporter and customer:
+chat customer:
     chat: shayan T
     fxml: dana
 chat: refresh for messages button and send button and remove column: shayan M

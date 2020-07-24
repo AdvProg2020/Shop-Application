@@ -8447,7 +8447,7 @@ public class Controllers {
         private String auctionId;
 
         public static void display(String auctionId) {
-            ((AuctionPopupController) View.setMainPane(Constants.FXMLs.auctionPopup)).initialize(auctionId);
+            ((AuctionPopupController) View.popupWindow("Auction page", Constants.FXMLs.auctionPopup, 600, 400)).initialize(auctionId);
         }
 
         private void initialize(String auctionId) {
