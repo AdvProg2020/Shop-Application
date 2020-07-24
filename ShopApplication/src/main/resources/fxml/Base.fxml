@@ -22,13 +22,19 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
                 <Region HBox.hgrow="ALWAYS"/>
-                <StackPane>
-                    <Button id="manage-button" fx:id="manageBTN" mnemonicParsing="false" styleClass="base-button"
-                            visible="false"/>
-                    <Button id="chat-button" fx:id="chatBTN" layoutX="10.0" layoutY="13.0" mnemonicParsing="false"
-                            styleClass="base-button" visible="false"/>
-                    <Button id="cart-button" fx:id="cartBTN" mnemonicParsing="false" styleClass="base-button"/>
-                </StackPane>
+                <HBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <Button id="chat-button" fx:id="customerChatBTN" mnemonicParsing="false"
+                                styleClass="base-button"/>
+                        <StackPane>
+                            <Button id="manage-button" fx:id="manageBTN" mnemonicParsing="false"
+                                    styleClass="base-button" visible="false"/>
+                            <Button id="chat-button" fx:id="supporterChatBTN" layoutX="10.0" layoutY="13.0"
+                                    mnemonicParsing="false" styleClass="base-button" visible="false"/>
+                            <Button id="cart-button" fx:id="cartBTN" mnemonicParsing="false" styleClass="base-button"/>
+                        </StackPane>
+                    </children>
+                </HBox>
                 <StackPane id="account-button-wrapper">
                     <Button id="login-button" fx:id="loginBTN" mnemonicParsing="false" styleClass="base-button"
                             text="login">

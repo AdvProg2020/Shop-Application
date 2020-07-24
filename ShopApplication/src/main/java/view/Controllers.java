@@ -2414,6 +2414,7 @@ public class Controllers {
         private void initMainObjectsInFileMode(){
             brandExtension.setText("Extension: ");
 
+
         }
 
         //Done...
@@ -6934,7 +6935,7 @@ public class Controllers {
         @FXML
         private Button manageBTN;
         @FXML
-        private Button chatBTN;
+        private Button supporterChatBTN;
         @FXML
         private Button cartBTN;
         @FXML
@@ -6980,7 +6981,7 @@ public class Controllers {
             );
             accountBTN.visibleProperty().bind(loginBTN.visibleProperty().not());
             backBTN.visibleProperty().bind(View.getStackSizeProperty().greaterThan(1));
-            chatBTN.visibleProperty().bind(View.type.isEqualTo(Constants.supporterUserType));
+            supporterChatBTN.visibleProperty().bind(View.type.isEqualTo(Constants.supporterUserType));
         }
 
         private void initActions() {
@@ -7003,7 +7004,7 @@ public class Controllers {
 
                 View.goBack();
             });
-            chatBTN.setOnAction(e -> SupporterChatMenuController.display());
+            supporterChatBTN.setOnAction(e -> SupporterChatMenuController.display());
         }
 
         private void initTexts() {
@@ -8404,6 +8405,16 @@ public class Controllers {
         @FXML
         private VBox messages;
 
+        @FXML
+        private Button refreshBTN;
+
+        @FXML
+        private TextField messageField;
+
+        @FXML
+        private Button sendBTN;
+
+
         private String chatPageId;
         private int lastMessageNumber = 0;
         private ArrayList<String[]> messagePacks;
@@ -8438,8 +8449,22 @@ public class Controllers {
         }
 
         private void setOnActions() {
+            refreshBTN.setOnAction(e -> updateMessages());
+            sendBTN.setOnAction((e -> updateMessages()));
+        }
+
+        private void sendMessage(){
+            String text = messageField.getText();
+            if( !text.isEmpty()){
+                try {
+                    mainController.sendMessage(chatPageId, text);
+                } catch (Exceptions.InvalidChatIdException | Exceptions.InvalidAccountTypeException | Exceptions.UnAuthorizedAccountException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
+
     }
 
     public static class MessageBoxController {

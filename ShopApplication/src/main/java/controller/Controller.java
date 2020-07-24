@@ -9,6 +9,7 @@ import model.account.Seller;
 import model.chat.AuctionChat;
 import model.chat.Chat;
 import model.chat.Message;
+import model.chat.SupportChat;
 import model.database.Database;
 import model.sellable.*;
 
@@ -671,15 +672,23 @@ public class Controller {
         }
     }
 
-    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException, Exceptions.InvalidAccountTypeException {
+    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException, Exceptions.InvalidAccountTypeException, Exceptions.UnAuthorizedAccountException {
         Chat chat = Chat.getChatById(chatId);
         if( chat == null ){
             throw new Exceptions.InvalidChatIdException(chatId);
         }else {
-            if( currentAccount.getClass().getSimpleName().equals("Customer"))
-                new Message(chatId, currentAccount.getId(), text);
-            else
-                throw new Exceptions.InvalidAccountTypeException();
+            if(chat.getClass().getSimpleName().equals("AuctionChat")){
+                if( currentAccount.getClass().getSimpleName().equals("Customer"))
+                    new Message(chatId, currentAccount.getId(), text);
+                else
+                    throw new Exceptions.InvalidAccountTypeException();
+            }else {
+                if( ((SupportChat)chat).getSupporter() == currentAccount || ((SupportChat)chat).getCustomer() == currentAccount)
+                    new Message(chatId, currentAccount.getId(), text);
+                else
+                    throw new Exceptions.UnAuthorizedAccountException();
+            }
+
         }
     }
 }
