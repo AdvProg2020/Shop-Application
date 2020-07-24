@@ -722,7 +722,7 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            accountIMG.setImage(new Image("file:"  + imgPath));
+            accountIMG.setImage(new Image("file:" + imgPath));
 
 
         }
@@ -1710,8 +1710,8 @@ public class Controllers {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
 
-            String imgPath = Constants.base + "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
-            File f = new File(imgPath);
+            String imgPath =  "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
+            File f = Path.of(imgPath).toFile();
             if ( ! f.exists()) {
                 try {
                     f.createNewFile();
@@ -2455,8 +2455,8 @@ public class Controllers {
             ratingCountLBL.setText(sellablePack[5]);
             categoryLBL.setText(sellablePack[7]);
 
-            String imgPath = Constants.base + "/src/main/resources/temp/digestImg.png";
-            File f = new File(imgPath);
+            String imgPath =  "/src/main/resources/temp/digestImg.png";
+            File f = Path.of(imgPath).toFile();
             if ( ! f.exists()) {
                 try {
                     f.createNewFile();
@@ -4466,8 +4466,8 @@ public class Controllers {
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
 
-                String imgPath = Constants.base + "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
-                File f = new File(imgPath);
+                String imgPath = "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
+                File f = Path.of(imgPath).toFile();
                 if ( ! f.exists()) {
                     try {
                         f.createNewFile();
@@ -8051,8 +8051,8 @@ public class Controllers {
             maxPrice1.setText(firstProductInfo[10]);
             maxPrice2.setText(secondProductInfo[10]);
 
-            String firstPath = Constants.base + "/src/main/resources/temp/compareFirstImage.png";
-            File f1 = new File(firstPath);
+            String firstPath = "/src/main/resources/temp/compareFirstImage.png";
+            File f1 = Path.of(firstPath).toFile();
             if ( ! f1.exists()) {
                 try {
                     f1.createNewFile();
@@ -8070,8 +8070,8 @@ public class Controllers {
             }
             image1.setImage(new Image("file:" + firstPath));
 
-            String secondPath = Constants.base + "/src/main/resources/temp/compareSecondImage.png";
-            File f2 = new File(secondPath);
+            String secondPath = "/src/main/resources/temp/compareSecondImage.png";
+            File f2 = Path.of(secondPath).toFile();
             if ( ! f2.exists()) {
                 try {
                     f2.createNewFile();
