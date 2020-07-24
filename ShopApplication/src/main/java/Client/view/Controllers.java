@@ -7196,7 +7196,7 @@ public class Controllers {
         private void initVisibility() {
             View.type.set(mainController.getType());
             cartBTN.visibleProperty().bind(
-                    Bindings.when(View.type.isEqualTo(Constants.adminUserType).or(View.type.isEqualTo(Constants.sellerUserType)))
+                    Bindings.when(View.type.isEqualTo(Constants.adminUserType).or(View.type.isEqualTo(Constants.sellerUserType)).or(View.type.isEqualTo(Constants.supporterUserType)))
                             .then(false).otherwise(true)
             );
             manageBTN.visibleProperty().bind(cartBTN.visibleProperty().not());

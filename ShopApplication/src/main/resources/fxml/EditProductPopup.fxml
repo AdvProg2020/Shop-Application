@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$EditProductPopupController">
+<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$EditProductPopupController">
     <center>
         <VBox BorderPane.alignment="CENTER">
             <children>

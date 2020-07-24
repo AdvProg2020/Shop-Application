@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane id="bg-pane" fx:id="borderPane" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$MainMenuController">
+<BorderPane id="bg-pane" fx:id="borderPane" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$MainMenuController">
     <center>
         <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="vScroll-pane" BorderPane.alignment="CENTER">
             <content>
