@@ -465,9 +465,10 @@ public class Utilities {
         }
 
         public static String[] supportChat(SupportChat chat){
-            String[] chatPack = new String[2];
+            String[] chatPack = new String[3];
             chatPack[0] = chat.getId();
             chatPack[1] = chat.getCustomer().getUsername();
+            chatPack[2] = chat.getSupporter().getUsername();
             return chatPack;
         }
 

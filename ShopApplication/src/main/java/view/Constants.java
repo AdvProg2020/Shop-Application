@@ -95,5 +95,6 @@ public final class Constants {
         public static final String auctionPopup = "AuctionPopup";
         public static final String messageBox = "MessageBox";
         public static final String chatPage = "ChatPage";
+        public static final String customerChatPopup = "CustomerChatPopup";
     }
 }

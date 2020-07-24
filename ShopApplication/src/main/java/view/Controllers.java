@@ -6926,7 +6926,8 @@ public class Controllers {
 
     public static class BaseController implements Initializable {
         private static BaseController currentBase;
-
+        @FXML
+        private Button customerChatBTN;
         @FXML
         private BorderPane mainPane;
         @FXML
@@ -6987,6 +6988,7 @@ public class Controllers {
             accountBTN.visibleProperty().bind(loginBTN.visibleProperty().not());
             backBTN.visibleProperty().bind(View.getStackSizeProperty().greaterThan(1));
             supporterChatBTN.visibleProperty().bind(View.type.isEqualTo(Constants.supporterUserType));
+            customerChatBTN.visibleProperty().bind(View.type.isEqualTo(Constants.customerUserType));
         }
 
         private void initActions() {
@@ -7010,6 +7012,7 @@ public class Controllers {
                 View.goBack();
             });
             supporterChatBTN.setOnAction(e -> SupporterChatMenuController.display());
+            customerChatBTN.setOnAction(e -> CustomerChatPopupController.display());
         }
 
         private void initTexts() {
@@ -8525,7 +8528,7 @@ public class Controllers {
         private String auctionId;
 
         public static void display(String auctionId) {
-            ((AuctionPopupController) View.setMainPane(Constants.FXMLs.auctionPopup)).initialize(auctionId);
+            ((AuctionPopupController) View.popupWindow("Auction page", Constants.FXMLs.auctionPopup, 600, 400)).initialize(auctionId);
         }
 
         private void initialize(String auctionId) {
@@ -8562,7 +8565,68 @@ public class Controllers {
                 } else errorLBL.setText("please enter a valid double");
             });
         }
-
     }
 
+    public static class CustomerChatPopupController implements Initializable {
+        @FXML
+        private AnchorPane chatPane;
+        @FXML
+        private ChoiceBox<String> supporterBox;
+        @FXML
+        private Button createChatBTN;
+
+        private HashMap<String, String> nameToId = new HashMap<>();
+        private boolean hasChat;
+        private String chatId;
+        private String[] chatInfo;
+
+        public static void display() {
+            View.popupWindow("Customer Chat menu", Constants.FXMLs.customerChatPopup, 600, 400);
+        }
+
+        @Override
+        public void initialize(URL location, ResourceBundle resources) {
+            initChat();
+            initChoiceBox();
+            initButton();
+        }
+
+        private void initChat() {
+            try {
+                chatId = customerController.getSupportChatId();
+                chatInfo = supporterController.viewChatById(chatId);
+                chatPane.getChildren().add(ChatPageController.getChatPage(chatId));
+            } catch (Exceptions.DontHaveChatException e) {
+
+            } catch (Exceptions.InvalidChatIdException e) {
+                e.printStackTrace();
+            }
+
+            hasChat = chatId != null;
+        }
+
+        private void initChoiceBox() {
+            customerController.getAllSupporters().forEach(s -> {
+                nameToId.put(s[1], s[0]);
+                supporterBox.getItems().add(s[1]);
+            });
+            if (hasChat) {
+                createChatBTN.setDisable(true);
+                supporterBox.getSelectionModel().select(chatInfo[2]);
+                supporterBox.setDisable(true);
+            } else {
+                createChatBTN.disableProperty().bind(supporterBox.getSelectionModel().selectedItemProperty().isNull());
+            }
+        }
+
+        private void initButton() {
+            createChatBTN.setOnAction(e -> {
+                try {
+                    customerController.createSupportChat(nameToId.get(supporterBox.getSelectionModel().getSelectedItem()));
+                } catch (Exceptions.AlreadyInAChatException | Exceptions.InvalidSupporterIdException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        }
+    }
 }
