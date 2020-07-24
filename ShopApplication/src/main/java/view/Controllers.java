@@ -8610,7 +8610,7 @@ public class Controllers {
                 supporterBox.getSelectionModel().select(chatInfo[2]);
                 supporterBox.setDisable(true);
             } else {
-                createChatBTN.disableProperty().bind(supporterBox.getSelectionModel().selectedItemProperty().isEqualTo(null));
+                createChatBTN.disableProperty().bind(supporterBox.getSelectionModel().selectedItemProperty().isNull());
             }
         }
 
