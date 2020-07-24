@@ -3055,7 +3055,12 @@ public class Controllers {
             customerRegister.setOnAction(e -> {
                 if (areCustomerFieldsAvailable()) {
                     try {
-                        byte[] image = Files.readAllBytes(Paths.get(customerImageField.getText()));
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(customerImageField.getText()));
+                        } catch (IOException ex) {
+                            //do nothing;
+                        }
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
                                 customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null,image);
@@ -3066,15 +3071,18 @@ public class Controllers {
                         customerUsernameError.setVisible(true);
                     } catch (Exceptions.AdminRegisterException ex) {
                         //wont happen
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
                     }
                 }
             });
             sellerRegister.setOnAction(e -> {
                 if (areSellerFieldsAvailable()) {
                     try {
-                        byte[] image = Files.readAllBytes(Paths.get(customerImageField.getText()));
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(customerImageField.getText()));
+                        } catch (IOException ex) {
+                            //nothing
+                        }
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
                                 sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), image);
@@ -3085,8 +3093,6 @@ public class Controllers {
                         sellerUsernameError.setVisible(true);
                     } catch (Exceptions.AdminRegisterException ex) {
                         //wont happen
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
                     }
                 }
             });
@@ -5790,7 +5796,12 @@ public class Controllers {
             adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        byte[] image = Files.readAllBytes(Paths.get(adminImageField.getText()));
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(adminImageField.getText()));
+                        } catch (IOException ex) {
+                            //nothing
+                        }
                         boolean bootUp = !mainController.doesManagerExist();
                         adminController.createAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
                                 adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), image);
@@ -5800,7 +5811,7 @@ public class Controllers {
                             View.subStart(new Stage());
                         }
                         adminUsername.getScene().getWindow().hide();
-                    } catch (Exceptions.UsernameAlreadyTakenException | IOException ex) {
+                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
                         adminUsernameError.setText("Sorry! this username is already taken.");
                         adminUsernameError.setVisible(true);
                         ex.printStackTrace();
@@ -7409,6 +7420,8 @@ public class Controllers {
                 imageBrowseBTN.setDisable(true);
                 infoArea.setEditable(false);
             }
+            imageField.setEditable(false);
+            pathField.setEditable(false);
         }
 
         private void initChoiceBox() {
@@ -7446,7 +7459,7 @@ public class Controllers {
                 }
             });
 
-            pathField.setOnAction(e -> {
+            pathBrowseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
                 File chosenFile = fileChooser.showOpenDialog(new Stage());
                 if (chosenFile != null) {
@@ -7467,16 +7480,34 @@ public class Controllers {
                     }
                     try {
                         if (!exists) {
-                            byte[] image = Files.readAllBytes(Paths.get(imageField.getText()));
-                            byte[] file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            byte[] image = new byte[0];
+                            try {
+                                image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            } catch (IOException ex) {
+                                //nothing
+                            }
+                            byte[] file = new byte[0];
+                            try {
+                                file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
                             sellerController.addNewFile(nameField.getText(), extensionField.getText(), infoArea.getText(), image, category.getValue(),
                                     propertyMap, Double.parseDouble(priceField.getText()), file);
                         } else {
-                            byte[] file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            byte[] file = new byte[0];
+                            try {
+                                file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            } catch (IOException ex) {
+                                //nothing
+                            }
                             sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), file);
                         }
-                    } catch (Exception ex) {
-                        printError(ex.getMessage());
+                    } catch (Exceptions.InvalidFileIdException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.ExistingFileException ex) {
                         ex.printStackTrace();
                     }
                     addFileBTN.getScene().getWindow().hide();
@@ -7716,13 +7747,17 @@ public class Controllers {
                     }
                     try {
                         if (!exists) {
-                            byte[] image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            byte[] image = new byte[0];
+                            try {
+                                image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            } catch (IOException ex) {
+                                //nothing
+                            }
                             sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), image, category.getValue(),
                                     propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
                         } else
                             sellerController.addNewSubProductToAnExistingProduct(productId, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
-                    } catch (Exception ex) {
-                        printError(ex.getMessage());
+                    } catch (Exceptions.InvalidSellableIdException | Exceptions.InvalidCategoryException | Exceptions.ExistingProductException ex) {
                         ex.printStackTrace();
                     }
                     addProductBTN.getScene().getWindow().hide();
@@ -8457,11 +8492,16 @@ public class Controllers {
             supporterRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        byte[] image = Files.readAllBytes(Paths.get(supporterImageField.getText()));
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(supporterImageField.getText()));
+                        } catch (IOException ex) {
+                            //nothing
+                        }
                         adminController.createSupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
                                 supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), image);
                         supporterUsername.getScene().getWindow().hide();
-                    } catch (Exceptions.UsernameAlreadyTakenException | IOException ex) {
+                    } catch (Exceptions.UsernameAlreadyTakenException  ex) {
                         supporterUsernameError.setText("Sorry! this username is already taken.");
                         supporterUsernameError.setVisible(true);
                         ex.printStackTrace();
