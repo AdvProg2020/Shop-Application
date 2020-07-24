@@ -2561,13 +2561,19 @@ public class Controllers {
             ratingsStackPane.getChildren().add(RatingBoxController.createBox(sellablePack[0]));
         }
 
-        //Todo
+
         private void download(){
             try {
-                customerController.downloadFile(subSellablePack[1]);
+                byte[] file = customerController.downloadFile(subSellablePack[1]);
             } catch (Exceptions.InvalidFileIdException e) {
                 e.printStackTrace();
+            } catch (Exceptions.HaveNotBoughtException e) {
+                purchaseTheFile();
             }
+        }
+
+        private void purchaseTheFile(){
+
         }
 
         //Done
@@ -4652,6 +4658,10 @@ public class Controllers {
 
         public static void display() {
             View.setMainPane(Constants.FXMLs.purchaseMenu);
+        }
+
+        public static void displayFileMode(double fileCost){
+
         }
 
         @Override
