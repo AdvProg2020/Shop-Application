@@ -13,7 +13,9 @@ import model.chat.SupportChat;
 import model.database.Database;
 import model.sellable.*;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,8 +68,9 @@ public class Controller {
      *             * String username, String password, String firstName, String lastName, String email, String phone
      */
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
-                             String email, String phone, double balance, String storeName, String imagePath) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
+                             String email, String phone, double balance, String storeName, byte[] image) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         usernameTypeValidation(username, type);
+        String imagePath = saveFileInDataBase(image, username);
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, imagePath, balance);
@@ -82,6 +85,19 @@ public class Controller {
                 database.request();
                 break;
         }
+    }
+
+    public String saveFileInDataBase(byte[] file, String name){
+        String filePath = "src/main/resources/files/"+ name;
+        java.io.File f = new java.io.File(filePath);
+        try {
+            OutputStream outputStream = new FileOutputStream(f);
+            outputStream.write(file);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filePath;
     }
 
     public boolean isManager() {

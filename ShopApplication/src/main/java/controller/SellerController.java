@@ -310,7 +310,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
-            String imagePath = saveFileInDataBase(image, name+"_"+brand+"_IMG");
+            String imagePath = mainController.saveFileInDataBase(image, name+"_"+brand+"_IMG");
             new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
     }
@@ -330,8 +330,8 @@ public class SellerController {
             Category category = Category.getCategoryByName(categoryName);
             if(category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
-            String downloadPath = saveFileInDataBase(file, name+"_"+extension+"_"+currentAccount().getUsername());
-            String imagePath = saveFileInDataBase(image, name + "_" + extension + "_IMG");
+            String downloadPath = mainController.saveFileInDataBase(file, name+"_"+extension+"_"+currentAccount().getUsername());
+            String imagePath = mainController.saveFileInDataBase(image, name + "_" + extension + "_IMG");
             SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
             new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         }
@@ -342,23 +342,11 @@ public class SellerController {
             throw new Exceptions.InvalidFileIdException(fileId);
         else {
             File f = File.getFileById(fileId);
-            String downloadPath = saveFileInDataBase(file, f.getName() +"_"+ f.getExtension() + "_"+ currentAccount().getUsername());
+            String downloadPath = mainController.saveFileInDataBase(file, f.getName() +"_"+ f.getExtension() + "_"+ currentAccount().getUsername());
             new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
         }
     }
 
-    private String saveFileInDataBase(byte[] file, String name){
-        String filePath = "src/main/resources/files/"+ name;
-        java.io.File f = new java.io.File(filePath);
-        try {
-            OutputStream outputStream = new FileOutputStream(f);
-            outputStream.write(file);
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return filePath;
-    }
 
     public void removeFile(String fileId) throws Exceptions.InvalidFileIdException {
         for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
