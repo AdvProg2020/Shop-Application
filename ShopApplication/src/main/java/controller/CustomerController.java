@@ -135,8 +135,6 @@ public class CustomerController {
         
     }
 
-
-
     public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException {
         SubFile subFile = SubFile.getSubFileById(subFileId);
         try {

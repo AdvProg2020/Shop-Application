@@ -2563,7 +2563,11 @@ public class Controllers {
 
         //Todo
         private void download(){
-
+            try {
+                customerController.downloadFile(subSellablePack[1]);
+            } catch (Exceptions.InvalidFileIdException e) {
+                e.printStackTrace();
+            }
         }
 
         //Done

@@ -319,24 +319,32 @@ public class SellerController {
         }
     }
 
-    public void addNewFile(String name, String extension, String infoText, String imagePath, String categoryName, Map<String, String> propertyValues, double price, String downloadPath) throws Exceptions.ExistingFileException, Exceptions.InvalidCategoryException {
+    public void addNewFile(String name, String extension, String infoText, byte[] image, String categoryName, Map<String, String> propertyValues, double price, byte[] file) throws Exceptions.ExistingFileException, Exceptions.InvalidCategoryException {
         if( File.isFileNameAndExtensionUsed(name, extension) ){
             throw new Exceptions.ExistingFileException();
         }else {
             Category category = Category.getCategoryByName(categoryName);
             if(category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
+            String downloadPath = saveFileInDataBase(file, name+"_"+extension+"_"+currentAccount().getUsername());
+            String imagePath = saveFileInDataBase(image, name + "_" + extension + "_IMG");
             SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
             new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         }
     }
 
-    public void addNewSubFileToAnExistingFile(String fileId, double price, String downloadPath) throws Exceptions.InvalidFileIdException {
+    public void addNewSubFileToAnExistingFile(String fileId, double price, byte[] file) throws Exceptions.InvalidFileIdException {
         if(File.getFileById(fileId) == null)
             throw new Exceptions.InvalidFileIdException(fileId);
         else {
+            File f = File.getFileById(fileId);
+            String downloadPath = saveFileInDataBase(file, f.getName() +"_"+ f.getExtension() + "_"+ currentAccount().getUsername());
             new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
         }
+    }
+
+    private String saveFileInDataBase(byte[] file, String name){
+        return null;
     }
 
     public void removeFile(String fileId) throws Exceptions.InvalidFileIdException {
