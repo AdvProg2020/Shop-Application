@@ -13,6 +13,10 @@ import model.log.SellLog;
 import model.request.*;
 import model.sellable.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -345,7 +349,16 @@ public class SellerController {
     }
 
     private String saveFileInDataBase(byte[] file, String name){
-        return null;
+        String filePath = "src/main/resources/files/"+ name;
+        java.io.File f = new java.io.File(filePath);
+        try {
+            OutputStream outputStream = new FileOutputStream(f);
+            outputStream.write(file);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filePath;
     }
 
     public void removeFile(String fileId) throws Exceptions.InvalidFileIdException {
