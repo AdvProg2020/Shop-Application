@@ -435,7 +435,7 @@ public class Controller {
         else return Utilities.Pack.personalInfo(account);
     }
 
-    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    public void editPersonalInfo(String field, String newInformation, byte[]... image) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
                 if (currentAccount.getFirstName().equals(newInformation))
@@ -463,8 +463,7 @@ public class Controller {
                 currentAccount.setPassword(newInformation);
                 break;
             case "image path":
-                if (currentAccount.getImagePath().equals(newInformation))
-                    throw new Exceptions.SameAsPreviousValueException(field);
+                newInformation = saveFileInDataBase(image[0], currentAccount.getUsername());
                 currentAccount.setImagePath(newInformation);
                 break;
             default:

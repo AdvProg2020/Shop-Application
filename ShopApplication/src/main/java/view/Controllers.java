@@ -197,8 +197,15 @@ public class Controllers {
                     try {
                         if (passwordChanged.get())
                             mainController.editPersonalInfo("password", info[1] = passwordField.getText());
-                        if (imageChanged.get())
-                            mainController.editPersonalInfo("image path", info[7] = imageField.getText());
+                        if (imageChanged.get()) {
+                            byte[] img = new byte[0];
+                            try {
+                                 img = Files.readAllBytes(Paths.get(info[7] = imageField.getText()));
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            mainController.editPersonalInfo("image path", "", img);
+                        }
                         if (firstNameChanged.get())
                             mainController.editPersonalInfo("firstName", info[3] = firstName.getText());
                         if (lastNameChanged.get())
