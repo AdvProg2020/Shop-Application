@@ -98,16 +98,18 @@ public class AdminController {
     }
 
 
-    public void createAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
+    public void createAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
+        String imagePath = mainController.saveFileInDataBase(image, username);
         new Admin(username, password, firstName, lastName, email, phone, imagePath);
         database().createAdmin();
     }
 
-    public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
+    public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
         if(Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
+        String imagePath = mainController.saveFileInDataBase(image, username);
         new Supporter(username, password, firstName, lastName, email, phone, imagePath);
         database().createSupporter();
     }

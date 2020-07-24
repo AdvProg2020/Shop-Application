@@ -2601,7 +2601,7 @@ public class Controllers {
         }
 
         private void purchaseTheFile(){
-
+            PurchaseMenuController.displayFileMode(Double.parseDouble(sellablePack[8]), sellablePack[1]);
         }
 
         //Done
@@ -3055,9 +3055,10 @@ public class Controllers {
             customerRegister.setOnAction(e -> {
                 if (areCustomerFieldsAvailable()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(customerImageField.getText()));
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null,image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -3065,15 +3066,18 @@ public class Controllers {
                         customerUsernameError.setVisible(true);
                     } catch (Exceptions.AdminRegisterException ex) {
                         //wont happen
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
                     }
                 }
             });
             sellerRegister.setOnAction(e -> {
                 if (areSellerFieldsAvailable()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(customerImageField.getText()));
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), customerImageField.getText());
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -3081,6 +3085,8 @@ public class Controllers {
                         sellerUsernameError.setVisible(true);
                     } catch (Exceptions.AdminRegisterException ex) {
                         //wont happen
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
                     }
                 }
             });
@@ -4658,7 +4664,7 @@ public class Controllers {
     }
 
 
-    public static class PurchaseMenuController implements Initializable {
+    public static class PurchaseMenuController{
 
         @FXML
         private TextField receiverName;
@@ -4693,16 +4699,46 @@ public class Controllers {
         @FXML
         private Label addressError;
 
+        private double fileCost = 0;
+        private String subFileId = null;
+
         public static void display() {
-            View.setMainPane(Constants.FXMLs.purchaseMenu);
+            PurchaseMenuController pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
+            pmc.initialize();
         }
 
-        public static void displayFileMode(double fileCost){
+        public static void displayFileMode(double fileCost, String subFileId){
+            PurchaseMenuController pmc = null;
+            pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
+            pmc.fileCost = fileCost;
+            pmc.subFileId = subFileId;
+            pmc.initializeFileMode();
 
         }
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
+        public void initializeFileMode(){
+            purchaseBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        customerController.purchaseTheFile(subFileId, discountCode.getText());
+                        PurchaseConfirmationController.display(totalPrice.getText());
+                    } catch (Exceptions.InsufficientCreditException ex) {
+                        discountError.setText("You dont have enough money!");
+                    }  catch (Exceptions.InvalidDiscountException ex) {
+                        discountError.setText("Invalid discount code!");
+                    } catch (Exceptions.InvalidFileIdException invalidFileIdException) {
+                        invalidFileIdException.printStackTrace();
+                    }
+                }
+            });
+            validateBTN.setOnAction(e -> validateDiscountFileMode());
+            address.setVisible(false);
+            phoneNumber.setVisible(false);
+            receiverName.setVisible(false);
+
+        }
+
+        public void initialize() {
             initButtons();
             initListeners();
 
@@ -4776,6 +4812,23 @@ public class Controllers {
             } else {
                 try {
                     double newPrice = customerController.getTotalPriceOfCartWithDiscount(discountCode.getText());
+                    discountError.setText("");
+                    totalPrice.setText("$" + newPrice);
+                    totalPrice.setTextFill(Color.RED);
+                    return true;
+                } catch (Exceptions.InvalidDiscountException e) {
+                    discountError.setText("Invalid discount code");
+                    return false;
+                }
+            }
+        }
+
+        private boolean validateDiscountFileMode() {
+            if (discountCode.getText().equals("")) {
+                return true;
+            } else {
+                try {
+                    double newPrice = customerController.getTotalPriceOfFileWithDiscount(discountCode.getText(), fileCost);
                     discountError.setText("");
                     totalPrice.setText("$" + newPrice);
                     totalPrice.setTextFill(Color.RED);
@@ -5737,16 +5790,17 @@ public class Controllers {
             adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(adminImageField.getText()));
                         boolean bootUp = !mainController.doesManagerExist();
                         adminController.createAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
-                                adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
+                                adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), image);
                         if (!bootUp) {
                             AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
                         } else {
                             View.subStart(new Stage());
                         }
                         adminUsername.getScene().getWindow().hide();
-                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                    } catch (Exceptions.UsernameAlreadyTakenException | IOException ex) {
                         adminUsernameError.setText("Sorry! this username is already taken.");
                         adminUsernameError.setVisible(true);
                         ex.printStackTrace();
@@ -8403,10 +8457,11 @@ public class Controllers {
             supporterRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(supporterImageField.getText()));
                         adminController.createSupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
-                                supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), supporterImageField.getText());
+                                supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), image);
                         supporterUsername.getScene().getWindow().hide();
-                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                    } catch (Exceptions.UsernameAlreadyTakenException | IOException ex) {
                         supporterUsernameError.setText("Sorry! this username is already taken.");
                         supporterUsernameError.setVisible(true);
                         ex.printStackTrace();

@@ -82,6 +82,15 @@ public class CustomerController {
         }
     }
 
+    public double getTotalPriceOfFileWithDiscount(String discountCode, double fileCost) throws Exceptions.InvalidDiscountException {
+        Discount discount = Discount.getDiscountByCode(discountCode);
+        if (discount == null || ! discount.hasCustomerWithId(currentAccount().getId())) {
+            throw new Exceptions.InvalidDiscountException(discountCode);
+        } else {
+            return discount.calculateDiscountAmount(fileCost);
+        }
+    }
+
     //Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
             Exceptions.NotAvailableSubProductsInCart, Exceptions.InvalidDiscountException, Exceptions.EmptyCartException {
