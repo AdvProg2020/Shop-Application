@@ -8450,9 +8450,18 @@ public class Controllers {
 
         private void setOnActions() {
             refreshBTN.setOnAction(e -> updateMessages());
+            sendBTN.setOnAction((e -> updateMessages()));
         }
 
         private void sendMessage(){
+            String text = messageField.getText();
+            if( !text.isEmpty()){
+                try {
+                    mainController.sendMessage(chatPageId, text);
+                } catch (Exceptions.InvalidChatIdException | Exceptions.InvalidAccountTypeException | Exceptions.UnAuthorizedAccountException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
 
