@@ -2,17 +2,23 @@ package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
 import Server.model.Auction;
+import Server.model.account.Customer;
+import Server.model.account.Supporter;
+import Server.model.chat.Chat;
+import Server.model.chat.SupportChat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import Client.view.Constants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 public class CustomerController {
     private static Type doubleType = new TypeToken<Double>(){}.getType();
     private static Type booleanType = new TypeToken<Boolean>(){}.getType();
+    private static Type stringType = new TypeToken<Boolean>(){}.getType();
     private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>(){}.getType();
 
     private Sender sender;
@@ -140,6 +146,41 @@ public class CustomerController {
     }
 
     public void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
-
+        String body = convertToJson(auctionId, bidAmount);
+        String response = sender.sendRequest(Constants.Commands.customerBid, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidAuctionIdException(nameBody[1]);
+        }
     }
+
+    public String getSupportChatId() throws Exceptions.DontHaveChatException {
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.customerGetSupportChatId, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new DontHaveChatException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringType);
+        }
+    }
+
+    public ArrayList<String[]> getAllSupporters() {
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.customerGetAllSupporters, body);
+        return new Gson().fromJson(response, stringArrayListType);
+    }
+
+    public String createSupportChat(String supporterId) throws Exceptions.AlreadyInAChatException, Exceptions.InvalidSupporterIdException {
+        String body = convertToJson(supporterId);
+        String response = sender.sendRequest(Constants.Commands.customerCreateSupportChat, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            if (nameBody[0].startsWith("Already")) throw new AlreadyInAChatException(nameBody[1]);
+            else throw new InvalidSupporterIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, booleanType);
+        }
+    }
+
 }

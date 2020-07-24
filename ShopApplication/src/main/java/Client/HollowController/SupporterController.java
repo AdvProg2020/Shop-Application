@@ -91,4 +91,15 @@ public class SupporterController {
             throw new Exceptions.InvalidChatIdException(nameBody[1]);
         }
     }
+
+    public String[] viewChatById(String chatId) throws Exceptions.InvalidChatIdException {
+        String body = convertToJson(chatId);
+        String response = sender.sendRequest(Constants.Commands.supporterViewChatById, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new Exceptions.InvalidChatIdException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, stringArrayType);
+        }
+    }
 }

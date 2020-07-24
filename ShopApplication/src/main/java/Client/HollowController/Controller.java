@@ -5,6 +5,7 @@ import Server.controller.Utilities;
 import Server.model.chat.AuctionChat;
 import Server.model.chat.Chat;
 import Server.model.chat.Message;
+import Server.model.chat.SupportChat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import Client.view.Constants;
@@ -423,6 +424,17 @@ public class Controller {
             throw new InvalidChatIdException(nameBody[1]);
         } else {
             return new Gson().fromJson(response, stringArrayListType);
+        }
+    }
+
+    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException, Exceptions.InvalidAccountTypeException, Exceptions.UnAuthorizedAccountException {
+        String body = convertToJson(chatId, text);
+        String response = sender.sendRequest(Constants.Commands.sendMessage, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            if (nameBody[0].startsWith("InvalidChat")) throw new InvalidChatIdException(nameBody[1]);
+            else if (nameBody[0].startsWith("InvalidAccount")) throw new InvalidAccountTypeException(nameBody[1]);
+            else throw new UnAuthorizedAccountException();
         }
     }
 }

@@ -223,4 +223,29 @@ public class Exceptions {
             super(message);
         }
     }
+
+    public static class DontHaveChatException extends Exception {
+        public DontHaveChatException(String message) {
+            super(message);
+        }
+    }
+
+    public static class InvalidAccountTypeException extends Exception {
+        public InvalidAccountTypeException(String message) {
+            super(message);
+        }
+    }
+
+    public static class AlreadyInAChatException extends Exception {
+       public AlreadyInAChatException(String message) {
+           super(message);
+       }
+    }
+
+    public static class InvalidSupporterIdException extends Exception {
+        public InvalidSupporterIdException(String message) {
+            super(message);
+        }
+
+    }
 }

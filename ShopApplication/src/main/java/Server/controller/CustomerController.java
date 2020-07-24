@@ -24,6 +24,7 @@ import Server.model.sellable.SubProduct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class CustomerController {
@@ -130,7 +131,7 @@ public class CustomerController {
 
     //Todo: discount, ...
     public void purchaseTheFile(String subFileId, String discountCode){
-        
+
     }
 
     private String notAvailableSubProductsInCart() {
@@ -321,5 +322,9 @@ public class CustomerController {
         }else {
             auction.bid(currentAccount().getId(), bidAmount);
         }
+    }
+
+    public ArrayList<String[]> getAllSupporters() {
+        return Supporter.getAllSupporters().stream().map(s -> new String[] {s.getId(), s.getUsername()}).collect(Collectors.toCollection(ArrayList::new));
     }
 }

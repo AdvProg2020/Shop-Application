@@ -95,7 +95,9 @@ public final class Constants {
         public static final String auctionPopup = "AuctionPopup";
         public static final String messageBox = "MessageBox";
         public static final String chatPage = "ChatPage";
+        public static final String customerChatPopup = "CustomerChatPopup";
     }
+
 
     public static class Commands {
         public static final String CommandRegex = "(^\\S+) (\\S+) (?:([^\\*]+)\\*)*([^\\*]+)$";
@@ -146,6 +148,8 @@ public final class Constants {
         public static final String getPropertyValuesOfAFile = "/main/getPropertyValuesOfAFile";
         public static final String getMessagesInAuctionChat = "/main/getMessagesInAuctionChat";
         public static final String getMessagesInChat = "/main/getMessagesInChat";
+
+        public static final String sendMessage = "/main/sendMessage";
         //admin Server.controller methods.
         public static final String adminEditPersonalInfo = "/admin/editPersonalInfo";
         public static final String adminManageUsers = "/admin/manageUsers";
@@ -241,11 +245,17 @@ public final class Constants {
         public static final String customerGetTotalPriceOfCart = "/customer/getTotalPriceOfCart";
         public static final String customerHasBought = "/customer/hasBought";
         public static final String customerBid = "/customer/bid";
+
+        public static final String customerGetSupportChatId = "/customer/getSupportChatId";
+        public static final String customerGetAllSupporters = "/customer/getAllSupporters";
+        public static final String customerCreateSupportChat = "/customer/createSupportChat";
         //supporterController methods.
         public static final String supporterGetActiveChats = "/supporter/getActiveChats";
         public static final String supporterGetArchiveChats = "/supporter/getArchiveChats";
         public static final String supporterViewChat = "/supporter/viewChat";
         public static final String supporterSendMessage = "/supporter/sendMessage";
         public static final String supporterDeleteChat = "/supporter/deleteChat";
+
+        public static final String supporterViewChatById = "/supporter/viewChatById";
     }
 }

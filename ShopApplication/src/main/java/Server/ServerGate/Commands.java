@@ -72,6 +72,8 @@ public class Commands {
     public static final String getPropertyValuesOfAFile = "/main/getPropertyValuesOfAFile";
     public static final String getMessagesInAuctionChat = "/main/getMessagesInAuctionChat";
     public static final String getMessagesInChat = "/main/getMessagesInChat";
+
+    public static final String sendMessage = "/main/sendMessage";
     //admin Server.controller methods.
     public static final String adminEditPersonalInfo = "/admin/editPersonalInfo";
     public static final String adminManageUsers = "/admin/manageUsers";
@@ -167,12 +169,18 @@ public class Commands {
     public static final String customerHasBought = "/customer/hasBought";
 
     public static final String customerBid = "/customer/bid";
+
+    public static final String customerGetSupportChatId = "/customer/getSupportChatId";
+    public static final String customerGetAllSupporters = "/customer/getAllSupporters";
+    public static final String customerCreateSupportChat = "/customer/createSupportChat";
     //supporterController methods
     public static final String supporterGetActiveChats = "/supporter/getActiveChats";
     public static final String supporterGetArchiveChats = "/supporter/getArchiveChats";
     public static final String supporterViewChat = "/supporter/viewChat";
     public static final String supporterSendMessage = "/supporter/sendMessage";
     public static final String supporterDeleteChat = "/supporter/deleteChat";
+
+    public static final String supporterViewChatById = "/supporter/viewChatById";
 
     static Map<String, Task> allTasks = Map.ofEntries(
             entry(authTokenRequest, new Task() {
@@ -1576,7 +1584,57 @@ public class Commands {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
                 }
+            }),
+            entry(sendMessage, new Task(stringType, stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        currentSession.getMainController().sendMessage(objectArgs[0] + "", objectArgs[1] + "");
+                        return "";
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(supporterViewChatById, new Task(stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getSupporterController().viewChatById(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(customerGetSupportChatId, new Task() {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getCustomerController().getSupportChatId();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(customerGetAllSupporters, new Task() {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getCustomerController().getAllSupporters();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(customerCreateSupportChat, new Task(stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getCustomerController().createSupportChat(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
             })
-
     );
 }
