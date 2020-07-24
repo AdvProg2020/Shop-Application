@@ -17,6 +17,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -645,6 +648,15 @@ public class SellerController {
             throw new Exceptions.InvalidSubProductIdException(subProductId);
         }else {
             return ((Seller)currentAccount()) == subProduct.getSeller();
+        }
+    }
+
+    private byte[] loadFileFromDataBase(String path){
+        Path filePath = Paths.get(path);
+        try {
+            return Files.readAllBytes(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
