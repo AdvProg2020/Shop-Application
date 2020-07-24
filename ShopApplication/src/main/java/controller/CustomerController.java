@@ -5,10 +5,7 @@ import model.Auction;
 import model.Cart;
 import model.Discount;
 import model.Rating;
-import model.account.Account;
-import model.account.Customer;
-import model.account.Seller;
-import model.account.Supporter;
+import model.account.*;
 import model.chat.Chat;
 import model.chat.SupportChat;
 import model.database.Database;
@@ -128,7 +125,7 @@ public class CustomerController {
             subProductCount = subProductsInCart.get(subProduct);
             new LogItem(buyLog.getId(), sellLog.getId(), subProduct.getId(), subProductCount);
             subProduct.changeRemainingCount(-subProductCount);
-            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount);
+            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount*(100 - Admin.getCommission())/100);
         }
         if (discount != null)
             discount.changeCount(currentAccount().getId(), -1);

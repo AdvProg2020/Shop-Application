@@ -603,4 +603,10 @@ public class AdminController {
             }
         }
     }
+
+    public void setCommission(double percentage) throws Exceptions.InvalidCommissionException {
+        if( percentage < 0 || percentage > 100)
+            throw new Exceptions.InvalidCommissionException();
+        Admin.setCommission(percentage);
+    }
 }
