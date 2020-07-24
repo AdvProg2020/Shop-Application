@@ -2620,10 +2620,11 @@ public class Controllers {
                 DirectoryChooser dc = new DirectoryChooser();
                 java.io.File f = dc.showDialog(new Stage() );
                 byte[] file = customerController.downloadFile(subSellablePack[1]);
-                if( !f.exists()){
-                    f.createNewFile();
+                java.io.File f2 = new File(f.getAbsolutePath()+"/"+subSellablePack[2]+"."+subSellablePack[3]);
+                if( !f2.exists()){
+                    f2.createNewFile();
                 }
-                OutputStream outputStream = new FileOutputStream(f);
+                OutputStream outputStream = new FileOutputStream(f2);
                 outputStream.write(file);
                 outputStream.close();
             } catch (Exceptions.InvalidFileIdException e) {
