@@ -19,6 +19,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
@@ -2368,7 +2369,7 @@ public class Controllers {
             }
             setPacks(sellableId, subSellableId);
 
-            
+
             initMainObjects();
             initCategoryHBox();
             initReviewsVB();
@@ -2592,11 +2593,23 @@ public class Controllers {
 
         private void download(){
             try {
+                DirectoryChooser dc = new DirectoryChooser();
+                java.io.File f = dc.showDialog(new Stage() );
                 byte[] file = customerController.downloadFile(subSellablePack[1]);
+                if( !f.exists()){
+                    f.createNewFile();
+                }
+                OutputStream outputStream = new FileOutputStream(f);
+                outputStream.write(file);
+                outputStream.close();
             } catch (Exceptions.InvalidFileIdException e) {
                 e.printStackTrace();
             } catch (Exceptions.HaveNotBoughtException e) {
                 purchaseTheFile();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
