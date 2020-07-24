@@ -2367,6 +2367,8 @@ public class Controllers {
                 }
             }
             setPacks(sellableId, subSellableId);
+
+            
             initMainObjects();
             initCategoryHBox();
             initReviewsVB();
@@ -2419,6 +2421,9 @@ public class Controllers {
         }
 
         private void initMainObjects() {
+            if( sellablePack[15].equals("SubFile")){
+                brandExtension.setText("Extension: ");
+            }
             nameLBL.setText(sellablePack[1]);
             brandExtensionLBL.setText(sellablePack[2]);
             sellableInfo.setText(sellablePack[3]);
@@ -2439,11 +2444,6 @@ public class Controllers {
             initRatingStars();
         }
 
-        private void initMainObjectsInFileMode(){
-            brandExtension.setText("Extension: ");
-
-
-        }
 
         //Done...
         private void initRatingStars() {

@@ -70,7 +70,7 @@ public class Controller {
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
                              String email, String phone, double balance, String storeName, byte[] image) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         usernameTypeValidation(username, type);
-        String imagePath = saveFileInDataBase(image, username);
+        String imagePath = image.length != 0 ? saveFileInDataBase(image, username) : null;
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, imagePath, balance);
