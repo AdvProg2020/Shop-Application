@@ -23,6 +23,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
+import model.account.Admin;
 
 import java.io.*;
 import java.net.URL;
@@ -722,7 +723,7 @@ public class Controllers {
 
     }
 
-    public static class CommissionManagingPopup{
+    public static class CommissionManagingPopupController{
         @FXML
         private Label errorLBL;
 
@@ -744,7 +745,35 @@ public class Controllers {
         @FXML
         private Button discardBTN;
 
+        public static void display(){
+            ((CommissionManagingPopupController)
+                    View.popupWindow("Commission managing popup", Constants.FXMLs.commissionManagingPopup, 650, 450)).initialize();
+        }
 
+        private void initialize(){
+            editBTN.setOnAction(e -> saveChanges());
+            discardBTN.setOnAction(e -> discard());
+        }
+
+        private void saveChanges(){
+            String commission = commissionField.getText();
+            String walletMin = walletMinField.getText();
+            if( !commission.isEmpty()){
+                try {
+                    adminController.setCommission(Double.parseDouble(commission));
+                } catch (Exceptions.InvalidCommissionException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(!walletMin.isEmpty()){
+                adminController.setWalletMin(Double.parseDouble(walletMin));
+            }
+        }
+
+        private void discard(){
+            walletMinField.setText("");
+            commissionField.setText("");
+        }
     }
 
     public static class AddProductRequestPopupController {
@@ -5216,6 +5245,7 @@ public class Controllers {
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
             manageSellables.setOnAction(e -> AdminProductManagingMenu.display());
             manageRequests.setOnAction(e -> AdminRequestManagingMenuController.display());
+            manageCommission.setOnAction(e -> CommissionManagingPopupController.display());
 
             manageShippings.setOnAction(e -> AdminBuyLogManagingMenuController.display());
         }
