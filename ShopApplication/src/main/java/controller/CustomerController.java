@@ -156,6 +156,7 @@ public class CustomerController {
             if (discount != null)
                 discount.changeCount(currentAccount().getId(), -1);
             ((Customer) currentAccount()).getWallet().changeBalance(-totalPrice);
+            (SubFile.getSubSellableById(subFileId)).getSeller().getWallet().changeBalance(totalPrice * (100 - Admin.getCommission())/100);
             database().purchase();
         }
     }
