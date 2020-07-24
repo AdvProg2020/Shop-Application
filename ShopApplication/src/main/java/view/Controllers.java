@@ -697,6 +697,14 @@ public class Controllers {
             }
 
             String imgPath = "/src/main/resources/temp/accountImage.png";
+            File f = new File(imgPath);
+            if ( ! f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             byte[] byteArray = mainController.loadFileFromDataBase(info[7]);
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
@@ -1694,6 +1702,14 @@ public class Controllers {
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
 
             String imgPath = "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
+            File f = new File(imgPath);
+            if ( ! f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             byte[] byteArray = mainController.loadFileFromDataBase(subProductInfo[6]);
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
@@ -2431,6 +2447,14 @@ public class Controllers {
             categoryLBL.setText(sellablePack[7]);
 
             String imgPath = "/src/main/resources/temp/digestImg.png";
+            File f = new File(imgPath);
+            if ( ! f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             byte[] byteArray = mainController.loadFileFromDataBase(sellablePack[8]);
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
@@ -4421,6 +4445,14 @@ public class Controllers {
                 img.setPreserveRatio(true);
 
                 String imgPath = "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
+                File f = new File(imgPath);
+                if ( ! f.exists()) {
+                    try {
+                        f.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 byte[] byteArray = mainController.loadFileFromDataBase(imagePath);
                 try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                     stream.write(byteArray);
@@ -7998,6 +8030,14 @@ public class Controllers {
             maxPrice2.setText(secondProductInfo[10]);
 
             String firstPath = "/src/main/resources/temp/compareFirstImage.png";
+            File f1 = new File(firstPath);
+            if ( ! f1.exists()) {
+                try {
+                    f1.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             byte[] byteArray1 = mainController.loadFileFromDataBase(firstProductInfo[8]);
             try (FileOutputStream stream = new FileOutputStream(firstPath)) {
                 stream.write(byteArray1);
@@ -8009,6 +8049,14 @@ public class Controllers {
             image1.setImage(new Image("file:" + Constants.base + firstPath));
 
             String secondPath = "/src/main/resources/temp/compareSecondImage.png";
+            File f2 = new File(secondPath);
+            if ( ! f2.exists()) {
+                try {
+                    f2.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             byte[] byteArray2 = mainController.loadFileFromDataBase(firstProductInfo[8]);
             try (FileOutputStream stream = new FileOutputStream(secondPath)) {
                 stream.write(byteArray2);
