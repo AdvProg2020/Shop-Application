@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" fx:id="mainPane" stylesheets="@../css/Base.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$BaseController">
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$BaseController">
     <top>
         <HBox id="top-box" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
             <HBox alignment="CENTER_LEFT" spacing="10.0" HBox.hgrow="ALWAYS">

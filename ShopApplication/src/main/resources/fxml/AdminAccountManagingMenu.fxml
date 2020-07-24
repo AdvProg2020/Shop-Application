@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="view.Controllers$AdminAccountManagingMenuController">
+            fx:controller="Client.view.Controllers$AdminAccountManagingMenuController">
     <center>
         <TabPane maxWidth="-Infinity">
             <Tab closable="false" text="Admins">
