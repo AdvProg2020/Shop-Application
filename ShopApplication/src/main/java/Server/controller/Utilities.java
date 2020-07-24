@@ -464,9 +464,10 @@ public class Utilities {
         }
 
         public static String[] supportChat(SupportChat chat){
-            String[] chatPack = new String[2];
+            String[] chatPack = new String[3];
             chatPack[0] = chat.getId();
             chatPack[1] = chat.getCustomer().getUsername();
+            chatPack[2] = chat.getSupporter().getUsername();
             return chatPack;
         }
 
@@ -609,8 +610,8 @@ public class Utilities {
                     return;
                 }
                 if (!contains.equals(""))
-                if (!contains.isEmpty())
-                    products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
+                    if (!contains.isEmpty())
+                        products.removeIf(product -> !(product.getName().toLowerCase().contains(contains.toLowerCase())));
             }
 
             public static void brand(ArrayList<Product> products, String brand) {
@@ -618,8 +619,8 @@ public class Utilities {
                     return;
                 }
                 if (!brand.equals(""))
-                if (!brand.isEmpty())
-                    products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
+                    if (!brand.isEmpty())
+                        products.removeIf(product -> !(product.getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
 
             public static void storeName(ArrayList<Product> products, String storeName) {
@@ -829,7 +830,7 @@ public class Utilities {
             @Override
             public int compare(SubSellable o1, SubSellable o2) {
                 if( o1.getClass().getSimpleName().equals("SubProduct") && o2.getClass().getSimpleName().equals("SubProduct"))
-                return direction * Integer.compare(((SubProduct)o1).getRemainingCount(), ((SubProduct)o2).getRemainingCount());
+                    return direction * Integer.compare(((SubProduct)o1).getRemainingCount(), ((SubProduct)o2).getRemainingCount());
                 else if(o1.getClass().getSimpleName().equals("SubProduct")){
                     return 1;
                 }else {

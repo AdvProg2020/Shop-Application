@@ -2,6 +2,7 @@ package Server.controller;
 
 import Server.model.Category;
 import Server.model.Discount;
+import Server.model.Wallet;
 import Server.model.account.Account;
 import Server.model.account.Admin;
 import Server.model.account.Customer;
@@ -98,16 +99,18 @@ public class AdminController {
     }
 
 
-    public void createAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
+    public void createAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
+        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, username + ".png") : null;
         new Admin(username, password, firstName, lastName, email, phone, imagePath);
         database().createAdmin();
     }
 
-    public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
+    public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
         if(Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
+        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, username + ".png") : null;
         new Supporter(username, password, firstName, lastName, email, phone, imagePath);
         database().createSupporter();
     }
@@ -600,5 +603,15 @@ public class AdminController {
                     break;
             }
         }
+    }
+
+    public void setCommission(double percentage) throws Exceptions.InvalidCommissionException {
+        if( percentage < 0 || percentage > 100)
+            throw new Exceptions.InvalidCommissionException();
+        Admin.setCommission(percentage);
+    }
+
+    public void setWalletMin(double amount){
+        Wallet.setMinBalance(amount);
     }
 }

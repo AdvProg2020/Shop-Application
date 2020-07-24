@@ -19,13 +19,16 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -194,8 +197,15 @@ public class Controllers {
                     try {
                         if (passwordChanged.get())
                             mainController.editPersonalInfo("password", info[1] = passwordField.getText());
-                        if (imageChanged.get())
-                            mainController.editPersonalInfo("image path", info[7] = imageField.getText());
+                        if (imageChanged.get()) {
+                            byte[] img = new byte[0];
+                            try {
+                                img = Files.readAllBytes(Paths.get(info[7] = imageField.getText()));
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            mainController.editPersonalInfo("image path", "", img);
+                        }
                         if (firstNameChanged.get())
                             mainController.editPersonalInfo("firstName", info[3] = firstName.getText());
                         if (lastNameChanged.get())
@@ -695,14 +705,83 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            info[7] = info[7].replaceAll("\\\\", "/");
+            String imgPath = "src/main/resources/temp/accountImage.jpg";
+            File f = Path.of(imgPath).toFile();
+            if ( ! f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            byte[] byteArray = mainController.loadFileFromDataBase(info[7]);
+            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                stream.write(byteArray);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            accountIMG.setImage(new Image("file:" + imgPath));
 
-            accountIMG.setImage(new Image("file:" + (info[7].startsWith("/src") ? Constants.base : "") + info[7]));
+
         }
 
 
     }
 
+    public static class CommissionManagingPopupController{
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private TextField commissionField;
+
+        @FXML
+        private TextField walletMinField;
+
+        @FXML
+        private Button addBTN;
+
+        @FXML
+        private HBox saveDiscardHBox;
+
+        @FXML
+        private Button editBTN;
+
+        @FXML
+        private Button discardBTN;
+
+        public static void display(){
+            ((CommissionManagingPopupController)
+                    View.popupWindow("Commission managing popup", Constants.FXMLs.commissionManagingPopup, 650, 450)).initialize();
+        }
+
+        private void initialize(){
+            editBTN.setOnAction(e -> saveChanges());
+            discardBTN.setOnAction(e -> discard());
+        }
+
+        private void saveChanges(){
+            String commission = commissionField.getText();
+            String walletMin = walletMinField.getText();
+            if( !commission.isEmpty()){
+                try {
+                    adminController.setCommission(Double.parseDouble(commission));
+                } catch (Exceptions.InvalidCommissionException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(!walletMin.isEmpty()){
+                adminController.setWalletMin(Double.parseDouble(walletMin));
+            }
+        }
+
+        private void discard(){
+            walletMinField.setText("");
+            commissionField.setText("");
+        }
+    }
 
     public static class AddProductRequestPopupController {
         @FXML
@@ -1682,8 +1761,26 @@ public class Controllers {
         private void setInfo(String[] subProductInfo) {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
-            subProductInfo[6] = subProductInfo[6].replaceAll("\\\\", "/");
-            image.setImage(new Image("file:" + (subProductInfo[6].startsWith("/src") ? Constants.base : "") + subProductInfo[6]));
+
+            String imgPath =  "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
+            File f = Path.of(imgPath).toFile();
+            if ( ! f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            byte[] byteArray = mainController.loadFileFromDataBase(subProductInfo[6]);
+            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                stream.write(byteArray);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            image.setImage(new Image("file:"  + imgPath));
+
             if (subProductInfo[16] != null) {
                 auctionMode(subProductInfo);
             } else {
@@ -2347,6 +2444,8 @@ public class Controllers {
                 }
             }
             setPacks(sellableId, subSellableId);
+
+
             initMainObjects();
             initCategoryHBox();
             initReviewsVB();
@@ -2399,23 +2498,37 @@ public class Controllers {
         }
 
         private void initMainObjects() {
+            if( sellablePack[15].equals("SubFile")){
+                brandExtension.setText("Extension: ");
+            }
             nameLBL.setText(sellablePack[1]);
             brandExtensionLBL.setText(sellablePack[2]);
             sellableInfo.setText(sellablePack[3]);
             ratingCountLBL.setText(sellablePack[5]);
             categoryLBL.setText(sellablePack[7]);
 
-            sellablePack[8] = sellablePack[8].replaceAll("\\\\", "/");
-            sellableIMG.setImage(new Image("file:" + (sellablePack[8].startsWith("/src") ? Constants.base : "") + sellablePack[8]));
+            String imgPath =  "/src/main/resources/temp/digestImg.png";
+            File f = Path.of(imgPath).toFile();
+            if ( ! f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            byte[] byteArray = mainController.loadFileFromDataBase(sellablePack[8]);
+            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                stream.write(byteArray);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            sellableIMG.setImage(new Image("file:"  + imgPath));
 
             initRatingStars();
         }
 
-        private void initMainObjectsInFileMode(){
-            brandExtension.setText("Extension: ");
-
-
-        }
 
         //Done...
         private void initRatingStars() {
@@ -2561,8 +2674,32 @@ public class Controllers {
             ratingsStackPane.getChildren().add(RatingBoxController.createBox(sellablePack[0]));
         }
 
-        //Todo
+
         private void download(){
+            try {
+                DirectoryChooser dc = new DirectoryChooser();
+                java.io.File f = dc.showDialog(new Stage() );
+                byte[] file = customerController.downloadFile(subSellablePack[1]);
+                java.io.File f2 = new File(f.getAbsolutePath()+"/"+subSellablePack[2]+"."+subSellablePack[3]);
+                if( !f2.exists()){
+                    f2.createNewFile();
+                }
+                OutputStream outputStream = new FileOutputStream(f2);
+                outputStream.write(file);
+                outputStream.close();
+            } catch (Exceptions.InvalidFileIdException e) {
+                e.printStackTrace();
+            } catch (Exceptions.HaveNotBoughtException e) {
+                purchaseTheFile();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void purchaseTheFile(){
+            PurchaseMenuController.displayFileMode(Double.parseDouble(sellablePack[8]), sellablePack[1]);
         }
 
         //Done
@@ -3016,9 +3153,15 @@ public class Controllers {
             customerRegister.setOnAction(e -> {
                 if (areCustomerFieldsAvailable()) {
                     try {
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(customerImageField.getText()));
+                        } catch (IOException ex) {
+                            //do nothing;
+                        }
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null,image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -3032,9 +3175,15 @@ public class Controllers {
             sellerRegister.setOnAction(e -> {
                 if (areSellerFieldsAvailable()) {
                     try {
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(customerImageField.getText()));
+                        } catch (IOException ex) {
+                            //nothing
+                        }
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), customerImageField.getText());
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -4368,8 +4517,25 @@ public class Controllers {
 
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
-                imagePath = imagePath.replaceAll("\\\\", "/");
-                img.setImage(new Image("file:" + (imagePath.startsWith("/src") ? Constants.base : "/") + imagePath));
+
+                String imgPath = "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
+                File f = Path.of(imgPath).toFile();
+                if ( ! f.exists()) {
+                    try {
+                        f.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                byte[] byteArray = mainController.loadFileFromDataBase(imagePath);
+                try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                    stream.write(byteArray);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                img.setImage(new Image("file:"  + imgPath));
 
 
                 initButtons();
@@ -4610,7 +4776,7 @@ public class Controllers {
     }
 
 
-    public static class PurchaseMenuController implements Initializable {
+    public static class PurchaseMenuController{
 
         @FXML
         private TextField receiverName;
@@ -4645,12 +4811,46 @@ public class Controllers {
         @FXML
         private Label addressError;
 
+        private double fileCost = 0;
+        private String subFileId = null;
+
         public static void display() {
-            View.setMainPane(Constants.FXMLs.purchaseMenu);
+            PurchaseMenuController pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
+            pmc.initialize();
         }
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
+        public static void displayFileMode(double fileCost, String subFileId){
+            PurchaseMenuController pmc = null;
+            pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
+            pmc.fileCost = fileCost;
+            pmc.subFileId = subFileId;
+            pmc.initializeFileMode();
+
+        }
+
+        public void initializeFileMode(){
+            purchaseBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        customerController.purchaseTheFile(subFileId, discountCode.getText());
+                        PurchaseConfirmationController.display(totalPrice.getText());
+                    } catch (Exceptions.InsufficientCreditException ex) {
+                        discountError.setText("You dont have enough money!");
+                    }  catch (Exceptions.InvalidDiscountException ex) {
+                        discountError.setText("Invalid discount code!");
+                    } catch (Exceptions.InvalidFileIdException invalidFileIdException) {
+                        invalidFileIdException.printStackTrace();
+                    }
+                }
+            });
+            validateBTN.setOnAction(e -> validateDiscountFileMode());
+            address.setVisible(false);
+            phoneNumber.setVisible(false);
+            receiverName.setVisible(false);
+
+        }
+
+        public void initialize() {
             initButtons();
             initListeners();
 
@@ -4724,6 +4924,23 @@ public class Controllers {
             } else {
                 try {
                     double newPrice = customerController.getTotalPriceOfCartWithDiscount(discountCode.getText());
+                    discountError.setText("");
+                    totalPrice.setText("$" + newPrice);
+                    totalPrice.setTextFill(Color.RED);
+                    return true;
+                } catch (Exceptions.InvalidDiscountException e) {
+                    discountError.setText("Invalid discount code");
+                    return false;
+                }
+            }
+        }
+
+        private boolean validateDiscountFileMode() {
+            if (discountCode.getText().equals("")) {
+                return true;
+            } else {
+                try {
+                    double newPrice = customerController.getTotalPriceOfFileWithDiscount(discountCode.getText(), fileCost);
                     discountError.setText("");
                     totalPrice.setText("$" + newPrice);
                     totalPrice.setTextFill(Color.RED);
@@ -5035,6 +5252,7 @@ public class Controllers {
             manageDiscounts.setOnAction(e -> AdminDiscountManagingMenuController.display());
             manageSellables.setOnAction(e -> AdminProductManagingMenu.display());
             manageRequests.setOnAction(e -> AdminRequestManagingMenuController.display());
+            manageCommission.setOnAction(e -> CommissionManagingPopupController.display());
 
             manageShippings.setOnAction(e -> AdminBuyLogManagingMenuController.display());
         }
@@ -5685,9 +5903,15 @@ public class Controllers {
             adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(adminImageField.getText()));
+                        } catch (IOException ex) {
+                            //nothing
+                        }
                         boolean bootUp = !mainController.doesManagerExist();
-                        adminController.creatAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
-                                adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
+                        adminController.createAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
+                                adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), image);
                         if (!bootUp) {
                             AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
                         } else {
@@ -7303,6 +7527,8 @@ public class Controllers {
                 imageBrowseBTN.setDisable(true);
                 infoArea.setEditable(false);
             }
+            imageField.setEditable(false);
+            pathField.setEditable(false);
         }
 
         private void initChoiceBox() {
@@ -7340,7 +7566,7 @@ public class Controllers {
                 }
             });
 
-            pathField.setOnAction(e -> {
+            pathBrowseBTN.setOnAction(e -> {
                 FileChooser fileChooser = new FileChooser();
                 File chosenFile = fileChooser.showOpenDialog(new Stage());
                 if (chosenFile != null) {
@@ -7360,13 +7586,35 @@ public class Controllers {
                         propertyMap.put(item.property, item.value.getText());
                     }
                     try {
-                        if (!exists)
-                            sellerController.addNewFile(nameField.getText(), extensionField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
-                                    propertyMap, Double.parseDouble(priceField.getText()), pathField.getText());
-                        else
-                            sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), pathField.getText());
-                    } catch (Exception ex) {
-                        printError(ex.getMessage());
+                        if (!exists) {
+                            byte[] image = new byte[0];
+                            try {
+                                image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            } catch (IOException ex) {
+                                //nothing
+                            }
+                            byte[] file = new byte[0];
+                            try {
+                                file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            sellerController.addNewFile(nameField.getText(), extensionField.getText(), infoArea.getText(), image, category.getValue(),
+                                    propertyMap, Double.parseDouble(priceField.getText()), file);
+                        } else {
+                            byte[] file = new byte[0];
+                            try {
+                                file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            } catch (IOException ex) {
+                                //nothing
+                            }
+                            sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), file);
+                        }
+                    } catch (Exceptions.InvalidFileIdException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.ExistingFileException ex) {
                         ex.printStackTrace();
                     }
                     addFileBTN.getScene().getWindow().hide();
@@ -7605,13 +7853,18 @@ public class Controllers {
                         propertyMap.put(item.property, item.value.getText());
                     }
                     try {
-                        if (!exists)
-                            sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
+                        if (!exists) {
+                            byte[] image = new byte[0];
+                            try {
+                                image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            } catch (IOException ex) {
+                                //nothing
+                            }
+                            sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), image, category.getValue(),
                                     propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
-                        else
+                        } else
                             sellerController.addNewSubProductToAnExistingProduct(productId, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
-                    } catch (Exception ex) {
-                        printError(ex.getMessage());
+                    } catch (Exceptions.InvalidSellableIdException | Exceptions.InvalidCategoryException | Exceptions.ExistingProductException ex) {
                         ex.printStackTrace();
                     }
                     addProductBTN.getScene().getWindow().hide();
@@ -7851,11 +8104,43 @@ public class Controllers {
             maxPrice1.setText(firstProductInfo[10]);
             maxPrice2.setText(secondProductInfo[10]);
 
-            firstProductInfo[8] = firstProductInfo[8].replaceAll("\\\\", "/");
-            image1.setImage(new Image("file:" + (firstProductInfo[8].startsWith("/src") ? Constants.base : "") + firstProductInfo[8]));
+            String firstPath = "/src/main/resources/temp/compareFirstImage.png";
+            File f1 = Path.of(firstPath).toFile();
+            if ( ! f1.exists()) {
+                try {
+                    f1.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            byte[] byteArray1 = mainController.loadFileFromDataBase(firstProductInfo[8]);
+            try (FileOutputStream stream = new FileOutputStream(firstPath)) {
+                stream.write(byteArray1);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            image1.setImage(new Image("file:" + firstPath));
 
-            secondProductInfo[8] = secondProductInfo[8].replaceAll("\\\\", "/");
-            image2.setImage(new Image("file:" + (secondProductInfo[8].startsWith("/src") ? Constants.base : "") + secondProductInfo[8]));
+            String secondPath = "/src/main/resources/temp/compareSecondImage.png";
+            File f2 = Path.of(secondPath).toFile();
+            if ( ! f2.exists()) {
+                try {
+                    f2.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            byte[] byteArray2 = mainController.loadFileFromDataBase(firstProductInfo[8]);
+            try (FileOutputStream stream = new FileOutputStream(secondPath)) {
+                stream.write(byteArray2);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            image2.setImage(new Image("file:"  + secondPath));
         }
 
         private void initProperties() {
@@ -8330,10 +8615,16 @@ public class Controllers {
             supporterRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
+                        byte[] image = new byte[0];
+                        try {
+                            image = Files.readAllBytes(Paths.get(supporterImageField.getText()));
+                        } catch (IOException ex) {
+                            //nothing
+                        }
                         adminController.createSupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
-                                supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), supporterImageField.getText());
+                                supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), image);
                         supporterUsername.getScene().getWindow().hide();
-                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                    } catch (Exceptions.UsernameAlreadyTakenException  ex) {
                         supporterUsernameError.setText("Sorry! this username is already taken.");
                         supporterUsernameError.setVisible(true);
                         ex.printStackTrace();
@@ -8461,7 +8752,7 @@ public class Controllers {
             if( !text.isEmpty()){
                 try {
                     mainController.sendMessage(chatPageId, text);
-                } catch (Exception e) {
+                } catch (Exceptions.InvalidChatIdException | Exceptions.InvalidAccountTypeException | Exceptions.UnAuthorizedAccountException e) {
                     e.printStackTrace();
                 }
             }
@@ -8618,7 +8909,7 @@ public class Controllers {
             createChatBTN.setOnAction(e -> {
                 try {
                     customerController.createSupportChat(nameToId.get(supporterBox.getSelectionModel().getSelectedItem()));
-                } catch (Exception ex) {
+                } catch (Exceptions.AlreadyInAChatException | Exceptions.InvalidSupporterIdException ex) {
                     ex.printStackTrace();
                 }
             });

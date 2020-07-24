@@ -13,6 +13,11 @@ import Server.model.chat.SupportChat;
 import Server.model.database.Database;
 import Server.model.sellable.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 
@@ -62,8 +67,9 @@ public class Controller {
      *             * String username, String password, String firstName, String lastName, String email, String phone
      */
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
-                             String email, String phone, double balance, String storeName, String imagePath) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
+                             String email, String phone, double balance, String storeName, byte[] image) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         usernameTypeValidation(username, type);
+        String imagePath = image.length != 0 ? saveFileInDataBase(image, username + ".png") : null;
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, imagePath, balance);
@@ -78,6 +84,22 @@ public class Controller {
                 database.request();
                 break;
         }
+    }
+
+    public String saveFileInDataBase(byte[] file, String name){
+        String filePath = "src/main/resources/files/"+ name;
+        java.io.File f = new java.io.File(filePath);
+        try {
+            if( !f.exists()){
+                f.createNewFile();
+            }
+            OutputStream outputStream = new FileOutputStream(f);
+            outputStream.write(file);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filePath;
     }
 
     public boolean isManager() {
@@ -412,7 +434,7 @@ public class Controller {
         else return Utilities.Pack.personalInfo(account);
     }
 
-    public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    public void editPersonalInfo(String field, String newInformation, byte[]... image) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         switch (field) {
             case "firstName":
                 if (currentAccount.getFirstName().equals(newInformation))
@@ -440,8 +462,7 @@ public class Controller {
                 currentAccount.setPassword(newInformation);
                 break;
             case "image path":
-                if (currentAccount.getImagePath().equals(newInformation))
-                    throw new Exceptions.SameAsPreviousValueException(field);
+                newInformation = saveFileInDataBase(image[0], currentAccount.getUsername() + ".png");
                 currentAccount.setImagePath(newInformation);
                 break;
             default:
@@ -690,5 +711,16 @@ public class Controller {
             }
 
         }
+    }
+
+    public byte[] loadFileFromDataBase(String path) {
+        Path filePath = Path.of(path);
+
+        try {
+            return Files.readAllBytes(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

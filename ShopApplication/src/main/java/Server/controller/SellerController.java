@@ -268,10 +268,6 @@ public class SellerController {
                     new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.SUB_PRICE, newInformation);
                     database().request();
                     break;
-                case "imagePath":
-                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.IMAGE_PATH, newInformation);
-                    database().request();
-                    break;
                 case "property":
                     new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.PROPERTY, newInformation);
                     database().request();
@@ -296,7 +292,7 @@ public class SellerController {
             return null;
     }
 
-    public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, HashMap<String, String> propertyValues,
+    public void addNewProduct(String name, String brand, String infoText, byte[] image, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
         Product product = Product.getProductByNameAndBrand(name, brand);
@@ -307,6 +303,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
+            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name + "_" + brand + "_IMG" + ".png") : null;
             new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
     }
@@ -319,25 +316,36 @@ public class SellerController {
         }
     }
 
-    public void addNewFile(String name, String extension, String infoText, String imagePath, String categoryName, Map<String, String> propertyValues, double price, String downloadPath) throws Exceptions.ExistingFileException, Exceptions.InvalidCategoryException {
+    public void addNewFile(String name, String extension, String infoText, byte[] image, String categoryName, Map<String, String> propertyValues, double price, byte[] file) throws Exceptions.ExistingFileException, Exceptions.InvalidCategoryException {
         if( File.isFileNameAndExtensionUsed(name, extension) ){
             throw new Exceptions.ExistingFileException();
         }else {
             Category category = Category.getCategoryByName(categoryName);
-            if(category == null)
+            if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
+            String downloadPath = mainController.saveFileInDataBase(file, currentAccount().getUsername() + "_" + name + "." + extension);
+            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name + "_" + extension + "_IMG" + ".png") : null;
             SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
             new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         }
     }
 
-    public void addNewSubFileToAnExistingFile(String fileId, double price, String downloadPath) throws Exceptions.InvalidFileIdException {
+    public void addNewSubFileToAnExistingFile(String fileId, double price, byte[] file) throws Exceptions.InvalidFileIdException {
         if(File.getFileById(fileId) == null)
             throw new Exceptions.InvalidFileIdException(fileId);
         else {
+            File f = File.getFileById(fileId);
+            String downloadPath;
+            if( file.length != 0){
+                downloadPath = mainController.saveFileInDataBase(file, currentAccount().getUsername() + "_" + f.getName() + "." + f.getExtension());
+            }else {
+                downloadPath = null;
+            }
+
             new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
         }
     }
+
 
     public void removeFile(String fileId) throws Exceptions.InvalidFileIdException {
         for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
@@ -625,4 +633,6 @@ public class SellerController {
             return ((Seller)currentAccount()) == subProduct.getSeller();
         }
     }
+
+
 }

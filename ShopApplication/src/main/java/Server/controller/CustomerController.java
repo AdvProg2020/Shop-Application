@@ -1,26 +1,21 @@
 package Server.controller;
 
 
-import Server.model.Auction;
-import Server.model.Cart;
-import Server.model.Discount;
-import Server.model.Rating;
-import Server.model.account.Account;
-import Server.model.account.Customer;
-import Server.model.account.Seller;
-import Server.model.account.Supporter;
+import Server.model.*;
+import Server.model.account.*;
 import Server.model.chat.AuctionChat;
 import Server.model.chat.Chat;
 import Server.model.chat.Message;
 import Server.model.chat.SupportChat;
 import Server.model.database.Database;
-import Server.model.log.BuyLog;
-import Server.model.log.LogItem;
-import Server.model.log.SellLog;
-import Server.model.log.ShippingStatus;
+import Server.model.log.*;
 import Server.model.sellable.Product;
+import Server.model.sellable.SubFile;
 import Server.model.sellable.SubProduct;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +78,15 @@ public class CustomerController {
         }
     }
 
+    public double getTotalPriceOfFileWithDiscount(String discountCode, double fileCost) throws Exceptions.InvalidDiscountException {
+        Discount discount = Discount.getDiscountByCode(discountCode);
+        if (discount == null || ! discount.hasCustomerWithId(currentAccount().getId())) {
+            throw new Exceptions.InvalidDiscountException(discountCode);
+        } else {
+            return discount.calculateDiscountAmount(fileCost);
+        }
+    }
+
     //Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
             Exceptions.NotAvailableSubProductsInCart, Exceptions.InvalidDiscountException, Exceptions.EmptyCartException {
@@ -102,7 +106,7 @@ public class CustomerController {
                 throw new Exceptions.InvalidDiscountException(discountCode);
         }
         double paidMoney = totalPrice - discountAmount;
-        if (paidMoney > ((Customer) currentAccount()).getWallet().getBalance())
+        if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - paidMoney)
             throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getWallet().getBalance());
         BuyLog buyLog = new BuyLog(currentAccount().getId(), paidMoney, discountAmount, receiverName, address, receiverPhone, ShippingStatus.PROCESSING);
         HashMap<Seller, SellLog> sellLogs = new HashMap<>();
@@ -120,7 +124,7 @@ public class CustomerController {
             subProductCount = subProductsInCart.get(subProduct);
             new LogItem(buyLog.getId(), sellLog.getId(), subProduct.getId(), subProductCount);
             subProduct.changeRemainingCount(-subProductCount);
-            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount);
+            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount*(100 - Admin.getCommission())/100);
         }
         if (discount != null)
             discount.changeCount(currentAccount().getId(), -1);
@@ -129,9 +133,49 @@ public class CustomerController {
         database().purchase();
     }
 
-    //Todo: discount, ...
-    public void purchaseTheFile(String subFileId, String discountCode){
+    public void purchaseTheFile(String subFileId, String discountCode) throws Exceptions.InvalidFileIdException, Exceptions.InvalidDiscountException, Exceptions.InsufficientCreditException {
+        SubFile subFile = SubFile.getSubFileById(subFileId);
+        Discount discount = null;
+        if(subFile == null){
+            throw new Exceptions.InvalidFileIdException(subFileId);
+        }else {
+            double totalPrice = subFile.getPriceWithSale();
+            double discountAmount = 0;
+            if( discountCode != null){
+                discount = Discount.getDiscountByCode(discountCode);
+                if (isDiscountCodeValid(discountCode) && (discount = Discount.getDiscountByCode(discountCode)) != null) {
+                    discountAmount = discount.calculateDiscountAmount(totalPrice);
+                    totalPrice -= discountAmount;
+                } else
+                    throw new Exceptions.InvalidDiscountException(discountCode);
+            }
+            if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - totalPrice)
+                throw new Exceptions.InsufficientCreditException(totalPrice, ((Customer) currentAccount()).getWallet().getBalance());
+            FileLog fileLog = new FileLog(subFileId, currentAccount().getId(), discountAmount);
+            if (discount != null)
+                discount.changeCount(currentAccount().getId(), -1);
+            ((Customer) currentAccount()).getWallet().changeBalance(-totalPrice);
+            (SubFile.getSubSellableById(subFileId)).getSeller().getWallet().changeBalance(totalPrice * (100 - Admin.getCommission())/100);
+            database().purchase();
+        }
+    }
 
+    public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException, Exceptions.HaveNotBoughtException {
+        SubFile subFile = SubFile.getSubFileById(subFileId);
+        try {
+            if(subFile != null ){
+                if( subFile.hasCustomerWithId(currentAccount().getId())){
+                    return Files.readAllBytes(Paths.get(subFile.getDownloadPath()));
+                }else {
+                    throw new Exceptions.HaveNotBoughtException(subFileId);
+                }
+            }else {
+                throw new Exceptions.InvalidFileIdException(subFileId);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private String notAvailableSubProductsInCart() {
@@ -264,15 +308,6 @@ public class CustomerController {
         }
     }
 
-    public void sendMessageInSupportChat(String chatId, String text) throws Exceptions.InvalidChatIdException {
-        SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if( chat == null || chat.getCustomer() != currentAccount()){
-            throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            new Message(chatId, currentAccount().getId(), text);
-        }
-    }
-
     public void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getCustomer() != currentAccount()){
@@ -291,29 +326,6 @@ public class CustomerController {
         }
     }
 
-    public ArrayList<String[]> viewAuctionChat(String auctionId) throws Exceptions.InvalidAuctionIdException {
-        Auction auction = Auction.getAuctionById(auctionId);
-        if( auction == null ){
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        }else {
-            AuctionChat chat = auction.getChat();
-            ArrayList<String[]> messages = new ArrayList<>();
-            String username = currentAccount().getUsername();
-            for (Message message : chat.getMessages()) {
-                messages.add(Utilities.Pack.message(message, username));
-            }
-            return messages;
-        }
-    }
-
-    public void sendMessageInAuctionChat(String auctionId, String text) throws Exceptions.InvalidAuctionIdException {
-        Auction auction = Auction.getAuctionById(auctionId);
-        if( auction == null ){
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        }else {
-            new Message(auction.getChat().getId(), currentAccount().getId(), text);
-        }
-    }
 
     public void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);

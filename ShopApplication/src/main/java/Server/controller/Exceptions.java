@@ -255,4 +255,10 @@ public class Exceptions {
             super("There is no supporter with id: " + supporterId);
         }
     }
+
+    public static class InvalidCommissionException extends Exception{
+        public InvalidCommissionException(){
+            super("Commission should be between 0 and 100");
+        }
+    }
 }
