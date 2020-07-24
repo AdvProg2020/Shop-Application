@@ -294,7 +294,8 @@ public class AdminController {
             String[] nameBody = getExceptionNameAndBody(response);
             throw new InvalidRequestIdException(nameBody[1]);
         } else {
-            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>(){}.getType());
+            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>() {
+            }.getType());
         }
     }
 
@@ -373,14 +374,15 @@ public class AdminController {
         }
     }
 
-    public HashMap<String, String> getPropertyValuesOfAFileInRequest(String id) throws InvalidRequestIdException{
+    public HashMap<String, String> getPropertyValuesOfAFileInRequest(String id) throws InvalidRequestIdException {
         String body = convertToJson(id);
         String response = sender.sendRequest(Constants.Commands.adminGetPropertyValuesOfAFileInRequest, body);
         if (response.startsWith("exception:")) {
             String[] nameBody = getExceptionNameAndBody(response);
             throw new InvalidRequestIdException(nameBody[1]);
         } else {
-            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>(){}.getType());
+            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>() {
+            }.getType());
         }
     }
 
@@ -406,7 +408,7 @@ public class AdminController {
         }
     }
 
-    public void editBuyLogStatus(String logId, String newStatus) throws InvalidLogIdException{
+    public void editBuyLogStatus(String logId, String newStatus) throws InvalidLogIdException {
         String body = convertToJson(logId, newStatus);
         String response = sender.sendRequest(Constants.Commands.adminEditBuyLogStatus, body);
         if (response.startsWith("exception:")) {
@@ -433,7 +435,7 @@ public class AdminController {
         }
     }
 
-    public void setWalletMin(double amount){
+    public void setWalletMin(double amount) {
         String body = convertToJson(amount);
         String response = sender.sendRequest(Constants.Commands.adminSetWalletMin, body);
     }

@@ -296,12 +296,12 @@ public class CustomerController {
 
     public String createSupportChat(String supporterId) throws Exceptions.AlreadyInAChatException, Exceptions.InvalidSupporterIdException {
         Chat chat = ((Customer)currentAccount()).getSupportChat();
-        if( ((Customer)currentAccount()).getSupportChat() != null){
+        if (((Customer) currentAccount()).getSupportChat() != null) {
             throw new Exceptions.AlreadyInAChatException(chat.getId());
-        }else {
-            if(Supporter.getSupporterById(supporterId) == null){
-                throw new Exceptions.InvalidSupporterIdException( supporterId );
-            }else {
+        } else {
+            if (Supporter.getSupporterById(supporterId) == null) {
+                throw new Exceptions.InvalidSupporterIdException(supporterId);
+            } else {
                 chat = new SupportChat(supporterId, currentAccount().getId());
                 return chat.getId();
             }

@@ -2498,7 +2498,7 @@ public class Controllers {
         }
 
         private void initMainObjects() {
-            if( sellablePack[15].equals("SubFile")){
+            if (subSellablePack[15].equals("SubFile")) {
                 brandExtension.setText("Extension: ");
             }
             nameLBL.setText(sellablePack[1]);
