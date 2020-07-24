@@ -29,6 +29,8 @@ public class DatabaseManager implements Database {
 
     private <T> void load(String fileName, Class<T> classType) {
         Scanner scanner = DatabaseUtilities.getScanner(fileName);
+        if (!scanner.hasNextLine()) return;
+
         if (classType == Admin.class) {
             String[] input = scanner.nextLine().split("\\s");
             Admin.setCommission(Double.parseDouble(input[1]));
