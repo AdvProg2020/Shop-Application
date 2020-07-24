@@ -29,14 +29,19 @@ FXML additions:
 
 
 account karmozd managing menu
+manage commission.
 auction: chat: shayan T
          auction popup: dana
 bank: how to handle?
-    admin
+    bankId: seller and customer -> register -> fxml and model.
+    increase wallet: personal info seller and customer.
+    admin: admin boot up: view and fxml.
     seller
-    customer -> 1. purchase menu 2. deposit
+    customer -> 1. purchase menu: fxml 2. deposit
 chat supporter and customer:
     chat: shayan T
     fxml: dana
-chat: refresh for messages button and send button: shayan M
+chat: refresh for messages button and send button and remove column: shayan M
+Base: chat button for customer: shayan M.
 auction popup: refresh highest bidder button: shayan M
+purchase file: shayan T.

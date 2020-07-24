@@ -1,6 +1,7 @@
 package controller;
 
 import model.account.Account;
+import model.account.Seller;
 import model.account.Supporter;
 import model.chat.Chat;
 import model.chat.Message;
@@ -27,21 +28,31 @@ public class SupporterController {
         return mainController.getDatabase();
     }
 
-    private ArrayList<String[]> getChatsOfSupporter() throws Exceptions.UnAuthorizedAccountException {
+    public ArrayList<String[]> getActiveChats() throws Exceptions.UnAuthorizedAccountException {
         ArrayList<String[]> chatPacks = new ArrayList<>();
         if(currentAccount().getClass().getSimpleName().equals("Supporter")){
             for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
                 chatPacks.add(Utilities.Pack.supportChat(chat));
             }
             return chatPacks;
-        }else {
+        } else {
             throw new Exceptions.UnAuthorizedAccountException();
         }
     }
 
+    public ArrayList<String[]> getArchiveChats() throws Exceptions.UnAuthorizedAccountException {
+        ArrayList<String[]> chatPacks = new ArrayList<>();
+        if (currentAccount().getClass().getSimpleName().equals("Supporter")) {
+            for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
+                chatPacks.add(Utilities.Pack.supportChat(chat));
+            }
+            return chatPacks;
+        } throw new Exceptions.UnAuthorizedAccountException();
+    }
+
 
     //
-    private ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
+    public ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -55,7 +66,7 @@ public class SupporterController {
         }
     }
 
-    private void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
+    public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);
@@ -64,7 +75,7 @@ public class SupporterController {
         }
     }
 
-    private void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
+    public void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
             throw new Exceptions.InvalidChatIdException(chatId);

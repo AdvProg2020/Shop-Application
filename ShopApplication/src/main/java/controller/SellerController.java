@@ -131,15 +131,15 @@ public class SellerController {
     }
 
     //TODO: Useless
-    public String[] viewProduct(String productID) throws Exceptions.InvalidProductIdException {
+    public String[] viewProduct(String productID) throws Exceptions.InvalidSellableIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID))
                 return Utilities.Pack.subProduct(subProduct);
         }
-        throw new Exceptions.InvalidProductIdException(productID);
+        throw new Exceptions.InvalidSellableIdException(productID);
     }
 
-    public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidProductIdException {
+    public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidSellableIdException {
         Seller seller = ((Seller) currentAccount());
         for (SubProduct subProduct : seller.getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
@@ -150,14 +150,14 @@ public class SellerController {
                 return buyers;
             }
         }
-        throw new Exceptions.InvalidProductIdException(productID);
+        throw new Exceptions.InvalidSellableIdException(productID);
     }
 
     public String[] getProductEditableFields() {
         return Utilities.Field.productEditableFields();
     }
 
-    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidProductIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidSellableIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
@@ -166,7 +166,7 @@ public class SellerController {
             }
         }
         if (targetedSubProduct == null)
-            throw new Exceptions.InvalidProductIdException(productID);
+            throw new Exceptions.InvalidSellableIdException(productID);
         else {
             switch (field) {
                 case "name": {
@@ -311,9 +311,9 @@ public class SellerController {
         }
     }
 
-    public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidProductIdException {
+    public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidSellableIdException {
         if (Product.getProductById(productId) == null)
-            throw new Exceptions.InvalidProductIdException(productId);
+            throw new Exceptions.InvalidSellableIdException(productId);
         else {
             new SubProduct(productId, currentAccount().getId(), price, count, database());
         }
@@ -350,7 +350,7 @@ public class SellerController {
         throw new Exceptions.InvalidFileIdException(fileId);
     }
 
-    public void removeProduct(String productID) throws Exceptions.InvalidProductIdException {
+    public void removeProduct(String productID) throws Exceptions.InvalidSellableIdException {
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
             if (subProduct.getProduct().getId().equals(productID)) {
                 subProduct.suspend();
@@ -358,7 +358,7 @@ public class SellerController {
                 return;
             }
         }
-        throw new Exceptions.InvalidProductIdException(productID);
+        throw new Exceptions.InvalidSellableIdException(productID);
     }
 
     public ArrayList<String[]> viewActiveSales() {
@@ -579,6 +579,15 @@ public class SellerController {
 
     public double viewBalance() {
         return ((Seller) currentAccount()).getWallet().getBalance();
+    }
+
+    public void removeAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
+        Auction auction = Auction.getAuctionById(auctionId);
+        if (auction != null) {
+            auction.suspend();
+        } else {
+            throw new Exceptions.InvalidAuctionIdException(auctionId);
+        }
     }
 
     public void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {

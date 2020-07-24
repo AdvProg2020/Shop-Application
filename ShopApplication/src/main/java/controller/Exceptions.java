@@ -70,8 +70,8 @@ public class Exceptions {
         }
     }
 
-    public static class InvalidProductIdException extends Exception {
-        public InvalidProductIdException(String productId) {
+    public static class InvalidSellableIdException extends Exception {
+        public InvalidSellableIdException(String productId) {
             super("ProductId: " + productId + " is Invalid!");
         }
     }
@@ -241,6 +241,18 @@ public class Exceptions {
     public static class InvalidAuctionIdException extends Exception{
         public InvalidAuctionIdException(String auctionId){
             super("There is no auction with id: "+ auctionId);
+        }
+    }
+
+    public static class AlreadyInAChatException extends Exception{
+        public AlreadyInAChatException(String chatId){
+            super("You are currently in chat with ID: " + chatId);
+        }
+    }
+
+    public static class InvalidSupporterIdException extends Exception{
+        public InvalidSupporterIdException(String supporterId){
+            super("There is no supporter with id: " + supporterId);
         }
     }
 }
