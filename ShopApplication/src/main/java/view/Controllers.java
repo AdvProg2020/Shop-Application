@@ -2414,6 +2414,7 @@ public class Controllers {
         private void initMainObjectsInFileMode(){
             brandExtension.setText("Extension: ");
 
+
         }
 
         //Done...
@@ -8403,6 +8404,16 @@ public class Controllers {
 
         @FXML
         private VBox messages;
+
+        @FXML
+        private Button refreshBTN;
+
+        @FXML
+        private TextField messageField;
+
+        @FXML
+        private Button sendBTN;
+
 
         private String chatPageId;
         private int lastMessageNumber = 0;
