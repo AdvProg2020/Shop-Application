@@ -2573,7 +2573,7 @@ public class Controllers {
         }
 
         private void purchaseTheFile(){
-
+            PurchaseMenuController.displayFileMode(Double.parseDouble(sellablePack[8]), sellablePack[1]);
         }
 
         //Done
@@ -4621,7 +4621,7 @@ public class Controllers {
     }
 
 
-    public static class PurchaseMenuController implements Initializable {
+    public static class PurchaseMenuController{
 
         @FXML
         private TextField receiverName;
@@ -4656,16 +4656,46 @@ public class Controllers {
         @FXML
         private Label addressError;
 
+        private double fileCost = 0;
+        private String subFileId = null;
+
         public static void display() {
-            View.setMainPane(Constants.FXMLs.purchaseMenu);
+            PurchaseMenuController pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
+            pmc.initialize();
         }
 
-        public static void displayFileMode(double fileCost){
+        public static void displayFileMode(double fileCost, String subFileId){
+            PurchaseMenuController pmc = null;
+            pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
+            pmc.fileCost = fileCost;
+            pmc.subFileId = subFileId;
+            pmc.initializeFileMode();
 
         }
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
+        public void initializeFileMode(){
+            purchaseBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        customerController.purchaseTheFile(subFileId, discountCode.getText());
+                        PurchaseConfirmationController.display(totalPrice.getText());
+                    } catch (Exceptions.InsufficientCreditException ex) {
+                        discountError.setText("You dont have enough money!");
+                    }  catch (Exceptions.InvalidDiscountException ex) {
+                        discountError.setText("Invalid discount code!");
+                    } catch (Exceptions.InvalidFileIdException invalidFileIdException) {
+                        invalidFileIdException.printStackTrace();
+                    }
+                }
+            });
+            validateBTN.setOnAction(e -> validateDiscountFileMode());
+            address.setVisible(false);
+            phoneNumber.setVisible(false);
+            receiverName.setVisible(false);
+
+        }
+
+        public void initialize() {
             initButtons();
             initListeners();
 
@@ -4739,6 +4769,23 @@ public class Controllers {
             } else {
                 try {
                     double newPrice = customerController.getTotalPriceOfCartWithDiscount(discountCode.getText());
+                    discountError.setText("");
+                    totalPrice.setText("$" + newPrice);
+                    totalPrice.setTextFill(Color.RED);
+                    return true;
+                } catch (Exceptions.InvalidDiscountException e) {
+                    discountError.setText("Invalid discount code");
+                    return false;
+                }
+            }
+        }
+
+        private boolean validateDiscountFileMode() {
+            if (discountCode.getText().equals("")) {
+                return true;
+            } else {
+                try {
+                    double newPrice = customerController.getTotalPriceOfFileWithDiscount(discountCode.getText(), fileCost);
                     discountError.setText("");
                     totalPrice.setText("$" + newPrice);
                     totalPrice.setTextFill(Color.RED);
