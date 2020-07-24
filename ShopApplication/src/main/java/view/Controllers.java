@@ -28,6 +28,7 @@ import model.account.Admin;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Instant;
@@ -197,8 +198,15 @@ public class Controllers {
                     try {
                         if (passwordChanged.get())
                             mainController.editPersonalInfo("password", info[1] = passwordField.getText());
-                        if (imageChanged.get())
-                            mainController.editPersonalInfo("image path", info[7] = imageField.getText());
+                        if (imageChanged.get()) {
+                            byte[] img = new byte[0];
+                            try {
+                                 img = Files.readAllBytes(Paths.get(info[7] = imageField.getText()));
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            mainController.editPersonalInfo("image path", "", img);
+                        }
                         if (firstNameChanged.get())
                             mainController.editPersonalInfo("firstName", info[3] = firstName.getText());
                         if (lastNameChanged.get())
@@ -698,8 +706,8 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            String imgPath = "/src/main/resources/temp/accountImage.png";
-            File f = new File(imgPath);
+            String imgPath =  "src/main/resources/temp/accountImage.png";
+            File f = Path.of(imgPath).toFile();
             if ( ! f.exists()) {
                 try {
                     f.createNewFile();
@@ -715,7 +723,7 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            accountIMG.setImage(new Image("file:" + Constants.base + imgPath));
+            accountIMG.setImage(new Image("file:"  + imgPath));
 
 
         }
@@ -1755,7 +1763,7 @@ public class Controllers {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
 
-            String imgPath = "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
+            String imgPath = Constants.base + "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
             File f = new File(imgPath);
             if ( ! f.exists()) {
                 try {
@@ -1772,7 +1780,7 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            image.setImage(new Image("file:" + Constants.base + imgPath));
+            image.setImage(new Image("file:"  + imgPath));
 
             if (subProductInfo[16] != null) {
                 auctionMode(subProductInfo);
@@ -2500,7 +2508,7 @@ public class Controllers {
             ratingCountLBL.setText(sellablePack[5]);
             categoryLBL.setText(sellablePack[7]);
 
-            String imgPath = "/src/main/resources/temp/digestImg.png";
+            String imgPath = Constants.base + "/src/main/resources/temp/digestImg.png";
             File f = new File(imgPath);
             if ( ! f.exists()) {
                 try {
@@ -2517,7 +2525,7 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            sellableIMG.setImage(new Image("file:" + Constants.base + imgPath));
+            sellableIMG.setImage(new Image("file:"  + imgPath));
 
             initRatingStars();
         }
@@ -4511,7 +4519,7 @@ public class Controllers {
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
 
-                String imgPath = "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
+                String imgPath = Constants.base + "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
                 File f = new File(imgPath);
                 if ( ! f.exists()) {
                     try {
@@ -4528,7 +4536,7 @@ public class Controllers {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                img.setImage(new Image("file:" + Constants.base + imgPath));
+                img.setImage(new Image("file:"  + imgPath));
 
 
                 initButtons();
@@ -8097,7 +8105,7 @@ public class Controllers {
             maxPrice1.setText(firstProductInfo[10]);
             maxPrice2.setText(secondProductInfo[10]);
 
-            String firstPath = "/src/main/resources/temp/compareFirstImage.png";
+            String firstPath = Constants.base + "/src/main/resources/temp/compareFirstImage.png";
             File f1 = new File(firstPath);
             if ( ! f1.exists()) {
                 try {
@@ -8114,9 +8122,9 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            image1.setImage(new Image("file:" + Constants.base + firstPath));
+            image1.setImage(new Image("file:" + firstPath));
 
-            String secondPath = "/src/main/resources/temp/compareSecondImage.png";
+            String secondPath = Constants.base + "/src/main/resources/temp/compareSecondImage.png";
             File f2 = new File(secondPath);
             if ( ! f2.exists()) {
                 try {
@@ -8133,7 +8141,7 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            image2.setImage(new Image("file:" + Constants.base + secondPath));
+            image2.setImage(new Image("file:"  + secondPath));
         }
 
         private void initProperties() {
