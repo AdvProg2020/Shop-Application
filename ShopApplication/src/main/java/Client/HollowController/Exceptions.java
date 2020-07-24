@@ -246,6 +246,11 @@ public class Exceptions {
         public InvalidSupporterIdException(String message) {
             super(message);
         }
+    }
 
+    public static class InvalidCommissionException extends Exception {
+        public InvalidCommissionException(String message) {
+            super(message);
+        }
     }
 }

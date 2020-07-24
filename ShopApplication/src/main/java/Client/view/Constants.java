@@ -151,6 +151,7 @@ public final class Constants {
         public static final String getMessagesInChat = "/main/getMessagesInChat";
 
         public static final String sendMessage = "/main/sendMessage";
+        public static final String loadFromDatabase = "/main/loadFromDatabase";
         //admin Server.controller methods.
         public static final String adminEditPersonalInfo = "/admin/editPersonalInfo";
         public static final String adminManageUsers = "/admin/manageUsers";
@@ -194,6 +195,8 @@ public final class Constants {
         public static final String adminGetBuyLogItemsWithId = "/admin/getBuyLogItemsWithId";
         public static final String adminEditBuyLogStatus = "/admin/editBuyLogStatus";
         public static final String adminCreateSupporterProfile = "/admin/createSupporterProfile";
+        public static final String adminSetCommission = "/admin/setCommission";
+        public static final String adminSetWalletMin = "/admin/setWalletMin";
         //seller Server.controller methods.
         public static final String sellerEditPersonalInfo = "/seller/editPersonalInfo";
         public static final String sellerIsProductWithNameAndBrand = "/seller/isProductWithNameAndBrand";
@@ -250,6 +253,9 @@ public final class Constants {
         public static final String customerGetSupportChatId = "/customer/getSupportChatId";
         public static final String customerGetAllSupporters = "/customer/getAllSupporters";
         public static final String customerCreateSupportChat = "/customer/createSupportChat";
+        public static final String customerDownloadFile = "/customer/downloadFile";
+        public static final String customerPurchaseTheFile = "/customer/purchaseTheFile";
+        public static final String customerGetTotalPriceOfFileWithDiscount = "/customer/getTotalPriceOfFileWithDiscount";
         //supporterController methods.
         public static final String supporterGetActiveChats = "/supporter/getActiveChats";
         public static final String supporterGetArchiveChats = "/supporter/getArchiveChats";

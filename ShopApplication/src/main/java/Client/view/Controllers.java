@@ -3161,7 +3161,7 @@ public class Controllers {
                         }
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null,image);
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null ,image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -5910,7 +5910,7 @@ public class Controllers {
                             //nothing
                         }
                         boolean bootUp = !mainController.doesManagerExist();
-                        adminController.createAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
+                        adminController.creatAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
                                 adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), image);
                         if (!bootUp) {
                             AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());

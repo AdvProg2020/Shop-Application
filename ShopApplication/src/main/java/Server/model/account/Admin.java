@@ -10,6 +10,7 @@ public class Admin extends Account {
     protected static Admin manager = null; // head of other admins (shouldn't be suspended)
     protected static Map<String, Admin> allAdmins = new HashMap<>();
     private static int lastNum = 1;
+    private static double commission = 0;
 
     public Admin(String username, String password, String firstName, String lastName, String email, String phone, String image) {
         super(username, password, firstName, lastName, email, phone, image);
@@ -40,5 +41,11 @@ public class Admin extends Account {
             manager = this;
     }
 
+    public static double getCommission() {
+        return commission;
+    }
 
+    public static void setCommission(double commission) {
+        Admin.commission = commission;
+    }
 }

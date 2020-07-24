@@ -137,7 +137,7 @@ public class SellerController {
 //    }
 
     //Todo: change it again!
-    public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, HashMap<String, String> propertyValues,
+    public void addNewProduct(String name, String brand, String infoText, byte[] imagePath, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws ExistingProductException, InvalidCategoryException {
 
         String body = convertToJson(name, brand, infoText, imagePath, categoryName, propertyValues, price, count);
@@ -299,7 +299,7 @@ public class SellerController {
         return new Gson().fromJson(response, booleanType);
     }
 
-    public void addNewFile(String name, String extension, String info, String imagePath, String category, HashMap<String, String> properties, double price, String path) throws ExistingFileException, InvalidCategoryException{
+    public void addNewFile(String name, String extension, String info, byte[] imagePath, String category, HashMap<String, String> properties, double price, byte[] path) throws ExistingFileException, InvalidCategoryException{
         String body = convertToJson(name, extension, info, imagePath, category, properties, price, path);
         String response = sender.sendRequest(Constants.Commands.sellerAddNewFile, body);
         if (response.startsWith("exception:")) {
@@ -309,7 +309,7 @@ public class SellerController {
         }
     }
 
-    public void addNewSubFileToAnExistingFile(String fileId, double price, String path) throws InvalidFileIdException{
+    public void addNewSubFileToAnExistingFile(String fileId, double price, byte[] path) throws InvalidFileIdException{
         String body = convertToJson(fileId, price, path);
         String response = sender.sendRequest(Constants.Commands.sellerAddNewSubFileToAnExistingFile, body);
         if (response.startsWith("exception:")) {

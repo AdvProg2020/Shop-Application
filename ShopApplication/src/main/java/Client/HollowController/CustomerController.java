@@ -1,18 +1,12 @@
 package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
-import Server.model.Auction;
-import Server.model.account.Customer;
-import Server.model.account.Supporter;
-import Server.model.chat.Chat;
-import Server.model.chat.SupportChat;
+import Client.view.Constants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import Client.view.Constants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 public class CustomerController {
@@ -20,6 +14,7 @@ public class CustomerController {
     private static Type booleanType = new TypeToken<Boolean>(){}.getType();
     private static Type stringType = new TypeToken<Boolean>(){}.getType();
     private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>(){}.getType();
+    private static Type byteArrayType = new TypeToken<byte[]>(){}.getType();
 
     private Sender sender;
 
@@ -180,6 +175,40 @@ public class CustomerController {
             else throw new InvalidSupporterIdException(nameBody[1]);
         } else {
             return new Gson().fromJson(response, booleanType);
+        }
+    }
+
+    public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException, Exceptions.HaveNotBoughtException {
+        String body = convertToJson(subFileId);
+        String response = sender.sendRequest(Constants.Commands.customerDownloadFile, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            if (nameBody[0].startsWith("Invalid")) throw new InvalidFileIdException(nameBody[1]);
+            else throw new HaveNotBoughtException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, byteArrayType);
+        }
+    }
+
+    public void purchaseTheFile(String subFileId, String discountCode) throws Exceptions.InvalidFileIdException, Exceptions.InvalidDiscountException, Exceptions.InsufficientCreditException {
+        String body = convertToJson(subFileId, discountCode);
+        String response = sender.sendRequest(Constants.Commands.customerPurchaseTheFile, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            if (nameBody[0].startsWith("InvalidFile")) throw new InvalidFileIdException(nameBody[1]);
+            else if (nameBody[0].startsWith("InvalidDiscount")) throw new InvalidDiscountException(nameBody[1]);
+            else throw new InsufficientCreditException(nameBody[1]);
+        }
+    }
+
+    public double getTotalPriceOfFileWithDiscount(String discountCode, double fileCost) throws Exceptions.InvalidDiscountException {
+        String body = convertToJson(discountCode, fileCost);
+        String response = sender.sendRequest(Constants.Commands.customerGetTotalPriceOfFileWithDiscount, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidDiscountException(nameBody[1]);
+        } else {
+            return new Gson().fromJson(response, doubleType);
         }
     }
 

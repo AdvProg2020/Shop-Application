@@ -1,7 +1,9 @@
 package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
+import Server.model.Wallet;
 import Server.model.account.Account;
+import Server.model.account.Admin;
 import Server.model.account.Supporter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -86,7 +88,7 @@ public class AdminController {
     }
 
 
-    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws UsernameAlreadyTakenException {
+    public void creatAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] imagePath) throws UsernameAlreadyTakenException {
         String body = convertToJson(username, password, firstName, lastName, email, phone, imagePath);
         String response = sender.sendRequest(Constants.Commands.adminCreatAdminProfile, body);
         if (response.startsWith("exception:")) {
@@ -413,13 +415,27 @@ public class AdminController {
         }
     }
 
-    public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, String imagePath) throws Exceptions.UsernameAlreadyTakenException {
+    public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] imagePath) throws Exceptions.UsernameAlreadyTakenException {
         String body = convertToJson(username, password, firstName, lastName, email, phone, imagePath);
         String response = sender.sendRequest(Constants.Commands.adminCreateSupporterProfile, body);
         if (response.startsWith("exception:")) {
             String[] nameBody = getExceptionNameAndBody(response);
             throw new UsernameAlreadyTakenException(nameBody[1]);
         }
+    }
+
+    public void setCommission(double percentage) throws Exceptions.InvalidCommissionException {
+        String body = convertToJson(percentage);
+        String response = sender.sendRequest(Constants.Commands.adminSetCommission, body);
+        if (response.startsWith("exception:")) {
+            String[] nameBody = getExceptionNameAndBody(response);
+            throw new InvalidCommissionException(nameBody[1]);
+        }
+    }
+
+    public void setWalletMin(double amount){
+        String body = convertToJson(amount);
+        String response = sender.sendRequest(Constants.Commands.adminSetWalletMin, body);
     }
 
 }

@@ -10,7 +10,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import Client.view.Constants;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 
@@ -20,6 +23,7 @@ public class Controller {
     private static Type booleanType = new TypeToken<Boolean>(){}.getType();
     private static Type stringListType = new TypeToken<ArrayList<String>>(){}.getType();
     private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>(){}.getType();
+    private static Type byteArrayType = new TypeToken<byte[]>(){}.getType();
 
     private Sender sender;
     public Controller() {
@@ -43,7 +47,7 @@ public class Controller {
     }
 
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
-                             String email, String phone, double balance, String storeName, String imagePath) throws UsernameAlreadyTakenException, AdminRegisterException {
+                             String email, String phone, double balance, String storeName, byte[] imagePath) throws UsernameAlreadyTakenException, AdminRegisterException {
         String body = convertToJson(type, username, password, firstName, lastName, email, phone, balance, storeName, imagePath);
         String response = sender.sendRequest(Constants.Commands.createAccount, body);
         if (response.startsWith("exception:")) {
@@ -300,8 +304,8 @@ public class Controller {
         }
     }
 
-    public void editPersonalInfo(String field, String newInformation) throws InvalidFieldException, SameAsPreviousValueException {
-        String body = convertToJson(field, newInformation);
+    public void editPersonalInfo(String field, String newInformation, byte[]... img) throws InvalidFieldException, SameAsPreviousValueException {
+        String body = convertToJson(field, newInformation, img);
         String response = sender.sendRequest(Constants.Commands.editPersonalInfo, body);
         if (response.startsWith("exception:")) {
             String[] nameBody = getExceptionNameAndBody(response);
@@ -436,5 +440,11 @@ public class Controller {
             else if (nameBody[0].startsWith("InvalidAccount")) throw new InvalidAccountTypeException(nameBody[1]);
             else throw new UnAuthorizedAccountException();
         }
+    }
+
+    public byte[] loadFileFromDataBase(String path) {
+        String body = convertToJson(path);
+        String response = sender.sendRequest(Constants.Commands.loadFromDatabase, body);
+        return new Gson().fromJson(response, byteArrayType);
     }
 }
