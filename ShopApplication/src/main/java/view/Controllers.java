@@ -8449,8 +8449,13 @@ public class Controllers {
         }
 
         private void setOnActions() {
+            refreshBTN.setOnAction(e -> updateMessages());
+        }
+
+        private void sendMessage(){
 
         }
+
     }
 
     public static class MessageBoxController {
