@@ -1,10 +1,7 @@
 package controller;
 
 
-import model.Auction;
-import model.Cart;
-import model.Discount;
-import model.Rating;
+import model.*;
 import model.account.*;
 import model.chat.Chat;
 import model.chat.SupportChat;
@@ -107,7 +104,7 @@ public class CustomerController {
                 throw new Exceptions.InvalidDiscountException(discountCode);
         }
         double paidMoney = totalPrice - discountAmount;
-        if (paidMoney > ((Customer) currentAccount()).getWallet().getBalance())
+        if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - paidMoney)
             throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getWallet().getBalance());
         BuyLog buyLog = new BuyLog(currentAccount().getId(), paidMoney, discountAmount, receiverName, address, receiverPhone, ShippingStatus.PROCESSING);
         HashMap<Seller, SellLog> sellLogs = new HashMap<>();
@@ -150,7 +147,7 @@ public class CustomerController {
                 } else
                     throw new Exceptions.InvalidDiscountException(discountCode);
             }
-            if (totalPrice > ((Customer) currentAccount()).getWallet().getBalance())
+            if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - totalPrice)
                 throw new Exceptions.InsufficientCreditException(totalPrice, ((Customer) currentAccount()).getWallet().getBalance());
             FileLog fileLog = new FileLog(subFileId, currentAccount().getId(), discountAmount);
             if (discount != null)

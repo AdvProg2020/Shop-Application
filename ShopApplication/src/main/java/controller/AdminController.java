@@ -2,6 +2,7 @@ package controller;
 
 import model.Category;
 import model.Discount;
+import model.Wallet;
 import model.account.Account;
 import model.account.Admin;
 import model.account.Customer;
@@ -608,5 +609,9 @@ public class AdminController {
         if( percentage < 0 || percentage > 100)
             throw new Exceptions.InvalidCommissionException();
         Admin.setCommission(percentage);
+    }
+
+    public void setWalletMin(double amount){
+        Wallet.setMinBalance(amount);
     }
 }
