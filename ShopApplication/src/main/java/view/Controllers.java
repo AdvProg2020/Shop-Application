@@ -26,6 +26,8 @@ import javafx.util.converter.NumberStringConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -3027,9 +3029,10 @@ public class Controllers {
             customerRegister.setOnAction(e -> {
                 if (areCustomerFieldsAvailable()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(customerImageField.getText()));
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, customerImageField.getText());
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null,image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -3037,15 +3040,18 @@ public class Controllers {
                         customerUsernameError.setVisible(true);
                     } catch (Exceptions.AdminRegisterException ex) {
                         //wont happen
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
                     }
                 }
             });
             sellerRegister.setOnAction(e -> {
                 if (areSellerFieldsAvailable()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(customerImageField.getText()));
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), customerImageField.getText());
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -3053,6 +3059,8 @@ public class Controllers {
                         sellerUsernameError.setVisible(true);
                     } catch (Exceptions.AdminRegisterException ex) {
                         //wont happen
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
                     }
                 }
             });
@@ -5747,16 +5755,17 @@ public class Controllers {
             adminRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(adminImageField.getText()));
                         boolean bootUp = !mainController.doesManagerExist();
                         adminController.createAdminProfile(adminUsername.getText(), adminPassword.getText(), adminFirstName.getText(),
-                                adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), adminImageField.getText());
+                                adminLastName.getText(), adminEmail.getText(), adminPhoneNumber.getText(), image);
                         if (!bootUp) {
                             AdminAccountManagingMenuController.current.addAdmin(adminUsername.getText());
                         } else {
                             View.subStart(new Stage());
                         }
                         adminUsername.getScene().getWindow().hide();
-                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                    } catch (Exceptions.UsernameAlreadyTakenException | IOException ex) {
                         adminUsernameError.setText("Sorry! this username is already taken.");
                         adminUsernameError.setVisible(true);
                         ex.printStackTrace();
@@ -7422,11 +7431,14 @@ public class Controllers {
                         propertyMap.put(item.property, item.value.getText());
                     }
                     try {
-                        if (!exists)
-                            sellerController.addNewFile(nameField.getText(), extensionField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
-                                    propertyMap, Double.parseDouble(priceField.getText()), pathField.getText());
-                        else
-                            sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), pathField.getText());
+                        if (!exists) {
+                            byte[] image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            byte[] file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            sellerController.addNewFile(nameField.getText(), extensionField.getText(), infoArea.getText(), image, category.getValue(),
+                                    propertyMap, Double.parseDouble(priceField.getText()), file);
+                        }else{
+                            byte[] file = Files.readAllBytes(Paths.get(pathField.getText()));
+                            sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), file);}
                     } catch (Exception ex) {
                         printError(ex.getMessage());
                         ex.printStackTrace();
@@ -7667,10 +7679,11 @@ public class Controllers {
                         propertyMap.put(item.property, item.value.getText());
                     }
                     try {
-                        if (!exists)
-                            sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), imageField.getText(), category.getValue(),
+                        if (!exists) {
+                            byte[] image = Files.readAllBytes(Paths.get(imageField.getText()));
+                            sellerController.addNewProduct(nameField.getText(), brandField.getText(), infoArea.getText(), image, category.getValue(),
                                     propertyMap, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
-                        else
+                        }else
                             sellerController.addNewSubProductToAnExistingProduct(productId, Double.parseDouble(priceField.getText()), Integer.parseInt(countField.getText()));
                     } catch (Exception ex) {
                         printError(ex.getMessage());
@@ -8392,10 +8405,11 @@ public class Controllers {
             supporterRegister.setOnAction(e -> {
                 if (validateFields()) {
                     try {
+                        byte[] image = Files.readAllBytes(Paths.get(supporterImageField.getText()));
                         adminController.createSupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
-                                supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), supporterImageField.getText());
+                                supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), image);
                         supporterUsername.getScene().getWindow().hide();
-                    } catch (Exceptions.UsernameAlreadyTakenException ex) {
+                    } catch (Exceptions.UsernameAlreadyTakenException | IOException ex) {
                         supporterUsernameError.setText("Sorry! this username is already taken.");
                         supporterUsernameError.setVisible(true);
                         ex.printStackTrace();
