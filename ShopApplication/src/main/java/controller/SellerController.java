@@ -296,7 +296,7 @@ public class SellerController {
             return null;
     }
 
-    public void addNewProduct(String name, String brand, String infoText, String imagePath, String categoryName, HashMap<String, String> propertyValues,
+    public void addNewProduct(String name, String brand, String infoText, byte[] image, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
         Product product = Product.getProductByNameAndBrand(name, brand);
@@ -307,6 +307,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
+            String imagePath = saveFileInDataBase(image, name+"_"+brand+"_IMG");
             new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
     }
