@@ -722,6 +722,30 @@ public class Controllers {
 
     }
 
+    public static class CommissionManagingPopup{
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private TextField commissionField;
+
+        @FXML
+        private TextField walletMinField;
+
+        @FXML
+        private Button addBTN;
+
+        @FXML
+        private HBox saveDiscardHBox;
+
+        @FXML
+        private Button editBTN;
+
+        @FXML
+        private Button discardBTN;
+
+
+    }
 
     public static class AddProductRequestPopupController {
         @FXML
