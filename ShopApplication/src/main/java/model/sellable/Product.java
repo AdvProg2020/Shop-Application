@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Product extends Sellable {
-    private static final String DEFAULT_IMAGE_PATH = "/src/main/resources/img/default-product-pic.png";
+    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/img/default-product-pic.png";
     private static Map<String, Product> allProducts = new HashMap<>();
     private static int lastNum = 1;
     private String brand;

@@ -705,7 +705,7 @@ public class Controllers {
                 storeValue.setText(info[9]);
             }
 
-            String imgPath =  "src/main/resources/temp/accountImage.png";
+            String imgPath = "src/main/resources/temp/accountImage.jpg";
             File f = Path.of(imgPath).toFile();
             if ( ! f.exists()) {
                 try {

@@ -11,15 +11,11 @@ import model.database.Database;
 import model.log.LogItem;
 import model.log.SellLog;
 import model.request.*;
-import model.sellable.*;
+import model.sellable.File;
+import model.sellable.Product;
+import model.sellable.SubFile;
+import model.sellable.SubProduct;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -310,7 +306,7 @@ public class SellerController {
             if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
-            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name+"_"+brand+"_IMG") : null;
+            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name + "_" + brand + "_IMG" + ".png") : null;
             new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
     }
@@ -328,10 +324,10 @@ public class SellerController {
             throw new Exceptions.ExistingFileException();
         }else {
             Category category = Category.getCategoryByName(categoryName);
-            if(category == null)
+            if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
-            String downloadPath = mainController.saveFileInDataBase(file, name+"_"+extension+"_"+currentAccount().getUsername());
-            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name + "_" + extension + "_IMG") : null;
+            String downloadPath = mainController.saveFileInDataBase(file, currentAccount().getUsername() + "_" + name + "." + extension);
+            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, name + "_" + extension + "_IMG" + ".png") : null;
             SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
             new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         }
@@ -344,7 +340,7 @@ public class SellerController {
             File f = File.getFileById(fileId);
             String downloadPath;
             if( file.length != 0){
-                downloadPath = mainController.saveFileInDataBase(file, f.getName() +"_"+ f.getExtension() + "_"+ currentAccount().getUsername());
+                downloadPath = mainController.saveFileInDataBase(file, currentAccount().getUsername() + "_" + f.getName() + "." + f.getExtension());
             }else {
                 downloadPath = null;
             }

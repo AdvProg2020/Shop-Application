@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -70,7 +69,7 @@ public class Controller {
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
                              String email, String phone, double balance, String storeName, byte[] image) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         usernameTypeValidation(username, type);
-        String imagePath = image.length != 0 ? saveFileInDataBase(image, username) : null;
+        String imagePath = image.length != 0 ? saveFileInDataBase(image, username + ".png") : null;
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, imagePath, balance);
@@ -463,7 +462,7 @@ public class Controller {
                 currentAccount.setPassword(newInformation);
                 break;
             case "image path":
-                newInformation = saveFileInDataBase(image[0], currentAccount.getUsername());
+                newInformation = saveFileInDataBase(image[0], currentAccount.getUsername() + ".png");
                 currentAccount.setImagePath(newInformation);
                 break;
             default:
@@ -714,8 +713,9 @@ public class Controller {
         }
     }
 
-    public byte[] loadFileFromDataBase(String path){
-        Path filePath = Paths.get(path);
+    public byte[] loadFileFromDataBase(String path) {
+        Path filePath = Path.of(path);
+
         try {
             return Files.readAllBytes(filePath);
         } catch (IOException e) {

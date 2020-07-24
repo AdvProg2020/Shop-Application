@@ -51,9 +51,9 @@ public class DatabaseManager implements Database {
         if (classType == Category.class) // writing superCategory first
             printWriter.println(gson.toJson(Category.getSuperCategory(), classType));
         else if (classType == Admin.class) // writing commission
-            printWriter.println("Commission:" + Admin.getCommission());
+            printWriter.println("Commission: " + Admin.getCommission());
         else if (classType == Wallet.class) // writing wallet min balance
-            printWriter.println("Min Balance:" + Wallet.getMinBalance());
+            printWriter.println("Min_Balance: " + Wallet.getMinBalance());
 
         for (T instance : allInstances) {
             printWriter.println(gson.toJson(instance, classType));
