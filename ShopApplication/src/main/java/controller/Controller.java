@@ -91,6 +91,9 @@ public class Controller {
         String filePath = "src/main/resources/files/"+ name;
         java.io.File f = new java.io.File(filePath);
         try {
+            if( !f.exists()){
+                f.createNewFile();
+            }
             OutputStream outputStream = new FileOutputStream(f);
             outputStream.write(file);
             outputStream.close();
