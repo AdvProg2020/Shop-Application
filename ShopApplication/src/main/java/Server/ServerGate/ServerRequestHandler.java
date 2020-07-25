@@ -5,6 +5,7 @@ import Server.controller.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -174,5 +175,18 @@ public class ServerRequestHandler extends Thread {
 
     public static HashMap<String, Session> getSessions() {
         return sessions;
+    }
+
+    public static ArrayList<String> getOnlineAccounts() {
+        ArrayList<String> onlineAccounts = new ArrayList<>();
+        sessions.forEach((k, v) -> {
+            try {
+                onlineAccounts.add(v.getMainController().viewPersonalInfo()[0]);
+            } catch (Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return onlineAccounts;
     }
 }

@@ -440,4 +440,10 @@ public class AdminController {
         String response = sender.sendRequest(Constants.Commands.adminSetWalletMin, body);
     }
 
+    public ArrayList<String> getOnlineAccounts() {
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.adminGetOnlineAccounts, body);
+        return new Gson().fromJson(response, stringListType);
+    }
+
 }
