@@ -69,7 +69,7 @@ public class Controller {
     public void creatAccount(String type, String username, String password, String firstName, String lastName,
                              String email, String phone, double balance, String storeName, byte[] image) throws Exceptions.UsernameAlreadyTakenException, Exceptions.AdminRegisterException {
         usernameTypeValidation(username, type);
-        String imagePath = image.length != 0 ? saveFileInDataBase(image, username + ".png") : null;
+        String imagePath = image.length != 0 ? saveFileInDataBase(image, "accountImg", username + ".png") : null;
         switch (type) {
             case "Customer":
                 new Customer(username, password, firstName, lastName, email, phone, imagePath, balance);
@@ -86,11 +86,11 @@ public class Controller {
         }
     }
 
-    public String saveFileInDataBase(byte[] file, String name){
-        String filePath = "src/main/resources/files/"+ name;
+    public String saveFileInDataBase(byte[] file, String directory, String name) {
+        String filePath = "src/main/resources/server/" + directory + "/" + name;
         java.io.File f = new java.io.File(filePath);
         try {
-            if( !f.exists()){
+            if (!f.exists()) {
                 f.createNewFile();
             }
             OutputStream outputStream = new FileOutputStream(f);
@@ -462,7 +462,7 @@ public class Controller {
                 currentAccount.setPassword(newInformation);
                 break;
             case "image path":
-                newInformation = saveFileInDataBase(image[0], currentAccount.getUsername() + ".png");
+                newInformation = saveFileInDataBase(image[0], "accountImg", currentAccount.getUsername() + ".png");
                 currentAccount.setImagePath(newInformation);
                 break;
             default:

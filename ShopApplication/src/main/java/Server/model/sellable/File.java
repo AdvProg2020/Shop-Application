@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class File extends Sellable {
-    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/img/default-file-pic.png";
+    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/server/default-file-pic.png";
     private static Map<String, File> allFiles = new HashMap<>();
     private static int lastNum = 1;
     private String extension;

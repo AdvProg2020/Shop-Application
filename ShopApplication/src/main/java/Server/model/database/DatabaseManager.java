@@ -1,6 +1,5 @@
 package Server.model.database;
 
-import com.google.gson.Gson;
 import Server.model.*;
 import Server.model.account.*;
 import Server.model.chat.Chat;
@@ -14,6 +13,7 @@ import Server.model.sellable.File;
 import Server.model.sellable.Product;
 import Server.model.sellable.SubFile;
 import Server.model.sellable.SubProduct;
+import com.google.gson.Gson;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class DatabaseManager implements Database {
     }
 
     private <T> void load(String fileName, Class<T> classType) {
-        Scanner scanner = DatabaseUtilities.getScanner(fileName);
+        Scanner scanner = DatabaseUtilities.getScanner(FileNames.DATABASE_DIR + fileName);
         while (scanner.hasNextLine()) {
             String gsonString = scanner.nextLine();
             ((ModelBasic) gson.fromJson(gsonString, classType)).initialize();
@@ -37,7 +37,7 @@ public class DatabaseManager implements Database {
     }
 
     private <T> void update(String fileName, Class<T> classType, List<? extends T> allInstances) {
-        PrintWriter printWriter = DatabaseUtilities.getPrintWriter(fileName);
+        PrintWriter printWriter = DatabaseUtilities.getPrintWriter(FileNames.DATABASE_DIR + fileName);
         if (classType == Category.class) // writing superCategory first
             printWriter.println(gson.toJson(Category.getSuperCategory(), classType));
 
@@ -141,6 +141,11 @@ public class DatabaseManager implements Database {
 
     @Override
     public void loadAll() {
+        DatabaseUtilities.createMissingDirectory(FileNames.DATABASE_DIR);
+        DatabaseUtilities.createMissingDirectory(FileNames.ACCOUNT_IMG_DIR);
+        DatabaseUtilities.createMissingDirectory(FileNames.SELLABLE_IMG_DIR);
+        DatabaseUtilities.createMissingDirectory(FileNames.FILES_DIR);
+
         load(FileNames.ADMIN, Account.class);
         load(FileNames.SELLER, Account.class);
         load(FileNames.CUSTOMER, Account.class);

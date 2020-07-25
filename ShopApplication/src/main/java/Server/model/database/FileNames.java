@@ -2,6 +2,11 @@ package Server.model.database;
 
 final class FileNames {
 
+    static final String DATABASE_DIR = "database/";
+    static final String ACCOUNT_IMG_DIR = "accountImg/";
+    static final String SELLABLE_IMG_DIR = "sellableImg/";
+    static final String FILES_DIR = "files/";
+
     static final String ADMIN = "account/admins.txt";
     static final String SELLER = "account/sellers.txt";
     static final String CUSTOMER = "account/customers.txt";

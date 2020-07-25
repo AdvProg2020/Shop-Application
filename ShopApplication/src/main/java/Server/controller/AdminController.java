@@ -102,7 +102,7 @@ public class AdminController {
     public void createAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
         if (Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
-        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, username + ".png") : null;
+        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "accountImg", username + ".png") : null;
         new Admin(username, password, firstName, lastName, email, phone, imagePath);
         database().createAdmin();
     }
@@ -110,7 +110,7 @@ public class AdminController {
     public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
         if(Account.isUsernameUsed(username))
             throw new Exceptions.UsernameAlreadyTakenException(username);
-        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, username + ".png") : null;
+        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "accountImg", username + ".png") : null;
         new Supporter(username, password, firstName, lastName, email, phone, imagePath);
         database().createSupporter();
     }
