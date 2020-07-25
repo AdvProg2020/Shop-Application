@@ -1,10 +1,10 @@
 package Server.model.database;
 
-import com.google.gson.*;
 import Server.model.account.Account;
 import Server.model.request.Request;
 import Server.model.sellable.Sellable;
 import Server.model.sellable.SubSellable;
+import com.google.gson.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,17 +15,24 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 class DatabaseUtilities {
-    private static void createMissingFile(File file) {
-        file.getParentFile().mkdirs();
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    static void createMissingDirectory(String name) {
+        File directory = Path.of("src/main/resources/server/" + name).toFile();
+        directory.mkdirs();
     }
 
-    private static File getFile(String fileName) {
-        return Path.of("src/main/resources/database/" + fileName).toFile();
+    static File getFile(String fileName) {
+        File file = Path.of("src/main/resources/server/" + fileName).toFile();
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return file;
     }
 
     static Scanner getScanner(String fileName) {
@@ -33,8 +40,8 @@ class DatabaseUtilities {
         try {
             return new Scanner(file);
         } catch (FileNotFoundException e) {
-            createMissingFile(file);
-            return getScanner(fileName);
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -43,8 +50,8 @@ class DatabaseUtilities {
         try {
             return new PrintWriter(file);
         } catch (FileNotFoundException e) {
-            createMissingFile(file);
-            return getPrintWriter(fileName);
+            e.printStackTrace();
+            return null;
         }
     }
 
