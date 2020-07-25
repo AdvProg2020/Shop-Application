@@ -2734,8 +2734,10 @@ public class Controllers {
                             addToCartBTN.setVisible(true);
                             addToCartBTN.setDisable(true);
                         }
+                        downloadBTN.setVisible(false);
                     } else {
                         downloadBTN.setVisible(true);
+                        addToCartBTN.setVisible(false);
                     }
                     auctionBTN.setVisible(false);
                 }else {// in an auction
