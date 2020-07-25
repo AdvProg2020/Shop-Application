@@ -45,6 +45,10 @@
     -fx-graphic: url("../img/dollar.png");
 }
 
+#shipping-button {
+    -fx-graphic: url("../img/shipping-button.png");
+}
+
 #accounts-button {
     -fx-graphic: url("../img/account-button2.png");
 }
