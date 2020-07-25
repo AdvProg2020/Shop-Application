@@ -8623,6 +8623,7 @@ public class Controllers {
                         }
                         adminController.createSupporterProfile(supporterUsername.getText(), supporterPassword.getText(), supporterFirstName.getText(),
                                 supporterLastName.getText(), supporterEmail.getText(), supporterPhoneNumber.getText(), image);
+                        AdminAccountManagingMenuController.current.addSupporter(supporterUsername.getText());
                         supporterUsername.getScene().getWindow().hide();
                     } catch (Exceptions.UsernameAlreadyTakenException  ex) {
                         supporterUsernameError.setText("Sorry! this username is already taken.");
