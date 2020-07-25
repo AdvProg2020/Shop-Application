@@ -198,6 +198,7 @@ public final class Constants {
         public static final String adminSetCommission = "/admin/setCommission";
         public static final String adminSetWalletMin = "/admin/setWalletMin";
         public static final String adminGetOnlineAccounts = "/admin/getOnlineAccounts";
+        public static final String adminManageAllFiles = "/admin/manageAllFiles";
         //seller Server.controller methods.
         public static final String sellerEditPersonalInfo = "/seller/editPersonalInfo";
         public static final String sellerIsProductWithNameAndBrand = "/seller/isProductWithNameAndBrand";

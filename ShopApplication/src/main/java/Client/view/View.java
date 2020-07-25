@@ -13,9 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import Server.model.Category;
-import Server.model.database.Database;
-import Server.model.database.DatabaseManager;
 
 import java.io.IOException;
 import java.util.ArrayList;

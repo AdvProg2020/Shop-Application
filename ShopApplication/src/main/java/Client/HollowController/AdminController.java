@@ -1,10 +1,12 @@
 package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
+import Server.controller.Utilities;
 import Server.model.Wallet;
 import Server.model.account.Account;
 import Server.model.account.Admin;
 import Server.model.account.Supporter;
+import Server.model.sellable.File;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import Client.view.Constants;
@@ -112,6 +114,13 @@ public class AdminController {
             throw new InvalidSellableIdException(nameBody[1]);
         }
     }
+
+    public ArrayList<String[]> manageAllFiles() {
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.adminManageAllFiles, body);
+        return new Gson().fromJson(response, stringArrayListType);
+    }
+
 
     public void createDiscountCode(String discountCode, String startDate, String endDate, double percentage,
                                    double maximumAmount, ArrayList<String[]> customersIdCount) throws ExistingDiscountCodeException, InvalidAccountsForDiscount, InvalidFormatException {

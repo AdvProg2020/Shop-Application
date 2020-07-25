@@ -73,6 +73,15 @@ public class Utilities {
             return productPack;
         }
 
+        public static String[] file(File file) {
+            String[] filePack = new String[4];
+            filePack[0] = file.getId();
+            filePack[1] = file.getName();
+            filePack[2] = file.getExtension();
+            filePack[3] = file.getCategory().getName();
+            return filePack;
+        }
+
         public static String[] subProduct(SubProduct subProduct){
             String[] subProductBoxPack = new String[20];
             Product product = subProduct.getProduct();

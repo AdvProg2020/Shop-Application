@@ -3349,22 +3349,43 @@ public class Controllers {
         private TableView<ProductWrapper> products;
 
         @FXML
-        private TableColumn<ProductWrapper, String> idCol;
+        private TableColumn<ProductWrapper, String> productIdCol;
 
         @FXML
-        private TableColumn<ProductWrapper, String> nameCOL;
+        private TableColumn<ProductWrapper, String> productNameCOL;
 
         @FXML
-        private TableColumn<ProductWrapper, String> categoryCOL;
+        private TableColumn<ProductWrapper, String> productCategoryCOL;
 
         @FXML
-        private TableColumn<ProductWrapper, Button> detailsCOL;
+        private TableColumn<ProductWrapper, Button> productDetailsCOL;
 
         @FXML
-        private TableColumn<ProductWrapper, Button> removeCOL;
+        private TableColumn<ProductWrapper, Button> productRemoveCOL;
 
         @FXML
-        private Label errorLBL;
+        private Label productErrorLBL;
+
+        @FXML
+        private TableView<?> files;
+
+        @FXML
+        private TableColumn<?, ?> fileIdCol;
+
+        @FXML
+        private TableColumn<?, ?> fileNameCOL;
+
+        @FXML
+        private TableColumn<?, ?> fileCategoryCOL;
+
+        @FXML
+        private TableColumn<?, ?> fileDetailsCOL;
+
+        @FXML
+        private TableColumn<?, ?> fileRemoveCOL;
+
+        @FXML
+        private Label fileErrorLBL;
 
         private ArrayList<ProductWrapper> allProducts;
 
@@ -3395,6 +3416,7 @@ public class Controllers {
                     try {
                         adminController.removeProduct(id);
                         products.getItems().remove(this);
+                        files.getItems().remove(this);
                     } catch (Exceptions.InvalidSellableIdException ex) {
                         ex.printStackTrace();
                     }
@@ -3434,11 +3456,16 @@ public class Controllers {
         }
 
         private void initTable() {
-            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            nameCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
-            categoryCOL.setCellValueFactory(new PropertyValueFactory<>("category"));
-            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailBTN"));
-            removeCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
+            productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            fileIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            productNameCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            fileNameCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            productCategoryCOL.setCellValueFactory(new PropertyValueFactory<>("category"));
+            fileCategoryCOL.setCellValueFactory(new PropertyValueFactory<>("category"));
+            productDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailBTN"));
+            fileDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("detailBTN"));
+            productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
+            fileRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("removeBTN"));
 
             initItems();
         }
@@ -3446,6 +3473,9 @@ public class Controllers {
         private void initItems() {
             var allProducts = adminController.manageAllProducts().stream().map(ProductWrapper::new).collect(Collectors.toCollection(ArrayList::new));
             products.getItems().setAll(allProducts);
+
+            var allFiles = adminController.manageAllFiles().stream().map(ProductWrapper::new).collect(Collectors.toCollection(ArrayList::new));
+            products.getItems().setAll(allFiles);
         }
     }
 

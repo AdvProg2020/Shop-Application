@@ -12,7 +12,9 @@ import Server.model.log.BuyLog;
 import Server.model.log.SellLog;
 import Server.model.log.ShippingStatus;
 import Server.model.request.*;
+import Server.model.sellable.File;
 import Server.model.sellable.Product;
+import Server.model.sellable.Sellable;
 import Server.model.sellable.SubProduct;
 
 import java.text.DateFormat;
@@ -123,6 +125,15 @@ public class AdminController {
             productPacks.add(Utilities.Pack.product(product));
         }
         return productPacks;
+    }
+
+    public ArrayList<String[]> manageAllFiles() {
+        ArrayList<String[]> filePacks = new ArrayList<>();
+        ArrayList<File> files = new ArrayList<>(File.getAllFiles());
+        for (File file : files) {
+            filePacks.add(Utilities.Pack.file(file));
+        }
+        return filePacks;
     }
 
     public void removeProduct(String productId) throws Exceptions.InvalidSellableIdException {

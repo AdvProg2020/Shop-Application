@@ -124,6 +124,7 @@ public class Commands {
     public static final String adminSetCommission = "/admin/setCommission";
     public static final String adminSetWalletMin = "/admin/setWalletMin";
     public static final String adminGetOnlineAccounts = "/admin/getOnlineAccounts";
+    public static final String adminManageAllFiles = "/admin/manageAllFiles";
     //seller Server.controller methods.
     public static final String sellerEditPersonalInfo = "/seller/editPersonalInfo";
     public static final String sellerIsProductWithNameAndBrand = "/seller/isProductWithNameAndBrand";
@@ -1714,6 +1715,16 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     return ServerRequestHandler.getOnlineAccounts();
+                }
+            }),
+            entry(adminManageAllFiles, new Task() {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getAdminController().manageAllFiles();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
                 }
             })
     );
