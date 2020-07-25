@@ -31,7 +31,7 @@
                 <VBox alignment="CENTER" spacing="20.0">
                     <VBox alignment="CENTER">
                         <StackPane alignment="TOP_LEFT">
-                            <ImageView fx:id="productIMG" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+                            <ImageView fx:id="sellableIMG" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                                 <Image url="@../img/default-product-pic.png" />
                             </ImageView>
                             <Label id="auction-label" fx:id="auctionLBL" layoutX="20.0" layoutY="20.0">
@@ -137,7 +137,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <Label fx:id="brandExtension" styleClass="property-label" text="Brand:" />
-                            <Label fx:id="brandLBL" styleClass="value-label" text="brand" GridPane.columnIndex="1" />
+                            <Label fx:id="brandExtensionLBL" styleClass="value-label" text="brand" GridPane.columnIndex="1" />
                             <Label styleClass="property-label" text="Category:" GridPane.rowIndex="1" />
                             <Label fx:id="categoryLBL" styleClass="value-label" text="category" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         </GridPane>
@@ -146,7 +146,7 @@
                     <VBox spacing="5.0">
                         <Label styleClass="property-label" text="Product Info:" />
                     </VBox>
-                    <TextArea fx:id="productInfo" editable="false" prefHeight="137.0" prefWidth="563.0" styleClass="white-area" stylesheets="@../css/TextArea.css" text="fes ;fmesl;mvl;emvl'aweml'evfl'evl' ev&#10;&#10;" />
+                    <TextArea fx:id="sellableInfo" editable="false" prefHeight="137.0" prefWidth="563.0" styleClass="white-area" stylesheets="@../css/TextArea.css" text="fes ;fmesl;mvl;emvl'aweml'evfl'evl' ev&#10;&#10;" />
                 </VBox>
                 <Region HBox.hgrow="ALWAYS" />
                 <VBox alignment="CENTER" spacing="60.0" HBox.hgrow="ALWAYS">
