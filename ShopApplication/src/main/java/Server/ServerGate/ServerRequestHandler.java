@@ -6,6 +6,7 @@ import Server.controller.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class ServerRequestHandler extends Thread {
     static HashMap<String, Session> sessions = new HashMap<>();
@@ -32,7 +33,7 @@ public class ServerRequestHandler extends Thread {
             customerController = new CustomerController(mainController);
             adminController = new AdminController(mainController);
             supporterController = new SupporterController(mainController);
-            lastReq = System.currentTimeMillis()/1000;
+            lastReq = System.currentTimeMillis() / 1000;
         }
 
         public SupporterController getSupporterController() {
@@ -56,15 +57,15 @@ public class ServerRequestHandler extends Thread {
         }
 
         public void updateLastRequest() {
-            lastReq = System.currentTimeMillis()/1000;
+            lastReq = System.currentTimeMillis() / 1000;
         }
 
         public long getTimePassedInMinutes() {
-            return getTimePassedInSeconds()/60;
+            return getTimePassedInSeconds() / 60;
         }
 
         public long getTimePassedInSeconds() {
-            return System.currentTimeMillis()/1000 - lastReq;
+            return System.currentTimeMillis() / 1000 - lastReq;
         }
     }
 
@@ -78,7 +79,7 @@ public class ServerRequestHandler extends Thread {
     @Override
     public void run() {
         try {
-            message = dis.readUTF();
+            message = receiveMessage(dis);
             System.out.println("Main Server received a request from " + clientSocket.getInetAddress() + "\ncontent: " + message);
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,8 +88,7 @@ public class ServerRequestHandler extends Thread {
         parseMessage();
         if (command == null) {
             try {
-                dos.writeUTF("speak persian");
-                dos.flush();
+                sendMessage("speak persian", dos);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -96,36 +96,64 @@ public class ServerRequestHandler extends Thread {
             }
         }
 
-        if (command.equals(Commands.authTokenRequest)) { sayHi(); }
-        else {
+        if (command.equals(Commands.authTokenRequest)) {
+            sayHi();
+        } else {
             try {
                 Session s = sessions.getOrDefault(authToken, null);
                 if (s == null) {
-                    dos.writeUTF("invalid auth token");
-                    dos.flush();
+                    sendMessage("invalid auth token", dos);
 //                } else if (s.getTimePassedInMinutes() > 1) {
 //                    dos.writeUTF();
                 } else {
                     String returnValue = Commands.allTasks.get(command).execute(s, body.split("\\*"));
                     s.updateLastRequest();
-                    dos.writeUTF(returnValue);
-                    dos.flush();
+                    sendMessage(returnValue, dos);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        try {
+            String certification = dis.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendMessage(String request, DataOutputStream dos) throws IOException {
+        int size = 64000;
+        int parts = request.getBytes().length / size + 1;
+        request = parts + " " + request;
+
+        for (int i = 0; i < parts; i++) {
+            dos.writeUTF(request.substring(i * size, Math.min((i + 1) * size, request.length())));
+            dos.flush();
+        }
+    }
+
+    private String receiveMessage(DataInputStream dis) throws IOException {
+        StringBuilder response = new StringBuilder("");
+        String firstPart = dis.readUTF();
+        String num = firstPart.split(" ")[0];
+        response.append(firstPart.substring(num.length() + 1));
+        int parts = Integer.parseInt(num) - 1;
+        for (int i = 0; i < parts; i++) {
+            response.append(dis.readUTF());
+        }
+        return response.toString();
     }
 
     private void parseMessage() {
         //checking the regex
-        if ( ! message.matches(Commands.CommandRegex)) return;
+        if (!message.matches(Commands.CommandRegex)) return;
 
         int firstSpaceIndex = message.indexOf(" ");
         int secondSpaceIndex = message.indexOf(" ", firstSpaceIndex + 1);
 
         String firstPart = message.substring(0, firstSpaceIndex);
-        if ( ! Commands.allTasks.containsKey(firstPart)) return;
+        if (!Commands.allTasks.containsKey(firstPart)) return;
         command = firstPart;
 
         authToken = message.substring(firstSpaceIndex + 1, secondSpaceIndex);
@@ -138,8 +166,7 @@ public class ServerRequestHandler extends Thread {
         String token = Integer.toString(++counter);
         sessions.put(token, new Session());
         try {
-            dos.writeUTF("authentication token:" + token);
-            dos.flush();
+            sendMessage("authentication token:" + token, dos);
         } catch (IOException e) {
             e.printStackTrace();
         }
