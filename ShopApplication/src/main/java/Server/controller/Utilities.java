@@ -338,19 +338,19 @@ public class Utilities {
             return info;
         }
 
-        public static String[] digest(Product product) {
+        public static String[] digest(Sellable sellable) {
             String[] productInfo = new String[11];
-            productInfo[0] = product.getId();
-            productInfo[1] = product.getName();
-            productInfo[2] = product.getBrand();
-            productInfo[3] = product.getInfoText();
-            productInfo[4] = Double.toString(product.getAverageRatingScore());
-            productInfo[5] = Integer.toString(product.getRatingsCount());
-            productInfo[6] = product.getDefaultSubProduct().getId();
-            productInfo[7] = product.getCategory().getName();
-            productInfo[8] = product.getImagePath();
-            productInfo[9] = product.getMinPrice() + "";
-            productInfo[10] = product.getMaxPrice() + "";
+            productInfo[0] = sellable.getId();
+            productInfo[1] = sellable.getName();
+            productInfo[2] = sellable.getClass().getSimpleName().equals("Product") ? ((Product)sellable).getBrand() : ((File)sellable).getExtension();
+            productInfo[3] = sellable.getInfoText();
+            productInfo[4] = Double.toString(sellable.getAverageRatingScore());
+            productInfo[5] = Integer.toString(sellable.getRatingsCount());
+            productInfo[6] = sellable.getDefaultSubSellable().getId();
+            productInfo[7] = sellable.getCategory().getName();
+            productInfo[8] = sellable.getImagePath();
+            productInfo[9] = sellable.getMinPrice() + "";
+            productInfo[10] = sellable.getMaxPrice() + "";
             return productInfo;
         }
 

@@ -2503,10 +2503,10 @@ public class Controllers {
             if (subSellablePack[15].equals("SubFile")) {
                 brandExtension.setText("Extension: ");
             }
-            nameLBL.setText(sellablePack[1]);
-            brandExtensionLBL.setText(sellablePack[2]);
-            sellableInfo.setText(sellablePack[3]);
-            ratingCountLBL.setText(sellablePack[5]);
+            nameLBL.setText(subSellablePack[2]);
+            brandExtensionLBL.setText(subSellablePack[3]);
+            sellableInfo.setText(subSellablePack[13]);
+            ratingCountLBL.setText(subSellablePack[5]);
             categoryLBL.setText(sellablePack[7]);
 
             String imgPath =  "/src/main/resources/temp/digestImg.png";
