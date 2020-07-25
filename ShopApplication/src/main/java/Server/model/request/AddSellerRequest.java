@@ -11,6 +11,7 @@ public class AddSellerRequest extends Request {
     public AddSellerRequest(Seller seller, double balance) {
         super();
         this.seller = seller;
+        this.balance = balance;
         initialize();
     }
 

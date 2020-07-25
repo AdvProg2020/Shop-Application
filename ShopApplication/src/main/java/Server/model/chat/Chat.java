@@ -22,7 +22,7 @@ public abstract class Chat implements ModelBasic {
     @Override
     public void initialize() {
         if (chatId == null)
-            chatId = ModelUtilities.generateNewId(getClass().getSimpleName(), lastNum);
+            chatId = ModelUtilities.generateNewId(Chat.class.getSimpleName(), lastNum);
         allChats.put(chatId, this);
         lastNum++;
 
