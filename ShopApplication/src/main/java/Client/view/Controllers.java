@@ -452,6 +452,37 @@ public class Controllers {
         @FXML
         private BorderPane mainBorderPane;
 
+        @FXML
+        private TabPane onlineAccountsTABPANE;
+
+        @FXML
+        private TableView<OnlineAccountWrapper> onlineAccounts;
+
+        @FXML
+        private TableColumn<OnlineAccountWrapper, String> accountsCOL;
+
+        @FXML
+        private TableColumn<OnlineAccountWrapper, Button> detailsCOL;
+
+        public class OnlineAccountWrapper {
+            String username;
+            Button details = new Button();
+
+            public OnlineAccountWrapper(String username) {
+                this.username = username;
+
+                details.getStyleClass().add("details-button");
+                details.setOnAction(e -> PersonalInfoMenuController.display(username));
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
+        }
 
         public class CategoryWrapper {
             String name, parent;
@@ -623,7 +654,7 @@ public class Controllers {
                 } else {
                     sellLogBTN.setVisible(false);
                     buyLogBTN.setVisible(false);
-                    additionalInfoStackPane.setVisible(false);
+                    onlineAccountsTABPANE.setVisible(true);
                 }
             }
 
@@ -677,6 +708,10 @@ public class Controllers {
                 for (String[] category : sellerController.getAllCategories()) {
                     categories.getItems().add(new CategoryWrapper(category[0], category[1]));
                 }
+            } else {
+                accountsCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
+                detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+                adminController.getOnlineAccounts().forEach(oa -> onlineAccounts.getItems().add(new OnlineAccountWrapper(oa)));
             }
         }
 
