@@ -774,12 +774,14 @@ public class Controllers {
             }
             if(!walletMin.isEmpty()){
                 adminController.setWalletMin(Double.parseDouble(walletMin));
+                editBTN.getScene().getWindow().hide();
             }
         }
 
         private void discard(){
             walletMinField.setText("");
             commissionField.setText("");
+            editBTN.getScene().getWindow().hide();
         }
     }
 
