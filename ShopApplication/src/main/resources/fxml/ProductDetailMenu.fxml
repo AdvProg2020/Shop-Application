@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="bg-pane" fx:id="borderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$SellableDetailMenuController">
+<BorderPane id="bg-pane" fx:id="borderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$SellableDetailMenuController">
     <center>
         <VBox stylesheets="@../css/ProductDetails.css">
             <HBox alignment="CENTER_LEFT" spacing="20.0">

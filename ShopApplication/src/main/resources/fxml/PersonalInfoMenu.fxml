@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane id="bg-pane" fx:id="mainBorderPane" stylesheets="@../css/PersonalInfo.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$PersonalInfoMenuController">
+<BorderPane id="bg-pane" fx:id="mainBorderPane" stylesheets="@../css/PersonalInfo.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$PersonalInfoMenuController">
     <padding>
         <Insets bottom="60.0" left="60.0" right="60.0" top="60.0" />
     </padding>

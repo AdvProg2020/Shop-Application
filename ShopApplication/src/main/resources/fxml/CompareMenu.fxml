@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" stylesheets="@../css/CompareMenu.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$CompareMenuController">
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$CompareMenuController">
     <center>
         <ScrollPane>
             <content>

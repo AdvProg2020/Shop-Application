@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER_LEFT" minWidth="300.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$MessageBoxController">
+<VBox alignment="CENTER_LEFT" minWidth="300.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$MessageBoxController">
     <children>
         <Label fx:id="sender" text="Label" />
         <Text fx:id="message" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />

@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane2" stylesheets="@../css/CategoriesBox.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="view.Controllers$CategoryBoxController">
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$CategoryBoxController">
     <center>
         <VBox id="categories-box" fx:id="subCategoryBox" spacing="20.0">
             <padding>

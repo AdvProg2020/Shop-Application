@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane styleClass="bg-pane" stylesheets="@../css/RegisterPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AdminRegistrationPopupController">
+<BorderPane styleClass="bg-pane" stylesheets="@../css/RegisterPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$AdminRegistrationPopupController">
     <center>
         <BorderPane BorderPane.alignment="CENTER">
             <center>

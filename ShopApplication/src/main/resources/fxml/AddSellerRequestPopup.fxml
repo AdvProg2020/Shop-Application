@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controllers$AddSellerRequestPopupController">
+<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$AddSellerRequestPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="10.0" BorderPane.alignment="CENTER">
             <VBox>

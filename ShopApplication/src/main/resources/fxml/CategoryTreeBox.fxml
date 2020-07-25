@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.HBox?>
 <HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="HBox" alignment="CENTER_LEFT" spacing="5.0"
       stylesheets="@../css/CategoryTreeBox.css" xmlns="http://javafx.com/javafx/11.0.1"
-      fx:controller="view.Controllers$CategoryTreeBoxController">
+      fx:controller="Client.view.Controllers$CategoryTreeBoxController">
     <padding>
         <Insets bottom="20.0" left="40.0" right="20.0" top="20.0"/>
     </padding>
