@@ -1799,7 +1799,7 @@ public class Controllers {
             subProduct = subProductInfo;
             name.setText(subProductInfo[2] + " " + subProductInfo[3]);
 
-            String imgPath = "/src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
+            String imgPath = "src/main/resources/temp/subProduct_" + subProductInfo[0] + ".png";
             File f = Path.of(imgPath).toFile();
             if (!f.exists()) {
                 try {
@@ -2544,7 +2544,7 @@ public class Controllers {
             ratingCountLBL.setText(subSellablePack[5]);
             categoryLBL.setText(sellablePack[7]);
 
-            String imgPath = "/src/main/resources/temp/digestImg.png";
+            String imgPath = "src/main/resources/temp/digestImg.png";
             File f = Path.of(imgPath).toFile();
             if (!f.exists()) {
                 try {
@@ -4192,7 +4192,7 @@ public class Controllers {
         private void initVisibility() {
             boolean isDetail = category != null;
 
-            parentField.setEditable(false);
+            parentField.setEditable(! isDetail);
             editHB.setVisible(isDetail);
             addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
@@ -4561,7 +4561,7 @@ public class Controllers {
                 img.setFitHeight(60);
                 img.setPreserveRatio(true);
 
-                String imgPath = "/src/main/resources/temp/shoppingCart_" + subProductId + ".png";
+                String imgPath = "src/main/resources/temp/shoppingCart_" + subProductId + ".png";
                 File f = Path.of(imgPath).toFile();
                 if (!f.exists()) {
                     try {
@@ -8147,7 +8147,7 @@ public class Controllers {
             maxPrice1.setText(firstProductInfo[10]);
             maxPrice2.setText(secondProductInfo[10]);
 
-            String firstPath = "/src/main/resources/temp/compareFirstImage.png";
+            String firstPath = "src/main/resources/temp/compareFirstImage.png";
             File f1 = Path.of(firstPath).toFile();
             if (!f1.exists()) {
                 try {
@@ -8166,7 +8166,7 @@ public class Controllers {
             }
             image1.setImage(new Image("file:" + firstPath));
 
-            String secondPath = "/src/main/resources/temp/compareSecondImage.png";
+            String secondPath = "src/main/resources/temp/compareSecondImage.png";
             File f2 = Path.of(secondPath).toFile();
             if (!f2.exists()) {
                 try {
