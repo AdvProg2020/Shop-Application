@@ -155,8 +155,6 @@ public class DatabaseManager implements Database {
         load(FileNames.SUPPORTER, Account.class);
         load(FileNames.CART, Cart.class);
         load(FileNames.WALLET, Wallet.class);
-        load(FileNames.SUPPORT_CHAT, Chat.class);
-        load(FileNames.AUCTION_CHAT, Chat.class);
         load(FileNames.MESSAGE, Message.class);
         load(FileNames.REQUEST, Request.class);
         load(FileNames.CATEGORY, Category.class);
@@ -173,6 +171,8 @@ public class DatabaseManager implements Database {
         load(FileNames.SELL_LOG, SellLog.class);
         load(FileNames.LOG_ITEM, LogItem.class);
         load(FileNames.FILE_LOG, FileLog.class);
+        load(FileNames.SUPPORT_CHAT, Chat.class);
+        load(FileNames.AUCTION_CHAT, Chat.class);
     }
 
     @Override
