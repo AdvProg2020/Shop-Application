@@ -8902,6 +8902,12 @@ public class Controllers {
             initButton();
         }
 
+        private void initAll() {
+            initChat();
+            initChoiceBox();
+            initButton();
+        }
+
         private void initChat() {
             try {
                 chatId = customerController.getSupportChatId();
@@ -8934,6 +8940,7 @@ public class Controllers {
             createChatBTN.setOnAction(e -> {
                 try {
                     customerController.createSupportChat(nameToId.get(supporterBox.getSelectionModel().getSelectedItem()));
+                    initAll();
                 } catch (Exceptions.AlreadyInAChatException | Exceptions.InvalidSupporterIdException ex) {
                     ex.printStackTrace();
                 }

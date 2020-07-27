@@ -903,7 +903,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().editNameOfProduct(objectArgs[0] + "", objectArgs[1] + "");
+                        currentSession.getAdminController().editBrandOfProduct(objectArgs[0] + "", objectArgs[1] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
