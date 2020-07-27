@@ -17,7 +17,8 @@ final class FileNames {
     static final String LOG_ITEM = "log/log-items.txt";
     static final String FILE_LOG = "log/file-logs.txt";
 
-    static final String CHAT = "chat/chats.txt";
+    static final String AUCTION_CHAT = "chat/auction-chats.txt";
+    static final String SUPPORT_CHAT = "chat/support-chats.txt";
     static final String MESSAGE = "chat/messages.txt";
 
     static final String REQUEST = "requests.txt";

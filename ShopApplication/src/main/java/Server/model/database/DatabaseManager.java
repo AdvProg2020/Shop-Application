@@ -2,8 +2,10 @@ package Server.model.database;
 
 import Server.model.*;
 import Server.model.account.*;
+import Server.model.chat.AuctionChat;
 import Server.model.chat.Chat;
 import Server.model.chat.Message;
+import Server.model.chat.SupportChat;
 import Server.model.log.BuyLog;
 import Server.model.log.FileLog;
 import Server.model.log.LogItem;
@@ -72,7 +74,8 @@ public class DatabaseManager implements Database {
     }
 
     private void updateChats() {
-        update(FileNames.CHAT, Chat.class, Chat.getAllChats(false));
+        update(FileNames.SUPPORT_CHAT, Chat.class, SupportChat.getAllSupportChats(false));
+        update(FileNames.AUCTION_CHAT, Chat.class, AuctionChat.getAllAuctionChats());
     }
 
     private void updateMessages() {
@@ -152,7 +155,8 @@ public class DatabaseManager implements Database {
         load(FileNames.SUPPORTER, Account.class);
         load(FileNames.CART, Cart.class);
         load(FileNames.WALLET, Wallet.class);
-        load(FileNames.CHAT, Chat.class);
+        load(FileNames.SUPPORT_CHAT, Chat.class);
+        load(FileNames.AUCTION_CHAT, Chat.class);
         load(FileNames.MESSAGE, Message.class);
         load(FileNames.REQUEST, Request.class);
         load(FileNames.CATEGORY, Category.class);

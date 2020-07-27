@@ -1,6 +1,7 @@
 package Server.model.database;
 
 import Server.model.account.Account;
+import Server.model.chat.Chat;
 import Server.model.request.Request;
 import Server.model.sellable.Sellable;
 import Server.model.sellable.SubSellable;
@@ -61,6 +62,7 @@ class DatabaseUtilities {
         builder.registerTypeAdapter(Request.class, new Adapter<Request>());
         builder.registerTypeAdapter(Sellable.class, new Adapter<Sellable>());
         builder.registerTypeAdapter(SubSellable.class, new Adapter<SubSellable>());
+        builder.registerTypeAdapter(Chat.class, new Adapter<Chat>());
         return builder.create();
     }
 

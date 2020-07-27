@@ -7,7 +7,6 @@ import java.util.*;
 
 public abstract class Chat implements ModelBasic {
     protected static Map<String, Chat> allChats = new HashMap<>();
-    protected static int lastNum = 1;
     protected String chatId;
     protected transient Set<String> messageIds;
 
@@ -21,10 +20,7 @@ public abstract class Chat implements ModelBasic {
 
     @Override
     public void initialize() {
-        if (chatId == null)
-            chatId = ModelUtilities.generateNewId(Chat.class.getSimpleName(), lastNum);
         allChats.put(chatId, this);
-        lastNum++;
 
         messageIds = new HashSet<>();
     }
