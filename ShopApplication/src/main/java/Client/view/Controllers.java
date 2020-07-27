@@ -8557,8 +8557,8 @@ public class Controllers {
 
             if (exists) {
                 try {
-                    subSellable.getSelectionModel().select(mainController.digest(info[2])[1]);
-                } catch (Exceptions.InvalidSellableIdException e) {
+                    subSellable.getSelectionModel().select(mainController.getSubProductByID(info[2])[2]);
+                } catch (Exceptions.InvalidSubProductIdException e) {
                     e.printStackTrace();
                 }
                 subSellable.setDisable(true);

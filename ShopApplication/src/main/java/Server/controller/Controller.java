@@ -310,12 +310,12 @@ public class Controller {
         return subSellables;
     }
 
-    public String[] getSubProductByID(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if (subProduct == null)
-            throw new Exceptions.InvalidSubProductIdException(subProductId);
+    public String[] getSubProductByID(String subSellableId) throws Exceptions.InvalidSubProductIdException {
+        SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
+        if (subSellable == null)
+            throw new Exceptions.InvalidSubProductIdException(subSellableId);
         else
-            return Utilities.Pack.subProduct(subProduct);
+            return Utilities.Pack.subSellable(subSellable);
     }
 
     /**
