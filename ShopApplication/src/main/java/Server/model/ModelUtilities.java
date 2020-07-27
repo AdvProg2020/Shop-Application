@@ -4,8 +4,9 @@ import Server.model.account.Admin;
 import Server.model.account.Customer;
 import Server.model.account.Seller;
 import Server.model.account.Supporter;
-import Server.model.chat.Chat;
+import Server.model.chat.AuctionChat;
 import Server.model.chat.Message;
+import Server.model.chat.SupportChat;
 import Server.model.log.BuyLog;
 import Server.model.log.FileLog;
 import Server.model.log.LogItem;
@@ -32,7 +33,8 @@ public class ModelUtilities {
             entry(Supporter.class.getSimpleName(), "SPT"),
             entry(Cart.class.getSimpleName(), "CRT"),
             entry(Wallet.class.getSimpleName(), "WLT"),
-            entry(Chat.class.getSimpleName(), "CHT"),
+            entry(SupportChat.class.getSimpleName(), "SCH"),
+            entry(AuctionChat.class.getSimpleName(), "ACH"),
             entry(Message.class.getSimpleName(), "MSG"),
             entry(BuyLog.class.getSimpleName(), "BLG"),
             entry(SellLog.class.getSimpleName(), "SLG"),

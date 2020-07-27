@@ -34,7 +34,7 @@ public class AuctionChat extends Chat {
         lastNum++;
         super.initialize();
 
-        getAuction().setChat(auctionId);
+        getAuction().setChat(chatId);
     }
 
     @Override
