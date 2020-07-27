@@ -41,13 +41,6 @@ public class SellerController {
         return mainController.getDatabase();
     }
 
-    /**
-     * @return seller:String[7]
-     * { String firstName, String lastName, String phone, String email, String password, String storeName, balance}
-     */
-    public String[] getPersonalInfoEditableFields() {
-        return Utilities.Field.sellerPersonalInfoEditableFields();
-    }
 
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         if (field.equals("storeName")) {
@@ -133,14 +126,6 @@ public class SellerController {
         return products;
     }
 
-    //TODO: Useless
-    public String[] viewProduct(String productID) throws Exceptions.InvalidSellableIdException {
-        for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
-            if (subProduct.getProduct().getId().equals(productID))
-                return Utilities.Pack.subProduct(subProduct);
-        }
-        throw new Exceptions.InvalidSellableIdException(productID);
-    }
 
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidSellableIdException {
         Seller seller = ((Seller) currentAccount());
@@ -309,6 +294,7 @@ public class SellerController {
             String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "sellableImg", "PRO_" + name + "_" + brand + ".png") : null;
             new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         }
+        database().request();
     }
 
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidSellableIdException {
@@ -317,6 +303,7 @@ public class SellerController {
         else {
             new SubProduct(productId, currentAccount().getId(), price, count, database());
         }
+        database().request();
     }
 
     public void addNewFile(String name, String extension, String infoText, byte[] image, String categoryName, Map<String, String> propertyValues, double price, byte[] file) throws Exceptions.ExistingFileException, Exceptions.InvalidCategoryException {
@@ -331,6 +318,7 @@ public class SellerController {
             SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
             new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         }
+        database().request();
     }
 
     public void addNewSubFileToAnExistingFile(String fileId, double price, byte[] file) throws Exceptions.InvalidFileIdException {
@@ -347,6 +335,7 @@ public class SellerController {
 
             new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
         }
+        database().request();
     }
 
 
@@ -511,6 +500,7 @@ public class SellerController {
             }
             if (invalidSubProductIds.size() > 0)
                 throw new Exceptions.InvalidProductIdsForASeller(Utilities.Pack.invalidProductIds(invalidSubProductIds));
+            database().request();
         } else
             throw new Exceptions.InvalidDateException();
     }
@@ -526,6 +516,7 @@ public class SellerController {
         }
         if (startDate.before(endDate)) {
             Auction auction = new Auction(currentAccount().getId(), subSellableID, startDate, endDate, database());
+            database().request();
         } else
             throw new Exceptions.InvalidDateException();
     }
@@ -579,6 +570,7 @@ public class SellerController {
         for (String subProductId : subProductIds) {
             sale.addSubSellable(subProductId);
         }
+        database().editSale();
     }
 
     public void removeProductsFromSale(String saleId, ArrayList<String> subProductIds){
@@ -586,6 +578,7 @@ public class SellerController {
         for (String subProductId : subProductIds) {
             sale.removeSubSellable(subProductId);
         }
+        database().removeSale();
     }
 
     public double viewBalance() {
@@ -596,6 +589,7 @@ public class SellerController {
         Auction auction = Auction.getAuctionById(auctionId);
         if (auction != null) {
             auction.suspend();
+            database().removeAuction();
         } else {
             throw new Exceptions.InvalidAuctionIdException(auctionId);
         }
@@ -605,6 +599,7 @@ public class SellerController {
         Sale sale = Sale.getSaleById(saleId);
         if( sale != null ){
             sale.suspend();
+            database().removeSale();
         }else {
             throw new Exceptions.InvalidSaleIdException(saleId);
         }
