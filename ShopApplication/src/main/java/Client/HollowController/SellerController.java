@@ -1,18 +1,12 @@
 package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
-import Server.ServerGate.Task;
-import Server.controller.Utilities;
+import Client.view.Constants;
 import Server.model.Auction;
-import Server.model.account.Seller;
-import Server.model.request.EditAuctionRequest;
-import Server.model.sellable.SubFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import Client.view.Constants;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
