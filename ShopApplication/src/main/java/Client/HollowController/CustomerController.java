@@ -107,12 +107,6 @@ public class CustomerController {
         }
     }
 
-    public double viewBalance() {
-        String body = convertToJson();
-        String response = sender.sendRequest(Constants.Commands.customerViewBalance, body);
-        return new Gson().fromJson(response, doubleType);
-    }
-
     public ArrayList<String[]> viewDiscountCodes() {
         String body = convertToJson();
         String response = sender.sendRequest(Constants.Commands.customerViewDiscountCodes, body);

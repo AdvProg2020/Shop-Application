@@ -9,12 +9,10 @@ import Server.model.account.Customer;
 import Server.model.account.Supporter;
 import Server.model.database.Database;
 import Server.model.log.BuyLog;
-import Server.model.log.SellLog;
 import Server.model.log.ShippingStatus;
 import Server.model.request.*;
 import Server.model.sellable.File;
 import Server.model.sellable.Product;
-import Server.model.sellable.Sellable;
 import Server.model.sellable.SubProduct;
 
 import java.text.DateFormat;
@@ -560,14 +558,6 @@ public class AdminController {
         return buyLogPacks;
     }
 
-    public ArrayList<String[]> getAllSellLogs(){
-        ArrayList<String[]> sellLogPacks = new ArrayList<>();
-        for (SellLog sellLog : SellLog.getAllSellLogs()) {
-            sellLogPacks.add(Utilities.Pack.sellLog(sellLog));
-        }
-        return sellLogPacks;
-    }
-
     public String[] getBuyLogWithId(String logId) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = BuyLog.getBuyLogById(logId);
         if( buyLog == null ){
@@ -585,15 +575,6 @@ public class AdminController {
             ArrayList<String[]> items = new ArrayList<>();
             buyLog.getLogItems().forEach(li -> items.add(Utilities.Pack.buyLogItem(li)));
             return items;
-        }
-    }
-
-    public String[] getSellLogWithId(String logId) throws Exceptions.InvalidLogIdException{
-        SellLog sellLog = SellLog.getSellLogById(logId);
-        if( sellLog == null ){
-            throw new Exceptions.InvalidLogIdException(logId);
-        }else {
-            return Utilities.Pack.sellLog(sellLog);
         }
     }
 

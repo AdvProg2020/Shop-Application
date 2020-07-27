@@ -56,12 +56,6 @@ public class SellerController {
         database().editAccount();
     }
 
-    public ArrayList<String> viewCompanyInformation() {
-        ArrayList<String> companyInformation = new ArrayList<>();
-        companyInformation.add(((Seller) currentAccount()).getStoreName());
-        return companyInformation;
-    }
-
     public String isProductWithNameAndBrand(String name, String brand){
         Product  p =  Product.getProductByNameAndBrand(name, brand);
         if (p == null) return null;
@@ -139,10 +133,6 @@ public class SellerController {
             }
         }
         throw new Exceptions.InvalidSellableIdException(productID);
-    }
-
-    public String[] getProductEditableFields() {
-        return Utilities.Field.productEditableFields();
     }
 
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidSellableIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
@@ -515,7 +505,7 @@ public class SellerController {
             throw new Exceptions.InvalidFormatException("date");
         }
         if (startDate.before(endDate)) {
-            Auction auction = new Auction(currentAccount().getId(), subSellableID, startDate, endDate, database());
+            new Auction(currentAccount().getId(), subSellableID, startDate, endDate, database());
             database().request();
         } else
             throw new Exceptions.InvalidDateException();

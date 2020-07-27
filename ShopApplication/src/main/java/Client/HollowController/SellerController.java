@@ -11,11 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SellerController {
-    private static Type stringType = new TypeToken<String>(){}.getType();
-    private static Type stringArrayType = new TypeToken<String[]>(){}.getType();
-    private static Type doubleType = new TypeToken<Double>(){}.getType();
-    private static Type booleanType = new TypeToken<Boolean>(){}.getType();
-    private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>(){}.getType();
+    private static Type stringType = new TypeToken<String>() {
+    }.getType();
+    private static Type stringArrayType = new TypeToken<String[]>() {
+    }.getType();
+    private static Type doubleType = new TypeToken<Double>() {
+    }.getType();
+    private static Type booleanType = new TypeToken<Boolean>() {
+    }.getType();
+    private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
+    }.getType();
 
     private Sender sender;
 
@@ -59,19 +64,19 @@ public class SellerController {
 //        }
 //    }
 
-    public String isProductWithNameAndBrand(String name, String brand){
+    public String isProductWithNameAndBrand(String name, String brand) {
         String body = convertToJson(name, brand);
         String response = sender.sendRequest(Constants.Commands.sellerIsProductWithNameAndBrand, body);
         return new Gson().fromJson(response, stringType);
     }
 
-    public boolean isNameAndBrandUsed(String name, String brand){
+    public boolean isNameAndBrandUsed(String name, String brand) {
         String body = convertToJson(name, brand);
         String response = sender.sendRequest(Constants.Commands.sellerIsNameAndBrandUsed, body);
         return new Gson().fromJson(response, booleanType);
     }
 
-    public boolean doesSellerSellThisProduct(String productId){
+    public boolean doesSellerSellThisProduct(String productId) {
         String body = convertToJson(productId);
         String response = sender.sendRequest(Constants.Commands.sellerDoesSellerSellThisProduct, body);
         return new Gson().fromJson(response, booleanType);
@@ -221,20 +226,14 @@ public class SellerController {
         }
     }
 
-    public void addProductsToSale(String saleId, ArrayList<String> subProductIds){
+    public void addProductsToSale(String saleId, ArrayList<String> subProductIds) {
         String body = convertToJson(saleId, subProductIds);
         sender.sendRequest(Constants.Commands.sellerAddProductsToSale, body);
     }
 
-    public void removeProductsFromSale(String saleId, ArrayList<String> subProductIds){
+    public void removeProductsFromSale(String saleId, ArrayList<String> subProductIds) {
         String body = convertToJson(saleId, subProductIds);
         sender.sendRequest(Constants.Commands.sellerRemoveProductsFromSale, body);
-    }
-
-    public double viewBalance() {
-        String body = convertToJson();
-        String response = sender.sendRequest(Constants.Commands.sellerViewBalance, body);
-        return new Gson().fromJson(response, doubleType);
     }
 
     public void removeSale(String saleId) throws InvalidSaleIdException {
@@ -252,13 +251,13 @@ public class SellerController {
 //        }
 //    }
 
-    public ArrayList<String[]> getPendingRequests(){
+    public ArrayList<String[]> getPendingRequests() {
         String body = convertToJson();
         String response = sender.sendRequest(Constants.Commands.sellerGetPendingRequests, body);
         return new Gson().fromJson(response, stringArrayListType);
     }
 
-    public ArrayList<String[]> getAllCategories(){
+    public ArrayList<String[]> getAllCategories() {
         String body = convertToJson();
         String response = sender.sendRequest(Constants.Commands.sellerGetAllCategories, body);
         return new Gson().fromJson(response, stringArrayListType);
@@ -293,7 +292,7 @@ public class SellerController {
         return new Gson().fromJson(response, booleanType);
     }
 
-    public void addNewFile(String name, String extension, String info, byte[] imagePath, String category, HashMap<String, String> properties, double price, byte[] path) throws ExistingFileException, InvalidCategoryException{
+    public void addNewFile(String name, String extension, String info, byte[] imagePath, String category, HashMap<String, String> properties, double price, byte[] path) throws ExistingFileException, InvalidCategoryException {
         String body = convertToJson(name, extension, info, imagePath, category, properties, price, path);
         String response = sender.sendRequest(Constants.Commands.sellerAddNewFile, body);
         if (response.startsWith("exception:")) {
@@ -303,7 +302,7 @@ public class SellerController {
         }
     }
 
-    public void addNewSubFileToAnExistingFile(String fileId, double price, byte[] path) throws InvalidFileIdException{
+    public void addNewSubFileToAnExistingFile(String fileId, double price, byte[] path) throws InvalidFileIdException {
         String body = convertToJson(fileId, price, path);
         String response = sender.sendRequest(Constants.Commands.sellerAddNewSubFileToAnExistingFile, body);
         if (response.startsWith("exception:")) {

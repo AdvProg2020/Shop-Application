@@ -40,14 +40,6 @@ public class CustomerController {
         return mainController.getDatabase();
     }
 
-    /**
-     * @return customer:
-     * { String firstName, String lastName, String phone, String email, String password, balance}
-     */
-    public String[] getPersonalInfoEditableFields() {
-        return Utilities.Field.customerPersonalInfoEditableFields();
-    }
-
     public void editPersonalInfo(String field, String newInformation) throws Exceptions.InvalidFieldException,
             Exceptions.SameAsPreviousValueException {
         if (field.equals("balance")) {
@@ -69,7 +61,7 @@ public class CustomerController {
 
     public double getTotalPriceOfCartWithDiscount(String discountCode) throws Exceptions.InvalidDiscountException {
         Discount discount = Discount.getDiscountByCode(discountCode);
-        if (discount == null || ! discount.hasCustomerWithId(currentAccount().getId())) {
+        if (discount == null || !discount.hasCustomerWithId(currentAccount().getId())) {
             throw new Exceptions.InvalidDiscountException(discountCode);
         } else {
             return discount.calculateDiscountAmount(currentCart().getTotalPrice());
@@ -78,7 +70,7 @@ public class CustomerController {
 
     public double getTotalPriceOfFileWithDiscount(String discountCode, double fileCost) throws Exceptions.InvalidDiscountException {
         Discount discount = Discount.getDiscountByCode(discountCode);
-        if (discount == null || ! discount.hasCustomerWithId(currentAccount().getId())) {
+        if (discount == null || !discount.hasCustomerWithId(currentAccount().getId())) {
             throw new Exceptions.InvalidDiscountException(discountCode);
         } else {
             return discount.calculateDiscountAmount(fileCost);
@@ -122,7 +114,7 @@ public class CustomerController {
             subProductCount = subProductsInCart.get(subProduct);
             new LogItem(buyLog.getId(), sellLog.getId(), subProduct.getId(), subProductCount);
             subProduct.changeRemainingCount(-subProductCount);
-            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount*(100 - Admin.getCommission())/100);
+            seller.getWallet().changeBalance(subProduct.getPriceWithSale() * subProductCount * (100 - Admin.getCommission()) / 100);
         }
         if (discount != null)
             discount.changeCount(currentAccount().getId(), -1);
@@ -134,14 +126,14 @@ public class CustomerController {
     public void purchaseTheFile(String subFileId, String discountCode) throws Exceptions.InvalidFileIdException, Exceptions.InvalidDiscountException, Exceptions.InsufficientCreditException {
         SubFile subFile = SubFile.getSubFileById(subFileId);
         Discount discount = null;
-        if(subFile == null){
+        if (subFile == null) {
             throw new Exceptions.InvalidFileIdException(subFileId);
-        }else {
+        } else {
             double totalPrice = subFile.getPriceWithSale();
             double discountAmount = 0;
-            if( discountCode != null){
+            if (discountCode != null) {
                 discount = Discount.getDiscountByCode(discountCode);
-                if (isDiscountCodeValid(discountCode) && (discount = Discount.getDiscountByCode(discountCode)) != null) {
+                if (isDiscountCodeValid(discountCode) && discount != null) {
                     discountAmount = discount.calculateDiscountAmount(totalPrice);
                     totalPrice -= discountAmount;
                 } else
@@ -149,11 +141,11 @@ public class CustomerController {
             }
             if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - totalPrice)
                 throw new Exceptions.InsufficientCreditException(totalPrice, ((Customer) currentAccount()).getWallet().getBalance());
-            FileLog fileLog = new FileLog(subFileId, currentAccount().getId(), discountAmount);
+            new FileLog(subFileId, currentAccount().getId(), discountAmount);
             if (discount != null)
                 discount.changeCount(currentAccount().getId(), -1);
             ((Customer) currentAccount()).getWallet().changeBalance(-totalPrice);
-            (SubFile.getSubSellableById(subFileId)).getSeller().getWallet().changeBalance(totalPrice * (100 - Admin.getCommission())/100);
+            (SubFile.getSubSellableById(subFileId)).getSeller().getWallet().changeBalance(totalPrice * (100 - Admin.getCommission()) / 100);
             database().purchase();
         }
     }
@@ -161,13 +153,13 @@ public class CustomerController {
     public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException, Exceptions.HaveNotBoughtException {
         SubFile subFile = SubFile.getSubFileById(subFileId);
         try {
-            if(subFile != null ){
-                if( subFile.hasCustomerWithId(currentAccount().getId())){
+            if (subFile != null) {
+                if (subFile.hasCustomerWithId(currentAccount().getId())) {
                     return Files.readAllBytes(Paths.get(subFile.getDownloadPath()));
-                }else {
+                } else {
                     throw new Exceptions.HaveNotBoughtException(subFileId);
                 }
-            }else {
+            } else {
                 throw new Exceptions.InvalidFileIdException(subFileId);
             }
         } catch (IOException e) {
@@ -239,7 +231,7 @@ public class CustomerController {
         else {
             if (currentAccount() != null) {
                 for (SubProduct subProduct : product.getSubProducts()) {
-                    if (new ArrayList<>(subProduct.getCustomers()).contains(currentAccount())) {
+                    if (new ArrayList<>(subProduct.getCustomers()).contains((Customer) currentAccount())) {
                         new Rating(currentAccount().getId(), productID, score);
                         database().addRating();
                         return;
@@ -275,9 +267,9 @@ public class CustomerController {
 
     public boolean hasBought(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
-        if(product == null){
+        if (product == null) {
             throw new Exceptions.InvalidSellableIdException(productId);
-        }else {
+        } else {
             return product.hasBought(currentAccount().getId());
         }
     }
@@ -285,15 +277,15 @@ public class CustomerController {
 
     public String getSupportChatId() throws Exceptions.DontHaveChatException {
         SupportChat chat = ((Customer) currentAccount()).getSupportChat();
-        if( chat == null ){
+        if (chat == null) {
             throw new Exceptions.DontHaveChatException();
-        }else {
+        } else {
             return chat.getId();
         }
     }
 
     public String createSupportChat(String supporterId) throws Exceptions.AlreadyInAChatException, Exceptions.InvalidSupporterIdException {
-        Chat chat = ((Customer)currentAccount()).getSupportChat();
+        Chat chat = ((Customer) currentAccount()).getSupportChat();
         if (((Customer) currentAccount()).getSupportChat() != null) {
             throw new Exceptions.AlreadyInAChatException(chat.getId());
         } else {
@@ -307,11 +299,12 @@ public class CustomerController {
         }
     }
 
+    //TODO: delete
     public void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if( chat == null || chat.getCustomer() != currentAccount()){
+        if (chat == null || chat.getCustomer() != currentAccount()) {
             throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
+        } else {
             chat.suspend();
             database().chat();
         }
@@ -319,9 +312,9 @@ public class CustomerController {
 
     public String[] viewAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
-        if( auction == null ){
+        if (auction == null) {
             throw new Exceptions.InvalidAuctionIdException(auctionId);
-        }else {
+        } else {
             return Utilities.Pack.auction(auction);
         }
     }
@@ -329,15 +322,15 @@ public class CustomerController {
 
     public void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
-        if(auction == null){
+        if (auction == null) {
             throw new Exceptions.InvalidAuctionIdException(auctionId);
-        }else {
+        } else {
             auction.bid(currentAccount().getId(), bidAmount);
             database().editAuction();
         }
     }
 
     public ArrayList<String[]> getAllSupporters() {
-        return Supporter.getAllSupporters().stream().map(s -> new String[] {s.getId(), s.getUsername()}).collect(Collectors.toCollection(ArrayList::new));
+        return Supporter.getAllSupporters().stream().map(s -> new String[]{s.getId(), s.getUsername()}).collect(Collectors.toCollection(ArrayList::new));
     }
 }
