@@ -319,6 +319,7 @@ public class DatabaseManager implements Database {
     public void createAuction() {
         updateRequests();
         updateAuctions();
+        chat();
     }
 
     @Override
@@ -330,6 +331,7 @@ public class DatabaseManager implements Database {
     @Override
     public void removeAuction() {
         updateAuctions();
+        chat();
     }
 
     @Override
