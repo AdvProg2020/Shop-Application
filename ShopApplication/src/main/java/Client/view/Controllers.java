@@ -2229,145 +2229,98 @@ public class Controllers {
     public static class SellableDetailMenuController {
         @FXML
         private ImageView sellableIMG;
-
         @FXML
         private Button compareBTN;
-
         @FXML
         private Label nameLBL;
-
         @FXML
         private Label brandExtensionLBL;
-
         @FXML
         private Label brandExtension;
-
         @FXML
         private Label categoryLBL;
-
         @FXML
         private TextArea sellableInfo;
-
         @FXML
         private Label sellerLBL;
-
         @FXML
         private Label priceBeforeLBL;
-
         @FXML
         private Label priceAfterLBL;
-
         @FXML
         private Button addToCartBTN;
-
         @FXML
         private Button editBTN;
-
         @FXML
         private Label auctionLBL;
-
         @FXML
         private Button auctionBTN;
-
         @FXML
         private Button downloadBTN;
-
         @FXML
         private TableView<SellerWrapper> sellersTBL;
-
         @FXML
         private TableColumn<SellerWrapper, String> sellersTBLSellerCOL;
-
         @FXML
         private TableColumn<SellerWrapper, String> sellersTBLPriceCOL;
-
         @FXML
         private TableColumn<SellerWrapper, String> sellersTBLNumberAvailableCOL;
-
         @FXML
         private TableView<PropertyWrapper> PropertiesTBL;
-
         @FXML
         private TableColumn<PropertyWrapper, String> propertyTab;
-
         @FXML
         private TableColumn<PropertyWrapper, String> valueTab;
-
         @FXML
         private VBox reviewsVB;
-
         @FXML
         private Label ratingCountLBL;
-
         @FXML
         private Button rateBTN;
-
         @FXML
         private ImageView halfStar1;
-
         @FXML
         private ImageView fullStar1;
-
         @FXML
         private ImageView halfStar2;
-
         @FXML
         private ImageView fullStar2;
-
         @FXML
         private ImageView halfStar3;
-
         @FXML
         private ImageView fullStar3;
-
         @FXML
         private ImageView halfStar4;
-
         @FXML
         private ImageView fullStar4;
-
         @FXML
         private ImageView halfStar5;
-
         @FXML
         private ImageView fullStar5;
-
         @FXML
         private TabPane tabPane;
-
         @FXML
         private Tab buyersTab;
-
         @FXML
         private TableView<BuyerWrapper> BuyersTBL;
-
         @FXML
         private TableColumn<BuyerWrapper, String> buyerCOL;
-
         @FXML
         private Button addReviewBTN;
-
         @FXML
         private BorderPane borderPane;
-
         @FXML
         private Label soldOutLBL;
-
         @FXML
         private Label salePercentageLBL;
-
         @FXML
         private HBox ratingsBox;
-
         @FXML
         private StackPane ratingsStackPane;
-
         @FXML
         private TableColumn<PropertyWrapper, Label> propertyCOL;
-
         @FXML
         private TableColumn<PropertyWrapper, Label> valueCOL;
-
 
         private String[] sellablePack;
         private String[] subSellablePack;
@@ -2389,8 +2342,7 @@ public class Controllers {
             String type = View.type.get();
             SellableDetailMenuController controller;
             if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
-                controller = ((SellableDetailMenuController)
-                        View.popupWindow("Sellable details", Constants.FXMLs.sellableDetailMenu, 1200, 800));
+                controller = (View.popupWindow("Sellable details", Constants.FXMLs.sellableDetailMenu, 1200, 800));
             } else {
                 controller = ((SellableDetailMenuController)
                         View.setMainPane(Constants.FXMLs.sellableDetailMenu));
@@ -8940,7 +8892,7 @@ public class Controllers {
         private String[] chatInfo;
 
         public static void display() {
-            View.popupWindow("Customer Chat menu", Constants.FXMLs.customerChatPopup, 600, 400);
+            View.popupWindow("Customer Chat menu", Constants.FXMLs.customerChatPopup, 600, 500);
         }
 
         @Override

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class CustomerController {
     private static Type doubleType = new TypeToken<Double>(){}.getType();
     private static Type booleanType = new TypeToken<Boolean>(){}.getType();
-    private static Type stringType = new TypeToken<Boolean>(){}.getType();
+    private static Type stringType = new TypeToken<String>(){}.getType();
     private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>(){}.getType();
     private static Type byteArrayType = new TypeToken<byte[]>(){}.getType();
 
@@ -174,7 +174,7 @@ public class CustomerController {
             if (nameBody[0].startsWith("Already")) throw new AlreadyInAChatException(nameBody[1]);
             else throw new InvalidSupporterIdException(nameBody[1]);
         } else {
-            return new Gson().fromJson(response, booleanType);
+            return new Gson().fromJson(response, stringType);
         }
     }
 
