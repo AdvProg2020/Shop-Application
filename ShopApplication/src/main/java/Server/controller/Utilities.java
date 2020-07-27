@@ -104,7 +104,7 @@ public class Utilities {
             subProductBoxPack[14] = subProduct.getSeller().getUsername();
             subProductBoxPack[15] = "SubProduct";
             subProductBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
-            subProductBoxPack[17] = auction != null ? auction.getHighestBidder().getUsername() : null;
+            subProductBoxPack[17] = auction != null ? (auction.getHighestBidder() == null ? "-": auction.getHighestBidder().getUsername()) : null;
             subProductBoxPack[18] = auction != null ? dateFormat.format(auction.getEndDate()) : null;
             subProductBoxPack[19] = auction != null ? auction.getId() : null;
             return subProductBoxPack;
@@ -132,7 +132,7 @@ public class Utilities {
             subFileBoxPack[14] = subFile.getSeller().getUsername();
             subFileBoxPack[15] = "SubFile";
             subFileBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
-            subFileBoxPack[17] = auction != null ? auction.getHighestBidder().getUsername() : null;
+            subFileBoxPack[17] = auction != null ? (auction.getHighestBidder() == null ? "-": auction.getHighestBidder().getUsername()) : null;
             subFileBoxPack[18] = auction != null ? dateFormat.format(auction.getEndDate()) : null;
             subFileBoxPack[19] = auction != null ? auction.getId() : null;
             return subFileBoxPack;

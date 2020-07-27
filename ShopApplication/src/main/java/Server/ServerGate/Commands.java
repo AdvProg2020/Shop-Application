@@ -164,6 +164,7 @@ public class Commands {
     public static final String sellerEditAuction = "/seller/editAuction";
     public static final String sellerAddAuction = "/seller/addAuction";
     public static final String sellerRemoveFile = "/seller/removeFile";
+    public static final String sellerViewAuctionWithId = "/seller/viewAuctionWithId";
     //customer Server.controller methods.
     public static final String customerEditPersonalInfo = "/customer/editPersonalInfo";
     public static final String customerGetTotalPriceOfCartWithDiscount = "/customer/getTotalPriceOfCartWithDiscount";
@@ -1722,6 +1723,16 @@ public class Commands {
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
                         return currentSession.getAdminController().manageAllFiles();
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(sellerViewAuctionWithId, new Task(stringType) {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getSellerController().viewAuctionWithId(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
