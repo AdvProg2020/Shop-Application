@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingIntro.css"
             xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$AdminManagingMenuController">
     <center>
-        <VBox alignment="CENTER" spacing="40.0">
-            <Button id="accounts-button" fx:id="manageAccounts" mnemonicParsing="false" text="Manage Accounts"/>
-            <Button id="sellables-button" fx:id="manageSellables" mnemonicParsing="false" text="Manage Sellables"/>
-            <Button id="categories-button" fx:id="manageCategories" mnemonicParsing="false" text="Manage Categories"/>
-            <Button id="sales-button" fx:id="manageDiscounts" mnemonicParsing="false" text="Manage Discounts"/>
-            <Button id="requests-button" fx:id="manageRequests" mnemonicParsing="false" text="Manage Requests"/>
-            <Button id="commission-button" fx:id="manageCommission" layoutX="10.0" layoutY="410.0"
-                    mnemonicParsing="false" text="Manage Commission"/>
-            <Button id="shipping-button" fx:id="manageShippings" layoutX="10.0" layoutY="510.0" mnemonicParsing="false"
-                    text="Manage Shippings"/>
-        </VBox>
+        <GridPane hgap="30.0" maxHeight="-Infinity" maxWidth="-Infinity" vgap="50.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Button id="accounts-button" fx:id="manageAccounts" mnemonicParsing="false" text="Manage Accounts"/>
+                <Button id="sellables-button" fx:id="manageSellables" mnemonicParsing="false" text="Manage Sellables"
+                        GridPane.columnIndex="1"/>
+                <Button id="categories-button" fx:id="manageCategories" mnemonicParsing="false" text="Manage Categories"
+                        GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Button id="sales-button" fx:id="manageDiscounts" mnemonicParsing="false" text="Manage Discounts"
+                        GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Button id="requests-button" fx:id="manageRequests" mnemonicParsing="false" text="Manage Requests"
+                        GridPane.rowIndex="1"/>
+                <Button id="commission-button" fx:id="manageCommission" mnemonicParsing="false" text="Manage Commission"
+                        GridPane.rowIndex="2"/>
+                <Button id="shipping-button" fx:id="manageShippings" mnemonicParsing="false" text="Manage Shippings"
+                        GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3"
+                        GridPane.valignment="CENTER"/>
+            </children>
+        </GridPane>
     </center>
 </BorderPane>
