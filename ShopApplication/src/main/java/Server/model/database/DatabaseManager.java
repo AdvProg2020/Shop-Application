@@ -155,20 +155,20 @@ public class DatabaseManager implements Database {
         load(FileNames.CHAT, Chat.class);
         load(FileNames.MESSAGE, Message.class);
         load(FileNames.REQUEST, Request.class);
-        load(FileNames.BUY_LOG, BuyLog.class);
-        load(FileNames.SELL_LOG, SellLog.class);
-        load(FileNames.LOG_ITEM, LogItem.class);
-        load(FileNames.FILE_LOG, FileLog.class);
         load(FileNames.CATEGORY, Category.class);
-        load(FileNames.SALE, Sale.class);
-        load(FileNames.AUCTION, Auction.class);
-        load(FileNames.DISCOUNT, Discount.class);
         load(FileNames.PRODUCT, Product.class);
         load(FileNames.SUB_PRODUCT, SubProduct.class);
         load(FileNames.FILE, File.class);
         load(FileNames.SUB_FILE, SubFile.class);
+        load(FileNames.SALE, Sale.class);
+        load(FileNames.AUCTION, Auction.class);
+        load(FileNames.DISCOUNT, Discount.class);
         load(FileNames.REVIEW, Review.class);
         load(FileNames.RATING, Rating.class);
+        load(FileNames.BUY_LOG, BuyLog.class);
+        load(FileNames.SELL_LOG, SellLog.class);
+        load(FileNames.LOG_ITEM, LogItem.class);
+        load(FileNames.FILE_LOG, FileLog.class);
     }
 
     @Override
@@ -182,18 +182,18 @@ public class DatabaseManager implements Database {
         updateChats();
         updateMessages();
         updateRequests();
-        updateProductLogs();
-        updateFileLogs();
         updateCategories();
-        updateSales();
-        updateAuctions();
-        updateDiscounts();
         updateProducts();
         updateSubProducts();
         updateFiles();
         updateSubFiles();
+        updateSales();
+        updateAuctions();
+        updateDiscounts();
         updateRatings();
         updateReviews();
+        updateProductLogs();
+        updateFileLogs();
     }
 
     @Override
