@@ -5326,7 +5326,6 @@ public class Controllers {
             manageSellables.setOnAction(e -> AdminProductManagingMenu.display());
             manageRequests.setOnAction(e -> AdminRequestManagingMenuController.display());
             manageCommission.setOnAction(e -> CommissionManagingPopupController.display());
-
             manageShippings.setOnAction(e -> AdminBuyLogManagingMenuController.display());
         }
     }
