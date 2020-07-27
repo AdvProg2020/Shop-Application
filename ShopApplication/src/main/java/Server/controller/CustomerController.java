@@ -3,9 +3,7 @@ package Server.controller;
 
 import Server.model.*;
 import Server.model.account.*;
-import Server.model.chat.AuctionChat;
 import Server.model.chat.Chat;
-import Server.model.chat.Message;
 import Server.model.chat.SupportChat;
 import Server.model.database.Database;
 import Server.model.log.*;
@@ -303,6 +301,7 @@ public class CustomerController {
                 throw new Exceptions.InvalidSupporterIdException(supporterId);
             } else {
                 chat = new SupportChat(supporterId, currentAccount().getId());
+                database().chat();
                 return chat.getId();
             }
         }
@@ -314,6 +313,7 @@ public class CustomerController {
             throw new Exceptions.InvalidChatIdException(chatId);
         }else {
             chat.suspend();
+            database().chat();
         }
     }
 
@@ -333,6 +333,7 @@ public class CustomerController {
             throw new Exceptions.InvalidAuctionIdException(auctionId);
         }else {
             auction.bid(currentAccount().getId(), bidAmount);
+            database().editAuction();
         }
     }
 

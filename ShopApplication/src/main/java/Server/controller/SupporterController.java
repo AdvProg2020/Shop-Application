@@ -48,8 +48,6 @@ public class SupporterController {
         } throw new Exceptions.UnAuthorizedAccountException();
     }
 
-
-    //
     public ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if( chat == null || chat.getSupporter() != currentAccount()){
@@ -76,6 +74,7 @@ public class SupporterController {
             throw new Exceptions.InvalidChatIdException(chatId);
         }else {
             new Message(chatId, currentAccount().getId(), text);
+            database().chat();
         }
     }
 
@@ -85,6 +84,7 @@ public class SupporterController {
             throw new Exceptions.InvalidChatIdException(chatId);
         }else {
             chat.suspend();
+            database().chat();
         }
     }
 
