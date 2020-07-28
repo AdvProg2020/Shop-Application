@@ -11,10 +11,7 @@ import Server.model.database.Database;
 import Server.model.log.LogItem;
 import Server.model.log.SellLog;
 import Server.model.request.*;
-import Server.model.sellable.File;
-import Server.model.sellable.Product;
-import Server.model.sellable.SubFile;
-import Server.model.sellable.SubProduct;
+import Server.model.sellable.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -51,24 +48,27 @@ public class SellerController {
             if (((Seller) currentAccount()).getWallet().getBalance() == Double.parseDouble(newInformation))
                 throw new Exceptions.SameAsPreviousValueException(newInformation);
             ((Seller) currentAccount()).getWallet().changeBalance(Double.parseDouble(newInformation) - ((Seller) currentAccount()).getWallet().getBalance());
-        } else
+        } else {
             mainController.editPersonalInfo(field, newInformation);
+        }
         database().editAccount();
     }
 
-    public String isProductWithNameAndBrand(String name, String brand){
-        Product  p =  Product.getProductByNameAndBrand(name, brand);
+    public String isProductWithNameAndBrand(String name, String brand) {
+        Product p = Product.getProductByNameAndBrand(name, brand);
         if (p == null) return null;
-        else return p.getId();
+
+        return p.getId();
     }
 
     public String isFileWithNameAndExtension(String name, String extension) {
         File f = File.getFileByNameAndExtension(name, extension);
         if (f == null) return null;
-        else return f.getId();
+
+        return f.getId();
     }
 
-    public boolean isNameAndBrandUsed(String name, String brand){
+    public boolean isNameAndBrandUsed(String name, String brand) {
         return Product.isProductNameAndBrandUsed(name, brand);
     }
 
@@ -76,14 +76,9 @@ public class SellerController {
         return File.isFileNameAndExtensionUsed(name, extension);
     }
 
-    public boolean doesSellerSellThisProduct(String productId){
-        Product product = Product.getProductById(productId);
-        return product.isSoldInStoreWithName(((Seller)currentAccount()).getStoreName());
-    }
-
-    public boolean doesSellerSellThisFile(String fileId) {
-        File file = File.getFileById(fileId);
-        return file.isSoldInStoreWithName(((Seller) currentAccount()).getStoreName());
+    public boolean doesSellerSellThisSellable(String sellableId) {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        return sellable.isSoldInStoreWithName(((Seller) currentAccount()).getStoreName());
     }
 
     public ArrayList<String[]> getAllSellLogs() {
@@ -100,16 +95,14 @@ public class SellerController {
             if (log.getId().equals(logId))
                 sellLog = log;
         }
-        if (sellLog == null)
-            throw new Exceptions.InvalidLogIdException(logId);
-        else {
-            ArrayList<String[]> logInfo = new ArrayList<>();
-            logInfo.add(Utilities.Pack.sellLog(sellLog));
-            for (LogItem item : sellLog.getLogItems()) {
-                logInfo.add(Utilities.Pack.sellLogItem(item));
-            }
-            return logInfo;
+        if (sellLog == null) throw new Exceptions.InvalidLogIdException(logId);
+
+        ArrayList<String[]> logInfo = new ArrayList<>();
+        logInfo.add(Utilities.Pack.sellLog(sellLog));
+        for (LogItem item : sellLog.getLogItems()) {
+            logInfo.add(Utilities.Pack.sellLogItem(item));
         }
+        return logInfo;
     }
 
     public ArrayList<String[]> manageProducts() {
@@ -129,18 +122,21 @@ public class SellerController {
     }
 
 
-    public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidSellableIdException {
+    public ArrayList<String> viewSellableBuyers(String sellableId) throws Exceptions.InvalidSellableIdException {
         Seller seller = ((Seller) currentAccount());
-        for (SubProduct subProduct : seller.getSubProducts()) {
-            if (subProduct.getProduct().getId().equals(productID)) {
+        ArrayList<SubSellable> subSellables = new ArrayList<>();
+        subSellables.addAll(seller.getSubProducts());
+        subSellables.addAll(seller.getSubFiles());
+        for (SubSellable subSellable : subSellables) {
+            if (subSellable.getSellable().getId().equals(sellableId)) {
                 ArrayList<String> buyers = new ArrayList<>();
-                for (Customer customer : subProduct.getCustomers()) {
+                for (Customer customer : subSellable.getCustomers()) {
                     buyers.add(customer.getId());
                 }
                 return buyers;
             }
         }
-        throw new Exceptions.InvalidSellableIdException(productID);
+        throw new Exceptions.InvalidSellableIdException(sellableId);
     }
 
     public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidSellableIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
@@ -151,61 +147,58 @@ public class SellerController {
                 break;
             }
         }
-        if (targetedSubProduct == null)
-            throw new Exceptions.InvalidSellableIdException(productID);
-        else {
-            switch (field) {
-                case "name": {
-                    String existingProductId;
-                    if ((existingProductId = exist(newInformation, targetedSubProduct.getProduct().getBrand())) == null) {
-                        if (targetedSubProduct.getProduct().getName().equals(newInformation))
-                            throw new Exceptions.SameAsPreviousValueException(field);
-                        new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
-                        database().request();
-                    } else
-                        throw new Exceptions.ExistingProductException(existingProductId);
-                    break;
-                }
-                case "brand": {
-                    String existingProductId;
-                    if ((existingProductId = exist(targetedSubProduct.getProduct().getName(), newInformation)) == null) {
-                        if (targetedSubProduct.getProduct().getBrand().equals(newInformation))
-                            throw new Exceptions.SameAsPreviousValueException(field);
-                        new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.BRAND, newInformation);
-                        database().request();
-                    } else
-                        throw new Exceptions.ExistingProductException(existingProductId);
-                    break;
-                }
-                case "info text":
-                    if (targetedSubProduct.getProduct().getInfoText().equals(newInformation))
-                        throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
-                    database().request();
-                    break;
-                case "price":
-                    if (targetedSubProduct.getRawPrice() == Double.parseDouble(newInformation))
-                        throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_PRICE, newInformation);
-                    database().request();
-                    break;
-                case "count":
-                    if (targetedSubProduct.getRemainingCount() == Integer.parseInt(newInformation))
-                        throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
-                    database().request();
-                    break;
-                case "imagePath":
-                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.IMAGE_PATH, newInformation);
-                    database().request();
-                    break;
-                case "property":
-                    new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.PROPERTY, newInformation);
-                    database().request();
-                    break;
-                default:
-                    throw new Exceptions.InvalidFieldException();
+        if (targetedSubProduct == null) throw new Exceptions.InvalidSellableIdException(productID);
+
+        switch (field) {
+            case "name": {
+                String existingProductId;
+                if ((existingProductId = exist(newInformation, targetedSubProduct.getProduct().getBrand())) != null)
+                    throw new Exceptions.ExistingProductException(existingProductId);
+                if (targetedSubProduct.getProduct().getName().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.NAME, newInformation);
+                database().request();
+                break;
             }
+            case "brand": {
+                String existingProductId;
+                if ((existingProductId = exist(targetedSubProduct.getProduct().getName(), newInformation)) != null)
+                    throw new Exceptions.ExistingProductException(existingProductId);
+                if (targetedSubProduct.getProduct().getBrand().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.BRAND, newInformation);
+                database().request();
+                break;
+            }
+            case "info text":
+                if (targetedSubProduct.getProduct().getInfoText().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.INFO_TEXT, newInformation);
+                database().request();
+                break;
+            case "property":
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.PROPERTY, newInformation);
+                database().request();
+                break;
+            case "price":
+                if (targetedSubProduct.getRawPrice() == Double.parseDouble(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_PRICE, newInformation);
+                database().request();
+                break;
+            case "count":
+                if (targetedSubProduct.getRemainingCount() == Integer.parseInt(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditProductRequest(targetedSubProduct.getId(), EditProductRequest.Field.SUB_COUNT, newInformation);
+                database().request();
+                break;
+            default:
+                throw new Exceptions.InvalidFieldException();
         }
     }
 
@@ -217,50 +210,50 @@ public class SellerController {
                 break;
             }
         }
-        if (targetedSubFile == null)
-            throw new Exceptions.InvalidFileIdException(fileID);
-        else {
-            switch (field) {
-                case "name": {
-                    if (exist(newInformation, targetedSubFile.getFile().getExtension()) == null) {
-                        if (targetedSubFile.getFile().getName().equals(newInformation))
-                            throw new Exceptions.SameAsPreviousValueException(field);
-                        new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.NAME, newInformation);
-                        database().request();
-                    } else
-                        throw new Exceptions.ExistingFileException();
-                    break;
-                }
-                case "extension": {
-                    String existingFileId;
-                    if (exist(targetedSubFile.getFile().getName(), newInformation) == null) {
-                        if (targetedSubFile.getFile().getExtension().equals(newInformation))
-                            throw new Exceptions.SameAsPreviousValueException(field);
-                        new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.EXTENSION, newInformation);
-                        database().request();
-                    } else
-                        throw new Exceptions.ExistingFileException();
-                    break;
-                }
-                case "info text":
-                    if (targetedSubFile.getFile().getInfoText().equals(newInformation))
-                        throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.INFO_TEXT, newInformation);
-                    database().request();
-                    break;
-                case "price":
-                    if (targetedSubFile.getRawPrice() == Double.parseDouble(newInformation))
-                        throw new Exceptions.SameAsPreviousValueException(field);
-                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.SUB_PRICE, newInformation);
-                    database().request();
-                    break;
-                case "property":
-                    new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.PROPERTY, newInformation);
-                    database().request();
-                    break;
-                default:
-                    throw new Exceptions.InvalidFieldException();
+        if (targetedSubFile == null) throw new Exceptions.InvalidFileIdException(fileID);
+
+        switch (field) {
+            case "name": {
+                if (exist(newInformation, targetedSubFile.getFile().getExtension()) != null)
+                    throw new Exceptions.ExistingFileException();
+                if (targetedSubFile.getFile().getName().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.NAME, newInformation);
+                database().request();
+                break;
             }
+            case "extension": {
+                String existingFileId;
+                if (exist(targetedSubFile.getFile().getName(), newInformation) != null)
+                    throw new Exceptions.ExistingFileException();
+                if (targetedSubFile.getFile().getExtension().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.EXTENSION, newInformation);
+                database().request();
+                break;
+            }
+            case "info text":
+                if (targetedSubFile.getFile().getInfoText().equals(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.INFO_TEXT, newInformation);
+                database().request();
+                break;
+            case "property":
+                new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.PROPERTY, newInformation);
+                database().request();
+                break;
+            case "price":
+                if (targetedSubFile.getRawPrice() == Double.parseDouble(newInformation))
+                    throw new Exceptions.SameAsPreviousValueException(field);
+
+                new EditFileRequest(targetedSubFile.getId(), EditFileRequest.Field.SUB_PRICE, newInformation);
+                database().request();
+                break;
+            default:
+                throw new Exceptions.InvalidFieldException();
         }
     }
 
@@ -282,82 +275,64 @@ public class SellerController {
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
 
         Product product = Product.getProductByNameAndBrand(name, brand);
-        if (product != null)
-            throw new Exceptions.ExistingProductException(product.getId());
-        else {
-            Category category = Category.getCategoryByName(categoryName);
-            if (category == null)
-                throw new Exceptions.InvalidCategoryException(categoryName);
-            SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
-            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "sellableImg", "PRO_" + name + "_" + brand + ".png") : null;
-            new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
-        }
+        if (product != null) throw new Exceptions.ExistingProductException(product.getId());
+        Category category = Category.getCategoryByName(categoryName);
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+
+        SubProduct subProduct = new SubProduct(null, currentAccount().getId(), price, count, database());
+        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "sellableImg", "PRO_" + name + "_" + brand + ".png") : null;
+        new Product(name, brand, infoText, imagePath, category.getId(), propertyValues, subProduct, database());
         database().request();
     }
 
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws Exceptions.InvalidSellableIdException {
-        if (Product.getProductById(productId) == null)
-            throw new Exceptions.InvalidSellableIdException(productId);
-        else {
-            new SubProduct(productId, currentAccount().getId(), price, count, database());
-        }
+        if (Product.getProductById(productId) == null) throw new Exceptions.InvalidSellableIdException(productId);
+
+        new SubProduct(productId, currentAccount().getId(), price, count, database());
         database().request();
     }
 
     public void addNewFile(String name, String extension, String infoText, byte[] image, String categoryName, Map<String, String> propertyValues, double price, byte[] file) throws Exceptions.ExistingFileException, Exceptions.InvalidCategoryException {
-        if( File.isFileNameAndExtensionUsed(name, extension) ){
-            throw new Exceptions.ExistingFileException();
-        }else {
-            Category category = Category.getCategoryByName(categoryName);
-            if (category == null)
-                throw new Exceptions.InvalidCategoryException(categoryName);
-            String downloadPath = mainController.saveFileInDataBase(file, "files", currentAccount().getUsername() + "_" + name + "." + extension);
-            String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "sellableImg", "FILE_" + name + "_" + extension + ".png") : null;
-            SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
-            new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
-        }
+        if (File.isFileNameAndExtensionUsed(name, extension)) throw new Exceptions.ExistingFileException();
+        Category category = Category.getCategoryByName(categoryName);
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+
+        String downloadPath = mainController.saveFileInDataBase(file, "files", currentAccount().getUsername() + "_" + name + "." + extension);
+        String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "sellableImg", "FILE_" + name + "_" + extension + ".png") : null;
+        SubFile subFile = new SubFile(null, currentAccount().getId(), price, downloadPath, database());
+        new File(name, extension, infoText, imagePath, category.getId(), propertyValues, subFile, database());
         database().request();
     }
 
     public void addNewSubFileToAnExistingFile(String fileId, double price, byte[] file) throws Exceptions.InvalidFileIdException {
-        if(File.getFileById(fileId) == null)
-            throw new Exceptions.InvalidFileIdException(fileId);
-        else {
-            File f = File.getFileById(fileId);
-            String downloadPath;
-            if( file.length != 0){
-                downloadPath = mainController.saveFileInDataBase(file, "files", currentAccount().getUsername() + "_" + f.getName() + "." + f.getExtension());
-            }else {
-                downloadPath = null;
-            }
+        if (File.getFileById(fileId) == null) throw new Exceptions.InvalidFileIdException(fileId);
 
-            new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
-        }
+        File f = File.getFileById(fileId);
+        String downloadPath;
+        if (file.length != 0)
+            downloadPath = mainController.saveFileInDataBase(file, "files", currentAccount().getUsername() + "_" + f.getName() + "." + f.getExtension());
+        else
+            downloadPath = null;
+
+        new SubFile(fileId, currentAccount().getId(), price, downloadPath, database());
         database().request();
     }
 
 
-    public void removeFile(String fileId) throws Exceptions.InvalidFileIdException {
-        for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
-            if(subFile.getFile().getId().equals(fileId)){
-                subFile.suspend();
-                database().removeSubFile();
+    public void removeSellable(String sellableId) throws Exceptions.InvalidFileIdException {
+        for (SubSellable subSellable : ((Seller) currentAccount()).getSubSellables()) {
+            if (subSellable.getSellable().getId().equals(sellableId)) {
+                subSellable.suspend();
+                if (subSellable instanceof SubProduct)
+                    database().removeSubFile();
+                else
+                    database().removeSubProduct();
                 return;
             }
         }
-        throw new Exceptions.InvalidFileIdException(fileId);
+        throw new Exceptions.InvalidFileIdException(sellableId);
     }
 
-    public void removeProduct(String productID) throws Exceptions.InvalidSellableIdException {
-        for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
-            if (subProduct.getProduct().getId().equals(productID)) {
-                subProduct.suspend();
-                database().removeSubProduct();
-                return;
-            }
-        }
-        throw new Exceptions.InvalidSellableIdException(productID);
-    }
 
     public ArrayList<String[]> viewActiveSales() {
         ArrayList<String[]> saleInfos = new ArrayList<>();
@@ -376,7 +351,11 @@ public class SellerController {
     }
 
     public ArrayList<String[]> viewArchiveSales() {
-        return ((Seller) currentAccount()).getSaleArchive().stream().map(Utilities.Pack::saleInfo).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<String[]> saleInfos = new ArrayList<>();
+        for (Sale sale : ((Seller) currentAccount()).getSaleArchive()) {
+            saleInfos.add(Utilities.Pack.saleInfo(sale));
+        }
+        return saleInfos;
     }
 
     public ArrayList<String[]> viewArchiveAuctions() {
@@ -405,11 +384,11 @@ public class SellerController {
         throw new Exceptions.InvalidAuctionIdException(auctionId);
     }
 
-    public ArrayList<String[]> getProductsInSale(String saleId) throws Exceptions.InvalidSaleIdException {
+    public ArrayList<String[]> getSellablesInSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
         if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
 
-        return sale.getSubProducts().stream().map(Utilities.Pack::productInSale).collect(Collectors.toCollection(ArrayList::new));
+        return sale.getSubSellables().stream().map(Utilities.Pack::sellableInSale).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void editSale(String saleId, String field, String newInformation) throws
@@ -421,53 +400,53 @@ public class SellerController {
                 break;
             }
         }
-        if (targetedSale == null)
-            throw new Exceptions.InvalidSaleIdException(saleId);
-        else {
-            switch (field) {
-                case "start date":
-                    try {
-                        if (targetedSale.getEndDate().after(dateFormat.parse(newInformation))) {
-                            if (dateFormat.parse(newInformation).equals(targetedSale.getStartDate()))
-                                throw new Exceptions.SameAsPreviousValueException("start date");
-                            new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.START_DATE);
-                            database().request();
-                        } else
-                            throw new Exceptions.InvalidDateException();
-                    } catch (ParseException e) {
-                        throw new Exceptions.InvalidFormatException("date");
-                    }
-                    break;
-                case "end date":
-                    try {
-                        if (targetedSale.getStartDate().before(dateFormat.parse(newInformation))) {
-                            if (dateFormat.parse(newInformation).equals(targetedSale.getEndDate()))
-                                throw new Exceptions.SameAsPreviousValueException("end date");
-                            new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.END_DATE);
-                            database().request();
-                        } else
-                            throw new Exceptions.InvalidDateException();
-                    } catch (ParseException e) {
-                        throw new Exceptions.InvalidFormatException("date");
-                    }
-                    break;
-                case "percentage":
-                    if (Double.parseDouble(newInformation) == targetedSale.getPercentage())
-                        throw new Exceptions.SameAsPreviousValueException("percentage");
-                    new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.PERCENTAGE);
-                    database().request();
-                    break;
-                case "maximum":
-                    if (Double.parseDouble(newInformation) == targetedSale.getMaximumAmount())
-                        throw new Exceptions.SameAsPreviousValueException("maximum");
-                    new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.MAXIMUM);
-                    database().request();
-                    break;
-                default:
-                    throw new Exceptions.InvalidFieldException();
-            }
+        if (targetedSale == null) throw new Exceptions.InvalidSaleIdException(saleId);
 
+        switch (field) {
+            case "start date":
+                try {
+                    if (!targetedSale.getEndDate().after(dateFormat.parse(newInformation)))
+                        throw new Exceptions.InvalidDateException();
+                    if (dateFormat.parse(newInformation).equals(targetedSale.getStartDate()))
+                        throw new Exceptions.SameAsPreviousValueException("start date");
+
+                    new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.START_DATE);
+                    database().request();
+                } catch (ParseException e) {
+                    throw new Exceptions.InvalidFormatException("date");
+                }
+                break;
+            case "end date":
+                try {
+                    if (!targetedSale.getStartDate().before(dateFormat.parse(newInformation)))
+                        throw new Exceptions.InvalidDateException();
+                    if (dateFormat.parse(newInformation).equals(targetedSale.getEndDate()))
+                        throw new Exceptions.SameAsPreviousValueException("end date");
+
+                    new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.END_DATE);
+                    database().request();
+                } catch (ParseException e) {
+                    throw new Exceptions.InvalidFormatException("date");
+                }
+                break;
+            case "percentage":
+                if (Double.parseDouble(newInformation) == targetedSale.getPercentage())
+                    throw new Exceptions.SameAsPreviousValueException("percentage");
+
+                new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.PERCENTAGE);
+                database().request();
+                break;
+            case "maximum":
+                if (Double.parseDouble(newInformation) == targetedSale.getMaximumAmount())
+                    throw new Exceptions.SameAsPreviousValueException("maximum");
+
+                new EditSaleRequest(saleId, newInformation, EditSaleRequest.Field.MAXIMUM);
+                database().request();
+                break;
+            default:
+                throw new Exceptions.InvalidFieldException();
         }
+
     }
 
     public void addSale(String StartDate, String EndDate, double percentage, double maximum, ArrayList<String> productIds) throws Exceptions.InvalidDateException, Exceptions.InvalidProductIdsForASeller, Exceptions.InvalidFormatException {
@@ -480,27 +459,27 @@ public class SellerController {
             throw new Exceptions.InvalidFormatException("date");
         }
 
-        if (startDate.before(endDate)) {
-            Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum, database());
-            Product product;
-            SubProduct subProduct;
-            ArrayList<String> invalidSubProductIds = new ArrayList<>();
-            for (String productId : productIds) {
-                product = Product.getProductById(productId);
-                if (product != null) {
-                    subProduct = product.getSubProductOfSeller(currentAccount().getId());
-                    if (subProduct != null)
-                        sale.addSubSellable(subProduct.getId());
-                    else
-                        invalidSubProductIds.add(productId);
-                } else
+        if (!startDate.before(endDate)) throw new Exceptions.InvalidDateException();
+
+        Sale sale = new Sale(currentAccount().getId(), startDate, endDate, percentage, maximum, database());
+        Product product;
+        SubProduct subProduct;
+        ArrayList<String> invalidSubProductIds = new ArrayList<>();
+        for (String productId : productIds) {
+            product = Product.getProductById(productId);
+            if (product != null) {
+                subProduct = product.getSubProductOfSeller(currentAccount().getId());
+                if (subProduct != null)
+                    sale.addSubSellable(subProduct.getId());
+                else
                     invalidSubProductIds.add(productId);
+            } else {
+                invalidSubProductIds.add(productId);
             }
-            if (invalidSubProductIds.size() > 0)
-                throw new Exceptions.InvalidProductIdsForASeller(Utilities.Pack.invalidProductIds(invalidSubProductIds));
-            database().request();
-        } else
-            throw new Exceptions.InvalidDateException();
+        }
+        if (invalidSubProductIds.size() > 0)
+            throw new Exceptions.InvalidProductIdsForASeller(Utilities.Pack.invalidProductIds(invalidSubProductIds));
+        database().request();
     }
 
     public void addAuction(String StartDate, String EndDate, String subSellableID) throws Exceptions.InvalidFormatException, Exceptions.InvalidDateException {
@@ -512,11 +491,10 @@ public class SellerController {
         } catch (ParseException e) {
             throw new Exceptions.InvalidFormatException("date");
         }
-        if (startDate.before(endDate)) {
-            new Auction(currentAccount().getId(), subSellableID, startDate, endDate, database());
-            database().request();
-        } else
-            throw new Exceptions.InvalidDateException();
+        if (!startDate.before(endDate)) throw new Exceptions.InvalidDateException();
+
+        new Auction(currentAccount().getId(), subSellableID, startDate, endDate, database());
+        database().request();
     }
 
     public void editAuction(String auctionId, String field, String newInformation) throws Exceptions.InvalidAuctionIdException, Exceptions.InvalidFieldException, Exceptions.InvalidDateException, Exceptions.InvalidFormatException, Exceptions.SameAsPreviousValueException {
@@ -527,54 +505,52 @@ public class SellerController {
                 break;
             }
         }
-        if (targetedAuction == null)
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        else {
-            switch (field) {
-                case "start date":
-                    try {
-                        if (targetedAuction.getEndDate().after(dateFormat.parse(newInformation))) {
-                            if (dateFormat.parse(newInformation).equals(targetedAuction.getStartDate()))
-                                throw new Exceptions.SameAsPreviousValueException("start date");
-                            new EditAuctionRequest(auctionId, newInformation, EditAuctionRequest.Field.START_DATE);
-                            database().request();
-                        } else
-                            throw new Exceptions.InvalidDateException();
-                    } catch (ParseException | Exceptions.SameAsPreviousValueException e) {
-                        throw new Exceptions.InvalidFormatException("date");
-                    }
-                    break;
-                case "end date":
-                    try {
-                        if (targetedAuction.getStartDate().before(dateFormat.parse(newInformation))) {
-                            if (dateFormat.parse(newInformation).equals(targetedAuction.getEndDate()))
-                                throw new Exceptions.SameAsPreviousValueException("end date");
-                            new EditAuctionRequest(auctionId, newInformation, EditAuctionRequest.Field.END_DATE);
-                            database().request();
-                        } else
-                            throw new Exceptions.InvalidDateException();
-                    } catch (ParseException e) {
-                        throw new Exceptions.InvalidFormatException("date");
-                    }
-                    break;
-                default:
-                    throw new Exceptions.InvalidFieldException();
-            }
+        if (targetedAuction == null) throw new Exceptions.InvalidAuctionIdException(auctionId);
+
+        switch (field) {
+            case "start date":
+                try {
+                    if (!targetedAuction.getEndDate().after(dateFormat.parse(newInformation)))
+                        throw new Exceptions.InvalidDateException();
+                    if (dateFormat.parse(newInformation).equals(targetedAuction.getStartDate()))
+                        throw new Exceptions.SameAsPreviousValueException("start date");
+
+                    new EditAuctionRequest(auctionId, newInformation, EditAuctionRequest.Field.START_DATE);
+                    database().request();
+                } catch (ParseException | Exceptions.SameAsPreviousValueException e) {
+                    throw new Exceptions.InvalidFormatException("date");
+                }
+                break;
+            case "end date":
+                try {
+                    if (!targetedAuction.getStartDate().before(dateFormat.parse(newInformation)))
+                        throw new Exceptions.InvalidDateException();
+                    if (dateFormat.parse(newInformation).equals(targetedAuction.getEndDate()))
+                        throw new Exceptions.SameAsPreviousValueException("end date");
+
+                    new EditAuctionRequest(auctionId, newInformation, EditAuctionRequest.Field.END_DATE);
+                    database().request();
+                } catch (ParseException e) {
+                    throw new Exceptions.InvalidFormatException("date");
+                }
+                break;
+            default:
+                throw new Exceptions.InvalidFieldException();
         }
     }
 
-    public void addProductsToSale(String saleId, ArrayList<String> subProductIds){
+    public void addSellablesToSale(String saleId, ArrayList<String> subSellableIds) {
         Sale sale = Sale.getSaleById(saleId);
-        for (String subProductId : subProductIds) {
-            sale.addSubSellable(subProductId);
+        for (String subSellableId : subSellableIds) {
+            sale.addSubSellable(subSellableId);
         }
         database().editSale();
     }
 
-    public void removeProductsFromSale(String saleId, ArrayList<String> subProductIds){
+    public void removeSellablesFromSale(String saleId, ArrayList<String> subSellableIds) {
         Sale sale = Sale.getSaleById(saleId);
-        for (String subProductId : subProductIds) {
-            sale.removeSubSellable(subProductId);
+        for (String subSellableId : subSellableIds) {
+            sale.removeSubSellable(subSellableId);
         }
         database().removeSale();
     }
@@ -585,22 +561,18 @@ public class SellerController {
 
     public void removeAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
-        if (auction != null) {
-            auction.suspend();
-            database().removeAuction();
-        } else {
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        }
+        if (auction == null) throw new Exceptions.InvalidAuctionIdException(auctionId);
+
+        auction.suspend();
+        database().removeAuction();
     }
 
     public void removeSale(String saleId) throws Exceptions.InvalidSaleIdException {
         Sale sale = Sale.getSaleById(saleId);
-        if( sale != null ){
-            sale.suspend();
-            database().removeSale();
-        }else {
-            throw new Exceptions.InvalidSaleIdException(saleId);
-        }
+        if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
+
+        sale.suspend();
+        database().removeSale();
     }
 
     public ArrayList<String[]> getPendingRequests(){
@@ -612,7 +584,7 @@ public class SellerController {
         return requestPacks;
     }
 
-    public ArrayList<String[]> getAllCategories(){
+    public ArrayList<String[]> getAllCategories() {
         ArrayList<Category> categories = new ArrayList<>(Category.getAllCategories());
         ArrayList<String[]> categoryNames = new ArrayList<>();
         for (Category category : categories) {
@@ -621,13 +593,11 @@ public class SellerController {
         return categoryNames;
     }
 
-    public boolean doesSellSubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if( subProduct == null ){
-            throw new Exceptions.InvalidSubProductIdException(subProductId);
-        }else {
-            return ((Seller)currentAccount()) == subProduct.getSeller();
-        }
+    public boolean doesSellSubSellable(String subProductId) throws Exceptions.InvalidSubProductIdException {
+        SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
+        if (subSellable == null) throw new Exceptions.InvalidSubProductIdException(subProductId);
+
+        return ((Seller) currentAccount()) == subSellable.getSeller();
     }
 
 

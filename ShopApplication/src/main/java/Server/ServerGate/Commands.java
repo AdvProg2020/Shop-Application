@@ -988,7 +988,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getSellerController().doesSellerSellThisProduct(objectArgs[0] + "");
+                        return currentSession.getSellerController().doesSellerSellThisSellable(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -1028,7 +1028,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getSellerController().viewProductBuyers(objectArgs[0] + "");
+                        return currentSession.getSellerController().viewSellableBuyers(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -1083,7 +1083,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getSellerController().removeProduct(objectArgs[0] + "");
+                        currentSession.getSellerController().removeSellable(objectArgs[0] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -1124,7 +1124,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getSellerController().getProductsInSale(objectArgs[0] + "");
+                        return currentSession.getSellerController().getSellablesInSale(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -1156,7 +1156,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getSellerController().addProductsToSale(objectArgs[0] + "", ((ArrayList<String>) objectArgs[1]));
+                        currentSession.getSellerController().addSellablesToSale(objectArgs[0] + "", ((ArrayList<String>) objectArgs[1]));
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -1167,7 +1167,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getSellerController().removeProductsFromSale(objectArgs[0] + "", ((ArrayList<String>) objectArgs[1]));
+                        currentSession.getSellerController().removeSellablesFromSale(objectArgs[0] + "", ((ArrayList<String>) objectArgs[1]));
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -1219,7 +1219,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getSellerController().doesSellSubProduct(objectArgs[0] + "");
+                        return currentSession.getSellerController().doesSellSubSellable(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -1399,7 +1399,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getSellerController().doesSellerSellThisFile(objectArgs[0] + "");
+                        return currentSession.getSellerController().doesSellerSellThisSellable(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -1538,7 +1538,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getSellerController().removeFile(objectArgs[0] + "");
+                        currentSession.getSellerController().removeSellable(objectArgs[0] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();

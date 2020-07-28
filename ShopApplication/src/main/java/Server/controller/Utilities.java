@@ -1,7 +1,10 @@
 package Server.controller;
 
 import Server.model.*;
-import Server.model.account.*;
+import Server.model.account.Account;
+import Server.model.account.Admin;
+import Server.model.account.Customer;
+import Server.model.account.Seller;
 import Server.model.chat.Message;
 import Server.model.chat.SupportChat;
 import Server.model.log.BuyLog;
@@ -258,14 +261,14 @@ public class Utilities {
             return productPack;
         }
 
-        public static String[] productInSale(SubSellable subProduct) {
-            String[] productPack = new String[5];
-            productPack[0] = subProduct.getSellable().getId();
-            productPack[1] = subProduct.getSellable().getName();
-            productPack[2] = subProduct.getClass().getSimpleName().equals("SubProduct") ? ((SubProduct)subProduct).getProduct().getBrand() : ((SubFile)subProduct).getFile().getExtension();
-            productPack[3] = Double.toString(subProduct.getRawPrice());
-            productPack[4] = Double.toString(subProduct.getPriceWithSale());
-            return productPack;
+        public static String[] sellableInSale(SubSellable sellable) {
+            String[] sellablePack = new String[5];
+            sellablePack[0] = sellable.getSellable().getId();
+            sellablePack[1] = sellable.getSellable().getName();
+            sellablePack[2] = sellable.getClass().getSimpleName().equals("SubProduct") ? ((SubProduct) sellable).getProduct().getBrand() : ((SubFile) sellable).getFile().getExtension();
+            sellablePack[3] = Double.toString(sellable.getRawPrice());
+            sellablePack[4] = Double.toString(sellable.getPriceWithSale());
+            return sellablePack;
         }
 
         public static String[] sellLog(SellLog sellLog) {
