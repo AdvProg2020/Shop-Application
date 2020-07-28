@@ -841,16 +841,11 @@ public class Utilities {
 
             @Override
             public int compare(SubSellable o1, SubSellable o2) {
-                if( o1.getClass().getSimpleName().equals("SubProduct") && o2.getClass().getSimpleName().equals("SubProduct"))
-                    return direction * Integer.compare(((SubProduct)o1).getRemainingCount(), ((SubProduct)o2).getRemainingCount());
-                else if(o1.getClass().getSimpleName().equals("SubProduct")){
-                    return 1;
-                }else {
-                    if(o2.getClass().getSimpleName().equals("SubProduct")){
-                        return -1;
-                    }else
-                        return 0;
-                }
+                if (o1.getClass().getSimpleName().equals("SubProduct") && o2.getClass().getSimpleName().equals("SubProduct"))
+                    return direction * Integer.compare(((SubProduct) o1).getRemainingCount(), ((SubProduct) o2).getRemainingCount());
+                if (o1.getClass().getSimpleName().equals("SubProduct")) return 1;
+                if (o2.getClass().getSimpleName().equals("SubProduct")) return -1;
+                return 0;
             }
         }
 

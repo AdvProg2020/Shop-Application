@@ -6,7 +6,6 @@ import Server.model.account.Account;
 import Server.model.account.Admin;
 import Server.model.account.Customer;
 import Server.model.account.Seller;
-import Server.model.chat.AuctionChat;
 import Server.model.chat.Chat;
 import Server.model.chat.Message;
 import Server.model.chat.SupportChat;
@@ -112,10 +111,9 @@ public class Controller {
 
     public void login(String username, String password) throws Exceptions.WrongPasswordException, Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
-        if (account == null)
-            throw new Exceptions.UsernameDoesntExistException(username);
-        if (!account.getPassword().equals(password))
-            throw new Exceptions.WrongPasswordException();
+        if (account == null) throw new Exceptions.UsernameDoesntExistException(username);
+        if (!account.getPassword().equals(password)) throw new Exceptions.WrongPasswordException();
+
         currentAccount = account;
         if (currentAccount instanceof Customer) {
             ((Customer) currentAccount).mergeCart(currentCart.getId());
@@ -125,8 +123,8 @@ public class Controller {
     }
 
     public void logout() throws Exceptions.NotLoggedInException {
-        if (currentAccount == null)
-            throw new Exceptions.NotLoggedInException();
+        if (currentAccount == null) throw new Exceptions.NotLoggedInException();
+
         currentAccount = null;
         currentCart = new Cart(null);
     }
@@ -135,8 +133,8 @@ public class Controller {
      * @return returns the currentAccount type: anonymous, customer, seller, admin.
      */
     public String getType() {
-        if (currentAccount == null)
-            return "Anonymous";
+        if (currentAccount == null) return "Anonymous";
+
         return currentAccount.getClass().getSimpleName();
     }
 
@@ -202,7 +200,7 @@ public class Controller {
 
     private ArrayList<Product> getProductsInCategory(Category category) {
         ArrayList<Product> products = new ArrayList<>(category.getProducts(true));
-        sortProducts( products);
+        sortProducts(products);
         return products;
     }
 
@@ -219,16 +217,16 @@ public class Controller {
         }
 
         for (String propertyFilter : propertyFilters.keySet()) {
-            if ( ! propertyFilters.get(propertyFilter).equals(""))
+            if (!propertyFilters.get(propertyFilter).equals(""))
                 Utilities.Filter.SellableFilter.property(sellables, propertyFilter, propertyFilters.get(propertyFilter));
         }
 
         ArrayList<SubSellable> subSellables = new ArrayList<>();
-        if(inAuction){
+        if (inAuction) {
             for (Sellable product : sellables) {
                 subSellables.addAll(product.getSubSellablesInAuction());
             }
-        }else{
+        } else {
             if (inSale) {
                 for (Sellable product : sellables) {
                     subSellables.addAll(product.getSubSellablesInSale());
@@ -241,9 +239,9 @@ public class Controller {
         }
 
 
-        filterSubProducts(available, minPrice, maxPrice, contains, brand, extension, storeName, minRatingScore, subSellables);
+        filterSubSellables(available, minPrice, maxPrice, contains, brand, extension, storeName, minRatingScore, subSellables);
 
-        sortSubProducts(sortBy, isIncreasing, subSellables);
+        sortSubSellables(sortBy, isIncreasing, subSellables);
         return Utilities.Pack.subSellableBoxes(subSellables);
     }
 
@@ -309,7 +307,7 @@ public class Controller {
         return subSellables;
     }
 
-    public String[] getSubProductByID(String subSellableId) throws Exceptions.InvalidSubProductIdException {
+    public String[] getSubSellableById(String subSellableId) throws Exceptions.InvalidSubProductIdException {
         SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
         if (subSellable == null)
             throw new Exceptions.InvalidSubProductIdException(subSellableId);
@@ -324,8 +322,8 @@ public class Controller {
      */
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidSellableIdException {
         Sellable product = Sellable.getSellableById(productId);
-        if (product == null)
-            throw new Exceptions.InvalidSellableIdException(productId);
+        if (product == null) throw new Exceptions.InvalidSellableIdException(productId);
+
         ArrayList<String[]> reviews = new ArrayList<>();
         for (Review review : product.getReviews()) {
             reviews.add(Utilities.Pack.review(review));
@@ -343,20 +341,21 @@ public class Controller {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (subProduct.getRemainingCount() < count + currentCart.getCountOfaSubProduct(subProductId))
+        if (subProduct.getRemainingCount() < count + currentCart.getCountOfaSubProduct(subProductId))
             throw new Exceptions.UnavailableProductException(subProductId);
-        else {
-            currentCart.addSubProductCount(subProductId, count);
-            database.cart();
-        }
+
+        currentCart.addSubProductCount(subProductId, count);
+        database.cart();
     }
 
     public ArrayList<String[]> getProductsInCart() throws Exceptions.UnAuthorizedAccountException {
         checkAuthorityOverCart();
         ArrayList<String[]> shoppingCart = new ArrayList<>();
         Map<SubProduct, Integer> subProducts;
-        if (currentAccount == null) subProducts = currentCart.getSubProducts();
-        else subProducts = ((Customer) currentAccount).getCart().getSubProducts();
+        if (currentAccount == null)
+            subProducts = currentCart.getSubProducts();
+        else
+            subProducts = ((Customer) currentAccount).getCart().getSubProducts();
         for (SubProduct subProduct : subProducts.keySet()) {
             shoppingCart.add(Utilities.Pack.productInCart(subProduct, subProducts.get(subProduct)));
         }
@@ -370,14 +369,13 @@ public class Controller {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else if (!subProducts.containsKey(subProduct))
+        if (!subProducts.containsKey(subProduct))
             throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
-        else if (number + subProducts.get(subProduct) > subProduct.getRemainingCount())
+        if (number + subProducts.get(subProduct) > subProduct.getRemainingCount())
             throw new Exceptions.UnavailableProductException(subProductId);
-        else {
-            currentCart.addSubProductCount(subProductId, number);
-            database.cart();
-        }
+
+        currentCart.addSubProductCount(subProductId, number);
+        database.cart();
     }
 
     public void decreaseProductInCart(String subProductId, int number) throws Exceptions.InvalidSubProductIdException,
@@ -386,14 +384,12 @@ public class Controller {
         SubProduct subProduct = SubProduct.getSubProductById(subProductId);
         if (subProduct == null)
             throw new Exceptions.InvalidSubProductIdException(subProductId);
-        else {
-            Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
-            if (subProductsInCart.containsKey(subProduct)) {
-                currentCart.addSubProductCount(subProductId, -number);
-                database.cart();
-            } else
-                throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
-        }
+        Map<SubProduct, Integer> subProductsInCart = currentCart.getSubProducts();
+        if (!subProductsInCart.containsKey(subProduct))
+            throw new Exceptions.NotSubProductIdInTheCartException(subProductId);
+
+        currentCart.addSubProductCount(subProductId, -number);
+        database.cart();
     }
 
     public double getTotalPriceOfCart() throws Exceptions.UnAuthorizedAccountException {
@@ -401,17 +397,12 @@ public class Controller {
         return currentCart.getTotalPrice();
     }
 
-    public void addReview(String productId, String title, String text) throws Exceptions.InvalidSellableIdException, Exceptions.NotLoggedInException {
-        if (currentAccount == null)
-            throw new Exceptions.NotLoggedInException();
-        else {
-            if (Product.getProductById(productId) == null)
-                throw new Exceptions.InvalidSellableIdException(productId);
-            else {
-                new Review(currentAccount.getId(), productId, title, text, database);
-                database.request();
-            }
-        }
+    public void addReview(String sellableId, String title, String text) throws Exceptions.InvalidSellableIdException, Exceptions.NotLoggedInException {
+        if (currentAccount == null) throw new Exceptions.NotLoggedInException();
+        if (Sellable.getSellableById(sellableId) == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        new Review(currentAccount.getId(), sellableId, title, text, database);
+        database.request();
     }
 
     /**
@@ -420,7 +411,6 @@ public class Controller {
      * customer:  7: username, type, firstName, lastName, email, phone, balance;
      * seller:    8: username, type, firstName, lastName, email, phone, balance, storeName;
      */
-    //Todo: supporter
     public String[] viewPersonalInfo() throws Exceptions.NotLoggedInException {
         if (currentAccount == null) throw new Exceptions.NotLoggedInException();
         return Utilities.Pack.personalInfo(currentAccount);
@@ -469,8 +459,8 @@ public class Controller {
         }
     }
 
-    private void filterSubProducts(boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                   String extension, String storeName, double minRatingScore, ArrayList<SubSellable> subSellables) {
+    private void filterSubSellables(boolean available, double minPrice, double maxPrice, String contains, String brand,
+                                    String extension, String storeName, double minRatingScore, ArrayList<SubSellable> subSellables) {
         Utilities.Filter.SubProductFilter.available(subSellables, available);
         Utilities.Filter.SubProductFilter.minPrice(subSellables, minPrice);
         Utilities.Filter.SubProductFilter.maxPrice(subSellables, maxPrice);
@@ -481,7 +471,7 @@ public class Controller {
         Utilities.Filter.SubProductFilter.extension(subSellables, extension);
     }
 
-    private void sortSubProducts(String sortBy, boolean isIncreasing, ArrayList<SubSellable> subSellables) {
+    private void sortSubSellables(String sortBy, boolean isIncreasing, ArrayList<SubSellable> subSellables) {
         if (sortBy == null) {
             sortBy = "view count";
         }
@@ -570,7 +560,7 @@ public class Controller {
         HashSet<Sellable> candidateSellables = new HashSet<>();
         choosingSellable:
         for (Sale sale : Sale.getAllSales()) {
-            if ( ! sale.hasStarted()) continue;
+            if (!sale.hasStarted()) continue;
             for (SubSellable subSellable : sale.getSubSellables()) {
                 candidateSellables.add(subSellable.getSellable());
                 if (candidateSellables.size() > number * 3) {
@@ -590,7 +580,7 @@ public class Controller {
         ArrayList<SubSellable> inSaleSubSellables;
         for (int i = 0; i < number; i++) {
             randomNumber = r.nextInt(numberOfSellables);
-            chosenSellable  = orderedSellables.remove(randomNumber);
+            chosenSellable = orderedSellables.remove(randomNumber);
             numberOfSellables--;
 
             inSaleSubSellables = new ArrayList<>(chosenSellable.getSubSellablesInSale());
@@ -633,11 +623,9 @@ public class Controller {
 
     public ArrayList<String> getCategoryTreeOfAProduct(String sellableId) throws Exceptions.InvalidSellableIdException {
         Sellable sellable = Sellable.getSellableById(sellableId);
-        if (sellable == null) {
-            throw new Exceptions.InvalidSellableIdException(sellableId);
-        } else {
-            return getCategoryTreeOfACategory(sellable.getCategory().getName());
-        }
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        return getCategoryTreeOfACategory(sellable.getCategory().getName());
     }
 
     public ArrayList<String> getCategoryTreeOfACategory(String categoryName) {
@@ -653,63 +641,40 @@ public class Controller {
         return categoryTree;
     }
 
-    public ArrayList<String> getBuyersOfASubProduct(String subProductId) throws Exceptions.InvalidSubProductIdException {
-        SubProduct subProduct = SubProduct.getSubProductById(subProductId);
-        if (subProduct == null) {
-            throw new Exceptions.InvalidSubProductIdException(subProductId);
-        } else {
-            ArrayList<String> buyerUserNames = new ArrayList<>();
-            for (Customer customer : subProduct.getCustomers()) {
-                buyerUserNames.add(customer.getUsername());
-            }
-            return buyerUserNames;
-        }
-    }
+    public ArrayList<String> getBuyersOfASubSellable(String subSellableId) throws Exceptions.InvalidSubProductIdException {
+        SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
+        if (subSellable == null) throw new Exceptions.InvalidSubProductIdException(subSellableId);
 
-    public ArrayList<String[]> getMessagesInAuctionChat(String chatId) throws Exceptions.InvalidChatIdException {
-        AuctionChat chat = AuctionChat.getAuctionChatById(chatId);
-        if(chat == null){
-            throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            ArrayList<String[]> messages = new ArrayList<>();
-            for (Message message : chat.getMessages()) {
-                messages.add(Utilities.Pack.message(message, currentAccount.getUsername()));
-            }
-            return messages;
+        ArrayList<String> buyerUserNames = new ArrayList<>();
+        for (Customer customer : subSellable.getCustomers()) {
+            buyerUserNames.add(customer.getUsername());
         }
+        return buyerUserNames;
     }
 
     public ArrayList<String[]> getMessagesInChat(String chatId) throws Exceptions.InvalidChatIdException {
         Chat chat = Chat.getChatById(chatId);
-        if(chat == null){
-            throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            ArrayList<String[]> messages = new ArrayList<>();
-            for (Message message : chat.getMessages()) {
-                messages.add(Utilities.Pack.message(message, currentAccount.getUsername()));
-            }
-            return messages;
+        if (chat == null) throw new Exceptions.InvalidChatIdException(chatId);
+
+        ArrayList<String[]> messages = new ArrayList<>();
+        for (Message message : chat.getMessages()) {
+            messages.add(Utilities.Pack.message(message, currentAccount.getUsername()));
         }
+        return messages;
     }
 
     public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException, Exceptions.InvalidAccountTypeException, Exceptions.UnAuthorizedAccountException {
         Chat chat = Chat.getChatById(chatId);
-        if( chat == null ){
-            throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            if(chat.getClass().getSimpleName().equals("AuctionChat")){
-                if( currentAccount.getClass().getSimpleName().equals("Customer"))
-                    new Message(chatId, currentAccount.getId(), text);
-                else
-                    throw new Exceptions.InvalidAccountTypeException();
-            }else {
-                if( ((SupportChat)chat).getSupporter() == currentAccount || ((SupportChat)chat).getCustomer() == currentAccount)
-                    new Message(chatId, currentAccount.getId(), text);
-                else
-                    throw new Exceptions.UnAuthorizedAccountException();
-            }
+        if (chat == null) throw new Exceptions.InvalidChatIdException(chatId);
 
+        if (chat.getClass().getSimpleName().equals("AuctionChat")) {
+            if (!currentAccount.getClass().getSimpleName().equals("Customer"))
+                throw new Exceptions.InvalidAccountTypeException();
+        } else if (((SupportChat) chat).getSupporter() != currentAccount && ((SupportChat) chat).getCustomer() != currentAccount) {
+            throw new Exceptions.UnAuthorizedAccountException();
         }
+        new Message(chatId, currentAccount.getId(), text);
+
     }
 
     public byte[] loadFileFromDataBase(String path) {

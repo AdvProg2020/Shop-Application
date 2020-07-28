@@ -48,7 +48,7 @@ public class ModelUtilities {
             entry(Product.class.getSimpleName(), "PRO"),
             entry(SubProduct.class.getSimpleName(), "SBP"),
             entry(File.class.getSimpleName(), "FIL"),
-            entry(SubFile.class.getSimpleName(), "SLF"),
+            entry(SubFile.class.getSimpleName(), "SFL"),
             entry(Rating.class.getSimpleName(), "RAT"),
             entry(Review.class.getSimpleName(), "REV")
     );

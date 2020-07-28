@@ -19,7 +19,7 @@ public class ServerListener {
         while (true) {
             try {
                 Socket clientSocket = serverSocket.accept();
-                new ServerRequestHandler(clientSocket).run();
+                new ServerRequestHandler(clientSocket).start();
             } catch (IOException e) {
                 e.printStackTrace();
             }

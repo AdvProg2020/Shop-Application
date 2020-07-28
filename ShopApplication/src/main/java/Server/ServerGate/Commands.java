@@ -371,7 +371,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getMainController().getSubProductByID(objectArgs[0] + "");
+                        return currentSession.getMainController().getSubSellableById(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -575,7 +575,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getMainController().getBuyersOfASubProduct(objectArgs[0] + "");
+                        return currentSession.getMainController().getBuyersOfASubSellable(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -1497,7 +1497,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getMainController().getMessagesInAuctionChat(objectArgs[0] + "");
+                        return currentSession.getMainController().getMessagesInChat(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }

@@ -7,7 +7,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class ServerRequestHandler extends Thread {
     static HashMap<String, Session> sessions = new HashMap<>();
@@ -20,61 +19,28 @@ public class ServerRequestHandler extends Thread {
     DataInputStream dis;
     DataOutputStream dos;
 
-    static class Session {
-        Controller mainController;
-        AdminController adminController;
-        SellerController sellerController;
-        CustomerController customerController;
-        SupporterController supporterController;
-        long lastReq;
-
-        public Session() {
-            mainController = new Controller(ServerInitializer.databaseManager);
-            sellerController = new SellerController(mainController);
-            customerController = new CustomerController(mainController);
-            adminController = new AdminController(mainController);
-            supporterController = new SupporterController(mainController);
-            lastReq = System.currentTimeMillis() / 1000;
-        }
-
-        public SupporterController getSupporterController() {
-            return supporterController;
-        }
-
-        public Controller getMainController() {
-            return mainController;
-        }
-
-        public AdminController getAdminController() {
-            return adminController;
-        }
-
-        public SellerController getSellerController() {
-            return sellerController;
-        }
-
-        public CustomerController getCustomerController() {
-            return customerController;
-        }
-
-        public void updateLastRequest() {
-            lastReq = System.currentTimeMillis() / 1000;
-        }
-
-        public long getTimePassedInMinutes() {
-            return getTimePassedInSeconds() / 60;
-        }
-
-        public long getTimePassedInSeconds() {
-            return System.currentTimeMillis() / 1000 - lastReq;
-        }
-    }
-
     public ServerRequestHandler(Socket clientSocket) throws IOException {
         super();
         this.clientSocket = clientSocket;
         dis = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
         dos = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+    }
+
+    public static HashMap<String, Session> getSessions() {
+        return sessions;
+    }
+
+    public static ArrayList<String> getOnlineAccounts() {
+        ArrayList<String> onlineAccounts = new ArrayList<>();
+        sessions.forEach((k, v) -> {
+            try {
+                onlineAccounts.add(v.getMainController().viewPersonalInfo()[0]);
+            } catch (Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return onlineAccounts;
     }
 
     @Override
@@ -173,20 +139,53 @@ public class ServerRequestHandler extends Thread {
         }
     }
 
-    public static HashMap<String, Session> getSessions() {
-        return sessions;
-    }
+    static class Session {
+        Controller mainController;
+        AdminController adminController;
+        SellerController sellerController;
+        CustomerController customerController;
+        SupporterController supporterController;
+        long lastReq;
 
-    public static ArrayList<String> getOnlineAccounts() {
-        ArrayList<String> onlineAccounts = new ArrayList<>();
-        sessions.forEach((k, v) -> {
-            try {
-                onlineAccounts.add(v.getMainController().viewPersonalInfo()[0]);
-            } catch (Exceptions.NotLoggedInException e) {
-                e.printStackTrace();
-            }
-        });
+        public Session() {
+            mainController = new Controller(ServerInitializer.databaseManager);
+            sellerController = new SellerController(mainController);
+            customerController = new CustomerController(mainController);
+            adminController = new AdminController(mainController);
+            supporterController = new SupporterController(mainController);
+            lastReq = System.currentTimeMillis() / 1000;
+        }
 
-        return onlineAccounts;
+        public SupporterController getSupporterController() {
+            return supporterController;
+        }
+
+        public Controller getMainController() {
+            return mainController;
+        }
+
+        public AdminController getAdminController() {
+            return adminController;
+        }
+
+        public SellerController getSellerController() {
+            return sellerController;
+        }
+
+        public CustomerController getCustomerController() {
+            return customerController;
+        }
+
+        public void updateLastRequest() {
+            lastReq = System.currentTimeMillis() / 1000;
+        }
+
+        public long getTimePassedInMinutes() {
+            return getTimePassedInSeconds() / 60;
+        }
+
+        public long getTimePassedInSeconds() {
+            return System.currentTimeMillis() / 1000 - lastReq;
+        }
     }
 }
