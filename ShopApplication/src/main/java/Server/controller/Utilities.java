@@ -172,16 +172,16 @@ public class Utilities {
             return subProductPack;
         }
 
-        public static String[] sellerSubProduct(SubProduct subProduct){
+        public static String[] sellerSubProduct(SubSellable subSellable){
             String[] subProductPack = new String[7];
-            Product product = subProduct.getProduct();
-            Sale sale = subProduct.getSale();
+            Sellable product = subSellable.getSellable();
+            Sale sale = subSellable.getSale();
             subProductPack[0] = product.getId();
-            subProductPack[1] = subProduct.getId();
+            subProductPack[1] = subSellable.getId();
             subProductPack[2] = product.getName();
-            subProductPack[3] = product.getBrand();
-            subProductPack[4] = Double.toString(subProduct.getRawPrice());
-            subProductPack[5] = Integer.toString(subProduct.getRemainingCount());
+            subProductPack[3] = product.getClass().getSimpleName().equals("Product") ? ((Product) product).getBrand() : ((File) product).getExtension();
+            subProductPack[4] = Double.toString(subSellable.getRawPrice());
+            subProductPack[5] = subSellable.getClass().getSimpleName().equals("SubProduct") ? ((SubProduct) subSellable).getRemainingCount() + "" : "-";
             subProductPack[6] = sale != null ? sale.getId() : null;
             return subProductPack;
         }

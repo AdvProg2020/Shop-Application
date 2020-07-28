@@ -2,7 +2,10 @@ package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
 import Client.view.Constants;
+import Server.controller.Utilities;
 import Server.model.Auction;
+import Server.model.account.Seller;
+import Server.model.sellable.SubFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -102,6 +105,12 @@ public class SellerController {
     public ArrayList<String[]> manageProducts() {
         String body = convertToJson();
         String response = sender.sendRequest(Constants.Commands.sellerManageProducts, body);
+        return new Gson().fromJson(response, stringArrayListType);
+    }
+
+    public ArrayList<String[]> manageFiles() {
+        String body = convertToJson();
+        String response = sender.sendRequest(Constants.Commands.sellerManageFiles, body);
         return new Gson().fromJson(response, stringArrayListType);
     }
 

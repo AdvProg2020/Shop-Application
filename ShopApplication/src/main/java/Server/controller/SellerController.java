@@ -120,6 +120,14 @@ public class SellerController {
         return products;
     }
 
+    public ArrayList<String[]> manageFiles() {
+        ArrayList<String[]> files = new ArrayList<>();
+        for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
+            files.add(Utilities.Pack.sellerSubProduct(subFile));
+        }
+        return files;
+    }
+
 
     public ArrayList<String> viewProductBuyers(String productID) throws Exceptions.InvalidSellableIdException {
         Seller seller = ((Seller) currentAccount());

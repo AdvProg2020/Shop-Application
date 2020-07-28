@@ -133,6 +133,7 @@ public class Commands {
     public static final String sellerGetAllSellLogs = "/seller/getAllSellLogs";
     public static final String sellerGetSellLogWithId = "/seller/getSellLogWithId";
     public static final String sellerManageProducts = "/seller/manageProducts";
+    public static final String sellerManageFiles = "/seller/manageFiles";
     public static final String sellerViewProductBuyers = "/seller/viewProductBuyers";
     public static final String sellerEditProduct = "/seller/editProduct";
     public static final String sellerExist = "/seller/exist";
@@ -1733,6 +1734,16 @@ public class Commands {
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
                         return currentSession.getSellerController().viewAuctionWithId(objectArgs[0] + "");
+                    } catch (Exception e) {
+                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
+                    }
+                }
+            }),
+            entry(sellerManageFiles, new Task() {
+                @Override
+                public Object executeMethod(Session currentSession, Object[] objectArgs) {
+                    try {
+                        return currentSession.getSellerController().manageFiles();
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
