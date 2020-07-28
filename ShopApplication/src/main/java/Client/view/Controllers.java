@@ -4886,7 +4886,7 @@ public class Controllers {
         public void initializeFileMode() {
             purchaseBTN.setOnAction(e -> {
                 try {
-                    customerController.purchaseTheFile(subFileId, discountCode.getText());
+                    customerController.purchaseTheFile(subFileId, discountCode.getText() == null ? "" : discountCode.getText());
                     PurchaseConfirmationController.display(totalPrice.getText());
                 } catch (Exceptions.InsufficientCreditException ex) {
                     discountError.setText("You dont have enough money!");
@@ -4922,7 +4922,7 @@ public class Controllers {
             purchaseBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText().equals("") ? null : discountCode.getText());
+                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText().equals("") ? null : discountCode.getText() == null ? "": discountCode.getText());
                         PurchaseConfirmationController.display(totalPrice.getText());
                     } catch (Exceptions.InsufficientCreditException ex) {
                         discountError.setText("You dont have enough money!");
