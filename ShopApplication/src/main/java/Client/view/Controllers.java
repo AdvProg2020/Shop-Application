@@ -2667,9 +2667,10 @@ public class Controllers {
         private void download() {
             if (View.type.get().equals(Constants.customerUserType)) {
                 try {
+
+                    byte[] file = customerController.downloadFile(subSellablePack[1]);
                     DirectoryChooser dc = new DirectoryChooser();
                     File f = dc.showDialog(new Stage());
-                    byte[] file = customerController.downloadFile(subSellablePack[1]);
                     File f2 = new File(f.getAbsolutePath() + "/" + subSellablePack[2] + "." + subSellablePack[3]);
                     if (!f2.exists()) {
                         f2.createNewFile();
