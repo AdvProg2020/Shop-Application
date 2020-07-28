@@ -139,15 +139,15 @@ public class SellerController {
         throw new Exceptions.InvalidSellableIdException(sellableId);
     }
 
-    public void editProduct(String productID, String field, String newInformation) throws Exceptions.InvalidSellableIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
+    public void editProduct(String productId, String field, String newInformation) throws Exceptions.InvalidSellableIdException, Exceptions.ExistingProductException, Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException {
         SubProduct targetedSubProduct = null;
         for (SubProduct subProduct : ((Seller) currentAccount()).getSubProducts()) {
-            if (subProduct.getProduct().getId().equals(productID)) {
+            if (subProduct.getProduct().getId().equals(productId)) {
                 targetedSubProduct = subProduct;
                 break;
             }
         }
-        if (targetedSubProduct == null) throw new Exceptions.InvalidSellableIdException(productID);
+        if (targetedSubProduct == null) throw new Exceptions.InvalidSellableIdException(productId);
 
         switch (field) {
             case "name": {
@@ -202,19 +202,19 @@ public class SellerController {
         }
     }
 
-    public void editFile(String fileID, String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException, Exceptions.ExistingFileException, Exceptions.InvalidFileIdException {
+    public void editFile(String fileId, String field, String newInformation) throws Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException, Exceptions.ExistingFileException, Exceptions.InvalidFileIdException {
         SubFile targetedSubFile = null;
         for (SubFile subFile : ((Seller) currentAccount()).getSubFiles()) {
-            if (subFile.getFile().getId().equals(fileID)) {
+            if (subFile.getFile().getId().equals(fileId)) {
                 targetedSubFile = subFile;
                 break;
             }
         }
-        if (targetedSubFile == null) throw new Exceptions.InvalidFileIdException(fileID);
+        if (targetedSubFile == null) throw new Exceptions.InvalidFileIdException(fileId);
 
         switch (field) {
             case "name": {
-                if (isFileWithNameAndExtension(newInformation, targetedSubFile.getFile().getExtension()) != null)
+                if (isNameAndExtensionUsed(newInformation, targetedSubFile.getFile().getExtension()))
                     throw new Exceptions.ExistingFileException();
                 if (targetedSubFile.getFile().getName().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
@@ -224,8 +224,7 @@ public class SellerController {
                 break;
             }
             case "extension": {
-                String existingFileId;
-                if (isFileWithNameAndExtension(targetedSubFile.getFile().getName(), newInformation) != null)
+                if (isNameAndExtensionUsed(targetedSubFile.getFile().getName(), newInformation))
                     throw new Exceptions.ExistingFileException();
                 if (targetedSubFile.getFile().getExtension().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
@@ -584,7 +583,7 @@ public class SellerController {
         SubSellable subSellable = SubSellable.getSubSellableById(subProductId);
         if (subSellable == null) throw new Exceptions.InvalidSubProductIdException(subProductId);
 
-        return ((Seller) currentAccount()) == subSellable.getSeller();
+        return (currentAccount() == subSellable.getSeller());
     }
 
 
