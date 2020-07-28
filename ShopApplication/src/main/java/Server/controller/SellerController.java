@@ -257,19 +257,6 @@ public class SellerController {
         }
     }
 
-    /**
-     * @param productName
-     * @param brand
-     * @return if there is an existing product returns its Id
-     * else it returns null
-     */
-    public String exist(String productName, String brand) {
-        Product product = Product.getProductByNameAndBrand(productName, brand);
-        if (product != null)
-            return product.getId();
-        else
-            return null;
-    }
 
     public void addNewProduct(String name, String brand, String infoText, byte[] image, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws Exceptions.ExistingProductException, Exceptions.InvalidCategoryException {
