@@ -258,15 +258,14 @@ public class Controller {
 
 
     /**
-     * @param productId
      * @return String[5]: ID, name, brand, infoText, averageRatingScore.
      * @throws Exceptions.InvalidSellableIdException
      */
-    public String[] digest(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if (product == null)
-            throw new Exceptions.InvalidSellableIdException(productId);
-        return Utilities.Pack.digest(product);
+    public String[] digest(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null)
+            throw new Exceptions.InvalidSellableIdException(sellableId);
+        return Utilities.Pack.digest(sellable);
     }
 
     public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
