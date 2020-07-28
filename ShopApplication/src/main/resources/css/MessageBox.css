@@ -1,0 +1,17 @@
+
+#date-label {
+    -fx-graphic: url("../img/clock-icon.png");
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+}
+
+#name-label {
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+#text {
+    -fx-font-family: "MV Boli";
+    -fx-font-size: 12;
+    -fx-background-radius: 10;
+}

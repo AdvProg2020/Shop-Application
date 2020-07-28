@@ -40,6 +40,7 @@
 }
 
 #remaining-date-label {
+    -fx-graphic: url("../img/clock-icon.png");
     -fx-font-size: 12;
     -fx-font-weight: bold;
 }

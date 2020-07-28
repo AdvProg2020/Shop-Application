@@ -357,21 +357,15 @@ public class SellerController {
     }
 
     public String[] viewSaleWithId(String saleId) throws Exceptions.InvalidSaleIdException {
-        for (Sale sale : ((Seller) currentAccount()).getActiveSales()) {
-            if (sale.getId().equals(saleId)) {
-                return Utilities.Pack.saleInfo(sale);
-            }
-        }
-        throw new Exceptions.InvalidSaleIdException(saleId);
+        Sale sale = Sale.getSaleById(saleId);
+        if (sale == null) throw new Exceptions.InvalidSaleIdException(saleId);
+        else return Utilities.Pack.saleInfo(sale);
     }
 
     public String[] viewAuctionWithId(String auctionId) throws Exceptions.InvalidAuctionIdException {
-        for (Auction auction : ((Seller) currentAccount()).getActiveAuctions()) {
-            if (auction.getId().equals(auctionId)) {
-                return Utilities.Pack.auctionInfo(auction);
-            }
-        }
-        throw new Exceptions.InvalidAuctionIdException(auctionId);
+        Auction auction = Auction.getAuctionById(auctionId);
+        if (auction == null) throw new Exceptions.InvalidAuctionIdException(auctionId);
+        else return Utilities.Pack.auctionInfo(auction);
     }
 
     public ArrayList<String[]> getSellablesInSale(String saleId) throws Exceptions.InvalidSaleIdException {
