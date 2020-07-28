@@ -2665,25 +2665,28 @@ public class Controllers {
         }
 
         private void download() {
-            try {
-                DirectoryChooser dc = new DirectoryChooser();
-                File f = dc.showDialog(new Stage());
-                byte[] file = customerController.downloadFile(subSellablePack[1]);
-                File f2 = new File(f.getAbsolutePath() + "/" + subSellablePack[2] + "." + subSellablePack[3]);
-                if (!f2.exists()) {
-                    f2.createNewFile();
+            if( View.type.get().equals(Constants.customerUserType))
+            {
+                try {
+                    DirectoryChooser dc = new DirectoryChooser();
+                    File f = dc.showDialog(new Stage());
+                    byte[] file = customerController.downloadFile(subSellablePack[1]);
+                    File f2 = new File(f.getAbsolutePath() + "/" + subSellablePack[2] + "." + subSellablePack[3]);
+                    if (!f2.exists()) {
+                        f2.createNewFile();
+                    }
+                    OutputStream outputStream = new FileOutputStream(f2);
+                    outputStream.write(file);
+                    outputStream.close();
+                } catch (Exceptions.InvalidFileIdException e) {
+                    e.printStackTrace();
+                } catch (Exceptions.HaveNotBoughtException e) {
+                    purchaseTheFile();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                OutputStream outputStream = new FileOutputStream(f2);
-                outputStream.write(file);
-                outputStream.close();
-            } catch (Exceptions.InvalidFileIdException e) {
-                e.printStackTrace();
-            } catch (Exceptions.HaveNotBoughtException e) {
-                purchaseTheFile();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
 
@@ -2734,6 +2737,10 @@ public class Controllers {
                 }
             } else {
                 addToCartBTN.setVisible(false);
+                downloadBTN.setVisible(false);
+            }
+
+            if( type.equals(Constants.anonymousUserType)){
                 downloadBTN.setVisible(false);
             }
 
