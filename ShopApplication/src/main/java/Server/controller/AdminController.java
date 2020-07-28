@@ -9,6 +9,7 @@ import Server.model.account.Customer;
 import Server.model.account.Supporter;
 import Server.model.database.Database;
 import Server.model.log.BuyLog;
+import Server.model.log.FileLog;
 import Server.model.log.ShippingStatus;
 import Server.model.request.*;
 import Server.model.sellable.*;
@@ -531,7 +532,9 @@ public class AdminController {
         for (BuyLog buyLog : BuyLog.getAllBuyLogs()) {
             buyLogPacks.add(Utilities.Pack.buyLog(buyLog));
         }
-
+        for (FileLog fileLog : FileLog.getAllFileLogs()) {
+            buyLogPacks.add(Utilities.Pack.fileLogAsBuyLog(fileLog));
+        }
         return buyLogPacks;
     }
 

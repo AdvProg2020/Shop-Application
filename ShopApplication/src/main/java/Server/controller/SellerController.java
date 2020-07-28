@@ -8,6 +8,7 @@ import Server.model.account.Account;
 import Server.model.account.Customer;
 import Server.model.account.Seller;
 import Server.model.database.Database;
+import Server.model.log.FileLog;
 import Server.model.log.LogItem;
 import Server.model.log.SellLog;
 import Server.model.request.*;
@@ -85,6 +86,9 @@ public class SellerController {
         ArrayList<String[]> allSells = new ArrayList<>();
         for (SellLog sellLog : ((Seller) currentAccount()).getSellLogs()) {
             allSells.add(Utilities.Pack.sellLog(sellLog));
+        }
+        for (FileLog fileLog : ((Seller) currentAccount()).getFileLogs()) {
+            allSells.add(Utilities.Pack.fileLogAsSellLog(fileLog));
         }
         return allSells;
     }
