@@ -41,7 +41,7 @@ public class Message implements ModelBasic {
         allMessages.put(messageId, this);
         lastNum++;
 
-        getChat().addMessage(messageId);
+        getChat(false).addMessage(messageId);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class Message implements ModelBasic {
         return messageId;
     }
 
-    public Chat getChat() {
-        return Chat.getChatById(chatId);
+    public Chat getChat(boolean... suspense) {
+        return Chat.getChatById(chatId, suspense);
     }
 
     public Account getSender() {
