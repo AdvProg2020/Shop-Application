@@ -4811,9 +4811,8 @@ public class Controllers {
         private void initialize(String totalPrice) {
             priceLBL.setText(totalPrice);
             dismissBTN.setOnAction(e -> {
-                ShoppingCartMenuController.current.iniTable();
-                View.goBack();
                 dismissBTN.getScene().getWindow().hide();
+                MainMenuController.display();
             });
         }
     }
