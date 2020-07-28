@@ -247,12 +247,12 @@ public class Controller {
         return Utilities.Pack.subSellableBoxes(subSellables);
     }
 
-    public void showProduct(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if (product == null)
-            throw new Exceptions.InvalidSellableIdException(productId);
+    public void showProduct(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null)
+            throw new Exceptions.InvalidSellableIdException(sellableId);
         else {
-            product.increaseViewCount();
+            sellable.increaseViewCount();
         }
     }
 
