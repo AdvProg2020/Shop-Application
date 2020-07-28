@@ -2565,7 +2565,7 @@ public class Controllers {
                 } else {
                     salePercentageLBL.setVisible(false);
                 }
-                if (Integer.parseInt(subSellablePack[9]) == 0) {
+                if (subSellablePack[15].equals("SubProduct") && Integer.parseInt(subSellablePack[9]) == 0) {
                     soldOutLBL.setVisible(true);
                 } else
                     soldOutLBL.setVisible(false);

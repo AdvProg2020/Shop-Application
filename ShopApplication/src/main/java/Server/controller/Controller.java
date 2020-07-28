@@ -269,7 +269,7 @@ public class Controller {
     }
 
     public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
+        Sellable product = Sellable.getSellableById(productId);
         if (product == null)
             throw new Exceptions.InvalidSellableIdException(productId);
         else {
