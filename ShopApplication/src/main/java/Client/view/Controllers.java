@@ -752,12 +752,13 @@ public class Controllers {
             byte[] byteArray = mainController.loadFileFromDataBase(info[7]);
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
+                accountIMG.setImage(new Image("file:" + imgPath));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            accountIMG.setImage(new Image("file:" + imgPath));
+
 
 
         }
@@ -1811,12 +1812,13 @@ public class Controllers {
             byte[] byteArray = mainController.loadFileFromDataBase(subProductInfo[6]);
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
+                image.setImage(new Image("file:" + imgPath));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            image.setImage(new Image("file:" + imgPath));
+
 
             if (subProductInfo[16] != null) {
                 auctionMode(subProductInfo);
@@ -2508,12 +2510,13 @@ public class Controllers {
             byte[] byteArray = mainController.loadFileFromDataBase(sellablePack[8]);
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
+                sellableIMG.setImage(new Image("file:" + imgPath));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            sellableIMG.setImage(new Image("file:" + imgPath));
+
 
             initRatingStars();
         }
@@ -4573,12 +4576,13 @@ public class Controllers {
                 byte[] byteArray = mainController.loadFileFromDataBase(imagePath);
                 try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                     stream.write(byteArray);
+                    img.setImage(new Image("file:" + imgPath));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                img.setImage(new Image("file:" + imgPath));
+
 
 
                 initButtons();
@@ -8168,18 +8172,20 @@ public class Controllers {
             byte[] byteArray1 = mainController.loadFileFromDataBase(firstProductInfo[8]);
             try (FileOutputStream stream = new FileOutputStream(firstPath)) {
                 stream.write(byteArray1);
+                image1.setImage(new Image("file:" + firstPath));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            image1.setImage(new Image("file:" + firstPath));
+
 
             String secondPath = "src/main/resources/temp/compareSecondImage.png";
             File f2 = Path.of(secondPath).toFile();
             if (!f2.exists()) {
                 try {
                     f2.createNewFile();
+                    image2.setImage(new Image("file:" + secondPath));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -8192,7 +8198,7 @@ public class Controllers {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            image2.setImage(new Image("file:" + secondPath));
+
         }
 
         private void initProperties() {
