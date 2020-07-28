@@ -53,51 +53,49 @@ public class CustomerController {
 
     private boolean isDiscountCodeValid(String code) {
         Discount discount = Discount.getDiscountByCode(code);
-        if (discount != null)
-            return discount.hasCustomerWithId(currentAccount().getId());
-        else
-            return false;
+        if (discount == null) return false;
+
+        return discount.hasCustomerWithId(currentAccount().getId());
     }
 
     public double getTotalPriceOfCartWithDiscount(String discountCode) throws Exceptions.InvalidDiscountException {
         Discount discount = Discount.getDiscountByCode(discountCode);
-        if (discount == null || !discount.hasCustomerWithId(currentAccount().getId())) {
+        if (discount == null || !discount.hasCustomerWithId(currentAccount().getId()))
             throw new Exceptions.InvalidDiscountException(discountCode);
-        } else {
-            return discount.calculateDiscountAmount(currentCart().getTotalPrice());
-        }
+
+        return discount.calculateDiscountAmount(currentCart().getTotalPrice());
     }
 
     public double getTotalPriceOfFileWithDiscount(String discountCode, double fileCost) throws Exceptions.InvalidDiscountException {
         Discount discount = Discount.getDiscountByCode(discountCode);
-        if (discount == null || !discount.hasCustomerWithId(currentAccount().getId())) {
+        if (discount == null || !discount.hasCustomerWithId(currentAccount().getId()))
             throw new Exceptions.InvalidDiscountException(discountCode);
-        } else {
-            return discount.calculateDiscountAmount(fileCost);
-        }
+
+        return discount.calculateDiscountAmount(fileCost);
     }
 
-    //Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws Exceptions.InsufficientCreditException,
             Exceptions.NotAvailableSubProductsInCart, Exceptions.InvalidDiscountException, Exceptions.EmptyCartException {
-        String notAvailableSubProducts;
+        String notAvailableSubProducts = notAvailableSubProductsInCart();
         Map<SubProduct, Integer> subProductsInCart = currentCart().getSubProducts();
         if (subProductsInCart.isEmpty())
             throw new Exceptions.EmptyCartException();
-        if (!(notAvailableSubProducts = notAvailableSubProductsInCart()).isEmpty())
+        if (notAvailableSubProducts.isEmpty())
             throw new Exceptions.NotAvailableSubProductsInCart(notAvailableSubProducts);
+
         double totalPrice = currentCart().getTotalPrice();
         double discountAmount = 0;
         Discount discount = null;
         if (discountCode != null) {
-            if (isDiscountCodeValid(discountCode) && (discount = Discount.getDiscountByCode(discountCode)) != null) {
-                discountAmount = discount.calculateDiscountAmount(totalPrice);
-            } else
+            if (!isDiscountCodeValid(discountCode) || (discount = Discount.getDiscountByCode(discountCode)) == null)
                 throw new Exceptions.InvalidDiscountException(discountCode);
+
+            discountAmount = discount.calculateDiscountAmount(totalPrice);
         }
         double paidMoney = totalPrice - discountAmount;
         if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - paidMoney)
             throw new Exceptions.InsufficientCreditException(paidMoney, ((Customer) currentAccount()).getWallet().getBalance());
+
         BuyLog buyLog = new BuyLog(currentAccount().getId(), paidMoney, discountAmount, receiverName, address, receiverPhone, ShippingStatus.PROCESSING);
         HashMap<Seller, SellLog> sellLogs = new HashMap<>();
         SellLog sellLog;
@@ -126,42 +124,38 @@ public class CustomerController {
     public void purchaseTheFile(String subFileId, String discountCode) throws Exceptions.InvalidFileIdException, Exceptions.InvalidDiscountException, Exceptions.InsufficientCreditException {
         SubFile subFile = SubFile.getSubFileById(subFileId);
         Discount discount = null;
-        if (subFile == null) {
-            throw new Exceptions.InvalidFileIdException(subFileId);
-        } else {
-            double totalPrice = subFile.getPriceWithSale();
-            double discountAmount = 0;
-            if (discountCode != null) {
-                discount = Discount.getDiscountByCode(discountCode);
-                if (isDiscountCodeValid(discountCode) && discount != null) {
-                    discountAmount = discount.calculateDiscountAmount(totalPrice);
-                    totalPrice -= discountAmount;
-                } else
-                    throw new Exceptions.InvalidDiscountException(discountCode);
-            }
-            if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - totalPrice)
-                throw new Exceptions.InsufficientCreditException(totalPrice, ((Customer) currentAccount()).getWallet().getBalance());
-            new FileLog(subFileId, currentAccount().getId(), discountAmount);
-            if (discount != null)
-                discount.changeCount(currentAccount().getId(), -1);
-            ((Customer) currentAccount()).getWallet().changeBalance(-totalPrice);
-            (SubFile.getSubSellableById(subFileId)).getSeller().getWallet().changeBalance(totalPrice * (100 - Admin.getCommission()) / 100);
-            database().purchase();
+        if (subFile == null) throw new Exceptions.InvalidFileIdException(subFileId);
+
+        double totalPrice = subFile.getPriceWithSale();
+        double discountAmount = 0;
+        if (discountCode != null) {
+            discount = Discount.getDiscountByCode(discountCode);
+            if (!isDiscountCodeValid(discountCode) || discount == null)
+                throw new Exceptions.InvalidDiscountException(discountCode);
+
+            discountAmount = discount.calculateDiscountAmount(totalPrice);
+            totalPrice -= discountAmount;
         }
+        if (Wallet.getMinBalance() > ((Customer) currentAccount()).getWallet().getBalance() - totalPrice)
+            throw new Exceptions.InsufficientCreditException(totalPrice, ((Customer) currentAccount()).getWallet().getBalance());
+
+        new FileLog(subFileId, currentAccount().getId(), discountAmount);
+        if (discount != null)
+            discount.changeCount(currentAccount().getId(), -1);
+        ((Customer) currentAccount()).getWallet().changeBalance(-totalPrice);
+        (SubFile.getSubSellableById(subFileId)).getSeller().getWallet().changeBalance(totalPrice * (100 - Admin.getCommission()) / 100);
+        database().purchase();
     }
 
     public byte[] downloadFile(String subFileId) throws Exceptions.InvalidFileIdException, Exceptions.HaveNotBoughtException {
         SubFile subFile = SubFile.getSubFileById(subFileId);
         try {
-            if (subFile != null) {
-                if (subFile.hasCustomerWithId(currentAccount().getId())) {
-                    return Files.readAllBytes(Paths.get(subFile.getDownloadPath()));
-                } else {
-                    throw new Exceptions.HaveNotBoughtException(subFileId);
-                }
-            } else {
+            if (subFile == null)
                 throw new Exceptions.InvalidFileIdException(subFileId);
-            }
+            if (!subFile.hasCustomerWithId(currentAccount().getId()))
+                throw new Exceptions.HaveNotBoughtException(subFileId);
+
+            return Files.readAllBytes(Paths.get(subFile.getDownloadPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,14 +181,13 @@ public class CustomerController {
      * @throws Exceptions.CustomerLoginException
      */
     public ArrayList<String[]> getOrders() throws Exceptions.CustomerLoginException {
-        if (currentAccount() instanceof Customer) {
-            ArrayList<String[]> orders = new ArrayList<>();
-            for (BuyLog buyLog : ((Customer) currentAccount()).getBuyLogs()) {
-                orders.add(Utilities.Pack.buyLog(buyLog));
-            }
-            return orders;
-        } else
-            throw new Exceptions.CustomerLoginException();
+        if (!(currentAccount() instanceof Customer)) throw new Exceptions.CustomerLoginException();
+
+        ArrayList<String[]> orders = new ArrayList<>();
+        for (BuyLog buyLog : ((Customer) currentAccount()).getBuyLogs()) {
+            orders.add(Utilities.Pack.buyLog(buyLog));
+        }
+        return orders;
     }
 
     /**
@@ -204,41 +197,36 @@ public class CustomerController {
      * @throws Exceptions.InvalidLogIdException
      */
     public ArrayList<String[]> getOrderWithId(String orderId) throws Exceptions.InvalidLogIdException, Exceptions.CustomerLoginException {
-        if (!(currentAccount() instanceof Customer))
-            throw new Exceptions.CustomerLoginException();
+        if (!(currentAccount() instanceof Customer)) throw new Exceptions.CustomerLoginException();
+
         BuyLog buyLog = null;
         for (BuyLog log : ((Customer) currentAccount()).getBuyLogs()) {
             if (log.getId().equals(orderId))
                 buyLog = log;
         }
-        if (buyLog == null)
-            throw new Exceptions.InvalidLogIdException(orderId);
-        else {
-            ArrayList<String[]> orderInfo = new ArrayList<>();
-            orderInfo.add(Utilities.Pack.buyLog(buyLog));
-            for (LogItem item : buyLog.getLogItems()) {
-                orderInfo.add(Utilities.Pack.buyLogItem(item));
-            }
-            return orderInfo;
+        if (buyLog == null) throw new Exceptions.InvalidLogIdException(orderId);
+
+        ArrayList<String[]> orderInfo = new ArrayList<>();
+        orderInfo.add(Utilities.Pack.buyLog(buyLog));
+        for (LogItem item : buyLog.getLogItems()) {
+            orderInfo.add(Utilities.Pack.buyLogItem(item));
         }
+        return orderInfo;
     }
 
-    public void rateProduct(String productID, int score) throws
-            Exceptions.InvalidSellableIdException, Exceptions.HaveNotBoughtException {
+    public void rateProduct(String productID, int score) throws Exceptions.InvalidSellableIdException, Exceptions.HaveNotBoughtException {
         Product product = Product.getProductById(productID);
-        if (product == null)
-            throw new Exceptions.InvalidSellableIdException(productID);
-        else {
-            if (currentAccount() != null) {
-                for (SubProduct subProduct : product.getSubProducts()) {
-                    if (new ArrayList<>(subProduct.getCustomers()).contains((Customer) currentAccount())) {
-                        new Rating(currentAccount().getId(), productID, score);
-                        database().addRating();
-                        return;
-                    }
+        if (product == null) throw new Exceptions.InvalidSellableIdException(productID);
+
+        if (currentAccount() != null) {
+            for (SubProduct subProduct : product.getSubProducts()) {
+                if (new ArrayList<>(subProduct.getCustomers()).contains((Customer) currentAccount())) {
+                    new Rating(currentAccount().getId(), productID, score);
+                    database().addRating();
+                    return;
                 }
-                throw new Exceptions.HaveNotBoughtException(productID);
             }
+            throw new Exceptions.HaveNotBoughtException(productID);
         }
     }
 
@@ -267,67 +255,54 @@ public class CustomerController {
 
     public boolean hasBought(String productId) throws Exceptions.InvalidSellableIdException {
         Product product = Product.getProductById(productId);
-        if (product == null) {
-            throw new Exceptions.InvalidSellableIdException(productId);
-        } else {
-            return product.hasBought(currentAccount().getId());
-        }
+        if (product == null) throw new Exceptions.InvalidSellableIdException(productId);
+
+        return product.hasBought(currentAccount().getId());
     }
 
 
     public String getSupportChatId() throws Exceptions.DontHaveChatException {
         SupportChat chat = ((Customer) currentAccount()).getSupportChat();
-        if (chat == null) {
-            throw new Exceptions.DontHaveChatException();
-        } else {
-            return chat.getId();
-        }
+        if (chat == null) throw new Exceptions.DontHaveChatException();
+
+        return chat.getId();
     }
 
     public String createSupportChat(String supporterId) throws Exceptions.AlreadyInAChatException, Exceptions.InvalidSupporterIdException {
         Chat chat = ((Customer) currentAccount()).getSupportChat();
-        if (((Customer) currentAccount()).getSupportChat() != null) {
+        if (((Customer) currentAccount()).getSupportChat() != null)
             throw new Exceptions.AlreadyInAChatException(chat.getId());
-        } else {
-            if (Supporter.getSupporterById(supporterId) == null) {
-                throw new Exceptions.InvalidSupporterIdException(supporterId);
-            } else {
-                chat = new SupportChat(supporterId, currentAccount().getId());
-                database().chat();
-                return chat.getId();
-            }
-        }
+        if (Supporter.getSupporterById(supporterId) == null)
+            throw new Exceptions.InvalidSupporterIdException(supporterId);
+
+        chat = new SupportChat(supporterId, currentAccount().getId());
+        database().chat();
+        return chat.getId();
     }
 
     //TODO: delete
     public void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if (chat == null || chat.getCustomer() != currentAccount()) {
-            throw new Exceptions.InvalidChatIdException(chatId);
-        } else {
-            chat.suspend();
-            database().chat();
-        }
+        if (chat == null || chat.getCustomer() != currentAccount()) throw new Exceptions.InvalidChatIdException(chatId);
+
+        chat.suspend();
+        database().chat();
     }
 
     public String[] viewAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
-        if (auction == null) {
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        } else {
-            return Utilities.Pack.auction(auction);
-        }
+        if (auction == null) throw new Exceptions.InvalidAuctionIdException(auctionId);
+
+        return Utilities.Pack.auction(auction);
     }
 
 
     public void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
-        if (auction == null) {
-            throw new Exceptions.InvalidAuctionIdException(auctionId);
-        } else {
-            auction.bid(currentAccount().getId(), bidAmount);
-            database().editAuction();
-        }
+        if (auction == null) throw new Exceptions.InvalidAuctionIdException(auctionId);
+
+        auction.bid(currentAccount().getId(), bidAmount);
+        database().editAuction();
     }
 
     public ArrayList<String[]> getAllSupporters() {
