@@ -8874,7 +8874,7 @@ public class Controllers {
         private String auctionId;
 
         public static void display(String auctionId) {
-            ((AuctionPopupController) View.popupWindow("Auction page", Constants.FXMLs.auctionPopup, 600, 400)).initialize(auctionId);
+            ((AuctionPopupController) View.popupWindow("Auction page", Constants.FXMLs.auctionPopup, 900, 500)).initialize(auctionId);
         }
 
         private void initialize(String auctionId) {
@@ -8905,6 +8905,7 @@ public class Controllers {
                     try {
                         customerController.bid(auctionId, Double.parseDouble(bidField.getText()));
                         errorLBL.setText("");
+                        bidField.setText("");
                     } catch (Exceptions.InvalidAuctionIdException ex) {
                         ex.printStackTrace();
                     }
