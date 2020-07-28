@@ -87,7 +87,7 @@ public class CustomerController {
         double totalPrice = currentCart().getTotalPrice();
         double discountAmount = 0;
         Discount discount = null;
-        if ( ! discountCode.equals("")) {
+        if ( discountCode != null && (! discountCode.equals("")) && (!discountCode.equals("null"))) {
             if (!isDiscountCodeValid(discountCode) || (discount = Discount.getDiscountByCode(discountCode)) == null)
                 throw new Exceptions.InvalidDiscountException(discountCode);
 
