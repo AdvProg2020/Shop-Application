@@ -8746,6 +8746,7 @@ public class Controllers {
                 ChatPageController cpc = loader.getController();
                 cpc.chatPageId = chatPageId;
                 cpc.updateMessages();
+                cpc.setOnActions();
                 return p;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -8777,6 +8778,8 @@ public class Controllers {
             if (!text.isEmpty()) {
                 try {
                     mainController.sendMessage(chatPageId, text);
+                    messageField.setText("");
+                    updateMessages();
                 } catch (Exceptions.InvalidChatIdException | Exceptions.InvalidAccountTypeException | Exceptions.UnAuthorizedAccountException e) {
                     e.printStackTrace();
                 }
