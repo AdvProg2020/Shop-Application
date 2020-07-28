@@ -7,9 +7,10 @@ import Server.model.chat.Chat;
 import Server.model.chat.SupportChat;
 import Server.model.database.Database;
 import Server.model.log.*;
-import Server.model.sellable.Product;
+import Server.model.sellable.Sellable;
 import Server.model.sellable.SubFile;
 import Server.model.sellable.SubProduct;
+import Server.model.sellable.SubSellable;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -214,19 +215,19 @@ public class CustomerController {
         return orderInfo;
     }
 
-    public void rateProduct(String productID, int score) throws Exceptions.InvalidSellableIdException, Exceptions.HaveNotBoughtException {
-        Product product = Product.getProductById(productID);
-        if (product == null) throw new Exceptions.InvalidSellableIdException(productID);
+    public void rateSellable(String sellableId, int score) throws Exceptions.InvalidSellableIdException, Exceptions.HaveNotBoughtException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
 
         if (currentAccount() != null) {
-            for (SubProduct subProduct : product.getSubProducts()) {
-                if (new ArrayList<>(subProduct.getCustomers()).contains((Customer) currentAccount())) {
-                    new Rating(currentAccount().getId(), productID, score);
+            for (SubSellable subSellable : sellable.getSubSellables()) {
+                if (new ArrayList<>(subSellable.getCustomers()).contains((Customer) currentAccount())) {
+                    new Rating(currentAccount().getId(), sellableId, score);
                     database().addRating();
                     return;
                 }
             }
-            throw new Exceptions.HaveNotBoughtException(productID);
+            throw new Exceptions.HaveNotBoughtException(sellableId);
         }
     }
 
@@ -253,11 +254,11 @@ public class CustomerController {
         return mainController.getTotalPriceOfCart();
     }
 
-    public boolean hasBought(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if (product == null) throw new Exceptions.InvalidSellableIdException(productId);
+    public boolean hasBought(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
 
-        return product.hasBought(currentAccount().getId());
+        return sellable.hasBought(currentAccount().getId());
     }
 
 
@@ -280,22 +281,12 @@ public class CustomerController {
         return chat.getId();
     }
 
-    //TODO: delete
-    public void deleteSupportChat(String chatId) throws Exceptions.InvalidChatIdException {
-        SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if (chat == null || chat.getCustomer() != currentAccount()) throw new Exceptions.InvalidChatIdException(chatId);
-
-        chat.suspend();
-        database().chat();
-    }
-
     public String[] viewAuction(String auctionId) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);
         if (auction == null) throw new Exceptions.InvalidAuctionIdException(auctionId);
 
         return Utilities.Pack.auction(auction);
     }
-
 
     public void bid(String auctionId, double bidAmount) throws Exceptions.InvalidAuctionIdException {
         Auction auction = Auction.getAuctionById(auctionId);

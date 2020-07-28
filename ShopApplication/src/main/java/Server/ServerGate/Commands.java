@@ -1281,7 +1281,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getCustomerController().rateProduct(objectArgs[0] + "", ((int) objectArgs[1]));
+                        currentSession.getCustomerController().rateSellable(objectArgs[0] + "", ((int) objectArgs[1]));
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
