@@ -76,9 +76,6 @@ public class DatabaseManager implements Database {
     private void updateChats() {
         update(FileNames.SUPPORT_CHAT, Chat.class, SupportChat.getAllSupportChats(false));
         update(FileNames.AUCTION_CHAT, Chat.class, AuctionChat.getAllAuctionChats());
-    }
-
-    private void updateMessages() {
         update(FileNames.MESSAGE, Message.class, Message.getAllMessages());
     }
 
@@ -155,7 +152,6 @@ public class DatabaseManager implements Database {
         load(FileNames.SUPPORTER, Account.class);
         load(FileNames.CART, Cart.class);
         load(FileNames.WALLET, Wallet.class);
-        load(FileNames.MESSAGE, Message.class);
         load(FileNames.REQUEST, Request.class);
         load(FileNames.CATEGORY, Category.class);
         load(FileNames.PRODUCT, Product.class);
@@ -173,6 +169,7 @@ public class DatabaseManager implements Database {
         load(FileNames.FILE_LOG, FileLog.class);
         load(FileNames.SUPPORT_CHAT, Chat.class);
         load(FileNames.AUCTION_CHAT, Chat.class);
+        load(FileNames.MESSAGE, Message.class);
     }
 
     @Override
@@ -183,8 +180,6 @@ public class DatabaseManager implements Database {
         updateSupporters();
         updateCarts();
         updateWallets();
-        updateChats();
-        updateMessages();
         updateRequests();
         updateCategories();
         updateProducts();
@@ -198,6 +193,7 @@ public class DatabaseManager implements Database {
         updateReviews();
         updateProductLogs();
         updateFileLogs();
+        updateChats();
     }
 
     @Override
@@ -260,7 +256,6 @@ public class DatabaseManager implements Database {
     @Override
     public void chat() {
         updateChats();
-        updateMessages();
     }
 
     @Override
