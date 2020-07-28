@@ -1409,7 +1409,7 @@ public class Controllers {
             }
 
             for (String[] subProduct : mainController.getSubSellablesInAuction(10)) {
-                productsInSale.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false, false));
+                productsInAuction.getChildren().add(SellableBoxController.createBox(subProduct, null, null, false, false));
             }
 
             allSales.setOnAction(e -> salesMenu());
@@ -4335,19 +4335,55 @@ public class Controllers {
         }
     }
 
-
-    public static class SellerAddProductPopupController implements Initializable {
-        public static void display() {
-
-        }
-
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-
-        }
-    }
-
     public static class SellerProductManagingMenuController implements Initializable {
+
+        @FXML
+        private TableView<SellerSubProductWrapper> productsTBL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> productIdCol;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> productNameCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> productPriceCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> productSaleCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, Button> productDetailsCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, Button> productRemoveCOL;
+
+        @FXML
+        private TableView<SellerSubProductWrapper> filesTBL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> fileIdCol;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> fileNameCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> filePriceCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, String> fileSaleCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, Button> fileDetailsCOL;
+
+        @FXML
+        private TableColumn<SellerSubProductWrapper, Button> fileRemoveCOL;
+
+        @FXML
+        private Label errorLBL;
+
+        @FXML
+        private Button addSellableBTN;
 
         public static void display() {
             View.setMainPane(Constants.FXMLs.sellerSellableManagingMenu);
@@ -4360,27 +4396,28 @@ public class Controllers {
         }
 
         private void initTable() {
-            ArrayList<SellerSubProductWrapper> sellerProducts = new ArrayList<>();
-
-            for (String[] product : sellerController.manageProducts()) {
-                sellerProducts.add(new SellerSubProductWrapper(product));
-            }
-            productsTBL.getItems().setAll(sellerProducts);
-
             initColumns();
+            sellerController.manageProducts().forEach(p -> productsTBL.getItems().add(new SellerSubProductWrapper(p)));
+            sellerController.manageFiles().forEach(f -> filesTBL.getItems().add(new SellerSubProductWrapper(f)));
         }
 
         private void initColumns() {
-            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            nameCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
-            priceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
-            saleCOL.setCellValueFactory(new PropertyValueFactory<>("saleId"));
-            detailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
-            removeCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            fileIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            productNameCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            fileNameCOL.setCellValueFactory(new PropertyValueFactory<>("nameBrand"));
+            productPriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
+            filePriceCOL.setCellValueFactory(new PropertyValueFactory<>("price"));
+            productSaleCOL.setCellValueFactory(new PropertyValueFactory<>("saleId"));
+            fileSaleCOL.setCellValueFactory(new PropertyValueFactory<>("saleId"));
+            productDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            fileDetailsCOL.setCellValueFactory(new PropertyValueFactory<>("details"));
+            productRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
+            fileRemoveCOL.setCellValueFactory(new PropertyValueFactory<>("remove"));
         }
 
         private void initButtons() {
-            addProductBTN.setOnAction(e -> AddProductPopupController_Page1.display());
+            addSellableBTN.setOnAction(e -> AddProductPopupController_Page1.display());
         }
 
         public class SellerSubProductWrapper {
@@ -4451,33 +4488,6 @@ public class Controllers {
                 return remove;
             }
         }
-
-        @FXML
-        private TableView<SellerSubProductWrapper> productsTBL;
-
-        @FXML
-        private TableColumn<SellerSubProductWrapper, String> idCol;
-
-        @FXML
-        private TableColumn<SellerSubProductWrapper, String> nameCOL;
-
-        @FXML
-        private TableColumn<SellerSubProductWrapper, Double> priceCOL;
-
-        @FXML
-        private TableColumn<SellerSubProductWrapper, String> saleCOL;
-
-        @FXML
-        private TableColumn<SellerSubProductWrapper, Button> detailsCOL;
-
-        @FXML
-        private TableColumn<SellerSubProductWrapper, Button> removeCOL;
-
-        @FXML
-        private Label errorLBL;
-
-        @FXML
-        private Button addProductBTN;
     }
 
     //add product detail menu

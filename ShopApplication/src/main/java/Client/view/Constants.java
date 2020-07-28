@@ -207,6 +207,7 @@ public final class Constants {
         public static final String sellerGetAllSellLogs = "/seller/getAllSellLogs";
         public static final String sellerGetSellLogWithId = "/seller/getSellLogWithId";
         public static final String sellerManageProducts = "/seller/manageProducts";
+        public static final String sellerManageFiles = "/seller/manageFiles";
         public static final String sellerViewProductBuyers = "/seller/viewProductBuyers";
         public static final String sellerEditProduct = "/seller/editProduct";
         public static final String sellerExist = "/seller/exist";
