@@ -50,8 +50,8 @@ public class AddFileRequest extends Request implements SellerRequest {
     @Override
     public void updateDatabase(Database database) {
         if (file != null)
-            database.createSubFile();
-        else
             database.createFile();
+        else
+            database.createSubFile();
     }
 }
