@@ -99,8 +99,10 @@ public class Seller extends Account {
 
     public List<Sale> getActiveSales() {
         List<Sale> sales = new ArrayList<>();
+        Sale sale;
         for (String saleId : saleIds) {
-            sales.add(Sale.getSaleById(saleId));
+            if( (sale = Sale.getSaleById(saleId)) != null)
+                sales.add(sale);
         }
 
         sales.sort(Comparator.comparing(Sale::getId));
@@ -125,8 +127,10 @@ public class Seller extends Account {
 
     public List<Auction> getActiveAuctions() {
         List<Auction> auctions = new ArrayList<>();
+        Auction auction;
         for (String auctionId : auctionIds) {
-            auctions.add(Auction.getAuctionById(auctionId));
+            if( (auction = Auction.getAuctionById(auctionId))!= null)
+            auctions.add(auction);
         }
 
         auctions.sort(Comparator.comparing(Auction::getId));
