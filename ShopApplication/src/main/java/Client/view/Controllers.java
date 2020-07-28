@@ -4817,6 +4817,15 @@ public class Controllers {
         private TextField receiverName;
 
         @FXML
+        private Label receiverNameLBL;
+
+        @FXML
+        private Label addressLBL;
+
+        @FXML
+        private Label phoneNumberLBL;
+
+        @FXML
         private Label nameError;
 
         @FXML
@@ -4882,7 +4891,9 @@ public class Controllers {
             address.setVisible(false);
             phoneNumber.setVisible(false);
             receiverName.setVisible(false);
-
+            addressLBL.setVisible(false);
+            phoneNumberLBL.setVisible(false);
+            receiverNameLBL.setVisible(false);
         }
 
         public void initialize() {

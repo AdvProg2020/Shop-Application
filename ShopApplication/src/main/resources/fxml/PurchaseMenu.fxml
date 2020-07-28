@@ -13,8 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="500.0" prefWidth="750.0" styleClass="bg-pane" stylesheets="@../css/Purchase.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="Client.view.Controllers$PurchaseMenuController">
+<BorderPane prefHeight="500.0" prefWidth="750.0" styleClass="bg-pane" stylesheets="@../css/Purchase.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$PurchaseMenuController">
     <center>
         <VBox maxWidth="-Infinity" spacing="30.0" BorderPane.alignment="CENTER">
             <padding>
@@ -22,7 +21,7 @@
             </padding>
             <GridPane alignment="CENTER" hgap="20.0" vgap="20.0" VBox.vgrow="ALWAYS">
                 <VBox alignment="CENTER_LEFT" spacing="5.0">
-                    <Label styleClass="property-label" text="Receiver Name" />
+                    <Label fx:id="receiverNameLBL" styleClass="property-label" text="Receiver Name" />
                     <TextField fx:id="receiverName" promptText="John Smith" styleClass="property-box">
                         <VBox.margin>
                             <Insets />
@@ -38,7 +37,7 @@
                </padding>
             </VBox>
                 <VBox alignment="CENTER_LEFT" spacing="5.0" GridPane.rowIndex="1">
-                    <Label styleClass="property-label" text="Phone Number" />
+                    <Label fx:id="phoneNumberLBL" styleClass="property-label" text="Phone Number" />
                     <TextField fx:id="phoneNumber" promptText="09123456789" styleClass="property-box">
                         <VBox.margin>
                             <Insets />
@@ -51,7 +50,7 @@
                     </Label>
                 </VBox>
                 <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
-                    <Label styleClass="property-label" text="Address" />
+                    <Label fx:id="addressLBL" styleClass="property-label" text="Address" />
                     <TextArea fx:id="address" promptText="enter your accurate shipping address..." scrollTop="1.0" styleClass="white-area" stylesheets="@../css/TextArea.css" text="&#10;" VBox.vgrow="ALWAYS" />
                <Label fx:id="addressError" textFill="RED" />
                 </VBox>
