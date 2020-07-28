@@ -323,7 +323,7 @@ public class Controller {
      * @throws Exceptions.InvalidSellableIdException
      */
     public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
+        Sellable product = Sellable.getSellableById(productId);
         if (product == null)
             throw new Exceptions.InvalidSellableIdException(productId);
         ArrayList<String[]> reviews = new ArrayList<>();
