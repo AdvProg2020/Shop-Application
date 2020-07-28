@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AuctionChat extends Chat {
-    protected static Map<String, Chat> allAuctionChats = new HashMap<>();
+    protected static Map<String, AuctionChat> allAuctionChats = new HashMap<>();
     protected static int lastNum = 1;
     private String auctionId;
 
@@ -18,7 +18,7 @@ public class AuctionChat extends Chat {
         initialize();
     }
 
-    public static List<Chat> getAllAuctionChats() {
+    public static List<AuctionChat> getAllAuctionChats() {
         return ModelUtilities.getAllInstances(allAuctionChats.values(), false);
     }
 

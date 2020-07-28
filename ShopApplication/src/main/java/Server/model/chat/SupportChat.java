@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SupportChat extends Chat {
-    protected static Map<String, Chat> allSupportChats = new HashMap<>();
+    protected static Map<String, SupportChat> allSupportChats = new HashMap<>();
     protected static int lastNum = 1;
     private String supporterId;
     private String customerId;
@@ -23,7 +23,7 @@ public class SupportChat extends Chat {
         initialize();
     }
 
-    public static List<Chat> getAllSupportChats(boolean... suspense) {
+    public static List<SupportChat> getAllSupportChats(boolean... suspense) {
         return ModelUtilities.getAllInstances(allSupportChats.values(), suspense);
     }
 
