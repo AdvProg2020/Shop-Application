@@ -1,5 +1,7 @@
 package Server.ServerGate;
 
+import Server.controller.Exceptions.InvalidLogIdException;
+import Server.controller.Exceptions.InvalidRequestIdException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -7,10 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import Server.controller.Exceptions.*;
-
-import static java.util.Map.entry;
 import static Server.ServerGate.ServerRequestHandler.Session;
+import static java.util.Map.entry;
 
 public class Commands {
     static Type stringType = new TypeToken<String>() {
@@ -649,7 +649,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().removeProduct(objectArgs[0] + "");
+                        currentSession.getAdminController().removeSellable(objectArgs[0] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -860,8 +860,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().getPropertyValuesOfAProductInARequest(objectArgs[0] + "");
-                        return "";
+                        return currentSession.getAdminController().getPropertyValuesOfAProductInARequest(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -871,8 +870,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().getProductsInSaleRequest(objectArgs[0] + "");
-                        return "";
+                        return currentSession.getAdminController().getSellablesInSaleRequest(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -915,7 +913,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().editImageOfProduct(objectArgs[0] + "", objectArgs[1] + "");
+                        currentSession.getAdminController().editImageOfSellable(objectArgs[0] + "", objectArgs[1] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -926,7 +924,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().editPropertyOfProduct(objectArgs[0] + "", objectArgs[1] + "");
+                        currentSession.getAdminController().editPropertyOfSellable(objectArgs[0] + "", objectArgs[1] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -937,7 +935,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().editInfoTextOfProduct(objectArgs[0] + "", objectArgs[1] + "");
+                        currentSession.getAdminController().editInfoTextOfSellable(objectArgs[0] + "", objectArgs[1] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -948,7 +946,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getAdminController().editNameOfProduct(objectArgs[0] + "", objectArgs[1] + "");
+                        currentSession.getAdminController().editNameOfSellable(objectArgs[0] + "", objectArgs[1] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();

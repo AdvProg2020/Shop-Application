@@ -11,16 +11,13 @@ import Server.model.database.Database;
 import Server.model.log.BuyLog;
 import Server.model.log.ShippingStatus;
 import Server.model.request.*;
-import Server.model.sellable.File;
-import Server.model.sellable.Product;
-import Server.model.sellable.SubProduct;
+import Server.model.sellable.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class AdminController {
 
@@ -65,23 +62,18 @@ public class AdminController {
 
     public String[] viewUsername(String username) throws Exceptions.UsernameDoesntExistException {
         Account account = Account.getAccountByUsername(username);
-        if (account == null)
-            throw new Exceptions.UsernameDoesntExistException(username);
-        else {
-            return Utilities.Pack.personalInfo(account);
-        }
+        if (account == null) throw new Exceptions.UsernameDoesntExistException(username);
+
+        return Utilities.Pack.personalInfo(account);
     }
 
     public void deleteUsername(String username) throws Exceptions.UsernameDoesntExistException, Exceptions.ManagerDeleteException {
         Account account = Account.getAccountByUsername(username);
-        if (account == null)
-            throw new Exceptions.UsernameDoesntExistException(username);
-        if (account != Admin.getManager()) {
-            if (account != currentAccount())
-                account.suspend();
-        }
-        else
-            throw new Exceptions.ManagerDeleteException();
+        if (account == null) throw new Exceptions.UsernameDoesntExistException(username);
+        if (account == Admin.getManager() || account == currentAccount()) throw new Exceptions.ManagerDeleteException();
+
+        account.suspend();
+
         switch (account.getClass().getSimpleName()) {
             case "Admin":
                 database().removeAdmin();
@@ -100,16 +92,16 @@ public class AdminController {
 
 
     public void createAdminProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
-        if (Account.isUsernameUsed(username))
-            throw new Exceptions.UsernameAlreadyTakenException(username);
+        if (Account.isUsernameUsed(username)) throw new Exceptions.UsernameAlreadyTakenException(username);
+
         String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "accountImg", username + ".png") : null;
         new Admin(username, password, firstName, lastName, email, phone, imagePath);
         database().createAdmin();
     }
 
     public void createSupporterProfile(String username, String password, String firstName, String lastName, String email, String phone, byte[] image) throws Exceptions.UsernameAlreadyTakenException {
-        if(Account.isUsernameUsed(username))
-            throw new Exceptions.UsernameAlreadyTakenException(username);
+        if (Account.isUsernameUsed(username)) throw new Exceptions.UsernameAlreadyTakenException(username);
+
         String imagePath = image.length != 0 ? mainController.saveFileInDataBase(image, "accountImg", username + ".png") : null;
         new Supporter(username, password, firstName, lastName, email, phone, imagePath);
         database().createSupporter();
@@ -117,59 +109,62 @@ public class AdminController {
 
     public ArrayList<String[]> manageAllProducts() {
         ArrayList<String[]> productPacks = new ArrayList<>();
-        ArrayList<Product> products = new ArrayList<>(Product.getAllProducts());
-        products.sort(new Utilities.Sort.ProductViewCountComparator(true));
-        for (Product product : products) {
+        for (Product product : Product.getAllProducts()) {
             productPacks.add(Utilities.Pack.product(product));
         }
+
         return productPacks;
     }
 
     public ArrayList<String[]> manageAllFiles() {
         ArrayList<String[]> filePacks = new ArrayList<>();
-        ArrayList<File> files = new ArrayList<>(File.getAllFiles());
-        for (File file : files) {
+        for (File file : File.getAllFiles()) {
             filePacks.add(Utilities.Pack.file(file));
         }
+
         return filePacks;
     }
 
-    public void removeProduct(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if (product == null)
-            throw new Exceptions.InvalidSellableIdException(productId);
-        else {
-            product.suspend();
-            database().removeProduct();
+    public void removeSellable(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        sellable.suspend();
+        switch (sellable.getClass().getSimpleName()) {
+            case "Product":
+                database().removeProduct();
+                break;
+            case "File":
+                database().removeFile();
+                break;
         }
     }
 
     public void createDiscountCode(String discountCode, String startDate, String endDate, double percentage,
-                                   double maximumAmount, ArrayList<String[]> customersIdCount) throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount, Exceptions.InvalidFormatException {
+                                   double maximumAmount, ArrayList<String[]> customersIdCount)
+            throws Exceptions.ExistingDiscountCodeException, Exceptions.InvalidAccountsForDiscount, Exceptions.InvalidFormatException {
 
         if (Discount.getDiscountByCode(discountCode) != null)
             throw new Exceptions.ExistingDiscountCodeException(discountCode);
-        else {
-            ArrayList<String> wrongIds = new ArrayList<>();
-            for (String[] Id : new ArrayList<>(customersIdCount)) {
-                Account account = Account.getAccountById(Id[0]);
-                if (!(account instanceof Customer)) {
-                    wrongIds.add(Id[0]);
-                    customersIdCount.remove(Id);
-                }
+
+        ArrayList<String> wrongIds = new ArrayList<>();
+        for (String[] Id : new ArrayList<>(customersIdCount)) {
+            Account account = Account.getAccountById(Id[0]);
+            if (!(account instanceof Customer)) {
+                wrongIds.add(Id[0]);
+                customersIdCount.remove(Id);
             }
-            Discount discount;
-            try {
-                discount = new Discount(discountCode, dateFormat.parse(startDate), dateFormat.parse(endDate), percentage, maximumAmount);
-                for (String[] IdCount : customersIdCount) {
-                    discount.addCustomer(IdCount[0], Integer.parseInt(IdCount[1]));
-                }
-                database().createDiscount();
-                if (wrongIds.size() > 0)
-                    throw new Exceptions.InvalidAccountsForDiscount(Utilities.Pack.invalidAccountIds(wrongIds));
-            } catch (ParseException ignored) {
-                throw new Exceptions.InvalidFormatException("date");
+        }
+        try {
+            Discount discount = new Discount(discountCode, dateFormat.parse(startDate), dateFormat.parse(endDate), percentage, maximumAmount);
+            for (String[] IdCount : customersIdCount) {
+                discount.addCustomer(IdCount[0], Integer.parseInt(IdCount[1]));
             }
+            database().createDiscount();
+            if (wrongIds.size() > 0)
+                throw new Exceptions.InvalidAccountsForDiscount(Utilities.Pack.invalidAccountIds(wrongIds));
+        } catch (ParseException e) {
+            throw new Exceptions.InvalidFormatException("date");
         }
     }
 
@@ -179,40 +174,42 @@ public class AdminController {
         for (Discount discount : Discount.getActiveDiscounts()) {
             discountCodes.add(discount.getDiscountCode());
         }
+
         return discountCodes;
     }
 
     public ArrayList<String> viewArchiveDiscountCodes() {
-        return Discount.getDiscountArchive().stream().map(Discount::getId).collect(Collectors.toCollection(ArrayList::new));
-    }
+        ArrayList<String> discountCodes = new ArrayList<>();
+        for (Discount discount : Discount.getDiscountArchive()) {
+            discountCodes.add(discount.getDiscountCode());
+        }
 
+        return discountCodes;
+    }
 
     public String[] viewDiscountCodeByCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
-        if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
-        else
-            return Utilities.Pack.discountInfo(discount);
+        if (discount == null) throw new Exceptions.DiscountCodeException(code);
+
+        return Utilities.Pack.discountInfo(discount);
     }
 
     public String[] viewDiscountCodeById(String discountId) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountById(discountId, false);
-        if (discount == null) throw new Exceptions.DiscountCodeException(discountId); // :P
-        else return Utilities.Pack.discountInfo(discount);
+        if (discount == null) throw new Exceptions.DiscountCodeException(discountId);
+
+        return Utilities.Pack.discountInfo(discount);
     }
 
     public ArrayList<String[]> peopleWhoHaveThisDiscount(String id) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountById(id, false);
-        if (discount == null)
-            throw new Exceptions.DiscountCodeException(id);
-        else {
-            Map<Customer, Integer> peopleRemainingCount = discount.getCustomers();
-            ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
-            for (Customer customer : peopleRemainingCount.keySet()) {
-                peopleWithThisCode.add(Utilities.Pack.customerDiscountRemainingCount(customer, peopleRemainingCount.get(customer)));
-            }
-            return peopleWithThisCode;
+        if (discount == null) throw new Exceptions.DiscountCodeException(id);
+
+        ArrayList<String[]> peopleWithThisCode = new ArrayList<>();
+        for (Map.Entry<Customer, Integer> entry : discount.getCustomers().entrySet()) {
+            peopleWithThisCode.add(Utilities.Pack.customerDiscountRemainingCount(entry.getKey(), entry.getValue()));
         }
+        return peopleWithThisCode;
     }
 
     /**
@@ -225,56 +222,50 @@ public class AdminController {
      */
     public void editDiscountCode(String code, String field, String newInformation) throws Exceptions.DiscountCodeException, Exceptions.SameAsPreviousValueException, Exceptions.InvalidFormatException {
         Discount discount = Discount.getDiscountByCode(code);
-        if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
-        else {
-            switch (field) {
-                case "start date":
-                    try {
-                        if (dateFormat.parse(newInformation).equals(discount.getStartDate()))
-                            throw new Exceptions.SameAsPreviousValueException(field);
-                        discount.setStartDate(dateFormat.parse(newInformation));
-                    } catch (ParseException e) {
-                        throw new Exceptions.InvalidFormatException("date");
-                    }
-                    break;
-                case "end date":
-                    try {
-                        if (dateFormat.parse(newInformation).equals(discount.getEndDate()))
-                            throw new Exceptions.SameAsPreviousValueException(field);
-                        discount.setEndDate(dateFormat.parse(newInformation));
-                    } catch (ParseException e) {
-                        throw new Exceptions.InvalidFormatException("date");
-                    }
-                    break;
-                case "maximum amount":
-                    if (Double.parseDouble(newInformation) == discount.getMaximumAmount())
+        if (discount == null) throw new Exceptions.DiscountCodeException(code);
+
+        switch (field) {
+            case "start date":
+                try {
+                    if (dateFormat.parse(newInformation).equals(discount.getStartDate()))
                         throw new Exceptions.SameAsPreviousValueException(field);
-                    else {
-                        discount.setMaximumAmount(Double.parseDouble(newInformation));
-                    }
-                    break;
-                case "percentage":
-                    if (Double.parseDouble(newInformation) == discount.getPercentage())
+                    discount.setStartDate(dateFormat.parse(newInformation));
+                } catch (ParseException e) {
+                    throw new Exceptions.InvalidFormatException("date");
+                }
+                break;
+            case "end date":
+                try {
+                    if (dateFormat.parse(newInformation).equals(discount.getEndDate()))
                         throw new Exceptions.SameAsPreviousValueException(field);
-                    else {
-                        discount.setPercentage(Double.parseDouble(newInformation));
-                    }
-                    break;
-            }
-            database().editDiscount();
+                    discount.setEndDate(dateFormat.parse(newInformation));
+                } catch (ParseException e) {
+                    throw new Exceptions.InvalidFormatException("date");
+                }
+                break;
+            case "maximum amount":
+                if (Double.parseDouble(newInformation) == discount.getMaximumAmount())
+                    throw new Exceptions.SameAsPreviousValueException(field);
+                else
+                    discount.setMaximumAmount(Double.parseDouble(newInformation));
+                break;
+            case "percentage":
+                if (Double.parseDouble(newInformation) == discount.getPercentage())
+                    throw new Exceptions.SameAsPreviousValueException(field);
+                else
+                    discount.setPercentage(Double.parseDouble(newInformation));
+                break;
         }
+        database().editDiscount();
     }
 
 
     public void removeDiscountCode(String code) throws Exceptions.DiscountCodeException {
         Discount discount = Discount.getDiscountByCode(code);
-        if (discount == null)
-            throw new Exceptions.DiscountCodeException(code);
-        else {
-            discount.suspend();
-            database().removeDiscount();
-        }
+        if (discount == null) throw new Exceptions.DiscountCodeException(code);
+
+        discount.suspend();
+        database().removeDiscount();
     }
 
     public ArrayList<String[]> getArchivedRequests() {
@@ -282,6 +273,7 @@ public class AdminController {
         for (Request request : Request.getRequestArchive()) {
             requestIds.add(Utilities.Pack.request(request));
         }
+
         return requestIds;
     }
 
@@ -290,63 +282,61 @@ public class AdminController {
         for (Request request : Request.getPendingRequests()) {
             requestPacks.add(Utilities.Pack.request(request));
         }
+
         return requestPacks;
     }
 
     public ArrayList<String[]> detailsOfRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId, false);
-        if (request == null)
-            throw new Exceptions.InvalidRequestIdException(requestId);
-        else {
-            ArrayList<String[]> detailsOfRequest = new ArrayList<>();
-            detailsOfRequest.add(Utilities.Pack.request(request));
-            switch (Utilities.Pack.request(request)[1]) {
-                case "AddProductRequest":
-                    detailsOfRequest.add(Utilities.Pack.addProductRequest(((AddProductRequest) request).getSubProduct(), ((AddProductRequest)request).getProduct()));
-                    break;
-                case "AddReviewRequest":
-                    detailsOfRequest.add(Utilities.Pack.getReviewInfo(((AddReviewRequest) request).getReview()));
-                    break;
-                case "AddSaleRequest":
-                    detailsOfRequest.add(Utilities.Pack.newSaleInRequest(((AddSaleRequest) request).getSale()));
-                    break;
-                case "AddSellerRequest":
-                    detailsOfRequest.add(Utilities.Pack.sellerInRequest(((AddSellerRequest) request).getSeller()));
-                    break;
-                case "EditProductRequest":
-                    detailsOfRequest.add(Utilities.Pack.subProduct(((EditProductRequest) request).getSubProduct()));
-                    detailsOfRequest.add(Utilities.Pack.productChange(((EditProductRequest) request)));
-                    break;
-                case "EditSaleRequest":
-                    detailsOfRequest.add(Utilities.Pack.saleInfo(((EditSaleRequest) request).getSale()));
-                    detailsOfRequest.add(Utilities.Pack.saleChange(((EditSaleRequest) request)));
-                    break;
-                case "AddFileRequest":
-                    detailsOfRequest.add(Utilities.Pack.addFileRequest(((AddFileRequest) request).getSubFile(), ((AddFileRequest)request).getFile()));
-                    break;
-                case "AddAuctionRequest":
-                    detailsOfRequest.add(Utilities.Pack.addAuctionRequest(((AddAuctionRequest) request).getAuction()));
-                    break;
-                case "EditFileRequest":
-                    detailsOfRequest.add(Utilities.Pack.subFile(((EditFileRequest) request).getSubFile()));
-                    detailsOfRequest.add(Utilities.Pack.fileChange(((EditFileRequest) request)));
-                    break;
-            }
-            return detailsOfRequest;
+        if (request == null) throw new Exceptions.InvalidRequestIdException(requestId);
+
+        ArrayList<String[]> detailsOfRequest = new ArrayList<>();
+        detailsOfRequest.add(Utilities.Pack.request(request));
+        switch (Utilities.Pack.request(request)[1]) {
+            case "AddProductRequest":
+                detailsOfRequest.add(Utilities.Pack.addProductRequest(((AddProductRequest) request).getSubProduct(), ((AddProductRequest) request).getProduct()));
+                break;
+            case "AddReviewRequest":
+                detailsOfRequest.add(Utilities.Pack.getReviewInfo(((AddReviewRequest) request).getReview()));
+                break;
+            case "AddSaleRequest":
+                detailsOfRequest.add(Utilities.Pack.newSaleInRequest(((AddSaleRequest) request).getSale()));
+                break;
+            case "AddSellerRequest":
+                detailsOfRequest.add(Utilities.Pack.sellerInRequest(((AddSellerRequest) request).getSeller()));
+                break;
+            case "EditProductRequest":
+                detailsOfRequest.add(Utilities.Pack.subProduct(((EditProductRequest) request).getSubProduct()));
+                detailsOfRequest.add(Utilities.Pack.productChange(((EditProductRequest) request)));
+                break;
+            case "EditSaleRequest":
+                detailsOfRequest.add(Utilities.Pack.saleInfo(((EditSaleRequest) request).getSale()));
+                detailsOfRequest.add(Utilities.Pack.saleChange(((EditSaleRequest) request)));
+                break;
+            case "AddFileRequest":
+                detailsOfRequest.add(Utilities.Pack.addFileRequest(((AddFileRequest) request).getSubFile(), ((AddFileRequest) request).getFile()));
+                break;
+            case "AddAuctionRequest":
+                detailsOfRequest.add(Utilities.Pack.addAuctionRequest(((AddAuctionRequest) request).getAuction()));
+                break;
+            case "EditFileRequest":
+                detailsOfRequest.add(Utilities.Pack.subFile(((EditFileRequest) request).getSubFile()));
+                detailsOfRequest.add(Utilities.Pack.fileChange(((EditFileRequest) request)));
+                break;
         }
+        return detailsOfRequest;
     }
 
     public void acceptRequest(String requestID, boolean accepted) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestID);
-        if (request == null)
-            throw new Exceptions.InvalidRequestIdException(requestID);
-        else {
-            if (accepted) {
-                request.accept();
-                request.updateDatabase(database());
-            } else
-                request.decline();
-        }
+        if (request == null) throw new Exceptions.InvalidRequestIdException(requestID);
+
+        if (accepted)
+            request.accept();
+        else
+            request.decline();
+
+        request.updateDatabase(database());
     }
 
     public ArrayList<String[]> manageCategories() {
@@ -368,26 +358,20 @@ public class AdminController {
      * @throws Exceptions.InvalidCategoryException     if this category doesn't exist
      * @throws Exceptions.InvalidFieldException        if there is no such field to edit
      * @throws Exceptions.SameAsPreviousValueException if new information is as the same as the previous one
-     * @throws Exceptions.ExistingCategoryException     if there is already a category with new name
+     * @throws Exceptions.ExistingCategoryException    if there is already a category with new name
      * @throws Exceptions.SubCategoryException         if the chosen new parent is a child of this category
      */
     public void editCategory(String categoryName, String field, String newInformation) throws Exceptions.InvalidCategoryException,
             Exceptions.InvalidFieldException, Exceptions.SameAsPreviousValueException, Exceptions.ExistingCategoryException, Exceptions.SubCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if (category == null)
-            throw new Exceptions.InvalidCategoryException(categoryName);
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+
         switch (field) {
             case "name":
-                if (category.getName().equals(newInformation))
-                    throw new Exceptions.SameAsPreviousValueException(field);
-                else {
-                    if (Category.getCategoryByName(newInformation) != null)
-                        throw new Exceptions.ExistingCategoryException(newInformation);
-                    else {
-                        category.setName(newInformation);
-                    }
-                }
-                database().editCategory();
+                if (category.getName().equals(newInformation)) throw new Exceptions.SameAsPreviousValueException(field);
+                if (Category.getCategoryByName(newInformation) != null)
+                    throw new Exceptions.ExistingCategoryException(newInformation);
+                category.setName(newInformation);
                 break;
             case "parent":
                 Category newParentCategory = Category.getCategoryByName(newInformation);
@@ -396,214 +380,201 @@ public class AdminController {
                 } else {
                     if (category.hasSubCategoryWithId(newParentCategory.getId()))
                         throw new Exceptions.SubCategoryException(categoryName, newInformation);
-                    else
-                        category.setParent(newParentCategory.getId());
+                    category.setParent(newParentCategory.getId());
                 }
-                database().editCategory();
                 break;
             default:
                 throw new Exceptions.InvalidFieldException();
         }
+        database().editCategory();
     }
 
     public void addCategory(String categoryName, String parentCategoryName, ArrayList<String> specialProperties) throws Exceptions.InvalidCategoryException, Exceptions.ExistingCategoryException {
         if (Category.getCategoryByName(categoryName) != null || categoryName.equals("superCategory"))
             throw new Exceptions.ExistingCategoryException(categoryName);
-        else {
-            Category parentCategory = Category.getCategoryByName(parentCategoryName);
-            if( parentCategory == null)
-                throw new Exceptions.InvalidCategoryException(parentCategoryName);
-            new Category(categoryName, parentCategory.getId(), specialProperties);
-            database().createCategory();
-        }
+        Category parentCategory = Category.getCategoryByName(parentCategoryName);
+        if (parentCategory == null) throw new Exceptions.InvalidCategoryException(parentCategoryName);
+
+        new Category(categoryName, parentCategory.getId(), specialProperties);
+        database().createCategory();
     }
 
     public String[] getCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
         if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
-        else return Utilities.Pack.category(category);
+
+        return Utilities.Pack.category(category);
     }
 
     public void removeCategory(String categoryName) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if (category == null)
-            throw new Exceptions.InvalidCategoryException(categoryName);
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+
         category.suspend();
         database().removeCategory();
     }
 
-    public void setAccounts(String code, ArrayList<String[]> customerIds){
+    public void setAccounts(String code, ArrayList<String[]> customerIds) {
         Discount discount = Discount.getDiscountByCode(code);
-        if( discount != null){
+        if (discount != null) {
             for (String[] customerId : customerIds) {
-                discount.addCustomer( customerId[0], Integer.parseInt(customerId[1]));
+                discount.addCustomer(customerId[0], Integer.parseInt(customerId[1]));
             }
         }
     }
 
-    public void removeAccountsFromDiscount(String code, ArrayList<String> customerIds){
+    public void removeAccountsFromDiscount(String code, ArrayList<String> customerIds) {
         Discount discount = Discount.getDiscountByCode(code);
-        if( discount != null){
+        if (discount != null) {
             for (String customerId : customerIds) {
                 discount.removeCustomer(customerId);
             }
         }
     }
-    public boolean existManager(){
+
+    public boolean existManager() {
         return Admin.getManager() != null;
     }
 
-    public HashMap<String,String> getPropertyValuesOfAProductInARequest(String requestId) throws Exceptions.InvalidRequestIdException {
+    public HashMap<String, String> getPropertyValuesOfAProductInARequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId, false);
-        if( request == null || !request.getClass().getSimpleName().equals("AddProductRequest")){
+        if (request == null || !request.getClass().getSimpleName().equals("AddProductRequest"))
             throw new Exceptions.InvalidRequestIdException(requestId);
-        }else {
-            return new HashMap<>(((AddProductRequest)request).getProduct().getPropertyValues());
-        }
+
+        return new HashMap<>(((AddProductRequest) request).getProduct().getPropertyValues());
     }
 
     public HashMap<String, String> getPropertyValuesOfAFileInRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId, false);
-        if (request == null || ! request.getClass().getSimpleName().equals("AddFileRequest")) {
+        if (request == null || !request.getClass().getSimpleName().equals("AddFileRequest"))
             throw new Exceptions.InvalidRequestIdException(requestId);
-        } else {
-            return new HashMap<>(((AddFileRequest) request).getFile().getPropertyValues());
-        }
+
+        return new HashMap<>(((AddFileRequest) request).getFile().getPropertyValues());
     }
 
-    public ArrayList<String[]> getProductsInSaleRequest(String requestId) throws Exceptions.InvalidRequestIdException {
+    public ArrayList<String[]> getSellablesInSaleRequest(String requestId) throws Exceptions.InvalidRequestIdException {
         Request request = Request.getRequestById(requestId, false);
-        if( request == null || !request.getClass().getSimpleName().equals("AddSaleRequest")){
+        if (request == null || !request.getClass().getSimpleName().equals("AddSaleRequest"))
             throw new Exceptions.InvalidRequestIdException(requestId);
-        }else {
-            ArrayList<SubProduct> subProducts = new ArrayList<>(((AddSaleRequest)request).getSale().getSubProducts());
-            ArrayList<String[]> productPacks = new ArrayList<>();
-            for (SubProduct subProduct : subProducts) {
-                productPacks.add(Utilities.Pack.product(subProduct.getProduct()));
-            }
-            return productPacks;
+
+        ArrayList<SubSellable> subSellables = new ArrayList<>(((AddSaleRequest) request).getSale().getSubProducts());
+        ArrayList<String[]> sellablePacks = new ArrayList<>();
+        for (SubSellable subSellable : subSellables) {
+            if (subSellable instanceof SubProduct)
+                sellablePacks.add(Utilities.Pack.product(((SubProduct) subSellable).getProduct()));
+            else
+                sellablePacks.add(Utilities.Pack.file(((SubFile) subSellable).getFile()));
         }
+        return sellablePacks;
     }
 
     public void addPropertyToACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException, Exceptions.ExistingPropertyException {
         Category category = Category.getCategoryByName(categoryName);
-        if( category == null){
-            throw new Exceptions.InvalidCategoryException(categoryName);
-        }else if( category.hasProperty(property)){
-            throw new Exceptions.ExistingPropertyException(property);
-        }else
-            category.addProperty(property);
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+        if (category.hasProperty(property)) throw new Exceptions.ExistingPropertyException(property);
+
+        category.addProperty(property);
     }
 
     public void removePropertyFromACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if(category == null){
-            throw new Exceptions.InvalidCategoryException(categoryName);
-        }else {
-            category.removeProperty(property);
-        }
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+
+        category.removeProperty(property);
     }
 
-    public void editBrandOfProduct(String productId, String newBrand) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if(product == null){
-            throw new Exceptions.InvalidSellableIdException(productId);
-        }else {
-            product.setBrand(newBrand);
-        }
+    public void editNameOfSellable(String sellableId, String newName) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        sellable.setName(newName);
     }
 
-    public void editImageOfProduct(String productId, String newImage) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if(product == null){
-            throw new Exceptions.InvalidSellableIdException(productId);
-        }else {
-            product.setImagePath(newImage);
-        }
+    public void editBrandOfProduct(String sellableId, String newBrand) throws Exceptions.InvalidSellableIdException {
+        Product product = Product.getProductById(sellableId);
+        if (product == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        product.setBrand(newBrand);
     }
 
-    public void editPropertyOfProduct(String productId, String newProperty) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if(product == null){
-            throw new Exceptions.InvalidSellableIdException(productId);
-        }else {
-            String[] keyValue = newProperty.split(",");
-            product.setProperty(keyValue[0], keyValue[1]);
-        }
+    public void editExtensionOfFile(String sellableId, String newBrand) throws Exceptions.InvalidSellableIdException {
+        File file = File.getFileById(sellableId);
+        if (file == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        file.setExtension(newBrand);
     }
 
-    public void editInfoTextOfProduct(String productId, String newInfoText) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if(product == null){
-            throw new Exceptions.InvalidSellableIdException(productId);
-        }else {
-            product.setInfoText(newInfoText);
-        }
+    public void editImageOfSellable(String sellableId, String newImage) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        sellable.setImagePath(newImage);
     }
 
-    public void editNameOfProduct(String productId, String newName) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if(product == null){
-            throw new Exceptions.InvalidSellableIdException(productId);
-        }else {
-            product.setName(newName);
-        }
+    public void editPropertyOfSellable(String sellableId, String newProperty) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        String[] keyValue = newProperty.split(",");
+        sellable.setProperty(keyValue[0], keyValue[1]);
     }
 
-    public ArrayList<String[]> getAllBuyLogs(){
+    public void editInfoTextOfSellable(String sellableId, String newInfoText) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        sellable.setInfoText(newInfoText);
+    }
+
+    public ArrayList<String[]> getAllBuyLogs() {
         ArrayList<String[]> buyLogPacks = new ArrayList<>();
         for (BuyLog buyLog : BuyLog.getAllBuyLogs()) {
             buyLogPacks.add(Utilities.Pack.buyLog(buyLog));
         }
+
         return buyLogPacks;
     }
 
     public String[] getBuyLogWithId(String logId) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = BuyLog.getBuyLogById(logId);
-        if( buyLog == null ){
-            throw new Exceptions.InvalidLogIdException(logId);
-        }else {
-            return Utilities.Pack.buyLog(buyLog);
-        }
+        if (buyLog == null) throw new Exceptions.InvalidLogIdException(logId);
+
+        return Utilities.Pack.buyLog(buyLog);
     }
 
     public ArrayList<String[]> getBuyLogItemsWithId(String logId) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = BuyLog.getBuyLogById(logId);
-        if ( buyLog == null ) {
-            throw new Exceptions.InvalidLogIdException(logId);
-        } else {
-            ArrayList<String[]> items = new ArrayList<>();
-            buyLog.getLogItems().forEach(li -> items.add(Utilities.Pack.buyLogItem(li)));
-            return items;
-        }
+        if (buyLog == null) throw new Exceptions.InvalidLogIdException(logId);
+
+        ArrayList<String[]> items = new ArrayList<>();
+        buyLog.getLogItems().forEach(li -> items.add(Utilities.Pack.buyLogItem(li)));
+        return items;
     }
 
     public void editBuyLogStatus(String logId, String newStatus) throws Exceptions.InvalidLogIdException {
         BuyLog buyLog = BuyLog.getBuyLogById(logId);
-        if( buyLog == null){
-            throw new Exceptions.InvalidLogIdException(logId);
-        }else {
-            switch (newStatus) {
-                case "Processing":
-                    buyLog.setShippingStatus(ShippingStatus.PROCESSING);
-                    break;
-                case "Sending":
-                    buyLog.setShippingStatus(ShippingStatus.SENDING);
-                    break;
-                case "Received":
-                    buyLog.setShippingStatus(ShippingStatus.RECEIVED);
-                    break;
-            }
+        if (buyLog == null) throw new Exceptions.InvalidLogIdException(logId);
+
+        switch (newStatus) {
+            case "Processing":
+                buyLog.setShippingStatus(ShippingStatus.PROCESSING);
+                break;
+            case "Sending":
+                buyLog.setShippingStatus(ShippingStatus.SENDING);
+                break;
+            case "Received":
+                buyLog.setShippingStatus(ShippingStatus.RECEIVED);
+                break;
         }
     }
 
     public void setCommission(double percentage) throws Exceptions.InvalidCommissionException {
-        if( percentage < 0 || percentage > 100)
-            throw new Exceptions.InvalidCommissionException();
+        if (percentage < 0 || percentage > 100) throw new Exceptions.InvalidCommissionException();
+
         Admin.setCommission(percentage);
     }
 
-    public void setWalletMin(double amount){
+    public void setWalletMin(double amount) {
         Wallet.setMinBalance(amount);
     }
 }
