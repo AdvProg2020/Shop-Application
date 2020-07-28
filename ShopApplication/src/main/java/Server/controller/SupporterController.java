@@ -41,7 +41,7 @@ public class SupporterController {
     public ArrayList<String[]> getArchiveChats() throws Exceptions.UnAuthorizedAccountException {
         ArrayList<String[]> chatPacks = new ArrayList<>();
         if (currentAccount().getClass().getSimpleName().equals("Supporter")) {
-            for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
+            for (SupportChat chat : ((Supporter) currentAccount()).getChatArchive()) {
                 chatPacks.add(Utilities.Pack.supportChat(chat));
             }
             return chatPacks;
