@@ -312,7 +312,7 @@ public class Commands {
             }.getType()) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    return currentSession.getMainController().sortFilterProducts(objectArgs[0] + "", ((boolean) objectArgs[1]), ((boolean) objectArgs[2]), objectArgs[3] + "", ((boolean) objectArgs[4]),
+                    return currentSession.getMainController().sortFilterSellables(objectArgs[0] + "", ((boolean) objectArgs[1]), ((boolean) objectArgs[2]), objectArgs[3] + "", ((boolean) objectArgs[4]),
                             ((boolean) objectArgs[5]), ((double) objectArgs[6]), ((double) objectArgs[7]), objectArgs[8] + "", objectArgs[9] + "", objectArgs[10] + "", objectArgs[11] + "", ((double) objectArgs[12]), (HashMap<String, String>) objectArgs[13]);
                 }
             }),
@@ -320,7 +320,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        currentSession.getMainController().showProduct(objectArgs[0] + "");
+                        currentSession.getMainController().showSellable(objectArgs[0] + "");
                         return "";
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
@@ -341,7 +341,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getMainController().getPropertyValuesOfAProduct(objectArgs[0] + "");
+                        return currentSession.getMainController().getPropertyValuesOfASellable(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -381,7 +381,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getMainController().reviewsOfProductWithId(objectArgs[0] + "");
+                        return currentSession.getMainController().reviewsOfSellableWithId(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -555,7 +555,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getMainController().getCategoryTreeOfAProduct(objectArgs[0] + "");
+                        return currentSession.getMainController().getCategoryTreeOfASellable(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }
@@ -1399,7 +1399,7 @@ public class Commands {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {
-                        return currentSession.getMainController().getPropertyValuesOfAFile(objectArgs[0] + "");
+                        return currentSession.getMainController().getPropertyValuesOfASellable(objectArgs[0] + "");
                     } catch (Exception e) {
                         return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
                     }

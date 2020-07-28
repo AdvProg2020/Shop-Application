@@ -5,10 +5,12 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="400.0" minWidth="600.0" stylesheets="@../css/ChatPage.css"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$ChatPageController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="400.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0"
+            stylesheets="@../css/ChatPage.css" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Client.view.Controllers$ChatPageController">
     <center>
-        <ScrollPane id="bg-pane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
+        <ScrollPane id="bg-pane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="350.0"
+                    minHeight="350.0" prefHeight="350.0" vbarPolicy="ALWAYS">
             <content>
                 <VBox fx:id="messages" alignment="CENTER" spacing="20.0">
                     <padding>

@@ -10,7 +10,10 @@ import Server.model.chat.Chat;
 import Server.model.chat.Message;
 import Server.model.chat.SupportChat;
 import Server.model.database.Database;
-import Server.model.sellable.*;
+import Server.model.sellable.Product;
+import Server.model.sellable.Sellable;
+import Server.model.sellable.SubProduct;
+import Server.model.sellable.SubSellable;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -204,8 +207,8 @@ public class Controller {
         return products;
     }
 
-    public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale, boolean inAuction, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
-                                                  String extension, String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
+    public ArrayList<String[]> sortFilterSellables(String categoryName, boolean inSale, boolean inAuction, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
+                                                   String extension, String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
 
         Category category = Category.getCategoryByName(categoryName) != null ? Category.getCategoryByName(categoryName) : Category.getSuperCategory();
         ArrayList<Sellable> sellables;
@@ -228,12 +231,12 @@ public class Controller {
             }
         } else {
             if (inSale) {
-                for (Sellable product : sellables) {
-                    subSellables.addAll(product.getSubSellablesInSale());
+                for (Sellable sellable : sellables) {
+                    subSellables.addAll(sellable.getSubSellablesInSale());
                 }
             } else {
-                for (Sellable product : sellables) {
-                    subSellables.add(product.getDefaultSubSellable());
+                for (Sellable sellable : sellables) {
+                    subSellables.add(sellable.getDefaultSubSellable());
                 }
             }
         }
@@ -245,13 +248,11 @@ public class Controller {
         return Utilities.Pack.subSellableBoxes(subSellables);
     }
 
-    public void showProduct(String sellableId) throws Exceptions.InvalidSellableIdException {
+    public void showSellable(String sellableId) throws Exceptions.InvalidSellableIdException {
         Sellable sellable = Sellable.getSellableById(sellableId);
-        if (sellable == null)
-            throw new Exceptions.InvalidSellableIdException(sellableId);
-        else {
-            sellable.increaseViewCount();
-        }
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        sellable.increaseViewCount();
     }
 
 
@@ -266,29 +267,19 @@ public class Controller {
         return Utilities.Pack.digest(sellable);
     }
 
-    public HashMap<String, String> getPropertyValuesOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
-        Sellable product = Sellable.getSellableById(productId);
-        if (product == null)
-            throw new Exceptions.InvalidSellableIdException(productId);
-        else {
-            return new HashMap<>(product.getPropertyValues());
-        }
+    public HashMap<String, String> getPropertyValuesOfASellable(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
+        return new HashMap<>(sellable.getPropertyValues());
     }
 
-    public HashMap<String, String> getPropertyValuesOfAFile(String fileId) throws Exceptions.InvalidFileIdException {
-        File file = File.getFileById(fileId);
-        if (file == null) throw new Exceptions.InvalidFileIdException(fileId);
-        else {
-            return new HashMap<>(file.getPropertyValues());
-        }
-    }
 
     public ArrayList<String> getPropertiesOfCategory(String categoryName, boolean deep) throws Exceptions.InvalidCategoryException {
         Category category = Category.getCategoryByName(categoryName);
-        if (category == null)
-            throw new Exceptions.InvalidCategoryException(categoryName);
-        else
-            return new ArrayList<>(category.getProperties(deep));
+        if (category == null) throw new Exceptions.InvalidCategoryException(categoryName);
+
+        return new ArrayList<>(category.getProperties(deep));
     }
 
     /**
@@ -298,8 +289,8 @@ public class Controller {
      */
     public ArrayList<String[]> subSellablesOfASellable(String sellableId) throws Exceptions.InvalidSellableIdException {
         Sellable sellable = Sellable.getSellableById(sellableId);
-        if (sellable == null)
-            throw new Exceptions.InvalidSellableIdException(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
+
         ArrayList<String[]> subSellables = new ArrayList<>();
         for (SubSellable subSellable : sellable.getSubSellables()) {
             subSellables.add(Utilities.Pack.subSellable(subSellable));
@@ -309,23 +300,22 @@ public class Controller {
 
     public String[] getSubSellableById(String subSellableId) throws Exceptions.InvalidSubProductIdException {
         SubSellable subSellable = SubSellable.getSubSellableById(subSellableId);
-        if (subSellable == null)
-            throw new Exceptions.InvalidSubProductIdException(subSellableId);
-        else
-            return Utilities.Pack.subSellable(subSellable);
+        if (subSellable == null) throw new Exceptions.InvalidSubProductIdException(subSellableId);
+
+        return Utilities.Pack.subSellable(subSellable);
     }
 
     /**
-     * @param productId
+     * @param sellableId
      * @return String[3]: usernameOfReviewer, title, body, hasBought.
      * @throws Exceptions.InvalidSellableIdException
      */
-    public ArrayList<String[]> reviewsOfProductWithId(String productId) throws Exceptions.InvalidSellableIdException {
-        Sellable product = Sellable.getSellableById(productId);
-        if (product == null) throw new Exceptions.InvalidSellableIdException(productId);
+    public ArrayList<String[]> reviewsOfSellableWithId(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
 
         ArrayList<String[]> reviews = new ArrayList<>();
-        for (Review review : product.getReviews()) {
+        for (Review review : sellable.getReviews()) {
             reviews.add(Utilities.Pack.review(review));
         }
         return reviews;
@@ -621,7 +611,7 @@ public class Controller {
         return subSellablesToShow;
     }
 
-    public ArrayList<String> getCategoryTreeOfAProduct(String sellableId) throws Exceptions.InvalidSellableIdException {
+    public ArrayList<String> getCategoryTreeOfASellable(String sellableId) throws Exceptions.InvalidSellableIdException {
         Sellable sellable = Sellable.getSellableById(sellableId);
         if (sellable == null) throw new Exceptions.InvalidSellableIdException(sellableId);
 

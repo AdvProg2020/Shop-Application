@@ -16,4 +16,5 @@ module view {
 
     opens Client.view to javafx.fxml, javafx.base;
     exports Client.view;
+    exports Server;
 }
