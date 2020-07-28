@@ -8769,7 +8769,7 @@ public class Controllers {
 
         private void setOnActions() {
             refreshBTN.setOnAction(e -> updateMessages());
-            sendBTN.setOnAction((e -> updateMessages()));
+            sendBTN.setOnAction((e -> sendMessage()));
         }
 
         private void sendMessage() {
@@ -8929,9 +8929,9 @@ public class Controllers {
                 supporterBox.getItems().add(s[1]);
             });
             if (hasChat) {
-                createChatBTN.setDisable(true);
+                createChatBTN.setVisible(false);
                 supporterBox.getSelectionModel().select(chatInfo[2]);
-                supporterBox.setDisable(true);
+                supporterBox.setVisible(false);
             } else {
                 createChatBTN.disableProperty().unbind();
                 createChatBTN.disableProperty().bind(supporterBox.getSelectionModel().selectedItemProperty().isNull());
