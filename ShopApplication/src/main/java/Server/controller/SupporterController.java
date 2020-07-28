@@ -28,14 +28,13 @@ public class SupporterController {
 
     public ArrayList<String[]> getActiveChats() throws Exceptions.UnAuthorizedAccountException {
         ArrayList<String[]> chatPacks = new ArrayList<>();
-        if(currentAccount().getClass().getSimpleName().equals("Supporter")){
-            for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
-                chatPacks.add(Utilities.Pack.supportChat(chat));
-            }
-            return chatPacks;
-        } else {
+        if (!currentAccount().getClass().getSimpleName().equals("Supporter"))
             throw new Exceptions.UnAuthorizedAccountException();
+
+        for (SupportChat chat : ((Supporter) currentAccount()).getActiveChats()) {
+            chatPacks.add(Utilities.Pack.supportChat(chat));
         }
+        return chatPacks;
     }
 
     public ArrayList<String[]> getArchiveChats() throws Exceptions.UnAuthorizedAccountException {
@@ -50,42 +49,40 @@ public class SupporterController {
 
     public ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if( chat == null || chat.getSupporter() != currentAccount()){
+        if (chat == null || chat.getSupporter() != currentAccount())
             throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            ArrayList<String[]> messages = new ArrayList<>();
-            String username = currentAccount().getUsername();
-            for (Message message : chat.getMessages()) {
-                messages.add(Utilities.Pack.message(message, username));
-            }
-            return messages;
+
+        ArrayList<String[]> messages = new ArrayList<>();
+        String username = currentAccount().getUsername();
+        for (Message message : chat.getMessages()) {
+            messages.add(Utilities.Pack.message(message, username));
         }
+        return messages;
     }
 
     public String[] viewChatById(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
         if (chat == null) throw new Exceptions.InvalidChatIdException(chatId);
-        else return Utilities.Pack.supportChat(chat);
+
+        return Utilities.Pack.supportChat(chat);
     }
 
     public void sendMessage(String chatId, String text) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if( chat == null || chat.getSupporter() != currentAccount()){
+        if (chat == null || chat.getSupporter() != currentAccount())
             throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            new Message(chatId, currentAccount().getId(), text);
-            database().chat();
-        }
+
+        new Message(chatId, currentAccount().getId(), text);
+        database().chat();
     }
 
     public void deleteChat(String chatId) throws Exceptions.InvalidChatIdException {
         SupportChat chat = SupportChat.getSupportChatById(chatId);
-        if( chat == null || chat.getSupporter() != currentAccount()){
+        if (chat == null || chat.getSupporter() != currentAccount())
             throw new Exceptions.InvalidChatIdException(chatId);
-        }else {
-            chat.suspend();
-            database().chat();
-        }
+
+        chat.suspend();
+        database().chat();
     }
 
 }
