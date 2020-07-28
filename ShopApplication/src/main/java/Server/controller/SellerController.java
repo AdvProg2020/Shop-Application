@@ -152,7 +152,7 @@ public class SellerController {
         switch (field) {
             case "name": {
                 String existingProductId;
-                if ((existingProductId = exist(newInformation, targetedSubProduct.getProduct().getBrand())) != null)
+                if ((existingProductId = isProductWithNameAndBrand(newInformation, targetedSubProduct.getProduct().getBrand())) != null)
                     throw new Exceptions.ExistingProductException(existingProductId);
                 if (targetedSubProduct.getProduct().getName().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
@@ -163,7 +163,7 @@ public class SellerController {
             }
             case "brand": {
                 String existingProductId;
-                if ((existingProductId = exist(targetedSubProduct.getProduct().getName(), newInformation)) != null)
+                if ((existingProductId = isProductWithNameAndBrand(targetedSubProduct.getProduct().getName(), newInformation)) != null)
                     throw new Exceptions.ExistingProductException(existingProductId);
                 if (targetedSubProduct.getProduct().getBrand().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
@@ -214,7 +214,7 @@ public class SellerController {
 
         switch (field) {
             case "name": {
-                if (exist(newInformation, targetedSubFile.getFile().getExtension()) != null)
+                if (isFileWithNameAndExtension(newInformation, targetedSubFile.getFile().getExtension()) != null)
                     throw new Exceptions.ExistingFileException();
                 if (targetedSubFile.getFile().getName().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);
@@ -225,7 +225,7 @@ public class SellerController {
             }
             case "extension": {
                 String existingFileId;
-                if (exist(targetedSubFile.getFile().getName(), newInformation) != null)
+                if (isFileWithNameAndExtension(targetedSubFile.getFile().getName(), newInformation) != null)
                     throw new Exceptions.ExistingFileException();
                 if (targetedSubFile.getFile().getExtension().equals(newInformation))
                     throw new Exceptions.SameAsPreviousValueException(field);

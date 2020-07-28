@@ -1045,16 +1045,6 @@ public class Commands {
                     }
                 }
             }),
-            entry(sellerExist, new Task(stringType, stringType) {
-                @Override
-                public Object executeMethod(Session currentSession, Object[] objectArgs) {
-                    try {
-                        return currentSession.getSellerController().exist(objectArgs[0] + "", objectArgs[1] + "");
-                    } catch (Exception e) {
-                        return "exception:" + e.getClass().getSimpleName() + "\n" + e.getMessage();
-                    }
-                }
-            }),
             entry(sellerAddNewProduct, new Task(stringType, stringType, stringType, byteArrayType, stringType, new TypeToken<HashMap<String, String>>() {
             }.getType(), doubleType, integerType) {
                 @Override
