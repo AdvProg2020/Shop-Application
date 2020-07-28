@@ -51,6 +51,7 @@ public class Seller extends Account {
         super.initialize();
 
         sellLogIds = new HashSet<>();
+        fileLogIds = new HashSet<>();
         if (!suspended) {
             subSellableIds = new HashSet<>();
             saleIds = new HashSet<>();

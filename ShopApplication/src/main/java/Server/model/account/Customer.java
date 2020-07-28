@@ -47,6 +47,7 @@ public class Customer extends Account {
         super.initialize();
 
         buyLogIds = new HashSet<>();
+        fileLogIds = new HashSet<>();
         if (!suspended) {
             discountIds = new HashMap<>();
         }
