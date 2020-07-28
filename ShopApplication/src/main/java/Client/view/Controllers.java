@@ -2688,7 +2688,7 @@ public class Controllers {
         }
 
         private void purchaseTheFile() {
-            PurchaseMenuController.displayFileMode(Double.parseDouble(sellablePack[8]), sellablePack[1]);
+            PurchaseMenuController.displayFileMode(Double.parseDouble(subSellablePack[8]), subSellablePack[1]);
         }
 
         //Done
