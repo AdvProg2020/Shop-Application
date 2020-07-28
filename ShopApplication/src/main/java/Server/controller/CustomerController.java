@@ -188,6 +188,9 @@ public class CustomerController {
         for (BuyLog buyLog : ((Customer) currentAccount()).getBuyLogs()) {
             orders.add(Utilities.Pack.buyLog(buyLog));
         }
+        for (FileLog fileLog : ((Customer) currentAccount()).getFileLogs()) {
+            orders.add(Utilities.Pack.fileLogAsBuyLog(fileLog));
+        }
         return orders;
     }
 

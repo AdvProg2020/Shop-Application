@@ -8,6 +8,7 @@ import Server.model.account.Seller;
 import Server.model.chat.Message;
 import Server.model.chat.SupportChat;
 import Server.model.log.BuyLog;
+import Server.model.log.FileLog;
 import Server.model.log.LogItem;
 import Server.model.log.SellLog;
 import Server.model.request.EditFileRequest;
@@ -285,6 +286,22 @@ public class Utilities {
             return sellPack;
         }
 
+        public static String[] fileLogAsSellLog(FileLog fileLog) {
+            String[] sellPack = new String[9];
+            sellPack[0] = fileLog.getId();
+            sellPack[1] = dateFormat.format(fileLog.getDate());
+            sellPack[2] = fileLog.getCustomer().getUsername();
+            sellPack[3] = Double.toString(fileLog.getPrice());
+            sellPack[4] = Double.toString(fileLog.getDiscountAmount());
+            sellPack[5] = fileLog.getCustomer().getLastName();
+            sellPack[6] = fileLog.getCustomer().getPhone();
+            sellPack[7] = "-";
+            sellPack[8] = "-";
+            return sellPack;
+        }
+
+
+
         public static String[] sellLogItem(LogItem item) {
             String[] productPack = new String[8];
             Product product = item.getSubProduct().getProduct();
@@ -385,6 +402,20 @@ public class Utilities {
             orderPack[6] = buyLog.getShippingStatus().toString();
             orderPack[7] = Double.toString(buyLog.getPaidMoney());
             orderPack[8] = Double.toString(buyLog.getTotalDiscountAmount());
+            return orderPack;
+        }
+
+        public static String[] fileLogAsBuyLog(FileLog fileLog) {
+            String[] orderPack = new String[9];
+            orderPack[0] = fileLog.getId();
+            orderPack[1] = fileLog.getCustomer().getUsername();
+            orderPack[2] = fileLog.getCustomer().getLastName();
+            orderPack[3] = fileLog.getCustomer().getPhone();
+            orderPack[4] = "-";
+            orderPack[5] = dateFormat.format(fileLog.getDate());
+            orderPack[6] = "-";
+            orderPack[7] = Double.toString(fileLog.getPrice());
+            orderPack[8] = Double.toString(fileLog.getDiscountAmount());
             return orderPack;
         }
 
