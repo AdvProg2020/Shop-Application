@@ -16,7 +16,7 @@ public class Sender {
 
     public  String sendRequest(String command, String body) {
         try {
-             socket = new Socket("localhost", 6051);
+             socket = new Socket("localhost", 8442);
             DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 

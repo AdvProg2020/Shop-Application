@@ -81,13 +81,13 @@ public class CustomerController {
         Map<SubProduct, Integer> subProductsInCart = currentCart().getSubProducts();
         if (subProductsInCart.isEmpty())
             throw new Exceptions.EmptyCartException();
-        if (notAvailableSubProducts.isEmpty())
+        if ( ! notAvailableSubProducts.isEmpty())
             throw new Exceptions.NotAvailableSubProductsInCart(notAvailableSubProducts);
 
         double totalPrice = currentCart().getTotalPrice();
         double discountAmount = 0;
         Discount discount = null;
-        if (discountCode != null) {
+        if ( ! discountCode.equals("")) {
             if (!isDiscountCodeValid(discountCode) || (discount = Discount.getDiscountByCode(discountCode)) == null)
                 throw new Exceptions.InvalidDiscountException(discountCode);
 
