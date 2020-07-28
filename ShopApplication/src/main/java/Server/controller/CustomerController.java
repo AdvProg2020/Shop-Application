@@ -129,7 +129,7 @@ public class CustomerController {
 
         double totalPrice = subFile.getPriceWithSale();
         double discountAmount = 0;
-        if (discountCode != null) {
+        if ( ! discountCode.equals("")) {
             discount = Discount.getDiscountByCode(discountCode);
             if (!isDiscountCodeValid(discountCode) || discount == null)
                 throw new Exceptions.InvalidDiscountException(discountCode);

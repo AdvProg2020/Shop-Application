@@ -2665,8 +2665,7 @@ public class Controllers {
         }
 
         private void download() {
-            if( View.type.get().equals(Constants.customerUserType))
-            {
+            if (View.type.get().equals(Constants.customerUserType)) {
                 try {
                     DirectoryChooser dc = new DirectoryChooser();
                     File f = dc.showDialog(new Stage());
@@ -2716,7 +2715,8 @@ public class Controllers {
         private void updateShowOfButtons() {
             if (type.equals(Constants.customerUserType) || type.equals(Constants.anonymousUserType)) {
                 if (subSellablePack[19] == null) // not in an auction
-                { if (subSellablePack[15].equals("SubProduct")) {
+                {
+                    if (subSellablePack[15].equals("SubProduct")) {
                         if (Integer.parseInt(subSellablePack[9]) != 0) {
                             addToCartBTN.setVisible(true);
                             addToCartBTN.setDisable(false);
@@ -2730,7 +2730,7 @@ public class Controllers {
                         addToCartBTN.setVisible(false);
                     }
                     auctionBTN.setVisible(false);
-                }else {// in an auction
+                } else {// in an auction
                     auctionBTN.setVisible(true);
                     downloadBTN.setVisible(false);
                     addToCartBTN.setVisible(false);
@@ -2740,7 +2740,7 @@ public class Controllers {
                 downloadBTN.setVisible(false);
             }
 
-            if( type.equals(Constants.anonymousUserType)){
+            if (type.equals(Constants.anonymousUserType)) {
                 downloadBTN.setVisible(false);
             }
 
@@ -4181,7 +4181,7 @@ public class Controllers {
         private void initVisibility() {
             boolean isDetail = category != null;
 
-            parentField.setEditable(! isDetail);
+            parentField.setEditable(!isDetail);
             editHB.setVisible(isDetail);
             addBTN.setVisible(!isDetail);
             idKeyLBL.setVisible(isDetail);
@@ -4867,7 +4867,7 @@ public class Controllers {
 
         public static void display() {
             PurchaseMenuController pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
-            pmc.initialize();
+            pmc.myInitialize();
         }
 
         public static void displayFileMode(double fileCost, String subFileId) {
@@ -4881,19 +4881,19 @@ public class Controllers {
 
         public void initializeFileMode() {
             purchaseBTN.setOnAction(e -> {
-                if (validateFields()) {
-                    try {
-                        customerController.purchaseTheFile(subFileId, discountCode.getText());
-                        PurchaseConfirmationController.display(totalPrice.getText());
-                    } catch (Exceptions.InsufficientCreditException ex) {
-                        discountError.setText("You dont have enough money!");
-                    } catch (Exceptions.InvalidDiscountException ex) {
-                        discountError.setText("Invalid discount code!");
-                    } catch (Exceptions.InvalidFileIdException invalidFileIdException) {
-                        invalidFileIdException.printStackTrace();
-                    }
+                try {
+                    customerController.purchaseTheFile(subFileId, discountCode.getText());
+                    PurchaseConfirmationController.display(totalPrice.getText());
+                } catch (Exceptions.InsufficientCreditException ex) {
+                    discountError.setText("You dont have enough money!");
+                } catch (Exceptions.InvalidDiscountException ex) {
+                    discountError.setText("Invalid discount code!");
+                } catch (Exceptions.InvalidFileIdException invalidFileIdException) {
+                    invalidFileIdException.printStackTrace();
                 }
+
             });
+            totalPrice.setText("$" + fileCost);
             validateBTN.setOnAction(e -> validateDiscountFileMode());
             address.setVisible(false);
             phoneNumber.setVisible(false);
@@ -4903,7 +4903,7 @@ public class Controllers {
             receiverNameLBL.setVisible(false);
         }
 
-        public void initialize() {
+        public void myInitialize() {
             initButtons();
             initListeners();
 
