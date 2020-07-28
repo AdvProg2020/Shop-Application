@@ -258,11 +258,11 @@ public class Utilities {
             return productPack;
         }
 
-        public static String[] productInSale(SubProduct subProduct) {
+        public static String[] productInSale(SubSellable subProduct) {
             String[] productPack = new String[5];
-            productPack[0] = subProduct.getProduct().getId();
-            productPack[1] = subProduct.getProduct().getName();
-            productPack[2] = subProduct.getProduct().getBrand();
+            productPack[0] = subProduct.getSellable().getId();
+            productPack[1] = subProduct.getSellable().getName();
+            productPack[2] = subProduct.getClass().getSimpleName().equals("SubProduct") ? ((SubProduct)subProduct).getProduct().getBrand() : ((SubFile)subProduct).getFile().getExtension();
             productPack[3] = Double.toString(subProduct.getRawPrice());
             productPack[4] = Double.toString(subProduct.getPriceWithSale());
             return productPack;
