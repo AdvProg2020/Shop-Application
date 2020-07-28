@@ -631,12 +631,12 @@ public class Controller {
         return subSellablesToShow;
     }
 
-    public ArrayList<String> getCategoryTreeOfAProduct(String productId) throws Exceptions.InvalidSellableIdException {
-        Product product = Product.getProductById(productId);
-        if (product == null) {
-            throw new Exceptions.InvalidSellableIdException(productId);
+    public ArrayList<String> getCategoryTreeOfAProduct(String sellableId) throws Exceptions.InvalidSellableIdException {
+        Sellable sellable = Sellable.getSellableById(sellableId);
+        if (sellable == null) {
+            throw new Exceptions.InvalidSellableIdException(sellableId);
         } else {
-            return getCategoryTreeOfACategory(product.getCategory().getName());
+            return getCategoryTreeOfACategory(sellable.getCategory().getName());
         }
     }
 
