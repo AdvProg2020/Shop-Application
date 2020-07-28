@@ -8923,6 +8923,7 @@ public class Controllers {
         }
 
         private void initChoiceBox() {
+            supporterBox.getItems().clear();
             customerController.getAllSupporters().forEach(s -> {
                 nameToId.put(s[1], s[0]);
                 supporterBox.getItems().add(s[1]);
@@ -8932,6 +8933,7 @@ public class Controllers {
                 supporterBox.getSelectionModel().select(chatInfo[2]);
                 supporterBox.setDisable(true);
             } else {
+                createChatBTN.disableProperty().unbind();
                 createChatBTN.disableProperty().bind(supporterBox.getSelectionModel().selectedItemProperty().isNull());
             }
         }
