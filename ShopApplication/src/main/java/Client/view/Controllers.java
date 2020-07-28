@@ -8929,9 +8929,9 @@ public class Controllers {
                 supporterBox.getItems().add(s[1]);
             });
             if (hasChat) {
-                createChatBTN.setVisible(false);
+                createChatBTN.setDisable(true);
                 supporterBox.getSelectionModel().select(chatInfo[2]);
-                supporterBox.setVisible(false);
+                supporterBox.setDisable(true);
             } else {
                 createChatBTN.disableProperty().unbind();
                 createChatBTN.disableProperty().bind(supporterBox.getSelectionModel().selectedItemProperty().isNull());
