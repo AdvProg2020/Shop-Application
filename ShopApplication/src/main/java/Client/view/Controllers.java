@@ -8232,6 +8232,10 @@ public class Controllers {
                 customer.setOnAction(e -> {
                     if (currentChat != null && !customer.getText().equals(currentChat)) {
                         currentChat = customer.getText();
+                        chatPane.getChildren().clear();
+                        chatPane.getChildren().add(ChatPageController.getChatPage(chatId));
+                    } else if (currentChat == null) {
+                        currentChat = customer.getText();
                         chatPane.getChildren().add(ChatPageController.getChatPage(chatId));
                     }
                 });
