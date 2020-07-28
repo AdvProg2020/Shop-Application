@@ -3319,22 +3319,22 @@ public class Controllers {
         private Label productErrorLBL;
 
         @FXML
-        private TableView<?> files;
+        private TableView<ProductWrapper> files;
 
         @FXML
-        private TableColumn<?, ?> fileIdCol;
+        private TableColumn<ProductWrapper, String> fileIdCol;
 
         @FXML
-        private TableColumn<?, ?> fileNameCOL;
+        private TableColumn<ProductWrapper, String> fileNameCOL;
 
         @FXML
-        private TableColumn<?, ?> fileCategoryCOL;
+        private TableColumn<ProductWrapper, String> fileCategoryCOL;
 
         @FXML
-        private TableColumn<?, ?> fileDetailsCOL;
+        private TableColumn<ProductWrapper, Button> fileDetailsCOL;
 
         @FXML
-        private TableColumn<?, ?> fileRemoveCOL;
+        private TableColumn<ProductWrapper, Button> fileRemoveCOL;
 
         @FXML
         private Label fileErrorLBL;
@@ -3427,7 +3427,7 @@ public class Controllers {
             products.getItems().setAll(allProducts);
 
             var allFiles = adminController.manageAllFiles().stream().map(ProductWrapper::new).collect(Collectors.toCollection(ArrayList::new));
-            products.getItems().setAll(allFiles);
+            files.getItems().setAll(allFiles);
         }
     }
 
