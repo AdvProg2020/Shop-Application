@@ -9,16 +9,16 @@ import Server.model.account.Customer;
 import java.util.*;
 
 public class BuyLog implements ModelBasic {
-    private static Map<String, BuyLog> allBuyLogs = new HashMap<>();
+    private static final Map<String, BuyLog> allBuyLogs = new HashMap<>();
     private static int lastNum = 1;
     private String buyLogId;
-    private String customerId;
-    private double paidMoney;
-    private double totalDiscountAmount;
-    private Date date;
-    private String receiverName;
-    private String receiverAddress;
-    private String receiverPhone;
+    private final String customerId;
+    private final double paidMoney;
+    private final double totalDiscountAmount;
+    private final Date date;
+    private final String receiverName;
+    private final String receiverAddress;
+    private final String receiverPhone;
     private ShippingStatus shippingStatus;
     private transient Set<String> logItemIds;
 

@@ -1,7 +1,5 @@
 package Server.controller;
 
-import java.lang.Exception;
-
 public class Exceptions {
 
     public static class WrongPasswordException extends Exception {
@@ -190,74 +188,74 @@ public class Exceptions {
         }
     }
 
-    public static class UnAuthorizedAccountException extends Exception{
-        public UnAuthorizedAccountException(){
+    public static class UnAuthorizedAccountException extends Exception {
+        public UnAuthorizedAccountException() {
             super("This account doesnt have access to shopping cart!");
         }
     }
 
-    public static class ExistingPropertyException extends Exception{
-        public ExistingPropertyException(String property){
-            super("This category already has a property with name: "+ property);
+    public static class ExistingPropertyException extends Exception {
+        public ExistingPropertyException(String property) {
+            super("This category already has a property with name: " + property);
         }
     }
 
-    public static class InvalidChatIdException extends Exception{
-        public InvalidChatIdException(String chatId){
+    public static class InvalidChatIdException extends Exception {
+        public InvalidChatIdException(String chatId) {
             super("There is no chat with id: " + chatId);
         }
     }
 
-    public static class InvalidAccountTypeException extends Exception{
-        public InvalidAccountTypeException(){
+    public static class InvalidAccountTypeException extends Exception {
+        public InvalidAccountTypeException() {
             super("You don't have access to this action!");
         }
     }
 
-    public static class NotParticipantInChat extends Exception{
-        public NotParticipantInChat(){
+    public static class NotParticipantInChat extends Exception {
+        public NotParticipantInChat() {
             super("You are not in this chat!");
         }
     }
 
-    public static class ExistingFileException extends Exception{
-        public ExistingFileException(){
+    public static class ExistingFileException extends Exception {
+        public ExistingFileException() {
             super("There is a file with this name and extension!");
         }
     }
 
-    public static class InvalidFileIdException extends Exception{
-        public InvalidFileIdException(String fileId){
+    public static class InvalidFileIdException extends Exception {
+        public InvalidFileIdException(String fileId) {
             super("There is no file with id: " + fileId);
         }
     }
 
-    public static class DontHaveChatException extends Exception{
-        public DontHaveChatException(){
+    public static class DontHaveChatException extends Exception {
+        public DontHaveChatException() {
             super("You don't have any chat!");
         }
     }
 
-    public static class InvalidAuctionIdException extends Exception{
-        public InvalidAuctionIdException(String auctionId){
-            super("There is no auction with id: "+ auctionId);
+    public static class InvalidAuctionIdException extends Exception {
+        public InvalidAuctionIdException(String auctionId) {
+            super("There is no auction with id: " + auctionId);
         }
     }
 
-    public static class AlreadyInAChatException extends Exception{
-        public AlreadyInAChatException(String chatId){
+    public static class AlreadyInAChatException extends Exception {
+        public AlreadyInAChatException(String chatId) {
             super("You are currently in chat with ID: " + chatId);
         }
     }
 
-    public static class InvalidSupporterIdException extends Exception{
-        public InvalidSupporterIdException(String supporterId){
+    public static class InvalidSupporterIdException extends Exception {
+        public InvalidSupporterIdException(String supporterId) {
             super("There is no supporter with id: " + supporterId);
         }
     }
 
-    public static class InvalidCommissionException extends Exception{
-        public InvalidCommissionException(){
+    public static class InvalidCommissionException extends Exception {
+        public InvalidCommissionException() {
             super("Commission should be between 0 and 100");
         }
     }

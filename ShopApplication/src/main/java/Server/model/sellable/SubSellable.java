@@ -9,7 +9,7 @@ import Server.model.database.Database;
 import java.util.*;
 
 public abstract class SubSellable implements ModelBasic {
-    private static Map<String, SubSellable> allSubSellables = new HashMap<>();
+    private static final Map<String, SubSellable> allSubSellables = new HashMap<>();
     protected String subSellableId;
     protected String sellableId;
     protected String sellerId;

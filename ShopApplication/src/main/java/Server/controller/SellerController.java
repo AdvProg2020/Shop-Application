@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class SellerController {
 
     private static final DateFormat dateFormat = Utilities.getDateFormat();
-    private Controller mainController;
+    private final Controller mainController;
 
     public SellerController(Controller controller) {
         mainController = controller;
@@ -559,8 +559,8 @@ public class SellerController {
         database().removeSale();
     }
 
-    public ArrayList<String[]> getPendingRequests(){
-        ArrayList<Request> requests = new ArrayList<>(((Seller)currentAccount()).getPendingRequests());
+    public ArrayList<String[]> getPendingRequests() {
+        ArrayList<Request> requests = new ArrayList<>(((Seller) currentAccount()).getPendingRequests());
         ArrayList<String[]> requestPacks = new ArrayList<>();
         for (Request request : requests) {
             requestPacks.add(Utilities.Pack.request(request));

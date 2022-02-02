@@ -5,7 +5,7 @@ import Server.model.account.Seller;
 import Server.model.database.Database;
 
 public class AddSaleRequest extends Request implements SellerRequest {
-    private Sale sale;
+    private final Sale sale;
 
     public AddSaleRequest(Sale sale) {
         super();

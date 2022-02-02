@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 public class Review implements ModelBasic {
-    private static Map<String, Review> allReviews = new HashMap<>();
+    private static final Map<String, Review> allReviews = new HashMap<>();
     private static int lastNum = 1;
     private String reviewId;
-    private String reviewerId;
-    private String sellableId;
-    private String title;
-    private String text;
+    private final String reviewerId;
+    private final String sellableId;
+    private final String title;
+    private final String text;
     private boolean bought;
 
     public Review(String reviewerId, String sellableId, String title, String text, Database database) {

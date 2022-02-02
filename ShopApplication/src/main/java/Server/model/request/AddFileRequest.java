@@ -6,8 +6,8 @@ import Server.model.sellable.File;
 import Server.model.sellable.SubFile;
 
 public class AddFileRequest extends Request implements SellerRequest {
-    private File file;
-    private SubFile subFile;
+    private final File file;
+    private final SubFile subFile;
 
     public AddFileRequest(File file, SubFile subFile) {
         super();

@@ -3,8 +3,8 @@ ShopApplication/out/
 ShopApplication/target/
 *.iml
 *.class
-/ShopApplication/src/main/resources/server/database/
-/ShopApplication/src/main/resources/server/accountImg/
-/ShopApplication/src/main/resources/server/sellableImg/
-/ShopApplication/src/main/resources/server/files/
+/ShopApplication/src/main/resources/server_resources/database/
+/ShopApplication/src/main/resources/server_resources/accountImg/
+/ShopApplication/src/main/resources/server_resources/sellableImg/
+/ShopApplication/src/main/resources/server_resources/files/
 /ShopApplication/src/main/resources/temp/

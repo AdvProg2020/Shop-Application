@@ -20,6 +20,6 @@
         </HBox>
     </children>
     <padding>
-        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0"/>
     </padding>
 </VBox>

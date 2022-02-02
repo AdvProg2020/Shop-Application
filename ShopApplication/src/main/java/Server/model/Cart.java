@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Cart implements ModelBasic {
-    private static Map<String, Cart> allCarts = new HashMap<>();
+    private static final Map<String, Cart> allCarts = new HashMap<>();
     private static int lastNum = 1;
     private String cartId;
-    private String customerId; // can be null
+    private final String customerId; // can be null
     private Map<String, Integer> subProductIds;
 
     public Cart(String customerId) {

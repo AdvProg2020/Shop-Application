@@ -8,9 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class EditSaleRequest extends Request implements SellerRequest {
-    private String saleId;
-    private Field field;
-    private String newValue;
+    private final String saleId;
+    private final Field field;
+    private final String newValue;
     private String oldValue;
 
 

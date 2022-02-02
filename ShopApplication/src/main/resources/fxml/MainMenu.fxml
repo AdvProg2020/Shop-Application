@@ -4,15 +4,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane id="bg-pane" fx:id="borderPane" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$MainMenuController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" fx:id="borderPane" stylesheets="@../css/MainMenu.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$MainMenuController">
     <center>
         <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="vScroll-pane" BorderPane.alignment="CENTER">
             <content>
                 <VBox spacing="30.0">
                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
                     </padding>
-                    <Region layoutX="20.0" layoutY="620.0" VBox.vgrow="ALWAYS" />
+                    <Region layoutX="20.0" layoutY="620.0" VBox.vgrow="ALWAYS"/>
                     <VBox id="advertisement-box" alignment="CENTER">
                         <HBox VBox.vgrow="ALWAYS">
                             <VBox alignment="CENTER" spacing="30.0">
@@ -25,15 +26,16 @@
                                 <Button id="all-products-button" fx:id="productsMenu" mnemonicParsing="false"
                                         text="Show All Products"/>
                             </VBox>
-                            <ScrollPane hbarPolicy="ALWAYS" minHeight="370.0" styleClass="hScroll-pane" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
-                                <HBox fx:id="advertisingProducts" alignment="CENTER" spacing="20.0" />
+                            <ScrollPane hbarPolicy="ALWAYS" minHeight="370.0" styleClass="hScroll-pane"
+                                        vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+                                <HBox fx:id="advertisingProducts" alignment="CENTER" spacing="20.0"/>
                             </ScrollPane>
                         </HBox>
                         <padding>
-                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
                         </padding>
                     </VBox>
-                    <Region layoutX="10.0" layoutY="127.0" VBox.vgrow="ALWAYS" />
+                    <Region layoutX="10.0" layoutY="127.0" VBox.vgrow="ALWAYS"/>
                     <VBox id="sales-box" alignment="CENTER" layoutX="20.0" layoutY="20.0">
                         <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                             <VBox alignment="CENTER" spacing="30.0">

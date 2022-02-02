@@ -6,9 +6,9 @@ import Server.model.sellable.File;
 import Server.model.sellable.SubFile;
 
 public class EditFileRequest extends Request implements SellerRequest {
-    private String subFileId;
-    private Field field;
-    private String newValue;
+    private final String subFileId;
+    private final Field field;
+    private final String newValue;
     private String oldValue;
 
     public EditFileRequest(String subFileId, Field field, String newValue) {

@@ -116,39 +116,38 @@ public class View extends Application {
                 Controllers.PersonalInfoMenuController.display(null);
             } else if (fxml.equals(Constants.FXMLs.productsMenu)) {
                 Controllers.ProductsMenuController.display(categoryName, inSale, inAuction);
-            }else {
+            } else {
                 p = loadFxml(fxml);
                 Controllers.BaseController.setMainPane(p);
             }
         } catch (IOException e) {
             System.out.println("could not load " + fxml + ".fxml");
-            return;
         }
     }
 
 
     public static <T> T popupWindow(String title, String fxml, int width, int height) {
-        if (fxml.equals(Constants.FXMLs.adminRegistrationPopup) &&  ! mainController.doesManagerExist()) {
-                Stage popup = new Stage();
-                popup.setOnCloseRequest(e -> System.exit(-1));
-                popup.initModality(Modality.APPLICATION_MODAL);
-                popup.initStyle(StageStyle.UTILITY);
-                popup.setTitle("Admin boot-up menu");
-                popup.setResizable(false);
-                popup.setWidth(1000);
-                popup.setHeight(700);
-                popup.centerOnScreen();
-                FXMLLoader loader = new FXMLLoader(View.class.getResource(getLocation(Constants.FXMLs.adminRegistrationPopup)));
-                Parent parent = null;
-                try {
-                    parent = loader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("could not load " + Constants.FXMLs.adminRegistrationPopup + ".fxml");
-                }
-                popup.setScene(new Scene(parent));
-                popup.show();
-                return null;
+        if (fxml.equals(Constants.FXMLs.adminRegistrationPopup) && !mainController.doesManagerExist()) {
+            Stage popup = new Stage();
+            popup.setOnCloseRequest(e -> System.exit(-1));
+            popup.initModality(Modality.APPLICATION_MODAL);
+            popup.initStyle(StageStyle.UTILITY);
+            popup.setTitle("Admin boot-up menu");
+            popup.setResizable(false);
+            popup.setWidth(1000);
+            popup.setHeight(700);
+            popup.centerOnScreen();
+            FXMLLoader loader = new FXMLLoader(View.class.getResource(getLocation(Constants.FXMLs.adminRegistrationPopup)));
+            Parent parent = null;
+            try {
+                parent = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("could not load " + Constants.FXMLs.adminRegistrationPopup + ".fxml");
+            }
+            popup.setScene(new Scene(parent));
+            popup.show();
+            return null;
         } else {
             Stage popup = new Stage();
             popup.setTitle(title);
@@ -182,7 +181,7 @@ public class View extends Application {
 
         Sender.getInstance().sendRequest(Constants.Commands.authTokenRequest, "");
 
-        if ( ! mainController.doesManagerExist()) {
+        if (!mainController.doesManagerExist()) {
             Controllers.AdminRegistrationPopupController.display();
         } else {
             subStart(stage);

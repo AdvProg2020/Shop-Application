@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$SellerSellLogsManagingMenuController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingMenu.css"
+            xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Client.view.Controllers$SellerSellLogsManagingMenuController">
     <center>
         <VBox alignment="CENTER" maxWidth="-Infinity" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
-            <TableView fx:id="sellLogs" focusTraversable="false" stylesheets="@../css/TableView.css" VBox.vgrow="ALWAYS">
+            <TableView fx:id="sellLogs" focusTraversable="false" stylesheets="@../css/TableView.css"
+                       VBox.vgrow="ALWAYS">
                 <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
                 <columns>
-                    <TableColumn fx:id="dateCol" prefWidth="150.0" resizable="false" text="Date" />
-                    <TableColumn fx:id="customerCOL" prefWidth="200.0" resizable="false" text="Customer" />
-                    <TableColumn fx:id="receivedMoneyCOL" prefWidth="150.0" resizable="false" text="Received Money" />
-                    <TableColumn fx:id="saleAmountCOL" prefWidth="150.0" resizable="false" text="Total Sale" />
-                    <TableColumn fx:id="shippingStatusCOL" prefWidth="150.0" resizable="false" text="Shipping Status" />
-                    <TableColumn fx:id="detailsCOL" prefWidth="100.0" resizable="false" text="Details" />
+                    <TableColumn fx:id="dateCol" prefWidth="150.0" resizable="false" text="Date"/>
+                    <TableColumn fx:id="customerCOL" prefWidth="200.0" resizable="false" text="Customer"/>
+                    <TableColumn fx:id="receivedMoneyCOL" prefWidth="150.0" resizable="false" text="Received Money"/>
+                    <TableColumn fx:id="saleAmountCOL" prefWidth="150.0" resizable="false" text="Total Sale"/>
+                    <TableColumn fx:id="shippingStatusCOL" prefWidth="150.0" resizable="false" text="Shipping Status"/>
+                    <TableColumn fx:id="detailsCOL" prefWidth="100.0" resizable="false" text="Details"/>
                 </columns>
                 <VBox.margin>
-                    <Insets />
+                    <Insets/>
                 </VBox.margin>
                 <padding>
-                    <Insets bottom="5.0" />
+                    <Insets bottom="5.0"/>
                 </padding>
             </TableView>
         </VBox>

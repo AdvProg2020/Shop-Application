@@ -4,7 +4,7 @@ import Server.model.Review;
 import Server.model.database.Database;
 
 public class AddReviewRequest extends Request {
-    private Review review;
+    private final Review review;
 
     public AddReviewRequest(Review review) {
         super();

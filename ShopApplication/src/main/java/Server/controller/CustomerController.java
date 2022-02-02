@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class CustomerController {
 
-    private Controller mainController;
+    private final Controller mainController;
 
     public CustomerController(Controller controller) {
         mainController = controller;
@@ -52,11 +52,11 @@ public class CustomerController {
         database().editAccount();
     }
 
-    private boolean isDiscountCodeValid(String code) {
+    private boolean isDiscountCodeInvalid(String code) {
         Discount discount = Discount.getDiscountByCode(code);
-        if (discount == null) return false;
+        if (discount == null) return true;
 
-        return discount.hasCustomerWithId(currentAccount().getId());
+        return !discount.hasCustomerWithId(currentAccount().getId());
     }
 
     public double getTotalPriceOfCartWithDiscount(String discountCode) throws Exceptions.InvalidDiscountException {
@@ -81,14 +81,14 @@ public class CustomerController {
         Map<SubProduct, Integer> subProductsInCart = currentCart().getSubProducts();
         if (subProductsInCart.isEmpty())
             throw new Exceptions.EmptyCartException();
-        if ( ! notAvailableSubProducts.isEmpty())
+        if (!notAvailableSubProducts.isEmpty())
             throw new Exceptions.NotAvailableSubProductsInCart(notAvailableSubProducts);
 
         double totalPrice = currentCart().getTotalPrice();
         double discountAmount = 0;
         Discount discount = null;
-        if ( discountCode != null && (! discountCode.equals("")) && (!discountCode.equals("null"))) {
-            if (!isDiscountCodeValid(discountCode) || (discount = Discount.getDiscountByCode(discountCode)) == null)
+        if (discountCode != null && (!discountCode.equals("")) && (!discountCode.equals("null"))) {
+            if (isDiscountCodeInvalid(discountCode) || (discount = Discount.getDiscountByCode(discountCode)) == null)
                 throw new Exceptions.InvalidDiscountException(discountCode);
 
             discountAmount = discount.calculateDiscountAmount(totalPrice);
@@ -129,9 +129,9 @@ public class CustomerController {
 
         double totalPrice = subFile.getPriceWithSale();
         double discountAmount = 0;
-        if ( ! discountCode.equals("")) {
+        if (!discountCode.equals("")) {
             discount = Discount.getDiscountByCode(discountCode);
-            if (!isDiscountCodeValid(discountCode) || discount == null)
+            if (isDiscountCodeInvalid(discountCode) || discount == null)
                 throw new Exceptions.InvalidDiscountException(discountCode);
 
             discountAmount = discount.calculateDiscountAmount(totalPrice);

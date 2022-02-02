@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Account implements ModelBasic {
-    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/server/default-account-pic.png";
+    private static final String DEFAULT_IMAGE_PATH = "src/main/resources/server_resources/default-account-pic.png";
     protected static Map<String, Account> allAccounts = new HashMap<>();
     protected String accountId;
     protected boolean suspended;
-    private String username;
+    private final String username;
     private String password;
     private String firstName;
     private String lastName;

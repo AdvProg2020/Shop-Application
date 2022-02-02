@@ -10,15 +10,15 @@ import Server.model.sellable.SubSellable;
 import java.util.*;
 
 public class Sale implements ModelBasic {
-    private static Map<String, Sale> allSales = new HashMap<>();
+    private static final Map<String, Sale> allSales = new HashMap<>();
     private static int lastNum = 1;
     private String saleId;
-    private String sellerId;
+    private final String sellerId;
     private Date startDate;
     private Date endDate;
     private double percentage; // 0 - 100
     private double maximumAmount;
-    private Set<String> subSellableIds;
+    private final Set<String> subSellableIds;
     private boolean suspended;
 
     public Sale(String sellerId, Date startDate, Date endDate, double percentage, double maximumAmount, Database database) {

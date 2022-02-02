@@ -11,11 +11,11 @@ import java.util.Map;
 
 
 public class Wallet implements ModelBasic {
-    private static Map<String, Wallet> allWallets = new HashMap<>();
+    private static final Map<String, Wallet> allWallets = new HashMap<>();
     private static int lastNum = 1;
     private static double minBalance = 0;
     private String walletId;
-    private String accountId;
+    private final String accountId;
     private double balance;
 
     public Wallet(String accountId, double balance) {

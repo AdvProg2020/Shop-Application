@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 public class Message implements ModelBasic {
-    private static Map<String, Message> allMessages = new HashMap<>();
+    private static final Map<String, Message> allMessages = new HashMap<>();
     private static int lastNum = 1;
     private String messageId;
-    private String chatId;
-    private String senderId;
-    private Date sendDate;
-    private String text;
+    private final String chatId;
+    private final String senderId;
+    private final Date sendDate;
+    private final String text;
 
     public Message(String chatId, String senderId, String text) {
         this.chatId = chatId;
@@ -66,7 +66,7 @@ public class Message implements ModelBasic {
         return sendDate;
     }
 
-    public String getText(){
+    public String getText() {
         return text;
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SubFile extends SubSellable {
-    private static Map<String, SubFile> allSubFiles = new HashMap<>();
+    private static final Map<String, SubFile> allSubFiles = new HashMap<>();
     private static int lastNum = 1;
     private String downloadPath;
 

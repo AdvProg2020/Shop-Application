@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Rating implements ModelBasic {
-    private static Map<String, Rating> allRatings = new HashMap<>();
+    private static final Map<String, Rating> allRatings = new HashMap<>();
     private static int lastNum = 1;
     private String ratingId;
-    private String customerId;
-    private String sellableId;
-    private int score; // 1 - 5
+    private final String customerId;
+    private final String sellableId;
+    private final int score; // 1 - 5
 
     public Rating(String customerId, String sellableId, int score) {
         this.sellableId = sellableId;

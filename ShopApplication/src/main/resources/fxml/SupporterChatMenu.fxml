@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$SupporterChatMenuController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Client.view.Controllers$SupporterChatMenuController">
     <padding>
-        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
     </padding>
     <center>
         <AnchorPane fx:id="chatPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets left="20.0" top="30.0" />
+                <Insets left="20.0" top="30.0"/>
             </BorderPane.margin>
         </AnchorPane>
     </center>
@@ -24,21 +20,24 @@
             <Tab closable="false" text="Active Chats">
                 <TableView fx:id="activeChats" stylesheets="@../css/TableView.css">
                     <columns>
-                        <TableColumn fx:id="activeCustomers" editable="false" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" text="Customer" />
-                        <TableColumn fx:id="activeRemove" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Remove" />
+                        <TableColumn fx:id="activeCustomers" editable="false" maxWidth="250.0" minWidth="250.0"
+                                     prefWidth="250.0" text="Customer"/>
+                        <TableColumn fx:id="activeRemove" editable="false" maxWidth="100.0" minWidth="100.0"
+                                     prefWidth="100.0" text="Remove"/>
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
             </Tab>
             <Tab closable="false" text="Chat Archive">
                 <TableView fx:id="archiveChats" stylesheets="@../css/TableView.css">
                     <columns>
-                        <TableColumn fx:id="archiveCustomers" editable="false" maxWidth="349.0" minWidth="250.0" prefWidth="349.0" text="Customer" />
+                        <TableColumn fx:id="archiveCustomers" editable="false" maxWidth="349.0" minWidth="250.0"
+                                     prefWidth="349.0" text="Customer"/>
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
             </Tab>

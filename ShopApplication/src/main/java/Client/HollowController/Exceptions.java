@@ -188,21 +188,21 @@ public class Exceptions {
         }
     }
 
-    public static class UnAuthorizedAccountException extends Exception{
-        public UnAuthorizedAccountException(){
+    public static class UnAuthorizedAccountException extends Exception {
+        public UnAuthorizedAccountException() {
             super("This account doesnt have access to shopping cart!");
         }
     }
 
-    public static class ExistingPropertyException extends Exception{
-        public ExistingPropertyException(String message){
+    public static class ExistingPropertyException extends Exception {
+        public ExistingPropertyException(String message) {
             super(message);
         }
     }
 
     public static class InvalidFileIdException extends Exception {
         public InvalidFileIdException(String message) {
-            super (message);
+            super(message);
         }
     }
 
@@ -237,9 +237,9 @@ public class Exceptions {
     }
 
     public static class AlreadyInAChatException extends Exception {
-       public AlreadyInAChatException(String message) {
-           super(message);
-       }
+        public AlreadyInAChatException(String message) {
+            super(message);
+        }
     }
 
     public static class InvalidSupporterIdException extends Exception {

@@ -24,7 +24,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -131,14 +134,14 @@ public class Controllers {
         private Label storeNameKeyLBL;
 
         private String[] info;
-        private SimpleBooleanProperty passwordChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty firstNameChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty lastNameChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty imageChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty phoneChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty emailChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty balanceChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty storeNameChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty passwordChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty firstNameChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty lastNameChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty imageChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty phoneChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty emailChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty balanceChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty storeNameChanged = new SimpleBooleanProperty(false);
 
         public static void display() {
             View.popupWindow("Edit Personal Info", Constants.FXMLs.editPersonalInfoPopup, 550, 600);
@@ -226,9 +229,7 @@ public class Controllers {
                             }
                         }
                         PersonalInfoMenuController.current.update();
-                    } catch (Exceptions.SameAsPreviousValueException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidFieldException ex) {
+                    } catch (Exceptions.SameAsPreviousValueException | Exceptions.InvalidFieldException ex) {
                         ex.printStackTrace();
                     } finally {
                         discardBTN.getScene().getWindow().hide();
@@ -464,7 +465,70 @@ public class Controllers {
         @FXML
         private TableColumn<OnlineAccountWrapper, Button> detailsCOL;
 
-        public class OnlineAccountWrapper {
+        private void initialize(String username, boolean isPopup) {
+            current = this;
+            this.isPopup = isPopup;
+            this.username = username;
+            try {
+                if (username != null)
+                    info = mainController.viewPersonalInfo(username);
+                else
+                    info = mainController.viewPersonalInfo();
+            } catch (Exceptions.UsernameDoesntExistException | Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            typeLBL.setText(info[info.length - 1]);
+            initVisibilities();
+            initActions();
+            initTable();
+            update();
+        }
+
+        public void update() {
+            try {
+                if (username != null)
+                    info = mainController.viewPersonalInfo(username);
+                else
+                    info = mainController.viewPersonalInfo();
+            } catch (Exceptions.UsernameDoesntExistException | Exceptions.NotLoggedInException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            usernameLBL.setText(info[0]);
+            nameLBL.setText(info[3] + " " + info[4]);
+            phoneValue.setText(info[6]);
+            emailValue.setText(info[5]);
+            if (!info[info.length - 1].equals(Constants.adminUserType)) {
+                balanceValue.setText(info[8] + "$");
+            }
+            if (info[info.length - 1].equals(Constants.sellerUserType)) {
+                storeValue.setText(info[9]);
+            }
+
+            String imgPath = "src/main/resources/temp/accountImage.jpg";
+            File f = Path.of(imgPath).toFile();
+            if (!f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            byte[] byteArray = mainController.loadFileFromDataBase(info[7]);
+            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
+                stream.write(byteArray);
+                accountIMG.setImage(new Image("file:" + imgPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+        public static class OnlineAccountWrapper {
             String username;
             Button details = new Button();
 
@@ -484,7 +548,7 @@ public class Controllers {
             }
         }
 
-        public class CategoryWrapper {
+        public static class CategoryWrapper {
             String name, parent;
 
             public CategoryWrapper(String name, String parent) {
@@ -501,7 +565,21 @@ public class Controllers {
             }
         }
 
-        public class DiscountWrapper {
+
+        private String username;
+        private String[] info;
+        private boolean isPopup;
+
+        public static void display(String username) {
+            if (username == null) {
+                ((PersonalInfoMenuController) View.setMainPane(Constants.FXMLs.personalInfoMenu)).initialize(null, false);
+            } else {
+                ((PersonalInfoMenuController)
+                        View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 900, 600)).initialize(username, true);
+            }
+        }
+
+        public static class DiscountWrapper {
             String code, endDate;
             String percentage, maximumAmount;
 
@@ -523,109 +601,6 @@ public class Controllers {
             public String getEndDate() {
                 return endDate;
             }
-        }
-
-        public class RequestWrapper {
-            String id, type, date, status;
-            Button details = new Button();
-
-            public RequestWrapper(String[] info) {
-                this(info[0], info[1], info[2], info[3]);
-            }
-
-            public RequestWrapper(String id, String type, String date, String status) {
-                this.id = id;
-                this.type = type;
-                this.date = date;
-                this.status = status;
-
-                initButtons();
-            }
-
-            private void initButtons() {
-                details.getStyleClass().add("details-button");
-
-                details.setOnAction(e -> {
-                    switch (type) {
-                        case "AddProductRequest":
-                            AddProductRequestPopupController.display(id);
-                            break;
-                        case "EditProductRequest":
-                        case "EditSaleRequest":
-                        case "EditFileRequest":
-                            EditRequestPopupController.display(id);
-                            break;
-                        case "AddSaleRequest":
-                            AddSaleRequestPopupController.display(id);
-                            break;
-                        case "AddAuctionRequest":
-                            AddAuctionRequestPopupController.display(id);
-                            break;
-                        case "AddFileRequest":
-                            AddFileRequestPopupController.display(id);
-                            break;
-                    }
-                });
-
-            }
-
-            public String getId() {
-                return id;
-            }
-
-            public String getType() {
-                return type;
-            }
-
-            public String getDate() {
-                return date;
-            }
-
-            public String getStatus() {
-                return status;
-            }
-
-            public Button getDetails() {
-                return details;
-            }
-        }
-
-
-        private String username;
-        private String[] info;
-        private boolean isPopup;
-
-        public static void display(String username) {
-            if (username == null) {
-                ((PersonalInfoMenuController) View.setMainPane(Constants.FXMLs.personalInfoMenu)).initialize(null, false);
-            } else {
-                ((PersonalInfoMenuController)
-                        View.popupWindow("Account detail menu", Constants.FXMLs.personalInfoMenu, 900, 600)).initialize(username, true);
-            }
-        }
-
-        private void initialize(String username, boolean isPopup) {
-            current = this;
-            this.isPopup = isPopup;
-            this.username = username;
-            try {
-                if (username != null)
-                    info = mainController.viewPersonalInfo(username);
-                else
-                    info = mainController.viewPersonalInfo();
-            } catch (Exceptions.UsernameDoesntExistException e) {
-                e.printStackTrace();
-                return;
-            } catch (Exceptions.NotLoggedInException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            typeLBL.setText(info[info.length - 1]);
-            initVisibilities();
-            initActions();
-            initTable();
-            update();
         }
 
         private void initVisibilities() {
@@ -715,52 +690,69 @@ public class Controllers {
             }
         }
 
-        public void update() {
-            try {
-                if (username != null)
-                    info = mainController.viewPersonalInfo(username);
-                else
-                    info = mainController.viewPersonalInfo();
-            } catch (Exceptions.UsernameDoesntExistException e) {
-                e.printStackTrace();
-                return;
-            } catch (Exceptions.NotLoggedInException e) {
-                e.printStackTrace();
-                return;
+        public static class RequestWrapper {
+            String id, type, date, status;
+            Button details = new Button();
+
+            public RequestWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3]);
             }
 
-            usernameLBL.setText(info[0]);
-            nameLBL.setText(info[3] + " " + info[4]);
-            phoneValue.setText(info[6]);
-            emailValue.setText(info[5]);
-            if (!info[info.length - 1].equals(Constants.adminUserType)) {
-                balanceValue.setText(info[8] + "$");
-            }
-            if (info[info.length - 1].equals(Constants.sellerUserType)) {
-                storeValue.setText(info[9]);
+            public RequestWrapper(String id, String type, String date, String status) {
+                this.id = id;
+                this.type = type;
+                this.date = date;
+                this.status = status;
+
+                initButtons();
             }
 
-            String imgPath = "src/main/resources/temp/accountImage.jpg";
-            File f = Path.of(imgPath).toFile();
-            if (!f.exists()) {
-                try {
-                    f.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            private void initButtons() {
+                details.getStyleClass().add("details-button");
+
+                details.setOnAction(e -> {
+                    switch (type) {
+                        case "AddProductRequest":
+                            AddProductRequestPopupController.display(id);
+                            break;
+                        case "EditProductRequest":
+                        case "EditSaleRequest":
+                        case "EditFileRequest":
+                            EditRequestPopupController.display(id);
+                            break;
+                        case "AddSaleRequest":
+                            AddSaleRequestPopupController.display(id);
+                            break;
+                        case "AddAuctionRequest":
+                            AddAuctionRequestPopupController.display(id);
+                            break;
+                        case "AddFileRequest":
+                            AddFileRequestPopupController.display(id);
+                            break;
+                    }
+                });
+
             }
-            byte[] byteArray = mainController.loadFileFromDataBase(info[7]);
-            try (FileOutputStream stream = new FileOutputStream(imgPath)) {
-                stream.write(byteArray);
-                accountIMG.setImage(new Image("file:" + imgPath));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            public String getId() {
+                return id;
             }
 
+            public String getType() {
+                return type;
+            }
 
+            public String getDate() {
+                return date;
+            }
 
+            public String getStatus() {
+                return status;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
         }
 
 
@@ -855,21 +847,15 @@ public class Controllers {
         String[] primaryDetails;
         String[] secondaryDetails;
 
-        public class PropertyWrapper {
-            String property;
-            String value;
+        private void initTable() {
+            propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
+            valueCOL.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-            public PropertyWrapper(String property, String value) {
-                this.property = property;
-                this.value = value;
-            }
-
-            public String getProperty() {
-                return property;
-            }
-
-            public String getValue() {
-                return value;
+            try {
+                adminController.getPropertyValuesOfAProductInARequest(primaryDetails[0]).forEach((key, value) ->
+                        properties.getItems().add(new PropertyWrapper(key, value)));
+            } catch (Exceptions.InvalidRequestIdException e) {
+                e.printStackTrace();
             }
         }
 
@@ -911,16 +897,21 @@ public class Controllers {
             priceField.setText(secondaryDetails[6]);
         }
 
-        private void initTable() {
-            propertyCOL.setCellValueFactory(new PropertyValueFactory<>("property"));
-            valueCOL.setCellValueFactory(new PropertyValueFactory<>("value"));
+        public static class PropertyWrapper {
+            String property;
+            String value;
 
-            try {
-                adminController.getPropertyValuesOfAProductInARequest(primaryDetails[0]).forEach((key, value) -> {
-                    properties.getItems().add(new PropertyWrapper(key, value));
-                });
-            } catch (Exceptions.InvalidRequestIdException e) {
-                e.printStackTrace();
+            public PropertyWrapper(String property, String value) {
+                this.property = property;
+                this.value = value;
+            }
+
+            public String getProperty() {
+                return property;
+            }
+
+            public String getValue() {
+                return value;
             }
         }
     }
@@ -982,62 +973,6 @@ public class Controllers {
      * }
      */
 
-//    public static class EditSaleRequestPopupController {
-//        @FXML private Label idProperty;
-//        @FXML private Label idValue;
-//        @FXML private Label fieldLBL;
-//        @FXML private TextArea newValue;
-//        @FXML private TextArea oldValue;
-//
-//        private String[] primaryDetails;
-//        private String[] secondaryDetails;
-//        private String[] tertiaryDetails;
-//
-//        public static void display(String requestId) {
-//            ((EditSaleRequestPopupController)
-//                    View.popupWindow("Edit sale request details", Constants.FXMLs.editRequestDetailsPopup, 500, 300)).initialize(requestId);
-//        }
-//
-//        private void initialize(String requestId) {
-//            try {
-//                var detailsOfRequest = adminController.detailsOfRequest(requestId);
-//                primaryDetails = detailsOfRequest.get(0);
-//                secondaryDetails = detailsOfRequest.get(1);
-//                tertiaryDetails = detailsOfRequest.get(2);
-//            } catch (Exceptions.InvalidRequestIdException e) {
-//                e.printStackTrace();
-//                return;
-//            }
-//
-//            initValues();
-//        }
-//
-//        private void initValues() {
-//            switch (tertiaryDetails[0]) {
-//                case "START_DATE":
-//                    fieldLBL.setText("Start date");
-//                    oldValue.setText(secondaryDetails[3]);
-//                    break;
-//                case "END_DATE":
-//                    fieldLBL.setText("End date");
-//                    oldValue.setText(secondaryDetails[4]);
-//                    break;
-//                case "PERCENTAGE":
-//                    fieldLBL.setText("Percentage");
-//                    oldValue.setText(secondaryDetails[2]);
-//                    break;
-//                case "MAXIMUM":
-//                    fieldLBL.setText("Maximum sale amount");
-//                    oldValue.setText(secondaryDetails[6]);
-//                    break;
-//            }
-//
-//            idValue.setText(secondaryDetails[0]);
-//
-//            newValue.setText(tertiaryDetails[1]);
-//        }
-//    }
-
     public static class AddSaleRequestPopupController {
         @FXML
         private TableView<MyStringWrapper> products;
@@ -1061,7 +996,7 @@ public class Controllers {
         String[] primaryDetails;
         String[] secondaryDetails;
 
-        public class MyStringWrapper {
+        public static class MyStringWrapper {
             String content;
 
             public MyStringWrapper(String content) {
@@ -1257,7 +1192,7 @@ public class Controllers {
         String[] primaryDetails;
         String[] secondaryDetails;
 
-        public class PropertyWrapper {
+        public static class PropertyWrapper {
             String property;
             String value;
 
@@ -1488,7 +1423,7 @@ public class Controllers {
         public ArrayList<String[]> products;
         private String categoryName;
         private double maximumAvailablePrice;
-        private HashMap<String, SimpleStringProperty> properties = new HashMap<>();
+        private final HashMap<String, SimpleStringProperty> properties = new HashMap<>();
         private boolean toCompare;
         //products menu mode:
         private boolean inSale = false;
@@ -1813,8 +1748,6 @@ public class Controllers {
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
                 image.setImage(new Image("file:" + imgPath));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1985,14 +1918,14 @@ public class Controllers {
         String subProductId;
         private String[] productInfo;
         private String[] subProductInfo;
-        private ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
-        private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty brandFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty imageFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty priceFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty countFieldChanged = new SimpleBooleanProperty(false);
+        private final ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
+        private final SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty brandFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty imageFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty priceFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty countFieldChanged = new SimpleBooleanProperty(false);
 
-        public class PropertyWrapper {
+        public static class PropertyWrapper {
             String property;
             String initialValue;
             TextField value = new TextField();
@@ -2326,8 +2259,8 @@ public class Controllers {
 
         private String[] sellablePack;
         private String[] subSellablePack;
-        private ArrayList<PropertyWrapper> properties = new ArrayList<>();
-        private ArrayList<SellerWrapper> sellers = new ArrayList<>();
+        private final ArrayList<PropertyWrapper> properties = new ArrayList<>();
+        private final ArrayList<SellerWrapper> sellers = new ArrayList<>();
         private ArrayList<String[]> subSellablePacks = new ArrayList<>();
         private boolean editable;
         private String type;
@@ -2346,8 +2279,7 @@ public class Controllers {
             if ((type.equals(Constants.sellerUserType) || type.equals(Constants.adminUserType)) && editable) {
                 controller = (View.popupWindow("Sellable details", Constants.FXMLs.sellableDetailMenu, 1200, 800));
             } else {
-                controller = ((SellableDetailMenuController)
-                        View.setMainPane(Constants.FXMLs.sellableDetailMenu));
+                controller = View.setMainPane(Constants.FXMLs.sellableDetailMenu);
             }
             if (controller != null) {
                 controller.editable = editable;
@@ -2511,8 +2443,6 @@ public class Controllers {
             try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                 stream.write(byteArray);
                 sellableIMG.setImage(new Image("file:" + imgPath));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -2568,10 +2498,7 @@ public class Controllers {
                 } else {
                     salePercentageLBL.setVisible(false);
                 }
-                if (subSellablePack[15].equals("SubProduct") && Integer.parseInt(subSellablePack[9]) == 0) {
-                    soldOutLBL.setVisible(true);
-                } else
-                    soldOutLBL.setVisible(false);
+                soldOutLBL.setVisible(subSellablePack[15].equals("SubProduct") && Integer.parseInt(subSellablePack[9]) == 0);
                 auctionLBL.setVisible(false);
             } else {
                 soldOutLBL.setVisible(false);
@@ -2681,14 +2608,10 @@ public class Controllers {
                     OutputStream outputStream = new FileOutputStream(f2);
                     outputStream.write(file);
                     outputStream.close();
-                } catch (Exceptions.InvalidFileIdException e) {
+                } catch (Exceptions.InvalidFileIdException | IOException e) {
                     e.printStackTrace();
                 } catch (Exceptions.HaveNotBoughtException e) {
                     purchaseTheFile();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -2750,24 +2673,16 @@ public class Controllers {
 
             if ((type.equals(Constants.adminUserType)) && editable) {
                 editBTN.setVisible(true);
-            } else if (type.equals(Constants.sellerUserType) && editable) {
-                editBTN.setVisible(true);
-            } else {
-                editBTN.setVisible(false);
-            }
+            } else editBTN.setVisible(type.equals(Constants.sellerUserType) && editable);
 
             try {
                 //rate button
-                if ((type.equals(Constants.customerUserType)) && customerController.hasBought(sellablePack[0])) {
-                    rateBTN.setVisible(true);
-                } else rateBTN.setVisible(false);
+                rateBTN.setVisible((type.equals(Constants.customerUserType)) && customerController.hasBought(sellablePack[0]));
             } catch (Exceptions.InvalidSellableIdException e) {
                 e.printStackTrace();
             }
             //add review button
-            if ((type.equals(Constants.customerUserType))) {
-                addReviewBTN.setVisible(true);
-            } else addReviewBTN.setVisible(false);
+            addReviewBTN.setVisible(type.equals(Constants.customerUserType));
 
             compareBTN.setVisible(true);
 
@@ -2828,7 +2743,7 @@ public class Controllers {
         private String productId;
 
         public static void display(String productId) {
-            AddReviewPopupController controller = (AddReviewPopupController) View.popupWindow("Add Review", Constants.FXMLs.addReviewPopup, 550, 200);
+            AddReviewPopupController controller = View.popupWindow("Add Review", Constants.FXMLs.addReviewPopup, 550, 200);
             if (controller != null) {
                 controller.productId = productId;
             }
@@ -3167,7 +3082,7 @@ public class Controllers {
                         }
                         mainController.creatAccount(Constants.customerUserType, customerUsername.getText(),
                                 customerPassword.getText(), customerFirstName.getText(), customerLastName.getText(),
-                                customerEmail.getText(), customerPhoneNumber.getText(), Double.valueOf(customerBalance.getText()), null, image);
+                                customerEmail.getText(), customerPhoneNumber.getText(), Double.parseDouble(customerBalance.getText()), null, image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -3189,7 +3104,7 @@ public class Controllers {
                         }
                         mainController.creatAccount(Constants.sellerUserType, sellerUsername.getText(),
                                 sellerPassword.getText(), sellerFirstName.getText(), sellerLastName.getText(),
-                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.valueOf(sellerBalance.getText()), sellerStoreName.getText(), image);
+                                sellerEmail.getText(), sellerPhoneNumber.getText(), Double.parseDouble(sellerBalance.getText()), sellerStoreName.getText(), image);
                         sellerLoginHL.getScene().getWindow().hide();
                         LoginPopupController.display();
                     } catch (Exceptions.UsernameAlreadyTakenException ex) {
@@ -3350,8 +3265,6 @@ public class Controllers {
         @FXML
         private Label fileErrorLBL;
 
-        private ArrayList<ProductWrapper> allProducts;
-
         public static void display() {
             View.setMainPane(Constants.FXMLs.adminProductManagingMenu);
         }
@@ -3410,11 +3323,6 @@ public class Controllers {
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
-            allProducts = new ArrayList<>();
-            for (String[] product : adminController.manageAllProducts()) {
-                allProducts.add(new ProductWrapper(product));
-            }
-
             initTable();
         }
 
@@ -3589,13 +3497,7 @@ public class Controllers {
                 this.startDate.set(startDate);
                 this.endDate.set(endDate);
                 perMax.bind(this.percentage.asString().concat("% (").concat(this.maximumAmount).concat("$)"));
-                detail.setOnAction(e -> {
-                    if (discounts.getItems().contains(this)) {
-                        AdminDiscountManagingPopupController.display(this, true);
-                    } else {
-                        AdminDiscountManagingPopupController.display(this, false);
-                    }
-                });
+                detail.setOnAction(e -> AdminDiscountManagingPopupController.display(this, discounts.getItems().contains(this)));
                 remove.setOnAction(e -> {
                     try {
                         adminController.removeDiscountCode(code);
@@ -4068,12 +3970,12 @@ public class Controllers {
         private HBox addPropertyHB;
 
         private AdminCategoryManagingMenuController.CategoryWrapper category;
-        private ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
-        private ArrayList<MiniProductWrapper> categoryProducts = new ArrayList<>();
-        private ArrayList<SubCategoryWrapper> categorySubCategories = new ArrayList<>();
+        private final ArrayList<PropertyWrapper> categoryProperties = new ArrayList<>();
+        private final ArrayList<MiniProductWrapper> categoryProducts = new ArrayList<>();
+        private final ArrayList<SubCategoryWrapper> categorySubCategories = new ArrayList<>();
 
-        private SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty parentFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty nameFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty parentFieldChanged = new SimpleBooleanProperty(false);
 
         public class PropertyWrapper {
             String property;
@@ -4104,37 +4006,18 @@ public class Controllers {
             }
         }
 
-        public class MiniProductWrapper {
-            String id, name, brand, category;
-            Button remove = new Button();
-
-            public MiniProductWrapper(String[] info) {
-                this(info[0], info[1], info[2], info[3]);
-            }
-
-            public MiniProductWrapper(String id, String name, String brand, String category) {
-                this.id = id;
-                this.name = name;
-                this.brand = brand;
-                this.category = category;
-
-                remove.getStyleClass().add("remove-button");
-
-                remove.setOnAction(e -> {
-                    try {
-                        adminController.removeProduct(this.id);
-                    } catch (Exceptions.InvalidSellableIdException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-
-            public String getNameBrand() {
-                return name + " (" + brand + ")";
-            }
-
-            public Button getRemove() {
-                return remove;
+        private void initBindings() {
+            if (category != null) {
+                nameFieldChanged.bind(
+                        Bindings.when(nameField.textProperty().isEqualTo(category.name)).then(false).otherwise(true)
+                );
+                parentFieldChanged.bind(
+                        Bindings.when(parentField.textProperty().isEqualTo(category.parent)).then(false).otherwise(true)
+                );
+                editBTN.disableProperty().bind(
+                        Bindings.createObjectBinding(() ->
+                                !nameFieldChanged.get() && !parentFieldChanged.get(), nameFieldChanged, parentFieldChanged)
+                );
             }
         }
 
@@ -4203,21 +4086,72 @@ public class Controllers {
             }
         }
 
-        private void initBindings() {
-            if (category != null) {
-                nameFieldChanged.bind(
-                        Bindings.when(nameField.textProperty().isEqualTo(category.name)).then(false).otherwise(true)
-                );
-                parentFieldChanged.bind(
-                        Bindings.when(parentField.textProperty().isEqualTo(category.parent)).then(false).otherwise(true)
-                );
-                editBTN.disableProperty().bind(
-                        Bindings.createObjectBinding(() -> {
-                            if (nameFieldChanged.get() || parentFieldChanged.get()) return false;
-                            else return true;
-                        }, nameFieldChanged, parentFieldChanged)
-                );
-            }
+        private void initActions() {
+            addBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        adminController.addCategory(nameField.getText(), parentField.getText().equals("") ? "SuperCategory" : parentField.getText(),
+                                properties.getItems().stream().map(PropertyWrapper::getProperty).collect(Collectors.toCollection(ArrayList::new)));
+                        String[] newCategory = adminController.getCategory(nameField.getText());
+                        AdminCategoryManagingMenuController.currentController.addItem(newCategory);
+                        properties.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                        printError("Invalid parent category.");
+                    } catch (Exceptions.ExistingCategoryException ex) {
+                        ex.printStackTrace();
+                        printError("Sorry, this category already exists.");
+                    }
+                }
+            });
+
+            editBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        if (parentFieldChanged.get()) {
+                            adminController.editCategory(category.name.get(), "parent", parentField.getText());
+                            category.parent.set(parentField.getText());
+                        }
+                        if (nameFieldChanged.get()) {
+                            adminController.editCategory(category.name.get(), "name", nameField.getText());
+                            category.name.set(nameField.getText());
+                        }
+                        discardBTN.getScene().getWindow().hide();
+                    } catch (Exceptions.SubCategoryException | Exceptions.SameAsPreviousValueException |
+                            Exceptions.ExistingCategoryException | Exceptions.InvalidFieldException |
+                            Exceptions.InvalidCategoryException ex) {
+                        printError(ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            discardBTN.setOnAction(e -> properties.getScene().getWindow().hide());
+            cancelBTN.setOnAction(e -> newPropertyField.setText(""));
+
+            confirmBTN.setOnAction(e -> {
+                if (newPropertyField.getText().equals("")) {
+                    printError("Field is empty");
+                    return;
+                }
+
+                if (category == null) {
+                    properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
+                    newPropertyField.setText("");
+                } else {
+                    try {
+                        adminController.addPropertyToACategory(category.name.get(), newPropertyField.getText());
+                        properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
+                        newPropertyField.setText("");
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Property added successfully");
+                    } catch (Exceptions.InvalidCategoryException ex) {
+                        ex.printStackTrace();
+                    } catch (Exceptions.ExistingPropertyException ex) {
+                        printError("This property already exists!");
+                    }
+                }
+            });
         }
 
         private void initTable() {
@@ -4253,84 +4187,38 @@ public class Controllers {
             }
         }
 
-        private void initActions() {
-            addBTN.setOnAction(e -> {
-                if (validateFields()) {
-                    try {
-                        adminController.addCategory(nameField.getText(), parentField.getText().equals("") ? "SuperCategory" : parentField.getText(),
-                                properties.getItems().stream().map(PropertyWrapper::getProperty).collect(Collectors.toCollection(ArrayList::new)));
-                        String[] newCategory = adminController.getCategory(nameField.getText());
-                        AdminCategoryManagingMenuController.currentController.addItem(newCategory);
-                        properties.getScene().getWindow().hide();
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        ex.printStackTrace();
-                        printError("Invalid parent category.");
-                    } catch (Exceptions.ExistingCategoryException ex) {
-                        ex.printStackTrace();
-                        printError("Sorry, this category already exists.");
-                    }
-                }
-            });
+        public static class MiniProductWrapper {
+            String id, name, brand, category;
+            Button remove = new Button();
 
-            editBTN.setOnAction(e -> {
-                if (validateFields()) {
+            public MiniProductWrapper(String[] info) {
+                this(info[0], info[1], info[2], info[3]);
+            }
+
+            public MiniProductWrapper(String id, String name, String brand, String category) {
+                this.id = id;
+                this.name = name;
+                this.brand = brand;
+                this.category = category;
+
+                remove.getStyleClass().add("remove-button");
+
+                remove.setOnAction(e -> {
                     try {
-                        if (parentFieldChanged.get()) {
-                            adminController.editCategory(category.name.get(), "parent", parentField.getText());
-                            category.parent.set(parentField.getText());
-                        }
-                        if (nameFieldChanged.get()) {
-                            adminController.editCategory(category.name.get(), "name", nameField.getText());
-                            category.name.set(nameField.getText());
-                        }
-                        discardBTN.getScene().getWindow().hide();
-//                        errorLBL.setTextFill(Color.GREEN);
-//                        errorLBL.setText("Changes saved successfully");
-                    } catch (Exceptions.SubCategoryException ex) {
-                        printError(ex.getMessage());
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        printError(ex.getMessage());
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidFieldException ex) {
-                        printError(ex.getMessage());
-                        ex.printStackTrace();
-                    } catch (Exceptions.ExistingCategoryException ex) {
-                        printError(ex.getMessage());
-                        ex.printStackTrace();
-                    } catch (Exceptions.SameAsPreviousValueException ex) {
-                        printError(ex.getMessage());
+                        adminController.removeProduct(this.id);
+                    } catch (Exceptions.InvalidSellableIdException ex) {
                         ex.printStackTrace();
                     }
-                }
-            });
+                });
+            }
 
-            discardBTN.setOnAction(e -> properties.getScene().getWindow().hide());
-            cancelBTN.setOnAction(e -> newPropertyField.setText(""));
+            public String getNameBrand() {
+                return name + " (" + brand + ")";
+            }
 
-            confirmBTN.setOnAction(e -> {
-                if (newPropertyField.getText().equals("")) {
-                    printError("Field is empty");
-                    return;
-                }
-
-                if (category == null) {
-                    properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
-                    newPropertyField.setText("");
-                } else {
-                    try {
-                        adminController.addPropertyToACategory(category.name.get(), newPropertyField.getText());
-                        properties.getItems().add(new PropertyWrapper(newPropertyField.getText()));
-                        newPropertyField.setText("");
-                        errorLBL.setTextFill(Color.GREEN);
-                        errorLBL.setText("Property added successfully");
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.ExistingPropertyException ex) {
-                        printError("This property already exists!");
-                    }
-                }
-            });
+            public Button getRemove() {
+                return remove;
+            }
         }
 
         private void printError(String err) {
@@ -4431,7 +4319,7 @@ public class Controllers {
             addSellableBTN.setOnAction(e -> AddProductPopupController_Page1.display());
         }
 
-        public class SellerSubProductWrapper {
+        public static class SellerSubProductWrapper {
             String productId, id, name, brand, saleId, nameBrand;
             double price;
             Button details = new Button(), remove = new Button();
@@ -4507,7 +4395,7 @@ public class Controllers {
         public static ShoppingCartMenuController current;
         private static ArrayList<String[]> cartProducts = new ArrayList<>();
         private static ArrayList<SubProductWrapper> subProducts = new ArrayList<>();
-        private SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
+        private final SimpleDoubleProperty totalPriceProperty = new SimpleDoubleProperty(0);
         NumberBinding totalPriceBinding = new SimpleDoubleProperty(0).add(0);
 
         public class SubProductWrapper {
@@ -4577,12 +4465,9 @@ public class Controllers {
                 try (FileOutputStream stream = new FileOutputStream(imgPath)) {
                     stream.write(byteArray);
                     img.setImage(new Image("file:" + imgPath));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
 
 
                 initButtons();
@@ -4775,21 +4660,6 @@ public class Controllers {
         }
 
         private void initCols() {
-            /**
-             * ImageView img;
-             *             String imagePath;
-             *             String subProductId;
-             *             String productId;
-             *             Button nameBrandSeller;
-             *             double unitPrice;
-             *             SimpleIntegerProperty countProperty = new SimpleIntegerProperty();
-             *             TextField countField;
-             *             HBox countGroup = new HBox();
-             *             Button increaseBTN = new Button();
-             *             Button decreaseBTN = new Button();
-             *             SimpleDoubleProperty totalPrice;
-             *             Button remove = new Button();
-             */
             imageCOL.setCellValueFactory(new PropertyValueFactory<>("img"));
             productName.setCellValueFactory(new PropertyValueFactory<>("nameBrandSeller"));
             productUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
@@ -4875,7 +4745,7 @@ public class Controllers {
         }
 
         public static void displayFileMode(double fileCost, String subFileId) {
-            PurchaseMenuController pmc = null;
+            PurchaseMenuController pmc;
             pmc = View.setMainPane(Constants.FXMLs.purchaseMenu);
             pmc.fileCost = fileCost;
             pmc.subFileId = subFileId;
@@ -4922,16 +4792,14 @@ public class Controllers {
             purchaseBTN.setOnAction(e -> {
                 if (validateFields()) {
                     try {
-                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText().equals("") ? null : discountCode.getText() == null ? "": discountCode.getText());
+                        customerController.purchaseTheCart(receiverName.getText(), address.getText(), phoneNumber.getText(), discountCode.getText().equals("") ? null : discountCode.getText() == null ? "" : discountCode.getText());
                         PurchaseConfirmationController.display(totalPrice.getText());
                     } catch (Exceptions.InsufficientCreditException ex) {
                         discountError.setText("You dont have enough money!");
-                    } catch (Exceptions.NotAvailableSubProductsInCart notAvailableSubProductsInCart) {
+                    } catch (Exceptions.NotAvailableSubProductsInCart | Exceptions.EmptyCartException notAvailableSubProductsInCart) {
                         notAvailableSubProductsInCart.printStackTrace();
                     } catch (Exceptions.InvalidDiscountException ex) {
                         discountError.setText("Invalid discount code!");
-                    } catch (Exceptions.EmptyCartException ex) {
-                        ex.printStackTrace();
                     }
                 }
             });
@@ -4992,19 +4860,15 @@ public class Controllers {
             }
         }
 
-        private boolean validateDiscountFileMode() {
-            if (discountCode.getText().equals("")) {
-                return true;
-            } else {
+        private void validateDiscountFileMode() {
+            if (!discountCode.getText().equals("")) {
                 try {
                     double newPrice = customerController.getTotalPriceOfFileWithDiscount(discountCode.getText(), fileCost);
                     discountError.setText("");
                     totalPrice.setText("$" + newPrice);
                     totalPrice.setTextFill(Color.RED);
-                    return true;
                 } catch (Exceptions.InvalidDiscountException e) {
                     discountError.setText("Invalid discount code");
-                    return false;
                 }
             }
         }
@@ -5012,7 +4876,7 @@ public class Controllers {
 
     public static class CustomerBuyLogMenuController implements Initializable {
 
-        public class BuyLogWrapper {
+        public static class BuyLogWrapper {
             String id, date, receiverUsername, receiverName, shippingStatus;
             double paidMoney, totalDiscount;
             Button details = new Button();
@@ -5132,9 +4996,7 @@ public class Controllers {
                 ArrayList<String[]> logDetails = customerController.getOrderWithId(logId);
                 initTable(logDetails.subList(1, logDetails.size()));
                 initValues(logDetails.get(0));
-            } catch (Exceptions.InvalidLogIdException e) {
-                e.printStackTrace();
-            } catch (Exceptions.CustomerLoginException e) {
+            } catch (Exceptions.InvalidLogIdException | Exceptions.CustomerLoginException e) {
                 e.printStackTrace();
             }
         }
@@ -5179,7 +5041,7 @@ public class Controllers {
             saleLBL.setText(totalSale + "$");
         }
 
-        public class BuyLogItemWrapper {
+        public static class BuyLogItemWrapper {
             String id, nameBrandSeller, sellerStoreName;
             int count;
             double unitPrice, saleAmount;
@@ -5455,7 +5317,7 @@ public class Controllers {
 
         private String[] info;
         private String logId;
-        private SimpleBooleanProperty statusChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty statusChanged = new SimpleBooleanProperty(false);
         private RadioButton defaultStatus;
 
         public static class LogItemWrapper {
@@ -5590,89 +5452,34 @@ public class Controllers {
         public ArrayList<AccountWrapper> allSellers;
         public ArrayList<AccountWrapper> allSupporters;
 
-        public class AccountWrapper {
-            String id, username, firstName, lastName, phone, email, fullName;
-            SimpleStringProperty type;
-            Button remove = new Button();
-            Button details = new Button();
-            TableView holder;
+        private void initItems() {
+            ArrayList<String[]> all = adminController.manageUsers();
+            allSellers = new ArrayList<>();
+            allCustomers = new ArrayList<>();
+            allAdmins = new ArrayList<>();
+            allSupporters = new ArrayList<>();
 
-            public AccountWrapper(String[] pack, TableView holder) {
-                this(pack[0], pack[1], pack[2], pack[3], pack[4], pack[5], pack[6], holder);
+            for (String[] strings : all) {
+                switch (strings[6]) {
+                    case "Seller":
+                        allSellers.add(new AccountWrapper(strings, sellers));
+                        break;
+                    case "Customer":
+                        allCustomers.add(new AccountWrapper(strings, customers));
+                        break;
+                    case "Admin":
+                        allAdmins.add(new AccountWrapper(strings, admins));
+                        break;
+                    default:
+                        allSupporters.add(new AccountWrapper(strings, supporters));
+                        break;
+                }
             }
 
-            public AccountWrapper(String id, String username, String firstName, String lastName, String phone, String email, String type, TableView holder) {
-                this.id = id;
-                this.username = username;
-                this.firstName = firstName;
-                this.lastName = lastName;
-                this.phone = phone;
-                this.email = email;
-                this.type = new SimpleStringProperty(type);
-                this.holder = holder;
-                fullName = firstName + " " + lastName;
-
-                this.remove.getStyleClass().add("remove-button");
-                this.details.getStyleClass().add("details-button");
-                initButtons();
-            }
-
-            private void initButtons() {
-                remove.setOnAction(e -> {
-                    try {
-                        adminController.deleteUsername(username);
-                        holder.getItems().remove(this);
-                    } catch (Exceptions.UsernameDoesntExistException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.ManagerDeleteException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-
-                remove.disableProperty().bind(
-                        Bindings.when(View.isManager.or(type.isEqualTo(Constants.sellerUserType)).or(type.isEqualTo(Constants.customerUserType)))
-                                .then(false).otherwise(true)
-                );
-                remove.opacityProperty().bind(Bindings.when(remove.disableProperty()).then(0.5).otherwise(1));
-
-                details.setOnAction(e -> PersonalInfoMenuController.display(username));
-            }
-
-            public String getId() {
-                return id;
-            }
-
-            public String getUsername() {
-                return username;
-            }
-
-            public String getFirstName() {
-                return firstName;
-            }
-
-            public String getLastName() {
-                return lastName;
-            }
-
-            public String getPhone() {
-                return phone;
-            }
-
-            public String getEmail() {
-                return email;
-            }
-
-            public String getFullName() {
-                return fullName;
-            }
-
-            public Button getRemove() {
-                return remove;
-            }
-
-            public Button getDetails() {
-                return details;
-            }
+            admins.getItems().addAll(allAdmins);
+            sellers.getItems().addAll(allSellers);
+            customers.getItems().addAll(allCustomers);
+            supporters.getItems().addAll(allSupporters);
         }
 
         @FXML
@@ -5829,29 +5636,87 @@ public class Controllers {
             initItems();
         }
 
-        private void initItems() {
-            ArrayList<String[]> all = adminController.manageUsers();
-            allSellers = new ArrayList<>();
-            allCustomers = new ArrayList<>();
-            allAdmins = new ArrayList<>();
-            allSupporters = new ArrayList<>();
+        public static class AccountWrapper {
+            String id, username, firstName, lastName, phone, email, fullName;
+            SimpleStringProperty type;
+            Button remove = new Button();
+            Button details = new Button();
+            TableView holder;
 
-            for (String[] strings : all) {
-                if (strings[6].equals("Seller")) {
-                    allSellers.add(new AccountWrapper(strings, sellers));
-                } else if (strings[6].equals("Customer")) {
-                    allCustomers.add(new AccountWrapper(strings, customers));
-                } else if (strings[6].equals("Admin")) {
-                    allAdmins.add(new AccountWrapper(strings, admins));
-                } else {
-                    allSupporters.add(new AccountWrapper(strings, supporters));
-                }
+            public AccountWrapper(String[] pack, TableView holder) {
+                this(pack[0], pack[1], pack[2], pack[3], pack[4], pack[5], pack[6], holder);
             }
 
-            admins.getItems().addAll(allAdmins);
-            sellers.getItems().addAll(allSellers);
-            customers.getItems().addAll(allCustomers);
-            supporters.getItems().addAll(allSupporters);
+            public AccountWrapper(String id, String username, String firstName, String lastName, String phone, String email, String type, TableView holder) {
+                this.id = id;
+                this.username = username;
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.phone = phone;
+                this.email = email;
+                this.type = new SimpleStringProperty(type);
+                this.holder = holder;
+                fullName = firstName + " " + lastName;
+
+                this.remove.getStyleClass().add("remove-button");
+                this.details.getStyleClass().add("details-button");
+                initButtons();
+            }
+
+            private void initButtons() {
+                remove.setOnAction(e -> {
+                    try {
+                        adminController.deleteUsername(username);
+                        holder.getItems().remove(this);
+                    } catch (Exceptions.UsernameDoesntExistException | Exceptions.ManagerDeleteException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+                remove.disableProperty().bind(
+                        Bindings.when(View.isManager.or(type.isEqualTo(Constants.sellerUserType)).or(type.isEqualTo(Constants.customerUserType)))
+                                .then(false).otherwise(true)
+                );
+                remove.opacityProperty().bind(Bindings.when(remove.disableProperty()).then(0.5).otherwise(1));
+
+                details.setOnAction(e -> PersonalInfoMenuController.display(username));
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public String getFirstName() {
+                return firstName;
+            }
+
+            public String getLastName() {
+                return lastName;
+            }
+
+            public String getPhone() {
+                return phone;
+            }
+
+            public String getEmail() {
+                return email;
+            }
+
+            public String getFullName() {
+                return fullName;
+            }
+
+            public Button getRemove() {
+                return remove;
+            }
+
+            public Button getDetails() {
+                return details;
+            }
         }
     }
 
@@ -6099,97 +5964,72 @@ public class Controllers {
 
         private String[] discountInfo;
         private AdminDiscountManagingMenuController.DiscountWrapper discount;
-        private ArrayList<CustomerWrapper> allCustomers = new ArrayList<>();
-        private ArrayList<CustomerWrapper> removedCustomers = new ArrayList<>();
-        private ArrayList<CustomerWrapper> customersWithDiscount = new ArrayList<>();
+        private final ArrayList<CustomerWrapper> allCustomers = new ArrayList<>();
+        private final ArrayList<CustomerWrapper> removedCustomers = new ArrayList<>();
+        private final ArrayList<CustomerWrapper> customersWithDiscount = new ArrayList<>();
 
-        private SimpleBooleanProperty codeFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty percentageFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty maxFieldChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty codeFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty percentageFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty maxFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
 
-        public class CustomerWrapper {
-            CheckBox hasCode = new CheckBox();
-            String id;
-            String username;
-            TextField count = new TextField();
-            Button increaseBTN = new Button();
-            Button decreaseBTN = new Button();
-            HBox countGroup = new HBox();
-            int initCount;
-
-            public CustomerWrapper(String[] customerPack, boolean hasCode) {
-                this(customerPack[2], customerPack[0], Integer.parseInt(customerPack[1]), hasCode);
-            }
-
-            public CustomerWrapper(String id, String username, int count, boolean hasCode) {
-                if (hasCode) this.count.setText(count + "");
-                else this.count.setText("");
-                this.id = id;
-                this.username = username;
-                this.hasCode.setSelected(hasCode);
-                this.initCount = count;
-                this.count.editableProperty().bind(this.hasCode.selectedProperty().and(new SimpleBooleanProperty(editable)));
-                this.countGroup.opacityProperty().bind(
-                        Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
-                );
-                View.addListener(this.count, Constants.unsignedIntPattern);
-                this.count.textProperty().addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals("") && Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
-                });
-                this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    if (newValue) {
-                        removedCustomers.remove(this);
-                        this.count.setText("1");
-                    } else {
-                        removedCustomers.add(this);
-                        this.count.setText("");
+        private void initActions(String discountId) {
+            addBTN.setOnAction(e -> {
+                if (fieldValidation()) {
+                    try {
+                        adminController.createDiscountCode(codeField.getText(), startDate.getValue().toString(), endDate.getValue().toString(),
+                                Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()),
+                                allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[]{c.id, String.valueOf(c.count.getText())}).collect(Collectors.toCollection(ArrayList::new)));
+                        AdminDiscountManagingMenuController.currentObject.addDiscount(adminController.viewDiscountCodeByCode(codeField.getText()));
+                        customersTable.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidAccountsForDiscount | Exceptions.DiscountCodeException invalidAccountsForDiscount) {
+                        invalidAccountsForDiscount.printStackTrace();
+                    } catch (Exceptions.InvalidFormatException ex) {
+                        ex.printStackTrace();
+                        printError("Invalid date format question mark.");
+                    } catch (Exceptions.ExistingDiscountCodeException ex) {
+                        ex.printStackTrace();
+                        printError("This code already exists!");
                     }
-                });
-
-                increaseBTN.getStyleClass().add("increase-button");
-                decreaseBTN.getStyleClass().add("decrease-button");
-
-                increaseBTN.setOnAction(e -> {
-                    this.count.setText((Integer.parseInt(this.count.getText()) + 1) + "");
-                });
-                decreaseBTN.setOnAction(e -> {
-                    this.count.setText((Integer.parseInt(this.count.getText()) - 1) + "");
-                });
-
-                countGroup.getChildren().addAll(decreaseBTN, this.count, increaseBTN);
-                countGroup.setPadding(new Insets(5, 5, 5, 5));
-                if (!editable) {
-                    increaseBTN.setVisible(false);
-                    decreaseBTN.setVisible(false);
                 }
-            }
+            });
 
-            public HBox getCountGroup() {
-                return countGroup;
-            }
+            editBTN.setOnAction(e -> {
+                if (fieldValidation()) {
+                    try {
+                        if (percentageFieldChanged.get()) {
+                            adminController.editDiscountCode(discountInfo[1], "percentage", percentageField.getText());
+                            discount.percentage.set(Double.parseDouble(percentageField.getText()));
+                        }
+                        if (maxFieldChanged.get()) {
+                            adminController.editDiscountCode(discountInfo[1], "maximum amount", maxField.getText());
+                            discount.maximumAmount.set(Double.parseDouble(maxField.getText()));
+                        }
+                        if (startDateChanged.get()) {
+                            adminController.editDiscountCode(discountInfo[1], "start date", startDate.getValue().toString());
+                            discount.startDate.set(startDate.getValue().toString());
+                        }
+                        if (endDateChanged.get()) {
+                            adminController.editDiscountCode(discountInfo[1], "end date", endDate.getValue().toString());
+                            discount.endDate.set(endDate.getValue().toString());
+                        }
 
-            public CheckBox getHasCode() {
-                return hasCode;
-            }
+                        adminController.setAccounts(discountInfo[1],
+                                customersTable.getItems().stream().filter(cw -> cw.hasCode.isSelected()).
+                                        map(cw -> new String[]{cw.getId(), cw.getCount().getText()}).collect(Collectors.toCollection(ArrayList::new)));
+                        adminController.removeAccountsFromDiscount(discountInfo[1],
+                                removedCustomers.stream().map(CustomerWrapper::getId).collect(Collectors.toCollection(ArrayList::new)));
 
-            public String getId() {
-                return id;
-            }
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Changed saved successfully!");
+                    } catch (Exception ex) {
+                        printError(ex.getMessage());
+                    }
+                }
+            });
 
-            public String getUsername() {
-                return username;
-            }
-
-            public TextField getCount() {
-                return count;
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                return this.id.equals(((CustomerWrapper) obj).id);
-            }
+            discardBTN.setOnAction(e -> customersTable.getScene().getWindow().hide());
         }
 
         private boolean editable;
@@ -6261,64 +6101,83 @@ public class Controllers {
             endDate.getEditor().setStyle("-fx-opacity: 1");
         }
 
-        private void initActions(String discountId) {
-            addBTN.setOnAction(e -> {
-                if (fieldValidation()) {
-                    try {
-                        adminController.createDiscountCode(codeField.getText(), startDate.getValue().toString(), endDate.getValue().toString(),
-                                Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()),
-                                allCustomers.stream().filter(c -> c.hasCode.isSelected()).map(c -> new String[]{c.id, String.valueOf(c.count.getText())}).collect(Collectors.toCollection(ArrayList::new)));
-                        AdminDiscountManagingMenuController.currentObject.addDiscount(adminController.viewDiscountCodeByCode(codeField.getText()));
-                        customersTable.getScene().getWindow().hide();
-                    } catch (Exceptions.InvalidAccountsForDiscount invalidAccountsForDiscount) {
-                        invalidAccountsForDiscount.printStackTrace();
-                    } catch (Exceptions.InvalidFormatException ex) {
-                        ex.printStackTrace();
-                        printError("Invalid date format question mark.");
-                    } catch (Exceptions.ExistingDiscountCodeException ex) {
-                        ex.printStackTrace();
-                        printError("This code already exists!");
-                    } catch (Exceptions.DiscountCodeException ex) {
-                        ex.printStackTrace();
+        public class CustomerWrapper {
+            CheckBox hasCode = new CheckBox();
+            String id;
+            String username;
+            TextField count = new TextField();
+            Button increaseBTN = new Button();
+            Button decreaseBTN = new Button();
+            HBox countGroup = new HBox();
+            int initCount;
+
+            public CustomerWrapper(String[] customerPack, boolean hasCode) {
+                this(customerPack[2], customerPack[0], Integer.parseInt(customerPack[1]), hasCode);
+            }
+
+            public CustomerWrapper(String id, String username, int count, boolean hasCode) {
+                if (hasCode) this.count.setText(count + "");
+                else this.count.setText("");
+                this.id = id;
+                this.username = username;
+                this.hasCode.setSelected(hasCode);
+                this.initCount = count;
+                this.count.editableProperty().bind(this.hasCode.selectedProperty().and(new SimpleBooleanProperty(editable)));
+                this.countGroup.opacityProperty().bind(
+                        Bindings.when(this.hasCode.selectedProperty()).then(1).otherwise(0.5)
+                );
+                View.addListener(this.count, Constants.unsignedIntPattern);
+                this.count.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.equals("") && Integer.parseInt(newValue) == 0) ((StringProperty) observable).set("1");
+                });
+                this.hasCode.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        removedCustomers.remove(this);
+                        this.count.setText("1");
+                    } else {
+                        removedCustomers.add(this);
+                        this.count.setText("");
                     }
+                });
+
+                increaseBTN.getStyleClass().add("increase-button");
+                decreaseBTN.getStyleClass().add("decrease-button");
+
+                increaseBTN.setOnAction(e -> this.count.setText((Integer.parseInt(this.count.getText()) + 1) + ""));
+                decreaseBTN.setOnAction(e -> this.count.setText((Integer.parseInt(this.count.getText()) - 1) + ""));
+
+                countGroup.getChildren().addAll(decreaseBTN, this.count, increaseBTN);
+                countGroup.setPadding(new Insets(5, 5, 5, 5));
+                if (!editable) {
+                    increaseBTN.setVisible(false);
+                    decreaseBTN.setVisible(false);
                 }
-            });
+            }
 
-            editBTN.setOnAction(e -> {
-                if (fieldValidation()) {
-                    try {
-                        if (percentageFieldChanged.get()) {
-                            adminController.editDiscountCode(discountInfo[1], "percentage", percentageField.getText());
-                            discount.percentage.set(Double.parseDouble(percentageField.getText()));
-                        }
-                        if (maxFieldChanged.get()) {
-                            adminController.editDiscountCode(discountInfo[1], "maximum amount", maxField.getText());
-                            discount.maximumAmount.set(Double.parseDouble(maxField.getText()));
-                        }
-                        if (startDateChanged.get()) {
-                            adminController.editDiscountCode(discountInfo[1], "start date", startDate.getValue().toString());
-                            discount.startDate.set(startDate.getValue().toString());
-                        }
-                        if (endDateChanged.get()) {
-                            adminController.editDiscountCode(discountInfo[1], "end date", endDate.getValue().toString());
-                            discount.endDate.set(endDate.getValue().toString());
-                        }
+            public HBox getCountGroup() {
+                return countGroup;
+            }
 
-                        adminController.setAccounts(discountInfo[1],
-                                customersTable.getItems().stream().filter(cw -> cw.hasCode.isSelected()).
-                                        map(cw -> new String[]{cw.getId(), cw.getCount().getText()}).collect(Collectors.toCollection(ArrayList::new)));
-                        adminController.removeAccountsFromDiscount(discountInfo[1],
-                                removedCustomers.stream().map(cw -> cw.getId()).collect(Collectors.toCollection(ArrayList::new)));
+            public CheckBox getHasCode() {
+                return hasCode;
+            }
 
-                        errorLBL.setTextFill(Color.GREEN);
-                        errorLBL.setText("Changed saved successfully!");
-                    } catch (Exception ex) {
-                        printError(ex.getMessage());
-                    }
-                }
-            });
+            public String getId() {
+                return id;
+            }
 
-            discardBTN.setOnAction(e -> customersTable.getScene().getWindow().hide());
+            public String getUsername() {
+                return username;
+            }
+
+            public TextField getCount() {
+                return count;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return this.id.equals(((CustomerWrapper) obj).id);
+            }
         }
 
         private void printError(String errorText) {
@@ -6346,10 +6205,6 @@ public class Controllers {
         }
 
         private void initTable(String discountId) {
-            //CheckBox hasCode;
-            //            String id;
-            //            String username;
-            //            TextField count;
             countCOL.setCellValueFactory(new PropertyValueFactory<>("countGroup"));
             removeCOL.setCellValueFactory(new PropertyValueFactory<>("hasCode"));
             usernameCOL.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -6593,9 +6448,9 @@ public class Controllers {
 
     public static class SellerSaleManagingPopupController {
 
-        private ArrayList<ProductInSaleWrapper> inSales = new ArrayList<>();
-        private ArrayList<ProductInSaleWrapper> removedFormSale = new ArrayList<>();
-        private ArrayList<ProductInSaleWrapper> addedToSale = new ArrayList<>();
+        private final ArrayList<ProductInSaleWrapper> inSales = new ArrayList<>();
+        private final ArrayList<ProductInSaleWrapper> removedFormSale = new ArrayList<>();
+        private final ArrayList<ProductInSaleWrapper> addedToSale = new ArrayList<>();
 
         private String[] sale;
 
@@ -6709,57 +6564,7 @@ public class Controllers {
                 endDate.setValue(LocalDate.parse(sale[4]));
             }
         }
-
-        private void initButtons(String saleId) {
-            addBTN.setOnAction(e -> {
-                if (validateFields()) {
-                    ArrayList<String> productIds;
-                    productIds = inSales.stream().map(ProductInSaleWrapper::getProductId).collect(Collectors.toCollection(ArrayList::new));
-                    try {
-                        sellerController.addSale(startDate.getValue().toString(), endDate.getValue().toString(),
-                                Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()), productIds);
-                        products.getScene().getWindow().hide();
-                    } catch (Exceptions.InvalidDateException ex) {
-                        printError("Dates selected do not match");
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidProductIdsForASeller invalidProductIdsForASeller) {
-                        invalidProductIdsForASeller.printStackTrace();
-                    } catch (Exceptions.InvalidFormatException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
-            editBTN.setOnAction(e -> {
-                if (validateFields()) {
-                    try {
-                        if (percentageChanged.get())
-                            sellerController.editSale(sale[0], "percentage", percentageField.getText());
-                        if (maxFieldChanged.get())
-                            sellerController.editSale(sale[0], "maximum", maxField.getText());
-                        if (startDateChanged.get())
-                            sellerController.editSale(sale[0], "start date", startDate.getValue().toString());
-                        if (endDateChanged.get())
-                            sellerController.editSale(sale[0], "end date", endDate.getValue().toString());
-                        errorLBL.setTextFill(Color.GREEN);
-                        errorLBL.setText("Edition request has been sent!");
-                        editBTN.getScene().getWindow().hide();
-                    } catch (Exceptions.InvalidDateException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidFieldException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidFormatException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidSaleIdException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.SameAsPreviousValueException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
-            discardBTN.setOnAction(e -> products.getScene().getWindow().hide());
-        }
+        private final SimpleBooleanProperty percentageChanged = new SimpleBooleanProperty(false);
 
         private boolean validateFields() {
             if (!percentageField.getText().matches(Constants.doublePattern) || Double.parseDouble(percentageField.getText()) >= 100) {
@@ -6776,34 +6581,7 @@ public class Controllers {
                 return false;
             } else return true;
         }
-
-        private void initBindings(String saleId) {
-            if (saleId != null) {
-                percentageChanged.bind(
-                        Bindings.when(percentageField.textProperty().isEqualTo(sale[2])).then(false).otherwise(true)
-                );
-                maxFieldChanged.bind(
-                        Bindings.when(maxField.textProperty().isEqualTo(sale[6])).then(false).otherwise(true)
-                );
-                startDateChanged.bind(
-                        Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse(sale[3]))).then(false).otherwise(true)
-                );
-                endDateChanged.bind(
-                        Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse(sale[4]))).then(false).otherwise(true)
-                );
-
-                editBTN.disableProperty().bind(
-                        Bindings.createObjectBinding(() -> {
-                            if (endDateChanged.get() || startDateChanged.get() || maxFieldChanged.get() || percentageChanged.get()) {
-                                return false;
-                            } else return true;
-                        }, endDateChanged, startDateChanged, maxFieldChanged, percentageChanged)
-                );
-                editBTN.opacityProperty().bind(
-                        Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
-                );
-            }
-        }
+        private final SimpleBooleanProperty maxFieldChanged = new SimpleBooleanProperty(false);
 
         private void initVisibilities(String saleId, boolean editable) {
             editHB.setVisible((saleId != null) && editable);
@@ -6840,19 +6618,86 @@ public class Controllers {
 
         @FXML
         private TextField percentageField;
-        private SimpleBooleanProperty percentageChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
 
         @FXML
         private TextField maxField;
-        private SimpleBooleanProperty maxFieldChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
 
         @FXML
         private DatePicker startDate;
-        private SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
+
+        private void initButtons(String saleId) {
+            addBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    ArrayList<String> productIds;
+                    productIds = inSales.stream().map(ProductInSaleWrapper::getProductId).collect(Collectors.toCollection(ArrayList::new));
+                    try {
+                        sellerController.addSale(startDate.getValue().toString(), endDate.getValue().toString(),
+                                Double.parseDouble(percentageField.getText()), Double.parseDouble(maxField.getText()), productIds);
+                        products.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidDateException ex) {
+                        printError("Dates selected do not match");
+                        ex.printStackTrace();
+                    } catch (Exceptions.InvalidProductIdsForASeller | Exceptions.InvalidFormatException invalidProductIdsForASeller) {
+                        invalidProductIdsForASeller.printStackTrace();
+                    }
+                }
+            });
+
+            editBTN.setOnAction(e -> {
+                if (validateFields()) {
+                    try {
+                        if (percentageChanged.get())
+                            sellerController.editSale(sale[0], "percentage", percentageField.getText());
+                        if (maxFieldChanged.get())
+                            sellerController.editSale(sale[0], "maximum", maxField.getText());
+                        if (startDateChanged.get())
+                            sellerController.editSale(sale[0], "start date", startDate.getValue().toString());
+                        if (endDateChanged.get())
+                            sellerController.editSale(sale[0], "end date", endDate.getValue().toString());
+                        errorLBL.setTextFill(Color.GREEN);
+                        errorLBL.setText("Edition request has been sent!");
+                        editBTN.getScene().getWindow().hide();
+                    } catch (Exceptions.InvalidDateException | Exceptions.SameAsPreviousValueException |
+                            Exceptions.InvalidSaleIdException | Exceptions.InvalidFormatException |
+                            Exceptions.InvalidFieldException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            discardBTN.setOnAction(e -> products.getScene().getWindow().hide());
+        }
 
         @FXML
         private DatePicker endDate;
-        private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
+
+        private void initBindings(String saleId) {
+            if (saleId != null) {
+                percentageChanged.bind(
+                        Bindings.when(percentageField.textProperty().isEqualTo(sale[2])).then(false).otherwise(true)
+                );
+                maxFieldChanged.bind(
+                        Bindings.when(maxField.textProperty().isEqualTo(sale[6])).then(false).otherwise(true)
+                );
+                startDateChanged.bind(
+                        Bindings.when(startDate.valueProperty().isEqualTo(LocalDate.parse(sale[3]))).then(false).otherwise(true)
+                );
+                endDateChanged.bind(
+                        Bindings.when(endDate.valueProperty().isEqualTo(LocalDate.parse(sale[4]))).then(false).otherwise(true)
+                );
+
+                editBTN.disableProperty().bind(
+                        Bindings.createObjectBinding(() ->
+                                !endDateChanged.get() && !startDateChanged.get() && !maxFieldChanged.get() && !percentageChanged.get(),
+                                endDateChanged, startDateChanged, maxFieldChanged, percentageChanged)
+                );
+                editBTN.opacityProperty().bind(
+                        Bindings.when(editBTN.disableProperty()).then(0.5).otherwise(1)
+                );
+            }
+        }
 
         @FXML
         private Button addBTN;
@@ -6943,7 +6788,7 @@ public class Controllers {
         @FXML
         private TableColumn<SellLogWrapper, Button> detailsCOL;
 
-        private ArrayList<SellLogWrapper> allSellLogs = new ArrayList<>();
+        private final ArrayList<SellLogWrapper> allSellLogs = new ArrayList<>();
 
         public static class SellLogWrapper {
             String id, date, username, receiverName, receiverPhone, receiverAddress, shippingStatus;
@@ -7090,7 +6935,7 @@ public class Controllers {
         SellerSellLogsManagingMenuController.SellLogWrapper sellLog;
         ArrayList<String[]> sellItems = new ArrayList<>();
 
-        public class SellLogItemWrapper {
+        public static class SellLogItemWrapper {
             String id, name, brand;
             Double price, saleAmount;
             int count;
@@ -7294,8 +7139,7 @@ public class Controllers {
             accountBTN.textProperty().bind(
                     Bindings.createObjectBinding(() -> {
                         try {
-                            String username = mainController.viewPersonalInfo()[0];
-                            return username;
+                            return mainController.viewPersonalInfo()[0];
                         } catch (Exceptions.NotLoggedInException e) {
                             return null;
                         }
@@ -7548,7 +7392,7 @@ public class Controllers {
             this.name = name;
             this.extension = extension;
             this.fileId = fileId;
-            exists = fileId != null;
+            exists = (fileId != null);
 
             initAccessControls();
             initListeners();
@@ -7662,15 +7506,11 @@ public class Controllers {
                             try {
                                 file = Files.readAllBytes(Paths.get(pathField.getText()));
                             } catch (IOException ex) {
-                                //nothing
+                                ex.printStackTrace();
                             }
                             sellerController.addNewSubFileToAnExistingFile(fileId, Double.parseDouble(priceField.getText()), file);
                         }
-                    } catch (Exceptions.InvalidFileIdException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidCategoryException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.ExistingFileException ex) {
+                    } catch (Exceptions.InvalidFileIdException | Exceptions.ExistingFileException | Exceptions.InvalidCategoryException ex) {
                         ex.printStackTrace();
                     }
                     addFileBTN.getScene().getWindow().hide();
@@ -7683,7 +7523,7 @@ public class Controllers {
                 printError("Please choose a category");
                 return false;
             }
-            if (pathField.equals("")) {
+            if (pathField.getText().equals("")) {
                 printError("Please choose a file");
                 return false;
             }
@@ -7933,7 +7773,7 @@ public class Controllers {
                 printError("Please choose a category");
                 return false;
             }
-            if (countField.equals("")) {
+            if (countField.getText().equals("")) {
                 printError("Please enter the number of available items");
                 return false;
             }
@@ -8173,8 +8013,6 @@ public class Controllers {
             try (FileOutputStream stream = new FileOutputStream(firstPath)) {
                 stream.write(byteArray1);
                 image1.setImage(new Image("file:" + firstPath));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -8193,8 +8031,6 @@ public class Controllers {
             byte[] byteArray2 = mainController.loadFileFromDataBase(firstProductInfo[8]);
             try (FileOutputStream stream = new FileOutputStream(secondPath)) {
                 stream.write(byteArray2);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -8314,6 +8150,7 @@ public class Controllers {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class SellerAuctionMangingMenuController implements Initializable {
         @FXML
         private TableView<AuctionWrapper> auctions;
@@ -8473,10 +8310,10 @@ public class Controllers {
         private String auctionId;
         private String[] info;
         private boolean exists;
-        private HashMap<String, String> nameToId = new HashMap<>();
+        private final HashMap<String, String> nameToId = new HashMap<>();
 
-        private SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
-        private SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty startDateChanged = new SimpleBooleanProperty(false);
+        private final SimpleBooleanProperty endDateChanged = new SimpleBooleanProperty(false);
 
         public static void display(String auctionId) {
             ((SellerAuctionMangingPopupController) View.popupWindow("seller auction managing popup", Constants.FXMLs.sellerAuctionManagingPopup, 600, 500)).initialize(auctionId);
@@ -8509,15 +8346,9 @@ public class Controllers {
                         if (endDateChanged.get())
                             sellerController.editAuction(auctionId, "end date", endDate.getValue().toString());
                         editBTN.getScene().getWindow().hide();
-                    } catch (Exceptions.InvalidDateException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidFieldException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidFormatException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidAuctionIdException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.SameAsPreviousValueException ex) {
+                    } catch (Exceptions.InvalidDateException | Exceptions.SameAsPreviousValueException |
+                            Exceptions.InvalidAuctionIdException | Exceptions.InvalidFormatException |
+                            Exceptions.InvalidFieldException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -8527,9 +8358,7 @@ public class Controllers {
                     try {
                         sellerController.addAuction(startDate.getValue().toString(), endDate.getValue().toString(), nameToId.get(subSellable.getSelectionModel().getSelectedItem()));
                         addBTN.getScene().getWindow().hide();
-                    } catch (Exceptions.InvalidFormatException ex) {
-                        ex.printStackTrace();
-                    } catch (Exceptions.InvalidDateException ex) {
+                    } catch (Exceptions.InvalidFormatException | Exceptions.InvalidDateException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -8774,7 +8603,6 @@ public class Controllers {
 
         private String chatPageId;
         private int lastMessageNumber = 0;
-        private ArrayList<String[]> messagePacks;
 
         public static Parent getChatPage(String chatPageId) {
             FXMLLoader loader = new FXMLLoader(View.class.getResource("/fxml/" + Constants.FXMLs.chatPage + ".fxml"));
@@ -8794,7 +8622,7 @@ public class Controllers {
 
         private void updateMessages() {
             try {
-                messagePacks = mainController.getMessagesInChat(chatPageId);
+                ArrayList<String[]> messagePacks = mainController.getMessagesInChat(chatPageId);
                 int numberOfMessages = messagePacks.size();
                 for (int i = lastMessageNumber; i < numberOfMessages; i++) {
                     messages.getChildren().add(MessageBoxController.createMessageBox(messagePacks.get(i)));
@@ -8928,7 +8756,7 @@ public class Controllers {
         @FXML
         private Button createChatBTN;
 
-        private HashMap<String, String> nameToId = new HashMap<>();
+        private final HashMap<String, String> nameToId = new HashMap<>();
         private boolean hasChat;
         private String chatId;
         private String[] chatInfo;
@@ -8955,9 +8783,7 @@ public class Controllers {
                 chatId = customerController.getSupportChatId();
                 chatInfo = supporterController.viewChatById(chatId);
                 chatPane.getChildren().add(ChatPageController.getChatPage(chatId));
-            } catch (Exceptions.DontHaveChatException e) {
-
-            } catch (Exceptions.InvalidChatIdException e) {
+            } catch (Exceptions.DontHaveChatException | Exceptions.InvalidChatIdException e) {
                 e.printStackTrace();
             }
 

@@ -6,7 +6,7 @@ import Server.model.chat.AuctionChat;
 import Server.model.database.Database;
 
 public class AddAuctionRequest extends Request implements SellerRequest {
-    private Auction auction;
+    private final Auction auction;
 
     public AddAuctionRequest(Auction auction) {
         super();

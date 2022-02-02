@@ -23,7 +23,7 @@ import java.util.Map;
 public class AdminController {
 
     private static final DateFormat dateFormat = Utilities.getDateFormat();
-    private Controller mainController;
+    private final Controller mainController;
 
     public AdminController(Controller controller) {
         mainController = controller;

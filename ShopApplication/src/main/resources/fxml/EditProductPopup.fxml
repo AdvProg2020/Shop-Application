@@ -3,7 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$EditProductPopupController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/ManagingPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$EditProductPopupController">
     <center>
         <VBox BorderPane.alignment="CENTER">
             <children>
@@ -79,15 +80,15 @@
     <right>
         <TableView fx:id="properties" stylesheets="@../css/TableView.css" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="propertyCOL" prefWidth="150.0" text="Property" />
-                <TableColumn fx:id="valueCOL" prefWidth="150.0" text="Value" />
+                <TableColumn fx:id="propertyCOL" prefWidth="150.0" text="Property"/>
+                <TableColumn fx:id="valueCOL" prefWidth="150.0" text="Value"/>
             </columns>
             <BorderPane.margin>
-                <Insets left="20.0" />
+                <Insets left="20.0"/>
             </BorderPane.margin>
         </TableView>
     </right>
     <padding>
-        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
     </padding>
 </BorderPane>

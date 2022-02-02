@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SubProduct extends SubSellable {
-    private static Map<String, SubProduct> allSubProducts = new HashMap<>();
+    private static final Map<String, SubProduct> allSubProducts = new HashMap<>();
     private static int lastNum = 1;
     private int remainingCount;
 

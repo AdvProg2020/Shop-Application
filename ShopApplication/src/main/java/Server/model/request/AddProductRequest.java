@@ -6,8 +6,8 @@ import Server.model.sellable.Product;
 import Server.model.sellable.SubProduct;
 
 public class AddProductRequest extends Request implements SellerRequest {
-    private Product product;
-    private SubProduct subProduct;
+    private final Product product;
+    private final SubProduct subProduct;
 
     public AddProductRequest(Product product, SubProduct subProduct) {
         super();
@@ -29,7 +29,7 @@ public class AddProductRequest extends Request implements SellerRequest {
     @Override
     protected boolean isInvalid() {
         if (product != null)
-            return (status == RequestStatus.PENDING) &&(product.getCategory() == null);
+            return (status == RequestStatus.PENDING) && (product.getCategory() == null);
 
         return (status == RequestStatus.PENDING) && (subProduct.getProduct() == null || subProduct.getSeller() == null);
     }

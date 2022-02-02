@@ -10,13 +10,18 @@ import java.util.ArrayList;
 
 
 public class CustomerController {
-    private static Type doubleType = new TypeToken<Double>(){}.getType();
-    private static Type booleanType = new TypeToken<Boolean>(){}.getType();
-    private static Type stringType = new TypeToken<String>(){}.getType();
-    private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>(){}.getType();
-    private static Type byteArrayType = new TypeToken<byte[]>(){}.getType();
+    private static final Type doubleType = new TypeToken<Double>() {
+    }.getType();
+    private static final Type booleanType = new TypeToken<Boolean>() {
+    }.getType();
+    private static final Type stringType = new TypeToken<String>() {
+    }.getType();
+    private static final Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
+    }.getType();
+    private static final Type byteArrayType = new TypeToken<byte[]>() {
+    }.getType();
 
-    private Sender sender;
+    private final Sender sender;
 
     public CustomerController() {
         sender = Sender.getInstance();
@@ -60,7 +65,6 @@ public class CustomerController {
         }
     }
 
-    //Todo: check please
     public void purchaseTheCart(String receiverName, String address, String receiverPhone, String discountCode) throws InsufficientCreditException,
             NotAvailableSubProductsInCart, InvalidDiscountException, EmptyCartException {
         String body = convertToJson(receiverName, address, receiverPhone, discountCode);

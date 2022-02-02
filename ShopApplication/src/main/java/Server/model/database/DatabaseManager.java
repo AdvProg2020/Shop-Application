@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DatabaseManager implements Database {
-    private Gson gson;
+    private final Gson gson;
 
     public DatabaseManager() {
         this.gson = DatabaseUtilities.getGson();

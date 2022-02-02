@@ -10,12 +10,12 @@ import java.util.*;
 public class Category implements ModelBasic {
     public static final String SUPER_CATEGORY_NAME = "SuperCategory";
     private static Category superCategory = null; // parent of all main categories (shouldn't be suspended)
-    private static Map<String, Category> allCategories = new HashMap<>();
+    private static final Map<String, Category> allCategories = new HashMap<>();
     private static int lastNum = 1;
     private String categoryId;
     private String name;
     private String parentId;
-    private List<String> properties;
+    private final List<String> properties;
     private transient Set<String> sellableIds;
     private transient Set<String> subCategoryIds;
     private boolean suspended;

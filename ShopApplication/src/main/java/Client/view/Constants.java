@@ -53,7 +53,7 @@ public final class Constants {
         public static final String adminDiscountManagingPopup = "AdminDiscountManagingPopup";
         public static final String adminAccountManagingMenu = "AdminAccountManagingMenu";
         public static final String adminRegistrationPopup = "AdminRegistrationPopup";
-        public static final String adminProductManagingMenu =  "AdminSellableManagingMenu";
+        public static final String adminProductManagingMenu = "AdminSellableManagingMenu";
         public static final String adminRequestManagingMenu = "AdminRequestManagingMenu";
         public static final String adminManagingMenu = "AdminManagingMenu";
         public static final String adminBuyLogManagingMenu = "AdminBuyLogManagingMenu";
@@ -117,7 +117,7 @@ public final class Constants {
         public static final String getSubCategoriesOfACategory = "/main/getSubCategoriesOfACategory";
         public static final String getProductsOfThisCategory = "/main/getProductsOfThisCategory";
         public static final String getProductsInCategory = "/main/getProductsInCategory";
-        public static final String sortFilterProducts  = "/main/sortFilterProducts";
+        public static final String sortFilterProducts = "/main/sortFilterProducts";
         public static final String showProduct = "/main/showProduct";
         public static final String digest = "/main/digest";
         public static final String getPropertyValuesOfAProduct = "/main/getPropertyValuesOfAProduct";

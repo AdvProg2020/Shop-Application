@@ -6,9 +6,9 @@ import Server.model.sellable.Product;
 import Server.model.sellable.SubProduct;
 
 public class EditProductRequest extends Request implements SellerRequest {
-    private String subProductId;
-    private Field field;
-    private String newValue;
+    private final String subProductId;
+    private final Field field;
+    private final String newValue;
     private String oldValue;
 
     public EditProductRequest(String subProductId, Field field, String newValue) {

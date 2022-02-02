@@ -25,8 +25,10 @@ public class Commands {
     }.getType();
     static Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
     }.getType();
-    static Type byteArrArr = new TypeToken<byte[][]>(){}.getType();
-    static Type byteArrayType = new TypeToken<byte[]>(){}.getType();
+    static Type byteArrArr = new TypeToken<byte[][]>() {
+    }.getType();
+    static Type byteArrayType = new TypeToken<byte[]>() {
+    }.getType();
 
     public static final String CommandRegex = "(^\\S+) (\\S+) (?:([^\\*]+)\\*)*([^\\*]+)?$";
     //Server.controller methods.
@@ -1405,7 +1407,8 @@ public class Commands {
                     }
                 }
             }),
-            entry(sellerAddNewFile, new Task(stringType, stringType, stringType, byteArrayType, stringType, new TypeToken<HashMap<String, String>>(){}.getType(), doubleType, byteArrayType) {
+            entry(sellerAddNewFile, new Task(stringType, stringType, stringType, byteArrayType, stringType, new TypeToken<HashMap<String, String>>() {
+            }.getType(), doubleType, byteArrayType) {
                 @Override
                 public Object executeMethod(Session currentSession, Object[] objectArgs) {
                     try {

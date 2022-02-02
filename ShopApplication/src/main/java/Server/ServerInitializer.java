@@ -9,7 +9,6 @@ import java.io.IOException;
 
 public class ServerInitializer {
     public static Database databaseManager = new DatabaseManager();
-    private static ServerListener serverListener;
 
     public static void main(String[] args) {
         databaseManager.loadAll();
@@ -17,7 +16,7 @@ public class ServerInitializer {
         databaseManager.createCategory();
 
         try {
-            serverListener = new ServerListener();
+            new ServerListener();
         } catch (IOException e) {
             System.out.println("failed to get the server online. sorry senpai...");
             e.printStackTrace();

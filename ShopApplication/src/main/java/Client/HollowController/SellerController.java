@@ -2,10 +2,7 @@ package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
 import Client.view.Constants;
-import Server.controller.Utilities;
 import Server.model.Auction;
-import Server.model.account.Seller;
-import Server.model.sellable.SubFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -14,18 +11,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SellerController {
-    private static Type stringType = new TypeToken<String>() {
+    private static final Type stringType = new TypeToken<String>() {
     }.getType();
-    private static Type stringArrayType = new TypeToken<String[]>() {
+    private static final Type stringArrayType = new TypeToken<String[]>() {
     }.getType();
-    private static Type doubleType = new TypeToken<Double>() {
+    private static final Type doubleType = new TypeToken<Double>() {
     }.getType();
-    private static Type booleanType = new TypeToken<Boolean>() {
+    private static final Type booleanType = new TypeToken<Boolean>() {
     }.getType();
-    private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
+    private static final Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
     }.getType();
 
-    private Sender sender;
+    private final Sender sender;
 
     public SellerController() {
         sender = Sender.getInstance();
@@ -136,15 +133,6 @@ public class SellerController {
         }
     }
 
-//    public String exist(String productName, String brand) {
-//        Product product = Product.getProductByNameAndBrand(productName, brand);
-//        if (product != null)
-//            return product.getId();
-//        else
-//            return null;
-//    }
-
-    //Todo: change it again!
     public void addNewProduct(String name, String brand, String infoText, byte[] imagePath, String categoryName, HashMap<String, String> propertyValues,
                               double price, int count) throws ExistingProductException, InvalidCategoryException {
 
@@ -157,7 +145,6 @@ public class SellerController {
         }
     }
 
-    //TODO
     public void addNewSubProductToAnExistingProduct(String productId, double price, int count) throws InvalidSellableIdException {
         String body = convertToJson(productId, price, count);
         String response = sender.sendRequest(Constants.Commands.sellerAddNewSubProductToAnExistingProduct, body);
@@ -253,12 +240,6 @@ public class SellerController {
             throw new InvalidSaleIdException(nameBody[1]);
         }
     }
-
-//    public void removeSale(ArrayList<String> saleIds) throws InvalidSaleIdException {
-//        for (String saleId : saleIds) {
-//            removeSale(saleId);
-//        }
-//    }
 
     public ArrayList<String[]> getPendingRequests() {
         String body = convertToJson();

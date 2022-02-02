@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 public class FileLog implements ModelBasic {
-    private static Map<String, FileLog> allFileLogs = new HashMap<>();
+    private static final Map<String, FileLog> allFileLogs = new HashMap<>();
     private static int lastNum = 1;
     private String fileLogId;
-    private String subFileId;
-    private String customerId;
-    private String sellerId;
-    private Date date;
-    private double price;
-    private double saleAmount;
-    private double discountAmount;
+    private final String subFileId;
+    private final String customerId;
+    private final String sellerId;
+    private final Date date;
+    private final double price;
+    private final double saleAmount;
+    private final double discountAmount;
 
     public FileLog(String subFileId, String customerId, double discountAmount) {
         this.subFileId = subFileId;

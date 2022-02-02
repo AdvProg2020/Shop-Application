@@ -8,9 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class EditAuctionRequest extends Request implements SellerRequest {
-    private String auctionId;
-    private Field field;
-    private String newValue;
+    private final String auctionId;
+    private final Field field;
+    private final String newValue;
     private String oldValue;
 
 

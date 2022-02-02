@@ -9,11 +9,11 @@ import Server.model.account.Seller;
 import java.util.*;
 
 public class SellLog implements ModelBasic {
-    private static Map<String, SellLog> allSellLogs = new HashMap<>();
+    private static final Map<String, SellLog> allSellLogs = new HashMap<>();
     private static int lastNum = 1;
     private String sellLogId;
-    private String parentBuyLogId;
-    private String sellerId;
+    private final String parentBuyLogId;
+    private final String sellerId;
     private double receivedMoney;
     private double totalSaleAmount;
     private transient List<String> logItemIds;

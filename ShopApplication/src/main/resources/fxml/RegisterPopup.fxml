@@ -3,7 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane styleClass="bg-pane" stylesheets="@../css/RegisterPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$RegisterPopupController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" styleClass="bg-pane" stylesheets="@../css/RegisterPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Client.view.Controllers$RegisterPopupController">
     <center>
         <TabPane stylesheets="@../css/TabPane.css">
             <Tab closable="false" text="customer">
@@ -50,46 +51,49 @@
                                 <Label id="error-label" fx:id="customerLastNameError"/>
                             </VBox>
                             <VBox spacing="5.0" GridPane.rowIndex="3">
-                                <Label styleClass="property-label" text="Phone number:" />
-                                <TextField fx:id="customerPhoneNumber" promptText="09123456789" styleClass="field-box" />
-                                <Label id="error-label" fx:id="customerPhoneNumberError" />
+                                <Label styleClass="property-label" text="Phone number:"/>
+                                <TextField fx:id="customerPhoneNumber" promptText="09123456789" styleClass="field-box"/>
+                                <Label id="error-label" fx:id="customerPhoneNumberError"/>
                             </VBox>
                             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                <Label styleClass="property-label" text="Email:" />
-                                <TextField fx:id="customerEmail" promptText="sample@atm.com" styleClass="field-box" />
-                                <Label id="error-label" fx:id="customerEmailError" />
+                                <Label styleClass="property-label" text="Email:"/>
+                                <TextField fx:id="customerEmail" promptText="sample@atm.com" styleClass="field-box"/>
+                                <Label id="error-label" fx:id="customerEmailError"/>
                             </VBox>
                             <VBox spacing="5.0" GridPane.rowIndex="4">
-                                <Label styleClass="property-label" text="Balance:" />
-                                <TextField fx:id="customerBalance" styleClass="field-box" />
-                                <Label id="error-label" fx:id="customerBalanceError" />
+                                <Label styleClass="property-label" text="Balance:"/>
+                                <TextField fx:id="customerBalance" styleClass="field-box"/>
+                                <Label id="error-label" fx:id="customerBalanceError"/>
                             </VBox>
                             <columnConstraints>
-                                <ColumnConstraints maxWidth="196.00003662109376" minWidth="180.00003662109376" prefWidth="192.8000244140625" />
-                                <ColumnConstraints maxWidth="208.79996337890628" minWidth="192.79996337890628" prefWidth="195.99997558593753" />
+                                <ColumnConstraints maxWidth="196.00003662109376" minWidth="180.00003662109376"
+                                                   prefWidth="192.8000244140625"/>
+                                <ColumnConstraints maxWidth="208.79996337890628" minWidth="192.79996337890628"
+                                                   prefWidth="195.99997558593753"/>
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
                             </rowConstraints>
                         </GridPane>
                     </center>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </padding>
                     <bottom>
                         <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
-                            <Button id="register-button" fx:id="customerRegister" mnemonicParsing="false" text="Register" />
+                            <Button id="register-button" fx:id="customerRegister" mnemonicParsing="false"
+                                    text="Register"/>
                             <HBox alignment="BOTTOM_CENTER">
                                 <Label id="message-label" text="already registered?">
                                     <padding>
-                                        <Insets bottom="3.0" left="15.0" />
+                                        <Insets bottom="3.0" left="15.0"/>
                                     </padding>
                                 </Label>
-                                <Hyperlink fx:id="customerLoginHL" text="Login" />
+                                <Hyperlink fx:id="customerLoginHL" text="Login"/>
                             </HBox>
                         </VBox>
                     </bottom>
@@ -139,68 +143,72 @@
                                 <Label id="error-label" fx:id="sellerLastNameError"/>
                             </VBox>
                             <VBox spacing="5.0" GridPane.rowIndex="3">
-                                <Label styleClass="property-label" text="Phone number:" />
-                                <TextField fx:id="sellerPhoneNumber" promptText="09123456789" styleClass="field-box" />
-                                <Label id="error-label" fx:id="sellerPhoneNumberError" />
+                                <Label styleClass="property-label" text="Phone number:"/>
+                                <TextField fx:id="sellerPhoneNumber" promptText="09123456789" styleClass="field-box"/>
+                                <Label id="error-label" fx:id="sellerPhoneNumberError"/>
                             </VBox>
                             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                <Label styleClass="property-label" text="Email:" />
-                                <TextField fx:id="sellerEmail" promptText="sample@atm.com" styleClass="field-box" />
-                                <Label id="error-label" fx:id="sellerEmailError" />
+                                <Label styleClass="property-label" text="Email:"/>
+                                <TextField fx:id="sellerEmail" promptText="sample@atm.com" styleClass="field-box"/>
+                                <Label id="error-label" fx:id="sellerEmailError"/>
                             </VBox>
                             <VBox spacing="5.0" GridPane.rowIndex="4">
-                                <Label styleClass="property-label" text="Balance:" />
-                                <TextField fx:id="sellerBalance" styleClass="field-box" />
-                                <Label id="error-label" fx:id="sellerBalanceError" />
+                                <Label styleClass="property-label" text="Balance:"/>
+                                <TextField fx:id="sellerBalance" styleClass="field-box"/>
+                                <Label id="error-label" fx:id="sellerBalanceError"/>
                             </VBox>
-                            <VBox layoutX="10.0" layoutY="355.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                <Label styleClass="property-label" text="Store Name:" />
-                                <TextField fx:id="sellerStoreName" styleClass="field-box" />
-                                <Label id="error-label" fx:id="sellerStoreNameError" />
+                            <VBox layoutX="10.0" layoutY="355.0" spacing="5.0" GridPane.columnIndex="1"
+                                  GridPane.rowIndex="4">
+                                <Label styleClass="property-label" text="Store Name:"/>
+                                <TextField fx:id="sellerStoreName" styleClass="field-box"/>
+                                <Label id="error-label" fx:id="sellerStoreNameError"/>
                             </VBox>
                             <columnConstraints>
-                                <ColumnConstraints maxWidth="196.00003662109376" minWidth="180.00003662109376" prefWidth="192.8000244140625" />
-                                <ColumnConstraints maxWidth="208.79996337890628" minWidth="192.79996337890628" prefWidth="195.99997558593753" />
+                                <ColumnConstraints maxWidth="196.00003662109376" minWidth="180.00003662109376"
+                                                   prefWidth="192.8000244140625"/>
+                                <ColumnConstraints maxWidth="208.79996337890628" minWidth="192.79996337890628"
+                                                   prefWidth="195.99997558593753"/>
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
                             </rowConstraints>
                         </GridPane>
                     </center>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </padding>
                     <bottom>
                         <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
-                            <Button id="register-button" fx:id="sellerRegister" mnemonicParsing="false" text="Register" />
+                            <Button id="register-button" fx:id="sellerRegister" mnemonicParsing="false"
+                                    text="Register"/>
                             <HBox alignment="BOTTOM_CENTER">
                                 <Label id="message-label" text="already registered?">
                                     <padding>
-                                        <Insets bottom="3.0" left="15.0" />
+                                        <Insets bottom="3.0" left="15.0"/>
                                     </padding>
                                 </Label>
-                                <Hyperlink fx:id="sellerLoginHL" text="Login" />
+                                <Hyperlink fx:id="sellerLoginHL" text="Login"/>
                             </HBox>
                         </VBox>
                     </bottom>
                 </BorderPane>
             </Tab>
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
         </TabPane>
     </center>
     <left>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
-            <Label id="header-label" text="Register Menu" />
-            <Pane id="register-image" prefHeight="472.0" prefWidth="342.0" />
+            <Label id="header-label" text="Register Menu"/>
+            <Pane id="register-image" prefHeight="472.0" prefWidth="342.0"/>
         </VBox>
     </left>
 </BorderPane>

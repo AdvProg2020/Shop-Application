@@ -17,7 +17,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints maxHeight="61.60001220703124" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES"/>
                 <RowConstraints maxHeight="112.80000152587891" minHeight="10.0" prefHeight="72.0" vgrow="SOMETIMES"/>
-                <RowConstraints maxHeight="112.80000152587891" minHeight="10.0" prefHeight="76.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="112.80000152587891" minHeight="10.0" prefHeight="76.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
                 <Label fx:id="idProperty" styleClass="property-label" text="ID:"/>
@@ -35,6 +35,6 @@
         </GridPane>
     </center>
     <padding>
-        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
     </padding>
 </BorderPane>

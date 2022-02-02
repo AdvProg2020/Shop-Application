@@ -39,8 +39,8 @@ public class Supporter extends Account {
         List<SupportChat> chats = new ArrayList<>();
         SupportChat chat;
         for (String chatId : chatIds) {
-            if( (chat = SupportChat.getSupportChatById(chatId))!= null)
-            chats.add(chat);
+            if ((chat = SupportChat.getSupportChatById(chatId)) != null)
+                chats.add(chat);
         }
 
         chats.sort(Comparator.comparing(SupportChat::getId));

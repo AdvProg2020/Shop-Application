@@ -101,7 +101,7 @@ public class ServerRequestHandler extends Thread {
     }
 
     private String receiveMessage(DataInputStream dis) throws IOException {
-        StringBuilder response = new StringBuilder("");
+        StringBuilder response = new StringBuilder();
         String firstPart = dis.readUTF();
         String num = firstPart.split(" ")[0];
         response.append(firstPart.substring(num.length() + 1));

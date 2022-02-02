@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Map;
 
 public class LogItem implements ModelBasic {
-    private static Map<String, LogItem> allLogItems = new HashMap<>();
+    private static final Map<String, LogItem> allLogItems = new HashMap<>();
     private static int lastNum = 1;
     private String logItemId;
-    private String buyLogId;
-    private String sellLogId;
-    private String subProductId;
-    private int count;
-    private double price;
-    private double saleAmount;
+    private final String buyLogId;
+    private final String sellLogId;
+    private final String subProductId;
+    private final int count;
+    private final double price;
+    private final double saleAmount;
 
     public LogItem(String buyLogId, String sellLogId, String subProductId, int count) {
         this.buyLogId = buyLogId;

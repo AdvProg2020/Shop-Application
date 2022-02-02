@@ -1,10 +1,6 @@
 package Client.HollowController;
 
 import Client.view.Constants;
-import Server.controller.Utilities;
-import Server.model.account.Supporter;
-import Server.model.chat.Message;
-import Server.model.chat.SupportChat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -12,14 +8,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class SupporterController {
-    private static Type stringArrayType = new TypeToken<String[]>() {
+    private static final Type stringArrayType = new TypeToken<String[]>() {
     }.getType();
-    private static Type stringListType = new TypeToken<ArrayList<String>>() {
+    private static final Type stringListType = new TypeToken<ArrayList<String>>() {
     }.getType();
-    private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
+    private static final Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
     }.getType();
 
-    private Sender sender;
+    private final Sender sender;
 
     public SupporterController() {
         sender = Sender.getInstance();

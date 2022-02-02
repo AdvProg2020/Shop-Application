@@ -26,7 +26,7 @@ import java.util.*;
 import static java.util.Map.entry;
 
 public class ModelUtilities {
-    private static Map<String, String> abbreviations = Map.ofEntries(
+    private static final Map<String, String> abbreviations = Map.ofEntries(
             entry(Customer.class.getSimpleName(), "CST"),
             entry(Seller.class.getSimpleName(), "SLR"),
             entry(Admin.class.getSimpleName(), "ADM"),

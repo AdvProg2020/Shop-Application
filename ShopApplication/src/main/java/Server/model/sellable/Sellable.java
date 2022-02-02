@@ -7,7 +7,7 @@ import Server.model.database.Database;
 import java.util.*;
 
 public abstract class Sellable implements ModelBasic {
-    private static Map<String, Sellable> allSellables = new HashMap<>();
+    private static final Map<String, Sellable> allSellables = new HashMap<>();
     protected String sellableId;
     protected String name;
     protected String infoText;
@@ -166,7 +166,6 @@ public abstract class Sellable implements ModelBasic {
         subSellables.sort(Comparator.comparing(SubSellable::getId));
         return subSellables;
     }
-
 
 
     public boolean isSoldInStoreWithName(String storeName) {

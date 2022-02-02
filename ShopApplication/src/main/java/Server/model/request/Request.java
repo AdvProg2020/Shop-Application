@@ -8,7 +8,7 @@ import Server.model.database.Database;
 import java.util.*;
 
 public abstract class Request implements ModelBasic {
-    private static Map<String, Request> allRequests = new HashMap<>();
+    private static final Map<String, Request> allRequests = new HashMap<>();
     private static int lastNum = 1;
     protected String requestId;
     protected Date date;

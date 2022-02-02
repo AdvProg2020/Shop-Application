@@ -18,12 +18,12 @@ import java.util.Scanner;
 class DatabaseUtilities {
 
     static void createMissingDirectory(String name) {
-        File directory = Path.of("src/main/resources/server/" + name).toFile();
+        File directory = Path.of("src/main/resources/server_resources/" + name).toFile();
         directory.mkdirs();
     }
 
     static File getFile(String fileName) {
-        File file = Path.of("src/main/resources/server/" + fileName).toFile();
+        File file = Path.of("src/main/resources/server_resources/" + fileName).toFile();
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             try {

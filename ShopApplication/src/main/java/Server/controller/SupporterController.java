@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class SupporterController {
 
     private static final DateFormat dateFormat = Utilities.getDateFormat();
-    private Controller mainController;
+    private final Controller mainController;
 
     public SupporterController(Controller mainController) {
         this.mainController = mainController;
@@ -44,7 +44,8 @@ public class SupporterController {
                 chatPacks.add(Utilities.Pack.supportChat(chat));
             }
             return chatPacks;
-        } throw new Exceptions.UnAuthorizedAccountException();
+        }
+        throw new Exceptions.UnAuthorizedAccountException();
     }
 
     public ArrayList<String[]> viewChat(String chatId) throws Exceptions.InvalidChatIdException {

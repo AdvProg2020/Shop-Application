@@ -3,20 +3,22 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane id="bg-pane" stylesheets="@../css/ManagingPopup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.view.Controllers$AddProductRequestPopupController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="bg-pane" stylesheets="@../css/ManagingPopup.css"
+            xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Client.view.Controllers$AddProductRequestPopupController">
     <center>
         <GridPane alignment="CENTER" hgap="40.0" vgap="20.0" BorderPane.alignment="CENTER">
             <VBox>
-                <Label styleClass="property-label" text="Name:" />
-                <TextField fx:id="nameField" editable="false" styleClass="property-box" />
+                <Label styleClass="property-label" text="Name:"/>
+                <TextField fx:id="nameField" editable="false" styleClass="property-box"/>
             </VBox>
             <VBox GridPane.columnIndex="1">
-                <Label styleClass="property-label" text="Brand:" />
-                <TextField fx:id="brandField" editable="false" styleClass="property-box" />
+                <Label styleClass="property-label" text="Brand:"/>
+                <TextField fx:id="brandField" editable="false" styleClass="property-box"/>
             </VBox>
             <VBox spacing="5.0" GridPane.rowIndex="1">
-                <Label styleClass="property-label" text="Category:" />
-                <TextField fx:id="categoryField" editable="false" styleClass="property-box" />
+                <Label styleClass="property-label" text="Category:"/>
+                <TextField fx:id="categoryField" editable="false" styleClass="property-box"/>
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <Label styleClass="property-label" text="Picture:"/>
@@ -25,49 +27,54 @@
                 </HBox>
             </VBox>
             <VBox GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
-                <Label styleClass="property-label" text="Product Info:" />
-                <TextArea fx:id="infoArea" editable="false" styleClass="white-area" stylesheets="@../css/TextArea.css" />
+                <Label styleClass="property-label" text="Product Info:"/>
+                <TextArea fx:id="infoArea" editable="false" styleClass="white-area" stylesheets="@../css/TextArea.css"/>
             </VBox>
             <VBox alignment="CENTER_LEFT" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
-                <Label styleClass="property-label" text="Price:" />
-                <TextField fx:id="priceField" editable="false" styleClass="property-box" />
+                <Label styleClass="property-label" text="Price:"/>
+                <TextField fx:id="priceField" editable="false" styleClass="property-box"/>
             </VBox>
             <VBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="160.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Label styleClass="property-label" text="Count:" />
-                <TextField fx:id="countField" editable="false" styleClass="property-box" />
+                <Label styleClass="property-label" text="Count:"/>
+                <TextField fx:id="countField" editable="false" styleClass="property-box"/>
             </VBox>
             <columnConstraints>
-                <ColumnConstraints maxWidth="220.0" minWidth="200.0" prefWidth="220.0" />
-                <ColumnConstraints maxWidth="220.0" minWidth="220.0" prefWidth="220.0" />
+                <ColumnConstraints maxWidth="220.0" minWidth="200.0" prefWidth="220.0"/>
+                <ColumnConstraints maxWidth="220.0" minWidth="220.0" prefWidth="220.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints maxHeight="99.19999389648437" minHeight="1.59998970031738" prefHeight="55.19999389648437" />
-                <RowConstraints maxHeight="121.60001029968261" minHeight="24.000006103515616" prefHeight="68.00000610351562" />
-                <RowConstraints maxHeight="60.79999999999998" minHeight="31.999981689453108" prefHeight="31.999981689453108" />
-                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998" prefHeight="60.79999999999998" />
-                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998" prefHeight="60.79999999999998" />
+                <RowConstraints maxHeight="99.19999389648437" minHeight="1.59998970031738"
+                                prefHeight="55.19999389648437"/>
+                <RowConstraints maxHeight="121.60001029968261" minHeight="24.000006103515616"
+                                prefHeight="68.00000610351562"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="31.999981689453108"
+                                prefHeight="31.999981689453108"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998"
+                                prefHeight="60.79999999999998"/>
+                <RowConstraints maxHeight="60.79999999999998" minHeight="60.79999999999998"
+                                prefHeight="60.79999999999998"/>
             </rowConstraints>
         </GridPane>
     </center>
     <padding>
-        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
     </padding>
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="20.0" BorderPane.alignment="CENTER">
-            <Region HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS"/>
             <padding>
-                <Insets left="10.0" right="10.0" top="20.0" />
+                <Insets left="10.0" right="10.0" top="20.0"/>
             </padding>
         </HBox>
     </bottom>
     <right>
         <TableView fx:id="properties" stylesheets="@../css/TableView.css" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="propertyCOL" prefWidth="150.0" text="Property" />
-                <TableColumn fx:id="valueCOL" prefWidth="150.0" text="Value" />
+                <TableColumn fx:id="propertyCOL" prefWidth="150.0" text="Property"/>
+                <TableColumn fx:id="valueCOL" prefWidth="150.0" text="Value"/>
             </columns>
             <BorderPane.margin>
-                <Insets left="20.0" />
+                <Insets left="20.0"/>
             </BorderPane.margin>
         </TableView>
     </right>

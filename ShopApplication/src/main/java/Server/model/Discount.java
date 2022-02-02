@@ -5,15 +5,15 @@ import Server.model.account.Customer;
 import java.util.*;
 
 public class Discount implements ModelBasic {
-    private static Map<String, Discount> allDiscounts = new HashMap<>();
+    private static final Map<String, Discount> allDiscounts = new HashMap<>();
     private static int lastNum = 1;
     private String discountId;
-    private String discountCode;
+    private final String discountCode;
     private Date startDate;
     private Date endDate;
     private double percentage; // 0 - 100
     private double maximumAmount;
-    private Map<String, Integer> customerIds;
+    private final Map<String, Integer> customerIds;
     private boolean suspended;
 
     public Discount(String discountCode, Date startDate, Date endDate, double percentage, double maximumAmount) {
@@ -152,7 +152,6 @@ public class Discount implements ModelBasic {
         Customer.getCustomerById(customerId).addDiscount(discountId, count);
     }
 
-    //TODO: delete
     public void changeCount(String customerId, int changeAmount) {
         int newCount = customerIds.get(customerId) + changeAmount;
         if (newCount <= 0)

@@ -19,24 +19,25 @@
             <children>
                 <VBox alignment="CENTER" spacing="10.0">
                     <children>
-                        <Label text="Highest Bid" />
-                        <Label fx:id="customerLBL" layoutX="10.0" layoutY="10.0" text="Customer" />
-                        <Label fx:id="highestBidLBL" layoutX="10.0" layoutY="28.0" text="\$99" />
+                        <Label text="Highest Bid"/>
+                        <Label fx:id="customerLBL" layoutX="10.0" layoutY="10.0" text="Customer"/>
+                        <Label fx:id="highestBidLBL" layoutX="10.0" layoutY="28.0" text="\$99"/>
                     </children>
                 </VBox>
-                <Region VBox.vgrow="ALWAYS" />
+                <Region VBox.vgrow="ALWAYS"/>
                 <HBox spacing="10.0">
                     <children>
-                        <Button id="refresh-button" fx:id="refreshBTN" layoutX="169.0" layoutY="10.0" mnemonicParsing="false" text="Refresh" />
-                        <TextField fx:id="bidField" promptText="make a higher bid..." />
-                        <Button id="bid-button" fx:id="bidBTN" mnemonicParsing="false" text="Bid" />
+                        <Button id="refresh-button" fx:id="refreshBTN" layoutX="169.0" layoutY="10.0"
+                                mnemonicParsing="false" text="Refresh"/>
+                        <TextField fx:id="bidField" promptText="make a higher bid..."/>
+                        <Button id="bid-button" fx:id="bidBTN" mnemonicParsing="false" text="Bid"/>
                     </children>
                 </HBox>
-            <Label fx:id="errorLBL" alignment="CENTER" prefHeight="33.0" prefWidth="258.0" textFill="RED" />
+                <Label fx:id="errorLBL" alignment="CENTER" prefHeight="33.0" prefWidth="258.0" textFill="RED"/>
             </children>
         </VBox>
     </left>
     <center>
-        <AnchorPane fx:id="chatPane" BorderPane.alignment="CENTER" />
+        <AnchorPane fx:id="chatPane" BorderPane.alignment="CENTER"/>
     </center>
 </BorderPane>

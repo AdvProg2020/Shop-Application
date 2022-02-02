@@ -26,7 +26,7 @@ import java.util.*;
 public class Controller {
     private Account currentAccount;
     private Cart currentCart;
-    private Database database;
+    private final Database database;
 
 
     public Controller(Database DataBaseManager) {
@@ -89,7 +89,7 @@ public class Controller {
     }
 
     public String saveFileInDataBase(byte[] file, String directory, String name) {
-        String filePath = "src/main/resources/server/" + directory + "/" + name;
+        String filePath = "src/main/resources/server_resources/" + directory + "/" + name;
         java.io.File f = new java.io.File(filePath);
         try {
             if (!f.exists()) {

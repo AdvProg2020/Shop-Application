@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Utilities {
-    private static DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
 
     public static DateFormat getDateFormat() {
         return dateFormat;
@@ -86,7 +86,7 @@ public class Utilities {
             return filePack;
         }
 
-        public static String[] subProduct(SubProduct subProduct){
+        public static String[] subProduct(SubProduct subProduct) {
             String[] subProductBoxPack = new String[20];
             Product product = subProduct.getProduct();
             Sale sale = subProduct.getSale();
@@ -108,13 +108,13 @@ public class Utilities {
             subProductBoxPack[14] = subProduct.getSeller().getUsername();
             subProductBoxPack[15] = "SubProduct";
             subProductBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
-            subProductBoxPack[17] = auction != null ? (auction.getHighestBidder() == null ? "-": auction.getHighestBidder().getUsername()) : null;
+            subProductBoxPack[17] = auction != null ? (auction.getHighestBidder() == null ? "-" : auction.getHighestBidder().getUsername()) : null;
             subProductBoxPack[18] = auction != null ? dateFormat.format(auction.getEndDate()) : null;
             subProductBoxPack[19] = auction != null ? auction.getId() : null;
             return subProductBoxPack;
         }
 
-        public static String[] subFile(SubFile subFile){
+        public static String[] subFile(SubFile subFile) {
             String[] subFileBoxPack = new String[20];
             File file = subFile.getFile();
             Sale sale = subFile.getSale();
@@ -136,20 +136,20 @@ public class Utilities {
             subFileBoxPack[14] = subFile.getSeller().getUsername();
             subFileBoxPack[15] = "SubFile";
             subFileBoxPack[16] = auction != null ? Double.toString(auction.getHighestBid()) : null;
-            subFileBoxPack[17] = auction != null ? (auction.getHighestBidder() == null ? "-": auction.getHighestBidder().getUsername()) : null;
+            subFileBoxPack[17] = auction != null ? (auction.getHighestBidder() == null ? "-" : auction.getHighestBidder().getUsername()) : null;
             subFileBoxPack[18] = auction != null ? dateFormat.format(auction.getEndDate()) : null;
             subFileBoxPack[19] = auction != null ? auction.getId() : null;
             return subFileBoxPack;
         }
 
-        public static String[] subSellable(SubSellable subSellable){
-            if(subSellable.getClass().getSimpleName().equals("SubProduct"))
+        public static String[] subSellable(SubSellable subSellable) {
+            if (subSellable.getClass().getSimpleName().equals("SubProduct"))
                 return subProduct((SubProduct) subSellable);
             else
                 return subFile((SubFile) subSellable);
         }
 
-        public static String[] auction(Auction auction){
+        public static String[] auction(Auction auction) {
             String[] auctionPack = new String[7];
             auctionPack[0] = auction.getId();
             auctionPack[1] = auction.getSubSellable().getId();
@@ -161,7 +161,7 @@ public class Utilities {
             return auctionPack;
         }
 
-        public static String[] subProductInProduct(SubProduct subProduct){
+        public static String[] subProductInProduct(SubProduct subProduct) {
             String[] subProductPack = new String[8];
             Product product = subProduct.getProduct();
             Sale sale = subProduct.getSale();
@@ -176,7 +176,7 @@ public class Utilities {
             return subProductPack;
         }
 
-        public static String[] sellerSubProduct(SubSellable subSellable){
+        public static String[] sellerSubProduct(SubSellable subSellable) {
             String[] subProductPack = new String[7];
             Sellable product = subSellable.getSellable();
             Sale sale = subSellable.getSale();
@@ -190,7 +190,7 @@ public class Utilities {
             return subProductPack;
         }
 
-        public static String[] addProductRequest(SubProduct subProduct, Product product){
+        public static String[] addProductRequest(SubProduct subProduct, Product product) {
             String[] productPack = new String[7];
             productPack[0] = product.getName();
             productPack[1] = product.getBrand();
@@ -202,7 +202,7 @@ public class Utilities {
             return productPack;
         }
 
-        public static String[] addFileRequest(SubFile subFile, File file){
+        public static String[] addFileRequest(SubFile subFile, File file) {
             String[] filePack = new String[7];
             filePack[0] = file.getName();
             filePack[1] = file.getExtension();
@@ -238,10 +238,10 @@ public class Utilities {
             reviewInfo[0] = review.getReviewer().getUsername();
             reviewInfo[1] = review.getSellable().getId();
             reviewInfo[2] = review.getSellable().getName();
-            if(review.getSellable().getClass().getSimpleName().equals("Product"))
-                reviewInfo[3] = ((Product)review.getSellable()).getBrand();
+            if (review.getSellable().getClass().getSimpleName().equals("Product"))
+                reviewInfo[3] = ((Product) review.getSellable()).getBrand();
             else
-                reviewInfo[3] = ((File)review.getSellable()).getExtension();
+                reviewInfo[3] = ((File) review.getSellable()).getExtension();
             reviewInfo[4] = review.getTitle();
             reviewInfo[5] = review.getText();
             reviewInfo[6] = review.hasBought() ? "yes" : "no";
@@ -301,7 +301,6 @@ public class Utilities {
         }
 
 
-
         public static String[] sellLogItem(LogItem item) {
             String[] productPack = new String[8];
             Product product = item.getSubProduct().getProduct();
@@ -336,7 +335,7 @@ public class Utilities {
                 info[8] = Double.toString(((Seller) account).getWallet().getBalance());
                 info[9] = ((Seller) account).getStoreName();
                 info[10] = account.getClass().getSimpleName();
-            } else if (account instanceof Admin){
+            } else if (account instanceof Admin) {
                 info = new String[9];
                 info[8] = account.getClass().getSimpleName();
             } else {
@@ -354,7 +353,7 @@ public class Utilities {
             return info;
         }
 
-        public static String[] sellerInRequest(Seller seller){
+        public static String[] sellerInRequest(Seller seller) {
             String[] info = new String[8];
             info[0] = seller.getUsername();
             info[1] = seller.getFirstName();
@@ -371,7 +370,7 @@ public class Utilities {
             String[] productInfo = new String[11];
             productInfo[0] = sellable.getId();
             productInfo[1] = sellable.getName();
-            productInfo[2] = sellable.getClass().getSimpleName().equals("Product") ? ((Product)sellable).getBrand() : ((File)sellable).getExtension();
+            productInfo[2] = sellable.getClass().getSimpleName().equals("Product") ? ((Product) sellable).getBrand() : ((File) sellable).getExtension();
             productInfo[3] = sellable.getInfoText();
             productInfo[4] = Double.toString(sellable.getAverageRatingScore());
             productInfo[5] = Integer.toString(sellable.getRatingsCount());
@@ -459,7 +458,7 @@ public class Utilities {
             return productChange;
         }
 
-        public static String[] fileChange(EditFileRequest request){
+        public static String[] fileChange(EditFileRequest request) {
             String[] fileChange = new String[3];
             fileChange[0] = request.getField().toString();
             fileChange[1] = request.getNewValue();
@@ -495,18 +494,18 @@ public class Utilities {
             return invalidAccountIds.toString();
         }
 
-        public static ArrayList<String[]> subSellableBoxes(ArrayList<SubSellable> subSellables){
+        public static ArrayList<String[]> subSellableBoxes(ArrayList<SubSellable> subSellables) {
             ArrayList<String[]> subProductBoxes = new ArrayList<>();
             for (SubSellable subSellable : subSellables) {
-                if( subSellable.getClass().getSimpleName().equals("SubProduct"))
+                if (subSellable.getClass().getSimpleName().equals("SubProduct"))
                     subProductBoxes.add(subProduct((SubProduct) subSellable));
                 else
-                    subProductBoxes.add(subFile((SubFile)subSellable));
+                    subProductBoxes.add(subFile((SubFile) subSellable));
             }
             return subProductBoxes;
         }
 
-        public static String[] supportChat(SupportChat chat){
+        public static String[] supportChat(SupportChat chat) {
             String[] chatPack = new String[3];
             chatPack[0] = chat.getId();
             chatPack[1] = chat.getCustomer().getUsername();
@@ -514,7 +513,7 @@ public class Utilities {
             return chatPack;
         }
 
-        public static String[] message(Message message, String viewerUsername){
+        public static String[] message(Message message, String viewerUsername) {
             String[] messagePack = new String[5];
             messagePack[0] = message.getId();
             messagePack[1] = message.getSender().getUsername();
@@ -609,7 +608,7 @@ public class Utilities {
 
         public static ArrayList<String> getAvailableValuesOfAPropertyOfACategory(String categoryName, String property) throws Exceptions.InvalidCategoryException {
             Category category = Category.getCategoryByName(categoryName);
-            if(category == null)
+            if (category == null)
                 throw new Exceptions.InvalidCategoryException(categoryName);
             ArrayList<Product> products = new ArrayList<>(category.getProducts(false));
             ArrayList<String> values = new ArrayList<>();
@@ -622,9 +621,9 @@ public class Utilities {
             return values;
         }
 
-        private static boolean doesMatchTheProperty(Sellable product, String property, String value){
+        private static boolean doesMatchTheProperty(Sellable product, String property, String value) {
             ArrayList<String> categoryProperties = new ArrayList<>(product.getCategory().getProperties(false));
-            if(!categoryProperties.contains(property))
+            if (!categoryProperties.contains(property))
                 return true;
             else {
                 return value.equals(product.getValue(property));
@@ -680,47 +679,55 @@ public class Utilities {
                 products.removeIf(product -> product.getAverageRatingScore() < minRatingScore);
             }
 
-            public static void property(ArrayList<Sellable> products, String property, String value){
-                if(property == null || property.equals(""))
+            public static void property(ArrayList<Sellable> products, String property, String value) {
+                if (property == null || property.equals(""))
                     return;
-                products.removeIf(product ->  ! Filter.doesMatchTheProperty(product, property, value));
+                products.removeIf(product -> !Filter.doesMatchTheProperty(product, property, value));
             }
         }
 
         static class SubProductFilter {
             public static void available(ArrayList<SubSellable> subSellables, boolean available) {
                 if (available)
-                    subSellables.removeIf(subProduct -> (subProduct.getClass().getSimpleName().equals("SubProduct") && ((SubProduct)subProduct).getRemainingCount() == 0));
+                    subSellables.removeIf(subProduct -> (subProduct.getClass().getSimpleName().equals("SubProduct") && ((SubProduct) subProduct).getRemainingCount() == 0));
             }
+
             public static void minPrice(ArrayList<SubSellable> subSellables, double minPrice) {
                 if (minPrice != 0)
                     subSellables.removeIf(subSellable -> subSellable.getPriceWithSale() < minPrice);
             }
+
             public static void maxPrice(ArrayList<SubSellable> subSellables, double maxPrice) {
                 if (maxPrice != 0)
                     subSellables.removeIf(subSellable -> subSellable.getPriceWithSale() > maxPrice);
             }
+
             public static void name(ArrayList<SubSellable> subSellables, String contains) {
                 if (!contains.isEmpty())
                     subSellables.removeIf(subSellable -> !(subSellable.getSellable().getName().toLowerCase().contains(contains.toLowerCase())));
             }
+
             public static void brand(ArrayList<SubSellable> subProducts, String brand) {
                 if (!brand.isEmpty())
-                    subProducts.removeIf(subProduct -> subProduct.getClass().getSimpleName().equals("SubProduct") && !(((SubProduct)subProduct).getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
+                    subProducts.removeIf(subProduct -> subProduct.getClass().getSimpleName().equals("SubProduct") && !(((SubProduct) subProduct).getProduct().getBrand().toLowerCase().contains(brand.toLowerCase())));
             }
+
             public static void storeName(ArrayList<SubSellable> subSellables, String storeName) {
                 if (!storeName.isEmpty())
                     subSellables.removeIf(subSellable -> !subSellable.getSeller().getStoreName().contains(storeName.toLowerCase()));
             }
-            public static void ratingScore(ArrayList<SubSellable> subSellables, double minRatingScore){
+
+            public static void ratingScore(ArrayList<SubSellable> subSellables, double minRatingScore) {
                 subSellables.removeIf(subSellable -> subSellable.getSellable().getAverageRatingScore() < minRatingScore);
             }
+
             public static void extension(ArrayList<SubSellable> subProducts, String extension) {
                 if (!extension.isEmpty())
-                    subProducts.removeIf(subProduct -> subProduct.getClass().getSimpleName().equals("SubFile") && !(((SubFile)subProduct).getFile().getExtension().toLowerCase().contains(extension.toLowerCase())));
+                    subProducts.removeIf(subProduct -> subProduct.getClass().getSimpleName().equals("SubFile") && !(((SubFile) subProduct).getFile().getExtension().toLowerCase().contains(extension.toLowerCase())));
             }
         }
     }
+
     static class Sort {
         public static String[] productAvailableSorts() {
             String[] availableSorts = new String[6];
@@ -734,7 +741,7 @@ public class Utilities {
         }
 
         public static class ProductPriceComparator implements Comparator<Product> {
-            private int direction;
+            private final int direction;
 
             public ProductPriceComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -747,7 +754,7 @@ public class Utilities {
         }
 
         public static class ProductRatingScoreComparator implements Comparator<Product> {
-            private int direction;
+            private final int direction;
 
             public ProductRatingScoreComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -760,7 +767,7 @@ public class Utilities {
         }
 
         public static class ProductNameComparator implements Comparator<Product> {
-            private int direction;
+            private final int direction;
 
             public ProductNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -773,7 +780,7 @@ public class Utilities {
         }
 
         public static class ProductCategoryNameComparator implements Comparator<Product> {
-            private int direction;
+            private final int direction;
 
             public ProductCategoryNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -786,7 +793,7 @@ public class Utilities {
         }
 
         public static class ProductRemainingCountComparator implements Comparator<Product> {
-            private int direction;
+            private final int direction;
 
             public ProductRemainingCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -799,7 +806,7 @@ public class Utilities {
         }
 
         public static class ProductViewCountComparator implements Comparator<Product> {
-            private int direction;
+            private final int direction;
 
             public ProductViewCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -812,7 +819,7 @@ public class Utilities {
         }
 
         public static class SubSellablePriceComparator implements Comparator<SubSellable> {
-            private int direction;
+            private final int direction;
 
             public SubSellablePriceComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -825,7 +832,7 @@ public class Utilities {
         }
 
         public static class SubSellableRatingScoreComparator implements Comparator<SubSellable> {
-            private int direction;
+            private final int direction;
 
             public SubSellableRatingScoreComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -838,7 +845,7 @@ public class Utilities {
         }
 
         public static class SubSellableNameComparator implements Comparator<SubSellable> {
-            private int direction;
+            private final int direction;
 
             public SubSellableNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -851,7 +858,7 @@ public class Utilities {
         }
 
         public static class SubSellableCategoryNameComparator implements Comparator<SubSellable> {
-            private int direction;
+            private final int direction;
 
             public SubSellableCategoryNameComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -864,7 +871,7 @@ public class Utilities {
         }
 
         public static class SubSellableRemainingCountComparator implements Comparator<SubSellable> {
-            private int direction;
+            private final int direction;
 
             public SubSellableRemainingCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;
@@ -881,7 +888,7 @@ public class Utilities {
         }
 
         public static class SubSellableViewCountComparator implements Comparator<SubSellable> {
-            private int direction;
+            private final int direction;
 
             public SubSellableViewCountComparator(boolean isIncreasing) {
                 direction = isIncreasing ? 1 : -1;

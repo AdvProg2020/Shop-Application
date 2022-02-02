@@ -5,8 +5,8 @@ import Server.model.account.Seller;
 import Server.model.database.Database;
 
 public class AddSellerRequest extends Request {
-    private Seller seller;
-    private double balance;
+    private final Seller seller;
+    private final double balance;
 
     public AddSellerRequest(Seller seller, double balance) {
         super();

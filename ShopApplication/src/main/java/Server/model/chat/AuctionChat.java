@@ -10,7 +10,7 @@ import java.util.Map;
 public class AuctionChat extends Chat {
     protected static Map<String, AuctionChat> allAuctionChats = new HashMap<>();
     protected static int lastNum = 1;
-    private String auctionId;
+    private final String auctionId;
 
     public AuctionChat(String auctionId) {
         super();

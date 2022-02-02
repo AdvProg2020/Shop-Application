@@ -11,8 +11,8 @@ import java.util.Map;
 public class SupportChat extends Chat {
     protected static Map<String, SupportChat> allSupportChats = new HashMap<>();
     protected static int lastNum = 1;
-    private String supporterId;
-    private String customerId;
+    private final String supporterId;
+    private final String customerId;
     private boolean suspended;
 
     public SupportChat(String supporterId, String customerId) {

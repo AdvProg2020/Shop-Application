@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Auction implements ModelBasic {
-    private static Map<String, Auction> allAuctions = new HashMap<>();
+    private static final Map<String, Auction> allAuctions = new HashMap<>();
     private static int lastNum = 1;
     private String auctionId;
-    private String sellerId;
-    private String subSellableId;
+    private final String sellerId;
+    private final String subSellableId;
     private Date startDate;
     private Date endDate;
     private String highestBidderId;

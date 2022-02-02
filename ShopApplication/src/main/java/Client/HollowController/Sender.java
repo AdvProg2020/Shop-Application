@@ -5,24 +5,22 @@ import java.net.Socket;
 
 public class Sender {
     private static Sender instance;
-    private static int serverPort;
     private static String authToken;
-    private Socket socket;
 
     public static Sender getInstance() {
         if (instance != null) return instance;
         else return instance = new Sender();
     }
 
-    public  String sendRequest(String command, String body) {
+    public String sendRequest(String command, String body) {
         try {
-             socket = new Socket("localhost", 64813);
+            Socket socket = new Socket("localhost", 50474);
             DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
             String request = command;
-            request += " " + ((authToken == null)? "0": authToken) + " ";
-            if ( ! body.equals("")) request += body;
+            request += " " + ((authToken == null) ? "0" : authToken) + " ";
+            if (!body.equals("")) request += body;
 
             sendMessage(request, dos);
 
@@ -48,7 +46,7 @@ public class Sender {
 
     private void sendMessage(String request, DataOutputStream dos) {
         int size = 64000;
-        int parts = request.getBytes().length/size + 1;
+        int parts = request.getBytes().length / size + 1;
         request = parts + " " + request;
 
         try {
@@ -63,7 +61,7 @@ public class Sender {
 
     private String receiveMessage(DataInputStream dis) {
         try {
-            StringBuilder response = new StringBuilder("");
+            StringBuilder response = new StringBuilder();
             String firstPart = dis.readUTF();
             String num = firstPart.split(" ")[0];
             response.append(firstPart.substring(num.length() + 1));

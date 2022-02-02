@@ -1,37 +1,37 @@
 package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
-import Server.controller.Utilities;
-import Server.model.chat.AuctionChat;
-import Server.model.chat.Chat;
-import Server.model.chat.Message;
-import Server.model.chat.SupportChat;
+import Client.view.Constants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import Client.view.Constants;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Controller {
-    private static Type stringType = new TypeToken<String>(){}.getType();
-    private static Type stringArrayType = new TypeToken<String[]>(){}.getType();
-    private static Type booleanType = new TypeToken<Boolean>(){}.getType();
-    private static Type stringListType = new TypeToken<ArrayList<String>>(){}.getType();
-    private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>(){}.getType();
-    private static Type byteArrayType = new TypeToken<byte[]>(){}.getType();
+    private static final Type stringType = new TypeToken<String>() {
+    }.getType();
+    private static final Type stringArrayType = new TypeToken<String[]>() {
+    }.getType();
+    private static final Type booleanType = new TypeToken<Boolean>() {
+    }.getType();
+    private static final Type stringListType = new TypeToken<ArrayList<String>>() {
+    }.getType();
+    private static final Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
+    }.getType();
+    private static final Type byteArrayType = new TypeToken<byte[]>() {
+    }.getType();
 
-    private Sender sender;
+    private final Sender sender;
+
     public Controller() {
         sender = Sender.getInstance();
     }
 
     private String convertToJson(Object... args) {
-        StringBuilder array = new StringBuilder("");
+        StringBuilder array = new StringBuilder();
         Gson gson = new Gson();
         for (int i = 0; i < args.length; i++) {
             array.append(gson.toJson(args[i]));
@@ -139,7 +139,7 @@ public class Controller {
 
     public ArrayList<String[]> sortFilterProducts(String categoryName, boolean inSale, boolean inAuction, String sortBy, boolean isIncreasing, boolean available, double minPrice, double maxPrice, String contains, String brand,
                                                   String extension, String storeName, double minRatingScore, HashMap<String, String> propertyFilters) {
-        String body = convertToJson(categoryName, inSale,inAuction, sortBy, isIncreasing, available, minPrice, maxPrice, contains, brand, extension, storeName, minRatingScore, propertyFilters);
+        String body = convertToJson(categoryName, inSale, inAuction, sortBy, isIncreasing, available, minPrice, maxPrice, contains, brand, extension, storeName, minRatingScore, propertyFilters);
         String response = sender.sendRequest(Constants.Commands.sortFilterProducts, body);
         return new Gson().fromJson(response, stringArrayListType);
     }
@@ -172,7 +172,8 @@ public class Controller {
             String[] nameBody = getExceptionNameAndBody(response);
             throw new InvalidSellableIdException(nameBody[1]);
         } else {
-            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>(){}.getType());
+            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>() {
+            }.getType());
         }
     }
 
@@ -405,7 +406,8 @@ public class Controller {
             String[] nameBody = getExceptionNameAndBody(response);
             throw new InvalidFileIdException(nameBody[1]);
         } else {
-            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>(){}.getType());
+            return new Gson().fromJson(response, new TypeToken<HashMap<String, String>>() {
+            }.getType());
         }
     }
 

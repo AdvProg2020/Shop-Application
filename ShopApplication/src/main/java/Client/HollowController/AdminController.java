@@ -1,15 +1,9 @@
 package Client.HollowController;
 
 import Client.HollowController.Exceptions.*;
-import Server.controller.Utilities;
-import Server.model.Wallet;
-import Server.model.account.Account;
-import Server.model.account.Admin;
-import Server.model.account.Supporter;
-import Server.model.sellable.File;
+import Client.view.Constants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import Client.view.Constants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -17,14 +11,14 @@ import java.util.HashMap;
 
 
 public class AdminController {
-    private static Type stringArrayType = new TypeToken<String[]>() {
+    private static final Type stringArrayType = new TypeToken<String[]>() {
     }.getType();
-    private static Type stringListType = new TypeToken<ArrayList<String>>() {
+    private static final Type stringListType = new TypeToken<ArrayList<String>>() {
     }.getType();
-    private static Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
+    private static final Type stringArrayListType = new TypeToken<ArrayList<String[]>>() {
     }.getType();
 
-    private Sender sender;
+    private final Sender sender;
 
     public AdminController() {
         sender = Sender.getInstance();
@@ -446,7 +440,7 @@ public class AdminController {
 
     public void setWalletMin(double amount) {
         String body = convertToJson(amount);
-        String response = sender.sendRequest(Constants.Commands.adminSetWalletMin, body);
+        sender.sendRequest(Constants.Commands.adminSetWalletMin, body);
     }
 
     public ArrayList<String> getOnlineAccounts() {
